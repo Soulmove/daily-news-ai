@@ -1,0 +1,46 @@
+name: Daily AI News Update
+
+# 触发条件：
+# 1. schedule: 每天国际标准时间 0点 (北京时间早上8点) 自动运行
+# 2. workflow_dispatch: 允许你手动点击按钮运行 (方便测试)
+on:
+  schedule:
+    - cron: '0 0 * * *' 
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: 📥 下载代码仓库
+      uses: actions/checkout@v3
+
+    - name: 🐍 设置 Python 环境
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+
+    - name: 📦 安装依赖库
+      run: |
+        pip install -r requirements.txt
+
+    - name: 🕷️ 运行爬虫 (获取原始数据)
+      run: python main.py
+
+    - name: 🧠 运行 AI 分析 (生成深度报告)
+      env:
+        GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+      run: python ai_editor.py
+
+    - name: 💾 保存数据并推送到仓库
+      run: |
+        git config --global user.name 'GitHub Action Bot'
+        git config --global user.email 'action@github.com'
+        git add *.json
+        # 如果有变动才提交，没有变动就不报错
+        git commit -m "🚀 Auto-update: Daily News Data" || exit 0
+        git push
