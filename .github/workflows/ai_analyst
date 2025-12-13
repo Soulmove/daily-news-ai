@@ -1,0 +1,39 @@
+name: 🧠 AI Analyst (Daily 6am)
+
+on:
+  schedule:
+    # 北京时间 06:10 (UTC 22:10)
+    # 故意比爬虫晚10分钟，确保读到最新数据
+    - cron: '10 22 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  ai-job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 下载代码 (含最新数据)
+        uses: actions/checkout@v3
+
+      - name: 🐍 设置 Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: 📦 安装依赖
+        run: pip install google-generativeai
+
+      - name: 🧠 运行 AI 分析
+        env:
+          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+        run: python ai_editor.py
+
+      - name: 💾 保存报告
+        run: |
+          git config --global user.name 'AI Analyst'
+          git config --global user.email 'ai@bot.com'
+          git add analysis_*.json
+          git commit -m "🧠 Auto-update: AI Report" || exit 0
+          git push
