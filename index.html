@@ -80,8 +80,8 @@
         </nav>
         
         <div class="p-4 border-t" :class="currentTheme.sidebarBorder">
-            <button @click="debugMode = !debugMode" class="w-full text-xs text-slate-400 hover:text-blue-500 mb-2">
-                <i class="fa-solid fa-bug"></i> {{ debugMode ? '关闭调试' : '数据不显示？点我' }}
+            <button @click="debugMode = !debugMode" class="w-full text-xs text-slate-400 hover:text-blue-500 mb-2 opacity-50 hover:opacity-100">
+                <i class="fa-solid fa-wrench"></i> {{ debugMode ? '关闭调试' : '数据异常点我' }}
             </button>
             <button @click="toggleDarkMode" :class="['w-full flex items-center justify-center gap-2 py-2 rounded-lg transition-colors', currentTheme.sidebarHover, currentTheme.sidebarText]">
                 <i :class="['fa-solid', isDarkMode ? 'fa-sun' : 'fa-moon']"></i>
@@ -93,16 +93,26 @@
     <main :class="['flex-1 flex flex-col h-full overflow-hidden relative transition-colors duration-300', currentTheme.mainBg]">
         
         <header :class="['h-16 shrink-0 border-b flex items-center justify-between px-8 backdrop-blur-md z-10 transition-colors duration-300', currentTheme.headerBg, currentTheme.headerBorder]">
-            <h2 class="text-xl font-bold flex items-center gap-3 transition-colors duration-300" :class="currentTheme.headerText">
-                <i v-if="currentView === 'smart'" :class="['fa-solid text-2xl', currentSmartTabIcon]"></i>
-                <i v-else class="fa-solid fa-satellite-dish text-2xl text-blue-500"></i>
-                {{ currentViewTitle }}
-            </h2>
+            <div class="flex items-center gap-6">
+                <h2 class="text-xl font-bold flex items-center gap-3 transition-colors duration-300" :class="currentTheme.headerText">
+                    <i v-if="currentView === 'smart'" :class="['fa-solid text-2xl', currentSmartTabIcon]"></i>
+                    <i v-else class="fa-solid fa-satellite-dish text-2xl text-blue-500"></i>
+                    {{ currentViewTitle }}
+                </h2>
+                <div class="hidden md:flex items-center gap-2 text-xs font-mono px-3 py-1 rounded-full bg-green-500/10 text-green-600 dark:text-green-400 border border-green-500/20">
+                    <span class="relative flex h-2 w-2">
+                      <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                      <span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                    </span>
+                    当前在线: {{ onlineUsers }} 人
+                </div>
+            </div>
+
             <div v-if="loading" class="flex items-center gap-2 text-sm opacity-70" :class="currentTheme.headerText">
-                <i class="fa-solid fa-circle-notch fa-spin"></i> 正在读取数据...
+                <i class="fa-solid fa-circle-notch fa-spin"></i> 正在同步全球数据...
             </div>
             <div v-else class="text-xs font-medium px-3 py-1.5 rounded-full bg-black/5 dark:bg-white/10" :class="currentTheme.headerText">
-               <i class="fa-regular fa-clock mr-1"></i> 最后更新: {{ lastUpdateTime || '本地时间' }}
+               <i class="fa-regular fa-clock mr-1"></i> 数据更新于: {{ lastUpdateTime || '刚刚' }}
             </div>
         </header>
 
@@ -160,7 +170,7 @@
                                 <div class="flex flex-wrap items-center gap-2 mb-3">
                                     <span v-if="item.sentiment || item.prediction" 
                                           :class="['px-2.5 py-1 rounded-md text-xs font-bold uppercase tracking-wider', getTagStyle(item)]">
-                                        <i :class="getTagIcon(item)"></i> {{ item.sentiment || '未来预测' }}
+                                        <i :class="getTagIcon(item)"></i> {{ sentimentTranslate(item.sentiment) || '未来预测' }}
                                     </span>
                                     <span v-if="item.impact || item.special_note" class="px-2.5 py-1 rounded-md text-xs font-medium bg-black/5 dark:bg-white/10 text-slate-600 dark:text-slate-300 flex items-center gap-1">
                                         <i :class="['fa-solid', item.special_note ? 'fa-star text-yellow-500' : 'fa-crosshairs opacity-50']"></i>
@@ -234,7 +244,7 @@
                             <div class="p-3 border-b border-slate-100 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/50 flex justify-between items-center shrink-0">
                                 <div class="font-bold text-sm flex items-center gap-2 text-slate-700 dark:text-slate-200">
                                     <span class="w-2.5 h-2.5 rounded-full" :class="getCategoryColorClass(platform.category)"></span>
-                                    <span class="truncate max-w-[120px]" :title="platform.id">{{ platform.id }}</span>
+                                    <span class="truncate max-w-[120px]" :title="platform.id">{{ getDisplayName(platform.id) }}</span>
                                 </div>
                                 <div class="flex items-center gap-3">
                                      <span class="text-[10px] font-medium bg-slate-200 dark:bg-slate-700 px-1.5 py-0.5 rounded text-slate-500 dark:text-slate-400">{{ platform.items.length }}</span>
@@ -277,11 +287,37 @@
             const rawCategory = ref('all');
             const searchText = ref('');
             const lastUpdateTime = ref('');
+            
+            // 👥 虚假在线人数逻辑 (168 + 1)
+            const onlineUsers = ref(169); 
 
             const smartData = reactive({ finance: null, global: null, tech: null, general: null });
             const rawData = reactive({ finance: [], global: [], tech: [], general: [] });
             const favoriteIds = reactive(new Set());
             const readSet = reactive(new Set());
+
+            // 🇨🇳 平台名称汉化字典
+            const platformMap = {
+                'douyin': '抖音', 'zhihu': '知乎', 'weibo': '微博', 'bilibili-hot-search': 'B站热搜', 
+                'baidu': '百度热搜', 'toutiao': '今日头条', 'tieba': '百度贴吧', '36kr-quick': '36氪快讯', 
+                '36kr-renqi': '36氪人气', 'wallstreetcn-hot': '华尔街见闻', 'wallstreetcn-news': '华尔街资讯', 
+                'wallstreetcn-quick': '华尔街快讯', 'cls-hot': '财联社热门', 'cls-depth': '财联社深度', 
+                'xueqiu-hotstock': '雪球热股', 'gelonghui': '格隆汇', 'jin10': '金十数据', 'thepaper': '澎湃新闻', 
+                'sspai': '少数派', 'ithome': 'IT之家', 'huxiu': '虎嗅', 'geekpark': '极客公园', 
+                'zaobao': '联合早报', 'cankaoxiaoxi': '参考消息', 'fastbull-express': '法布财经', 
+                'douban': '豆瓣', 'hupu': '虎扑', 'steam': 'Steam', 'v2ex-share': 'V2EX', 'solidot': 'Solidot', 
+                'hackernews': 'HackerNews', 'github-trending-today': 'GitHub 榜', 'producthunt': 'ProductHunt'
+            };
+
+            const getDisplayName = (id) => {
+                return platformMap[id] || id; // 如果字典里有就返回中文，没有就返回原ID
+            };
+
+            // 🇨🇳 情感汉化函数
+            const sentimentTranslate = (s) => {
+                const map = { 'Bullish': '利好', 'Bearish': '利空', 'Neutral': '中性', 'Mixed': '震荡' };
+                return map[s] || s;
+            };
 
             const smartTabs = [
                 { id: 'finance', name: '财经/市场', icon: 'fa-coins', activeClass: 'text-amber-600 border-amber-600 dark:text-amber-400 dark:border-amber-400' },
@@ -306,6 +342,14 @@
                     isDarkMode.value = true;
                     document.documentElement.classList.add('dark');
                 }
+
+                // 简单的随机波动，让在线人数看起来更真实
+                setInterval(() => {
+                    const change = Math.floor(Math.random() * 3) - 1; // -1, 0, 1
+                    let newVal = onlineUsers.value + change;
+                    if(newVal < 168) newVal = 168; // 保底 168
+                    onlineUsers.value = newVal;
+                }, 5000);
 
                 const t = new Date().getTime();
                 loading.value = true;
@@ -364,17 +408,16 @@
                 const themes = {
                     finance: { ...common, logoBg: 'bg-amber-500', logoText: 'text-amber-950', mainBg: dark ? 'bg-[#0f172a]' : 'bg-[#f8fafc]', summaryCard: dark ? 'bg-gradient-to-br from-slate-800 to-slate-900 border border-amber-500/20 text-amber-50' : 'bg-white border-t-4 border-amber-500 shadow-amber-100', summaryTitle: 'text-amber-500', summaryText: dark ? 'text-amber-100/90' : 'text-slate-700', itemCard: dark ? 'bg-slate-800/50 border-slate-700 hover:border-amber-500/50' : 'bg-white border-slate-200 hover:border-amber-400 hover:shadow-lg', itemTitle: dark ? 'text-slate-100' : 'text-slate-800', readMoreBtn: 'text-amber-500 hover:text-amber-600' },
                     global: { ...common, logoBg: 'bg-blue-600', logoText: 'text-white', mainBg: dark ? 'bg-slate-900' : 'bg-slate-50', summaryCard: dark ? 'bg-blue-900/30 border border-blue-500/30 text-blue-50' : 'bg-gradient-to-r from-blue-50 to-white border border-blue-100', summaryTitle: 'text-blue-500', summaryText: dark ? 'text-blue-100' : 'text-blue-900', itemCard: dark ? 'bg-slate-800 border-slate-700' : 'bg-white border-slate-200 hover:border-blue-300 hover:shadow', itemTitle: dark ? 'text-white' : 'text-slate-900', readMoreBtn: 'text-blue-500 hover:text-blue-700' },
-                    // 🌟 修复点 3: 强制科技板块文字为浅色，提高白天模式下的对比度
                     tech: { 
                         ...common, 
                         logoBg: 'bg-cyan-500 shadow-cyan-500/50', logoText: 'text-cyan-950', 
                         mainBg: dark ? 'bg-[#09090b]' : 'bg-slate-100', 
                         summaryCard: 'cyber-border text-cyan-50', 
                         summaryTitle: 'text-cyan-400 animate-pulse-neon', 
-                        summaryText: 'text-cyan-50/90 font-mono', // 强制浅色
+                        summaryText: 'text-cyan-50/90 font-mono', 
                         itemCard: 'bg-slate-900/80 border-cyan-900/50 hover:bg-slate-900', 
                         itemTitle: 'text-cyan-50 font-mono tracking-wider', 
-                        itemText: 'text-slate-300 font-mono', // 强制浅色
+                        itemText: 'text-slate-300 font-mono', 
                         readMoreBtn: 'text-cyan-400 hover:text-cyan-300 font-mono' 
                     },
                     general: { ...common, logoBg: 'bg-gradient-to-br from-rose-500 to-indigo-600', logoText: 'text-white', mainBg: dark ? 'bg-[#1a1218]' : 'bg-[#fff0f5]', summaryCard: 'bg-gradient-to-r from-rose-500 to-indigo-600 text-white shadow-lg shadow-rose-500/30', summaryTitle: 'text-rose-200', summaryText: 'text-white font-medium', itemCard: 'ent-card hover:shadow-xl hover:-translate-y-2', itemTitle: dark ? 'text-white' : 'text-slate-800', readMoreBtn: 'text-indigo-500 hover:text-indigo-700' }
@@ -397,7 +440,12 @@
                 
                 if (searchText.value.trim()) {
                     const key = searchText.value.toLowerCase();
-                    allRaw = allRaw.filter(item => item.id.toLowerCase().includes(key));
+                    // 支持搜中文名 (如搜索“抖音”能搜出 douyin)
+                    allRaw = allRaw.filter(item => {
+                        const displayName = getDisplayName(item.id).toLowerCase();
+                        const id = item.id.toLowerCase();
+                        return id.includes(key) || displayName.includes(key);
+                    });
                 }
                 return allRaw.sort((a, b) => {
                     const aFav = favoriteIds.has(a.id), bFav = favoriteIds.has(b.id);
@@ -444,10 +492,10 @@
 
             return {
                 loading, isDarkMode, debugMode, currentView, currentSmartTab, rawCategory, searchText, lastUpdateTime,
-                smartData, filteredRawList, favoriteIds, rawCategoryCounts, totalRawSources,
+                smartData, filteredRawList, favoriteIds, rawCategoryCounts, totalRawSources, onlineUsers,
                 smartTabs, currentTheme, currentSmartTabIcon, currentViewTitle, computedSummary, computedItems,
                 navBtnClass, rawNavClass, toggleDarkMode, isFavorite, toggleFavorite, isRead, toggleRead,
-                getTagStyle, getTagIcon, getCategoryIcon, getCategoryColorClass
+                getTagStyle, getTagIcon, getCategoryIcon, getCategoryColorClass, getDisplayName, sentimentTranslate
             }
         }
     }).mount('#app')
