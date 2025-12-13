@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 全网舆情智库 | Insight Pro</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Serif+SC:wght@700&family=Orbitron:wght@500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['"Noto Serif SC"', 'serif'],
+                        cyber: ['Orbitron', 'sans-serif'],
+                    },
+                    colors: {
+                        fin: { dark: '#0f172a', light: '#1e293b', accent: '#ca8a04', text: '#e2e8f0' },
+                        cyber: { bg: '#09090b', border: '#22d3ee', accent: '#a855f7', text: '#00f2ff' },
+                    },
+                    animation: {
+                        'pulse-neon': 'pulse-neon 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        'pulse-neon': {
+                            '0%, 100%': { opacity: 1, filter: 'brightness(100%)' },
+                            '50%': { opacity: .7, filter: 'brightness(150%)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #f8fafc; color: #1e293b; font-family: 'Inter', sans-serif; }
+        .dark body { background-color: #0f172a; color: #f1f5f9; }
+        [v-cloak] { display: none; }
+        
+        .thin-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+        .thin-scrollbar::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 9999px; }
+        .dark .thin-scrollbar::-webkit-scrollbar-thumb { background-color: #334155; }
+
+        .read-item { opacity: 0.6; filter: grayscale(100%); transition: all 0.3s ease; }
+        
+        .cyber-border { position: relative; background: linear-gradient(90deg, #22d3ee, #a855f7); padding: 1px; }
+        .cyber-inner { background-color: #020617; height: 100%; width: 100%; }
+
+        .ent-card { background: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(255,255,255,0.4)); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.3); }
+        .dark .ent-card { background: linear-gradient(135deg, rgba(30,41,59,0.8), rgba(15,23,42,0.6)); border-color: rgba(255,255,255,0.05); }
+    </style>
+</head>
+<body class="h-full flex overflow-hidden">
+
+<div id="app" v-cloak class="flex w-full h-full relative transition-colors duration-300">
+
+    <aside :class="['w-64 flex flex-col transition-all z-20 shrink-0 border-r', currentTheme.sidebarBg, currentTheme.sidebarBorder]">
+        <div class="p-6 flex items-center gap-3">
+            <div :class="['w-10 h-10 rounded-xl flex items-center justify-center text-xl shadow-lg transition-colors duration-300', currentTheme.logoBg, currentTheme.logoText]">
+                <i class="fa-solid fa-brain"></i>
+            </div>
+            <div>
+                <h1 :class="['font-bold text-lg leading-tight', currentTheme.sidebarText]">Insight Pro</h1>
+                <p class="text-[10px] opacity-60 uppercase tracking-wider">AI Powered Analytics</p>
+            </div>
+        </div>
+
+        <nav class="flex-1 px-4 space-y-2">
+            <div class="text-xs font-bold uppercase tracking-wider opacity-50 mb-3 px-2" :class="currentTheme.sidebarText">核心视图</div>
+            <button @click="currentView = 'smart'" :class="navBtnClass('smart')">
+                <i class="fa-solid fa-chart-pie w-5 opacity-70"></i> 智能深度简报
+            </button>
+            <button @click="currentView = 'raw'" :class="navBtnClass('raw')">
+                <i class="fa-solid fa-tower-broadcast w-5 opacity-70"></i> 原始数据监控
+            </button>
+        </nav>
+        
+        <div class="p-4 border-t" :class="currentTheme.sidebarBorder">
+            <button @click="debugMode = !debugMode" class="w-full text-xs text-slate-400 hover:text-blue-500 mb-2">
+                <i class="fa-solid fa-bug"></i> {{ debugMode ? '关闭调试' : '数据不显示？点我' }}
+            </button>
+            <button @click="toggleDarkMode" :class="['w-full flex items-center justify-center gap-2 py-2 rounded-lg transition-colors', currentTheme.sidebarHover, currentTheme.sidebarText]">
+                <i :class="['fa-solid', isDarkMode ? 'fa-sun' : 'fa-moon']"></i>
+                <span class="text-sm">{{ isDarkMode ? '切换日间模式' : '切换深色模式' }}</span>
+            </button>
+        </div>
+    </aside>
+
+    <main :class="['flex-1 flex flex-col h-full overflow-hidden relative transition-colors duration-300', currentTheme.mainBg]">
+        
+        <header :class="['h-16 shrink-0 border-b flex items-center justify-between px-8 backdrop-blur-md z-10 transition-colors duration-300', currentTheme.headerBg, currentTheme.headerBorder]">
+            <h2 class="text-xl font-bold flex items-center gap-3 transition-colors duration-300" :class="currentTheme.headerText">
+                <i v-if="currentView === 'smart'" :class="['fa-solid text-2xl', currentSmartTabIcon]"></i>
+                <i v-else class="fa-solid fa-satellite-dish text-2xl text-blue-500"></i>
+                {{ currentViewTitle }}
+            </h2>
+            <div v-if="loading" class="flex items-center gap-2 text-sm opacity-70" :class="currentTheme.headerText">
+                <i class="fa-solid fa-circle-notch fa-spin"></i> 正在读取数据...
+            </div>
+            <div v-else class="text-xs font-medium px-3 py-1.5 rounded-full bg-black/5 dark:bg-white/10" :class="currentTheme.headerText">
+               <i class="fa-regular fa-clock mr-1"></i> 最后更新: {{ lastUpdateTime || '本地时间' }}
+            </div>
+        </header>
+
+        <div v-if="debugMode" class="absolute inset-0 z-50 bg-black/80 p-10 overflow-auto text-green-400 font-mono text-xs">
+            <div class="bg-slate-900 p-6 rounded border border-green-500">
+                <h3 class="text-lg font-bold mb-4 border-b border-green-500 pb-2">数据调试面板 (点击左下角关闭)</h3>
+                <p class="mb-2">当前 Tab: {{ currentSmartTab }}</p>
+                <p class="mb-2">检测到的数据结构:</p>
+                <pre>{{ JSON.stringify(currentSmartData, null, 2) }}</pre>
+            </div>
+        </div>
+
+        <div v-if="currentView === 'smart'" class="flex-1 flex flex-col overflow-hidden">
+            <div :class="['shrink-0 px-8 pt-4 pb-0 flex gap-6 border-b text-sm font-medium transition-colors duration-300', currentTheme.tabBorder]">
+                <button v-for="tab in smartTabs" :key="tab.id" @click="currentSmartTab = tab.id"
+                    :class="['pb-3 relative transition-all flex items-center gap-2', 
+                    currentSmartTab === tab.id ? tab.activeClass + ' border-b-2' : 'opacity-50 hover:opacity-100 border-transparent text-slate-500 dark:text-slate-400']">
+                    <i :class="['fa-solid', tab.icon]"></i> {{ tab.name }}
+                    <span v-if="currentSmartTab === 'tech' && tab.id === 'tech'" class="absolute bottom-0 left-0 w-full h-0.5 bg-cyan-400 shadow-[0_0_10px_#22d3ee]"></span>
+                </button>
+            </div>
+
+            <div class="flex-1 overflow-y-auto p-8 thin-scrollbar scroll-smooth">
+                
+                <div v-if="currentSmartData?.error" class="mb-8 p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg flex items-center gap-3">
+                    <i class="fa-solid fa-triangle-exclamation text-xl"></i>
+                    <div>
+                        <p class="font-bold">数据加载失败</p>
+                        <p class="text-xs opacity-75">原因: {{ currentSmartData.error }}</p>
+                    </div>
+                </div>
+
+                <div v-if="computedSummary" :class="['p-6 rounded-2xl mb-8 shadow-xl relative overflow-hidden transition-all duration-300', currentTheme.summaryCard]">
+                    <div class="absolute top-0 right-0 p-8 opacity-10 pointer-events-none">
+                        <i :class="['fa-solid text-8xl', currentSmartTabIcon]"></i>
+                    </div>
+                    <div v-if="currentSmartTab === 'tech'" class="cyber-inner absolute inset-0 -z-10"></div>
+                    <h3 :class="['text-sm font-bold uppercase tracking-widest mb-4 flex items-center gap-2 relative z-10', currentTheme.summaryTitle]">
+                        <i class="fa-solid fa-microchip"></i> AI 核心综述
+                    </h3>
+                    <p :class="['text-lg leading-relaxed font-medium relative z-10', currentTheme.summaryText]" style="font-family: 'Noto Serif SC', serif;">
+                        {{ computedSummary }}
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
+                    <div v-for="(item, idx) in computedItems" :key="idx" 
+                         :class="['group rounded-xl p-6 transition-all relative overflow-hidden hover:-translate-y-1', 
+                         isRead(item.title) ? 'read-item' : '', currentTheme.itemCard]">
+                        
+                        <div v-if="currentSmartTab === 'tech'" class="absolute inset-0 border border-cyan-500/30 rounded-xl pointer-events-none group-hover:border-cyan-400/60 transition-all"></div>
+
+                        <div class="flex justify-between items-start gap-4 mb-4 relative z-10">
+                            <div>
+                                <div class="flex flex-wrap items-center gap-2 mb-3">
+                                    <span v-if="item.sentiment || item.prediction" 
+                                          :class="['px-2.5 py-1 rounded-md text-xs font-bold uppercase tracking-wider', getTagStyle(item)]">
+                                        <i :class="getTagIcon(item)"></i> {{ item.sentiment || '未来预测' }}
+                                    </span>
+                                    <span v-if="item.impact || item.special_note" class="px-2.5 py-1 rounded-md text-xs font-medium bg-black/5 dark:bg-white/10 text-slate-600 dark:text-slate-300 flex items-center gap-1">
+                                        <i :class="['fa-solid', item.special_note ? 'fa-star text-yellow-500' : 'fa-crosshairs opacity-50']"></i>
+                                        {{ item.impact || item.special_note }}
+                                    </span>
+                                </div>
+                                <h3 :class="['text-xl font-bold leading-tight group-hover:text-blue-500 transition-colors', currentTheme.itemTitle]">
+                                    {{ item.title }}
+                                </h3>
+                            </div>
+                            <button @click.stop="toggleRead(item.title)" class="shrink-0 text-2xl opacity-30 hover:opacity-100 transition-opacity" :class="currentTheme.itemText">
+                                <i :class="['fa-regular', isRead(item.title) ? 'fa-circle-check text-green-500 opacity-100' : 'fa-circle']"></i>
+                            </button>
+                        </div>
+
+                        <p :class="['text-sm leading-relaxed mb-4 line-clamp-3 group-hover:line-clamp-none transition-all relative z-10', currentTheme.itemText]">
+                            {{ item.summary || item.comment || item.reason }}
+                        </p>
+
+                        <a :href="item.url" target="_blank" @click.stop :class="['inline-flex items-center gap-1 text-xs font-bold uppercase tracking-widest transition-colors relative z-10', currentTheme.readMoreBtn]">
+                            Read Source <i class="fa-solid fa-arrow-right-long ml-1 group-hover:translate-x-1 transition-transform"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div v-if="!loading && !currentSmartData?.error && computedItems.length === 0" class="text-center py-24 opacity-50 text-slate-400">
+                    <i class="fa-solid fa-box-open text-6xl mb-4"></i>
+                    <p class="text-xl">该板块暂无数据分析</p>
+                    <p class="text-xs mt-2">点击左下角“数据不显示”按钮查看原始数据</p>
+                </div>
+            </div>
+        </div>
+
+        <div v-if="currentView === 'raw'" class="flex-1 flex overflow-hidden bg-slate-100 dark:bg-slate-900 transition-colors duration-300">
+            <div class="w-48 bg-white dark:bg-slate-800 border-r border-slate-200 dark:border-slate-700 flex flex-col shrink-0 transition-colors duration-300">
+                <div class="p-4">
+                    <h3 class="text-xs font-bold uppercase text-slate-400 mb-4 px-2">来源分类</h3>
+                    <div class="space-y-1">
+                        <button @click="rawCategory = 'all'" :class="rawNavClass('all')">
+                            <span><i class="fa-solid fa-border-all mr-2 opacity-70"></i>全部来源</span>
+                            <span class="text-xs opacity-50 bg-black/5 dark:bg-white/5 px-1.5 rounded-full">{{ totalRawSources }}</span>
+                        </button>
+                        <button @click="rawCategory = 'fav'" :class="rawNavClass('fav')">
+                            <span><i class="fa-solid fa-star mr-2 opacity-70 text-yellow-500"></i>我的收藏</span>
+                            <span class="text-xs opacity-50 bg-black/5 dark:bg-white/5 px-1.5 rounded-full">{{ favoriteIds.size }}</span>
+                        </button>
+                    </div>
+                    <div class="my-4 border-t border-slate-100 dark:border-slate-700"></div>
+                    <div class="space-y-1 overflow-y-auto thin-scrollbar" style="max-height: calc(100vh - 250px);">
+                         <button v-for="(count, cat) in rawCategoryCounts" :key="cat" @click="rawCategory = cat" :class="rawNavClass(cat)">
+                            <span><i :class="['fa-solid mr-2 opacity-70', getCategoryIcon(cat)]"></i><span class="capitalize">{{cat}}</span></span>
+                            <span class="text-xs opacity-50">{{ count }}</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex-1 flex flex-col overflow-hidden">
+                <div class="p-4 border-b border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 flex items-center justify-between transition-colors duration-300">
+                    <div class="relative w-96">
+                        <i class="fa-solid fa-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                        <input v-model="searchText" type="text" placeholder="搜索来源 (如: 微博, 36kr)..." 
+                            class="w-full pl-10 pr-4 py-2 bg-slate-100 dark:bg-slate-900 border-transparent focus:border-blue-500 focus:bg-white dark:focus:bg-slate-950 rounded-lg text-sm transition-all outline-none dark:text-slate-200 placeholder-slate-400">
+                    </div>
+                    <div class="text-sm text-slate-500">显示 {{ filteredRawList.length }} 个来源</div>
+                </div>
+
+                <div class="flex-1 overflow-y-auto p-6 thin-scrollbar bg-slate-50 dark:bg-slate-900 transition-colors duration-300">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 items-start">
+                        <div v-for="platform in filteredRawList" :key="platform.id" class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 flex flex-col overflow-hidden hover:shadow-md transition-shadow group">
+                            <div class="p-3 border-b border-slate-100 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/50 flex justify-between items-center shrink-0">
+                                <div class="font-bold text-sm flex items-center gap-2 text-slate-700 dark:text-slate-200">
+                                    <span class="w-2.5 h-2.5 rounded-full" :class="getCategoryColorClass(platform.category)"></span>
+                                    <span class="truncate max-w-[120px]" :title="platform.id">{{ platform.id }}</span>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                     <span class="text-[10px] font-medium bg-slate-200 dark:bg-slate-700 px-1.5 py-0.5 rounded text-slate-500 dark:text-slate-400">{{ platform.items.length }}</span>
+                                    <button @click.stop="toggleFavorite(platform.id)" class="text-lg transition-transform active:scale-125 hover:scale-110">
+                                        <i :class="['fa-star', isFavorite(platform.id) ? 'fa-solid text-yellow-400' : 'fa-regular text-slate-300 hover:text-yellow-400']"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="p-3 overflow-y-auto thin-scrollbar" style="max-height: 320px;">
+                                <ul class="space-y-2.5">
+                                    <li v-for="(news, idx) in platform.items" :key="idx" class="group/item">
+                                        <a :href="news.url" target="_blank" @click.stop class="flex gap-2 items-start leading-tight">
+                                            <span class="text-[10px] text-slate-400 font-mono pt-0.5 w-4 shrink-0">{{ idx + 1 }}.</span>
+                                            <span class="text-xs text-slate-600 dark:text-slate-300 group-hover/item:text-blue-600 dark:group-hover/item:text-blue-400 group-hover/item:underline break-words">
+                                                {{ news.title }}
+                                            </span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+</div>
+
+<script>
+    const { createApp, reactive, computed, ref, onMounted } = Vue
+
+    createApp({
+        setup() {
+            const loading = ref(true);
+            const isDarkMode = ref(false);
+            const debugMode = ref(false);
+            const currentView = ref('smart');
+            const currentSmartTab = ref('finance');
+            const rawCategory = ref('all');
+            const searchText = ref('');
+            const lastUpdateTime = ref('');
+
+            const smartData = reactive({ finance: null, global: null, tech: null, general: null });
+            const rawData = reactive({ finance: [], global: [], tech: [], general: [] });
+            const favoriteIds = reactive(new Set());
+            const readSet = reactive(new Set());
+
+            const smartTabs = [
+                { id: 'finance', name: '财经/市场', icon: 'fa-coins', activeClass: 'text-amber-600 border-amber-600 dark:text-amber-400 dark:border-amber-400' },
+                { id: 'global', name: '国际/宏观', icon: 'fa-globe', activeClass: 'text-blue-600 border-blue-600 dark:text-blue-400 dark:border-blue-400' },
+                { id: 'tech', name: '科技/AI', icon: 'fa-microchip', activeClass: 'text-cyan-600 border-cyan-600 dark:text-cyan-400 dark:border-cyan-400' },
+                { id: 'general', name: '娱乐/吃瓜', icon: 'fa-fire', activeClass: 'text-rose-600 border-rose-600 dark:text-rose-400 dark:border-rose-400' },
+            ];
+
+            async function safeFetch(url) {
+                try {
+                    const res = await fetch(url);
+                    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                    return await res.json();
+                } catch (e) {
+                    return { error: e.message, items: [] }; 
+                }
+            }
+
+            onMounted(async () => {
+                loadLocalStorage();
+                if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                    isDarkMode.value = true;
+                    document.documentElement.classList.add('dark');
+                }
+
+                const t = new Date().getTime();
+                loading.value = true;
+                
+                smartData.finance = await safeFetch(`./analysis_finance.json?t=${t}`);
+                smartData.global = await safeFetch(`./analysis_global.json?t=${t}`);
+                smartData.tech = await safeFetch(`./analysis_tech.json?t=${t}`);
+                smartData.general = await safeFetch(`./analysis_general.json?t=${t}`);
+                
+                const fData = await safeFetch(`./data_finance.json?t=${t}`); rawData.finance = Array.isArray(fData) ? fData : [];
+                const gData = await safeFetch(`./data_global.json?t=${t}`); rawData.global = Array.isArray(gData) ? gData : [];
+                const tData = await safeFetch(`./data_tech.json?t=${t}`); rawData.tech = Array.isArray(tData) ? tData : [];
+                const genData = await safeFetch(`./data_general.json?t=${t}`); rawData.general = Array.isArray(genData) ? genData : [];
+
+                const anyData = smartData.finance || smartData.tech;
+                if (anyData?.date) lastUpdateTime.value = anyData.date;
+                
+                loading.value = false;
+            });
+
+            const currentSmartData = computed(() => smartData[currentSmartTab.value]);
+            
+            const computedItems = computed(() => {
+                const data = currentSmartData.value;
+                if (!data) return [];
+                if (Array.isArray(data.items) && data.items.length > 0) return data.items;
+                if (data.categories) {
+                    for (const key in data.categories) {
+                         if (Array.isArray(data.categories[key]) && data.categories[key].length > 0) return data.categories[key];
+                    }
+                }
+                return [];
+            });
+
+            const computedSummary = computed(() => {
+                const d = currentSmartData.value;
+                return d ? (d.summary || d.economy_summary) : null;
+            });
+
+            const currentTheme = computed(() => {
+                const dark = isDarkMode.value;
+                const tab = currentSmartTab.value;
+                const view = currentView.value;
+                const common = {
+                    sidebarBg: dark ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-200',
+                    sidebarText: dark ? 'text-slate-100' : 'text-slate-800',
+                    sidebarBorder: dark ? 'border-slate-800' : 'border-slate-200',
+                    sidebarHover: dark ? 'hover:bg-slate-800' : 'hover:bg-slate-100',
+                    headerBg: dark ? 'bg-slate-900/80' : 'bg-white/80',
+                    headerBorder: dark ? 'border-slate-800' : 'border-slate-200',
+                    headerText: dark ? 'text-slate-100' : 'text-slate-800',
+                    tabBorder: dark ? 'border-slate-800' : 'border-slate-200',
+                    itemText: dark ? 'text-slate-300' : 'text-slate-600',
+                };
+                if (view === 'raw') return { ...common, logoBg: 'bg-slate-200 text-slate-600', logoText: '', mainBg: dark? 'bg-slate-950':'bg-slate-100' };
+                const themes = {
+                    finance: { ...common, logoBg: 'bg-amber-500', logoText: 'text-amber-950', mainBg: dark ? 'bg-[#0f172a]' : 'bg-[#f8fafc]', summaryCard: dark ? 'bg-gradient-to-br from-slate-800 to-slate-900 border border-amber-500/20 text-amber-50' : 'bg-white border-t-4 border-amber-500 shadow-amber-100', summaryTitle: 'text-amber-500', summaryText: dark ? 'text-amber-100/90' : 'text-slate-700', itemCard: dark ? 'bg-slate-800/50 border-slate-700 hover:border-amber-500/50' : 'bg-white border-slate-200 hover:border-amber-400 hover:shadow-lg', itemTitle: dark ? 'text-slate-100' : 'text-slate-800', readMoreBtn: 'text-amber-500 hover:text-amber-600' },
+                    global: { ...common, logoBg: 'bg-blue-600', logoText: 'text-white', mainBg: dark ? 'bg-slate-900' : 'bg-slate-50', summaryCard: dark ? 'bg-blue-900/30 border border-blue-500/30 text-blue-50' : 'bg-gradient-to-r from-blue-50 to-white border border-blue-100', summaryTitle: 'text-blue-500', summaryText: dark ? 'text-blue-100' : 'text-blue-900', itemCard: dark ? 'bg-slate-800 border-slate-700' : 'bg-white border-slate-200 hover:border-blue-300 hover:shadow', itemTitle: dark ? 'text-white' : 'text-slate-900', readMoreBtn: 'text-blue-500 hover:text-blue-700' },
+                    // 🌟 修复点 3: 强制科技板块文字为浅色，提高白天模式下的对比度
+                    tech: { 
+                        ...common, 
+                        logoBg: 'bg-cyan-500 shadow-cyan-500/50', logoText: 'text-cyan-950', 
+                        mainBg: dark ? 'bg-[#09090b]' : 'bg-slate-100', 
+                        summaryCard: 'cyber-border text-cyan-50', 
+                        summaryTitle: 'text-cyan-400 animate-pulse-neon', 
+                        summaryText: 'text-cyan-50/90 font-mono', // 强制浅色
+                        itemCard: 'bg-slate-900/80 border-cyan-900/50 hover:bg-slate-900', 
+                        itemTitle: 'text-cyan-50 font-mono tracking-wider', 
+                        itemText: 'text-slate-300 font-mono', // 强制浅色
+                        readMoreBtn: 'text-cyan-400 hover:text-cyan-300 font-mono' 
+                    },
+                    general: { ...common, logoBg: 'bg-gradient-to-br from-rose-500 to-indigo-600', logoText: 'text-white', mainBg: dark ? 'bg-[#1a1218]' : 'bg-[#fff0f5]', summaryCard: 'bg-gradient-to-r from-rose-500 to-indigo-600 text-white shadow-lg shadow-rose-500/30', summaryTitle: 'text-rose-200', summaryText: 'text-white font-medium', itemCard: 'ent-card hover:shadow-xl hover:-translate-y-2', itemTitle: dark ? 'text-white' : 'text-slate-800', readMoreBtn: 'text-indigo-500 hover:text-indigo-700' }
+                };
+                return themes[tab];
+            });
+
+            const currentSmartTabIcon = computed(() => smartTabs.find(t => t.id === currentSmartTab.value)?.icon);
+            const currentViewTitle = computed(() => currentView.value === 'smart' ? smartTabs.find(t => t.id === currentSmartTab.value)?.name : '全网原始数据监控台');
+
+            const filteredRawList = computed(() => {
+                let allRaw = [
+                    ...rawData.finance.map(i => ({ ...i, category: 'finance' })),
+                    ...rawData.global.map(i => ({ ...i, category: 'global' })),
+                    ...rawData.tech.map(i => ({ ...i, category: 'tech' })),
+                    ...rawData.general.map(i => ({ ...i, category: 'general' }))
+                ];
+                if (rawCategory.value === 'fav') allRaw = allRaw.filter(item => favoriteIds.has(item.id));
+                else if (rawCategory.value !== 'all') allRaw = allRaw.filter(item => item.category === rawCategory.value);
+                
+                if (searchText.value.trim()) {
+                    const key = searchText.value.toLowerCase();
+                    allRaw = allRaw.filter(item => item.id.toLowerCase().includes(key));
+                }
+                return allRaw.sort((a, b) => {
+                    const aFav = favoriteIds.has(a.id), bFav = favoriteIds.has(b.id);
+                    if (aFav && !bFav) return -1; if (!aFav && bFav) return 1;
+                    return a.id.localeCompare(b.id);
+                });
+            });
+
+            const rawCategoryCounts = computed(() => ({
+                finance: rawData.finance.length, global: rawData.global.length, tech: rawData.tech.length, general: rawData.general.length
+            }));
+            const totalRawSources = computed(() => Object.values(rawCategoryCounts.value).reduce((a, b) => a + b, 0));
+
+            const navBtnClass = (view) => `w-full text-left px-4 py-3 rounded-xl flex items-center gap-4 transition-all font-medium ${currentView.value === view ? (isDarkMode.value ? 'bg-slate-800 text-white shadow-inner' : 'bg-slate-100 text-slate-900 shadow-sm') : (isDarkMode.value ? 'text-slate-400 hover:bg-slate-800/50' : 'text-slate-500 hover:bg-slate-50')}`;
+            const rawNavClass = (cat) => `w-full text-left px-3 py-2 rounded-lg text-sm font-medium flex items-center justify-between transition-colors capitalize ${rawCategory.value === cat ? 'bg-slate-100 dark:bg-slate-700 text-slate-900 dark:text-slate-100' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700'}`;
+
+            const toggleDarkMode = () => { isDarkMode.value = !isDarkMode.value; document.documentElement.classList.toggle('dark', isDarkMode.value); localStorage.setItem('darkMode', isDarkMode.value); };
+            const isFavorite = (id) => favoriteIds.has(id);
+            const toggleFavorite = (id) => { favoriteIds.has(id) ? favoriteIds.delete(id) : favoriteIds.add(id); saveLocalStorage(); };
+            const isRead = (title) => readSet.has(title);
+            const toggleRead = (title) => { readSet.has(title) ? readSet.delete(title) : readSet.add(title); saveLocalStorage(); };
+            
+            const saveLocalStorage = () => { localStorage.setItem('favorites', JSON.stringify([...favoriteIds])); localStorage.setItem('readItems', JSON.stringify([...readSet])); };
+            const loadLocalStorage = () => {
+                const fav = localStorage.getItem('favorites'); if (fav) new Set(JSON.parse(fav)).forEach(id => favoriteIds.add(id));
+                const read = localStorage.getItem('readItems'); if (read) new Set(JSON.parse(read)).forEach(id => readSet.add(id));
+                const dark = localStorage.getItem('darkMode'); if (dark === 'true') { isDarkMode.value = true; }
+            };
+
+            const getTagStyle = (item) => {
+                if (item.sentiment === 'Bullish') return 'bg-red-100 text-red-700 border border-red-200 dark:bg-red-900/30 dark:text-red-400 dark:border-red-800';
+                if (item.sentiment === 'Bearish') return 'bg-green-100 text-green-700 border border-green-200 dark:bg-green-900/30 dark:text-green-400 dark:border-green-800';
+                if (item.prediction) return 'bg-cyan-100 text-cyan-700 border border-cyan-200 dark:bg-cyan-900/30 dark:text-cyan-400 dark:border-cyan-800';
+                return 'bg-slate-100 text-slate-600 border border-slate-200 dark:bg-slate-800 dark:text-slate-400 dark:border-slate-700';
+            };
+            const getTagIcon = (item) => {
+                if (item.sentiment === 'Bullish') return 'fa-solid fa-arrow-trend-up mr-1';
+                if (item.sentiment === 'Bearish') return 'fa-solid fa-arrow-trend-down mr-1';
+                if (item.prediction) return 'fa-solid fa-crystal-ball mr-1';
+                return 'fa-solid fa-tag mr-1';
+            };
+             const getCategoryIcon = (cat) => ({ finance: 'fa-coins', global: 'fa-globe', tech: 'fa-microchip', general: 'fa-fire' }[cat] || 'fa-circle');
+            const getCategoryColorClass = (cat) => ({ finance: 'bg-amber-500', global: 'bg-blue-500', tech: 'bg-cyan-500', general: 'bg-rose-500' }[cat] || 'bg-slate-500');
+
+            return {
+                loading, isDarkMode, debugMode, currentView, currentSmartTab, rawCategory, searchText, lastUpdateTime,
+                smartData, filteredRawList, favoriteIds, rawCategoryCounts, totalRawSources,
+                smartTabs, currentTheme, currentSmartTabIcon, currentViewTitle, computedSummary, computedItems,
+                navBtnClass, rawNavClass, toggleDarkMode, isFavorite, toggleFavorite, isRead, toggleRead,
+                getTagStyle, getTagIcon, getCategoryIcon, getCategoryColorClass
+            }
+        }
+    }).mount('#app')
+</script>
+</body>
+</html>
