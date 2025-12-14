@@ -345,7 +345,7 @@
 
                 // 简单的随机波动，让在线人数看起来更真实
                 setInterval(() => {
-                    const change = Math.floor(Math.random() * 3) - 1; // -1, 0, 1
+                    const change = Math.floor(Math.random() * 3) - 6; // -1, 0, 1
                     let newVal = onlineUsers.value + change;
                     if(newVal < 168) newVal = 168; // 保底 168
                     onlineUsers.value = newVal;
@@ -501,4 +501,5 @@
     }).mount('#app')
 </script>
 </body>
+
 </html>
