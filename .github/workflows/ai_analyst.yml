@@ -2,8 +2,6 @@ name: 🧠 AI Analyst (Daily 6am)
 
 on:
   schedule:
-    # 北京时间 06:10 (UTC 22:10)
-    # 故意比爬虫晚10分钟，确保读到最新数据
     - cron: '10 22 * * *'
   workflow_dispatch:
 
@@ -14,7 +12,7 @@ jobs:
   ai-job:
     runs-on: ubuntu-latest
     steps:
-      - name: 📥 下载代码 (含最新数据)
+      - name: 📥 下载代码
         uses: actions/checkout@v3
 
       - name: 🐍 设置 Python
@@ -26,7 +24,13 @@ jobs:
         run: pip install google-generativeai
 
       - name: 🧠 运行 AI 分析
+        # ⬇️⬇️⬇️ 关键修改：在这里把 4 个 Secret 传给环境变量 ⬇️⬇️⬇️
         env:
+          KEY_FINANCE: ${{ secrets.KEY_FINANCE }}
+          KEY_GLOBAL: ${{ secrets.KEY_GLOBAL }}
+          KEY_TECH: ${{ secrets.KEY_TECH }}
+          KEY_GENERAL: ${{ secrets.KEY_GENERAL }}
+          # 留着这个作为保底，防止某个Key没设置
           GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
         run: python ai_editor.py
 
@@ -35,5 +39,5 @@ jobs:
           git config --global user.name 'AI Analyst'
           git config --global user.email 'ai@bot.com'
           git add analysis_*.json
-          git commit -m "🧠 Auto-update: AI Report" || exit 0
+          git commit -m "🧠 Auto-update: AI Report (Multi-Key)" || exit 0
           git push
