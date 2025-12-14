@@ -71,7 +71,7 @@ def get_prompt(module_type, data_text):
         要求：
         1. 【数量强制】：至少输出 30 条以上独立的新闻条目 (Items)。禁止过度合并！
         2. 【覆盖广度】：必须包含：宏观政策(央行/财政)、股市异动(个股/板块)、行业动态(地产/汽车/科技)、国际金融(美联储/汇率)、大宗商品。
-        3. 【细节保留】：summary 必须包含具体数字（如涨跌幅%、金额、日期），拒绝模糊描述。
+        3. 【细节保留】：summary 必须包含具体数字（如涨跌幅%、金额、日期），拒绝模糊描述，必须为这个事件评价和作出细节描述分析。
         4. 【深度综述】：economy_summary 需 300-500 字，深度复盘今日资金流向与市场情绪。
         
         输出 JSON: {{ "economy_summary": "...", "items": [ {{ "title": "...", "sentiment": "Bullish/Bearish/Mixed", "impact": "具体板块/股票", "summary": "详实分析..." }} ] }}
@@ -85,7 +85,7 @@ def get_prompt(module_type, data_text):
         要求：
         1. 【数量强制】：至少输出 20-50 条独立新闻。
         2. 【细分领域】：覆盖 AI大模型、芯片半导体、智能硬件(手机/汽车)、互联网巨头动态、前沿黑科技。
-        3. 【深度解读】：summary 需解释技术原理或商业影响；prediction 必须给出具体预测。
+        3. 【深度解读】：summary 需解释技术原理或商业影响；prediction 必须给出具体预测，必须为这个事件评价和作出细节描述分析。
         4. 【特别关注】：AI 相关新闻必须详细展开。
         
         输出 JSON: {{ "summary": "...", "items": [ {{ "title": "...", "summary": "...", "prediction": "...", "special_note": "AI/芯片/无" }} ] }}
@@ -99,7 +99,7 @@ def get_prompt(module_type, data_text):
         要求：
         1. 【数量强制】：至少输出 10 条以上。
         2. 【关注点】：战争冲突、大国外交、能源危机、贸易制裁。
-        3. 【经济关联】：必须分析该政治事件对经济/市场的潜在冲击。
+        3. 【经济关联】：必须分析该政治事件对经济/市场的潜在冲击，必须为这个事件评价和作出细节描述分析。
         
         输出 JSON: {{ "economy_summary": "...", "items": [ {{ "title": "...", "sentiment": "...", "impact": "...", "summary": "..." }} ] }}
         {format_instruction}
@@ -112,7 +112,7 @@ def get_prompt(module_type, data_text):
         要求：
         1. 【数量强制】：至少 30 条。
         2. 【去重】：去除广告，保留社会民生、娱乐八卦、网络热梗。
-        3. 【点评】：comment 需辛辣幽默。
+        3. 【点评】：comment 需辛辣幽默，必须为这个事件评价和作出细节描述分析。
         
         输出 JSON: {{ "summary": "...", "items": [ {{ "title": "...", "comment": "..." }} ] }}
         {format_instruction}
@@ -164,4 +164,5 @@ if __name__ == "__main__":
     for key, config in FILES_CONFIG.items():
         process_module(key, config)
         time.sleep(5) # 稍微延长间隔，让 Key 喘口气
+
 
