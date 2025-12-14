@@ -15,8 +15,8 @@ else:
     os.environ["HTTP_PROXY"] = f"http://127.0.0.1:{PROXY_PORT}"
     os.environ["HTTPS_PROXY"] = f"http://127.0.0.1:{PROXY_PORT}"
 
-# 模型名称 (使用 gemini-pro 以支持长文本处理)
-MODEL_NAME = "gemini-pro"
+# 模型名称 (使用 gemini-2.5-flash 以支持长文本处理)
+MODEL_NAME = "gemini-2.5-flash"
 
 # 定义模块对应的 Key 环境变量名 和 文件配置
 FILES_CONFIG = {
@@ -213,3 +213,4 @@ if __name__ == "__main__":
         process_module(key, config)
         # 多 Key 并发可以稍微快点，但为了稳妥还是停 2 秒
         time.sleep(2)
+
