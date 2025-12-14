@@ -135,9 +135,6 @@
         </nav>
         
         <div class="p-4 border-t" :class="currentTheme.sidebarBorder">
-            <button @click="debugMode = !debugMode" class="w-full text-xs text-slate-400 hover:text-blue-500 mb-2 opacity-50 hover:opacity-100">
-                <i class="fa-solid fa-wrench"></i> {{ debugMode ? '关闭调试' : '数据异常点我' }}
-            </button>
             <button @click="toggleDarkMode" :class="['w-full flex items-center justify-center gap-2 py-2 rounded-lg transition-colors', currentTheme.sidebarHover, currentTheme.sidebarText]">
                 <i :class="['fa-solid', isDarkMode ? 'fa-sun' : 'fa-moon']"></i>
                 <span class="text-sm">{{ isDarkMode ? '切换日间模式' : '切换深色模式' }}</span>
@@ -599,3 +596,4 @@
 </script>
 </body>
 </html>
+
