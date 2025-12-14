@@ -343,14 +343,50 @@
                     document.documentElement.classList.add('dark');
                 }
 
-                // 简单的随机波动，让在线人数看起来更真实
-                setInterval(() => {
-                    const change = Math.floor(Math.random() * 3) - 6; // -1, 0, 1
-                    let newVal = onlineUsers.value + change;
-                    if(newVal < 168) newVal = 168; // 保底 168
-                    onlineUsers.value = newVal;
-                }, 5000);
+// ==========================================
+            // 👥 拟真在线人数逻辑 (50 - 500人 随机波动)
+            // ==========================================
+            
+            // 1. 开局随机：每次刷新，初始人数在 50-500 之间随机
+            const onlineUsers = ref(Math.floor(Math.random() * (500 - 50 + 1)) + 50);
 
+            const updateOnlineUsers = () => {
+                // 2. 时间随机：下次变动可能是 2秒后，也可能是 8秒后 (模拟有时候人流静止)
+                const delay = Math.floor(Math.random() * 6000) + 2000; 
+
+                setTimeout(() => {
+                    const chance = Math.random();
+                    let change = 0;
+
+                    // 3. 变化逻辑：
+                    if (chance > 0.85) {
+                        // 【突发情况】15% 概率：突然大批人进出 (变化幅度 10 ~ 40)
+                        // 模拟：“卧槽这个新闻火了大家都在看”
+                        change = Math.floor(Math.random() * 30) + 10;
+                        if (Math.random() > 0.4) change = -change; // 40% 概率是掉线，60% 概率是上线
+                    } else if (chance > 0.3) {
+                        // 【正常波动】55% 概率：小幅波动 (变化幅度 1 ~ 5)
+                        change = Math.floor(Math.random() * 5) + 1;
+                        if (Math.random() > 0.5) change = -change;
+                    } 
+                    // 剩余 30% 概率：人数完全不动 (change = 0)，模拟静止状态
+
+                    let newVal = onlineUsers.value + change;
+
+                    // 4. 严格限制范围 (50 - 500)
+                    if (newVal < 50) newVal = 50;   // 跌破 50 就卡在 50
+                    if (newVal > 500) newVal = 500; // 超过 500 就卡在 500
+
+                    onlineUsers.value = newVal;
+
+                    // 递归调用，开始下一轮波动
+                    updateOnlineUsers();
+
+                }, delay);
+            };
+
+            // 启动模拟
+            updateOnlineUsers();
                 const t = new Date().getTime();
                 loading.value = true;
                 
@@ -503,3 +539,4 @@
 </body>
 
 </html>
+
