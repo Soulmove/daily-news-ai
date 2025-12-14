@@ -25,7 +25,7 @@ if not API_KEY:
     print("⚠️ 警告：未找到环境变量 GOOGLE_API_KEY")
     API_KEY = "AIzaSy..." # 如果本地跑，请临时填你的Key
 
-MODEL_NAME = "gemini-1.5-flash"
+MODEL_NAME = "gemini-2.5-flash"
 
 FILES_CONFIG = {
     "finance": { "in": "data_finance.json", "out": "analysis_finance.json", "type": "finance" },
@@ -128,3 +128,4 @@ if __name__ == "__main__":
     for key, config in FILES_CONFIG.items():
         process_module(key, config)
         time.sleep(2)
+
