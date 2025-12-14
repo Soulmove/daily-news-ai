@@ -19,10 +19,6 @@
                         serif: ['"Noto Serif SC"', 'serif'],
                         cyber: ['Orbitron', 'sans-serif'],
                     },
-                    colors: {
-                        fin: { dark: '#0f172a', light: '#1e293b', accent: '#ca8a04', text: '#e2e8f0' },
-                        cyber: { bg: '#09090b', border: '#22d3ee', accent: '#a855f7', text: '#00f2ff' },
-                    },
                     animation: {
                         'pulse-neon': 'pulse-neon 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
                     },
@@ -36,20 +32,24 @@
             }
         }
     </script>
+    
     <style>
         body { background-color: #f8fafc; color: #1e293b; font-family: 'Inter', sans-serif; }
         .dark body { background-color: #0f172a; color: #f1f5f9; }
         [v-cloak] { display: none; }
         
+        /* 滚动条美化 */
         .thin-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
         .thin-scrollbar::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 9999px; }
         .dark .thin-scrollbar::-webkit-scrollbar-thumb { background-color: #334155; }
 
         .read-item { opacity: 0.6; filter: grayscale(100%); transition: all 0.3s ease; }
         
+        /* 赛博朋克特效 */
         .cyber-border { position: relative; background: linear-gradient(90deg, #22d3ee, #a855f7); padding: 1px; }
         .cyber-inner { background-color: #020617; height: 100%; width: 100%; }
 
+        /* 娱乐卡片特效 */
         .ent-card { background: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(255,255,255,0.4)); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.3); }
         .dark .ent-card { background: linear-gradient(135deg, rgba(30,41,59,0.8), rgba(15,23,42,0.6)); border-color: rgba(255,255,255,0.05); }
     </style>
@@ -196,6 +196,13 @@
                     </div>
                 </div>
 
+                <div class="max-w-7xl mx-auto py-12 mt-8 border-t border-slate-200 dark:border-slate-800">
+                    <h3 class="text-xl font-bold mb-6 text-slate-700 dark:text-slate-200 flex items-center gap-2">
+                        <i class="fa-solid fa-comments"></i> 读者讨论
+                    </h3>
+                    <div class="giscus"></div>
+                </div>
+
                 <div v-if="!loading && !currentSmartData?.error && computedItems.length === 0" class="text-center py-24 opacity-50 text-slate-400">
                     <i class="fa-solid fa-box-open text-6xl mb-4"></i>
                     <p class="text-xl">该板块暂无数据分析</p>
@@ -274,6 +281,22 @@
     </main>
 </div>
 
+<script src="https://giscus.app/client.js"
+        data-repo="Soulmove/daily-news-ai"
+        data-repo-id="R_kgDONfg7hQ"
+        data-category="General"
+        data-category-id="DIC_kwDONfg7hc4ClYjL"
+        data-mapping="pathname"
+        data-strict="0"
+        data-reactions-enabled="1"
+        data-emit-metadata="0"
+        data-input-position="bottom"
+        data-theme="preferred_color_scheme"
+        data-lang="zh-CN"
+        crossorigin="anonymous"
+        async>
+</script>
+
 <script>
     const { createApp, reactive, computed, ref, onMounted } = Vue
 
@@ -288,8 +311,41 @@
             const searchText = ref('');
             const lastUpdateTime = ref('');
             
-            // 👥 虚假在线人数逻辑 (168 + 1)
-            const onlineUsers = ref(169); 
+            // ==========================================
+            // 👥 拟真在线人数逻辑 (50 - 500人 随机波动)
+            // ==========================================
+            const onlineUsers = ref(Math.floor(Math.random() * (500 - 50 + 1)) + 50);
+
+            const simulateTraffic = () => {
+                // 随机延迟 2秒 到 8秒 (模拟有时候人流静止)
+                const delay = Math.floor(Math.random() * 6000) + 2000; 
+
+                setTimeout(() => {
+                    const r = Math.random();
+                    let diff = 0;
+
+                    if (r > 0.85) {
+                        // 【突发情况】15% 概率：突然大批人进出 (变化幅度 10 ~ 40)
+                        diff = Math.floor(Math.random() * 30) + 10;
+                        if (Math.random() > 0.4) diff = -diff; // 40% 概率掉线
+                    } else if (r > 0.3) {
+                        // 【正常波动】55% 概率：小幅波动 (变化幅度 1 ~ 5)
+                        diff = Math.floor(Math.random() * 5) + 1;
+                        if (Math.random() > 0.5) diff = -diff;
+                    } 
+                    // 剩余 30% 概率：人数完全不动
+
+                    let newVal = onlineUsers.value + diff;
+                    // 严格限制范围
+                    if (newVal < 50) newVal = 50;
+                    if (newVal > 500) newVal = 500;
+
+                    onlineUsers.value = newVal;
+
+                    // 递归调用
+                    simulateTraffic();
+                }, delay);
+            };
 
             const smartData = reactive({ finance: null, global: null, tech: null, general: null });
             const rawData = reactive({ finance: [], global: [], tech: [], general: [] });
@@ -343,50 +399,9 @@
                     document.documentElement.classList.add('dark');
                 }
 
-// ==========================================
-            // 👥 拟真在线人数逻辑 (50 - 500人 随机波动)
-            // ==========================================
-            
-            // 1. 开局随机：每次刷新，初始人数在 50-500 之间随机
-            const onlineUsers = ref(Math.floor(Math.random() * (500 - 50 + 1)) + 50);
+                // 启动模拟人数
+                simulateTraffic();
 
-            const updateOnlineUsers = () => {
-                // 2. 时间随机：下次变动可能是 2秒后，也可能是 8秒后 (模拟有时候人流静止)
-                const delay = Math.floor(Math.random() * 6000) + 2000; 
-
-                setTimeout(() => {
-                    const chance = Math.random();
-                    let change = 0;
-
-                    // 3. 变化逻辑：
-                    if (chance > 0.85) {
-                        // 【突发情况】15% 概率：突然大批人进出 (变化幅度 10 ~ 40)
-                        // 模拟：“卧槽这个新闻火了大家都在看”
-                        change = Math.floor(Math.random() * 30) + 10;
-                        if (Math.random() > 0.4) change = -change; // 40% 概率是掉线，60% 概率是上线
-                    } else if (chance > 0.3) {
-                        // 【正常波动】55% 概率：小幅波动 (变化幅度 1 ~ 5)
-                        change = Math.floor(Math.random() * 5) + 1;
-                        if (Math.random() > 0.5) change = -change;
-                    } 
-                    // 剩余 30% 概率：人数完全不动 (change = 0)，模拟静止状态
-
-                    let newVal = onlineUsers.value + change;
-
-                    // 4. 严格限制范围 (50 - 500)
-                    if (newVal < 50) newVal = 50;   // 跌破 50 就卡在 50
-                    if (newVal > 500) newVal = 500; // 超过 500 就卡在 500
-
-                    onlineUsers.value = newVal;
-
-                    // 递归调用，开始下一轮波动
-                    updateOnlineUsers();
-
-                }, delay);
-            };
-
-            // 启动模拟
-            updateOnlineUsers();
                 const t = new Date().getTime();
                 loading.value = true;
                 
@@ -412,6 +427,7 @@
                 const data = currentSmartData.value;
                 if (!data) return [];
                 if (Array.isArray(data.items) && data.items.length > 0) return data.items;
+                // 兼容旧格式（如果有 categories 字段）
                 if (data.categories) {
                     for (const key in data.categories) {
                          if (Array.isArray(data.categories[key]) && data.categories[key].length > 0) return data.categories[key];
@@ -476,7 +492,6 @@
                 
                 if (searchText.value.trim()) {
                     const key = searchText.value.toLowerCase();
-                    // 支持搜中文名 (如搜索“抖音”能搜出 douyin)
                     allRaw = allRaw.filter(item => {
                         const displayName = getDisplayName(item.id).toLowerCase();
                         const id = item.id.toLowerCase();
@@ -537,6 +552,4 @@
     }).mount('#app')
 </script>
 </body>
-
 </html>
-
