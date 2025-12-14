@@ -2,7 +2,7 @@
 <html lang="zh-CN" class="h-full">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>AI 全网舆情智库 | Insight Pro</title>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
@@ -42,6 +42,10 @@
         .thin-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
         .thin-scrollbar::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 9999px; }
         .dark .thin-scrollbar::-webkit-scrollbar-thumb { background-color: #334155; }
+        
+        /* 隐藏横向滚动条但保留滚动功能 */
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
         .read-item { opacity: 0.6; filter: grayscale(100%); transition: all 0.3s ease; }
         
@@ -54,27 +58,37 @@
         .dark .ent-card { background: linear-gradient(135deg, rgba(30,41,59,0.8), rgba(15,23,42,0.6)); border-color: rgba(255,255,255,0.05); }
     </style>
 </head>
-<body class="h-full flex overflow-hidden">
+<body class="h-full flex overflow-hidden selection:bg-blue-500 selection:text-white">
 
 <div id="app" v-cloak class="flex w-full h-full relative transition-colors duration-300">
 
-    <aside :class="['w-64 flex flex-col transition-all z-20 shrink-0 border-r', currentTheme.sidebarBg, currentTheme.sidebarBorder]">
-        <div class="p-6 flex items-center gap-3">
-            <div :class="['w-10 h-10 rounded-xl flex items-center justify-center text-xl shadow-lg transition-colors duration-300', currentTheme.logoBg, currentTheme.logoText]">
-                <i class="fa-solid fa-brain"></i>
+    <div v-if="isMobileMenuOpen" @click="isMobileMenuOpen = false" class="fixed inset-0 bg-black/50 z-30 md:hidden backdrop-blur-sm transition-opacity"></div>
+
+    <aside :class="['fixed md:static inset-y-0 left-0 z-40 w-64 transform transition-transform duration-300 ease-in-out flex flex-col border-r shadow-2xl md:shadow-none', 
+        isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0',
+        currentTheme.sidebarBg, currentTheme.sidebarBorder]">
+        
+        <div class="p-6 flex items-center justify-between gap-3">
+            <div class="flex items-center gap-3">
+                <div :class="['w-10 h-10 rounded-xl flex items-center justify-center text-xl shadow-lg transition-colors duration-300', currentTheme.logoBg, currentTheme.logoText]">
+                    <i class="fa-solid fa-brain"></i>
+                </div>
+                <div>
+                    <h1 :class="['font-bold text-lg leading-tight', currentTheme.sidebarText]">Insight Pro</h1>
+                    <p class="text-[10px] opacity-60 uppercase tracking-wider">AI Powered Analytics</p>
+                </div>
             </div>
-            <div>
-                <h1 :class="['font-bold text-lg leading-tight', currentTheme.sidebarText]">Insight Pro</h1>
-                <p class="text-[10px] opacity-60 uppercase tracking-wider">AI Powered Analytics</p>
-            </div>
+            <button @click="isMobileMenuOpen = false" class="md:hidden text-slate-400 hover:text-slate-600">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
         </div>
 
-        <nav class="flex-1 px-4 space-y-2">
+        <nav class="flex-1 px-4 space-y-2 py-4">
             <div class="text-xs font-bold uppercase tracking-wider opacity-50 mb-3 px-2" :class="currentTheme.sidebarText">核心视图</div>
-            <button @click="currentView = 'smart'" :class="navBtnClass('smart')">
+            <button @click="switchView('smart')" :class="navBtnClass('smart')">
                 <i class="fa-solid fa-chart-pie w-5 opacity-70"></i> 智能深度简报
             </button>
-            <button @click="currentView = 'raw'" :class="navBtnClass('raw')">
+            <button @click="switchView('raw')" :class="navBtnClass('raw')">
                 <i class="fa-solid fa-tower-broadcast w-5 opacity-70"></i> 原始数据监控
             </button>
         </nav>
@@ -90,35 +104,42 @@
         </div>
     </aside>
 
-    <main :class="['flex-1 flex flex-col h-full overflow-hidden relative transition-colors duration-300', currentTheme.mainBg]">
+    <main :class="['flex-1 flex flex-col h-full overflow-hidden relative transition-colors duration-300 w-full', currentTheme.mainBg]">
         
-        <header :class="['h-16 shrink-0 border-b flex items-center justify-between px-8 backdrop-blur-md z-10 transition-colors duration-300', currentTheme.headerBg, currentTheme.headerBorder]">
-            <div class="flex items-center gap-6">
-                <h2 class="text-xl font-bold flex items-center gap-3 transition-colors duration-300" :class="currentTheme.headerText">
-                    <i v-if="currentView === 'smart'" :class="['fa-solid text-2xl', currentSmartTabIcon]"></i>
-                    <i v-else class="fa-solid fa-satellite-dish text-2xl text-blue-500"></i>
-                    {{ currentViewTitle }}
+        <header :class="['h-16 shrink-0 border-b flex items-center justify-between px-4 md:px-8 backdrop-blur-md z-10 transition-colors duration-300', currentTheme.headerBg, currentTheme.headerBorder]">
+            <div class="flex items-center gap-4">
+                <button @click="isMobileMenuOpen = true" class="md:hidden text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200">
+                    <i class="fa-solid fa-bars text-xl"></i>
+                </button>
+
+                <h2 class="text-lg md:text-xl font-bold flex items-center gap-2 md:gap-3 transition-colors duration-300 truncate" :class="currentTheme.headerText">
+                    <i v-if="currentView === 'smart'" :class="['fa-solid text-xl md:text-2xl', currentSmartTabIcon]"></i>
+                    <i v-else class="fa-solid fa-satellite-dish text-xl md:text-2xl text-blue-500"></i>
+                    <span class="truncate">{{ currentViewTitle }}</span>
                 </h2>
-                <div class="hidden md:flex items-center gap-2 text-xs font-mono px-3 py-1 rounded-full bg-green-500/10 text-green-600 dark:text-green-400 border border-green-500/20">
+            </div>
+
+            <div class="flex items-center gap-3">
+                 <div class="flex items-center gap-2 text-xs font-mono px-2 py-1 md:px-3 md:py-1 rounded-full bg-green-500/10 text-green-600 dark:text-green-400 border border-green-500/20">
                     <span class="relative flex h-2 w-2">
                       <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
                       <span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
                     </span>
-                    当前在线: {{ onlineUsers }} 人
+                    <span class="hidden md:inline">当前在线:</span> {{ onlineUsers }} <span class="hidden md:inline">人</span>
                 </div>
-            </div>
 
-            <div v-if="loading" class="flex items-center gap-2 text-sm opacity-70" :class="currentTheme.headerText">
-                <i class="fa-solid fa-circle-notch fa-spin"></i> 正在同步全球数据...
-            </div>
-            <div v-else class="text-xs font-medium px-3 py-1.5 rounded-full bg-black/5 dark:bg-white/10" :class="currentTheme.headerText">
-               <i class="fa-regular fa-clock mr-1"></i> 数据更新于: {{ lastUpdateTime || '刚刚' }}
+                <div v-if="loading" class="hidden md:flex items-center gap-2 text-sm opacity-70" :class="currentTheme.headerText">
+                    <i class="fa-solid fa-circle-notch fa-spin"></i> 同步中...
+                </div>
+                <div v-else class="hidden md:block text-xs font-medium px-3 py-1.5 rounded-full bg-black/5 dark:bg-white/10" :class="currentTheme.headerText">
+                   <i class="fa-regular fa-clock mr-1"></i> {{ lastUpdateTime || '刚刚' }}
+                </div>
             </div>
         </header>
 
         <div v-if="debugMode" class="absolute inset-0 z-50 bg-black/80 p-10 overflow-auto text-green-400 font-mono text-xs">
             <div class="bg-slate-900 p-6 rounded border border-green-500">
-                <h3 class="text-lg font-bold mb-4 border-b border-green-500 pb-2">数据调试面板 (点击左下角关闭)</h3>
+                <h3 class="text-lg font-bold mb-4 border-b border-green-500 pb-2">数据调试面板</h3>
                 <p class="mb-2">当前 Tab: {{ currentSmartTab }}</p>
                 <p class="mb-2">检测到的数据结构:</p>
                 <pre>{{ JSON.stringify(currentSmartData, null, 2) }}</pre>
@@ -126,16 +147,16 @@
         </div>
 
         <div v-if="currentView === 'smart'" class="flex-1 flex flex-col overflow-hidden">
-            <div :class="['shrink-0 px-8 pt-4 pb-0 flex gap-6 border-b text-sm font-medium transition-colors duration-300', currentTheme.tabBorder]">
+            <div :class="['shrink-0 px-4 md:px-8 pt-2 md:pt-4 pb-0 flex gap-4 md:gap-6 border-b text-sm font-medium transition-colors duration-300 overflow-x-auto hide-scrollbar', currentTheme.tabBorder]">
                 <button v-for="tab in smartTabs" :key="tab.id" @click="currentSmartTab = tab.id"
-                    :class="['pb-3 relative transition-all flex items-center gap-2', 
+                    :class="['pb-3 relative transition-all flex items-center gap-2 shrink-0 whitespace-nowrap', 
                     currentSmartTab === tab.id ? tab.activeClass + ' border-b-2' : 'opacity-50 hover:opacity-100 border-transparent text-slate-500 dark:text-slate-400']">
                     <i :class="['fa-solid', tab.icon]"></i> {{ tab.name }}
                     <span v-if="currentSmartTab === 'tech' && tab.id === 'tech'" class="absolute bottom-0 left-0 w-full h-0.5 bg-cyan-400 shadow-[0_0_10px_#22d3ee]"></span>
                 </button>
             </div>
 
-            <div class="flex-1 overflow-y-auto p-8 thin-scrollbar scroll-smooth">
+            <div class="flex-1 overflow-y-auto p-4 md:p-8 thin-scrollbar scroll-smooth">
                 
                 <div v-if="currentSmartData?.error" class="mb-8 p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg flex items-center gap-3">
                     <i class="fa-solid fa-triangle-exclamation text-xl"></i>
@@ -145,48 +166,48 @@
                     </div>
                 </div>
 
-                <div v-if="computedSummary" :class="['p-6 rounded-2xl mb-8 shadow-xl relative overflow-hidden transition-all duration-300', currentTheme.summaryCard]">
+                <div v-if="computedSummary" :class="['p-5 md:p-6 rounded-2xl mb-6 md:mb-8 shadow-xl relative overflow-hidden transition-all duration-300', currentTheme.summaryCard]">
                     <div class="absolute top-0 right-0 p-8 opacity-10 pointer-events-none">
-                        <i :class="['fa-solid text-8xl', currentSmartTabIcon]"></i>
+                        <i :class="['fa-solid text-6xl md:text-8xl', currentSmartTabIcon]"></i>
                     </div>
                     <div v-if="currentSmartTab === 'tech'" class="cyber-inner absolute inset-0 -z-10"></div>
-                    <h3 :class="['text-sm font-bold uppercase tracking-widest mb-4 flex items-center gap-2 relative z-10', currentTheme.summaryTitle]">
+                    <h3 :class="['text-xs md:text-sm font-bold uppercase tracking-widest mb-3 md:mb-4 flex items-center gap-2 relative z-10', currentTheme.summaryTitle]">
                         <i class="fa-solid fa-microchip"></i> AI 核心综述
                     </h3>
-                    <p :class="['text-lg leading-relaxed font-medium relative z-10', currentTheme.summaryText]" style="font-family: 'Noto Serif SC', serif;">
+                    <p :class="['text-base md:text-lg leading-relaxed font-medium relative z-10 text-justify', currentTheme.summaryText]" style="font-family: 'Noto Serif SC', serif;">
                         {{ computedSummary }}
                     </p>
                 </div>
 
-                <div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
+                <div class="grid grid-cols-1 xl:grid-cols-2 gap-4 md:gap-6">
                     <div v-for="(item, idx) in computedItems" :key="idx" 
-                         :class="['group rounded-xl p-6 transition-all relative overflow-hidden hover:-translate-y-1', 
+                         :class="['group rounded-xl p-5 md:p-6 transition-all relative overflow-hidden active:scale-[0.98]', 
                          isRead(item.title) ? 'read-item' : '', currentTheme.itemCard]">
                         
                         <div v-if="currentSmartTab === 'tech'" class="absolute inset-0 border border-cyan-500/30 rounded-xl pointer-events-none group-hover:border-cyan-400/60 transition-all"></div>
 
-                        <div class="flex justify-between items-start gap-4 mb-4 relative z-10">
+                        <div class="flex justify-between items-start gap-4 mb-3 relative z-10">
                             <div>
-                                <div class="flex flex-wrap items-center gap-2 mb-3">
+                                <div class="flex flex-wrap items-center gap-2 mb-2">
                                     <span v-if="item.sentiment || item.prediction" 
-                                          :class="['px-2.5 py-1 rounded-md text-xs font-bold uppercase tracking-wider', getTagStyle(item)]">
+                                          :class="['px-2 py-0.5 rounded-md text-[10px] md:text-xs font-bold uppercase tracking-wider', getTagStyle(item)]">
                                         <i :class="getTagIcon(item)"></i> {{ sentimentTranslate(item.sentiment) || '未来预测' }}
                                     </span>
-                                    <span v-if="item.impact || item.special_note" class="px-2.5 py-1 rounded-md text-xs font-medium bg-black/5 dark:bg-white/10 text-slate-600 dark:text-slate-300 flex items-center gap-1">
+                                    <span v-if="item.impact || item.special_note" class="px-2 py-0.5 rounded-md text-[10px] md:text-xs font-medium bg-black/5 dark:bg-white/10 text-slate-600 dark:text-slate-300 flex items-center gap-1">
                                         <i :class="['fa-solid', item.special_note ? 'fa-star text-yellow-500' : 'fa-crosshairs opacity-50']"></i>
                                         {{ item.impact || item.special_note }}
                                     </span>
                                 </div>
-                                <h3 :class="['text-xl font-bold leading-tight group-hover:text-blue-500 transition-colors', currentTheme.itemTitle]">
+                                <h3 :class="['text-lg md:text-xl font-bold leading-tight group-hover:text-blue-500 transition-colors', currentTheme.itemTitle]">
                                     {{ item.title }}
                                 </h3>
                             </div>
-                            <button @click.stop="toggleRead(item.title)" class="shrink-0 text-2xl opacity-30 hover:opacity-100 transition-opacity" :class="currentTheme.itemText">
+                            <button @click.stop="toggleRead(item.title)" class="shrink-0 text-xl md:text-2xl opacity-30 hover:opacity-100 transition-opacity p-1" :class="currentTheme.itemText">
                                 <i :class="['fa-regular', isRead(item.title) ? 'fa-circle-check text-green-500 opacity-100' : 'fa-circle']"></i>
                             </button>
                         </div>
 
-                        <p :class="['text-sm leading-relaxed mb-4 line-clamp-3 group-hover:line-clamp-none transition-all relative z-10', currentTheme.itemText]">
+                        <p :class="['text-sm leading-relaxed mb-4 line-clamp-4 group-hover:line-clamp-none transition-all relative z-10 text-justify', currentTheme.itemText]">
                             {{ item.summary || item.comment || item.reason }}
                         </p>
 
@@ -196,8 +217,8 @@
                     </div>
                 </div>
 
-                <div class="max-w-7xl mx-auto py-12 mt-8 border-t border-slate-200 dark:border-slate-800">
-                    <h3 class="text-xl font-bold mb-6 text-slate-700 dark:text-slate-200 flex items-center gap-2">
+                <div class="max-w-7xl mx-auto py-8 md:py-12 mt-8 border-t border-slate-200 dark:border-slate-800">
+                    <h3 class="text-lg md:text-xl font-bold mb-6 text-slate-700 dark:text-slate-200 flex items-center gap-2">
                         <i class="fa-solid fa-comments"></i> 读者讨论
                     </h3>
                     <div class="giscus"></div>
@@ -211,47 +232,45 @@
             </div>
         </div>
 
-        <div v-if="currentView === 'raw'" class="flex-1 flex overflow-hidden bg-slate-100 dark:bg-slate-900 transition-colors duration-300">
-            <div class="w-48 bg-white dark:bg-slate-800 border-r border-slate-200 dark:border-slate-700 flex flex-col shrink-0 transition-colors duration-300">
-                <div class="p-4">
-                    <h3 class="text-xs font-bold uppercase text-slate-400 mb-4 px-2">来源分类</h3>
-                    <div class="space-y-1">
-                        <button @click="rawCategory = 'all'" :class="rawNavClass('all')">
-                            <span><i class="fa-solid fa-border-all mr-2 opacity-70"></i>全部来源</span>
-                            <span class="text-xs opacity-50 bg-black/5 dark:bg-white/5 px-1.5 rounded-full">{{ totalRawSources }}</span>
+        <div v-if="currentView === 'raw'" class="flex-1 flex flex-col md:flex-row overflow-hidden bg-slate-100 dark:bg-slate-900 transition-colors duration-300">
+            <div class="w-full md:w-48 bg-white dark:bg-slate-800 border-b md:border-b-0 md:border-r border-slate-200 dark:border-slate-700 flex flex-col shrink-0 transition-colors duration-300">
+                <div class="p-3 md:p-4">
+                    <h3 class="hidden md:block text-xs font-bold uppercase text-slate-400 mb-4 px-2">来源分类</h3>
+                    <div class="flex md:flex-col gap-2 md:gap-1 overflow-x-auto hide-scrollbar pb-1 md:pb-0">
+                        <button @click="rawCategory = 'all'" :class="rawNavClass('all') + ' shrink-0'">
+                            <span><i class="fa-solid fa-border-all mr-2 opacity-70"></i>全部</span>
+                            <span class="text-xs opacity-50 bg-black/5 dark:bg-white/5 px-1.5 rounded-full ml-2">{{ totalRawSources }}</span>
                         </button>
-                        <button @click="rawCategory = 'fav'" :class="rawNavClass('fav')">
-                            <span><i class="fa-solid fa-star mr-2 opacity-70 text-yellow-500"></i>我的收藏</span>
-                            <span class="text-xs opacity-50 bg-black/5 dark:bg-white/5 px-1.5 rounded-full">{{ favoriteIds.size }}</span>
+                        <button @click="rawCategory = 'fav'" :class="rawNavClass('fav') + ' shrink-0'">
+                            <span><i class="fa-solid fa-star mr-2 opacity-70 text-yellow-500"></i>收藏</span>
+                            <span class="text-xs opacity-50 bg-black/5 dark:bg-white/5 px-1.5 rounded-full ml-2">{{ favoriteIds.size }}</span>
                         </button>
-                    </div>
-                    <div class="my-4 border-t border-slate-100 dark:border-slate-700"></div>
-                    <div class="space-y-1 overflow-y-auto thin-scrollbar" style="max-height: calc(100vh - 250px);">
-                         <button v-for="(count, cat) in rawCategoryCounts" :key="cat" @click="rawCategory = cat" :class="rawNavClass(cat)">
+                        <div class="hidden md:block my-4 border-t border-slate-100 dark:border-slate-700"></div>
+                        <button v-for="(count, cat) in rawCategoryCounts" :key="cat" @click="rawCategory = cat" :class="rawNavClass(cat) + ' shrink-0'">
                             <span><i :class="['fa-solid mr-2 opacity-70', getCategoryIcon(cat)]"></i><span class="capitalize">{{cat}}</span></span>
-                            <span class="text-xs opacity-50">{{ count }}</span>
+                            <span class="text-xs opacity-50 ml-2">{{ count }}</span>
                         </button>
                     </div>
                 </div>
             </div>
 
             <div class="flex-1 flex flex-col overflow-hidden">
-                <div class="p-4 border-b border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 flex items-center justify-between transition-colors duration-300">
-                    <div class="relative w-96">
+                <div class="p-3 md:p-4 border-b border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 flex items-center justify-between transition-colors duration-300">
+                    <div class="relative w-full md:w-96">
                         <i class="fa-solid fa-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
                         <input v-model="searchText" type="text" placeholder="搜索来源 (如: 微博, 36kr)..." 
                             class="w-full pl-10 pr-4 py-2 bg-slate-100 dark:bg-slate-900 border-transparent focus:border-blue-500 focus:bg-white dark:focus:bg-slate-950 rounded-lg text-sm transition-all outline-none dark:text-slate-200 placeholder-slate-400">
                     </div>
-                    <div class="text-sm text-slate-500">显示 {{ filteredRawList.length }} 个来源</div>
+                    <div class="hidden md:block text-sm text-slate-500">显示 {{ filteredRawList.length }} 个来源</div>
                 </div>
 
-                <div class="flex-1 overflow-y-auto p-6 thin-scrollbar bg-slate-50 dark:bg-slate-900 transition-colors duration-300">
+                <div class="flex-1 overflow-y-auto p-4 md:p-6 thin-scrollbar bg-slate-50 dark:bg-slate-900 transition-colors duration-300">
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 items-start">
                         <div v-for="platform in filteredRawList" :key="platform.id" class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 flex flex-col overflow-hidden hover:shadow-md transition-shadow group">
                             <div class="p-3 border-b border-slate-100 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/50 flex justify-between items-center shrink-0">
                                 <div class="font-bold text-sm flex items-center gap-2 text-slate-700 dark:text-slate-200">
                                     <span class="w-2.5 h-2.5 rounded-full" :class="getCategoryColorClass(platform.category)"></span>
-                                    <span class="truncate max-w-[120px]" :title="platform.id">{{ getDisplayName(platform.id) }}</span>
+                                    <span class="truncate max-w-[150px] md:max-w-[120px]" :title="platform.id">{{ getDisplayName(platform.id) }}</span>
                                 </div>
                                 <div class="flex items-center gap-3">
                                      <span class="text-[10px] font-medium bg-slate-200 dark:bg-slate-700 px-1.5 py-0.5 rounded text-slate-500 dark:text-slate-400">{{ platform.items.length }}</span>
@@ -305,6 +324,7 @@
             const loading = ref(true);
             const isDarkMode = ref(false);
             const debugMode = ref(false);
+            const isMobileMenuOpen = ref(false); // 📱 手机菜单状态
             const currentView = ref('smart');
             const currentSmartTab = ref('finance');
             const rawCategory = ref('all');
@@ -391,6 +411,12 @@
                     return { error: e.message, items: [] }; 
                 }
             }
+            
+            // 切换视图并关闭手机菜单
+            const switchView = (view) => {
+                currentView.value = view;
+                isMobileMenuOpen.value = false;
+            };
 
             onMounted(async () => {
                 loadLocalStorage();
@@ -399,7 +425,7 @@
                     document.documentElement.classList.add('dark');
                 }
 
-                // 启动模拟人数
+                // 启动拟真流量
                 simulateTraffic();
 
                 const t = new Date().getTime();
@@ -542,10 +568,10 @@
             const getCategoryColorClass = (cat) => ({ finance: 'bg-amber-500', global: 'bg-blue-500', tech: 'bg-cyan-500', general: 'bg-rose-500' }[cat] || 'bg-slate-500');
 
             return {
-                loading, isDarkMode, debugMode, currentView, currentSmartTab, rawCategory, searchText, lastUpdateTime,
+                loading, isDarkMode, debugMode, isMobileMenuOpen, currentView, currentSmartTab, rawCategory, searchText, lastUpdateTime,
                 smartData, filteredRawList, favoriteIds, rawCategoryCounts, totalRawSources, onlineUsers,
                 smartTabs, currentTheme, currentSmartTabIcon, currentViewTitle, computedSummary, computedItems,
-                navBtnClass, rawNavClass, toggleDarkMode, isFavorite, toggleFavorite, isRead, toggleRead,
+                navBtnClass, rawNavClass, toggleDarkMode, isFavorite, toggleFavorite, isRead, toggleRead, switchView,
                 getTagStyle, getTagIcon, getCategoryIcon, getCategoryColorClass, getDisplayName, sentimentTranslate
             }
         }
