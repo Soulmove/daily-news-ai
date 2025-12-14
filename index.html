@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>AI 全网舆情智库 | Insight Pro</title>
+    <title>InfoFocus | AI 全网舆情智库</title>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Serif+SC:wght@700&family=Orbitron:wght@500&display=swap" rel="stylesheet">
@@ -63,6 +63,41 @@
 <div id="app" v-cloak class="flex w-full h-full relative transition-colors duration-300">
 
     <div v-if="isMobileMenuOpen" @click="isMobileMenuOpen = false" class="fixed inset-0 bg-black/50 z-30 md:hidden backdrop-blur-sm transition-opacity"></div>
+    
+    <div v-if="showHelpModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+        <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl max-w-md w-full overflow-hidden border border-slate-200 dark:border-slate-700 transform transition-all">
+            <div class="p-6 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center bg-slate-50 dark:bg-slate-900">
+                <h3 class="text-lg font-bold text-slate-800 dark:text-white flex items-center gap-2">
+                    <i class="fa-solid fa-circle-info text-blue-500"></i> 关于 InfoFocus
+                </h3>
+                <button @click="showHelpModal = false" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+            <div class="p-6 space-y-4 text-sm text-slate-600 dark:text-slate-300 leading-relaxed overflow-y-auto max-h-[60vh]">
+                <div class="space-y-2">
+                    <h4 class="font-bold text-slate-900 dark:text-slate-100">🚀 核心功能</h4>
+                    <ul class="list-disc pl-5 space-y-1">
+                        <li><b>全网监控：</b>每2小时自动抓取全网热搜（微博、36氪、财联社、GitHub等）。</li>
+                        <li><b>AI 深度分析：</b>每天早上6点，AI 分析师自动生成深度简报，判断利好利空。</li>
+                        <li><b>去重提炼：</b>自动过滤重复信息，只看重点。</li>
+                    </ul>
+                </div>
+                <div class="space-y-2">
+                    <h4 class="font-bold text-slate-900 dark:text-slate-100">👨‍💻 联系作者</h4>
+                    <div class="bg-slate-100 dark:bg-slate-700/50 p-3 rounded-lg space-y-1 font-mono text-xs">
+                        <p><i class="fa-brands fa-weixin w-5 text-center"></i> HunQian_OP</p>
+                        <p><i class="fa-solid fa-envelope w-5 text-center"></i> 1441527537@qq.com</p>
+                    </div>
+                </div>
+            </div>
+            <div class="p-4 bg-slate-50 dark:bg-slate-900 border-t border-slate-100 dark:border-slate-700 text-center">
+                <button @click="showHelpModal = false" class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-full font-medium transition-colors text-sm">
+                    我知道了
+                </button>
+            </div>
+        </div>
+    </div>
 
     <aside :class="['fixed md:static inset-y-0 left-0 z-40 w-64 transform transition-transform duration-300 ease-in-out flex flex-col border-r shadow-2xl md:shadow-none', 
         isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0',
@@ -71,10 +106,10 @@
         <div class="p-6 flex items-center justify-between gap-3">
             <div class="flex items-center gap-3">
                 <div :class="['w-10 h-10 rounded-xl flex items-center justify-center text-xl shadow-lg transition-colors duration-300', currentTheme.logoBg, currentTheme.logoText]">
-                    <i class="fa-solid fa-brain"></i>
+                    <i class="fa-solid fa-layer-group"></i>
                 </div>
                 <div>
-                    <h1 :class="['font-bold text-lg leading-tight', currentTheme.sidebarText]">Insight Pro</h1>
+                    <h1 :class="['font-bold text-lg leading-tight', currentTheme.sidebarText]">InfoFocus</h1>
                     <p class="text-[10px] opacity-60 uppercase tracking-wider">AI Powered Analytics</p>
                 </div>
             </div>
@@ -90,6 +125,12 @@
             </button>
             <button @click="switchView('raw')" :class="navBtnClass('raw')">
                 <i class="fa-solid fa-tower-broadcast w-5 opacity-70"></i> 原始数据监控
+            </button>
+            
+            <div class="my-4 border-t opacity-50" :class="currentTheme.sidebarBorder"></div>
+            
+            <button @click="showHelpModal = true; isMobileMenuOpen = false" :class="navBtnClass('help')">
+                <i class="fa-solid fa-circle-question w-5 opacity-70 text-purple-500"></i> 使用说明 & 联系
             </button>
         </nav>
         
@@ -217,13 +258,6 @@
                     </div>
                 </div>
 
-                <div class="max-w-7xl mx-auto py-8 md:py-12 mt-8 border-t border-slate-200 dark:border-slate-800">
-                    <h3 class="text-lg md:text-xl font-bold mb-6 text-slate-700 dark:text-slate-200 flex items-center gap-2">
-                        <i class="fa-solid fa-comments"></i> 读者讨论
-                    </h3>
-                    <div class="giscus"></div>
-                </div>
-
                 <div v-if="!loading && !currentSmartData?.error && computedItems.length === 0" class="text-center py-24 opacity-50 text-slate-400">
                     <i class="fa-solid fa-box-open text-6xl mb-4"></i>
                     <p class="text-xl">该板块暂无数据分析</p>
@@ -236,17 +270,17 @@
             <div class="w-full md:w-48 bg-white dark:bg-slate-800 border-b md:border-b-0 md:border-r border-slate-200 dark:border-slate-700 flex flex-col shrink-0 transition-colors duration-300">
                 <div class="p-3 md:p-4">
                     <h3 class="hidden md:block text-xs font-bold uppercase text-slate-400 mb-4 px-2">来源分类</h3>
-                    <div class="flex md:flex-col gap-2 md:gap-1 overflow-x-auto hide-scrollbar pb-1 md:pb-0">
-                        <button @click="rawCategory = 'all'" :class="rawNavClass('all') + ' shrink-0'">
+                    <div class="flex md:flex-col gap-2 md:gap-1 overflow-x-auto hide-scrollbar pb-1 md:pb-0 items-center md:items-stretch">
+                        <button @click="rawCategory = 'all'" :class="rawNavClass('all') + ' shrink-0 whitespace-nowrap'">
                             <span><i class="fa-solid fa-border-all mr-2 opacity-70"></i>全部</span>
                             <span class="text-xs opacity-50 bg-black/5 dark:bg-white/5 px-1.5 rounded-full ml-2">{{ totalRawSources }}</span>
                         </button>
-                        <button @click="rawCategory = 'fav'" :class="rawNavClass('fav') + ' shrink-0'">
+                        <button @click="rawCategory = 'fav'" :class="rawNavClass('fav') + ' shrink-0 whitespace-nowrap'">
                             <span><i class="fa-solid fa-star mr-2 opacity-70 text-yellow-500"></i>收藏</span>
                             <span class="text-xs opacity-50 bg-black/5 dark:bg-white/5 px-1.5 rounded-full ml-2">{{ favoriteIds.size }}</span>
                         </button>
                         <div class="hidden md:block my-4 border-t border-slate-100 dark:border-slate-700"></div>
-                        <button v-for="(count, cat) in rawCategoryCounts" :key="cat" @click="rawCategory = cat" :class="rawNavClass(cat) + ' shrink-0'">
+                        <button v-for="(count, cat) in rawCategoryCounts" :key="cat" @click="rawCategory = cat" :class="rawNavClass(cat) + ' shrink-0 whitespace-nowrap'">
                             <span><i :class="['fa-solid mr-2 opacity-70', getCategoryIcon(cat)]"></i><span class="capitalize">{{cat}}</span></span>
                             <span class="text-xs opacity-50 ml-2">{{ count }}</span>
                         </button>
@@ -255,13 +289,18 @@
             </div>
 
             <div class="flex-1 flex flex-col overflow-hidden">
-                <div class="p-3 md:p-4 border-b border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 flex items-center justify-between transition-colors duration-300">
+                <div class="p-3 md:p-4 border-b border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 flex flex-col md:flex-row md:items-center justify-between gap-3 transition-colors duration-300">
                     <div class="relative w-full md:w-96">
                         <i class="fa-solid fa-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
                         <input v-model="searchText" type="text" placeholder="搜索来源 (如: 微博, 36kr)..." 
                             class="w-full pl-10 pr-4 py-2 bg-slate-100 dark:bg-slate-900 border-transparent focus:border-blue-500 focus:bg-white dark:focus:bg-slate-950 rounded-lg text-sm transition-all outline-none dark:text-slate-200 placeholder-slate-400">
                     </div>
-                    <div class="hidden md:block text-sm text-slate-500">显示 {{ filteredRawList.length }} 个来源</div>
+                    <div class="flex items-center justify-between md:justify-end gap-3 text-xs text-slate-500">
+                        <span class="hidden md:block">显示 {{ filteredRawList.length }} 个来源</span>
+                        <span v-if="rawDataLastUpdate" class="flex items-center gap-1 bg-slate-100 dark:bg-slate-700 px-2 py-1 rounded">
+                             <i class="fa-solid fa-arrows-rotate"></i> 数据更新于: {{ rawDataLastUpdate }}
+                        </span>
+                    </div>
                 </div>
 
                 <div class="flex-1 overflow-y-auto p-4 md:p-6 thin-scrollbar bg-slate-50 dark:bg-slate-900 transition-colors duration-300">
@@ -300,22 +339,6 @@
     </main>
 </div>
 
-<script src="https://giscus.app/client.js"
-        data-repo="Soulmove/daily-news-ai"
-        data-repo-id="R_kgDONfg7hQ"
-        data-category="General"
-        data-category-id="DIC_kwDONfg7hc4ClYjL"
-        data-mapping="pathname"
-        data-strict="0"
-        data-reactions-enabled="1"
-        data-emit-metadata="0"
-        data-input-position="bottom"
-        data-theme="preferred_color_scheme"
-        data-lang="zh-CN"
-        crossorigin="anonymous"
-        async>
-</script>
-
 <script>
     const { createApp, reactive, computed, ref, onMounted } = Vue
 
@@ -324,45 +347,34 @@
             const loading = ref(true);
             const isDarkMode = ref(false);
             const debugMode = ref(false);
-            const isMobileMenuOpen = ref(false); // 📱 手机菜单状态
+            const isMobileMenuOpen = ref(false); 
+            const showHelpModal = ref(false); // 控制使用说明弹窗
             const currentView = ref('smart');
             const currentSmartTab = ref('finance');
             const rawCategory = ref('all');
             const searchText = ref('');
             const lastUpdateTime = ref('');
+            const rawDataLastUpdate = ref(''); // 原始数据最后更新时间
             
-            // ==========================================
-            // 👥 拟真在线人数逻辑 (50 - 500人 随机波动)
-            // ==========================================
+            // 拟真在线人数逻辑 (50 - 500人 随机波动)
             const onlineUsers = ref(Math.floor(Math.random() * (500 - 50 + 1)) + 50);
 
             const simulateTraffic = () => {
-                // 随机延迟 2秒 到 8秒 (模拟有时候人流静止)
                 const delay = Math.floor(Math.random() * 6000) + 2000; 
-
                 setTimeout(() => {
                     const r = Math.random();
                     let diff = 0;
-
                     if (r > 0.85) {
-                        // 【突发情况】15% 概率：突然大批人进出 (变化幅度 10 ~ 40)
                         diff = Math.floor(Math.random() * 30) + 10;
-                        if (Math.random() > 0.4) diff = -diff; // 40% 概率掉线
+                        if (Math.random() > 0.4) diff = -diff; 
                     } else if (r > 0.3) {
-                        // 【正常波动】55% 概率：小幅波动 (变化幅度 1 ~ 5)
                         diff = Math.floor(Math.random() * 5) + 1;
                         if (Math.random() > 0.5) diff = -diff;
                     } 
-                    // 剩余 30% 概率：人数完全不动
-
                     let newVal = onlineUsers.value + diff;
-                    // 严格限制范围
                     if (newVal < 50) newVal = 50;
                     if (newVal > 500) newVal = 500;
-
                     onlineUsers.value = newVal;
-
-                    // 递归调用
                     simulateTraffic();
                 }, delay);
             };
@@ -372,7 +384,7 @@
             const favoriteIds = reactive(new Set());
             const readSet = reactive(new Set());
 
-            // 🇨🇳 平台名称汉化字典
+            // 平台名称汉化字典
             const platformMap = {
                 'douyin': '抖音', 'zhihu': '知乎', 'weibo': '微博', 'bilibili-hot-search': 'B站热搜', 
                 'baidu': '百度热搜', 'toutiao': '今日头条', 'tieba': '百度贴吧', '36kr-quick': '36氪快讯', 
@@ -386,10 +398,9 @@
             };
 
             const getDisplayName = (id) => {
-                return platformMap[id] || id; // 如果字典里有就返回中文，没有就返回原ID
+                return platformMap[id] || id; 
             };
 
-            // 🇨🇳 情感汉化函数
             const sentimentTranslate = (s) => {
                 const map = { 'Bullish': '利好', 'Bearish': '利空', 'Neutral': '中性', 'Mixed': '震荡' };
                 return map[s] || s;
@@ -412,10 +423,20 @@
                 }
             }
             
-            // 切换视图并关闭手机菜单
             const switchView = (view) => {
                 currentView.value = view;
                 isMobileMenuOpen.value = false;
+            };
+            
+            // 估算原始数据更新时间（基于当前时间的前一个偶数小时）
+            const calculateRawUpdate = () => {
+                const now = new Date();
+                let h = now.getHours();
+                if (h % 2 !== 0) h -= 1; // 偶数小时更新
+                // 格式化为 14:00 这种格式
+                const timeStr = `${String(h).padStart(2, '0')}:00`;
+                const dateStr = `${now.getMonth()+1}-${now.getDate()}`;
+                rawDataLastUpdate.value = `${dateStr} ${timeStr}`;
             };
 
             onMounted(async () => {
@@ -425,8 +446,8 @@
                     document.documentElement.classList.add('dark');
                 }
 
-                // 启动拟真流量
                 simulateTraffic();
+                calculateRawUpdate();
 
                 const t = new Date().getTime();
                 loading.value = true;
@@ -453,7 +474,6 @@
                 const data = currentSmartData.value;
                 if (!data) return [];
                 if (Array.isArray(data.items) && data.items.length > 0) return data.items;
-                // 兼容旧格式（如果有 categories 字段）
                 if (data.categories) {
                     for (const key in data.categories) {
                          if (Array.isArray(data.categories[key]) && data.categories[key].length > 0) return data.categories[key];
@@ -536,7 +556,7 @@
             }));
             const totalRawSources = computed(() => Object.values(rawCategoryCounts.value).reduce((a, b) => a + b, 0));
 
-            const navBtnClass = (view) => `w-full text-left px-4 py-3 rounded-xl flex items-center gap-4 transition-all font-medium ${currentView.value === view ? (isDarkMode.value ? 'bg-slate-800 text-white shadow-inner' : 'bg-slate-100 text-slate-900 shadow-sm') : (isDarkMode.value ? 'text-slate-400 hover:bg-slate-800/50' : 'text-slate-500 hover:bg-slate-50')}`;
+            const navBtnClass = (view) => `w-full text-left px-4 py-3 rounded-xl flex items-center gap-4 transition-all font-medium ${currentView.value === view || (view === 'help' && false) ? (isDarkMode.value ? 'bg-slate-800 text-white shadow-inner' : 'bg-slate-100 text-slate-900 shadow-sm') : (isDarkMode.value ? 'text-slate-400 hover:bg-slate-800/50' : 'text-slate-500 hover:bg-slate-50')}`;
             const rawNavClass = (cat) => `w-full text-left px-3 py-2 rounded-lg text-sm font-medium flex items-center justify-between transition-colors capitalize ${rawCategory.value === cat ? 'bg-slate-100 dark:bg-slate-700 text-slate-900 dark:text-slate-100' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700'}`;
 
             const toggleDarkMode = () => { isDarkMode.value = !isDarkMode.value; document.documentElement.classList.toggle('dark', isDarkMode.value); localStorage.setItem('darkMode', isDarkMode.value); };
@@ -568,7 +588,7 @@
             const getCategoryColorClass = (cat) => ({ finance: 'bg-amber-500', global: 'bg-blue-500', tech: 'bg-cyan-500', general: 'bg-rose-500' }[cat] || 'bg-slate-500');
 
             return {
-                loading, isDarkMode, debugMode, isMobileMenuOpen, currentView, currentSmartTab, rawCategory, searchText, lastUpdateTime,
+                loading, isDarkMode, debugMode, isMobileMenuOpen, showHelpModal, currentView, currentSmartTab, rawCategory, searchText, lastUpdateTime, rawDataLastUpdate,
                 smartData, filteredRawList, favoriteIds, rawCategoryCounts, totalRawSources, onlineUsers,
                 smartTabs, currentTheme, currentSmartTabIcon, currentViewTitle, computedSummary, computedItems,
                 navBtnClass, rawNavClass, toggleDarkMode, isFavorite, toggleFavorite, isRead, toggleRead, switchView,
