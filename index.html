@@ -62,7 +62,7 @@
 
 <div id="app" v-cloak class="flex w-full h-full relative transition-colors duration-300">
 
-    <div v-if="isMobileMenuOpen || isRawMenuOpen" @click="closeAllMenus" class="fixed inset-0 bg-black/50 z-30 md:hidden backdrop-blur-sm transition-opacity"></div>
+    <div v-if="isMobileMenuOpen" @click="isMobileMenuOpen = false" class="fixed inset-0 bg-black/50 z-30 md:hidden backdrop-blur-sm transition-opacity"></div>
     
     <div v-if="showHelpModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
         <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl max-w-md w-full overflow-hidden border border-slate-200 dark:border-slate-700 transform transition-all">
@@ -178,6 +178,15 @@
             </div>
         </header>
 
+        <div v-if="debugMode" class="absolute inset-0 z-50 bg-black/80 p-10 overflow-auto text-green-400 font-mono text-xs">
+            <div class="bg-slate-900 p-6 rounded border border-green-500">
+                <h3 class="text-lg font-bold mb-4 border-b border-green-500 pb-2">数据调试面板</h3>
+                <p class="mb-2">当前 Tab: {{ currentSmartTab }}</p>
+                <p class="mb-2">检测到的数据结构:</p>
+                <pre>{{ JSON.stringify(currentSmartData, null, 2) }}</pre>
+            </div>
+        </div>
+
         <div v-if="currentView === 'smart'" class="flex-1 flex flex-col overflow-hidden">
             <div :class="['shrink-0 px-4 md:px-8 pt-2 md:pt-4 pb-0 flex gap-4 md:gap-6 border-b text-sm font-medium transition-colors duration-300 overflow-x-auto hide-scrollbar', currentTheme.tabBorder]">
                 <button v-for="tab in smartTabs" :key="tab.id" @click="currentSmartTab = tab.id"
@@ -189,6 +198,7 @@
             </div>
 
             <div class="flex-1 overflow-y-auto p-4 md:p-8 thin-scrollbar scroll-smooth">
+                
                 <div v-if="currentSmartData?.error" class="mb-8 p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg flex items-center gap-3">
                     <i class="fa-solid fa-triangle-exclamation text-xl"></i>
                     <div>
@@ -214,11 +224,14 @@
                     <div v-for="(item, idx) in computedItems" :key="idx" 
                          :class="['group rounded-xl p-5 md:p-6 transition-all relative overflow-hidden active:scale-[0.98]', 
                          isRead(item.title) ? 'read-item' : '', currentTheme.itemCard]">
+                        
                         <div v-if="currentSmartTab === 'tech'" class="absolute inset-0 border border-cyan-500/30 rounded-xl pointer-events-none group-hover:border-cyan-400/60 transition-all"></div>
+
                         <div class="flex justify-between items-start gap-4 mb-3 relative z-10">
                             <div>
                                 <div class="flex flex-wrap items-center gap-2 mb-2">
-                                    <span v-if="item.sentiment || item.prediction" :class="['px-2 py-0.5 rounded-md text-[10px] md:text-xs font-bold uppercase tracking-wider', getTagStyle(item)]">
+                                    <span v-if="item.sentiment || item.prediction" 
+                                          :class="['px-2 py-0.5 rounded-md text-[10px] md:text-xs font-bold uppercase tracking-wider', getTagStyle(item)]">
                                         <i :class="getTagIcon(item)"></i> {{ sentimentTranslate(item.sentiment) || '未来预测' }}
                                     </span>
                                     <span v-if="item.impact || item.special_note" class="px-2 py-0.5 rounded-md text-[10px] md:text-xs font-medium bg-black/5 dark:bg-white/10 text-slate-600 dark:text-slate-300 flex items-center gap-1">
@@ -234,9 +247,11 @@
                                 <i :class="['fa-regular', isRead(item.title) ? 'fa-circle-check text-green-500 opacity-100' : 'fa-circle']"></i>
                             </button>
                         </div>
+
                         <p :class="['text-sm leading-relaxed mb-4 line-clamp-4 group-hover:line-clamp-none transition-all relative z-10 text-justify', currentTheme.itemText]">
                             {{ item.summary || item.comment || item.reason }}
                         </p>
+
                         <a :href="item.url" target="_blank" @click.stop :class="['inline-flex items-center gap-1 text-xs font-bold uppercase tracking-widest transition-colors relative z-10', currentTheme.readMoreBtn]">
                             Read Source <i class="fa-solid fa-arrow-right-long ml-1 group-hover:translate-x-1 transition-transform"></i>
                         </a>
@@ -252,63 +267,22 @@
         </div>
 
         <div v-if="currentView === 'raw'" class="flex-1 flex flex-col md:flex-row overflow-hidden bg-slate-100 dark:bg-slate-900 transition-colors duration-300">
-            
-            <div class="md:hidden w-full bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 z-20 shrink-0 relative">
-                <div class="p-3">
-                    <button @click="isRawMenuOpen = !isRawMenuOpen" class="w-full flex justify-between items-center bg-slate-100 dark:bg-slate-700 p-3 rounded-xl active:scale-[0.98] transition-all">
-                        <div class="flex items-center gap-3">
-                            <span class="w-2 h-8 rounded-full" :class="getCategoryColorClass(rawCategory)"></span>
-                            <div class="text-left">
-                                <p class="text-xs text-slate-500 dark:text-slate-400">当前板块</p>
-                                <p class="font-bold text-slate-800 dark:text-white text-lg capitalize flex items-center gap-2">
-                                    {{ getCategoryDisplayName(rawCategory) }}
-                                    <span class="text-xs font-normal opacity-50 bg-black/5 dark:bg-white/10 px-1.5 py-0.5 rounded-full">{{ getCategoryCount(rawCategory) }}</span>
-                                </p>
-                            </div>
-                        </div>
-                        <i :class="['fa-solid fa-chevron-down text-slate-400 transition-transform duration-300', isRawMenuOpen ? 'rotate-180' : '']"></i>
-                    </button>
-                    
-                    <div v-if="isRawMenuOpen" class="absolute top-full left-0 w-full bg-white dark:bg-slate-800 shadow-2xl border-t border-slate-100 dark:border-slate-700 rounded-b-2xl p-2 z-30 animate-in slide-in-from-top-2 duration-200">
-                        <div class="grid grid-cols-2 gap-2 p-2">
-                            <button @click="selectRawCat('all')" :class="['p-3 rounded-lg flex items-center gap-2 transition-colors', rawCategory === 'all' ? 'bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400' : 'hover:bg-slate-50 dark:hover:bg-slate-700 dark:text-slate-300']">
-                                <i class="fa-solid fa-border-all opacity-70"></i> 全部 <span class="ml-auto opacity-50 text-xs">{{ totalRawSources }}</span>
-                            </button>
-                            <button @click="selectRawCat('fav')" :class="['p-3 rounded-lg flex items-center gap-2 transition-colors', rawCategory === 'fav' ? 'bg-yellow-50 text-yellow-600 dark:bg-yellow-900/20 dark:text-yellow-400' : 'hover:bg-slate-50 dark:hover:bg-slate-700 dark:text-slate-300']">
-                                <i class="fa-solid fa-star opacity-70 text-yellow-500"></i> 收藏 <span class="ml-auto opacity-50 text-xs">{{ favoriteIds.size }}</span>
-                            </button>
-                        </div>
-                        <div class="border-t border-slate-100 dark:border-slate-700 my-1"></div>
-                        <div class="grid grid-cols-1 gap-1 p-2">
-                            <button v-for="(count, cat) in rawCategoryCounts" :key="cat" @click="selectRawCat(cat)" 
-                                :class="['p-3 rounded-lg flex items-center gap-3 transition-colors capitalize', rawCategory === cat ? 'bg-slate-100 dark:bg-slate-700 font-bold dark:text-white' : 'hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300']">
-                                <i :class="['fa-solid opacity-70 w-5 text-center', getCategoryIcon(cat)]"></i>
-                                {{ cat }}
-                                <span class="ml-auto opacity-50 text-xs bg-black/5 dark:bg-white/10 px-2 py-0.5 rounded-full">{{ count }}</span>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="hidden md:flex w-48 bg-white dark:bg-slate-800 border-r border-slate-200 dark:border-slate-700 flex-col shrink-0 transition-colors duration-300">
-                <div class="p-4">
-                    <h3 class="text-xs font-bold uppercase text-slate-400 mb-4 px-2">来源分类</h3>
-                    <div class="space-y-1">
-                        <button @click="rawCategory = 'all'" :class="rawNavClass('all')">
-                            <span><i class="fa-solid fa-border-all mr-2 opacity-70"></i>全部来源</span>
-                            <span class="text-xs opacity-50 bg-black/5 dark:bg-white/5 px-1.5 rounded-full">{{ totalRawSources }}</span>
+            <div class="w-full md:w-48 bg-white dark:bg-slate-800 border-b md:border-b-0 md:border-r border-slate-200 dark:border-slate-700 flex flex-col shrink-0 transition-colors duration-300">
+                <div class="p-3 md:p-4">
+                    <h3 class="hidden md:block text-xs font-bold uppercase text-slate-400 mb-4 px-2">来源分类</h3>
+                    <div class="flex md:flex-col gap-2 md:gap-1 overflow-x-auto hide-scrollbar pb-1 md:pb-0 items-center md:items-stretch">
+                        <button @click="rawCategory = 'all'" :class="rawNavClass('all') + ' shrink-0 whitespace-nowrap'">
+                            <span><i class="fa-solid fa-border-all mr-2 opacity-70"></i>全部</span>
+                            <span class="text-xs opacity-50 bg-black/5 dark:bg-white/5 px-1.5 rounded-full ml-2">{{ totalRawSources }}</span>
                         </button>
-                        <button @click="rawCategory = 'fav'" :class="rawNavClass('fav')">
-                            <span><i class="fa-solid fa-star mr-2 opacity-70 text-yellow-500"></i>我的收藏</span>
-                            <span class="text-xs opacity-50 bg-black/5 dark:bg-white/5 px-1.5 rounded-full">{{ favoriteIds.size }}</span>
+                        <button @click="rawCategory = 'fav'" :class="rawNavClass('fav') + ' shrink-0 whitespace-nowrap'">
+                            <span><i class="fa-solid fa-star mr-2 opacity-70 text-yellow-500"></i>收藏</span>
+                            <span class="text-xs opacity-50 bg-black/5 dark:bg-white/5 px-1.5 rounded-full ml-2">{{ favoriteIds.size }}</span>
                         </button>
-                    </div>
-                    <div class="my-4 border-t border-slate-100 dark:border-slate-700"></div>
-                    <div class="space-y-1 overflow-y-auto thin-scrollbar">
-                         <button v-for="(count, cat) in rawCategoryCounts" :key="cat" @click="rawCategory = cat" :class="rawNavClass(cat)">
+                        <div class="hidden md:block my-4 border-t border-slate-100 dark:border-slate-700"></div>
+                        <button v-for="(count, cat) in rawCategoryCounts" :key="cat" @click="rawCategory = cat" :class="rawNavClass(cat) + ' shrink-0 whitespace-nowrap'">
                             <span><i :class="['fa-solid mr-2 opacity-70', getCategoryIcon(cat)]"></i><span class="capitalize">{{cat}}</span></span>
-                            <span class="text-xs opacity-50">{{ count }}</span>
+                            <span class="text-xs opacity-50 ml-2">{{ count }}</span>
                         </button>
                     </div>
                 </div>
@@ -374,15 +348,15 @@
             const isDarkMode = ref(false);
             const debugMode = ref(false);
             const isMobileMenuOpen = ref(false); 
-            const isRawMenuOpen = ref(false); // 📱 手机端原始数据菜单开关
-            const showHelpModal = ref(false); 
+            const showHelpModal = ref(false); // 控制使用说明弹窗
             const currentView = ref('smart');
             const currentSmartTab = ref('finance');
             const rawCategory = ref('all');
             const searchText = ref('');
             const lastUpdateTime = ref('');
-            const rawDataLastUpdate = ref(''); 
+            const rawDataLastUpdate = ref(''); // 原始数据最后更新时间
             
+            // 拟真在线人数逻辑 (50 - 500人 随机波动)
             const onlineUsers = ref(Math.floor(Math.random() * (500 - 50 + 1)) + 50);
 
             const simulateTraffic = () => {
@@ -410,6 +384,7 @@
             const favoriteIds = reactive(new Set());
             const readSet = reactive(new Set());
 
+            // 平台名称汉化字典
             const platformMap = {
                 'douyin': '抖音', 'zhihu': '知乎', 'weibo': '微博', 'bilibili-hot-search': 'B站热搜', 
                 'baidu': '百度热搜', 'toutiao': '今日头条', 'tieba': '百度贴吧', '36kr-quick': '36氪快讯', 
@@ -452,21 +427,13 @@
                 currentView.value = view;
                 isMobileMenuOpen.value = false;
             };
-
-            const selectRawCat = (cat) => {
-                rawCategory.value = cat;
-                isRawMenuOpen.value = false; // 选完自动关闭菜单
-            };
-
-            const closeAllMenus = () => {
-                isMobileMenuOpen.value = false;
-                isRawMenuOpen.value = false;
-            };
             
+            // 估算原始数据更新时间（基于当前时间的前一个偶数小时）
             const calculateRawUpdate = () => {
                 const now = new Date();
                 let h = now.getHours();
-                if (h % 2 !== 0) h -= 1; 
+                if (h % 2 !== 0) h -= 1; // 偶数小时更新
+                // 格式化为 14:00 这种格式
                 const timeStr = `${String(h).padStart(2, '0')}:00`;
                 const dateStr = `${now.getMonth()+1}-${now.getDate()}`;
                 rawDataLastUpdate.value = `${dateStr} ${timeStr}`;
@@ -556,6 +523,9 @@
                 return themes[tab];
             });
 
+            const currentSmartTabIcon = computed(() => smartTabs.find(t => t.id === currentSmartTab.value)?.icon);
+            const currentViewTitle = computed(() => currentView.value === 'smart' ? smartTabs.find(t => t.id === currentSmartTab.value)?.name : '全网原始数据监控台');
+
             const filteredRawList = computed(() => {
                 let allRaw = [
                     ...rawData.finance.map(i => ({ ...i, category: 'finance' })),
@@ -617,24 +587,12 @@
              const getCategoryIcon = (cat) => ({ finance: 'fa-coins', global: 'fa-globe', tech: 'fa-microchip', general: 'fa-fire' }[cat] || 'fa-circle');
             const getCategoryColorClass = (cat) => ({ finance: 'bg-amber-500', global: 'bg-blue-500', tech: 'bg-cyan-500', general: 'bg-rose-500' }[cat] || 'bg-slate-500');
 
-            // 辅助函数：获取选中分类的显示名称
-            const getCategoryDisplayName = (cat) => {
-                const map = { all: '全部', fav: '收藏', finance: 'Finance', global: 'Global', tech: 'Tech', general: 'General' };
-                return map[cat] || cat;
-            };
-
-            const getCategoryCount = (cat) => {
-                if (cat === 'all') return totalRawSources.value;
-                if (cat === 'fav') return favoriteIds.size;
-                return rawCategoryCounts.value[cat] || 0;
-            };
-
             return {
-                loading, isDarkMode, debugMode, isMobileMenuOpen, isRawMenuOpen, showHelpModal, currentView, currentSmartTab, rawCategory, searchText, lastUpdateTime, rawDataLastUpdate,
+                loading, isDarkMode, debugMode, isMobileMenuOpen, showHelpModal, currentView, currentSmartTab, rawCategory, searchText, lastUpdateTime, rawDataLastUpdate,
                 smartData, filteredRawList, favoriteIds, rawCategoryCounts, totalRawSources, onlineUsers,
                 smartTabs, currentTheme, currentSmartTabIcon, currentViewTitle, computedSummary, computedItems,
-                navBtnClass, rawNavClass, toggleDarkMode, isFavorite, toggleFavorite, isRead, toggleRead, switchView, selectRawCat, closeAllMenus,
-                getTagStyle, getTagIcon, getCategoryIcon, getCategoryColorClass, getDisplayName, sentimentTranslate, getCategoryDisplayName, getCategoryCount
+                navBtnClass, rawNavClass, toggleDarkMode, isFavorite, toggleFavorite, isRead, toggleRead, switchView,
+                getTagStyle, getTagIcon, getCategoryIcon, getCategoryColorClass, getDisplayName, sentimentTranslate
             }
         }
     }).mount('#app')
