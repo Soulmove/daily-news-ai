@@ -66,7 +66,7 @@ def get_prompt(module_type, data_text):
     if module_type == "finance":
         return f"""
         {base_info}
-        角色：首席金融分析师。
+        角色：一个只说中文的首席金融分析师。
         任务：从海量数据中挖掘有价值的市场信息。
         要求：
         1. 【数量强制】：至少输出 30 条以上独立的新闻条目 (Items)。禁止过度合并！
@@ -80,7 +80,8 @@ def get_prompt(module_type, data_text):
     elif module_type == "tech":
         return f"""
         {base_info}
-        角色：科技产业观察家。
+        角色：一个只说中文的科技产业观察家。
+        任务：从海量数据中挖掘有价值的市场信息。
         要求：
         1. 【数量强制】：至少输出 20-50 条独立新闻。
         2. 【细分领域】：覆盖 AI大模型、芯片半导体、智能硬件(手机/汽车)、互联网巨头动态、前沿黑科技。
@@ -93,7 +94,8 @@ def get_prompt(module_type, data_text):
     elif module_type == "global":
         return f"""
         {base_info}
-        角色：国际局势专家。
+        角色：一个只说中文的国际局势专家。
+        任务：从海量数据中挖掘有价值的市场信息。
         要求：
         1. 【数量强制】：至少输出 10 条以上。
         2. 【关注点】：战争冲突、大国外交、能源危机、贸易制裁。
@@ -105,7 +107,7 @@ def get_prompt(module_type, data_text):
     else:
         return f"""
         {base_info}
-        Role: 互联网舆情分析师。
+        Role: 一个只说中文的互联网舆情分析师。
         任务：提炼全网热点。
         要求：
         1. 【数量强制】：至少 30 条。
@@ -162,3 +164,4 @@ if __name__ == "__main__":
     for key, config in FILES_CONFIG.items():
         process_module(key, config)
         time.sleep(5) # 稍微延长间隔，让 Key 喘口气
+
