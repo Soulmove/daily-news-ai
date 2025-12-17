@@ -38,6 +38,7 @@ def load_and_simplify(filepath):
     simplified_lines = []
     url_lookup = {}
     
+    # 保持较大的读取量，确保 AI 有足够素材
     TOTAL_SAFETY_CAP = 1000 
     total_count = 0
     
@@ -61,30 +62,28 @@ def get_prompt(module_type, data_text):
     base_info = f"Date:{datetime.now().strftime('%Y-%m-%d')}\nData:\n{data_text}"
     format_instruction = "Return strictly pure JSON only. No Markdown."
     
-    # 🔥🔥🔥 核心修改区：强制 AI 使用分点列表格式 🔥🔥🔥
+    # 🔥🔥🔥 核心修改区：强制 AI 使用分点列表格式，并要求换行 🔥🔥🔥
     if module_type == "finance":
         return f"""
         {base_info}
         角色：金牌财经编辑。
-        任务：从海量数据中提取核心要点，生成一份简洁有力的早报。
+        任务：生成一份条理清晰、分点陈述的市场早报。
         
         【economy_summary 格式严格要求】：
-        必须使用分点陈述，禁止长篇大论。请严格按照以下排版格式输出（包含换行符）：
+        禁止写成一段话！必须按以下【标题】+【分点】格式输出，并在每点之间换行：
         
         【📈 市场核心】
-        1. 第一条核心要闻...
-        2. 第二条核心要闻...
+        1. 核心事件A...
+        2. 核心事件B...
         
         【💰 资金与情绪】
         1. 资金流向分析...
         2. 市场情绪判断...
         
         【🏗️ 行业异动】
-        1. 领涨板块逻辑...
-        2. 领跌板块原因...
+        1. 领涨板块...
+        2. 领跌板块...
 
-        要求：summary 字段必须包含换行符，条理清晰，重点突出。
-        
         输出 JSON: {{ "economy_summary": "...", "items": [ {{ "title": "...", "sentiment": "Bullish/Bearish/Mixed", "impact": "...", "summary": "..." }} ] }}
         {format_instruction}
         """
@@ -94,15 +93,13 @@ def get_prompt(module_type, data_text):
         角色：科技前沿观察员。
         
         【summary 格式严格要求】：
-        请按以下结构分点输出：
+        分点输出，禁止长篇大论：
         
         【🚀 颠覆性突破】
         1. ...
-        2. ...
         
         【🤖 AI 与大模型】
         1. ...
-        2. ...
         
         【📱 硬件与芯片】
         1. ...
