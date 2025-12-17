@@ -4,10 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>InfoFocus | AI 全网舆情智库</title>
-    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Serif+SC:wght@700&family=Orbitron:wght@500&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.staticfile.net/vue/3.3.4/vue.global.min.js"></script>
+    <script src="https://cdn.staticfile.net/tailwindcss/3.3.3/tailwind.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        window.onerror = function(msg, url, line, col, error) {
+            var errorBox = document.getElementById('error-box');
+            if (errorBox) {
+                errorBox.style.display = 'block';
+                document.getElementById('error-msg').innerText = "⚠️ 网页运行出错:\n" + msg + "\n(请截图发给作者)";
+            }
+        };
+    </script>
 
     <script>
         tailwind.config = {
@@ -36,29 +46,30 @@
     <style>
         body { background-color: #f8fafc; color: #1e293b; font-family: 'Inter', sans-serif; }
         .dark body { background-color: #0f172a; color: #f1f5f9; }
+        /* v-cloak 防止闪烁，但如果 Vue 挂了，它会导致白屏。这里保留，靠 JS 修复逻辑 */
         [v-cloak] { display: none; }
         
-        /* 滚动条美化 */
         .thin-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
         .thin-scrollbar::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 9999px; }
         .dark .thin-scrollbar::-webkit-scrollbar-thumb { background-color: #334155; }
         
-        /* 隐藏横向滚动条但保留滚动功能 */
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
         .read-item { opacity: 0.6; filter: grayscale(100%); transition: all 0.3s ease; }
-        
-        /* 赛博朋克特效 */
         .cyber-border { position: relative; background: linear-gradient(90deg, #22d3ee, #a855f7); padding: 1px; }
         .cyber-inner { background-color: #020617; height: 100%; width: 100%; }
-
-        /* 娱乐卡片特效 */
         .ent-card { background: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(255,255,255,0.4)); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.3); }
         .dark .ent-card { background: linear-gradient(135deg, rgba(30,41,59,0.8), rgba(15,23,42,0.6)); border-color: rgba(255,255,255,0.05); }
     </style>
 </head>
 <body class="h-full flex overflow-hidden selection:bg-blue-500 selection:text-white">
+
+<div id="error-box" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:white; z-index:9999; padding:20px; color:red; font-family:monospace;">
+    <h3 style="font-size:20px; font-weight:bold;">程序崩溃保护</h3>
+    <p id="error-msg"></p>
+    <button onclick="localStorage.clear(); location.reload();" style="margin-top:20px; padding:10px 20px; background:red; color:white; border:none; border-radius:5px;">点击尝试自动修复 (清空缓存)</button>
+</div>
 
 <div id="app" v-cloak class="flex w-full h-full relative transition-colors duration-300">
 
@@ -135,6 +146,9 @@
         </nav>
         
         <div class="p-4 border-t" :class="currentTheme.sidebarBorder">
+            <button @click="debugMode = !debugMode" class="w-full text-xs text-slate-400 hover:text-blue-500 mb-2 opacity-50 hover:opacity-100">
+                <i class="fa-solid fa-wrench"></i> {{ debugMode ? '关闭调试' : '数据异常点我' }}
+            </button>
             <button @click="toggleDarkMode" :class="['w-full flex items-center justify-center gap-2 py-2 rounded-lg transition-colors', currentTheme.sidebarHover, currentTheme.sidebarText]">
                 <i :class="['fa-solid', isDarkMode ? 'fa-sun' : 'fa-moon']"></i>
                 <span class="text-sm">{{ isDarkMode ? '切换日间模式' : '切换深色模式' }}</span>
@@ -202,7 +216,6 @@
                     <h3 :class="['text-xs md:text-sm font-bold uppercase tracking-widest mb-3 md:mb-4 flex items-center gap-2 relative z-10', currentTheme.summaryTitle]">
                         <i class="fa-solid fa-microchip"></i> AI 核心综述
                     </h3>
-                    
                     <p :class="['text-base md:text-lg leading-loose font-medium relative z-10 whitespace-pre-wrap', currentTheme.summaryText]" style="font-family: 'Noto Serif SC', serif;">
                         {{ computedSummary }}
                     </p>
@@ -366,7 +379,7 @@
 <script>
     const { createApp, reactive, computed, ref, onMounted } = Vue
 
-    const app = createApp({
+    createApp({
         setup() {
             const loading = ref(true);
             const isDarkMode = ref(false);
@@ -470,7 +483,7 @@
                 rawDataLastUpdate.value = `${dateStr} ${timeStr}`;
             };
 
-            // 🔥 关键修复：安全的 LocalStorage 加载
+            // 🔥 核心修复：增加 try-catch 保护，防止缓存脏数据导致白屏
             const loadLocalStorage = () => {
                 try {
                     const fav = localStorage.getItem('favorites');
@@ -486,7 +499,7 @@
                     const dark = localStorage.getItem('darkMode');
                     if (dark === 'true') { isDarkMode.value = true; }
                 } catch (e) {
-                    console.error("LocalStorage corrupted, resetting:", e);
+                    console.error("缓存数据损坏，已自动重置:", e);
                     localStorage.removeItem('favorites');
                     localStorage.removeItem('readItems');
                 }
@@ -648,9 +661,7 @@
                 getTagStyle, getTagIcon, getCategoryIcon, getCategoryColorClass, getDisplayName, sentimentTranslate, getCategoryDisplayName, getCategoryCount
             }
         }
-    });
-
-    app.mount('#app');
+    }).mount('#app')
 </script>
 </body>
 </html>
