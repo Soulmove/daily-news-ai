@@ -38,7 +38,6 @@ def load_and_simplify(filepath):
     simplified_lines = []
     url_lookup = {}
     
-    # 保持较大的读取量，确保 AI 有足够素材
     TOTAL_SAFETY_CAP = 1000 
     total_count = 0
     
@@ -62,31 +61,51 @@ def get_prompt(module_type, data_text):
     base_info = f"Date:{datetime.now().strftime('%Y-%m-%d')}\nData:\n{data_text}"
     format_instruction = "Return strictly pure JSON only. No Markdown."
     
-    # 🔥🔥🔥 核心修改区：超强版 Prompt 🔥🔥🔥
+    # 🔥🔥🔥 核心修改区：强制 AI 使用分点列表格式 🔥🔥🔥
     if module_type == "finance":
         return f"""
         {base_info}
-        角色：一个只说中文的首席金融分析师。
-        任务：从海量数据中挖掘有价值的市场信息。
-        要求：
-        1. 【数量强制】：至少输出 30 条以上独立的新闻条目 (Items)。禁止过度合并！
-        2. 【覆盖广度】：必须包含：宏观政策(央行/财政)、股市异动(个股/板块)、行业动态(地产/汽车/科技)、国际金融(美联储/汇率)、大宗商品。
-        3. 【细节保留】：summary 必须包含具体数字（如涨跌幅%、金额、日期），拒绝模糊描述，必须为这个事件评价和作出细节描述分析。
-        4. 【深度综述】：economy_summary 需 300-500 字，深度复盘今日资金流向与市场情绪。
+        角色：金牌财经编辑。
+        任务：从海量数据中提取核心要点，生成一份简洁有力的早报。
         
-        输出 JSON: {{ "economy_summary": "...", "items": [ {{ "title": "...", "sentiment": "Bullish/Bearish/Mixed", "impact": "具体板块/股票", "summary": "详实分析..." }} ] }}
+        【economy_summary 格式严格要求】：
+        必须使用分点陈述，禁止长篇大论。请严格按照以下排版格式输出（包含换行符）：
+        
+        【📈 市场核心】
+        1. 第一条核心要闻...
+        2. 第二条核心要闻...
+        
+        【💰 资金与情绪】
+        1. 资金流向分析...
+        2. 市场情绪判断...
+        
+        【🏗️ 行业异动】
+        1. 领涨板块逻辑...
+        2. 领跌板块原因...
+
+        要求：summary 字段必须包含换行符，条理清晰，重点突出。
+        
+        输出 JSON: {{ "economy_summary": "...", "items": [ {{ "title": "...", "sentiment": "Bullish/Bearish/Mixed", "impact": "...", "summary": "..." }} ] }}
         {format_instruction}
         """
     elif module_type == "tech":
         return f"""
         {base_info}
-        角色：一个只说中文的科技产业观察家。
-        任务：从海量数据中挖掘有价值的市场信息。
-        要求：
-        1. 【数量强制】：至少输出 20-50 条独立新闻。
-        2. 【细分领域】：覆盖 AI大模型、芯片半导体、智能硬件(手机/汽车)、互联网巨头动态、前沿黑科技。
-        3. 【深度解读】：summary 需解释技术原理或商业影响；prediction 必须给出具体预测，必须为这个事件评价和作出细节描述分析。
-        4. 【特别关注】：AI 相关新闻必须详细展开。
+        角色：科技前沿观察员。
+        
+        【summary 格式严格要求】：
+        请按以下结构分点输出：
+        
+        【🚀 颠覆性突破】
+        1. ...
+        2. ...
+        
+        【🤖 AI 与大模型】
+        1. ...
+        2. ...
+        
+        【📱 硬件与芯片】
+        1. ...
         
         输出 JSON: {{ "summary": "...", "items": [ {{ "title": "...", "summary": "...", "prediction": "...", "special_note": "AI/芯片/无" }} ] }}
         {format_instruction}
@@ -94,12 +113,19 @@ def get_prompt(module_type, data_text):
     elif module_type == "global":
         return f"""
         {base_info}
-        角色：一个只说中文的国际局势专家。
-        任务：从海量数据中挖掘有价值的市场信息。
-        要求：
-        1. 【数量强制】：至少输出 10 条以上。
-        2. 【关注点】：战争冲突、大国外交、能源危机、贸易制裁。
-        3. 【经济关联】：必须分析该政治事件对经济/市场的潜在冲击，必须为这个事件评价和作出细节描述分析。
+        角色：国际局势观察员。
+        
+        【economy_summary 格式严格要求】：
+        分点输出：
+        
+        【🌍 地缘焦点】
+        1. ...
+        
+        【⚔️ 战争与冲突】
+        1. ...
+        
+        【🤝 外交动态】
+        1. ...
         
         输出 JSON: {{ "economy_summary": "...", "items": [ {{ "title": "...", "sentiment": "...", "impact": "...", "summary": "..." }} ] }}
         {format_instruction}
@@ -107,12 +133,16 @@ def get_prompt(module_type, data_text):
     else:
         return f"""
         {base_info}
-        Role: 一个只说中文的互联网舆情分析师。
-        任务：提炼全网热点。
-        要求：
-        1. 【数量强制】：至少 30 条。
-        2. 【去重】：去除广告，保留社会民生、娱乐八卦、网络热梗。
-        3. 【点评】：comment 需辛辣幽默，必须为这个事件评价和作出细节描述分析。
+        角色：热搜挖掘机。
+        
+        【summary 格式严格要求】：
+        分点输出：
+        
+        【🔥 全民热议】
+        1. ...
+        
+        【🍉 吃瓜一线】
+        1. ...
         
         输出 JSON: {{ "summary": "...", "items": [ {{ "title": "...", "comment": "..." }} ] }}
         {format_instruction}
@@ -141,11 +171,9 @@ def process_module(key, config):
         
         ai_json = json.loads(response.text)
         
-        # 链接还原逻辑
         for item in ai_json.get("items", []):
             t = item.get("title")
             item['url'] = "#"
-            # 模糊匹配优化：只要标题包含关键词就算匹配
             for raw_t, raw_u in url_lookup.items():
                 if t in raw_t or raw_t in t:
                     item['url'] = raw_u
@@ -155,7 +183,7 @@ def process_module(key, config):
         
         with open(config['out'], "w", encoding="utf-8") as f:
             json.dump(ai_json, f, ensure_ascii=False, indent=2)
-        print(f"✅ Generated: {config['out']} (包含 {len(ai_json.get('items', []))} 条新闻)")
+        print(f"✅ Generated: {config['out']}")
         
     except Exception as e:
         print(f"❌ Error {key}: {e}")
@@ -163,6 +191,4 @@ def process_module(key, config):
 if __name__ == "__main__":
     for key, config in FILES_CONFIG.items():
         process_module(key, config)
-        time.sleep(5) # 稍微延长间隔，让 Key 喘口气
-
-
+        time.sleep(5)
