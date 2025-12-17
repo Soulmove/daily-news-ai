@@ -4,28 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>InfoFocus | AI 全网舆情智库</title>
-    
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.3.4/vue.global.prod.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous">
-
-    <script>
-        window.onerror = function(msg, url, line, col, error) {
-            // 忽略一些良性的 ResizeObserver 错误
-            if (msg.includes('ResizeObserver')) return;
-            
-            var errorBox = document.getElementById('error-box');
-            if (errorBox) {
-                errorBox.style.display = 'block';
-                var text = "⚠️ 网页崩溃了 (自动诊断):\n";
-                text += "错误信息: " + msg + "\n";
-                if (line) text += "行号: " + line + "\n";
-                text += "\n尝试点击下方红色按钮修复。";
-                document.getElementById('error-msg').innerText = text;
-            }
-        };
-    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Serif+SC:wght@700&family=Orbitron:wght@500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <script>
         tailwind.config = {
@@ -56,29 +38,27 @@
         .dark body { background-color: #0f172a; color: #f1f5f9; }
         [v-cloak] { display: none; }
         
+        /* 滚动条美化 */
         .thin-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
         .thin-scrollbar::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 9999px; }
         .dark .thin-scrollbar::-webkit-scrollbar-thumb { background-color: #334155; }
         
+        /* 隐藏横向滚动条但保留滚动功能 */
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
         .read-item { opacity: 0.6; filter: grayscale(100%); transition: all 0.3s ease; }
+        
+        /* 赛博朋克特效 */
         .cyber-border { position: relative; background: linear-gradient(90deg, #22d3ee, #a855f7); padding: 1px; }
         .cyber-inner { background-color: #020617; height: 100%; width: 100%; }
+
+        /* 娱乐卡片特效 */
         .ent-card { background: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(255,255,255,0.4)); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.3); }
         .dark .ent-card { background: linear-gradient(135deg, rgba(30,41,59,0.8), rgba(15,23,42,0.6)); border-color: rgba(255,255,255,0.05); }
     </style>
 </head>
 <body class="h-full flex overflow-hidden selection:bg-blue-500 selection:text-white">
-
-<div id="error-box" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(255,255,255,0.95); z-index:9999; padding:30px; color:#ef4444; font-family:monospace; backdrop-filter:blur(10px);">
-    <h3 style="font-size:24px; font-weight:bold; margin-bottom:15px;">🔧 程序崩溃保护模式</h3>
-    <pre id="error-msg" style="white-space:pre-wrap; background:#fee2e2; padding:15px; border-radius:10px; border:1px solid #fca5a5; margin-bottom:20px;"></pre>
-    <button onclick="localStorage.clear(); location.reload();" style="padding:12px 24px; background:#ef4444; color:white; border:none; border-radius:8px; font-weight:bold; cursor:pointer; font-size:16px; box-shadow: 0 4px 6px -1px rgba(239, 68, 68, 0.5);">
-        🚀 点击一键修复 (清空缓存并重载)
-    </button>
-</div>
 
 <div id="app" v-cloak class="flex w-full h-full relative transition-colors duration-300">
 
@@ -225,7 +205,7 @@
                     <h3 :class="['text-xs md:text-sm font-bold uppercase tracking-widest mb-3 md:mb-4 flex items-center gap-2 relative z-10', currentTheme.summaryTitle]">
                         <i class="fa-solid fa-microchip"></i> AI 核心综述
                     </h3>
-                    <p :class="['text-base md:text-lg leading-loose font-medium relative z-10 whitespace-pre-wrap text-justify', currentTheme.summaryText]" style="font-family: 'Noto Serif SC', serif;">
+                    <p :class="['text-base md:text-lg leading-relaxed font-medium relative z-10 text-justify', currentTheme.summaryText]" style="font-family: 'Noto Serif SC', serif;">
                         {{ computedSummary }}
                     </p>
                 </div>
@@ -394,7 +374,7 @@
             const isDarkMode = ref(false);
             const debugMode = ref(false);
             const isMobileMenuOpen = ref(false); 
-            const isRawMenuOpen = ref(false); 
+            const isRawMenuOpen = ref(false); // 📱 手机端原始数据菜单开关
             const showHelpModal = ref(false); 
             const currentView = ref('smart');
             const currentSmartTab = ref('finance');
@@ -492,38 +472,6 @@
                 rawDataLastUpdate.value = `${dateStr} ${timeStr}`;
             };
 
-            // 🔥 核心修复：更强的容错加载，防止脏数据导致白屏
-            const loadLocalStorage = () => {
-                try {
-                    const fav = localStorage.getItem('favorites');
-                    if (fav) {
-                        try {
-                            const parsed = JSON.parse(fav);
-                            if (Array.isArray(parsed)) parsed.forEach(id => favoriteIds.add(id));
-                        } catch(e) { console.warn('Fav data corrupt, reset'); }
-                    }
-                    const read = localStorage.getItem('readItems');
-                    if (read) {
-                        try {
-                            const parsed = JSON.parse(read);
-                            if (Array.isArray(parsed)) parsed.forEach(id => readSet.add(id));
-                        } catch(e) { console.warn('Read data corrupt, reset'); }
-                    }
-                    const dark = localStorage.getItem('darkMode');
-                    if (dark === 'true') { isDarkMode.value = true; }
-                } catch (e) {
-                    console.error("LocalStorage serious error, clearing:", e);
-                    localStorage.clear();
-                }
-            };
-
-            const saveLocalStorage = () => {
-                try {
-                    localStorage.setItem('favorites', JSON.stringify([...favoriteIds]));
-                    localStorage.setItem('readItems', JSON.stringify([...readSet]));
-                } catch(e) { console.warn('Save failed', e); }
-            };
-
             onMounted(async () => {
                 loadLocalStorage();
                 if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
@@ -537,23 +485,18 @@
                 const t = new Date().getTime();
                 loading.value = true;
                 
-                // 加载数据，失败也不影响主界面
-                try {
-                    smartData.finance = await safeFetch(`./analysis_finance.json?t=${t}`);
-                    smartData.global = await safeFetch(`./analysis_global.json?t=${t}`);
-                    smartData.tech = await safeFetch(`./analysis_tech.json?t=${t}`);
-                    smartData.general = await safeFetch(`./analysis_general.json?t=${t}`);
-                    
-                    const fData = await safeFetch(`./data_finance.json?t=${t}`); rawData.finance = Array.isArray(fData) ? fData : [];
-                    const gData = await safeFetch(`./data_global.json?t=${t}`); rawData.global = Array.isArray(gData) ? gData : [];
-                    const tData = await safeFetch(`./data_tech.json?t=${t}`); rawData.tech = Array.isArray(tData) ? tData : [];
-                    const genData = await safeFetch(`./data_general.json?t=${t}`); rawData.general = Array.isArray(genData) ? genData : [];
+                smartData.finance = await safeFetch(`./analysis_finance.json?t=${t}`);
+                smartData.global = await safeFetch(`./analysis_global.json?t=${t}`);
+                smartData.tech = await safeFetch(`./analysis_tech.json?t=${t}`);
+                smartData.general = await safeFetch(`./analysis_general.json?t=${t}`);
+                
+                const fData = await safeFetch(`./data_finance.json?t=${t}`); rawData.finance = Array.isArray(fData) ? fData : [];
+                const gData = await safeFetch(`./data_global.json?t=${t}`); rawData.global = Array.isArray(gData) ? gData : [];
+                const tData = await safeFetch(`./data_tech.json?t=${t}`); rawData.tech = Array.isArray(tData) ? tData : [];
+                const genData = await safeFetch(`./data_general.json?t=${t}`); rawData.general = Array.isArray(genData) ? genData : [];
 
-                    const anyData = smartData.finance || smartData.tech;
-                    if (anyData?.date) lastUpdateTime.value = anyData.date;
-                } catch (e) {
-                    console.error("Data load error:", e);
-                }
+                const anyData = smartData.finance || smartData.tech;
+                if (anyData?.date) lastUpdateTime.value = anyData.date;
                 
                 loading.value = false;
             });
@@ -646,15 +589,17 @@
             const navBtnClass = (view) => `w-full text-left px-4 py-3 rounded-xl flex items-center gap-4 transition-all font-medium ${currentView.value === view || (view === 'help' && false) ? (isDarkMode.value ? 'bg-slate-800 text-white shadow-inner' : 'bg-slate-100 text-slate-900 shadow-sm') : (isDarkMode.value ? 'text-slate-400 hover:bg-slate-800/50' : 'text-slate-500 hover:bg-slate-50')}`;
             const rawNavClass = (cat) => `w-full text-left px-3 py-2 rounded-lg text-sm font-medium flex items-center justify-between transition-colors capitalize ${rawCategory.value === cat ? 'bg-slate-100 dark:bg-slate-700 text-slate-900 dark:text-slate-100' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700'}`;
 
-            const getCategoryDisplayName = (cat) => {
-                const map = { all: '全部', fav: '收藏', finance: 'Finance', global: 'Global', tech: 'Tech', general: 'General' };
-                return map[cat] || cat;
-            };
-
-            const getCategoryCount = (cat) => {
-                if (cat === 'all') return totalRawSources.value;
-                if (cat === 'fav') return favoriteIds.size;
-                return rawCategoryCounts.value[cat] || 0;
+            const toggleDarkMode = () => { isDarkMode.value = !isDarkMode.value; document.documentElement.classList.toggle('dark', isDarkMode.value); localStorage.setItem('darkMode', isDarkMode.value); };
+            const isFavorite = (id) => favoriteIds.has(id);
+            const toggleFavorite = (id) => { favoriteIds.has(id) ? favoriteIds.delete(id) : favoriteIds.add(id); saveLocalStorage(); };
+            const isRead = (title) => readSet.has(title);
+            const toggleRead = (title) => { readSet.has(title) ? readSet.delete(title) : readSet.add(title); saveLocalStorage(); };
+            
+            const saveLocalStorage = () => { localStorage.setItem('favorites', JSON.stringify([...favoriteIds])); localStorage.setItem('readItems', JSON.stringify([...readSet])); };
+            const loadLocalStorage = () => {
+                const fav = localStorage.getItem('favorites'); if (fav) new Set(JSON.parse(fav)).forEach(id => favoriteIds.add(id));
+                const read = localStorage.getItem('readItems'); if (read) new Set(JSON.parse(read)).forEach(id => readSet.add(id));
+                const dark = localStorage.getItem('darkMode'); if (dark === 'true') { isDarkMode.value = true; }
             };
 
             const getTagStyle = (item) => {
@@ -671,6 +616,18 @@
             };
              const getCategoryIcon = (cat) => ({ finance: 'fa-coins', global: 'fa-globe', tech: 'fa-microchip', general: 'fa-fire' }[cat] || 'fa-circle');
             const getCategoryColorClass = (cat) => ({ finance: 'bg-amber-500', global: 'bg-blue-500', tech: 'bg-cyan-500', general: 'bg-rose-500' }[cat] || 'bg-slate-500');
+
+            // 辅助函数：获取选中分类的显示名称
+            const getCategoryDisplayName = (cat) => {
+                const map = { all: '全部', fav: '收藏', finance: 'Finance', global: 'Global', tech: 'Tech', general: 'General' };
+                return map[cat] || cat;
+            };
+
+            const getCategoryCount = (cat) => {
+                if (cat === 'all') return totalRawSources.value;
+                if (cat === 'fav') return favoriteIds.size;
+                return rawCategoryCounts.value[cat] || 0;
+            };
 
             return {
                 loading, isDarkMode, debugMode, isMobileMenuOpen, isRawMenuOpen, showHelpModal, currentView, currentSmartTab, rawCategory, searchText, lastUpdateTime, rawDataLastUpdate,
