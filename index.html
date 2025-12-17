@@ -135,9 +135,6 @@
         </nav>
         
         <div class="p-4 border-t" :class="currentTheme.sidebarBorder">
-            <button @click="debugMode = !debugMode" class="w-full text-xs text-slate-400 hover:text-blue-500 mb-2 opacity-50 hover:opacity-100">
-                <i class="fa-solid fa-wrench"></i> {{ debugMode ? '关闭调试' : '数据异常点我' }}
-            </button>
             <button @click="toggleDarkMode" :class="['w-full flex items-center justify-center gap-2 py-2 rounded-lg transition-colors', currentTheme.sidebarHover, currentTheme.sidebarText]">
                 <i :class="['fa-solid', isDarkMode ? 'fa-sun' : 'fa-moon']"></i>
                 <span class="text-sm">{{ isDarkMode ? '切换日间模式' : '切换深色模式' }}</span>
@@ -369,7 +366,7 @@
 <script>
     const { createApp, reactive, computed, ref, onMounted } = Vue
 
-    createApp({
+    const app = createApp({
         setup() {
             const loading = ref(true);
             const isDarkMode = ref(false);
@@ -471,6 +468,33 @@
                 const timeStr = `${String(h).padStart(2, '0')}:00`;
                 const dateStr = `${now.getMonth()+1}-${now.getDate()}`;
                 rawDataLastUpdate.value = `${dateStr} ${timeStr}`;
+            };
+
+            // 🔥 关键修复：安全的 LocalStorage 加载
+            const loadLocalStorage = () => {
+                try {
+                    const fav = localStorage.getItem('favorites');
+                    if (fav) {
+                        const parsed = JSON.parse(fav);
+                        if (Array.isArray(parsed)) parsed.forEach(id => favoriteIds.add(id));
+                    }
+                    const read = localStorage.getItem('readItems');
+                    if (read) {
+                        const parsed = JSON.parse(read);
+                        if (Array.isArray(parsed)) parsed.forEach(id => readSet.add(id));
+                    }
+                    const dark = localStorage.getItem('darkMode');
+                    if (dark === 'true') { isDarkMode.value = true; }
+                } catch (e) {
+                    console.error("LocalStorage corrupted, resetting:", e);
+                    localStorage.removeItem('favorites');
+                    localStorage.removeItem('readItems');
+                }
+            };
+
+            const saveLocalStorage = () => {
+                localStorage.setItem('favorites', JSON.stringify([...favoriteIds]));
+                localStorage.setItem('readItems', JSON.stringify([...readSet]));
             };
 
             onMounted(async () => {
@@ -590,7 +614,6 @@
             const navBtnClass = (view) => `w-full text-left px-4 py-3 rounded-xl flex items-center gap-4 transition-all font-medium ${currentView.value === view || (view === 'help' && false) ? (isDarkMode.value ? 'bg-slate-800 text-white shadow-inner' : 'bg-slate-100 text-slate-900 shadow-sm') : (isDarkMode.value ? 'text-slate-400 hover:bg-slate-800/50' : 'text-slate-500 hover:bg-slate-50')}`;
             const rawNavClass = (cat) => `w-full text-left px-3 py-2 rounded-lg text-sm font-medium flex items-center justify-between transition-colors capitalize ${rawCategory.value === cat ? 'bg-slate-100 dark:bg-slate-700 text-slate-900 dark:text-slate-100' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700'}`;
 
-            // 辅助函数：获取选中分类的显示名称
             const getCategoryDisplayName = (cat) => {
                 const map = { all: '全部', fav: '收藏', finance: 'Finance', global: 'Global', tech: 'Tech', general: 'General' };
                 return map[cat] || cat;
@@ -602,6 +625,21 @@
                 return rawCategoryCounts.value[cat] || 0;
             };
 
+            const getTagStyle = (item) => {
+                if (item.sentiment === 'Bullish') return 'bg-red-100 text-red-700 border border-red-200 dark:bg-red-900/30 dark:text-red-400 dark:border-red-800';
+                if (item.sentiment === 'Bearish') return 'bg-green-100 text-green-700 border border-green-200 dark:bg-green-900/30 dark:text-green-400 dark:border-green-800';
+                if (item.prediction) return 'bg-cyan-100 text-cyan-700 border border-cyan-200 dark:bg-cyan-900/30 dark:text-cyan-400 dark:border-cyan-800';
+                return 'bg-slate-100 text-slate-600 border border-slate-200 dark:bg-slate-800 dark:text-slate-400 dark:border-slate-700';
+            };
+            const getTagIcon = (item) => {
+                if (item.sentiment === 'Bullish') return 'fa-solid fa-arrow-trend-up mr-1';
+                if (item.sentiment === 'Bearish') return 'fa-solid fa-arrow-trend-down mr-1';
+                if (item.prediction) return 'fa-solid fa-crystal-ball mr-1';
+                return 'fa-solid fa-tag mr-1';
+            };
+             const getCategoryIcon = (cat) => ({ finance: 'fa-coins', global: 'fa-globe', tech: 'fa-microchip', general: 'fa-fire' }[cat] || 'fa-circle');
+            const getCategoryColorClass = (cat) => ({ finance: 'bg-amber-500', global: 'bg-blue-500', tech: 'bg-cyan-500', general: 'bg-rose-500' }[cat] || 'bg-slate-500');
+
             return {
                 loading, isDarkMode, debugMode, isMobileMenuOpen, isRawMenuOpen, showHelpModal, currentView, currentSmartTab, rawCategory, searchText, lastUpdateTime, rawDataLastUpdate,
                 smartData, filteredRawList, favoriteIds, rawCategoryCounts, totalRawSources, onlineUsers,
@@ -610,7 +648,9 @@
                 getTagStyle, getTagIcon, getCategoryIcon, getCategoryColorClass, getDisplayName, sentimentTranslate, getCategoryDisplayName, getCategoryCount
             }
         }
-    }).mount('#app')
+    });
+
+    app.mount('#app');
 </script>
 </body>
 </html>
