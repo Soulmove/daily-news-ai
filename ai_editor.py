@@ -19,7 +19,7 @@ else:
 
 # 💡 提示：新版 SDK 通常使用 'gemini-2.0-flash' 或 'gemini-1.5-flash'
 # 如果你的账号有 'gemini-3.0-flash' 权限，可以在这里修改
-MODEL_NAME = "gemini-3.0-flash"
+MODEL_NAME = "gemini-3-flash-preview"
 
 FILES_CONFIG = {
     "finance": { "in": "data_finance.json", "out": "analysis_finance.json", "type": "finance", "key_env": "KEY_FINANCE" },
@@ -221,4 +221,5 @@ if __name__ == "__main__":
         process_module(key, config)
         # 稍微增加延时，防止触发新 API 的速率限制
         time.sleep(8)
+
 
