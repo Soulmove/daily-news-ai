@@ -21,8 +21,8 @@ jobs:
           python-version: '3.10'
 
       - name: 📦 安装依赖
-        # 强制安装最新版库，防止报 404 错误
-        run: pip install requests google-generativeai>=0.7.2
+        # ⚠️⚠️⚠️ 关键修改：改用 google-genai 库以支持最新模型 ⚠️⚠️⚠️
+        run: pip install requests google-genai
 
       - name: 🧠 运行 AI 分析
         env:
