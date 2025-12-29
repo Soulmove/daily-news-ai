@@ -1,9 +1,12 @@
 import json
 import os
 import time
-import google.generativeai as genai
 from datetime import datetime
-from google.generativeai.types import HarmCategory, HarmBlockThreshold
+
+# ================= 📦 新版 SDK 导入 =================
+# 必须先在 requirements.txt 或 workflow 中安装 google-genai
+from google import genai
+from google.genai import types
 
 # ================= 🔧 智能配置区域 =================
 if os.environ.get("GITHUB_ACTIONS"):
@@ -14,20 +17,15 @@ else:
     os.environ["HTTP_PROXY"] = f"http://127.0.0.1:{PROXY_PORT}"
     os.environ["HTTPS_PROXY"] = f"http://127.0.0.1:{PROXY_PORT}"
 
-MODEL_NAME = "gemini-2.5-flash"
+# 💡 提示：新版 SDK 通常使用 'gemini-2.0-flash' 或 'gemini-1.5-flash'
+# 如果你的账号有 'gemini-3.0-flash' 权限，可以在这里修改
+MODEL_NAME = "gemini-3-flash"
 
 FILES_CONFIG = {
     "finance": { "in": "data_finance.json", "out": "analysis_finance.json", "type": "finance", "key_env": "KEY_FINANCE" },
     "global": { "in": "data_global.json",  "out": "analysis_global.json",  "type": "global",  "key_env": "KEY_GLOBAL" },
     "tech": { "in": "data_tech.json",    "out": "analysis_tech.json",    "type": "tech",    "key_env": "KEY_TECH" },
     "general": { "in": "data_general.json", "out": "analysis_general.json", "type": "general", "key_env": "KEY_GENERAL" }
-}
-
-safety_settings = {
-    HarmCategory.HARM_CATEGORY_HARASSMENT: HarmBlockThreshold.BLOCK_NONE,
-    HarmCategory.HARM_CATEGORY_HATE_SPEECH: HarmBlockThreshold.BLOCK_NONE,
-    HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT: HarmBlockThreshold.BLOCK_NONE,
-    HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT: HarmBlockThreshold.BLOCK_NONE,
 }
 
 def load_and_simplify(filepath):
@@ -61,7 +59,7 @@ def get_prompt(module_type, data_text):
     base_info = f"Date:{datetime.now().strftime('%Y-%m-%d')}\nData:\n{data_text}"
     format_instruction = "Return strictly pure JSON only. No Markdown."
     
-    # 🔥🔥🔥 核心修改区：强制 AI 使用分点列表格式，并要求换行 🔥🔥🔥
+    # 提示词保持原样，未做修改
     if module_type == "finance":
         return f"""
         {base_info}
@@ -152,44 +150,74 @@ def process_module(key, config):
         print(f"❌ Skip {key}: No API Key found.")
         return
 
-    genai.configure(api_key=current_api_key)
-    
-    slim_text, url_lookup = load_and_simplify(config['in'])
-    if not slim_text: return
-    
+    # ================= ⚡ 新版 SDK 调用逻辑 =================
     try:
-        model = genai.GenerativeModel(MODEL_NAME)
-        response = model.generate_content(
-            get_prompt(config['type'], slim_text),
-            safety_settings=safety_settings,
-            generation_config={"response_mime_type": "application/json"}
+        # 1. 初始化客户端
+        client = genai.Client(api_key=current_api_key)
+        
+        slim_text, url_lookup = load_and_simplify(config['in'])
+        if not slim_text: return
+        
+        # 2. 发送请求 (使用新版 generate_content 方法)
+        response = client.models.generate_content(
+            model=MODEL_NAME,
+            contents=get_prompt(config['type'], slim_text),
+            config=types.GenerateContentConfig(
+                response_mime_type="application/json",
+                safety_settings=[
+                    types.SafetySetting(
+                        category="HARM_CATEGORY_HARASSMENT",
+                        threshold="BLOCK_NONE"
+                    ),
+                    types.SafetySetting(
+                        category="HARM_CATEGORY_HATE_SPEECH",
+                        threshold="BLOCK_NONE"
+                    ),
+                    types.SafetySetting(
+                        category="HARM_CATEGORY_SEXUALLY_EXPLICIT",
+                        threshold="BLOCK_NONE"
+                    ),
+                    types.SafetySetting(
+                        category="HARM_CATEGORY_DANGEROUS_CONTENT",
+                        threshold="BLOCK_NONE"
+                    )
+                ]
+            )
         )
         
+        # 3. 解析 JSON 响应
+        # 新版 SDK 的 response.text 直接返回字符串
+        if not response.text:
+            print(f"⚠️ Warning {key}: Empty response from API.")
+            return
+
         ai_json = json.loads(response.text)
         
+        # 4. URL 回填逻辑 (保持不变)
         for item in ai_json.get("items", []):
             t = item.get("title")
             item['url'] = "#"
+            # 简单的模糊匹配
             for raw_t, raw_u in url_lookup.items():
-                if t in raw_t or raw_t in t:
+                if t and (t in raw_t or raw_t in t):
                     item['url'] = raw_u
                     break
         
         ai_json['date'] = datetime.now().strftime("%Y-%m-%d %H:%M")
         
+        # 5. 保存文件
         with open(config['out'], "w", encoding="utf-8") as f:
             json.dump(ai_json, f, ensure_ascii=False, indent=2)
         print(f"✅ Generated: {config['out']}")
         
     except Exception as e:
         print(f"❌ Error {key}: {e}")
+        # 打印更多调试信息（如果存在）
+        if hasattr(e, 'response'):
+             print(f"🔍 API Response Info: {e.response}")
 
 if __name__ == "__main__":
     for key, config in FILES_CONFIG.items():
         process_module(key, config)
-        time.sleep(5)
-
-
-
-
-
+        # 稍微增加延时，防止触发新 API 的速率限制
+        time.sleep(8)
