@@ -6,30 +6,37 @@ from datetime import datetime
 from google import genai
 from google.genai import types
 
-# ================= 🔧 模型与策略配置 (可自定义) =================
-
-# 1. 定义你可用的模型池
-# 格式: "别名": "谷歌官方模型ID"
+# ================= 🔧 模型与策略配置 =================
 MODEL_REGISTRY = {
-    "smart": "gemini-3-flash-preview",       # 或 gemini-2.0-pro-exp-02-05 (用于需要深度的评论)
-    "cheap": "gemini-2.5-flash", # 或 gemini-1.5-flash (用于普通吃瓜评论，节省成本)
-    "latest": "gemini-2.5-flash"     # 你想尝试的新模型
+    "smart": "gemini-3-flash-preview",       # 聪明/专业角色用
+    "cheap": "gemini-2.5-flash", # 普通/吃瓜角色用
 }
 
-# 2. 默认模型 (如果没有特别指定，就用这个)
 DEFAULT_MODEL = "cheap"
 
-# 3. 角色分组配置
-# 在这里的关键词会被分配给 "smart" 模型，其他的默认去 "cheap"
-# 比如：医生、分析师、博主 需要更有逻辑，所以用好模型
+# 🌟 智能分组关键词：包含这些词的角色会分配给 "smart" 模型
 HIGH_INTEL_KEYWORDS = [
-    "医生", "分析师", "博主", "老师", "创业者", 
-    "大厂", "律师", "公务员", "老干部", "悲观主义者"
+    "医生", "分析师", "博主", "老师", "创业者", "捞偏门", 
+    "大厂", "律师", "公务员", "老干部", "首富", 
+    "马斯克", "马云", "老板", "商家", "学霸", "失业人员"
 ]
 
-# ================= 🎭 30种职业与人设定义 =================
-# 程序会自动根据上面的关键词，把这些人分成两组去跑不同的 AI
+# ================= 🎭 40+ 种职业与人设定义 (已扩展) =================
 PERSONAS = [
+    # --- 新增角色 ---
+    "跨境电商商家 (焦虑/关注汇率与关税)", 
+    "世界首富 (凡尔赛/宏观视角)", 
+    "上市公司老板 (画大饼/危机感)", 
+    "国内电商商家 (卷王/抱怨退货率)", 
+    "埃隆马斯克 (硬核/第一性原理/英语口癖)", 
+    "马云 (退隐/哲理/太极)", 
+    "失业人员 (迷茫/自嘲/寻找机会)", 
+    "高中生 (刷题累/吐槽教育/玩梗)", 
+    "数学老师 (逻辑严密/喜欢推理)", 
+    "语文老师 (感性/引经据典)", 
+    "捞偏门的人 (容易找点捷径突破口和有对信息敏锐的洞察能力/能注意到平常人注意不到的信息差)", 
+    
+    # --- 原有角色 ---
     "出租车司机 (老练/愤世嫉俗)", "大一新生 (清澈/充满希望)", "菜市场大妈 (务实/关心物价)", 
     "互联网大厂P7 (焦虑/满口黑话)", "退休老干部 (严肃/宏大叙事)", "三甲医院医生 (冷静/疲惫)", 
     "全职妈妈 (细腻/担忧)", "城中村房东 (悠闲/凡尔赛)", "小学班主任 (操心/严厉)", 
@@ -53,17 +60,13 @@ FILES_CONFIG = {
 KEY_VARS = ["KEY_1", "KEY_2", "KEY_3", "KEY_4", "KEY_5", "KEY_6", "KEY_7", "KEY_8"]
 
 def get_random_client():
-    """随机抽取一个有效的 Client"""
     valid_keys = [os.environ.get(k) for k in KEY_VARS if os.environ.get(k)]
     if not valid_keys:
-        print("❌ 错误：未检测到任何 API Key，请在 Secrets 中配置 KEY_1 到 KEY_8")
+        print("❌ 错误：未检测到 API Key")
         return None
-    selected_key = random.choice(valid_keys)
-    # 统一使用 v1alpha 以获得最大模型兼容性
-    return genai.Client(api_key=selected_key, http_options={'api_version': 'v1alpha'})
+    return genai.Client(api_key=random.choice(valid_keys), http_options={'api_version': 'v1alpha'})
 
 def load_news_summary(filepath):
-    """读取新闻数据"""
     if not os.path.exists(filepath): return ""
     with open(filepath, "r", encoding="utf-8") as f: data = json.load(f)
     summary = []
@@ -77,49 +80,44 @@ def load_news_summary(filepath):
     return "\n".join(summary)
 
 def assign_model_to_personas():
-    """将角色分配到不同的模型批次"""
     batches = {}
-    
     for persona in PERSONAS:
-        # 默认模型
         assigned_alias = DEFAULT_MODEL
-        
-        # 检查是否属于高智商组
         for kw in HIGH_INTEL_KEYWORDS:
             if kw in persona:
                 assigned_alias = "smart"
                 break
-        
         real_model_name = MODEL_REGISTRY.get(assigned_alias, MODEL_REGISTRY[DEFAULT_MODEL])
-        
-        if real_model_name not in batches:
-            batches[real_model_name] = []
+        if real_model_name not in batches: batches[real_model_name] = []
         batches[real_model_name].append(persona)
-        
     return batches
 
 def process_batch(client, model_name, personas_list, news_text, category_name):
-    """处理单个批次的生成请求"""
     if not personas_list: return []
+    print(f"   ⚡ [{model_name}] 生成 {len(personas_list)} 个角色评论...")
     
-    print(f"   ⚡ 使用模型 [{model_name}] 生成 {len(personas_list)} 个角色的评论...")
-    
+    # 🔥🔥🔥 核心 Prompt 修改：增加随机性和长短不一的要求 🔥🔥🔥
     prompt = f"""
     你是一个全网舆情模拟器。请阅读今天的【{category_name}】板块热搜新闻：
     {news_text}
 
-    任务：模拟以下列表中的不同职业/人设的真实网友，针对上述新闻发表简短评论。
+    任务：模拟以下列表中的不同职业/人设的真实网友，针对上述新闻发表评论。
     
     【待模拟角色列表】：
     {', '.join(personas_list)}
 
-    要求：
-    1. **完全代入角色**：语气、用词、关注点必须符合人设。
-    2. **情绪多样化**：包含愤怒、调侃、焦虑、开心、讽刺等不同情绪。
-    3. **口语化**：像真实的社交媒体评论，不要书面语，可以带Emoji。
-    4. **严格JSON输出**：只返回 JSON 数组，不要Markdown标记。
+    【⚠️ 严格的风格要求】：
+    1. **完全代入角色**：如果是马斯克就要像马斯克（提第一性原理/火星/Doge），如果是学生就要像学生（作业/考试）。
+    2. **字数随机化**：
+       - 大部分评论保持简短（30-60字）。
+       - **必须有 3-5 个角色发表“长篇大论”**（100-150字），进行深度分析或情绪发泄。
+       - 极少数角色可以只发几个字（如“牛逼”、“甚至有点想笑”）。
+    3. **Emoji 随机化**：
+       - 有些人（如00后/销售）喜欢狂用 Emoji。
+       - 有些人（如老师/大佬/老干部）非常严肃，**绝对不用** Emoji。
+    4. **拒绝死板**：不要每个人的格式都一样，要像真实的评论区一样混乱而真实。
 
-    输出格式示例：
+    输出 JSON 数组格式：
     [
         {{
             "role": "角色全名",
@@ -134,66 +132,41 @@ def process_batch(client, model_name, personas_list, news_text, category_name):
         response = client.models.generate_content(
             model=model_name,
             contents=prompt,
-            config=types.GenerateContentConfig(
-                response_mime_type="application/json",
-                temperature=0.85 # 稍微调高一点，增加多样性
-            )
+            config=types.GenerateContentConfig(response_mime_type="application/json", temperature=0.9) # 温度调高，增加随机性
         )
         return json.loads(response.text)
     except Exception as e:
-        print(f"   ⚠️ 模型 {model_name} 生成部分失败: {e}")
+        print(f"   ⚠️ 错误: {e}")
         return []
 
 def generate_comments(category_key, config):
     client = get_random_client()
     if not client: return
-
-    print(f"🔄 [开始任务] 板块：{config['name']}")
-    
+    print(f"🔄 处理板块：{config['name']}")
     news_text = load_news_summary(config['in'])
-    if not news_text:
-        print(f"⚠️ {config['in']} 无数据，跳过。")
-        return
+    if not news_text: return
 
-    # 1. 分配任务批次
     batches = assign_model_to_personas()
     all_comments = []
 
-    # 2. 分批次调用不同模型
     for model_name, personas_sublist in batches.items():
-        # 这里可以加入随机延时，防止 API 限流
-        time.sleep(1) 
-        
-        # 为了容错，每个批次重新获取一个 Client (负载均衡)
+        time.sleep(1)
         batch_client = get_random_client() or client
-        
         comments = process_batch(batch_client, model_name, personas_sublist, news_text, config['name'])
-        if comments:
-            all_comments.extend(comments)
+        if comments: all_comments.extend(comments)
 
-    # 3. 结果混洗 (避免同一种模型的评论挨在一起)
     random.shuffle(all_comments)
+    
+    # 随机选取 30 条左右，避免太多
+    final_comments = all_comments[:35] if len(all_comments) > 35 else all_comments
 
-    # 4. 保存结果
-    if all_comments:
-        output_data = {
-            "date": datetime.now().strftime("%Y-%m-%d %H:%M"),
-            "category": category_key,
-            "comments": all_comments
-        }
-        
-        with open(config['out'], "w", encoding="utf-8") as f:
-            json.dump(output_data, f, ensure_ascii=False, indent=2)
-            
-        print(f"✅ {config['out']} 生成完毕！共 {len(all_comments)} 条评论。\n")
-    else:
-        print(f"❌ {config['name']} 生成失败，无有效评论。\n")
+    if final_comments:
+        output_data = { "date": datetime.now().strftime("%Y-%m-%d %H:%M"), "category": category_key, "comments": final_comments }
+        with open(config['out'], "w", encoding="utf-8") as f: json.dump(output_data, f, ensure_ascii=False, indent=2)
+        print(f"✅ 完成！生成 {len(final_comments)} 条评论。\n")
 
 if __name__ == "__main__":
-    print(f"🤖 多模型混合评论生成器启动...")
-    print(f"📋 模型注册表: {json.dumps(MODEL_REGISTRY, indent=2)}")
-    
+    print(f"🤖 AI 模拟评论启动...")
     for key, config in FILES_CONFIG.items():
         generate_comments(key, config)
-
-        time.sleep(3) # 板块之间稍微歇一下
+        time.sleep(2)
