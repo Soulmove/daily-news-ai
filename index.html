@@ -42,12 +42,12 @@
         .ent-card { background: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(255,255,255,0.4)); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.3); }
         .dark .ent-card { background: linear-gradient(135deg, rgba(30,41,59,0.8), rgba(15,23,42,0.6)); border-color: rgba(255,255,255,0.05); }
         
-        /* 下拉菜单动画 */
+        /* 菜单动画 */
         .menu-enter-active, .menu-leave-active { transition: all 0.2s ease; }
         .menu-enter-from, .menu-leave-to { opacity: 0; transform: scale(0.95); }
     </style>
 </head>
-<body class="h-full flex overflow-hidden selection:bg-blue-500 selection:text-white" @click="closeAllMenus">
+<body class="h-full flex overflow-hidden selection:bg-blue-500 selection:text-white">
 
 <div id="app" v-cloak class="flex w-full h-full relative transition-colors duration-300">
 
@@ -135,70 +135,151 @@
             <div :class="['shrink-0 px-4 md:px-8 pt-2 md:pt-4 pb-0 flex gap-4 md:gap-6 border-b text-sm font-medium transition-colors duration-300 overflow-x-auto hide-scrollbar', currentTheme.tabBorder]">
                 <button v-for="tab in smartTabs" :key="tab.id" @click="currentSmartTab = tab.id" :class="['pb-3 relative transition-all flex items-center gap-2 shrink-0 whitespace-nowrap', currentSmartTab === tab.id ? tab.activeClass + ' border-b-2' : 'opacity-50 hover:opacity-100 border-transparent text-slate-500 dark:text-slate-400']"><i :class="['fa-solid', tab.icon]"></i> {{ tab.name }}<span v-if="currentSmartTab === 'tech' && tab.id === 'tech'" class="absolute bottom-0 left-0 w-full h-0.5 bg-cyan-400 shadow-[0_0_10px_#22d3ee]"></span></button>
             </div>
+            
             <div class="flex-1 overflow-y-auto p-4 md:p-8 thin-scrollbar scroll-smooth">
                 <div v-if="currentSmartData?.error" class="mb-8 p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg flex items-center gap-3"><i class="fa-solid fa-triangle-exclamation text-xl"></i><div><p class="font-bold">数据加载失败</p><p class="text-xs opacity-75">原因: {{ currentSmartData.error }}</p></div></div>
                 
-                <div v-if="computedSummary" :class="['p-5 md:p-6 rounded-2xl mb-6 md:mb-8 shadow-xl relative overflow-hidden transition-all duration-300', currentTheme.summaryCard]"><div class="absolute top-0 right-0 p-8 opacity-10 pointer-events-none"><i :class="['fa-solid text-6xl md:text-8xl', currentSmartTabIcon]"></i></div><div v-if="currentSmartTab === 'tech'" class="cyber-inner absolute inset-0 -z-10"></div><div class="flex items-center gap-2 mb-4 md:mb-6 border-b border-black/10 dark:border-white/10 pb-3 relative z-10"><i class="fa-solid fa-microchip text-lg" :class="currentTheme.summaryTitle"></i><h3 :class="['text-sm md:text-base font-bold uppercase tracking-widest', currentTheme.summaryTitle]">AI 核心综述</h3></div><div class="relative z-10 space-y-6"><template v-if="structuredSummary.length > 0"><div v-for="(section, idx) in structuredSummary" :key="idx" class="group"><h4 v-if="section.title" :class="['text-sm md:text-base font-bold mb-3 flex items-center gap-2', currentTheme.summaryTitle]"><span class="w-1.5 h-1.5 rounded-full bg-current opacity-60"></span>{{ section.title }}</h4><ul class="space-y-3"><li v-for="(point, pIdx) in section.items" :key="pIdx" :class="['text-sm md:text-[15px] leading-relaxed flex items-start gap-2.5', currentTheme.summaryText]"><span class="mt-1.5 w-1.5 h-1.5 rounded-full shrink-0 bg-current opacity-40"></span><span class="text-justify">{{ point }}</span></li></ul></div></template><p v-else :class="['text-sm md:text-base leading-relaxed font-medium text-justify whitespace-pre-wrap', currentTheme.summaryText]">{{ computedSummary }}</p></div></div>
-                
-                <div class="grid grid-cols-1 xl:grid-cols-2 gap-4 md:gap-6"><div v-for="(item, idx) in computedItems" :key="idx" :class="['group rounded-xl p-5 md:p-6 transition-all relative overflow-hidden active:scale-[0.98]', isRead(item.title) ? 'read-item' : '', currentTheme.itemCard]"><div v-if="currentSmartTab === 'tech'" class="absolute inset-0 border border-cyan-500/30 rounded-xl pointer-events-none group-hover:border-cyan-400/60 transition-all"></div><div class="flex justify-between items-start gap-4 mb-3 relative z-10"><div><div class="flex flex-wrap items-center gap-2 mb-2"><span v-if="item.sentiment || item.prediction" :class="['px-2 py-0.5 rounded-md text-[10px] md:text-xs font-bold uppercase tracking-wider', getTagStyle(item)]"><i :class="getTagIcon(item)"></i> {{ sentimentTranslate(item.sentiment) || '未来预测' }}</span><span v-if="item.impact || item.special_note" class="px-2 py-0.5 rounded-md text-[10px] md:text-xs font-medium bg-black/5 dark:bg-white/10 text-slate-600 dark:text-slate-300 flex items-center gap-1"><i :class="['fa-solid', item.special_note ? 'fa-star text-yellow-500' : 'fa-crosshairs opacity-50']"></i>{{ item.impact || item.special_note }}</span></div><h3 :class="['text-lg md:text-xl font-bold leading-tight group-hover:text-blue-500 transition-colors', currentTheme.itemTitle]">{{ item.title }}</h3></div><button @click.stop="toggleRead(item.title)" class="shrink-0 text-xl md:text-2xl opacity-30 hover:opacity-100 transition-opacity p-1" :class="currentTheme.itemText"><i :class="['fa-regular', isRead(item.title) ? 'fa-circle-check text-green-500 opacity-100' : 'fa-circle']"></i></button></div><p :class="['text-sm leading-relaxed mb-4 line-clamp-4 group-hover:line-clamp-none transition-all relative z-10 text-justify', currentTheme.itemText]">{{ item.summary || item.comment || item.reason }}</p><a :href="item.url" target="_blank" @click.stop :class="['inline-flex items-center gap-1 text-xs font-bold uppercase tracking-widest transition-colors relative z-10', currentTheme.readMoreBtn]">Read Source <i class="fa-solid fa-arrow-right-long ml-1 group-hover:translate-x-1 transition-transform"></i></a></div></div>
-                
-                <div class="max-w-7xl mx-auto py-8 md:py-12 mt-8 border-t border-slate-200 dark:border-slate-800">
-                    <div class="flex items-center justify-between mb-6">
-                        <h3 class="text-lg md:text-xl font-bold text-slate-700 dark:text-slate-200 flex items-center gap-2">
-                            <i class="fa-solid fa-comments"></i> 读者讨论 
-                            <span class="text-xs font-normal opacity-60 ml-2">(30+位不同职业网友模拟)</span>
-                        </h3>
-                        <div v-if="blockedUsers.size > 0" class="relative group/blocked">
-                            <button class="text-xs px-3 py-1.5 rounded-full bg-red-100 text-red-600 hover:bg-red-200 dark:bg-red-900/30 dark:text-red-400 transition-colors">
-                                <i class="fa-solid fa-user-shield mr-1"></i> 已屏蔽 {{ blockedUsers.size }} 人
-                            </button>
-                            <div class="absolute right-0 top-full mt-2 w-48 bg-white dark:bg-slate-800 rounded-lg shadow-xl border border-slate-200 dark:border-slate-700 p-2 z-50 hidden group-hover/blocked:block">
-                                <div class="text-[10px] text-slate-400 px-2 pb-1 mb-1 border-b dark:border-slate-700">点击用户解除屏蔽</div>
-                                <div v-for="user in blockedUsers" :key="user" @click="toggleBlockUser(user)" class="px-2 py-1.5 text-xs rounded hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer flex justify-between items-center text-slate-600 dark:text-slate-300">
-                                    <span>{{ user }}</span>
-                                    <i class="fa-solid fa-rotate-left text-slate-400"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <div v-if="computedSummary" :class="['rounded-2xl mb-6 md:mb-8 shadow-xl relative overflow-hidden transition-all duration-300', currentTheme.summaryCard]">
+                     <div class="absolute top-0 right-0 p-8 opacity-10 pointer-events-none"><i :class="['fa-solid text-6xl md:text-8xl', currentSmartTabIcon]"></i></div>
+                     <div v-if="currentSmartTab === 'tech'" class="cyber-inner absolute inset-0 -z-10"></div>
+                     
+                     <div class="flex items-center justify-between p-5 md:p-6 pb-2 border-b border-black/10 dark:border-white/10 relative z-10 cursor-pointer" @click="isSummaryCollapsed = !isSummaryCollapsed">
+                         <div class="flex items-center gap-2">
+                            <i class="fa-solid fa-microchip text-lg" :class="currentTheme.summaryTitle"></i>
+                            <h3 :class="['text-sm md:text-base font-bold uppercase tracking-widest', currentTheme.summaryTitle]">AI 核心综述</h3>
+                         </div>
+                         <button class="w-8 h-8 rounded-full flex items-center justify-center hover:bg-black/10 dark:hover:bg-white/10 transition-colors">
+                             <i :class="['fa-solid transition-transform duration-300', isSummaryCollapsed ? 'fa-chevron-down' : 'fa-chevron-up', currentTheme.summaryTitle]"></i>
+                         </button>
+                     </div>
 
-                    <div v-if="currentComments && currentComments.length > 0" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <template v-for="(comment, cIdx) in filteredComments" :key="comment.name + cIdx">
-                            <div class="bg-white dark:bg-slate-800/50 p-4 rounded-xl border border-slate-100 dark:border-slate-700 hover:shadow-md transition-all flex gap-3 relative group">
-                                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-slate-200 to-slate-300 dark:from-slate-700 dark:to-slate-600 flex items-center justify-center shrink-0 text-lg">
-                                    <i :class="['fa-solid', getAvatarIcon(comment.role)]"></i>
-                                </div>
-                                <div class="flex-1 min-w-0 pr-6"> <div class="flex justify-between items-start mb-1">
-                                        <div>
-                                            <span class="font-bold text-sm text-slate-800 dark:text-slate-200">{{ comment.name }}</span>
-                                            <span class="text-xs text-slate-500 ml-2 px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-700">{{ comment.role }}</span>
-                                        </div>
-                                        <span class="text-[10px] px-2 py-0.5 rounded-full bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400 font-medium">{{ comment.emotion }}</span>
-                                    </div>
-                                    <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">{{ comment.content }}</p>
-                                </div>
-
-                                <div class="absolute top-4 right-3">
-                                    <button @click.stop="toggleMenu(cIdx)" class="text-slate-300 hover:text-slate-500 dark:text-slate-600 dark:hover:text-slate-400 p-1 rounded-full transition-colors">
-                                        <i class="fa-solid fa-ellipsis-vertical"></i>
-                                    </button>
-                                    
-                                    <transition name="menu">
-                                        <div v-if="activeCommentMenu === cIdx" class="absolute right-0 top-6 w-36 bg-white dark:bg-slate-800 rounded-lg shadow-xl border border-slate-200 dark:border-slate-700 py-1 z-20 origin-top-right">
-                                            <button @click.stop="toggleBlockUser(comment.name)" class="w-full text-left px-4 py-2 text-xs text-red-600 dark:text-red-400 hover:bg-slate-50 dark:hover:bg-slate-700 flex items-center gap-2">
-                                                <i class="fa-solid fa-ban"></i> 屏蔽该读者
-                                            </button>
-                                        </div>
-                                    </transition>
-                                </div>
+                     <div v-show="!isSummaryCollapsed" class="p-5 md:p-6 pt-4 relative z-10 space-y-6">
+                        <template v-if="structuredSummary.length > 0">
+                            <div v-for="(section, idx) in structuredSummary" :key="idx" class="group">
+                                <h4 v-if="section.title" :class="['text-sm md:text-base font-bold mb-3 flex items-center gap-2', currentTheme.summaryTitle]"><span class="w-1.5 h-1.5 rounded-full bg-current opacity-60"></span>{{ section.title }}</h4>
+                                <ul class="space-y-3">
+                                    <li v-for="(point, pIdx) in section.items" :key="pIdx" :class="['text-sm md:text-[15px] leading-relaxed flex items-start gap-2.5', currentTheme.summaryText]">
+                                        <span class="mt-1.5 w-1.5 h-1.5 rounded-full shrink-0 bg-current opacity-40"></span>
+                                        <span class="text-justify">{{ point }}</span>
+                                    </li>
+                                </ul>
                             </div>
                         </template>
-                        <div v-if="filteredComments.length === 0 && currentComments.length > 0" class="col-span-full py-8 text-center text-slate-400">
-                            所有评论已被屏蔽
+                        <p v-else :class="['text-sm md:text-base leading-relaxed font-medium text-justify whitespace-pre-wrap', currentTheme.summaryText]">{{ computedSummary }}</p>
+                     </div>
+                </div>
+
+                <div class="border border-slate-200 dark:border-slate-700 rounded-2xl bg-white dark:bg-slate-800/50 mb-8 overflow-hidden transition-all shadow-sm hover:shadow-md">
+                     <div class="p-4 md:px-6 md:py-4 bg-slate-50 dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 flex items-start md:items-center justify-between gap-4 cursor-pointer select-none" @click="isNewsCollapsed = !isNewsCollapsed">
+                         <div class="flex items-center gap-3 flex-1">
+                             <div class="w-1.5 h-6 bg-blue-500 rounded-full shrink-0"></div>
+                             <div>
+                                 <h3 class="text-base font-bold text-slate-800 dark:text-slate-200">AI提取重点新闻</h3>
+                                 <p class="text-[10px] md:text-xs text-slate-500 dark:text-slate-400 mt-0.5 leading-tight">为了防止你读了之后重复又看一遍，所以你读完这个新闻后勾选后这里会变黑以示提醒作用</p>
+                             </div>
+                         </div>
+                         <button class="w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-700 text-slate-500 dark:text-slate-300 flex items-center justify-center shrink-0">
+                             <i :class="['fa-solid transition-transform duration-300', isNewsCollapsed ? 'fa-chevron-down' : 'fa-chevron-up']"></i>
+                         </button>
+                     </div>
+
+                     <div v-show="!isNewsCollapsed" class="p-4 md:p-6 bg-slate-50/50 dark:bg-slate-900/20">
+                        <div class="grid grid-cols-1 xl:grid-cols-2 gap-4 md:gap-6">
+                            <div v-for="(item, idx) in computedItems" :key="idx" :class="['group rounded-xl p-5 md:p-6 transition-all relative overflow-hidden active:scale-[0.98]', isRead(item.title) ? 'read-item' : '', currentTheme.itemCard]">
+                                <div v-if="currentSmartTab === 'tech'" class="absolute inset-0 border border-cyan-500/30 rounded-xl pointer-events-none group-hover:border-cyan-400/60 transition-all"></div>
+                                <div class="flex justify-between items-start gap-4 mb-3 relative z-10">
+                                    <div>
+                                        <div class="flex flex-wrap items-center gap-2 mb-2">
+                                            <span v-if="item.sentiment || item.prediction" :class="['px-2 py-0.5 rounded-md text-[10px] md:text-xs font-bold uppercase tracking-wider', getTagStyle(item)]"><i :class="getTagIcon(item)"></i> {{ sentimentTranslate(item.sentiment) || '未来预测' }}</span>
+                                            <span v-if="item.impact || item.special_note" class="px-2 py-0.5 rounded-md text-[10px] md:text-xs font-medium bg-black/5 dark:bg-white/10 text-slate-600 dark:text-slate-300 flex items-center gap-1"><i :class="['fa-solid', item.special_note ? 'fa-star text-yellow-500' : 'fa-crosshairs opacity-50']"></i>{{ item.impact || item.special_note }}</span>
+                                        </div>
+                                        <h3 :class="['text-lg md:text-xl font-bold leading-tight group-hover:text-blue-500 transition-colors', currentTheme.itemTitle]">{{ item.title }}</h3>
+                                    </div>
+                                    <button @click.stop="toggleRead(item.title)" class="shrink-0 text-xl md:text-2xl opacity-30 hover:opacity-100 transition-opacity p-1" :class="currentTheme.itemText" title="标记为已读"><i :class="['fa-regular', isRead(item.title) ? 'fa-circle-check text-green-500 opacity-100' : 'fa-circle']"></i></button>
+                                </div>
+                                <p :class="['text-sm leading-relaxed mb-4 line-clamp-4 group-hover:line-clamp-none transition-all relative z-10 text-justify', currentTheme.itemText]">{{ item.summary || item.comment || item.reason }}</p>
+                                <a :href="item.url" target="_blank" @click.stop :class="['inline-flex items-center gap-1 text-xs font-bold uppercase tracking-widest transition-colors relative z-10', currentTheme.readMoreBtn]">Read Source <i class="fa-solid fa-arrow-right-long ml-1 group-hover:translate-x-1 transition-transform"></i></a>
+                            </div>
+                        </div>
+                     </div>
+                </div>
+
+                <div class="max-w-7xl mx-auto py-8 md:py-12 mt-8 border-t border-slate-200 dark:border-slate-800">
+                    <div class="flex flex-wrap items-center justify-between mb-6 gap-4">
+                        <h3 class="text-lg md:text-xl font-bold text-slate-700 dark:text-slate-200 flex items-center gap-2">
+                            <i class="fa-solid fa-comments"></i> 读者讨论 
+                            <span class="text-xs font-normal opacity-50 bg-slate-200 dark:bg-slate-700 px-2 py-0.5 rounded-full">{{ sortedAndFilteredComments.length }}条</span>
+                        </h3>
+                        
+                        <div class="flex items-center gap-3">
+                             <button @click="showBlockedListModal = true" class="text-xs flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-500 dark:text-slate-400 transition-colors">
+                                <i class="fa-solid fa-user-slash"></i> 查看屏蔽的人群
+                             </button>
+                        </div>
+                    </div>
+                    
+                    <div v-if="sortedAndFilteredComments.length > 0" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div v-for="(comment, cIdx) in sortedAndFilteredComments" :key="cIdx" class="bg-white dark:bg-slate-800/50 p-4 rounded-xl border border-slate-100 dark:border-slate-700 hover:shadow-md transition-all flex gap-3 group relative">
+                            <div class="absolute top-2 right-2 z-20">
+                                <button @click.stop="toggleCommentMenu(cIdx)" class="w-6 h-6 rounded-full hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center justify-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors opacity-0 group-hover:opacity-100">
+                                    <i class="fa-solid fa-ellipsis-vertical"></i>
+                                </button>
+                                <transition name="menu">
+                                    <div v-if="activeCommentMenuIndex === cIdx" v-click-outside="closeCommentMenu" class="absolute right-0 top-7 w-32 bg-white dark:bg-slate-800 shadow-xl rounded-lg border border-slate-100 dark:border-slate-600 py-1 overflow-hidden z-30 flex flex-col">
+                                        <button @click="togglePinUser(comment.name)" class="text-left px-3 py-2 text-xs hover:bg-blue-50 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 flex items-center gap-2">
+                                            <i :class="['fa-solid w-4 text-center', isPinned(comment.name) ? 'fa-thumbtack-slash text-slate-400' : 'fa-thumbtack text-blue-500']"></i>
+                                            {{ isPinned(comment.name) ? '取消置顶' : '每次排到最前' }}
+                                        </button>
+                                        <button @click="confirmBlockUser(comment.name, comment.role)" class="text-left px-3 py-2 text-xs hover:bg-red-50 dark:hover:bg-red-900/20 text-red-500 flex items-center gap-2 border-t border-slate-100 dark:border-slate-700">
+                                            <i class="fa-solid fa-ban w-4 text-center"></i> 不再看他
+                                        </button>
+                                    </div>
+                                </transition>
+                            </div>
+
+                            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-slate-200 to-slate-300 dark:from-slate-700 dark:to-slate-600 flex items-center justify-center shrink-0 text-lg relative">
+                                <i :class="['fa-solid', getAvatarIcon(comment.role)]"></i>
+                                <div v-if="isPinned(comment.name)" class="absolute -top-1 -right-1 w-4 h-4 bg-blue-500 rounded-full border-2 border-white dark:border-slate-800 flex items-center justify-center text-[8px] text-white shadow-sm"><i class="fa-solid fa-thumbtack"></i></div>
+                            </div>
+                            
+                            <div class="flex-1 min-w-0">
+                                <div class="flex justify-between items-start mb-1 pr-6">
+                                    <div>
+                                        <span class="font-bold text-sm text-slate-800 dark:text-slate-200">{{ comment.name }}</span>
+                                        <span class="text-xs text-slate-500 ml-2 px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-700">{{ comment.role }}</span>
+                                    </div>
+                                    <span class="text-[10px] px-2 py-0.5 rounded-full bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400 font-medium">{{ comment.emotion }}</span>
+                                </div>
+                                <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">{{ comment.content }}</p>
+                            </div>
                         </div>
                     </div>
                     <div v-else class="text-center py-10 text-slate-400">
-                        <i class="fa-solid fa-spinner fa-spin mr-2"></i> 正在加载评论或暂无数据...
+                        <i class="fa-solid fa-spinner fa-spin mr-2" v-if="loading"></i> 
+                        <span v-else>暂无相关评论或评论已被全部过滤</span>
+                    </div>
+                </div>
+
+                <div v-if="showBlockedListModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" @click="showBlockedListModal = false">
+                    <div class="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-md max-h-[80vh] flex flex-col shadow-2xl" @click.stop>
+                        <div class="p-4 border-b border-slate-200 dark:border-slate-700 flex justify-between items-center">
+                            <h3 class="font-bold text-slate-800 dark:text-white">已屏蔽的人群名单</h3>
+                            <button @click="showBlockedListModal = false" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-times text-xl"></i></button>
+                        </div>
+                        <div class="flex-1 overflow-y-auto p-4 thin-scrollbar">
+                            <div v-if="blockedUsers.size === 0" class="text-center text-slate-400 py-8 text-sm">
+                                列表空空如也，说明你包容心很强 <i class="fa-regular fa-face-smile ml-1"></i>
+                            </div>
+                            <div v-else class="space-y-2">
+                                <div v-for="user in Array.from(blockedUsers)" :key="user" class="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-700/50 rounded-lg">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-600 flex items-center justify-center text-slate-500"><i class="fa-solid fa-user-slash"></i></div>
+                                        <span class="text-sm font-medium text-slate-700 dark:text-slate-200">{{ user }}</span>
+                                    </div>
+                                    <button @click="unblockUser(user)" class="px-3 py-1 text-xs font-bold text-slate-500 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-600 rounded hover:text-green-600 hover:border-green-500 transition-colors">恢复显示</button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -212,94 +293,46 @@
 
         <div v-if="currentView === 'contact'" class="flex-1 overflow-y-auto p-4 md:p-8 bg-slate-50 dark:bg-slate-900 transition-colors duration-300">
             <div class="max-w-4xl mx-auto space-y-8">
-                
                 <div class="text-center py-8">
-                    <h1 class="text-3xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 to-purple-600 mb-4 font-cyber tracking-tight">
-                        Insight Pro
-                    </h1>
+                    <h1 class="text-3xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 to-purple-600 mb-4 font-cyber tracking-tight">Insight Pro</h1>
                     <p class="text-slate-500 dark:text-slate-400 text-lg">AI 驱动的全网舆情智库 · 实时洞察 · 多维模拟</p>
                 </div>
-
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4 relative">
                     <div class="hidden md:block absolute top-1/2 left-0 w-full h-1 bg-slate-200 dark:bg-slate-700 -z-10 -translate-y-1/2 rounded"></div>
-                    
                     <div class="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-lg border border-slate-100 dark:border-slate-700 text-center relative hover:-translate-y-1 transition-transform">
                         <div class="w-12 h-12 mx-auto bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-xl mb-3"><i class="fa-solid fa-tower-broadcast"></i></div>
                         <h3 class="font-bold text-slate-800 dark:text-white mb-1">1. 全网采集</h3>
                         <p class="text-xs text-slate-500">每 2 小时自动抓取<br>39 个主流平台热搜</p>
                     </div>
-                    
                     <div class="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-lg border border-slate-100 dark:border-slate-700 text-center relative hover:-translate-y-1 transition-transform">
                         <div class="w-12 h-12 mx-auto bg-purple-100 text-purple-600 rounded-full flex items-center justify-center text-xl mb-3"><i class="fa-solid fa-brain"></i></div>
                         <h3 class="font-bold text-slate-800 dark:text-white mb-1">2. 深度研判</h3>
                         <p class="text-xs text-slate-500">每天 6:00 AM<br>AI 聚合分析四大板块</p>
                     </div>
-
                     <div class="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-lg border border-slate-100 dark:border-slate-700 text-center relative hover:-translate-y-1 transition-transform">
                         <div class="w-12 h-12 mx-auto bg-rose-100 text-rose-600 rounded-full flex items-center justify-center text-xl mb-3"><i class="fa-solid fa-people-group"></i></div>
                         <h3 class="font-bold text-slate-800 dark:text-white mb-1">3. 舆情模拟</h3>
                         <p class="text-xs text-slate-500">30+ 不同人设/职业<br>AI 模拟真实评论</p>
                     </div>
                 </div>
-
                 <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 p-6 md:p-8">
-                    <h2 class="text-xl font-bold mb-6 flex items-center gap-2 text-slate-800 dark:text-white">
-                        <span class="w-1.5 h-6 bg-indigo-500 rounded-full"></span> 平台价值与用途
-                    </h2>
+                    <h2 class="text-xl font-bold mb-6 flex items-center gap-2 text-slate-800 dark:text-white"><span class="w-1.5 h-6 bg-indigo-500 rounded-full"></span> 平台价值与用途</h2>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div class="flex gap-4">
-                            <i class="fa-solid fa-layer-group text-2xl text-indigo-500 mt-1"></i>
-                            <div>
-                                <h4 class="font-bold text-slate-700 dark:text-slate-200">🔍 信息聚合</h4>
-                                <p class="text-sm text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">告别在几十个App间频繁切换。我们汇集了微博、知乎、36氪、财联社、GitHub等39个头部平台的热点，一站式掌握全网动态。</p>
-                            </div>
-                        </div>
-                        <div class="flex gap-4">
-                            <i class="fa-solid fa-user-graduate text-2xl text-emerald-500 mt-1"></i>
-                            <div>
-                                <h4 class="font-bold text-slate-700 dark:text-slate-200">🎓 学术与社会学参考</h4>
-                                <p class="text-sm text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">通过 AI 模拟 30+ 种不同社会阶层（从首富到学生）的视角，为社会心理学研究、舆情推演提供独特的模拟样本。</p>
-                            </div>
-                        </div>
-                        <div class="flex gap-4">
-                            <i class="fa-solid fa-bolt text-2xl text-amber-500 mt-1"></i>
-                            <div>
-                                <h4 class="font-bold text-slate-700 dark:text-slate-200">⚡ 决策辅助</h4>
-                                <p class="text-sm text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">跨境电商商家可关注汇率政策，股民可关注市场情绪。AI 提炼的核心综述帮助你快速过滤噪音，抓住关键信息。</p>
-                            </div>
-                        </div>
-                        <div class="flex gap-4">
-                            <i class="fa-solid fa-robot text-2xl text-cyan-500 mt-1"></i>
-                            <div>
-                                <h4 class="font-bold text-slate-700 dark:text-slate-200">🤖 Prompt 工程示例</h4>
-                                <p class="text-sm text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">这是一个完全开源的自动化 AI Agent 实践项目。展示了如何利用 GitHub Actions 和 Gemini API 构建全自动化的内容生产流。</p>
-                            </div>
-                        </div>
+                        <div class="flex gap-4"><i class="fa-solid fa-layer-group text-2xl text-indigo-500 mt-1"></i><div><h4 class="font-bold text-slate-700 dark:text-slate-200">🔍 信息聚合</h4><p class="text-sm text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">告别在几十个App间频繁切换。我们汇集了微博、知乎、36氪、财联社、GitHub等39个头部平台的热点，一站式掌握全网动态。</p></div></div>
+                        <div class="flex gap-4"><i class="fa-solid fa-user-graduate text-2xl text-emerald-500 mt-1"></i><div><h4 class="font-bold text-slate-700 dark:text-slate-200">🎓 学术与社会学参考</h4><p class="text-sm text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">通过 AI 模拟 30+ 种不同社会阶层（从首富到学生）的视角，为社会心理学研究、舆情推演提供独特的模拟样本。</p></div></div>
+                        <div class="flex gap-4"><i class="fa-solid fa-bolt text-2xl text-amber-500 mt-1"></i><div><h4 class="font-bold text-slate-700 dark:text-slate-200">⚡ 决策辅助</h4><p class="text-sm text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">跨境电商商家可关注汇率政策，股民可关注市场情绪。AI 提炼的核心综述帮助你快速过滤噪音，抓住关键信息。</p></div></div>
+                        <div class="flex gap-4"><i class="fa-solid fa-robot text-2xl text-cyan-500 mt-1"></i><div><h4 class="font-bold text-slate-700 dark:text-slate-200">🤖 Prompt 工程示例</h4><p class="text-sm text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">这是一个完全开源的自动化 AI Agent 实践项目。展示了如何利用 GitHub Actions 和 Gemini API 构建全自动化的内容生产流。</p></div></div>
                     </div>
                 </div>
-
                 <div class="bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-900 rounded-2xl p-6 md:p-8 text-center border border-slate-200 dark:border-slate-700">
                     <h2 class="text-xl font-bold mb-6 text-slate-800 dark:text-white">联系作者 & 加入社区</h2>
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                         <div class="group bg-white dark:bg-slate-700 p-4 rounded-xl shadow-sm hover:shadow-md transition-all cursor-pointer flex flex-col items-center gap-2" @click="copyToClipboard('HunQian_OP', '微信')">
-                            <div class="w-10 h-10 rounded-full bg-green-100 text-green-600 flex items-center justify-center text-lg"><i class="fa-brands fa-weixin"></i></div>
-                            <div class="text-center"><p class="text-xs text-slate-400 uppercase font-bold">微信</p><p class="font-mono font-medium text-slate-700 dark:text-slate-200 text-sm">HunQian_OP</p></div>
-                        </div>
-                        <div class="group bg-white dark:bg-slate-700 p-4 rounded-xl shadow-sm hover:shadow-md transition-all cursor-pointer flex flex-col items-center gap-2" @click="copyToClipboard('1441527537', 'QQ')">
-                            <div class="w-10 h-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-lg"><i class="fa-brands fa-qq"></i></div>
-                            <div class="text-center"><p class="text-xs text-slate-400 uppercase font-bold">QQ</p><p class="font-mono font-medium text-slate-700 dark:text-slate-200 text-sm">1441527537</p></div>
-                        </div>
-                        <div class="group bg-white dark:bg-slate-700 p-4 rounded-xl shadow-sm hover:shadow-md transition-all cursor-pointer flex flex-col items-center gap-2" @click="copyToClipboard('821367583', 'QQ群')">
-                            <div class="w-10 h-10 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center text-lg"><i class="fa-solid fa-users"></i></div>
-                            <div class="text-center"><p class="text-xs text-slate-400 uppercase font-bold">QQ 交流群</p><p class="font-mono font-medium text-slate-700 dark:text-slate-200 text-sm">821367583</p></div>
-                        </div>
-                        <div class="group bg-white dark:bg-slate-700 p-4 rounded-xl shadow-sm hover:shadow-md transition-all cursor-pointer flex flex-col items-center gap-2" @click="copyToClipboard('1441527537@qq.com', '邮箱')">
-                            <div class="w-10 h-10 rounded-full bg-red-100 text-red-600 flex items-center justify-center text-lg"><i class="fa-regular fa-envelope"></i></div>
-                            <div class="text-center"><p class="text-xs text-slate-400 uppercase font-bold">Email</p><p class="font-mono font-medium text-slate-700 dark:text-slate-200 text-xs break-all">1441527537@qq.com</p></div>
-                        </div>
+                         <div class="group bg-white dark:bg-slate-700 p-4 rounded-xl shadow-sm hover:shadow-md transition-all cursor-pointer flex flex-col items-center gap-2" @click="copyToClipboard('HunQian_OP', '微信')"><div class="w-10 h-10 rounded-full bg-green-100 text-green-600 flex items-center justify-center text-lg"><i class="fa-brands fa-weixin"></i></div><div class="text-center"><p class="text-xs text-slate-400 uppercase font-bold">微信</p><p class="font-mono font-medium text-slate-700 dark:text-slate-200 text-sm">HunQian_OP</p></div></div>
+                        <div class="group bg-white dark:bg-slate-700 p-4 rounded-xl shadow-sm hover:shadow-md transition-all cursor-pointer flex flex-col items-center gap-2" @click="copyToClipboard('1441527537', 'QQ')"><div class="w-10 h-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-lg"><i class="fa-brands fa-qq"></i></div><div class="text-center"><p class="text-xs text-slate-400 uppercase font-bold">QQ</p><p class="font-mono font-medium text-slate-700 dark:text-slate-200 text-sm">1441527537</p></div></div>
+                        <div class="group bg-white dark:bg-slate-700 p-4 rounded-xl shadow-sm hover:shadow-md transition-all cursor-pointer flex flex-col items-center gap-2" @click="copyToClipboard('821367583', 'QQ群')"><div class="w-10 h-10 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center text-lg"><i class="fa-solid fa-users"></i></div><div class="text-center"><p class="text-xs text-slate-400 uppercase font-bold">QQ 交流群</p><p class="font-mono font-medium text-slate-700 dark:text-slate-200 text-sm">821367583</p></div></div>
+                        <div class="group bg-white dark:bg-slate-700 p-4 rounded-xl shadow-sm hover:shadow-md transition-all cursor-pointer flex flex-col items-center gap-2" @click="copyToClipboard('1441527537@qq.com', '邮箱')"><div class="w-10 h-10 rounded-full bg-red-100 text-red-600 flex items-center justify-center text-lg"><i class="fa-regular fa-envelope"></i></div><div class="text-center"><p class="text-xs text-slate-400 uppercase font-bold">Email</p><p class="font-mono font-medium text-slate-700 dark:text-slate-200 text-xs break-all">1441527537@qq.com</p></div></div>
                     </div>
                 </div>
-
                 <p class="text-center text-xs text-slate-400 pb-4">© 2025 Insight Pro. Powered by Gemini & GitHub Actions.</p>
             </div>
         </div>
@@ -309,7 +342,23 @@
 <script>
     const { createApp, reactive, computed, ref, onMounted } = Vue
 
+    // 点击外部关闭指令
+    const clickOutside = {
+        beforeMount(el, binding) {
+            el.clickOutsideEvent = function(event) {
+                if (!(el === event.target || el.contains(event.target))) {
+                    binding.value(event);
+                }
+            };
+            document.body.addEventListener('click', el.clickOutsideEvent);
+        },
+        unmounted(el) {
+            document.body.removeEventListener('click', el.clickOutsideEvent);
+        }
+    };
+
     createApp({
+        directives: { 'click-outside': clickOutside },
         setup() {
             const loading = ref(true);
             const isDarkMode = ref(false);
@@ -321,10 +370,12 @@
             const searchText = ref('');
             const lastUpdateTime = ref('');
             const onlineUsers = ref(Math.floor(Math.random() * (500 - 50 + 1)) + 50);
-
-            // 屏蔽功能相关状态
-            const blockedUsers = reactive(new Set());
-            const activeCommentMenu = ref(null); // 存储当前打开菜单的评论索引
+            
+            // 新增的状态变量
+            const isSummaryCollapsed = ref(false);
+            const isNewsCollapsed = ref(false);
+            const showBlockedListModal = ref(false);
+            const activeCommentMenuIndex = ref(null);
 
             const simulateTraffic = () => {
                 const delay = Math.floor(Math.random() * 6000) + 2000; 
@@ -345,6 +396,9 @@
             
             const favoriteIds = reactive(new Set());
             const readSet = reactive(new Set());
+            // 新增：屏蔽和置顶用户
+            const blockedUsers = reactive(new Set());
+            const pinnedUsers = reactive(new Set());
 
             const platformMap = {
                 'douyin': '抖音', 'zhihu': '知乎', 'weibo': '微博', 'bilibili-hot-search': 'B站热搜', 
@@ -420,10 +474,19 @@
             const currentSmartData = computed(() => smartData[currentSmartTab.value]);
             const currentComments = computed(() => commentsData[currentSmartTab.value]);
             
-            // 计算过滤后的评论（排除已屏蔽用户）
-            const filteredComments = computed(() => {
-                if (!currentComments.value) return [];
-                return currentComments.value.filter(c => !blockedUsers.has(c.name));
+            // 🌟🌟🌟 新增：排序和过滤后的评论 🌟🌟🌟
+            const sortedAndFilteredComments = computed(() => {
+                const rawComments = currentComments.value || [];
+                // 1. 过滤掉屏蔽的人
+                const filtered = rawComments.filter(c => !blockedUsers.has(c.name));
+                // 2. 排序：置顶的人排在最前面
+                return filtered.sort((a, b) => {
+                    const aPinned = pinnedUsers.has(a.name);
+                    const bPinned = pinnedUsers.has(b.name);
+                    if (aPinned && !bPinned) return -1;
+                    if (!aPinned && bPinned) return 1;
+                    return 0; // 保持原有顺序
+                });
             });
 
             const computedItems = computed(() => {
@@ -447,8 +510,8 @@
                     const titleMatch = section.match(/【(.*?)】/);
                     const title = titleMatch ? titleMatch[1] : '';
                     let content = section.replace(/【.*?】/, '').trim();
-                    // 🌟 核心修改：检测 (1) (2) (3) 类型的换行
-                    let items = content.split(/(?=\s*\(\d+\))/).map(i => i.trim()).filter(i => i.length > 2);
+                    // 🌟🌟🌟 修改的核心：使用 (1) (2) (3) 作为分隔符
+                    let items = content.split(/(?=\(\d+\))/).map(i => i.trim()).filter(i => i.length > 2);
                     if (items.length === 0 && content) items = [content];
                     return { title, items };
                 }).filter(s => s.title || s.items.length > 0);
@@ -522,33 +585,43 @@
             const isRead = (title) => readSet.has(title);
             const toggleRead = (title) => { readSet.has(title) ? readSet.delete(title) : readSet.add(title); saveLocalStorage(); };
             
-            // 屏蔽相关方法
-            const toggleBlockUser = (name) => {
-                if(blockedUsers.has(name)) blockedUsers.delete(name);
-                else blockedUsers.add(name);
-                activeCommentMenu.value = null; // 关闭菜单
+            // 🌟🌟🌟 新增：评论交互功能 🌟🌟🌟
+            const toggleCommentMenu = (index) => {
+                activeCommentMenuIndex.value = activeCommentMenuIndex.value === index ? null : index;
+            };
+            const closeCommentMenu = () => { activeCommentMenuIndex.value = null; };
+            
+            const isPinned = (name) => pinnedUsers.has(name);
+            const togglePinUser = (name) => {
+                pinnedUsers.has(name) ? pinnedUsers.delete(name) : pinnedUsers.add(name);
+                activeCommentMenuIndex.value = null; // 操作后关闭菜单
                 saveLocalStorage();
             };
             
-            const toggleMenu = (idx) => {
-                activeCommentMenu.value = activeCommentMenu.value === idx ? null : idx;
+            const confirmBlockUser = (name, role) => {
+                if(confirm(`确定不再看 "${name}" (${role}) 的评论吗？\n操作不可撤销(可在“查看屏蔽人群”中恢复)。`)) {
+                    blockedUsers.add(name);
+                    activeCommentMenuIndex.value = null;
+                    saveLocalStorage();
+                }
             };
-
-            const closeAllMenus = () => {
-                activeCommentMenu.value = null;
+            const unblockUser = (name) => {
+                blockedUsers.delete(name);
+                saveLocalStorage();
             };
 
             const saveLocalStorage = () => { 
                 localStorage.setItem('favorites', JSON.stringify([...favoriteIds])); 
                 localStorage.setItem('readItems', JSON.stringify([...readSet])); 
-                localStorage.setItem('blockedUsers', JSON.stringify([...blockedUsers])); // 保存屏蔽列表
+                localStorage.setItem('blockedUsers', JSON.stringify([...blockedUsers])); 
+                localStorage.setItem('pinnedUsers', JSON.stringify([...pinnedUsers])); 
             };
-            
             const loadLocalStorage = () => {
                 const fav = localStorage.getItem('favorites'); if (fav) new Set(JSON.parse(fav)).forEach(id => favoriteIds.add(id));
                 const read = localStorage.getItem('readItems'); if (read) new Set(JSON.parse(read)).forEach(id => readSet.add(id));
-                const blocked = localStorage.getItem('blockedUsers'); if (blocked) new Set(JSON.parse(blocked)).forEach(u => blockedUsers.add(u)); // 加载屏蔽列表
                 const dark = localStorage.getItem('darkMode'); if (dark === 'true') isDarkMode.value = true;
+                const blocked = localStorage.getItem('blockedUsers'); if(blocked) new Set(JSON.parse(blocked)).forEach(user => blockedUsers.add(user));
+                const pinned = localStorage.getItem('pinnedUsers'); if(pinned) new Set(JSON.parse(pinned)).forEach(user => pinnedUsers.add(user));
             };
 
             const getTagStyle = (item) => {
@@ -575,19 +648,21 @@
                 if(role.includes('健身')) return 'fa-dumbbell';
                 if(role.includes('乐手')) return 'fa-guitar';
                 if(role.includes('二次元') || role.includes('宅男')) return 'fa-gamepad';
-                if(role.includes('首富') || role.includes('马斯克') || role.includes('马云')) return 'fa-crown';
-                if(role.includes('失业')) return 'fa-user-injured';
+                if(role.includes('首富') || role.includes('马斯克') || role.includes('马云')) return 'fa-crown'; 
+                if(role.includes('失业')) return 'fa-user-injured'; 
                 return 'fa-user'; 
             };
 
             return {
                 loading, isDarkMode, isMobileMenuOpen, showMobileSourceModal, currentView, currentSmartTab, rawCategory, searchText, lastUpdateTime,
-                smartData, filteredRawList, favoriteIds, rawCategoryCounts, totalRawSources, onlineUsers, allPlatformIds, currentComments,
+                smartData, filteredRawList, favoriteIds, rawCategoryCounts, totalRawSources, onlineUsers, allPlatformIds,
                 smartTabs, currentTheme, currentSmartTabIcon, currentViewTitle, computedSummary, computedItems, structuredSummary,
+                // 新增和修改的返回值
+                sortedAndFilteredComments, isSummaryCollapsed, isNewsCollapsed, showBlockedListModal, activeCommentMenuIndex, blockedUsers, pinnedUsers,
                 navBtnClass, rawNavClass, toggleDarkMode, isFavorite, toggleFavorite, isRead, toggleRead, switchView, selectPlatformFromModal, copyToClipboard,
                 getTagStyle, getTagIcon, getCategoryIcon, getCategoryColorClass, getDisplayName, sentimentTranslate, getAvatarIcon,
-                // 新增/修改后的返回
-                blockedUsers, filteredComments, activeCommentMenu, toggleBlockUser, toggleMenu, closeAllMenus
+                // 新增方法
+                toggleCommentMenu, closeCommentMenu, isPinned, togglePinUser, confirmBlockUser, unblockUser
             }
         }
     }).mount('#app')
