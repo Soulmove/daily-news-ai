@@ -62,8 +62,10 @@
 
 <div id="app" v-cloak class="flex w-full h-full relative transition-colors duration-300">
 
+    <!-- 手机端全屏遮罩 -->
     <div v-if="isMobileMenuOpen" @click="isMobileMenuOpen = false" class="fixed inset-0 bg-black/50 z-30 md:hidden backdrop-blur-sm transition-opacity"></div>
 
+    <!-- 侧边栏 -->
     <aside :class="['fixed md:static inset-y-0 left-0 z-40 w-64 transform transition-transform duration-300 ease-in-out flex flex-col border-r shadow-2xl md:shadow-none', 
         isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0',
         currentTheme.sidebarBg, currentTheme.sidebarBorder]">
@@ -91,12 +93,16 @@
             <button @click="switchView('raw')" :class="navBtnClass('raw')">
                 <i class="fa-solid fa-tower-broadcast w-5 opacity-70"></i> 原始数据监控
             </button>
+            
+            <!-- 新增：联系页面入口 -->
+            <div class="my-4 border-t border-slate-200 dark:border-slate-800 opacity-50"></div>
+            <button @click="switchView('contact')" :class="navBtnClass('contact')">
+                <i class="fa-solid fa-address-card w-5 opacity-70"></i> 联系/加群
+            </button>
         </nav>
         
         <div class="p-4 border-t" :class="currentTheme.sidebarBorder">
-            <button @click="debugMode = !debugMode" class="w-full text-xs text-slate-400 hover:text-blue-500 mb-2 opacity-50 hover:opacity-100">
-                <i class="fa-solid fa-wrench"></i> {{ debugMode ? '关闭调试' : '数据异常点我' }}
-            </button>
+            <!-- 已删除调试按钮 -->
             <button @click="toggleDarkMode" :class="['w-full flex items-center justify-center gap-2 py-2 rounded-lg transition-colors', currentTheme.sidebarHover, currentTheme.sidebarText]">
                 <i :class="['fa-solid', isDarkMode ? 'fa-sun' : 'fa-moon']"></i>
                 <span class="text-sm">{{ isDarkMode ? '切换日间模式' : '切换深色模式' }}</span>
@@ -106,6 +112,7 @@
 
     <main :class="['flex-1 flex flex-col h-full overflow-hidden relative transition-colors duration-300 w-full', currentTheme.mainBg]">
         
+        <!-- 顶部导航栏 -->
         <header :class="['h-16 shrink-0 border-b flex items-center justify-between px-4 md:px-8 backdrop-blur-md z-10 transition-colors duration-300', currentTheme.headerBg, currentTheme.headerBorder]">
             <div class="flex items-center gap-4">
                 <button @click="isMobileMenuOpen = true" class="md:hidden text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200">
@@ -113,9 +120,14 @@
                 </button>
 
                 <h2 class="text-lg md:text-xl font-bold flex items-center gap-2 md:gap-3 transition-colors duration-300 truncate" :class="currentTheme.headerText">
-                    <i v-if="currentView === 'smart'" :class="['fa-solid text-xl md:text-2xl', currentSmartTabIcon]"></i>
-                    <i v-else class="fa-solid fa-satellite-dish text-xl md:text-2xl text-blue-500"></i>
-                    <span class="truncate">{{ currentViewTitle }}</span>
+                    <template v-if="currentView === 'contact'">
+                        <i class="fa-solid fa-users text-indigo-500 text-xl md:text-2xl"></i> 联系作者
+                    </template>
+                    <template v-else>
+                        <i v-if="currentView === 'smart'" :class="['fa-solid text-xl md:text-2xl', currentSmartTabIcon]"></i>
+                        <i v-else class="fa-solid fa-satellite-dish text-xl md:text-2xl text-blue-500"></i>
+                        <span class="truncate">{{ currentViewTitle }}</span>
+                    </template>
                 </h2>
             </div>
 
@@ -137,15 +149,7 @@
             </div>
         </header>
 
-        <div v-if="debugMode" class="absolute inset-0 z-50 bg-black/80 p-10 overflow-auto text-green-400 font-mono text-xs">
-            <div class="bg-slate-900 p-6 rounded border border-green-500">
-                <h3 class="text-lg font-bold mb-4 border-b border-green-500 pb-2">数据调试面板</h3>
-                <p class="mb-2">当前 Tab: {{ currentSmartTab }}</p>
-                <p class="mb-2">检测到的数据结构:</p>
-                <pre>{{ JSON.stringify(currentSmartData, null, 2) }}</pre>
-            </div>
-        </div>
-
+        <!-- 1. 智能简报视图 -->
         <div v-if="currentView === 'smart'" class="flex-1 flex flex-col overflow-hidden">
             <div :class="['shrink-0 px-4 md:px-8 pt-2 md:pt-4 pb-0 flex gap-4 md:gap-6 border-b text-sm font-medium transition-colors duration-300 overflow-x-auto hide-scrollbar', currentTheme.tabBorder]">
                 <button v-for="tab in smartTabs" :key="tab.id" @click="currentSmartTab = tab.id"
@@ -166,16 +170,12 @@
                     </div>
                 </div>
 
-                <!-- 🌟🌟🌟 核心修改区：优化后的 AI 总结卡片 🌟🌟🌟 -->
                 <div v-if="computedSummary" :class="['p-5 md:p-6 rounded-2xl mb-6 md:mb-8 shadow-xl relative overflow-hidden transition-all duration-300', currentTheme.summaryCard]">
-                    <!-- 背景图标 -->
                     <div class="absolute top-0 right-0 p-8 opacity-10 pointer-events-none">
                         <i :class="['fa-solid text-6xl md:text-8xl', currentSmartTabIcon]"></i>
                     </div>
-                    <!-- 赛博背景 -->
                     <div v-if="currentSmartTab === 'tech'" class="cyber-inner absolute inset-0 -z-10"></div>
                     
-                    <!-- 标题栏 -->
                     <div class="flex items-center gap-2 mb-4 md:mb-6 border-b border-black/10 dark:border-white/10 pb-3 relative z-10">
                          <i class="fa-solid fa-microchip text-lg" :class="currentTheme.summaryTitle"></i>
                          <h3 :class="['text-sm md:text-base font-bold uppercase tracking-widest', currentTheme.summaryTitle]">
@@ -183,35 +183,26 @@
                         </h3>
                     </div>
 
-                    <!-- 📝 智能解析后的列表展示 -->
                     <div class="relative z-10 space-y-6">
-                        <!-- 如果解析出结构化数据，展示结构化列表 -->
                         <template v-if="structuredSummary.length > 0">
                             <div v-for="(section, idx) in structuredSummary" :key="idx" class="group">
-                                <!-- 子版块标题 -->
-                                <h4 v-if="section.title" 
-                                    :class="['text-sm md:text-base font-bold mb-3 flex items-center gap-2', currentTheme.summaryTitle]">
+                                <h4 v-if="section.title" :class="['text-sm md:text-base font-bold mb-3 flex items-center gap-2', currentTheme.summaryTitle]">
                                     <span class="w-1.5 h-1.5 rounded-full bg-current opacity-60"></span>
                                     {{ section.title }}
                                 </h4>
-                                <!-- 内容列表 -->
                                 <ul class="space-y-3">
-                                    <li v-for="(point, pIdx) in section.items" :key="pIdx" 
-                                        :class="['text-sm md:text-[15px] leading-relaxed flex items-start gap-2.5', currentTheme.summaryText]">
+                                    <li v-for="(point, pIdx) in section.items" :key="pIdx" :class="['text-sm md:text-[15px] leading-relaxed flex items-start gap-2.5', currentTheme.summaryText]">
                                         <span class="mt-1.5 w-1.5 h-1.5 rounded-full shrink-0 bg-current opacity-40"></span>
                                         <span class="text-justify">{{ point }}</span>
                                     </li>
                                 </ul>
                             </div>
                         </template>
-
-                        <!-- 降级方案：如果解析失败，显示原文 -->
                         <p v-else :class="['text-sm md:text-base leading-relaxed font-medium text-justify whitespace-pre-wrap', currentTheme.summaryText]">
                             {{ computedSummary }}
                         </p>
                     </div>
                 </div>
-                <!-- 🌟🌟🌟 修改结束 🌟🌟🌟 -->
 
                 <div class="grid grid-cols-1 xl:grid-cols-2 gap-4 md:gap-6">
                     <div v-for="(item, idx) in computedItems" :key="idx" 
@@ -266,11 +257,38 @@
             </div>
         </div>
 
+        <!-- 2. 原始数据监控视图 -->
         <div v-if="currentView === 'raw'" class="flex-1 flex flex-col md:flex-row overflow-hidden bg-slate-100 dark:bg-slate-900 transition-colors duration-300">
+            
+            <!-- 手机端：全平台选择弹窗 -->
+             <div v-if="showMobileSourceModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm md:hidden" @click="showMobileSourceModal = false">
+                <div class="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-sm max-h-[80vh] flex flex-col shadow-2xl" @click.stop>
+                    <div class="p-4 border-b border-slate-200 dark:border-slate-700 flex justify-between items-center">
+                        <h3 class="font-bold text-slate-800 dark:text-white">选择具体来源</h3>
+                        <button @click="showMobileSourceModal = false" class="text-slate-400 hover:text-slate-600">
+                            <i class="fa-solid fa-times text-xl"></i>
+                        </button>
+                    </div>
+                    <div class="flex-1 overflow-y-auto p-4 grid grid-cols-2 gap-3">
+                        <button v-for="pid in allPlatformIds" :key="pid" 
+                            @click="selectPlatformFromModal(pid)"
+                            class="px-3 py-2 text-sm bg-slate-100 dark:bg-slate-700 rounded-lg text-slate-700 dark:text-slate-200 truncate text-center hover:bg-blue-100 dark:hover:bg-blue-900/30">
+                            {{ getDisplayName(pid) }}
+                        </button>
+                    </div>
+                </div>
+            </div>
+
             <div class="w-full md:w-48 bg-white dark:bg-slate-800 border-b md:border-b-0 md:border-r border-slate-200 dark:border-slate-700 flex flex-col shrink-0 transition-colors duration-300">
                 <div class="p-3 md:p-4">
                     <h3 class="hidden md:block text-xs font-bold uppercase text-slate-400 mb-4 px-2">来源分类</h3>
-                    <div class="flex md:flex-col gap-2 md:gap-1 overflow-x-auto hide-scrollbar pb-1 md:pb-0">
+                    <div class="flex items-center gap-2 overflow-x-auto hide-scrollbar pb-1 md:pb-0 md:flex-col md:gap-1 md:items-stretch">
+                        <!-- 手机端：新增来源筛选按钮 -->
+                        <button @click="showMobileSourceModal = true" class="md:hidden shrink-0 px-3 py-2 rounded-lg text-sm font-medium bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400 flex items-center gap-2">
+                             <i class="fa-solid fa-filter"></i> 筛选来源
+                        </button>
+                        <div class="md:hidden w-px h-6 bg-slate-200 dark:bg-slate-700 mx-1 shrink-0"></div>
+
                         <button @click="rawCategory = 'all'" :class="rawNavClass('all') + ' shrink-0'">
                             <span><i class="fa-solid fa-border-all mr-2 opacity-70"></i>全部</span>
                             <span class="text-xs opacity-50 bg-black/5 dark:bg-white/5 px-1.5 rounded-full ml-2">{{ totalRawSources }}</span>
@@ -331,6 +349,74 @@
             </div>
         </div>
 
+        <!-- 3. 新增：联系/加群视图 -->
+        <div v-if="currentView === 'contact'" class="flex-1 flex flex-col items-center justify-center p-6 bg-slate-50 dark:bg-slate-900 transition-colors duration-300 overflow-y-auto">
+            <div class="max-w-md w-full bg-white dark:bg-slate-800 rounded-2xl shadow-xl overflow-hidden border border-slate-200 dark:border-slate-700">
+                <div class="h-32 bg-gradient-to-r from-indigo-500 to-purple-600 flex items-center justify-center">
+                    <i class="fa-solid fa-network-wired text-6xl text-white/30"></i>
+                </div>
+                <div class="px-6 pb-8 text-center relative">
+                    <div class="w-20 h-20 mx-auto -mt-10 bg-white dark:bg-slate-800 rounded-full flex items-center justify-center shadow-lg border-4 border-white dark:border-slate-800 text-3xl text-indigo-500">
+                        <i class="fa-solid fa-user-astronaut"></i>
+                    </div>
+                    <h2 class="mt-4 text-2xl font-bold text-slate-800 dark:text-white">Insight Pro 作者</h2>
+                    <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">欢迎交流与反馈，加入社群获取最新动态</p>
+
+                    <div class="mt-8 space-y-3">
+                        <div class="group p-3 rounded-xl bg-slate-50 dark:bg-slate-700/50 hover:bg-green-50 dark:hover:bg-green-900/20 border border-slate-100 dark:border-slate-700 transition-all cursor-pointer flex items-center gap-4"
+                             @click="copyToClipboard('HunQian_OP', '微信')">
+                            <div class="w-10 h-10 rounded-full bg-green-100 text-green-600 flex items-center justify-center text-lg shrink-0">
+                                <i class="fa-brands fa-weixin"></i>
+                            </div>
+                            <div class="text-left flex-1 min-w-0">
+                                <p class="text-xs text-slate-400 uppercase font-bold tracking-wider">微信 WeChat</p>
+                                <p class="font-mono font-medium text-slate-700 dark:text-slate-200 truncate">HunQian_OP</p>
+                            </div>
+                            <i class="fa-regular fa-copy text-slate-300 group-hover:text-green-500"></i>
+                        </div>
+
+                        <div class="group p-3 rounded-xl bg-slate-50 dark:bg-slate-700/50 hover:bg-blue-50 dark:hover:bg-blue-900/20 border border-slate-100 dark:border-slate-700 transition-all cursor-pointer flex items-center gap-4"
+                             @click="copyToClipboard('1441527537', 'QQ')">
+                            <div class="w-10 h-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-lg shrink-0">
+                                <i class="fa-brands fa-qq"></i>
+                            </div>
+                            <div class="text-left flex-1 min-w-0">
+                                <p class="text-xs text-slate-400 uppercase font-bold tracking-wider">QQ</p>
+                                <p class="font-mono font-medium text-slate-700 dark:text-slate-200 truncate">1441527537</p>
+                            </div>
+                            <i class="fa-regular fa-copy text-slate-300 group-hover:text-blue-500"></i>
+                        </div>
+
+                         <div class="group p-3 rounded-xl bg-slate-50 dark:bg-slate-700/50 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 border border-slate-100 dark:border-slate-700 transition-all cursor-pointer flex items-center gap-4"
+                             @click="copyToClipboard('821367583', 'QQ群')">
+                            <div class="w-10 h-10 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center text-lg shrink-0">
+                                <i class="fa-solid fa-users"></i>
+                            </div>
+                            <div class="text-left flex-1 min-w-0">
+                                <p class="text-xs text-slate-400 uppercase font-bold tracking-wider">QQ 交流群</p>
+                                <p class="font-mono font-medium text-slate-700 dark:text-slate-200 truncate">821367583</p>
+                            </div>
+                            <i class="fa-regular fa-copy text-slate-300 group-hover:text-indigo-500"></i>
+                        </div>
+
+                        <div class="group p-3 rounded-xl bg-slate-50 dark:bg-slate-700/50 hover:bg-red-50 dark:hover:bg-red-900/20 border border-slate-100 dark:border-slate-700 transition-all cursor-pointer flex items-center gap-4"
+                             @click="copyToClipboard('1441527537@qq.com', '邮箱')">
+                            <div class="w-10 h-10 rounded-full bg-red-100 text-red-600 flex items-center justify-center text-lg shrink-0">
+                                <i class="fa-regular fa-envelope"></i>
+                            </div>
+                            <div class="text-left flex-1 min-w-0">
+                                <p class="text-xs text-slate-400 uppercase font-bold tracking-wider">Email</p>
+                                <p class="font-mono font-medium text-slate-700 dark:text-slate-200 truncate text-xs sm:text-sm">1441527537@qq.com</p>
+                            </div>
+                            <i class="fa-regular fa-copy text-slate-300 group-hover:text-red-500"></i>
+                        </div>
+                    </div>
+
+                    <p class="mt-6 text-xs text-slate-400">点击卡片即可复制对应号码</p>
+                </div>
+            </div>
+        </div>
+
     </main>
 </div>
 
@@ -357,17 +443,13 @@
         setup() {
             const loading = ref(true);
             const isDarkMode = ref(false);
-            const debugMode = ref(false);
-            const isMobileMenuOpen = ref(false); // 📱 手机菜单状态
+            const isMobileMenuOpen = ref(false); 
+            const showMobileSourceModal = ref(false); // 📱 手机端来源弹窗控制
             const currentView = ref('smart');
             const currentSmartTab = ref('finance');
             const rawCategory = ref('all');
             const searchText = ref('');
             const lastUpdateTime = ref('');
-            
-            // ==========================================
-            // 👥 拟真在线人数逻辑 (50 - 500人 随机波动)
-            // ==========================================
             const onlineUsers = ref(Math.floor(Math.random() * (500 - 50 + 1)) + 50);
 
             const simulateTraffic = () => {
@@ -395,7 +477,6 @@
             const favoriteIds = reactive(new Set());
             const readSet = reactive(new Set());
 
-            // 🇨🇳 平台名称汉化字典
             const platformMap = {
                 'douyin': '抖音', 'zhihu': '知乎', 'weibo': '微博', 'bilibili-hot-search': 'B站热搜', 
                 'baidu': '百度热搜', 'toutiao': '今日头条', 'tieba': '百度贴吧', '36kr-quick': '36氪快讯', 
@@ -412,7 +493,6 @@
                 return platformMap[id] || id; 
             };
 
-            // 🇨🇳 情感汉化函数
             const sentimentTranslate = (s) => {
                 const map = { 'Bullish': '利好', 'Bearish': '利空', 'Neutral': '中性', 'Mixed': '震荡' };
                 return map[s] || s;
@@ -438,6 +518,14 @@
             const switchView = (view) => {
                 currentView.value = view;
                 isMobileMenuOpen.value = false;
+            };
+
+            const copyToClipboard = (text, label) => {
+                navigator.clipboard.writeText(text).then(() => {
+                    alert(`${label} 已复制：${text}`);
+                }).catch(err => {
+                    console.error('复制失败:', err);
+                });
             };
 
             onMounted(async () => {
@@ -487,36 +575,16 @@
                 return d ? (d.summary || d.economy_summary) : null;
             });
 
-            // ========================================================
-            // 🧠 核心逻辑：将挤在一起的文本智能拆分为结构化列表
-            // ========================================================
             const structuredSummary = computed(() => {
                 const raw = computedSummary.value;
                 if (!raw) return [];
-                
-                // 1. 按 【板块标题】 进行粗分割
-                // 正则说明：(?=【) 是前瞻断言，保留【符号在分割后的结果中
                 const sections = raw.split(/(?=【)/).filter(s => s.trim());
-                
                 return sections.map(section => {
-                    // 提取标题 (去除括号)
                     const titleMatch = section.match(/【(.*?)】/);
                     const title = titleMatch ? titleMatch[1] : '';
-                    
-                    // 提取并清洗内容
                     let content = section.replace(/【.*?】/, '').trim();
-                    
-                    // 智能识别：尝试分割 "1. xxx 2. xxx" 这种连在一起的文本
-                    // 策略：按 "数字+点" 进行分割，如 "1." 或 "2."
-                    // (?=\s*\d+\.) 匹配前面可能有空格，后面跟数字和点的结构
-                    let items = content.split(/(?=\s*\d+\.)/).map(i => {
-                        // 去掉开头多余的数字和点，只保留纯文本，或者保留数字也可以，这里选择保留原样
-                        return i.trim();
-                    }).filter(i => i.length > 2); // 过滤太短的噪点
-
-                    // 如果正则没分出来（可能不是列表格式），就直接当做一段话
+                    let items = content.split(/(?=\s*\d+\.)/).map(i => i.trim()).filter(i => i.length > 2);
                     if (items.length === 0 && content) items = [content];
-                    
                     return { title, items };
                 }).filter(s => s.title || s.items.length > 0);
             });
@@ -536,7 +604,7 @@
                     tabBorder: dark ? 'border-slate-800' : 'border-slate-200',
                     itemText: dark ? 'text-slate-300' : 'text-slate-600',
                 };
-                if (view === 'raw') return { ...common, logoBg: 'bg-slate-200 text-slate-600', logoText: '', mainBg: dark? 'bg-slate-950':'bg-slate-100' };
+                if (view === 'raw' || view === 'contact') return { ...common, logoBg: 'bg-slate-200 text-slate-600', logoText: '', mainBg: dark? 'bg-slate-950':'bg-slate-100' };
                 const themes = {
                     finance: { ...common, logoBg: 'bg-amber-500', logoText: 'text-amber-950', mainBg: dark ? 'bg-[#0f172a]' : 'bg-[#f8fafc]', summaryCard: dark ? 'bg-gradient-to-br from-slate-800 to-slate-900 border border-amber-500/20 text-amber-50' : 'bg-white border-t-4 border-amber-500 shadow-amber-100', summaryTitle: 'text-amber-500', summaryText: dark ? 'text-amber-100/90' : 'text-slate-700', itemCard: dark ? 'bg-slate-800/50 border-slate-700 hover:border-amber-500/50' : 'bg-white border-slate-200 hover:border-amber-400 hover:shadow-lg', itemTitle: dark ? 'text-slate-100' : 'text-slate-800', readMoreBtn: 'text-amber-500 hover:text-amber-600' },
                     global: { ...common, logoBg: 'bg-blue-600', logoText: 'text-white', mainBg: dark ? 'bg-slate-900' : 'bg-slate-50', summaryCard: dark ? 'bg-blue-900/30 border border-blue-500/30 text-blue-50' : 'bg-gradient-to-r from-blue-50 to-white border border-blue-100', summaryTitle: 'text-blue-500', summaryText: dark ? 'text-blue-100' : 'text-blue-900', itemCard: dark ? 'bg-slate-800 border-slate-700' : 'bg-white border-slate-200 hover:border-blue-300 hover:shadow', itemTitle: dark ? 'text-white' : 'text-slate-900', readMoreBtn: 'text-blue-500 hover:text-blue-700' },
@@ -558,15 +626,37 @@
             });
 
             const currentSmartTabIcon = computed(() => smartTabs.find(t => t.id === currentSmartTab.value)?.icon);
-            const currentViewTitle = computed(() => currentView.value === 'smart' ? smartTabs.find(t => t.id === currentSmartTab.value)?.name : '全网原始数据监控台');
+            
+            const currentViewTitle = computed(() => {
+                if (currentView.value === 'smart') return smartTabs.find(t => t.id === currentSmartTab.value)?.name;
+                if (currentView.value === 'raw') return '全网原始数据监控台';
+                if (currentView.value === 'contact') return '联系作者';
+            });
 
-            const filteredRawList = computed(() => {
-                let allRaw = [
+            const allPlatformList = computed(() => {
+                 return [
                     ...rawData.finance.map(i => ({ ...i, category: 'finance' })),
                     ...rawData.global.map(i => ({ ...i, category: 'global' })),
                     ...rawData.tech.map(i => ({ ...i, category: 'tech' })),
                     ...rawData.general.map(i => ({ ...i, category: 'general' }))
                 ];
+            });
+
+            // 获取所有平台ID用于手机端弹窗
+            const allPlatformIds = computed(() => {
+                const uniqueIds = new Set(allPlatformList.value.map(p => p.id));
+                return Array.from(uniqueIds).sort();
+            });
+
+            // 手机端弹窗点击逻辑
+            const selectPlatformFromModal = (pid) => {
+                searchText.value = getDisplayName(pid); // 直接设置为搜索词，达到过滤效果
+                showMobileSourceModal.value = false;
+            };
+
+            const filteredRawList = computed(() => {
+                let allRaw = allPlatformList.value;
+                
                 if (rawCategory.value === 'fav') allRaw = allRaw.filter(item => favoriteIds.has(item.id));
                 else if (rawCategory.value !== 'all') allRaw = allRaw.filter(item => item.category === rawCategory.value);
                 
@@ -622,10 +712,10 @@
             const getCategoryColorClass = (cat) => ({ finance: 'bg-amber-500', global: 'bg-blue-500', tech: 'bg-cyan-500', general: 'bg-rose-500' }[cat] || 'bg-slate-500');
 
             return {
-                loading, isDarkMode, debugMode, isMobileMenuOpen, currentView, currentSmartTab, rawCategory, searchText, lastUpdateTime,
-                smartData, filteredRawList, favoriteIds, rawCategoryCounts, totalRawSources, onlineUsers,
+                loading, isDarkMode, isMobileMenuOpen, showMobileSourceModal, currentView, currentSmartTab, rawCategory, searchText, lastUpdateTime,
+                smartData, filteredRawList, favoriteIds, rawCategoryCounts, totalRawSources, onlineUsers, allPlatformIds,
                 smartTabs, currentTheme, currentSmartTabIcon, currentViewTitle, computedSummary, computedItems, structuredSummary,
-                navBtnClass, rawNavClass, toggleDarkMode, isFavorite, toggleFavorite, isRead, toggleRead, switchView,
+                navBtnClass, rawNavClass, toggleDarkMode, isFavorite, toggleFavorite, isRead, toggleRead, switchView, selectPlatformFromModal, copyToClipboard,
                 getTagStyle, getTagIcon, getCategoryIcon, getCategoryColorClass, getDisplayName, sentimentTranslate
             }
         }
