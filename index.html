@@ -22,12 +22,6 @@
                     animation: {
                         'pulse-neon': 'pulse-neon 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
                     },
-                    keyframes: {
-                        'pulse-neon': {
-                            '0%, 100%': { opacity: 1, filter: 'brightness(100%)' },
-                            '50%': { opacity: .7, filter: 'brightness(150%)' },
-                        }
-                    }
                 }
             }
         }
@@ -37,23 +31,14 @@
         body { background-color: #f8fafc; color: #1e293b; font-family: 'Inter', sans-serif; }
         .dark body { background-color: #0f172a; color: #f1f5f9; }
         [v-cloak] { display: none; }
-        
-        /* 滚动条美化 */
         .thin-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
         .thin-scrollbar::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 9999px; }
         .dark .thin-scrollbar::-webkit-scrollbar-thumb { background-color: #334155; }
-        
-        /* 隐藏横向滚动条但保留滚动功能 */
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-
         .read-item { opacity: 0.6; filter: grayscale(100%); transition: all 0.3s ease; }
-        
-        /* 赛博朋克特效 */
         .cyber-border { position: relative; background: linear-gradient(90deg, #22d3ee, #a855f7); padding: 1px; }
         .cyber-inner { background-color: #020617; height: 100%; width: 100%; }
-
-        /* 娱乐卡片特效 */
         .ent-card { background: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(255,255,255,0.4)); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.3); }
         .dark .ent-card { background: linear-gradient(135deg, rgba(30,41,59,0.8), rgba(15,23,42,0.6)); border-color: rgba(255,255,255,0.05); }
     </style>
@@ -93,8 +78,6 @@
             <button @click="switchView('raw')" :class="navBtnClass('raw')">
                 <i class="fa-solid fa-tower-broadcast w-5 opacity-70"></i> 原始数据监控
             </button>
-            
-            <!-- 新增：联系页面入口 -->
             <div class="my-4 border-t border-slate-200 dark:border-slate-800 opacity-50"></div>
             <button @click="switchView('contact')" :class="navBtnClass('contact')">
                 <i class="fa-solid fa-address-card w-5 opacity-70"></i> 联系/加群
@@ -102,7 +85,6 @@
         </nav>
         
         <div class="p-4 border-t" :class="currentTheme.sidebarBorder">
-            <!-- 已删除调试按钮 -->
             <button @click="toggleDarkMode" :class="['w-full flex items-center justify-center gap-2 py-2 rounded-lg transition-colors', currentTheme.sidebarHover, currentTheme.sidebarText]">
                 <i :class="['fa-solid', isDarkMode ? 'fa-sun' : 'fa-moon']"></i>
                 <span class="text-sm">{{ isDarkMode ? '切换日间模式' : '切换深色模式' }}</span>
@@ -139,7 +121,6 @@
                     </span>
                     <span class="hidden md:inline">当前在线:</span> {{ onlineUsers }} <span class="hidden md:inline">人</span>
                 </div>
-
                 <div v-if="loading" class="hidden md:flex items-center gap-2 text-sm opacity-70" :class="currentTheme.headerText">
                     <i class="fa-solid fa-circle-notch fa-spin"></i> 同步中...
                 </div>
@@ -161,106 +142,102 @@
             </div>
 
             <div class="flex-1 overflow-y-auto p-4 md:p-8 thin-scrollbar scroll-smooth">
-                
+                <!-- 错误提示 -->
                 <div v-if="currentSmartData?.error" class="mb-8 p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg flex items-center gap-3">
                     <i class="fa-solid fa-triangle-exclamation text-xl"></i>
-                    <div>
-                        <p class="font-bold">数据加载失败</p>
-                        <p class="text-xs opacity-75">原因: {{ currentSmartData.error }}</p>
-                    </div>
+                    <div><p class="font-bold">数据加载失败</p><p class="text-xs opacity-75">原因: {{ currentSmartData.error }}</p></div>
                 </div>
 
+                <!-- 核心综述 -->
                 <div v-if="computedSummary" :class="['p-5 md:p-6 rounded-2xl mb-6 md:mb-8 shadow-xl relative overflow-hidden transition-all duration-300', currentTheme.summaryCard]">
                     <div class="absolute top-0 right-0 p-8 opacity-10 pointer-events-none">
                         <i :class="['fa-solid text-6xl md:text-8xl', currentSmartTabIcon]"></i>
                     </div>
                     <div v-if="currentSmartTab === 'tech'" class="cyber-inner absolute inset-0 -z-10"></div>
-                    
                     <div class="flex items-center gap-2 mb-4 md:mb-6 border-b border-black/10 dark:border-white/10 pb-3 relative z-10">
                          <i class="fa-solid fa-microchip text-lg" :class="currentTheme.summaryTitle"></i>
-                         <h3 :class="['text-sm md:text-base font-bold uppercase tracking-widest', currentTheme.summaryTitle]">
-                            AI 核心综述
-                        </h3>
+                         <h3 :class="['text-sm md:text-base font-bold uppercase tracking-widest', currentTheme.summaryTitle]">AI 核心综述</h3>
                     </div>
-
                     <div class="relative z-10 space-y-6">
                         <template v-if="structuredSummary.length > 0">
                             <div v-for="(section, idx) in structuredSummary" :key="idx" class="group">
                                 <h4 v-if="section.title" :class="['text-sm md:text-base font-bold mb-3 flex items-center gap-2', currentTheme.summaryTitle]">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-current opacity-60"></span>
-                                    {{ section.title }}
+                                    <span class="w-1.5 h-1.5 rounded-full bg-current opacity-60"></span>{{ section.title }}
                                 </h4>
                                 <ul class="space-y-3">
                                     <li v-for="(point, pIdx) in section.items" :key="pIdx" :class="['text-sm md:text-[15px] leading-relaxed flex items-start gap-2.5', currentTheme.summaryText]">
-                                        <span class="mt-1.5 w-1.5 h-1.5 rounded-full shrink-0 bg-current opacity-40"></span>
-                                        <span class="text-justify">{{ point }}</span>
+                                        <span class="mt-1.5 w-1.5 h-1.5 rounded-full shrink-0 bg-current opacity-40"></span><span class="text-justify">{{ point }}</span>
                                     </li>
                                 </ul>
                             </div>
                         </template>
-                        <p v-else :class="['text-sm md:text-base leading-relaxed font-medium text-justify whitespace-pre-wrap', currentTheme.summaryText]">
-                            {{ computedSummary }}
-                        </p>
+                        <p v-else :class="['text-sm md:text-base leading-relaxed font-medium text-justify whitespace-pre-wrap', currentTheme.summaryText]">{{ computedSummary }}</p>
                     </div>
                 </div>
 
+                <!-- 新闻卡片网格 -->
                 <div class="grid grid-cols-1 xl:grid-cols-2 gap-4 md:gap-6">
                     <div v-for="(item, idx) in computedItems" :key="idx" 
                          :class="['group rounded-xl p-5 md:p-6 transition-all relative overflow-hidden active:scale-[0.98]', 
                          isRead(item.title) ? 'read-item' : '', currentTheme.itemCard]">
-                        
                         <div v-if="currentSmartTab === 'tech'" class="absolute inset-0 border border-cyan-500/30 rounded-xl pointer-events-none group-hover:border-cyan-400/60 transition-all"></div>
-
                         <div class="flex justify-between items-start gap-4 mb-3 relative z-10">
                             <div>
                                 <div class="flex flex-wrap items-center gap-2 mb-2">
-                                    <span v-if="item.sentiment || item.prediction" 
-                                          :class="['px-2 py-0.5 rounded-md text-[10px] md:text-xs font-bold uppercase tracking-wider', getTagStyle(item)]">
+                                    <span v-if="item.sentiment || item.prediction" :class="['px-2 py-0.5 rounded-md text-[10px] md:text-xs font-bold uppercase tracking-wider', getTagStyle(item)]">
                                         <i :class="getTagIcon(item)"></i> {{ sentimentTranslate(item.sentiment) || '未来预测' }}
                                     </span>
                                     <span v-if="item.impact || item.special_note" class="px-2 py-0.5 rounded-md text-[10px] md:text-xs font-medium bg-black/5 dark:bg-white/10 text-slate-600 dark:text-slate-300 flex items-center gap-1">
-                                        <i :class="['fa-solid', item.special_note ? 'fa-star text-yellow-500' : 'fa-crosshairs opacity-50']"></i>
-                                        {{ item.impact || item.special_note }}
+                                        <i :class="['fa-solid', item.special_note ? 'fa-star text-yellow-500' : 'fa-crosshairs opacity-50']"></i>{{ item.impact || item.special_note }}
                                     </span>
                                 </div>
-                                <h3 :class="['text-lg md:text-xl font-bold leading-tight group-hover:text-blue-500 transition-colors', currentTheme.itemTitle]">
-                                    {{ item.title }}
-                                </h3>
+                                <h3 :class="['text-lg md:text-xl font-bold leading-tight group-hover:text-blue-500 transition-colors', currentTheme.itemTitle]">{{ item.title }}</h3>
                             </div>
                             <button @click.stop="toggleRead(item.title)" class="shrink-0 text-xl md:text-2xl opacity-30 hover:opacity-100 transition-opacity p-1" :class="currentTheme.itemText">
                                 <i :class="['fa-regular', isRead(item.title) ? 'fa-circle-check text-green-500 opacity-100' : 'fa-circle']"></i>
                             </button>
                         </div>
-
-                        <p :class="['text-sm leading-relaxed mb-4 line-clamp-4 group-hover:line-clamp-none transition-all relative z-10 text-justify', currentTheme.itemText]">
-                            {{ item.summary || item.comment || item.reason }}
-                        </p>
-
-                        <a :href="item.url" target="_blank" @click.stop :class="['inline-flex items-center gap-1 text-xs font-bold uppercase tracking-widest transition-colors relative z-10', currentTheme.readMoreBtn]">
-                            Read Source <i class="fa-solid fa-arrow-right-long ml-1 group-hover:translate-x-1 transition-transform"></i>
-                        </a>
+                        <p :class="['text-sm leading-relaxed mb-4 line-clamp-4 group-hover:line-clamp-none transition-all relative z-10 text-justify', currentTheme.itemText]">{{ item.summary || item.comment || item.reason }}</p>
+                        <a :href="item.url" target="_blank" @click.stop :class="['inline-flex items-center gap-1 text-xs font-bold uppercase tracking-widest transition-colors relative z-10', currentTheme.readMoreBtn]">Read Source <i class="fa-solid fa-arrow-right-long ml-1 group-hover:translate-x-1 transition-transform"></i></a>
                     </div>
                 </div>
 
+                <!-- 🌟🌟🌟 新增：AI 模拟评论区 🌟🌟🌟 -->
                 <div class="max-w-7xl mx-auto py-8 md:py-12 mt-8 border-t border-slate-200 dark:border-slate-800">
                     <h3 class="text-lg md:text-xl font-bold mb-6 text-slate-700 dark:text-slate-200 flex items-center gap-2">
-                        <i class="fa-solid fa-comments"></i> 读者讨论
+                        <i class="fa-solid fa-comments"></i> 读者讨论 (30位不同职业网友模拟)
                     </h3>
-                    <div class="giscus"></div>
-                </div>
-
-                <div v-if="!loading && !currentSmartData?.error && computedItems.length === 0" class="text-center py-24 opacity-50 text-slate-400">
-                    <i class="fa-solid fa-box-open text-6xl mb-4"></i>
-                    <p class="text-xl">该板块暂无数据分析</p>
-                    <p class="text-xs mt-2">点击左下角“数据不显示”按钮查看原始数据</p>
+                    
+                    <div v-if="currentComments && currentComments.length > 0" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div v-for="(comment, cIdx) in currentComments" :key="cIdx" 
+                             class="bg-white dark:bg-slate-800/50 p-4 rounded-xl border border-slate-100 dark:border-slate-700 hover:shadow-md transition-all flex gap-3">
+                             <!-- 头像 -->
+                            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-slate-200 to-slate-300 dark:from-slate-700 dark:to-slate-600 flex items-center justify-center shrink-0 text-lg">
+                                <i :class="['fa-solid', getAvatarIcon(comment.role)]"></i>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <div class="flex justify-between items-start mb-1">
+                                    <div>
+                                        <span class="font-bold text-sm text-slate-800 dark:text-slate-200">{{ comment.name }}</span>
+                                        <span class="text-xs text-slate-500 ml-2 px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-700">{{ comment.role }}</span>
+                                    </div>
+                                    <span class="text-[10px] px-2 py-0.5 rounded-full bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400 font-medium">
+                                        {{ comment.emotion }}
+                                    </span>
+                                </div>
+                                <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">{{ comment.content }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div v-else class="text-center py-10 text-slate-400">
+                        <i class="fa-solid fa-spinner fa-spin mr-2"></i> 正在加载评论或暂无数据...
+                    </div>
                 </div>
             </div>
         </div>
 
         <!-- 2. 原始数据监控视图 -->
         <div v-if="currentView === 'raw'" class="flex-1 flex flex-col md:flex-row overflow-hidden bg-slate-100 dark:bg-slate-900 transition-colors duration-300">
-            
-            <!-- 手机端：全平台选择弹窗 -->
              <div v-if="showMobileSourceModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm md:hidden" @click="showMobileSourceModal = false">
                 <div class="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-sm max-h-[80vh] flex flex-col shadow-2xl" @click.stop>
                     <div class="p-4 border-b border-slate-200 dark:border-slate-700 flex justify-between items-center">
@@ -270,11 +247,7 @@
                         </button>
                     </div>
                     <div class="flex-1 overflow-y-auto p-4 grid grid-cols-2 gap-3">
-                        <button v-for="pid in allPlatformIds" :key="pid" 
-                            @click="selectPlatformFromModal(pid)"
-                            class="px-3 py-2 text-sm bg-slate-100 dark:bg-slate-700 rounded-lg text-slate-700 dark:text-slate-200 truncate text-center hover:bg-blue-100 dark:hover:bg-blue-900/30">
-                            {{ getDisplayName(pid) }}
-                        </button>
+                        <button v-for="pid in allPlatformIds" :key="pid" @click="selectPlatformFromModal(pid)" class="px-3 py-2 text-sm bg-slate-100 dark:bg-slate-700 rounded-lg text-slate-700 dark:text-slate-200 truncate text-center hover:bg-blue-100 dark:hover:bg-blue-900/30">{{ getDisplayName(pid) }}</button>
                     </div>
                 </div>
             </div>
@@ -283,25 +256,12 @@
                 <div class="p-3 md:p-4">
                     <h3 class="hidden md:block text-xs font-bold uppercase text-slate-400 mb-4 px-2">来源分类</h3>
                     <div class="flex items-center gap-2 overflow-x-auto hide-scrollbar pb-1 md:pb-0 md:flex-col md:gap-1 md:items-stretch">
-                        <!-- 手机端：新增来源筛选按钮 -->
-                        <button @click="showMobileSourceModal = true" class="md:hidden shrink-0 px-3 py-2 rounded-lg text-sm font-medium bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400 flex items-center gap-2">
-                             <i class="fa-solid fa-filter"></i> 筛选来源
-                        </button>
+                        <button @click="showMobileSourceModal = true" class="md:hidden shrink-0 px-3 py-2 rounded-lg text-sm font-medium bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400 flex items-center gap-2"><i class="fa-solid fa-filter"></i> 筛选来源</button>
                         <div class="md:hidden w-px h-6 bg-slate-200 dark:bg-slate-700 mx-1 shrink-0"></div>
-
-                        <button @click="rawCategory = 'all'" :class="rawNavClass('all') + ' shrink-0'">
-                            <span><i class="fa-solid fa-border-all mr-2 opacity-70"></i>全部</span>
-                            <span class="text-xs opacity-50 bg-black/5 dark:bg-white/5 px-1.5 rounded-full ml-2">{{ totalRawSources }}</span>
-                        </button>
-                        <button @click="rawCategory = 'fav'" :class="rawNavClass('fav') + ' shrink-0'">
-                            <span><i class="fa-solid fa-star mr-2 opacity-70 text-yellow-500"></i>收藏</span>
-                            <span class="text-xs opacity-50 bg-black/5 dark:bg-white/5 px-1.5 rounded-full ml-2">{{ favoriteIds.size }}</span>
-                        </button>
+                        <button @click="rawCategory = 'all'" :class="rawNavClass('all') + ' shrink-0'"><span><i class="fa-solid fa-border-all mr-2 opacity-70"></i>全部</span><span class="text-xs opacity-50 bg-black/5 dark:bg-white/5 px-1.5 rounded-full ml-2">{{ totalRawSources }}</span></button>
+                        <button @click="rawCategory = 'fav'" :class="rawNavClass('fav') + ' shrink-0'"><span><i class="fa-solid fa-star mr-2 opacity-70 text-yellow-500"></i>收藏</span><span class="text-xs opacity-50 bg-black/5 dark:bg-white/5 px-1.5 rounded-full ml-2">{{ favoriteIds.size }}</span></button>
                         <div class="hidden md:block my-4 border-t border-slate-100 dark:border-slate-700"></div>
-                        <button v-for="(count, cat) in rawCategoryCounts" :key="cat" @click="rawCategory = cat" :class="rawNavClass(cat) + ' shrink-0'">
-                            <span><i :class="['fa-solid mr-2 opacity-70', getCategoryIcon(cat)]"></i><span class="capitalize">{{cat}}</span></span>
-                            <span class="text-xs opacity-50 ml-2">{{ count }}</span>
-                        </button>
+                        <button v-for="(count, cat) in rawCategoryCounts" :key="cat" @click="rawCategory = cat" :class="rawNavClass(cat) + ' shrink-0'"><span><i :class="['fa-solid mr-2 opacity-70', getCategoryIcon(cat)]"></i><span class="capitalize">{{cat}}</span></span><span class="text-xs opacity-50 ml-2">{{ count }}</span></button>
                     </div>
                 </div>
             </div>
@@ -310,12 +270,10 @@
                 <div class="p-3 md:p-4 border-b border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 flex items-center justify-between transition-colors duration-300">
                     <div class="relative w-full md:w-96">
                         <i class="fa-solid fa-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
-                        <input v-model="searchText" type="text" placeholder="搜索来源 (如: 微博, 36kr)..." 
-                            class="w-full pl-10 pr-4 py-2 bg-slate-100 dark:bg-slate-900 border-transparent focus:border-blue-500 focus:bg-white dark:focus:bg-slate-950 rounded-lg text-sm transition-all outline-none dark:text-slate-200 placeholder-slate-400">
+                        <input v-model="searchText" type="text" placeholder="搜索来源 (如: 微博, 36kr)..." class="w-full pl-10 pr-4 py-2 bg-slate-100 dark:bg-slate-900 border-transparent focus:border-blue-500 focus:bg-white dark:focus:bg-slate-950 rounded-lg text-sm transition-all outline-none dark:text-slate-200 placeholder-slate-400">
                     </div>
                     <div class="hidden md:block text-sm text-slate-500">显示 {{ filteredRawList.length }} 个来源</div>
                 </div>
-
                 <div class="flex-1 overflow-y-auto p-4 md:p-6 thin-scrollbar bg-slate-50 dark:bg-slate-900 transition-colors duration-300">
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 items-start">
                         <div v-for="platform in filteredRawList" :key="platform.id" class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 flex flex-col overflow-hidden hover:shadow-md transition-shadow group">
@@ -326,9 +284,7 @@
                                 </div>
                                 <div class="flex items-center gap-3">
                                      <span class="text-[10px] font-medium bg-slate-200 dark:bg-slate-700 px-1.5 py-0.5 rounded text-slate-500 dark:text-slate-400">{{ platform.items.length }}</span>
-                                    <button @click.stop="toggleFavorite(platform.id)" class="text-lg transition-transform active:scale-125 hover:scale-110">
-                                        <i :class="['fa-star', isFavorite(platform.id) ? 'fa-solid text-yellow-400' : 'fa-regular text-slate-300 hover:text-yellow-400']"></i>
-                                    </button>
+                                    <button @click.stop="toggleFavorite(platform.id)" class="text-lg transition-transform active:scale-125 hover:scale-110"><i :class="['fa-star', isFavorite(platform.id) ? 'fa-solid text-yellow-400' : 'fa-regular text-slate-300 hover:text-yellow-400']"></i></button>
                                 </div>
                             </div>
                             <div class="p-3 overflow-y-auto thin-scrollbar" style="max-height: 320px;">
@@ -336,9 +292,7 @@
                                     <li v-for="(news, idx) in platform.items" :key="idx" class="group/item">
                                         <a :href="news.url" target="_blank" @click.stop class="flex gap-2 items-start leading-tight">
                                             <span class="text-[10px] text-slate-400 font-mono pt-0.5 w-4 shrink-0">{{ idx + 1 }}.</span>
-                                            <span class="text-xs text-slate-600 dark:text-slate-300 group-hover/item:text-blue-600 dark:group-hover/item:text-blue-400 group-hover/item:underline break-words">
-                                                {{ news.title }}
-                                            </span>
+                                            <span class="text-xs text-slate-600 dark:text-slate-300 group-hover/item:text-blue-600 dark:group-hover/item:text-blue-400 group-hover/item:underline break-words">{{ news.title }}</span>
                                         </a>
                                     </li>
                                 </ul>
@@ -349,7 +303,7 @@
             </div>
         </div>
 
-        <!-- 3. 新增：联系/加群视图 -->
+        <!-- 3. 联系/加群视图 -->
         <div v-if="currentView === 'contact'" class="flex-1 flex flex-col items-center justify-center p-6 bg-slate-50 dark:bg-slate-900 transition-colors duration-300 overflow-y-auto">
             <div class="max-w-md w-full bg-white dark:bg-slate-800 rounded-2xl shadow-xl overflow-hidden border border-slate-200 dark:border-slate-700">
                 <div class="h-32 bg-gradient-to-r from-indigo-500 to-purple-600 flex items-center justify-center">
@@ -363,78 +317,29 @@
                     <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">欢迎交流与反馈，加入社群获取最新动态</p>
 
                     <div class="mt-8 space-y-3">
-                        <div class="group p-3 rounded-xl bg-slate-50 dark:bg-slate-700/50 hover:bg-green-50 dark:hover:bg-green-900/20 border border-slate-100 dark:border-slate-700 transition-all cursor-pointer flex items-center gap-4"
-                             @click="copyToClipboard('HunQian_OP', '微信')">
-                            <div class="w-10 h-10 rounded-full bg-green-100 text-green-600 flex items-center justify-center text-lg shrink-0">
-                                <i class="fa-brands fa-weixin"></i>
-                            </div>
-                            <div class="text-left flex-1 min-w-0">
-                                <p class="text-xs text-slate-400 uppercase font-bold tracking-wider">微信 WeChat</p>
-                                <p class="font-mono font-medium text-slate-700 dark:text-slate-200 truncate">HunQian_OP</p>
-                            </div>
-                            <i class="fa-regular fa-copy text-slate-300 group-hover:text-green-500"></i>
+                        <div class="group p-3 rounded-xl bg-slate-50 dark:bg-slate-700/50 hover:bg-green-50 dark:hover:bg-green-900/20 border border-slate-100 dark:border-slate-700 transition-all cursor-pointer flex items-center gap-4" @click="copyToClipboard('HunQian_OP', '微信')">
+                            <div class="w-10 h-10 rounded-full bg-green-100 text-green-600 flex items-center justify-center text-lg shrink-0"><i class="fa-brands fa-weixin"></i></div>
+                            <div class="text-left flex-1 min-w-0"><p class="text-xs text-slate-400 uppercase font-bold tracking-wider">微信 WeChat</p><p class="font-mono font-medium text-slate-700 dark:text-slate-200 truncate">HunQian_OP</p></div><i class="fa-regular fa-copy text-slate-300 group-hover:text-green-500"></i>
                         </div>
-
-                        <div class="group p-3 rounded-xl bg-slate-50 dark:bg-slate-700/50 hover:bg-blue-50 dark:hover:bg-blue-900/20 border border-slate-100 dark:border-slate-700 transition-all cursor-pointer flex items-center gap-4"
-                             @click="copyToClipboard('1441527537', 'QQ')">
-                            <div class="w-10 h-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-lg shrink-0">
-                                <i class="fa-brands fa-qq"></i>
-                            </div>
-                            <div class="text-left flex-1 min-w-0">
-                                <p class="text-xs text-slate-400 uppercase font-bold tracking-wider">QQ</p>
-                                <p class="font-mono font-medium text-slate-700 dark:text-slate-200 truncate">1441527537</p>
-                            </div>
-                            <i class="fa-regular fa-copy text-slate-300 group-hover:text-blue-500"></i>
+                        <div class="group p-3 rounded-xl bg-slate-50 dark:bg-slate-700/50 hover:bg-blue-50 dark:hover:bg-blue-900/20 border border-slate-100 dark:border-slate-700 transition-all cursor-pointer flex items-center gap-4" @click="copyToClipboard('1441527537', 'QQ')">
+                            <div class="w-10 h-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-lg shrink-0"><i class="fa-brands fa-qq"></i></div>
+                            <div class="text-left flex-1 min-w-0"><p class="text-xs text-slate-400 uppercase font-bold tracking-wider">QQ</p><p class="font-mono font-medium text-slate-700 dark:text-slate-200 truncate">1441527537</p></div><i class="fa-regular fa-copy text-slate-300 group-hover:text-blue-500"></i>
                         </div>
-
-                         <div class="group p-3 rounded-xl bg-slate-50 dark:bg-slate-700/50 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 border border-slate-100 dark:border-slate-700 transition-all cursor-pointer flex items-center gap-4"
-                             @click="copyToClipboard('821367583', 'QQ群')">
-                            <div class="w-10 h-10 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center text-lg shrink-0">
-                                <i class="fa-solid fa-users"></i>
-                            </div>
-                            <div class="text-left flex-1 min-w-0">
-                                <p class="text-xs text-slate-400 uppercase font-bold tracking-wider">QQ 交流群</p>
-                                <p class="font-mono font-medium text-slate-700 dark:text-slate-200 truncate">821367583</p>
-                            </div>
-                            <i class="fa-regular fa-copy text-slate-300 group-hover:text-indigo-500"></i>
+                         <div class="group p-3 rounded-xl bg-slate-50 dark:bg-slate-700/50 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 border border-slate-100 dark:border-slate-700 transition-all cursor-pointer flex items-center gap-4" @click="copyToClipboard('821367583', 'QQ群')">
+                            <div class="w-10 h-10 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center text-lg shrink-0"><i class="fa-solid fa-users"></i></div>
+                            <div class="text-left flex-1 min-w-0"><p class="text-xs text-slate-400 uppercase font-bold tracking-wider">QQ 交流群</p><p class="font-mono font-medium text-slate-700 dark:text-slate-200 truncate">821367583</p></div><i class="fa-regular fa-copy text-slate-300 group-hover:text-indigo-500"></i>
                         </div>
-
-                        <div class="group p-3 rounded-xl bg-slate-50 dark:bg-slate-700/50 hover:bg-red-50 dark:hover:bg-red-900/20 border border-slate-100 dark:border-slate-700 transition-all cursor-pointer flex items-center gap-4"
-                             @click="copyToClipboard('1441527537@qq.com', '邮箱')">
-                            <div class="w-10 h-10 rounded-full bg-red-100 text-red-600 flex items-center justify-center text-lg shrink-0">
-                                <i class="fa-regular fa-envelope"></i>
-                            </div>
-                            <div class="text-left flex-1 min-w-0">
-                                <p class="text-xs text-slate-400 uppercase font-bold tracking-wider">Email</p>
-                                <p class="font-mono font-medium text-slate-700 dark:text-slate-200 truncate text-xs sm:text-sm">1441527537@qq.com</p>
-                            </div>
-                            <i class="fa-regular fa-copy text-slate-300 group-hover:text-red-500"></i>
+                        <div class="group p-3 rounded-xl bg-slate-50 dark:bg-slate-700/50 hover:bg-red-50 dark:hover:bg-red-900/20 border border-slate-100 dark:border-slate-700 transition-all cursor-pointer flex items-center gap-4" @click="copyToClipboard('1441527537@qq.com', '邮箱')">
+                            <div class="w-10 h-10 rounded-full bg-red-100 text-red-600 flex items-center justify-center text-lg shrink-0"><i class="fa-regular fa-envelope"></i></div>
+                            <div class="text-left flex-1 min-w-0"><p class="text-xs text-slate-400 uppercase font-bold tracking-wider">Email</p><p class="font-mono font-medium text-slate-700 dark:text-slate-200 truncate text-xs sm:text-sm">1441527537@qq.com</p></div><i class="fa-regular fa-copy text-slate-300 group-hover:text-red-500"></i>
                         </div>
                     </div>
-
                     <p class="mt-6 text-xs text-slate-400">点击卡片即可复制对应号码</p>
                 </div>
             </div>
         </div>
-
     </main>
 </div>
-
-<script src="https://giscus.app/client.js"
-        data-repo="Soulmove/daily-news-ai"
-        data-repo-id="R_kgDONfg7hQ"
-        data-category="General"
-        data-category-id="DIC_kwDONfg7hc4ClYjL"
-        data-mapping="pathname"
-        data-strict="0"
-        data-reactions-enabled="1"
-        data-emit-metadata="0"
-        data-input-position="bottom"
-        data-theme="preferred_color_scheme"
-        data-lang="zh-CN"
-        crossorigin="anonymous"
-        async>
-</script>
 
 <script>
     const { createApp, reactive, computed, ref, onMounted } = Vue
@@ -444,7 +349,7 @@
             const loading = ref(true);
             const isDarkMode = ref(false);
             const isMobileMenuOpen = ref(false); 
-            const showMobileSourceModal = ref(false); // 📱 手机端来源弹窗控制
+            const showMobileSourceModal = ref(false);
             const currentView = ref('smart');
             const currentSmartTab = ref('finance');
             const rawCategory = ref('all');
@@ -457,23 +362,19 @@
                 setTimeout(() => {
                     const r = Math.random();
                     let diff = 0;
-                    if (r > 0.85) {
-                        diff = Math.floor(Math.random() * 30) + 10;
-                        if (Math.random() > 0.4) diff = -diff; 
-                    } else if (r > 0.3) {
-                        diff = Math.floor(Math.random() * 5) + 1;
-                        if (Math.random() > 0.5) diff = -diff;
-                    } 
+                    if (r > 0.85) { diff = Math.floor(Math.random() * 30) + 10; if (Math.random() > 0.4) diff = -diff; } 
+                    else if (r > 0.3) { diff = Math.floor(Math.random() * 5) + 1; if (Math.random() > 0.5) diff = -diff; } 
                     let newVal = onlineUsers.value + diff;
-                    if (newVal < 50) newVal = 50;
-                    if (newVal > 500) newVal = 500;
-                    onlineUsers.value = newVal;
-                    simulateTraffic();
+                    if (newVal < 50) newVal = 50; if (newVal > 500) newVal = 500;
+                    onlineUsers.value = newVal; simulateTraffic();
                 }, delay);
             };
 
             const smartData = reactive({ finance: null, global: null, tech: null, general: null });
             const rawData = reactive({ finance: [], global: [], tech: [], general: [] });
+            // 新增：存储评论数据
+            const commentsData = reactive({ finance: [], global: [], tech: [], general: [] });
+            
             const favoriteIds = reactive(new Set());
             const readSet = reactive(new Set());
 
@@ -489,14 +390,8 @@
                 'hackernews': 'HackerNews', 'github-trending-today': 'GitHub 榜', 'producthunt': 'ProductHunt'
             };
 
-            const getDisplayName = (id) => {
-                return platformMap[id] || id; 
-            };
-
-            const sentimentTranslate = (s) => {
-                const map = { 'Bullish': '利好', 'Bearish': '利空', 'Neutral': '中性', 'Mixed': '震荡' };
-                return map[s] || s;
-            };
+            const getDisplayName = (id) => platformMap[id] || id; 
+            const sentimentTranslate = (s) => ({ 'Bullish': '利好', 'Bearish': '利空', 'Neutral': '中性', 'Mixed': '震荡' }[s] || s);
 
             const smartTabs = [
                 { id: 'finance', name: '财经/市场', icon: 'fa-coins', activeClass: 'text-amber-600 border-amber-600 dark:text-amber-400 dark:border-amber-400' },
@@ -510,9 +405,7 @@
                     const res = await fetch(url);
                     if (!res.ok) throw new Error(`HTTP ${res.status}`);
                     return await res.json();
-                } catch (e) {
-                    return { error: e.message, items: [] }; 
-                }
+                } catch (e) { return { error: e.message, items: [], comments: [] }; } // 容错
             }
             
             const switchView = (view) => {
@@ -521,11 +414,7 @@
             };
 
             const copyToClipboard = (text, label) => {
-                navigator.clipboard.writeText(text).then(() => {
-                    alert(`${label} 已复制：${text}`);
-                }).catch(err => {
-                    console.error('复制失败:', err);
-                });
+                navigator.clipboard.writeText(text).then(() => alert(`${label} 已复制：${text}`)).catch(err => console.error('复制失败:', err));
             };
 
             onMounted(async () => {
@@ -534,21 +423,28 @@
                     isDarkMode.value = true;
                     document.documentElement.classList.add('dark');
                 }
-
                 simulateTraffic();
 
                 const t = new Date().getTime();
                 loading.value = true;
                 
+                // 加载简报数据
                 smartData.finance = await safeFetch(`./analysis_finance.json?t=${t}`);
                 smartData.global = await safeFetch(`./analysis_global.json?t=${t}`);
                 smartData.tech = await safeFetch(`./analysis_tech.json?t=${t}`);
                 smartData.general = await safeFetch(`./analysis_general.json?t=${t}`);
                 
+                // 加载原始数据
                 const fData = await safeFetch(`./data_finance.json?t=${t}`); rawData.finance = Array.isArray(fData) ? fData : [];
                 const gData = await safeFetch(`./data_global.json?t=${t}`); rawData.global = Array.isArray(gData) ? gData : [];
                 const tData = await safeFetch(`./data_tech.json?t=${t}`); rawData.tech = Array.isArray(tData) ? tData : [];
                 const genData = await safeFetch(`./data_general.json?t=${t}`); rawData.general = Array.isArray(genData) ? genData : [];
+
+                // 🌟 新增：加载评论数据
+                const cf = await safeFetch(`./comments_finance.json?t=${t}`); commentsData.finance = cf.comments || [];
+                const cg = await safeFetch(`./comments_global.json?t=${t}`); commentsData.global = cg.comments || [];
+                const ct = await safeFetch(`./comments_tech.json?t=${t}`); commentsData.tech = ct.comments || [];
+                const cgen = await safeFetch(`./comments_general.json?t=${t}`); commentsData.general = cgen.comments || [];
 
                 const anyData = smartData.finance || smartData.tech;
                 if (anyData?.date) lastUpdateTime.value = anyData.date;
@@ -557,16 +453,14 @@
             });
 
             const currentSmartData = computed(() => smartData[currentSmartTab.value]);
-            
+            // 🌟 获取当前 Tab 的评论
+            const currentComments = computed(() => commentsData[currentSmartTab.value]);
+
             const computedItems = computed(() => {
                 const data = currentSmartData.value;
                 if (!data) return [];
                 if (Array.isArray(data.items) && data.items.length > 0) return data.items;
-                if (data.categories) {
-                    for (const key in data.categories) {
-                         if (Array.isArray(data.categories[key]) && data.categories[key].length > 0) return data.categories[key];
-                    }
-                }
+                if (data.categories) { for (const key in data.categories) { if (Array.isArray(data.categories[key]) && data.categories[key].length > 0) return data.categories[key]; } }
                 return [];
             });
 
@@ -608,65 +502,35 @@
                 const themes = {
                     finance: { ...common, logoBg: 'bg-amber-500', logoText: 'text-amber-950', mainBg: dark ? 'bg-[#0f172a]' : 'bg-[#f8fafc]', summaryCard: dark ? 'bg-gradient-to-br from-slate-800 to-slate-900 border border-amber-500/20 text-amber-50' : 'bg-white border-t-4 border-amber-500 shadow-amber-100', summaryTitle: 'text-amber-500', summaryText: dark ? 'text-amber-100/90' : 'text-slate-700', itemCard: dark ? 'bg-slate-800/50 border-slate-700 hover:border-amber-500/50' : 'bg-white border-slate-200 hover:border-amber-400 hover:shadow-lg', itemTitle: dark ? 'text-slate-100' : 'text-slate-800', readMoreBtn: 'text-amber-500 hover:text-amber-600' },
                     global: { ...common, logoBg: 'bg-blue-600', logoText: 'text-white', mainBg: dark ? 'bg-slate-900' : 'bg-slate-50', summaryCard: dark ? 'bg-blue-900/30 border border-blue-500/30 text-blue-50' : 'bg-gradient-to-r from-blue-50 to-white border border-blue-100', summaryTitle: 'text-blue-500', summaryText: dark ? 'text-blue-100' : 'text-blue-900', itemCard: dark ? 'bg-slate-800 border-slate-700' : 'bg-white border-slate-200 hover:border-blue-300 hover:shadow', itemTitle: dark ? 'text-white' : 'text-slate-900', readMoreBtn: 'text-blue-500 hover:text-blue-700' },
-                    tech: { 
-                        ...common, 
-                        logoBg: 'bg-cyan-500 shadow-cyan-500/50', logoText: 'text-cyan-950', 
-                        mainBg: dark ? 'bg-[#09090b]' : 'bg-slate-100', 
-                        summaryCard: 'cyber-border text-cyan-50', 
-                        summaryTitle: 'text-cyan-400 animate-pulse-neon', 
-                        summaryText: 'text-cyan-50/90 font-mono', 
-                        itemCard: 'bg-slate-900/80 border-cyan-900/50 hover:bg-slate-900', 
-                        itemTitle: 'text-cyan-50 font-mono tracking-wider', 
-                        itemText: 'text-slate-300 font-mono', 
-                        readMoreBtn: 'text-cyan-400 hover:text-cyan-300 font-mono' 
-                    },
+                    tech: { ...common, logoBg: 'bg-cyan-500 shadow-cyan-500/50', logoText: 'text-cyan-950', mainBg: dark ? 'bg-[#09090b]' : 'bg-slate-100', summaryCard: 'cyber-border text-cyan-50', summaryTitle: 'text-cyan-400 animate-pulse-neon', summaryText: 'text-cyan-50/90 font-mono', itemCard: 'bg-slate-900/80 border-cyan-900/50 hover:bg-slate-900', itemTitle: 'text-cyan-50 font-mono tracking-wider', itemText: 'text-slate-300 font-mono', readMoreBtn: 'text-cyan-400 hover:text-cyan-300 font-mono' },
                     general: { ...common, logoBg: 'bg-gradient-to-br from-rose-500 to-indigo-600', logoText: 'text-white', mainBg: dark ? 'bg-[#1a1218]' : 'bg-[#fff0f5]', summaryCard: 'bg-gradient-to-r from-rose-500 to-indigo-600 text-white shadow-lg shadow-rose-500/30', summaryTitle: 'text-rose-200', summaryText: 'text-white font-medium', itemCard: 'ent-card hover:shadow-xl hover:-translate-y-2', itemTitle: dark ? 'text-white' : 'text-slate-800', readMoreBtn: 'text-indigo-500 hover:text-indigo-700' }
                 };
                 return themes[tab];
             });
 
             const currentSmartTabIcon = computed(() => smartTabs.find(t => t.id === currentSmartTab.value)?.icon);
-            
             const currentViewTitle = computed(() => {
                 if (currentView.value === 'smart') return smartTabs.find(t => t.id === currentSmartTab.value)?.name;
                 if (currentView.value === 'raw') return '全网原始数据监控台';
                 if (currentView.value === 'contact') return '联系作者';
             });
 
-            const allPlatformList = computed(() => {
-                 return [
-                    ...rawData.finance.map(i => ({ ...i, category: 'finance' })),
-                    ...rawData.global.map(i => ({ ...i, category: 'global' })),
-                    ...rawData.tech.map(i => ({ ...i, category: 'tech' })),
-                    ...rawData.general.map(i => ({ ...i, category: 'general' }))
-                ];
-            });
-
-            // 获取所有平台ID用于手机端弹窗
-            const allPlatformIds = computed(() => {
-                const uniqueIds = new Set(allPlatformList.value.map(p => p.id));
-                return Array.from(uniqueIds).sort();
-            });
-
-            // 手机端弹窗点击逻辑
-            const selectPlatformFromModal = (pid) => {
-                searchText.value = getDisplayName(pid); // 直接设置为搜索词，达到过滤效果
-                showMobileSourceModal.value = false;
-            };
+            const allPlatformList = computed(() => [
+                ...rawData.finance.map(i => ({ ...i, category: 'finance' })),
+                ...rawData.global.map(i => ({ ...i, category: 'global' })),
+                ...rawData.tech.map(i => ({ ...i, category: 'tech' })),
+                ...rawData.general.map(i => ({ ...i, category: 'general' }))
+            ]);
+            const allPlatformIds = computed(() => Array.from(new Set(allPlatformList.value.map(p => p.id))).sort());
+            const selectPlatformFromModal = (pid) => { searchText.value = getDisplayName(pid); showMobileSourceModal.value = false; };
 
             const filteredRawList = computed(() => {
                 let allRaw = allPlatformList.value;
-                
                 if (rawCategory.value === 'fav') allRaw = allRaw.filter(item => favoriteIds.has(item.id));
                 else if (rawCategory.value !== 'all') allRaw = allRaw.filter(item => item.category === rawCategory.value);
-                
                 if (searchText.value.trim()) {
                     const key = searchText.value.toLowerCase();
-                    allRaw = allRaw.filter(item => {
-                        const displayName = getDisplayName(item.id).toLowerCase();
-                        const id = item.id.toLowerCase();
-                        return id.includes(key) || displayName.includes(key);
-                    });
+                    allRaw = allRaw.filter(item => getDisplayName(item.id).toLowerCase().includes(key) || item.id.toLowerCase().includes(key));
                 }
                 return allRaw.sort((a, b) => {
                     const aFav = favoriteIds.has(a.id), bFav = favoriteIds.has(b.id);
@@ -675,9 +539,7 @@
                 });
             });
 
-            const rawCategoryCounts = computed(() => ({
-                finance: rawData.finance.length, global: rawData.global.length, tech: rawData.tech.length, general: rawData.general.length
-            }));
+            const rawCategoryCounts = computed(() => ({ finance: rawData.finance.length, global: rawData.global.length, tech: rawData.tech.length, general: rawData.general.length }));
             const totalRawSources = computed(() => Object.values(rawCategoryCounts.value).reduce((a, b) => a + b, 0));
 
             const navBtnClass = (view) => `w-full text-left px-4 py-3 rounded-xl flex items-center gap-4 transition-all font-medium ${currentView.value === view ? (isDarkMode.value ? 'bg-slate-800 text-white shadow-inner' : 'bg-slate-100 text-slate-900 shadow-sm') : (isDarkMode.value ? 'text-slate-400 hover:bg-slate-800/50' : 'text-slate-500 hover:bg-slate-50')}`;
@@ -688,12 +550,11 @@
             const toggleFavorite = (id) => { favoriteIds.has(id) ? favoriteIds.delete(id) : favoriteIds.add(id); saveLocalStorage(); };
             const isRead = (title) => readSet.has(title);
             const toggleRead = (title) => { readSet.has(title) ? readSet.delete(title) : readSet.add(title); saveLocalStorage(); };
-            
             const saveLocalStorage = () => { localStorage.setItem('favorites', JSON.stringify([...favoriteIds])); localStorage.setItem('readItems', JSON.stringify([...readSet])); };
             const loadLocalStorage = () => {
                 const fav = localStorage.getItem('favorites'); if (fav) new Set(JSON.parse(fav)).forEach(id => favoriteIds.add(id));
                 const read = localStorage.getItem('readItems'); if (read) new Set(JSON.parse(read)).forEach(id => readSet.add(id));
-                const dark = localStorage.getItem('darkMode'); if (dark === 'true') { isDarkMode.value = true; }
+                const dark = localStorage.getItem('darkMode'); if (dark === 'true') isDarkMode.value = true;
             };
 
             const getTagStyle = (item) => {
@@ -702,21 +563,34 @@
                 if (item.prediction) return 'bg-cyan-100 text-cyan-700 border border-cyan-200 dark:bg-cyan-900/30 dark:text-cyan-400 dark:border-cyan-800';
                 return 'bg-slate-100 text-slate-600 border border-slate-200 dark:bg-slate-800 dark:text-slate-400 dark:border-slate-700';
             };
-            const getTagIcon = (item) => {
-                if (item.sentiment === 'Bullish') return 'fa-solid fa-arrow-trend-up mr-1';
-                if (item.sentiment === 'Bearish') return 'fa-solid fa-arrow-trend-down mr-1';
-                if (item.prediction) return 'fa-solid fa-crystal-ball mr-1';
-                return 'fa-solid fa-tag mr-1';
-            };
-             const getCategoryIcon = (cat) => ({ finance: 'fa-coins', global: 'fa-globe', tech: 'fa-microchip', general: 'fa-fire' }[cat] || 'fa-circle');
+            const getTagIcon = (item) => item.sentiment === 'Bullish' ? 'fa-solid fa-arrow-trend-up mr-1' : (item.sentiment === 'Bearish' ? 'fa-solid fa-arrow-trend-down mr-1' : 'fa-solid fa-tag mr-1');
+            const getCategoryIcon = (cat) => ({ finance: 'fa-coins', global: 'fa-globe', tech: 'fa-microchip', general: 'fa-fire' }[cat] || 'fa-circle');
             const getCategoryColorClass = (cat) => ({ finance: 'bg-amber-500', global: 'bg-blue-500', tech: 'bg-cyan-500', general: 'bg-rose-500' }[cat] || 'bg-slate-500');
+
+            // 🌟 辅助函数：根据职业返回 FontAwesome 图标
+            const getAvatarIcon = (role) => {
+                if(role.includes('司机')) return 'fa-taxi';
+                if(role.includes('学生') || role.includes('考研')) return 'fa-graduation-cap';
+                if(role.includes('大妈') || role.includes('主妇')) return 'fa-basket-shopping';
+                if(role.includes('大厂') || role.includes('程序员') || role.includes('博主')) return 'fa-laptop-code';
+                if(role.includes('医生')) return 'fa-user-doctor';
+                if(role.includes('房东') || role.includes('暴发户')) return 'fa-sack-dollar';
+                if(role.includes('教师') || role.includes('老师')) return 'fa-chalkboard-user';
+                if(role.includes('金融') || role.includes('股民')) return 'fa-chart-line';
+                if(role.includes('外卖')) return 'fa-motorcycle';
+                if(role.includes('工地')) return 'fa-helmet-safety';
+                if(role.includes('健身')) return 'fa-dumbbell';
+                if(role.includes('乐手')) return 'fa-guitar';
+                if(role.includes('二次元') || role.includes('宅男')) return 'fa-gamepad';
+                return 'fa-user'; // 默认图标
+            };
 
             return {
                 loading, isDarkMode, isMobileMenuOpen, showMobileSourceModal, currentView, currentSmartTab, rawCategory, searchText, lastUpdateTime,
-                smartData, filteredRawList, favoriteIds, rawCategoryCounts, totalRawSources, onlineUsers, allPlatformIds,
+                smartData, filteredRawList, favoriteIds, rawCategoryCounts, totalRawSources, onlineUsers, allPlatformIds, currentComments,
                 smartTabs, currentTheme, currentSmartTabIcon, currentViewTitle, computedSummary, computedItems, structuredSummary,
                 navBtnClass, rawNavClass, toggleDarkMode, isFavorite, toggleFavorite, isRead, toggleRead, switchView, selectPlatformFromModal, copyToClipboard,
-                getTagStyle, getTagIcon, getCategoryIcon, getCategoryColorClass, getDisplayName, sentimentTranslate
+                getTagStyle, getTagIcon, getCategoryIcon, getCategoryColorClass, getDisplayName, sentimentTranslate, getAvatarIcon
             }
         }
     }).mount('#app')
