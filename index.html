@@ -166,18 +166,52 @@
                     </div>
                 </div>
 
+                <!-- 🌟🌟🌟 核心修改区：优化后的 AI 总结卡片 🌟🌟🌟 -->
                 <div v-if="computedSummary" :class="['p-5 md:p-6 rounded-2xl mb-6 md:mb-8 shadow-xl relative overflow-hidden transition-all duration-300', currentTheme.summaryCard]">
+                    <!-- 背景图标 -->
                     <div class="absolute top-0 right-0 p-8 opacity-10 pointer-events-none">
                         <i :class="['fa-solid text-6xl md:text-8xl', currentSmartTabIcon]"></i>
                     </div>
+                    <!-- 赛博背景 -->
                     <div v-if="currentSmartTab === 'tech'" class="cyber-inner absolute inset-0 -z-10"></div>
-                    <h3 :class="['text-xs md:text-sm font-bold uppercase tracking-widest mb-3 md:mb-4 flex items-center gap-2 relative z-10', currentTheme.summaryTitle]">
-                        <i class="fa-solid fa-microchip"></i> AI 核心综述
-                    </h3>
-                    <p :class="['text-base md:text-lg leading-relaxed font-medium relative z-10 text-justify', currentTheme.summaryText]" style="font-family: 'Noto Serif SC', serif;">
-                        {{ computedSummary }}
-                    </p>
+                    
+                    <!-- 标题栏 -->
+                    <div class="flex items-center gap-2 mb-4 md:mb-6 border-b border-black/10 dark:border-white/10 pb-3 relative z-10">
+                         <i class="fa-solid fa-microchip text-lg" :class="currentTheme.summaryTitle"></i>
+                         <h3 :class="['text-sm md:text-base font-bold uppercase tracking-widest', currentTheme.summaryTitle]">
+                            AI 核心综述
+                        </h3>
+                    </div>
+
+                    <!-- 📝 智能解析后的列表展示 -->
+                    <div class="relative z-10 space-y-6">
+                        <!-- 如果解析出结构化数据，展示结构化列表 -->
+                        <template v-if="structuredSummary.length > 0">
+                            <div v-for="(section, idx) in structuredSummary" :key="idx" class="group">
+                                <!-- 子版块标题 -->
+                                <h4 v-if="section.title" 
+                                    :class="['text-sm md:text-base font-bold mb-3 flex items-center gap-2', currentTheme.summaryTitle]">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-current opacity-60"></span>
+                                    {{ section.title }}
+                                </h4>
+                                <!-- 内容列表 -->
+                                <ul class="space-y-3">
+                                    <li v-for="(point, pIdx) in section.items" :key="pIdx" 
+                                        :class="['text-sm md:text-[15px] leading-relaxed flex items-start gap-2.5', currentTheme.summaryText]">
+                                        <span class="mt-1.5 w-1.5 h-1.5 rounded-full shrink-0 bg-current opacity-40"></span>
+                                        <span class="text-justify">{{ point }}</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </template>
+
+                        <!-- 降级方案：如果解析失败，显示原文 -->
+                        <p v-else :class="['text-sm md:text-base leading-relaxed font-medium text-justify whitespace-pre-wrap', currentTheme.summaryText]">
+                            {{ computedSummary }}
+                        </p>
+                    </div>
                 </div>
+                <!-- 🌟🌟🌟 修改结束 🌟🌟🌟 -->
 
                 <div class="grid grid-cols-1 xl:grid-cols-2 gap-4 md:gap-6">
                     <div v-for="(item, idx) in computedItems" :key="idx" 
@@ -337,32 +371,21 @@
             const onlineUsers = ref(Math.floor(Math.random() * (500 - 50 + 1)) + 50);
 
             const simulateTraffic = () => {
-                // 随机延迟 2秒 到 8秒 (模拟有时候人流静止)
                 const delay = Math.floor(Math.random() * 6000) + 2000; 
-
                 setTimeout(() => {
                     const r = Math.random();
                     let diff = 0;
-
                     if (r > 0.85) {
-                        // 【突发情况】15% 概率：突然大批人进出 (变化幅度 10 ~ 40)
                         diff = Math.floor(Math.random() * 30) + 10;
-                        if (Math.random() > 0.4) diff = -diff; // 40% 概率掉线
+                        if (Math.random() > 0.4) diff = -diff; 
                     } else if (r > 0.3) {
-                        // 【正常波动】55% 概率：小幅波动 (变化幅度 1 ~ 5)
                         diff = Math.floor(Math.random() * 5) + 1;
                         if (Math.random() > 0.5) diff = -diff;
                     } 
-                    // 剩余 30% 概率：人数完全不动
-
                     let newVal = onlineUsers.value + diff;
-                    // 严格限制范围
                     if (newVal < 50) newVal = 50;
                     if (newVal > 500) newVal = 500;
-
                     onlineUsers.value = newVal;
-
-                    // 递归调用
                     simulateTraffic();
                 }, delay);
             };
@@ -386,7 +409,7 @@
             };
 
             const getDisplayName = (id) => {
-                return platformMap[id] || id; // 如果字典里有就返回中文，没有就返回原ID
+                return platformMap[id] || id; 
             };
 
             // 🇨🇳 情感汉化函数
@@ -412,7 +435,6 @@
                 }
             }
             
-            // 切换视图并关闭手机菜单
             const switchView = (view) => {
                 currentView.value = view;
                 isMobileMenuOpen.value = false;
@@ -425,7 +447,6 @@
                     document.documentElement.classList.add('dark');
                 }
 
-                // 启动拟真流量
                 simulateTraffic();
 
                 const t = new Date().getTime();
@@ -453,7 +474,6 @@
                 const data = currentSmartData.value;
                 if (!data) return [];
                 if (Array.isArray(data.items) && data.items.length > 0) return data.items;
-                // 兼容旧格式（如果有 categories 字段）
                 if (data.categories) {
                     for (const key in data.categories) {
                          if (Array.isArray(data.categories[key]) && data.categories[key].length > 0) return data.categories[key];
@@ -465,6 +485,40 @@
             const computedSummary = computed(() => {
                 const d = currentSmartData.value;
                 return d ? (d.summary || d.economy_summary) : null;
+            });
+
+            // ========================================================
+            // 🧠 核心逻辑：将挤在一起的文本智能拆分为结构化列表
+            // ========================================================
+            const structuredSummary = computed(() => {
+                const raw = computedSummary.value;
+                if (!raw) return [];
+                
+                // 1. 按 【板块标题】 进行粗分割
+                // 正则说明：(?=【) 是前瞻断言，保留【符号在分割后的结果中
+                const sections = raw.split(/(?=【)/).filter(s => s.trim());
+                
+                return sections.map(section => {
+                    // 提取标题 (去除括号)
+                    const titleMatch = section.match(/【(.*?)】/);
+                    const title = titleMatch ? titleMatch[1] : '';
+                    
+                    // 提取并清洗内容
+                    let content = section.replace(/【.*?】/, '').trim();
+                    
+                    // 智能识别：尝试分割 "1. xxx 2. xxx" 这种连在一起的文本
+                    // 策略：按 "数字+点" 进行分割，如 "1." 或 "2."
+                    // (?=\s*\d+\.) 匹配前面可能有空格，后面跟数字和点的结构
+                    let items = content.split(/(?=\s*\d+\.)/).map(i => {
+                        // 去掉开头多余的数字和点，只保留纯文本，或者保留数字也可以，这里选择保留原样
+                        return i.trim();
+                    }).filter(i => i.length > 2); // 过滤太短的噪点
+
+                    // 如果正则没分出来（可能不是列表格式），就直接当做一段话
+                    if (items.length === 0 && content) items = [content];
+                    
+                    return { title, items };
+                }).filter(s => s.title || s.items.length > 0);
             });
 
             const currentTheme = computed(() => {
@@ -570,7 +624,7 @@
             return {
                 loading, isDarkMode, debugMode, isMobileMenuOpen, currentView, currentSmartTab, rawCategory, searchText, lastUpdateTime,
                 smartData, filteredRawList, favoriteIds, rawCategoryCounts, totalRawSources, onlineUsers,
-                smartTabs, currentTheme, currentSmartTabIcon, currentViewTitle, computedSummary, computedItems,
+                smartTabs, currentTheme, currentSmartTabIcon, currentViewTitle, computedSummary, computedItems, structuredSummary,
                 navBtnClass, rawNavClass, toggleDarkMode, isFavorite, toggleFavorite, isRead, toggleRead, switchView,
                 getTagStyle, getTagIcon, getCategoryIcon, getCategoryColorClass, getDisplayName, sentimentTranslate
             }
