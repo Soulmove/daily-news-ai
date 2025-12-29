@@ -15,7 +15,7 @@ else:
     os.environ["HTTPS_PROXY"] = f"http://127.0.0.1:{PROXY_PORT}"
 
 # 🔒 锁定 gemini-3-flash
-MODEL_NAME = "gemini-3-flash"
+MODEL_NAME = "gemini-3.0-flash"
 
 FILES_CONFIG = {
     "finance": { "in": "data_finance.json", "out": "analysis_finance.json", "type": "finance", "key_env": "KEY_FINANCE" },
@@ -39,7 +39,7 @@ def load_and_simplify(filepath):
     url_lookup = {}
     
     # 保持较大的读取量，确保 AI 有足够素材
-    TOTAL_SAFETY_CAP = 1000 
+    TOTAL_SAFETY_CAP = 1500 
     total_count = 0
     
     for platform in raw_data:
@@ -189,4 +189,5 @@ if __name__ == "__main__":
     for key, config in FILES_CONFIG.items():
         process_module(key, config)
         time.sleep(5)
+
 
