@@ -11,7 +11,7 @@ from google.genai import types
 # 1. 定义你可用的模型池
 # 格式: "别名": "谷歌官方模型ID"
 MODEL_REGISTRY = {
-    "smart": "gemini-3.0-flash-preview",       # 或 gemini-2.0-pro-exp-02-05 (用于需要深度的评论)
+    "smart": "gemini-3-flash-preview",       # 或 gemini-2.0-pro-exp-02-05 (用于需要深度的评论)
     "cheap": "gemini-2.5-flash", # 或 gemini-1.5-flash (用于普通吃瓜评论，节省成本)
     "latest": "gemini-2.5-flash"     # 你想尝试的新模型
 }
@@ -195,4 +195,5 @@ if __name__ == "__main__":
     
     for key, config in FILES_CONFIG.items():
         generate_comments(key, config)
+
         time.sleep(3) # 板块之间稍微歇一下
