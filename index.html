@@ -41,15 +41,18 @@
         .cyber-inner { background-color: #020617; height: 100%; width: 100%; }
         .ent-card { background: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(255,255,255,0.4)); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.3); }
         .dark .ent-card { background: linear-gradient(135deg, rgba(30,41,59,0.8), rgba(15,23,42,0.6)); border-color: rgba(255,255,255,0.05); }
+        
+        /* 下拉菜单动画 */
+        .menu-enter-active, .menu-leave-active { transition: all 0.2s ease; }
+        .menu-enter-from, .menu-leave-to { opacity: 0; transform: scale(0.95); }
     </style>
 </head>
-<body class="h-full flex overflow-hidden selection:bg-blue-500 selection:text-white">
+<body class="h-full flex overflow-hidden selection:bg-blue-500 selection:text-white" @click="closeAllMenus">
 
 <div id="app" v-cloak class="flex w-full h-full relative transition-colors duration-300">
 
     <div v-if="isMobileMenuOpen" @click="isMobileMenuOpen = false" class="fixed inset-0 bg-black/50 z-30 md:hidden backdrop-blur-sm transition-opacity"></div>
 
-    <!-- 侧边栏 -->
     <aside :class="['fixed md:static inset-y-0 left-0 z-40 w-64 transform transition-transform duration-300 ease-in-out flex flex-col border-r shadow-2xl md:shadow-none', 
         isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0',
         currentTheme.sidebarBg, currentTheme.sidebarBorder]">
@@ -78,7 +81,6 @@
                 <i class="fa-solid fa-tower-broadcast w-5 opacity-70"></i> 原始数据监控
             </button>
             <div class="my-4 border-t border-slate-200 dark:border-slate-800 opacity-50"></div>
-            <!-- 🌟 修改了按钮名称 -->
             <button @click="switchView('contact')" :class="navBtnClass('contact')">
                 <i class="fa-solid fa-circle-info w-5 opacity-70"></i> 说明/联系/加群
             </button>
@@ -129,30 +131,88 @@
             </div>
         </header>
 
-        <!-- 1. 智能简报视图 (保持不变) -->
         <div v-if="currentView === 'smart'" class="flex-1 flex flex-col overflow-hidden">
             <div :class="['shrink-0 px-4 md:px-8 pt-2 md:pt-4 pb-0 flex gap-4 md:gap-6 border-b text-sm font-medium transition-colors duration-300 overflow-x-auto hide-scrollbar', currentTheme.tabBorder]">
                 <button v-for="tab in smartTabs" :key="tab.id" @click="currentSmartTab = tab.id" :class="['pb-3 relative transition-all flex items-center gap-2 shrink-0 whitespace-nowrap', currentSmartTab === tab.id ? tab.activeClass + ' border-b-2' : 'opacity-50 hover:opacity-100 border-transparent text-slate-500 dark:text-slate-400']"><i :class="['fa-solid', tab.icon]"></i> {{ tab.name }}<span v-if="currentSmartTab === 'tech' && tab.id === 'tech'" class="absolute bottom-0 left-0 w-full h-0.5 bg-cyan-400 shadow-[0_0_10px_#22d3ee]"></span></button>
             </div>
             <div class="flex-1 overflow-y-auto p-4 md:p-8 thin-scrollbar scroll-smooth">
                 <div v-if="currentSmartData?.error" class="mb-8 p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg flex items-center gap-3"><i class="fa-solid fa-triangle-exclamation text-xl"></i><div><p class="font-bold">数据加载失败</p><p class="text-xs opacity-75">原因: {{ currentSmartData.error }}</p></div></div>
+                
                 <div v-if="computedSummary" :class="['p-5 md:p-6 rounded-2xl mb-6 md:mb-8 shadow-xl relative overflow-hidden transition-all duration-300', currentTheme.summaryCard]"><div class="absolute top-0 right-0 p-8 opacity-10 pointer-events-none"><i :class="['fa-solid text-6xl md:text-8xl', currentSmartTabIcon]"></i></div><div v-if="currentSmartTab === 'tech'" class="cyber-inner absolute inset-0 -z-10"></div><div class="flex items-center gap-2 mb-4 md:mb-6 border-b border-black/10 dark:border-white/10 pb-3 relative z-10"><i class="fa-solid fa-microchip text-lg" :class="currentTheme.summaryTitle"></i><h3 :class="['text-sm md:text-base font-bold uppercase tracking-widest', currentTheme.summaryTitle]">AI 核心综述</h3></div><div class="relative z-10 space-y-6"><template v-if="structuredSummary.length > 0"><div v-for="(section, idx) in structuredSummary" :key="idx" class="group"><h4 v-if="section.title" :class="['text-sm md:text-base font-bold mb-3 flex items-center gap-2', currentTheme.summaryTitle]"><span class="w-1.5 h-1.5 rounded-full bg-current opacity-60"></span>{{ section.title }}</h4><ul class="space-y-3"><li v-for="(point, pIdx) in section.items" :key="pIdx" :class="['text-sm md:text-[15px] leading-relaxed flex items-start gap-2.5', currentTheme.summaryText]"><span class="mt-1.5 w-1.5 h-1.5 rounded-full shrink-0 bg-current opacity-40"></span><span class="text-justify">{{ point }}</span></li></ul></div></template><p v-else :class="['text-sm md:text-base leading-relaxed font-medium text-justify whitespace-pre-wrap', currentTheme.summaryText]">{{ computedSummary }}</p></div></div>
+                
                 <div class="grid grid-cols-1 xl:grid-cols-2 gap-4 md:gap-6"><div v-for="(item, idx) in computedItems" :key="idx" :class="['group rounded-xl p-5 md:p-6 transition-all relative overflow-hidden active:scale-[0.98]', isRead(item.title) ? 'read-item' : '', currentTheme.itemCard]"><div v-if="currentSmartTab === 'tech'" class="absolute inset-0 border border-cyan-500/30 rounded-xl pointer-events-none group-hover:border-cyan-400/60 transition-all"></div><div class="flex justify-between items-start gap-4 mb-3 relative z-10"><div><div class="flex flex-wrap items-center gap-2 mb-2"><span v-if="item.sentiment || item.prediction" :class="['px-2 py-0.5 rounded-md text-[10px] md:text-xs font-bold uppercase tracking-wider', getTagStyle(item)]"><i :class="getTagIcon(item)"></i> {{ sentimentTranslate(item.sentiment) || '未来预测' }}</span><span v-if="item.impact || item.special_note" class="px-2 py-0.5 rounded-md text-[10px] md:text-xs font-medium bg-black/5 dark:bg-white/10 text-slate-600 dark:text-slate-300 flex items-center gap-1"><i :class="['fa-solid', item.special_note ? 'fa-star text-yellow-500' : 'fa-crosshairs opacity-50']"></i>{{ item.impact || item.special_note }}</span></div><h3 :class="['text-lg md:text-xl font-bold leading-tight group-hover:text-blue-500 transition-colors', currentTheme.itemTitle]">{{ item.title }}</h3></div><button @click.stop="toggleRead(item.title)" class="shrink-0 text-xl md:text-2xl opacity-30 hover:opacity-100 transition-opacity p-1" :class="currentTheme.itemText"><i :class="['fa-regular', isRead(item.title) ? 'fa-circle-check text-green-500 opacity-100' : 'fa-circle']"></i></button></div><p :class="['text-sm leading-relaxed mb-4 line-clamp-4 group-hover:line-clamp-none transition-all relative z-10 text-justify', currentTheme.itemText]">{{ item.summary || item.comment || item.reason }}</p><a :href="item.url" target="_blank" @click.stop :class="['inline-flex items-center gap-1 text-xs font-bold uppercase tracking-widest transition-colors relative z-10', currentTheme.readMoreBtn]">Read Source <i class="fa-solid fa-arrow-right-long ml-1 group-hover:translate-x-1 transition-transform"></i></a></div></div>
-                <div class="max-w-7xl mx-auto py-8 md:py-12 mt-8 border-t border-slate-200 dark:border-slate-800"><h3 class="text-lg md:text-xl font-bold mb-6 text-slate-700 dark:text-slate-200 flex items-center gap-2"><i class="fa-solid fa-comments"></i> 读者讨论 (30+位不同职业网友模拟)</h3><div v-if="currentComments && currentComments.length > 0" class="grid grid-cols-1 md:grid-cols-2 gap-4"><div v-for="(comment, cIdx) in currentComments" :key="cIdx" class="bg-white dark:bg-slate-800/50 p-4 rounded-xl border border-slate-100 dark:border-slate-700 hover:shadow-md transition-all flex gap-3"><div class="w-10 h-10 rounded-full bg-gradient-to-br from-slate-200 to-slate-300 dark:from-slate-700 dark:to-slate-600 flex items-center justify-center shrink-0 text-lg"><i :class="['fa-solid', getAvatarIcon(comment.role)]"></i></div><div class="flex-1 min-w-0"><div class="flex justify-between items-start mb-1"><div><span class="font-bold text-sm text-slate-800 dark:text-slate-200">{{ comment.name }}</span><span class="text-xs text-slate-500 ml-2 px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-700">{{ comment.role }}</span></div><span class="text-[10px] px-2 py-0.5 rounded-full bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400 font-medium">{{ comment.emotion }}</span></div><p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">{{ comment.content }}</p></div></div></div><div v-else class="text-center py-10 text-slate-400"><i class="fa-solid fa-spinner fa-spin mr-2"></i> 正在加载评论或暂无数据...</div></div>
+                
+                <div class="max-w-7xl mx-auto py-8 md:py-12 mt-8 border-t border-slate-200 dark:border-slate-800">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-lg md:text-xl font-bold text-slate-700 dark:text-slate-200 flex items-center gap-2">
+                            <i class="fa-solid fa-comments"></i> 读者讨论 
+                            <span class="text-xs font-normal opacity-60 ml-2">(30+位不同职业网友模拟)</span>
+                        </h3>
+                        <div v-if="blockedUsers.size > 0" class="relative group/blocked">
+                            <button class="text-xs px-3 py-1.5 rounded-full bg-red-100 text-red-600 hover:bg-red-200 dark:bg-red-900/30 dark:text-red-400 transition-colors">
+                                <i class="fa-solid fa-user-shield mr-1"></i> 已屏蔽 {{ blockedUsers.size }} 人
+                            </button>
+                            <div class="absolute right-0 top-full mt-2 w-48 bg-white dark:bg-slate-800 rounded-lg shadow-xl border border-slate-200 dark:border-slate-700 p-2 z-50 hidden group-hover/blocked:block">
+                                <div class="text-[10px] text-slate-400 px-2 pb-1 mb-1 border-b dark:border-slate-700">点击用户解除屏蔽</div>
+                                <div v-for="user in blockedUsers" :key="user" @click="toggleBlockUser(user)" class="px-2 py-1.5 text-xs rounded hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer flex justify-between items-center text-slate-600 dark:text-slate-300">
+                                    <span>{{ user }}</span>
+                                    <i class="fa-solid fa-rotate-left text-slate-400"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div v-if="currentComments && currentComments.length > 0" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <template v-for="(comment, cIdx) in filteredComments" :key="comment.name + cIdx">
+                            <div class="bg-white dark:bg-slate-800/50 p-4 rounded-xl border border-slate-100 dark:border-slate-700 hover:shadow-md transition-all flex gap-3 relative group">
+                                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-slate-200 to-slate-300 dark:from-slate-700 dark:to-slate-600 flex items-center justify-center shrink-0 text-lg">
+                                    <i :class="['fa-solid', getAvatarIcon(comment.role)]"></i>
+                                </div>
+                                <div class="flex-1 min-w-0 pr-6"> <div class="flex justify-between items-start mb-1">
+                                        <div>
+                                            <span class="font-bold text-sm text-slate-800 dark:text-slate-200">{{ comment.name }}</span>
+                                            <span class="text-xs text-slate-500 ml-2 px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-700">{{ comment.role }}</span>
+                                        </div>
+                                        <span class="text-[10px] px-2 py-0.5 rounded-full bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400 font-medium">{{ comment.emotion }}</span>
+                                    </div>
+                                    <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">{{ comment.content }}</p>
+                                </div>
+
+                                <div class="absolute top-4 right-3">
+                                    <button @click.stop="toggleMenu(cIdx)" class="text-slate-300 hover:text-slate-500 dark:text-slate-600 dark:hover:text-slate-400 p-1 rounded-full transition-colors">
+                                        <i class="fa-solid fa-ellipsis-vertical"></i>
+                                    </button>
+                                    
+                                    <transition name="menu">
+                                        <div v-if="activeCommentMenu === cIdx" class="absolute right-0 top-6 w-36 bg-white dark:bg-slate-800 rounded-lg shadow-xl border border-slate-200 dark:border-slate-700 py-1 z-20 origin-top-right">
+                                            <button @click.stop="toggleBlockUser(comment.name)" class="w-full text-left px-4 py-2 text-xs text-red-600 dark:text-red-400 hover:bg-slate-50 dark:hover:bg-slate-700 flex items-center gap-2">
+                                                <i class="fa-solid fa-ban"></i> 屏蔽该读者
+                                            </button>
+                                        </div>
+                                    </transition>
+                                </div>
+                            </div>
+                        </template>
+                        <div v-if="filteredComments.length === 0 && currentComments.length > 0" class="col-span-full py-8 text-center text-slate-400">
+                            所有评论已被屏蔽
+                        </div>
+                    </div>
+                    <div v-else class="text-center py-10 text-slate-400">
+                        <i class="fa-solid fa-spinner fa-spin mr-2"></i> 正在加载评论或暂无数据...
+                    </div>
+                </div>
+
             </div>
         </div>
 
-        <!-- 2. 原始数据监控视图 (保持不变) -->
         <div v-if="currentView === 'raw'" class="flex-1 flex flex-col md:flex-row overflow-hidden bg-slate-100 dark:bg-slate-900 transition-colors duration-300">
             <div v-if="showMobileSourceModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm md:hidden" @click="showMobileSourceModal = false"><div class="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-sm max-h-[80vh] flex flex-col shadow-2xl" @click.stop><div class="p-4 border-b border-slate-200 dark:border-slate-700 flex justify-between items-center"><h3 class="font-bold text-slate-800 dark:text-white">选择具体来源</h3><button @click="showMobileSourceModal = false" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-times text-xl"></i></button></div><div class="flex-1 overflow-y-auto p-4 grid grid-cols-2 gap-3"><button v-for="pid in allPlatformIds" :key="pid" @click="selectPlatformFromModal(pid)" class="px-3 py-2 text-sm bg-slate-100 dark:bg-slate-700 rounded-lg text-slate-700 dark:text-slate-200 truncate text-center hover:bg-blue-100 dark:hover:bg-blue-900/30">{{ getDisplayName(pid) }}</button></div></div></div>
             <div class="w-full md:w-48 bg-white dark:bg-slate-800 border-b md:border-b-0 md:border-r border-slate-200 dark:border-slate-700 flex flex-col shrink-0 transition-colors duration-300"><div class="p-3 md:p-4"><h3 class="hidden md:block text-xs font-bold uppercase text-slate-400 mb-4 px-2">来源分类</h3><div class="flex items-center gap-2 overflow-x-auto hide-scrollbar pb-1 md:pb-0 md:flex-col md:gap-1 md:items-stretch"><button @click="showMobileSourceModal = true" class="md:hidden shrink-0 px-3 py-2 rounded-lg text-sm font-medium bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400 flex items-center gap-2"><i class="fa-solid fa-filter"></i> 筛选来源</button><div class="md:hidden w-px h-6 bg-slate-200 dark:bg-slate-700 mx-1 shrink-0"></div><button @click="rawCategory = 'all'" :class="rawNavClass('all') + ' shrink-0'"><span><i class="fa-solid fa-border-all mr-2 opacity-70"></i>全部</span><span class="text-xs opacity-50 bg-black/5 dark:bg-white/5 px-1.5 rounded-full ml-2">{{ totalRawSources }}</span></button><button @click="rawCategory = 'fav'" :class="rawNavClass('fav') + ' shrink-0'"><span><i class="fa-solid fa-star mr-2 opacity-70 text-yellow-500"></i>收藏</span><span class="text-xs opacity-50 bg-black/5 dark:bg-white/5 px-1.5 rounded-full ml-2">{{ favoriteIds.size }}</span></button><div class="hidden md:block my-4 border-t border-slate-100 dark:border-slate-700"></div><button v-for="(count, cat) in rawCategoryCounts" :key="cat" @click="rawCategory = cat" :class="rawNavClass(cat) + ' shrink-0'"><span><i :class="['fa-solid mr-2 opacity-70', getCategoryIcon(cat)]"></i><span class="capitalize">{{cat}}</span></span><span class="text-xs opacity-50 ml-2">{{ count }}</span></button></div></div></div>
             <div class="flex-1 flex flex-col overflow-hidden"><div class="p-3 md:p-4 border-b border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 flex items-center justify-between transition-colors duration-300"><div class="relative w-full md:w-96"><i class="fa-solid fa-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i><input v-model="searchText" type="text" placeholder="搜索来源 (如: 微博, 36kr)..." class="w-full pl-10 pr-4 py-2 bg-slate-100 dark:bg-slate-900 border-transparent focus:border-blue-500 focus:bg-white dark:focus:bg-slate-950 rounded-lg text-sm transition-all outline-none dark:text-slate-200 placeholder-slate-400"></div><div class="hidden md:block text-sm text-slate-500">显示 {{ filteredRawList.length }} 个来源</div></div><div class="flex-1 overflow-y-auto p-4 md:p-6 thin-scrollbar bg-slate-50 dark:bg-slate-900 transition-colors duration-300"><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 items-start"><div v-for="platform in filteredRawList" :key="platform.id" class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 flex flex-col overflow-hidden hover:shadow-md transition-shadow group"><div class="p-3 border-b border-slate-100 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/50 flex justify-between items-center shrink-0"><div class="font-bold text-sm flex items-center gap-2 text-slate-700 dark:text-slate-200"><span class="w-2.5 h-2.5 rounded-full" :class="getCategoryColorClass(platform.category)"></span><span class="truncate max-w-[150px] md:max-w-[120px]" :title="platform.id">{{ getDisplayName(platform.id) }}</span></div><div class="flex items-center gap-3"><span class="text-[10px] font-medium bg-slate-200 dark:bg-slate-700 px-1.5 py-0.5 rounded text-slate-500 dark:text-slate-400">{{ platform.items.length }}</span><button @click.stop="toggleFavorite(platform.id)" class="text-lg transition-transform active:scale-125 hover:scale-110"><i :class="['fa-star', isFavorite(platform.id) ? 'fa-solid text-yellow-400' : 'fa-regular text-slate-300 hover:text-yellow-400']"></i></button></div></div><div class="p-3 overflow-y-auto thin-scrollbar" style="max-height: 320px;"><ul class="space-y-2.5"><li v-for="(news, idx) in platform.items" :key="idx" class="group/item"><a :href="news.url" target="_blank" @click.stop class="flex gap-2 items-start leading-tight"><span class="text-[10px] text-slate-400 font-mono pt-0.5 w-4 shrink-0">{{ idx + 1 }}.</span><span class="text-xs text-slate-600 dark:text-slate-300 group-hover/item:text-blue-600 dark:group-hover/item:text-blue-400 group-hover/item:underline break-words">{{ news.title }}</span></a></li></ul></div></div></div></div></div></div>
 
-        <!-- 3. 🌟🌟🌟 新增：说明/联系/加群视图 (大幅美化) 🌟🌟🌟 -->
         <div v-if="currentView === 'contact'" class="flex-1 overflow-y-auto p-4 md:p-8 bg-slate-50 dark:bg-slate-900 transition-colors duration-300">
             <div class="max-w-4xl mx-auto space-y-8">
                 
-                <!-- 顶部 Hero 区域 -->
                 <div class="text-center py-8">
                     <h1 class="text-3xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 to-purple-600 mb-4 font-cyber tracking-tight">
                         Insight Pro
@@ -160,9 +220,7 @@
                     <p class="text-slate-500 dark:text-slate-400 text-lg">AI 驱动的全网舆情智库 · 实时洞察 · 多维模拟</p>
                 </div>
 
-                <!-- 🚀 工作流可视化 -->
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4 relative">
-                    <!-- 连接线 (桌面端显示) -->
                     <div class="hidden md:block absolute top-1/2 left-0 w-full h-1 bg-slate-200 dark:bg-slate-700 -z-10 -translate-y-1/2 rounded"></div>
                     
                     <div class="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-lg border border-slate-100 dark:border-slate-700 text-center relative hover:-translate-y-1 transition-transform">
@@ -184,7 +242,6 @@
                     </div>
                 </div>
 
-                <!-- 💡 核心价值模块 -->
                 <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 p-6 md:p-8">
                     <h2 class="text-xl font-bold mb-6 flex items-center gap-2 text-slate-800 dark:text-white">
                         <span class="w-1.5 h-6 bg-indigo-500 rounded-full"></span> 平台价值与用途
@@ -221,7 +278,6 @@
                     </div>
                 </div>
 
-                <!-- 📞 联系与加群 -->
                 <div class="bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-900 rounded-2xl p-6 md:p-8 text-center border border-slate-200 dark:border-slate-700">
                     <h2 class="text-xl font-bold mb-6 text-slate-800 dark:text-white">联系作者 & 加入社区</h2>
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -250,13 +306,11 @@
     </main>
 </div>
 
-<!-- Script 部分保持不变，无需修改 -->
 <script>
     const { createApp, reactive, computed, ref, onMounted } = Vue
 
     createApp({
         setup() {
-            // ... (Vue 逻辑保持完全一致，不需要改动) ...
             const loading = ref(true);
             const isDarkMode = ref(false);
             const isMobileMenuOpen = ref(false); 
@@ -267,6 +321,10 @@
             const searchText = ref('');
             const lastUpdateTime = ref('');
             const onlineUsers = ref(Math.floor(Math.random() * (500 - 50 + 1)) + 50);
+
+            // 屏蔽功能相关状态
+            const blockedUsers = reactive(new Set());
+            const activeCommentMenu = ref(null); // 存储当前打开菜单的评论索引
 
             const simulateTraffic = () => {
                 const delay = Math.floor(Math.random() * 6000) + 2000; 
@@ -361,6 +419,12 @@
 
             const currentSmartData = computed(() => smartData[currentSmartTab.value]);
             const currentComments = computed(() => commentsData[currentSmartTab.value]);
+            
+            // 计算过滤后的评论（排除已屏蔽用户）
+            const filteredComments = computed(() => {
+                if (!currentComments.value) return [];
+                return currentComments.value.filter(c => !blockedUsers.has(c.name));
+            });
 
             const computedItems = computed(() => {
                 const data = currentSmartData.value;
@@ -383,7 +447,8 @@
                     const titleMatch = section.match(/【(.*?)】/);
                     const title = titleMatch ? titleMatch[1] : '';
                     let content = section.replace(/【.*?】/, '').trim();
-                    let items = content.split(/(?=\s*\d+\.)/).map(i => i.trim()).filter(i => i.length > 2);
+                    // 🌟 核心修改：检测 (1) (2) (3) 类型的换行
+                    let items = content.split(/(?=\s*\(\d+\))/).map(i => i.trim()).filter(i => i.length > 2);
                     if (items.length === 0 && content) items = [content];
                     return { title, items };
                 }).filter(s => s.title || s.items.length > 0);
@@ -456,10 +521,33 @@
             const toggleFavorite = (id) => { favoriteIds.has(id) ? favoriteIds.delete(id) : favoriteIds.add(id); saveLocalStorage(); };
             const isRead = (title) => readSet.has(title);
             const toggleRead = (title) => { readSet.has(title) ? readSet.delete(title) : readSet.add(title); saveLocalStorage(); };
-            const saveLocalStorage = () => { localStorage.setItem('favorites', JSON.stringify([...favoriteIds])); localStorage.setItem('readItems', JSON.stringify([...readSet])); };
+            
+            // 屏蔽相关方法
+            const toggleBlockUser = (name) => {
+                if(blockedUsers.has(name)) blockedUsers.delete(name);
+                else blockedUsers.add(name);
+                activeCommentMenu.value = null; // 关闭菜单
+                saveLocalStorage();
+            };
+            
+            const toggleMenu = (idx) => {
+                activeCommentMenu.value = activeCommentMenu.value === idx ? null : idx;
+            };
+
+            const closeAllMenus = () => {
+                activeCommentMenu.value = null;
+            };
+
+            const saveLocalStorage = () => { 
+                localStorage.setItem('favorites', JSON.stringify([...favoriteIds])); 
+                localStorage.setItem('readItems', JSON.stringify([...readSet])); 
+                localStorage.setItem('blockedUsers', JSON.stringify([...blockedUsers])); // 保存屏蔽列表
+            };
+            
             const loadLocalStorage = () => {
                 const fav = localStorage.getItem('favorites'); if (fav) new Set(JSON.parse(fav)).forEach(id => favoriteIds.add(id));
                 const read = localStorage.getItem('readItems'); if (read) new Set(JSON.parse(read)).forEach(id => readSet.add(id));
+                const blocked = localStorage.getItem('blockedUsers'); if (blocked) new Set(JSON.parse(blocked)).forEach(u => blockedUsers.add(u)); // 加载屏蔽列表
                 const dark = localStorage.getItem('darkMode'); if (dark === 'true') isDarkMode.value = true;
             };
 
@@ -473,7 +561,6 @@
             const getCategoryIcon = (cat) => ({ finance: 'fa-coins', global: 'fa-globe', tech: 'fa-microchip', general: 'fa-fire' }[cat] || 'fa-circle');
             const getCategoryColorClass = (cat) => ({ finance: 'bg-amber-500', global: 'bg-blue-500', tech: 'bg-cyan-500', general: 'bg-rose-500' }[cat] || 'bg-slate-500');
 
-            // 🌟 辅助函数：根据职业返回 FontAwesome 图标
             const getAvatarIcon = (role) => {
                 if(role.includes('司机')) return 'fa-taxi';
                 if(role.includes('学生') || role.includes('考研')) return 'fa-graduation-cap';
@@ -488,8 +575,8 @@
                 if(role.includes('健身')) return 'fa-dumbbell';
                 if(role.includes('乐手')) return 'fa-guitar';
                 if(role.includes('二次元') || role.includes('宅男')) return 'fa-gamepad';
-                if(role.includes('首富') || role.includes('马斯克') || role.includes('马云')) return 'fa-crown'; // 新增图标
-                if(role.includes('失业')) return 'fa-user-injured'; // 新增图标
+                if(role.includes('首富') || role.includes('马斯克') || role.includes('马云')) return 'fa-crown';
+                if(role.includes('失业')) return 'fa-user-injured';
                 return 'fa-user'; 
             };
 
@@ -498,7 +585,9 @@
                 smartData, filteredRawList, favoriteIds, rawCategoryCounts, totalRawSources, onlineUsers, allPlatformIds, currentComments,
                 smartTabs, currentTheme, currentSmartTabIcon, currentViewTitle, computedSummary, computedItems, structuredSummary,
                 navBtnClass, rawNavClass, toggleDarkMode, isFavorite, toggleFavorite, isRead, toggleRead, switchView, selectPlatformFromModal, copyToClipboard,
-                getTagStyle, getTagIcon, getCategoryIcon, getCategoryColorClass, getDisplayName, sentimentTranslate, getAvatarIcon
+                getTagStyle, getTagIcon, getCategoryIcon, getCategoryColorClass, getDisplayName, sentimentTranslate, getAvatarIcon,
+                // 新增/修改后的返回
+                blockedUsers, filteredComments, activeCommentMenu, toggleBlockUser, toggleMenu, closeAllMenus
             }
         }
     }).mount('#app')
