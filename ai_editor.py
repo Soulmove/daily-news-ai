@@ -14,8 +14,7 @@ else:
     os.environ["HTTP_PROXY"] = f"http://127.0.0.1:{PROXY_PORT}"
     os.environ["HTTPS_PROXY"] = f"http://127.0.0.1:{PROXY_PORT}"
 
-# 🔒 锁定 gemini-3-flash
-MODEL_NAME = "gemini-3.0-flash"
+MODEL_NAME = "gemini-3-flash"
 
 FILES_CONFIG = {
     "finance": { "in": "data_finance.json", "out": "analysis_finance.json", "type": "finance", "key_env": "KEY_FINANCE" },
@@ -189,5 +188,6 @@ if __name__ == "__main__":
     for key, config in FILES_CONFIG.items():
         process_module(key, config)
         time.sleep(5)
+
 
 
