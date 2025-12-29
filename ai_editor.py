@@ -38,7 +38,7 @@ def load_and_simplify(filepath):
     url_lookup = {}
     
     # 保持较大的读取量，确保 AI 有足够素材
-    TOTAL_SAFETY_CAP = 1500 
+    TOTAL_SAFETY_CAP = 2000 
     total_count = 0
     
     for platform in raw_data:
@@ -131,7 +131,7 @@ def get_prompt(module_type, data_text):
         {base_info}
         角色：热搜挖掘机。
         
-        【summary 格式严格要求】：
+        【summary 格式严格要求，字数不低于400字】：
         分点输出：
         
         【🔥 全民热议】
@@ -188,6 +188,7 @@ if __name__ == "__main__":
     for key, config in FILES_CONFIG.items():
         process_module(key, config)
         time.sleep(5)
+
 
 
 
