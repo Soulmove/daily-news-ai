@@ -11,6 +11,8 @@ permissions:
 jobs:
   spider-job:
     runs-on: ubuntu-latest
+    env:
+      TZ: 'Asia/Shanghai'
     steps:
       - name: 📥 下载代码
         uses: actions/checkout@v3
