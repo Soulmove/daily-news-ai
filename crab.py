@@ -1,7 +1,7 @@
 import requests
 import json
 import os
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
 
 # ================= 配置区域 =================
 # 定义四个分类的数据文件名
@@ -25,7 +25,8 @@ for ids in CATEGORY_MAP.values():
     ALL_SOURCES.extend(ids)
 
 def run_spider():
-    print(f"[{datetime.now()}] 🚀 云端爬虫启动...")
+    CN_TZ = timezone(timedelta(hours=8)) # 中国时区
+    print(f"[{datetime.now(CN_TZ).strftime('%Y-%m-%d %H:%M:%S')}] 🚀 云端爬虫启动...")
     
     url = "https://newsnow.busiyi.world/api/s/entire"
     headers = {
@@ -67,7 +68,7 @@ def run_spider():
             return
 
         # ================= 📂 存档逻辑 (新增) =================
-        now = datetime.now()
+        now = datetime.now(CN_TZ)
         date_str = now.strftime("%Y-%m-%d")
         time_str = now.strftime("%H-%M")
         
