@@ -84,6 +84,17 @@
             background: linear-gradient(135deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.6));
             border-color: rgba(255, 255, 255, 0.05);
         }
+
+        .list-enter-active,
+        .list-leave-active {
+            transition: all 0.3s ease;
+        }
+
+        .list-enter-from,
+        .list-leave-to {
+            opacity: 0;
+            transform: scale(0.95);
+        }
     </style>
 </head>
 
@@ -112,7 +123,7 @@
             <nav class="flex-1 px-4 space-y-2 py-4">
                 <div class="text-xs font-bold uppercase tracking-wider opacity-50 mb-3 px-2"
                     :class="currentTheme.sidebarText">核心视图</div>
-                <a href="smart.html" :class="navBtnClass('smart')"><i class="fa-solid fa-chart-pie w-5 opacity-70"></i>
+                <a href="index.html" :class="navBtnClass('smart')"><i class="fa-solid fa-chart-pie w-5 opacity-70"></i>
                     智能深度简报</a>
                 <a href="monitor.html" :class="navBtnClass('raw')"><i
                         class="fa-solid fa-tower-broadcast w-5 opacity-70"></i> 原始数据监控</a>
@@ -639,7 +650,8 @@
                     selectHistory, resetToLatest, getTimeIcon, getTimeLabel, getTimeBadgeClass,
                     smartTabs, currentTheme, currentSmartTabIcon, currentSmartTabName, navBtnClass,
                     currentSmartData, computedSummary, structuredSummary, computedItems, sortedAndFilteredComments,
-                    toggleDarkMode, isRead, toggleRead, getTagStyle, getTagIcon, sentimentTranslate, getAvatarIcon
+                    toggleDarkMode, isRead, toggleRead, getTagStyle, getTagIcon, sentimentTranslate, getAvatarIcon,
+                    historyIndex // Added missing property
                 }
             }
         }).mount('#app')

@@ -50,6 +50,17 @@
         .hide-scrollbar::-webkit-scrollbar {
             display: none;
         }
+
+        .list-enter-active,
+        .list-leave-active {
+            transition: all 0.3s ease;
+        }
+
+        .list-enter-from,
+        .list-leave-to {
+            opacity: 0;
+            transform: scale(0.95);
+        }
     </style>
 </head>
 
@@ -65,7 +76,8 @@
                 <div class="flex items-center gap-3">
                     <div
                         :class="['w-10 h-10 rounded-xl flex items-center justify-center text-xl shadow-lg', currentTheme.logoBg, currentTheme.logoText]">
-                        <i class="fa-solid fa-brain"></i></div>
+                        <i class="fa-solid fa-brain"></i>
+                    </div>
                     <div>
                         <h1 :class="['font-bold text-lg', currentTheme.sidebarText]">Insight Pro</h1>
                         <p class="text-[10px] opacity-60 uppercase tracking-wider">AI Powered Analytics</p>
@@ -77,7 +89,7 @@
             <nav class="flex-1 px-4 space-y-2 py-4">
                 <div class="text-xs font-bold uppercase tracking-wider opacity-50 mb-3 px-2"
                     :class="currentTheme.sidebarText">核心视图</div>
-                <a href="smart.html" :class="navBtnClass('smart')"><i class="fa-solid fa-chart-pie w-5 opacity-70"></i>
+                <a href="index.html" :class="navBtnClass('smart')"><i class="fa-solid fa-chart-pie w-5 opacity-70"></i>
                     智能深度简报</a>
                 <a href="monitor.html" :class="navBtnClass('raw')"><i
                         class="fa-solid fa-tower-broadcast w-5 opacity-70"></i> 原始数据监控</a>
@@ -114,23 +126,118 @@
                     </h2>
                 </div>
 
+                <!-- Time Machine & Time Ago -->
                 <div class="flex items-center gap-3">
-                    <div class="text-xs font-medium px-3 py-1.5 rounded-full bg-black/5 dark:bg-white/10"
-                        :class="currentTheme.headerText">
-                        <i class="fa-regular fa-clock mr-1"></i> {{ timeAgo }}
+                    <div
+                        class="hidden md:flex items-center gap-1.5 px-3 py-1 text-xs font-medium rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700">
+                        <i class="fa-regular fa-clock"></i> {{ timeAgo }}
                     </div>
-                    <div class="relative">
-                        <select v-model="selectedHistory" @change="loadHistoryData"
-                            class="appearance-none bg-black/5 dark:bg-white/10 border-none rounded-full px-4 py-1.5 text-xs font-medium cursor-pointer hover:bg-black/10 transition-colors pr-8 focus:ring-0"
-                            :class="currentTheme.headerText">
-                            <option value="latest">⚡ 最新 (Latest)</option>
-                            <option v-for="h in historyIndex" :key="h.path" :value="h.path">🕒 {{ h.display }}</option>
-                        </select>
-                        <i class="fa-solid fa-clock-rotate-left absolute right-3 top-1/2 -translate-y-1/2 text-xs opacity-50 pointer-events-none"
-                            :class="currentTheme.headerText"></i>
+
+                    <div class="flex items-center gap-3">
+                        <button @click="showTimeMachine = true"
+                            class="flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold transition-all border group"
+                            :class="[isHistoryMode ? 'bg-blue-500 text-white border-blue-500 shadow-lg shadow-blue-500/30' : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-blue-500 hover:text-blue-500']">
+                            <i class="fa-solid fa-clock-rotate-left" :class="{'animate-spin-reverse': loading}"></i>
+                            <span v-if="isHistoryMode">{{ currentHistoryLabel }}</span>
+                            <span v-else>历史时光机</span>
+                            <i v-if="isHistoryMode" @click.stop="resetToLatest"
+                                class="fa-solid fa-times ml-1 opacity-60 hover:opacity-100" title="返回最新"></i>
+                        </button>
                     </div>
                 </div>
             </header>
+
+            <!-- Time Machine Modal -->
+            <transition name="list">
+                <div v-if="showTimeMachine"
+                    class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+                    @click="showTimeMachine = false">
+                    <div class="bg-white dark:bg-slate-900 rounded-2xl w-full max-w-4xl max-h-[80vh] flex flex-col shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-800"
+                        @click.stop>
+
+                        <!-- Modal Header -->
+                        <div
+                            class="p-4 md:p-6 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center bg-slate-50/50 dark:bg-slate-800/50">
+                            <div>
+                                <h3 class="text-xl font-bold text-slate-800 dark:text-white flex items-center gap-2">
+                                    <i class="fa-solid fa-timeline text-blue-500"></i> 数据历史时光机
+                                </h3>
+                                <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">追溯过往的原始数据采集记录</p>
+                            </div>
+                            <button @click="showTimeMachine = false"
+                                class="w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-800 text-slate-500 flex items-center justify-center hover:bg-slate-300 dark:hover:bg-slate-700 transition-colors">
+                                <i class="fa-solid fa-times"></i>
+                            </button>
+                        </div>
+
+                        <!-- Modal Body -->
+                        <div class="flex-1 flex overflow-hidden">
+                            <!-- Left: Date List -->
+                            <div
+                                class="w-1/3 md:w-64 border-r border-slate-100 dark:border-slate-800 overflow-y-auto thin-scrollbar bg-slate-50 dark:bg-slate-900">
+                                <div class="p-2 space-y-1">
+                                    <button @click="selectedDate = 'all'"
+                                        :class="['w-full text-left px-4 py-3 rounded-lg text-sm font-bold flex justify-between items-center transition-all', selectedDate === 'all' ? 'bg-blue-500 text-white shadow-md shadow-blue-500/20' : 'text-slate-600 dark:text-slate-400 hover:bg-white dark:hover:bg-slate-800']">
+                                        <span>📅 所有日期</span>
+                                        <span
+                                            class="text-xs opacity-60 bg-black/10 dark:bg-white/10 px-1.5 rounded-full">{{
+                                            historyIndex.length }}</span>
+                                    </button>
+                                    <div class="my-2 border-t border-slate-200 dark:border-slate-800 mx-2"></div>
+                                    <button v-for="date in uniqueDates" :key="date" @click="selectedDate = date"
+                                        :class="['w-full text-left px-4 py-3 rounded-lg text-sm font-medium transition-all', selectedDate === date ? 'bg-white dark:bg-slate-800 text-blue-600 dark:text-blue-400 shadow-sm ring-1 ring-slate-200 dark:ring-slate-700' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800/50']">
+                                        {{ date }}
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Right: Time Slots -->
+                            <div class="flex-1 overflow-y-auto p-4 md:p-6 bg-white dark:bg-slate-900/50 thin-scrollbar">
+                                <div v-if="filteredHistory.length === 0"
+                                    class="h-full flex flex-col items-center justify-center text-slate-400 opacity-60">
+                                    <i class="fa-regular fa-folder-open text-4xl mb-3"></i>
+                                    <p class="text-sm">该日期暂无存档数据</p>
+                                </div>
+
+                                <div v-else class="space-y-6">
+                                    <!-- Group by Date Section -->
+                                    <div v-for="(group, date) in groupedFilteredHistory" :key="date">
+                                        <h4 v-if="selectedDate === 'all'"
+                                            class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3 pl-1 sticky top-0 bg-white dark:bg-slate-900 py-2 z-10">
+                                            {{ date }}</h4>
+
+                                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                                            <button v-for="item in group" :key="item.path" @click="selectHistory(item)"
+                                                class="relative overflow-hidden p-4 rounded-xl border border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 hover:border-blue-500 hover:shadow-md dark:hover:border-blue-500 transition-all text-left group">
+
+                                                <div
+                                                    class="absolute top-0 right-0 p-3 opacity-10 group-hover:opacity-20 transition-opacity transform group-hover:scale-110">
+                                                    <i :class="['fa-solid text-4xl', getTimeIcon(item.time)]"></i>
+                                                </div>
+
+                                                <div class="relative z-10">
+                                                    <div class="flex items-center gap-2 mb-1">
+                                                        <span
+                                                            :class="['px-1.5 py-0.5 rounded text-[10px] font-bold border', getTimeBadgeClass(item.time)]">
+                                                            {{ getTimeLabel(item.time) }}
+                                                        </span>
+                                                        <span class="text-xs font-mono text-slate-400">{{ item.time
+                                                            }}</span>
+                                                    </div>
+                                                    <div
+                                                        class="text-sm font-bold text-slate-700 dark:text-slate-200 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                                                        原始数据归档
+                                                    </div>
+                                                </div>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </transition>
 
             <div
                 class="flex-1 flex flex-col md:flex-row overflow-hidden bg-slate-100 dark:bg-slate-900 transition-colors duration-300">
@@ -232,10 +339,40 @@
                 const rawCategory = ref('all');
                 const searchText = ref('');
 
+                // Time Machine State
+                const showTimeMachine = ref(false);
+                const isHistoryMode = ref(false);
+                const currentHistoryLabel = ref('');
+                const selectedDate = ref('all');
+
                 // History
                 const historyIndex = ref([]);
-                const selectedHistory = ref('latest');
                 const lastUpdateTime = ref(new Date());
+
+                const uniqueDates = computed(() => {
+                    const dates = new Set(historyIndex.value.map(h => h.display.split(' ')[0]));
+                    return Array.from(dates).sort().reverse();
+                });
+
+                const filteredHistory = computed(() => {
+                    let list = historyIndex.value;
+                    if (selectedDate.value !== 'all') {
+                        list = list.filter(h => h.display.startsWith(selectedDate.value));
+                    }
+                    return list.map(h => {
+                        const [d, t] = h.display.split(' ');
+                        return { ...h, date: d, time: t };
+                    });
+                });
+
+                const groupedFilteredHistory = computed(() => {
+                    const groups = {};
+                    filteredHistory.value.forEach(item => {
+                        if (!groups[item.date]) groups[item.date] = [];
+                        groups[item.date].push(item);
+                    });
+                    return groups;
+                });
 
                 const rawData = reactive({ finance: [], global: [], tech: [], general: [] });
                 const favoriteIds = reactive(new Set());
@@ -246,9 +383,10 @@
                     try { const res = await fetch(url); return res.ok ? await res.json() : []; } catch (e) { return []; }
                 }
 
-                const loadHistoryData = async () => {
+                const loadHistoryData = async (path) => {
                     loading.value = true;
-                    const basePath = selectedHistory.value === 'latest' ? './' : `./${selectedHistory.value}`;
+                    // Support both "latest" string and full path logic
+                    const basePath = (!path || path === 'latest') ? './' : `./${path}`;
                     const t = new Date().getTime();
 
                     const [f, g, tc, gen] = await Promise.all([
@@ -261,9 +399,9 @@
                     rawData.finance = f; rawData.global = g; rawData.tech = tc; rawData.general = gen;
 
                     // Parse Time for "updated X mins ago"
-                    if (selectedHistory.value !== 'latest') {
+                    if (path && path !== 'latest') {
                         // Extract from path archives/raw/YYYY-MM-DD/HH-mm/
-                        const parts = selectedHistory.value.split('/');
+                        const parts = path.split('/');
                         if (parts.length >= 4) {
                             const dateStr = parts[2]; // YYYY-MM-DD
                             const timeStr = parts[3]; // HH-mm
@@ -274,6 +412,44 @@
                     }
                     loading.value = false;
                 };
+
+                const selectHistory = async (item) => {
+                    isHistoryMode.value = true;
+                    currentHistoryLabel.value = `🕒 ${item.display}`;
+                    showTimeMachine.value = false;
+                    await loadHistoryData(item.path);
+                };
+
+                const resetToLatest = async () => {
+                    isHistoryMode.value = false;
+                    currentHistoryLabel.value = '';
+                    await loadHistoryData('latest');
+                };
+
+                // Helpers
+                const getTimeIcon = (time) => {
+                    const hour = parseInt(time.split(':')[0]);
+                    if (hour >= 5 && hour < 10) return 'fa-mug-hot text-amber-500';
+                    if (hour >= 10 && hour < 14) return 'fa-sun text-orange-500';
+                    if (hour >= 14 && hour < 19) return 'fa-cloud-sun text-blue-400';
+                    return 'fa-moon text-indigo-400';
+                };
+
+                const getTimeLabel = (time) => {
+                    const hour = parseInt(time.split(':')[0]);
+                    if (hour >= 5 && hour < 10) return '早间更新';
+                    if (hour >= 10 && hour < 14) return '午间更新';
+                    if (hour >= 14 && hour < 19) return '晚间更新';
+                    return '夜间更新';
+                };
+
+                const getTimeBadgeClass = (time) => {
+                    const hour = parseInt(time.split(':')[0]);
+                    if (hour >= 5 && hour < 10) return 'bg-amber-100 text-amber-900 dark:bg-amber-900/40 dark:text-amber-300 border-amber-200 dark:border-amber-700';
+                    if (hour >= 10 && hour < 14) return 'bg-orange-100 text-orange-900 dark:bg-orange-900/40 dark:text-orange-300 border-orange-200 dark:border-orange-700';
+                    return 'bg-blue-100 text-blue-900 dark:bg-blue-900/40 dark:text-blue-300 border-blue-200 dark:border-blue-700';
+                };
+
 
                 const timeAgo = computed(() => {
                     const now = new Date();
@@ -295,7 +471,7 @@
                         if (indexRes.ok) historyIndex.value = await indexRes.json();
                     } catch (e) { }
 
-                    await loadHistoryData();
+                    await loadHistoryData('latest');
                 });
 
                 const currentTheme = computed(() => {
@@ -346,7 +522,9 @@
 
                 return {
                     loading, isDarkMode, isMobileMenuOpen, rawCategory, searchText,
-                    selectedHistory, historyIndex, loadHistoryData, timeAgo,
+                    showTimeMachine, isHistoryMode, currentHistoryLabel, selectedDate, uniqueDates, filteredHistory, groupedFilteredHistory,
+                    selectHistory, resetToLatest, getTimeIcon, getTimeLabel, getTimeBadgeClass,
+                    historyIndex, loadHistoryData, timeAgo,
                     currentTheme, navBtnClass, rawNavClass, toggleDarkMode,
                     filteredRawList, rawCategoryCounts, totalRawSources, favoriteIds, isFavorite, toggleFavorite,
                     getCategoryIcon, getCategoryColorClass, getDisplayName
