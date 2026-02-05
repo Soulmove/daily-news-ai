@@ -1,7 +1,7 @@
 import json
 import os
 import time
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
 
 # ================= 📦 新版 SDK 导入 =================
 # 必须先在 requirements.txt 或 workflow 中安装 google-genai
@@ -231,9 +231,10 @@ def process_module(key, config):
                     item['url'] = raw_u
                     break
         
-        ai_json['date'] = datetime.now().strftime("%Y-%m-%d %H:%M")
         
-        ai_json['date'] = datetime.now().strftime("%Y-%m-%d %H:%M")
+        # 定义时区
+        CN_TZ = timezone(timedelta(hours=8))
+        ai_json['date'] = datetime.now(CN_TZ).strftime("%Y-%m-%d %H:%M")
         
         # 5. 保存文件 (Latest & Archive)
         # 5.1 Save Latest
@@ -242,7 +243,7 @@ def process_module(key, config):
         print(f"✅ Generated [Latest]: {config['out']}")
         
         # 5.2 Save Archive
-        now = datetime.now()
+        now = datetime.now(CN_TZ)
         date_str = now.strftime("%Y-%m-%d")
         time_str = now.strftime("%H-%M")
         
