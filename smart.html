@@ -1,0 +1,649 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN" class="h-full">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>AI 智能深度简报 | Insight Pro</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Serif+SC:wght@700&family=Orbitron:wght@500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'], serif: ['"Noto Serif SC"', 'serif'], cyber: ['Orbitron', 'sans-serif'] },
+                    animation: { 'pulse-neon': 'pulse-neon 2s cubic-bezier(0.4, 0, 0.6, 1) infinite' }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #f8fafc;
+            color: #1e293b;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .dark body {
+            background-color: #0f172a;
+            color: #f1f5f9;
+        }
+
+        [v-cloak] {
+            display: none;
+        }
+
+        .thin-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        .thin-scrollbar::-webkit-scrollbar-thumb {
+            background-color: #cbd5e1;
+            border-radius: 9999px;
+        }
+
+        .dark .thin-scrollbar::-webkit-scrollbar-thumb {
+            background-color: #334155;
+        }
+
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .read-item {
+            opacity: 0.6;
+            filter: grayscale(100%);
+            transition: all 0.3s ease;
+        }
+
+        .cyber-border {
+            position: relative;
+            background: linear-gradient(90deg, #22d3ee, #a855f7);
+            padding: 1px;
+        }
+
+        .cyber-inner {
+            background-color: #020617;
+            height: 100%;
+            width: 100%;
+        }
+
+        .ent-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.4));
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .dark .ent-card {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.6));
+            border-color: rgba(255, 255, 255, 0.05);
+        }
+    </style>
+</head>
+
+<body class="h-full flex overflow-hidden selection:bg-blue-500 selection:text-white">
+
+    <div id="app" v-cloak class="flex w-full h-full relative transition-colors duration-300">
+        <!-- Sidebar and Menu implementation -->
+        <div v-if="isMobileMenuOpen" @click="isMobileMenuOpen = false"
+            class="fixed inset-0 bg-black/50 z-30 md:hidden backdrop-blur-sm transition-opacity"></div>
+        <aside
+            :class="['fixed md:static inset-y-0 left-0 z-40 w-64 transform transition-transform duration-300 ease-in-out flex flex-col border-r shadow-2xl md:shadow-none', currentTheme.sidebarBg, currentTheme.sidebarBorder, isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0']">
+            <div class="p-6 flex items-center justify-between gap-3">
+                <div class="flex items-center gap-3">
+                    <div
+                        :class="['w-10 h-10 rounded-xl flex items-center justify-center text-xl shadow-lg', currentTheme.logoBg, currentTheme.logoText]">
+                        <i class="fa-solid fa-brain"></i>
+                    </div>
+                    <div>
+                        <h1 :class="['font-bold text-lg', currentTheme.sidebarText]">Insight Pro</h1>
+                        <p class="text-[10px] opacity-60 uppercase tracking-wider">AI Powered Analytics</p>
+                    </div>
+                </div>
+                <button @click="isMobileMenuOpen = false" class="md:hidden text-slate-400"><i
+                        class="fa-solid fa-xmark text-xl"></i></button>
+            </div>
+            <nav class="flex-1 px-4 space-y-2 py-4">
+                <div class="text-xs font-bold uppercase tracking-wider opacity-50 mb-3 px-2"
+                    :class="currentTheme.sidebarText">核心视图</div>
+                <a href="smart.html" :class="navBtnClass('smart')"><i class="fa-solid fa-chart-pie w-5 opacity-70"></i>
+                    智能深度简报</a>
+                <a href="monitor.html" :class="navBtnClass('raw')"><i
+                        class="fa-solid fa-tower-broadcast w-5 opacity-70"></i> 原始数据监控</a>
+                <div class="my-4 border-t border-slate-200 dark:border-slate-800 opacity-50"></div>
+                <a href="about.html" :class="navBtnClass('contact')"><i
+                        class="fa-solid fa-circle-info w-5 opacity-70"></i> 说明/联系/加群</a>
+            </nav>
+            <div class="p-4 border-t" :class="currentTheme.sidebarBorder">
+                <button @click="toggleDarkMode"
+                    :class="['w-full flex items-center justify-center gap-2 py-2 rounded-lg transition-colors', currentTheme.sidebarHover, currentTheme.sidebarText]">
+                    <i :class="['fa-solid', isDarkMode ? 'fa-sun' : 'fa-moon']"></i><span class="text-sm">{{ isDarkMode
+                        ? '切换日间模式' : '切换深色模式' }}</span>
+                </button>
+            </div>
+        </aside>
+
+        <main
+            :class="['flex-1 flex flex-col h-full overflow-hidden relative transition-colors duration-300 w-full', currentTheme.mainBg]">
+            <!-- Top Banner -->
+            <div
+                class="bg-gradient-to-r from-indigo-500 to-purple-600 text-white text-[10px] md:text-xs text-center py-1 font-bold z-20">
+                每天七点更新AI简报，每三十分钟更新一次原始数据监控
+            </div>
+
+            <header
+                :class="['h-16 shrink-0 border-b flex items-center justify-between px-4 md:px-8 backdrop-blur-md z-10 transition-colors duration-300', currentTheme.headerBg, currentTheme.headerBorder]">
+                <div class="flex items-center gap-4">
+                    <button @click="isMobileMenuOpen = true"
+                        class="md:hidden text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200"><i
+                            class="fa-solid fa-bars text-xl"></i></button>
+                    <h2 class="text-lg md:text-xl font-bold flex items-center gap-2 transition-colors duration-300 truncate"
+                        :class="currentTheme.headerText">
+                        <i :class="['fa-solid text-xl md:text-2xl', currentSmartTabIcon]"></i>
+                        <span class="truncate">{{ currentSmartTabName }}</span>
+                    </h2>
+                </div>
+
+                <!-- Historical Data Selector -->
+                <!-- Historical Data Selector (Time Machine) -->
+                <div class="flex items-center gap-3">
+                    <button @click="showTimeMachine = true"
+                        class="flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold transition-all border group"
+                        :class="[isHistoryMode ? 'bg-indigo-500 text-white border-indigo-500 shadow-lg shadow-indigo-500/30' : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-indigo-500 hover:text-indigo-500']">
+                        <i class="fa-solid fa-clock-rotate-left" :class="{'animate-spin-reverse': loading}"></i>
+                        <span v-if="isHistoryMode">{{ currentHistoryLabel }}</span>
+                        <span v-else>历史时光机</span>
+                        <i v-if="isHistoryMode" @click.stop="resetToLatest"
+                            class="fa-solid fa-times ml-1 opacity-60 hover:opacity-100" title="返回最新"></i>
+                    </button>
+                    <!-- Latest Indicator -->
+                    <div v-if="!isHistoryMode"
+                        class="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-green-500/10 text-green-600 dark:text-green-400 text-xs font-bold border border-green-500/20">
+                        <span class="relative flex h-2 w-2">
+                            <span
+                                class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                        </span>
+                        ⚡ 最新内容 (Latest)
+                    </div>
+                </div>
+            </header>
+
+            <!-- Time Machine Modal -->
+            <transition name="list">
+                <div v-if="showTimeMachine"
+                    class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+                    @click="showTimeMachine = false">
+                    <div class="bg-white dark:bg-slate-900 rounded-2xl w-full max-w-4xl max-h-[80vh] flex flex-col shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-800"
+                        @click.stop>
+
+                        <!-- Modal Header -->
+                        <div
+                            class="p-4 md:p-6 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center bg-slate-50/50 dark:bg-slate-800/50">
+                            <div>
+                                <h3 class="text-xl font-bold text-slate-800 dark:text-white flex items-center gap-2">
+                                    <i class="fa-solid fa-timeline text-indigo-500"></i> AI 历史时光机
+                                </h3>
+                                <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">追溯过往的 AI 研判报告，支持按日期快速检索</p>
+                            </div>
+                            <button @click="showTimeMachine = false"
+                                class="w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-800 text-slate-500 flex items-center justify-center hover:bg-slate-300 dark:hover:bg-slate-700 transition-colors">
+                                <i class="fa-solid fa-times"></i>
+                            </button>
+                        </div>
+
+                        <!-- Modal Body -->
+                        <div class="flex-1 flex overflow-hidden">
+                            <!-- Left: Date List -->
+                            <div
+                                class="w-1/3 md:w-64 border-r border-slate-100 dark:border-slate-800 overflow-y-auto thin-scrollbar bg-slate-50 dark:bg-slate-900">
+                                <div class="p-2 space-y-1">
+                                    <button @click="selectedDate = 'all'"
+                                        :class="['w-full text-left px-4 py-3 rounded-lg text-sm font-bold flex justify-between items-center transition-all', selectedDate === 'all' ? 'bg-indigo-500 text-white shadow-md shadow-indigo-500/20' : 'text-slate-600 dark:text-slate-400 hover:bg-white dark:hover:bg-slate-800']">
+                                        <span>📅 所有日期</span>
+                                        <span
+                                            class="text-xs opacity-60 bg-black/10 dark:bg-white/10 px-1.5 rounded-full">{{
+                                            historyIndex.length }}</span>
+                                    </button>
+                                    <div class="my-2 border-t border-slate-200 dark:border-slate-800 mx-2"></div>
+                                    <button v-for="date in uniqueDates" :key="date" @click="selectedDate = date"
+                                        :class="['w-full text-left px-4 py-3 rounded-lg text-sm font-medium transition-all', selectedDate === date ? 'bg-white dark:bg-slate-800 text-indigo-600 dark:text-indigo-400 shadow-sm ring-1 ring-slate-200 dark:ring-slate-700' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800/50']">
+                                        {{ date }}
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Right: Time Slots -->
+                            <div class="flex-1 overflow-y-auto p-4 md:p-6 bg-white dark:bg-slate-900/50 thin-scrollbar">
+                                <div v-if="filteredHistory.length === 0"
+                                    class="h-full flex flex-col items-center justify-center text-slate-400 opacity-60">
+                                    <i class="fa-regular fa-folder-open text-4xl mb-3"></i>
+                                    <p class="text-sm">该日期暂无存档数据</p>
+                                </div>
+
+                                <div v-else class="space-y-6">
+                                    <!-- Group by Date Section -->
+                                    <div v-for="(group, date) in groupedFilteredHistory" :key="date">
+                                        <h4 v-if="selectedDate === 'all'"
+                                            class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3 pl-1 sticky top-0 bg-white dark:bg-slate-900 py-2 z-10">
+                                            {{ date }}</h4>
+
+                                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                                            <button v-for="item in group" :key="item.path" @click="selectHistory(item)"
+                                                class="relative overflow-hidden p-4 rounded-xl border border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 hover:border-indigo-500 hover:shadow-md dark:hover:border-indigo-500 transition-all text-left group">
+
+                                                <!-- Visual Decoration based on time -->
+                                                <div
+                                                    class="absolute top-0 right-0 p-3 opacity-10 group-hover:opacity-20 transition-opacity transform group-hover:scale-110">
+                                                    <i :class="['fa-solid text-4xl', getTimeIcon(item.time)]"></i>
+                                                </div>
+
+                                                <div class="relative z-10">
+                                                    <div class="flex items-center gap-2 mb-1">
+                                                        <span
+                                                            :class="['px-1.5 py-0.5 rounded text-[10px] font-bold border', getTimeBadgeClass(item.time)]">
+                                                            {{ getTimeLabel(item.time) }}
+                                                        </span>
+                                                        <span class="text-xs font-mono text-slate-400">{{ item.time
+                                                            }}</span>
+                                                    </div>
+                                                    <div
+                                                        class="text-sm font-bold text-slate-700 dark:text-slate-200 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
+                                                        AI 全网简报
+                                                    </div>
+                                                </div>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </transition>
+            </header>
+
+            <div class="flex-1 flex flex-col overflow-hidden">
+                <div
+                    :class="['shrink-0 px-4 md:px-8 pt-2 md:pt-4 pb-0 flex gap-4 md:gap-6 border-b text-sm font-medium transition-colors duration-300 overflow-x-auto hide-scrollbar', currentTheme.tabBorder]">
+                    <button v-for="tab in smartTabs" :key="tab.id" @click="currentSmartTab = tab.id"
+                        :class="['pb-3 relative transition-all flex items-center gap-2 shrink-0 whitespace-nowrap', currentSmartTab === tab.id ? tab.activeClass + ' border-b-2' : 'opacity-50 hover:opacity-100 border-transparent text-slate-500 dark:text-slate-400']">
+                        <i :class="['fa-solid', tab.icon]"></i> {{ tab.name }}
+                    </button>
+                </div>
+
+                <div class="flex-1 overflow-y-auto p-4 md:p-8 thin-scrollbar scroll-smooth">
+                    <div v-if="loading" class="flex flex-col items-center justify-center py-20 opacity-50">
+                        <i class="fa-solid fa-circle-notch fa-spin text-3xl mb-3"></i>
+                        <p class="text-sm">正在加载数据...</p>
+                    </div>
+
+                    <div v-if="!loading && currentSmartData?.error"
+                        class="mb-8 p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg flex items-center gap-3">
+                        <i class="fa-solid fa-triangle-exclamation text-xl"></i>
+                        <div>
+                            <p class="font-bold">数据加载失败</p>
+                            <p class="text-xs opacity-75">原因: {{ currentSmartData.error }}</p>
+                        </div>
+                    </div>
+
+                    <template v-if="!loading && !currentSmartData?.error">
+                        <div v-if="computedSummary"
+                            :class="['rounded-2xl mb-6 md:mb-8 shadow-xl relative overflow-hidden transition-all duration-300', currentTheme.summaryCard]">
+                            <!-- Summary Header -->
+                            <div class="flex items-center justify-between p-5 md:p-6 pb-2 border-b border-black/10 dark:border-white/10 relative z-10 cursor-pointer"
+                                @click="isSummaryCollapsed = !isSummaryCollapsed">
+                                <div class="flex items-center gap-2">
+                                    <i class="fa-solid fa-microchip text-lg" :class="currentTheme.summaryTitle"></i>
+                                    <h3
+                                        :class="['text-sm md:text-base font-bold uppercase tracking-widest', currentTheme.summaryTitle]">
+                                        AI 核心综述</h3>
+                                </div>
+                                <button
+                                    class="w-8 h-8 rounded-full flex items-center justify-center hover:bg-black/10 dark:hover:bg-white/10 transition-colors">
+                                    <i
+                                        :class="['fa-solid transition-transform duration-300', isSummaryCollapsed ? 'fa-chevron-down' : 'fa-chevron-up', currentTheme.summaryTitle]"></i>
+                                </button>
+                            </div>
+                            <div v-show="!isSummaryCollapsed" class="p-5 md:p-6 pt-4 relative z-10 space-y-6">
+                                <template v-if="structuredSummary.length > 0">
+                                    <div v-for="(section, idx) in structuredSummary" :key="idx" class="group">
+                                        <h4 v-if="section.title"
+                                            :class="['text-sm md:text-base font-bold mb-3 flex items-center gap-2', currentTheme.summaryTitle]">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-current opacity-60"></span>{{
+                                            section.title }}
+                                        </h4>
+                                        <ul class="space-y-3">
+                                            <li v-for="(point, pIdx) in section.items" :key="pIdx"
+                                                :class="['text-sm md:text-[15px] leading-relaxed flex items-start gap-2.5', currentTheme.summaryText]">
+                                                <span
+                                                    class="mt-1.5 w-1.5 h-1.5 rounded-full shrink-0 bg-current opacity-40"></span><span
+                                                    class="text-justify">{{ point }}</span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </template>
+                                <p v-else
+                                    :class="['text-sm md:text-base leading-relaxed font-medium text-justify whitespace-pre-wrap', currentTheme.summaryText]">
+                                    {{ computedSummary }}</p>
+                            </div>
+                        </div>
+
+                        <!-- News List -->
+                        <div
+                            class="border border-slate-200 dark:border-slate-700 rounded-2xl bg-white dark:bg-slate-800/50 mb-8 overflow-hidden transition-all shadow-sm hover:shadow-md">
+                            <div class="p-4 md:px-6 md:py-4 bg-slate-50 dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 flex items-start md:items-center justify-between gap-4 cursor-pointer select-none"
+                                @click="isNewsCollapsed = !isNewsCollapsed">
+                                <div class="flex items-center gap-3 flex-1">
+                                    <div class="w-1.5 h-6 bg-blue-500 rounded-full shrink-0"></div>
+                                    <div>
+                                        <h3 class="text-base font-bold text-slate-800 dark:text-slate-200">AI提取重点新闻</h3>
+                                        <p
+                                            class="text-[10px] md:text-xs text-slate-500 dark:text-slate-400 mt-0.5 leading-tight">
+                                            点击勾选可标记已读，防止重复阅读</p>
+                                    </div>
+                                </div>
+                                <button
+                                    class="w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-700 text-slate-500 dark:text-slate-300 flex items-center justify-center shrink-0">
+                                    <i
+                                        :class="['fa-solid transition-transform duration-300', isNewsCollapsed ? 'fa-chevron-down' : 'fa-chevron-up']"></i>
+                                </button>
+                            </div>
+                            <div v-show="!isNewsCollapsed" class="p-4 md:p-6 bg-slate-50/50 dark:bg-slate-900/20">
+                                <div class="grid grid-cols-1 xl:grid-cols-2 gap-4 md:gap-6">
+                                    <div v-for="(item, idx) in computedItems" :key="idx"
+                                        :class="['group rounded-xl p-5 md:p-6 transition-all relative overflow-hidden active:scale-[0.98]', isRead(item.title) ? 'read-item' : '', currentTheme.itemCard]">
+                                        <div class="flex justify-between items-start gap-4 mb-3 relative z-10">
+                                            <div>
+                                                <div class="flex flex-wrap items-center gap-2 mb-2">
+                                                    <span v-if="item.sentiment || item.prediction"
+                                                        :class="['px-2 py-0.5 rounded-md text-[10px] md:text-xs font-bold uppercase tracking-wider', getTagStyle(item)]">
+                                                        <i :class="getTagIcon(item)"></i> {{
+                                                        sentimentTranslate(item.sentiment) || '未来预测' }}
+                                                    </span>
+                                                </div>
+                                                <h3
+                                                    :class="['text-lg md:text-xl font-bold leading-tight group-hover:text-blue-500 transition-colors', currentTheme.itemTitle]">
+                                                    {{ item.title }}</h3>
+                                            </div>
+                                            <button @click.stop="toggleRead(item.title)"
+                                                class="shrink-0 text-xl md:text-2xl opacity-30 hover:opacity-100 transition-opacity p-1"
+                                                :class="currentTheme.itemText"><i
+                                                    :class="['fa-regular', isRead(item.title) ? 'fa-circle-check text-green-500 opacity-100' : 'fa-circle']"></i></button>
+                                        </div>
+                                        <p
+                                            :class="['text-sm leading-relaxed mb-4 line-clamp-4 group-hover:line-clamp-none transition-all relative z-10 text-justify', currentTheme.itemText]">
+                                            {{ item.summary || item.comment || item.reason }}</p>
+                                        <a :href="item.url" target="_blank" @click.stop
+                                            :class="['inline-flex items-center gap-1 text-xs font-bold uppercase tracking-widest transition-colors relative z-10', currentTheme.readMoreBtn]">Read
+                                            Source <i class="fa-solid fa-arrow-right-long ml-1"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Comments Section -->
+                        <div
+                            class="max-w-7xl mx-auto py-8 md:py-12 mt-8 border-t border-slate-200 dark:border-slate-800">
+                            <h3
+                                class="text-lg md:text-xl font-bold text-slate-700 dark:text-slate-200 flex items-center gap-2 mb-6">
+                                <i class="fa-solid fa-comments"></i> 读者讨论 ({{ sortedAndFilteredComments.length }}条)
+                            </h3>
+                            <div v-if="sortedAndFilteredComments.length > 0"
+                                class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div v-for="(comment, cIdx) in sortedAndFilteredComments" :key="cIdx"
+                                    class="bg-white dark:bg-slate-800/50 p-4 rounded-xl border border-slate-100 dark:border-slate-700 hover:shadow-md transition-all flex gap-3 group relative">
+                                    <div
+                                        class="w-10 h-10 rounded-full bg-gradient-to-br from-slate-200 to-slate-300 dark:from-slate-700 dark:to-slate-600 flex items-center justify-center shrink-0 text-lg">
+                                        <i :class="['fa-solid', getAvatarIcon(comment.role)]"></i>
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <div class="flex justify-between items-start mb-1 pr-1">
+                                            <div><span class="font-bold text-sm text-slate-800 dark:text-slate-200">{{
+                                                    comment.name }}</span><span
+                                                    class="text-xs text-slate-500 ml-2 px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-700">{{
+                                                    comment.role }}</span></div>
+                                            <span
+                                                class="text-[10px] px-2 py-0.5 rounded-full bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400 font-medium">{{
+                                                comment.emotion }}</span>
+                                        </div>
+                                        <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">{{
+                                            comment.content }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div v-else class="text-center py-10 text-slate-400">暂无评论</div>
+                        </div>
+                    </template>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const { createApp, reactive, computed, ref, onMounted, watch } = Vue
+        createApp({
+            setup() {
+                const loading = ref(true);
+                const isDarkMode = ref(false);
+                const isMobileMenuOpen = ref(false);
+                const currentSmartTab = ref('finance');
+                const isSummaryCollapsed = ref(false);
+                const isNewsCollapsed = ref(false);
+
+                // Time Machine State
+                const showTimeMachine = ref(false);
+                const isHistoryMode = ref(false);
+                const currentHistoryLabel = ref('');
+                const selectedDate = ref('all');
+
+                // History Logic
+                const historyIndex = ref([]);
+
+                const uniqueDates = computed(() => {
+                    const dates = new Set(historyIndex.value.map(h => h.display.split(' ')[0]));
+                    return Array.from(dates).sort().reverse();
+                });
+
+                const filteredHistory = computed(() => {
+                    let list = historyIndex.value;
+                    if (selectedDate.value !== 'all') {
+                        list = list.filter(h => h.display.startsWith(selectedDate.value));
+                    }
+                    return list.map(h => {
+                        const [d, t] = h.display.split(' ');
+                        return { ...h, date: d, time: t };
+                    });
+                });
+
+                const groupedFilteredHistory = computed(() => {
+                    const groups = {};
+                    filteredHistory.value.forEach(item => {
+                        if (!groups[item.date]) groups[item.date] = [];
+                        groups[item.date].push(item);
+                    });
+                    return groups;
+                });
+
+                const smartData = reactive({ finance: null, global: null, tech: null, general: null });
+                const commentsData = reactive({ finance: [], global: [], tech: [], general: [] });
+                const readSet = reactive(new Set());
+
+                const smartTabs = [
+                    { id: 'finance', name: '财经/市场', icon: 'fa-coins', activeClass: 'text-amber-600 border-amber-600 dark:text-amber-400 dark:border-amber-400' },
+                    { id: 'global', name: '国际/宏观', icon: 'fa-globe', activeClass: 'text-blue-600 border-blue-600 dark:text-blue-400 dark:border-blue-400' },
+                    { id: 'tech', name: '科技/AI', icon: 'fa-microchip', activeClass: 'text-cyan-600 border-cyan-600 dark:text-cyan-400 dark:border-cyan-400' },
+                    { id: 'general', name: '娱乐/吃瓜', icon: 'fa-fire', activeClass: 'text-rose-600 border-rose-600 dark:text-rose-400 dark:border-rose-400' },
+                ];
+
+                async function safeFetch(url) {
+                    try { const res = await fetch(url); return res.ok ? await res.json() : { error: `HTTP ${res.status}` }; }
+                    catch (e) { return { error: e.message }; }
+                }
+
+                const loadHistoryData = async (path) => {
+                    loading.value = true;
+                    // Support both "latest" string and full path logic
+                    const basePath = (!path || path === 'latest') ? './' : `./${path}`;
+                    const t = new Date().getTime();
+
+                    try {
+                        const [f, g, tc, gen, cf, cg, ctc, cgen] = await Promise.all([
+                            safeFetch(`${basePath}analysis_finance.json?t=${t}`),
+                            safeFetch(`${basePath}analysis_global.json?t=${t}`),
+                            safeFetch(`${basePath}analysis_tech.json?t=${t}`),
+                            safeFetch(`${basePath}analysis_general.json?t=${t}`),
+                            safeFetch(`${basePath}comments_finance.json?t=${t}`),
+                            safeFetch(`${basePath}comments_global.json?t=${t}`),
+                            safeFetch(`${basePath}comments_tech.json?t=${t}`),
+                            safeFetch(`${basePath}comments_general.json?t=${t}`)
+                        ]);
+
+                        smartData.finance = f; smartData.global = g; smartData.tech = tc; smartData.general = gen;
+                        commentsData.finance = cf.comments || []; commentsData.global = cg.comments || [];
+                        commentsData.tech = ctc.comments || []; commentsData.general = cgen.comments || [];
+                    } catch (e) { console.error(e); }
+                    loading.value = false;
+                };
+
+                const selectHistory = async (item) => {
+                    isHistoryMode.value = true;
+                    currentHistoryLabel.value = `🕒 ${item.display}`;
+                    showTimeMachine.value = false;
+                    await loadHistoryData(item.path);
+                };
+
+                const resetToLatest = async () => {
+                    isHistoryMode.value = false;
+                    currentHistoryLabel.value = '';
+                    await loadHistoryData('latest');
+                };
+
+                // Helpers
+                const getTimeIcon = (time) => {
+                    // Simple logic to guess icon from time string HH:mm
+                    const hour = parseInt(time.split(':')[0]);
+                    if (hour >= 5 && hour < 10) return 'fa-mug-hot text-amber-500';
+                    if (hour >= 10 && hour < 14) return 'fa-sun text-orange-500';
+                    if (hour >= 14 && hour < 19) return 'fa-cloud-sun text-blue-400';
+                    return 'fa-moon text-indigo-400';
+                };
+
+                const getTimeLabel = (time) => {
+                    const hour = parseInt(time.split(':')[0]);
+                    if (hour >= 5 && hour < 10) return '早间日报';
+                    if (hour >= 10 && hour < 14) return '午间更新';
+                    if (hour >= 14 && hour < 19) return '晚间追踪';
+                    return '深夜档';
+                };
+
+                const getTimeBadgeClass = (time) => {
+                    const hour = parseInt(time.split(':')[0]);
+                    if (hour >= 5 && hour < 10) return 'bg-amber-100 text-amber-900 dark:bg-amber-900/40 dark:text-amber-300 border-amber-200 dark:border-amber-700';
+                    if (hour >= 10 && hour < 14) return 'bg-orange-100 text-orange-900 dark:bg-orange-900/40 dark:text-orange-300 border-orange-200 dark:border-orange-700';
+                    return 'bg-blue-100 text-blue-900 dark:bg-blue-900/40 dark:text-blue-300 border-blue-200 dark:border-blue-700';
+                };
+
+                onMounted(async () => {
+                    const dark = localStorage.getItem('darkMode'); if (dark === 'true') { isDarkMode.value = true; document.documentElement.classList.add('dark'); }
+                    const read = localStorage.getItem('readItems'); if (read) new Set(JSON.parse(read)).forEach(id => readSet.add(id));
+
+                    // Load History Index
+                    try {
+                        const indexRes = await fetch('./history/smart_index.json');
+                        if (indexRes.ok) historyIndex.value = await indexRes.json();
+                    } catch (e) { console.log("No history index found"); }
+
+                    await loadHistoryData('latest');
+                });
+
+                const currentSmartData = computed(() => smartData[currentSmartTab.value]);
+                const currentComments = computed(() => commentsData[currentSmartTab.value]);
+                const sortedAndFilteredComments = computed(() => currentComments.value || []); // Simplified for now
+
+                const computedSummary = computed(() => { const d = currentSmartData.value; return d ? (d.summary || d.economy_summary) : null; });
+                const computedItems = computed(() => {
+                    const data = currentSmartData.value; if (!data) return [];
+                    if (Array.isArray(data.items)) return data.items;
+                    if (data.categories) { for (const k in data.categories) { if (Array.isArray(data.categories[k])) return data.categories[k]; } }
+                    return [];
+                });
+
+                const structuredSummary = computed(() => {
+                    const raw = computedSummary.value; if (!raw) return [];
+                    const sections = raw.split(/(?=【)/).filter(s => s.trim());
+                    return sections.map(section => {
+                        const titleMatch = section.match(/【(.*?)】/);
+                        const title = titleMatch ? titleMatch[1] : '';
+                        let content = section.replace(/【.*?】/, '').trim();
+                        let items = content.split(/(?=\(\d+\))/).map(i => i.trim()).filter(i => i.length > 2);
+                        if (items.length === 0 && content) items = [content];
+                        return { title, items };
+                    }).filter(s => s.title || s.items.length > 0);
+                });
+
+                const currentTheme = computed(() => {
+                    const dark = isDarkMode.value;
+                    const common = {
+                        sidebarBg: dark ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-200',
+                        sidebarText: dark ? 'text-slate-100' : 'text-slate-800',
+                        sidebarBorder: dark ? 'border-slate-800' : 'border-slate-200',
+                        sidebarHover: dark ? 'hover:bg-slate-800' : 'hover:bg-slate-100',
+                        headerBg: dark ? 'bg-slate-900/80' : 'bg-white/80',
+                        headerBorder: dark ? 'border-slate-800' : 'border-slate-200',
+                        headerText: dark ? 'text-slate-100' : 'text-slate-800',
+                        tabBorder: dark ? 'border-slate-800' : 'border-slate-200',
+                        itemText: dark ? 'text-slate-300' : 'text-slate-600',
+                        mainBg: dark ? 'bg-[#0f172a]' : 'bg-[#f8fafc]'
+                    };
+                    const tabThemes = {
+                        finance: { ...common, logoBg: 'bg-amber-500', logoText: 'text-amber-950', summaryCard: dark ? 'bg-gradient-to-br from-slate-800 to-slate-900 border border-amber-500/20' : 'bg-white border-t-4 border-amber-500 shadow-amber-100', summaryTitle: 'text-amber-500', summaryText: dark ? 'text-amber-100/90' : 'text-slate-700', itemCard: dark ? 'bg-slate-800/50 border-slate-700 hover:border-amber-500/50' : 'bg-white border-slate-200 hover:border-amber-400 hover:shadow-lg', itemTitle: dark ? 'text-slate-100' : 'text-slate-800', readMoreBtn: 'text-amber-500 hover:text-amber-600' },
+                        global: { ...common, logoBg: 'bg-blue-600', logoText: 'text-white', summaryCard: dark ? 'bg-blue-900/30 border border-blue-500/30' : 'bg-gradient-to-r from-blue-50 to-white border border-blue-100', summaryTitle: 'text-blue-500', summaryText: dark ? 'text-blue-100' : 'text-blue-900', itemCard: dark ? 'bg-slate-800 border-slate-700' : 'bg-white border-slate-200 hover:border-blue-300 hover:shadow', itemTitle: dark ? 'text-white' : 'text-slate-900', readMoreBtn: 'text-blue-500 hover:text-blue-700' },
+                        tech: { ...common, logoBg: 'bg-cyan-500 shadow-cyan-500/50', logoText: 'text-cyan-950', mainBg: dark ? 'bg-[#09090b]' : 'bg-slate-100', summaryCard: 'cyber-border text-cyan-50', summaryTitle: 'text-cyan-400 animate-pulse-neon', summaryText: 'text-cyan-50/90 font-mono', itemCard: 'bg-slate-900/80 border-cyan-900/50 hover:bg-slate-900', itemTitle: 'text-cyan-50 font-mono tracking-wider', itemText: 'text-slate-300 font-mono', readMoreBtn: 'text-cyan-400 hover:text-cyan-300 font-mono' },
+                        general: { ...common, logoBg: 'bg-gradient-to-br from-rose-500 to-indigo-600', logoText: 'text-white', mainBg: dark ? 'bg-[#1a1218]' : 'bg-[#fff0f5]', summaryCard: 'bg-gradient-to-r from-rose-500 to-indigo-600 text-white shadow-lg shadow-rose-500/30', summaryTitle: 'text-rose-200', summaryText: 'text-white font-medium', itemCard: 'ent-card hover:shadow-xl hover:-translate-y-2', itemTitle: dark ? 'text-white' : 'text-slate-800', readMoreBtn: 'text-indigo-500 hover:text-indigo-700' }
+                    };
+                    return tabThemes[currentSmartTab.value];
+                });
+
+                const currentSmartTabIcon = computed(() => smartTabs.find(t => t.id === currentSmartTab.value)?.icon);
+                const currentSmartTabName = computed(() => smartTabs.find(t => t.id === currentSmartTab.value)?.name);
+                const navBtnClass = (page) => `w-full text-left px-4 py-3 rounded-xl flex items-center gap-4 transition-all font-medium ${page === 'smart' ? (isDarkMode.value ? 'bg-slate-800 text-white shadow-inner' : 'bg-slate-100 text-slate-900 shadow-sm') : (isDarkMode.value ? 'text-slate-400 hover:bg-slate-800/50' : 'text-slate-500 hover:bg-slate-50')}`;
+
+                const toggleDarkMode = () => { isDarkMode.value = !isDarkMode.value; document.documentElement.classList.toggle('dark', isDarkMode.value); localStorage.setItem('darkMode', isDarkMode.value); };
+                const isRead = (t) => readSet.has(t);
+                const toggleRead = (t) => { readSet.has(t) ? readSet.delete(t) : readSet.add(t); localStorage.setItem('readItems', JSON.stringify([...readSet])); };
+
+                const getTagStyle = (item) => {
+                    if (item.sentiment === 'Bullish') return 'bg-red-100 text-red-700 border border-red-200 dark:bg-red-900/30 dark:text-red-400 dark:border-red-800';
+                    if (item.sentiment === 'Bearish') return 'bg-green-100 text-green-700 border border-green-200 dark:bg-green-900/30 dark:text-green-400 dark:border-green-800';
+                    if (item.prediction) return 'bg-cyan-100 text-cyan-700 border border-cyan-200 dark:bg-cyan-900/30 dark:text-cyan-400 dark:border-cyan-800';
+                    return 'bg-slate-100 text-slate-600 border border-slate-200 dark:bg-slate-800 dark:text-slate-400 dark:border-slate-700';
+                };
+                const getTagIcon = (item) => item.sentiment === 'Bullish' ? 'fa-solid fa-arrow-trend-up mr-1' : (item.sentiment === 'Bearish' ? 'fa-solid fa-arrow-trend-down mr-1' : 'fa-solid fa-tag mr-1');
+                const sentimentTranslate = (s) => ({ 'Bullish': '利好', 'Bearish': '利空', 'Neutral': '中性', 'Mixed': '震荡' }[s] || s);
+                const getAvatarIcon = (role) => {
+                    if (role.includes('司机')) return 'fa-taxi';
+                    if (role.includes('学生') || role.includes('考研')) return 'fa-graduation-cap';
+                    return 'fa-user'; // Default for now, can copy full logic later
+                };
+
+                return {
+                    loading, isDarkMode, isMobileMenuOpen, currentSmartTab, isSummaryCollapsed, isNewsCollapsed,
+                    showTimeMachine, isHistoryMode, currentHistoryLabel, selectedDate, uniqueDates, filteredHistory, groupedFilteredHistory,
+                    selectHistory, resetToLatest, getTimeIcon, getTimeLabel, getTimeBadgeClass,
+                    smartTabs, currentTheme, currentSmartTabIcon, currentSmartTabName, navBtnClass,
+                    currentSmartData, computedSummary, structuredSummary, computedItems, sortedAndFilteredComments,
+                    toggleDarkMode, isRead, toggleRead, getTagStyle, getTagIcon, sentimentTranslate, getAvatarIcon
+                }
+            }
+        }).mount('#app')
+    </script>
+</body>
+
+</html>

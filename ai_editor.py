@@ -233,10 +233,33 @@ def process_module(key, config):
         
         ai_json['date'] = datetime.now().strftime("%Y-%m-%d %H:%M")
         
-        # 5. 保存文件
+        ai_json['date'] = datetime.now().strftime("%Y-%m-%d %H:%M")
+        
+        # 5. 保存文件 (Latest & Archive)
+        # 5.1 Save Latest
         with open(config['out'], "w", encoding="utf-8") as f:
             json.dump(ai_json, f, ensure_ascii=False, indent=2)
-        print(f"✅ Generated: {config['out']}")
+        print(f"✅ Generated [Latest]: {config['out']}")
+        
+        # 5.2 Save Archive
+        now = datetime.now()
+        date_str = now.strftime("%Y-%m-%d")
+        time_str = now.strftime("%H-%M")
+        
+        archive_dir = os.path.join("archives", "smart", date_str, time_str)
+        os.makedirs(archive_dir, exist_ok=True)
+        
+        archive_path = os.path.join(archive_dir, config['out'])
+        with open(archive_path, "w", encoding="utf-8") as f:
+            json.dump(ai_json, f, ensure_ascii=False, indent=2)
+        print(f"📦 Generated [Archive]: {archive_path}")
+        
+        # 5.3 Update Index (Global)
+        # 注意: ai_editor 是循环调用的，我们需要一个锁或者只更新一次索引？
+        # 或者为了简单，每次都读写，虽然效率低但安全。
+        # 更好的方式是: process_module 只负责存文件，main 函数最后统一更新 index。
+        # 但这里为了改动最小，直接写函数更新吧，index 文件很小。
+        update_smart_index(date_str, time_str)
         
     except Exception as e:
         print(f"❌ Error {key}: {e}")
@@ -244,9 +267,35 @@ def process_module(key, config):
         if hasattr(e, 'response'):
              print(f"🔍 API Response Info: {e.response}")
 
+def update_smart_index(date_str, time_str):
+    history_dir = "history"
+    os.makedirs(history_dir, exist_ok=True)
+    index_file = os.path.join(history_dir, "smart_index.json")
+    
+    history_list = []
+    if os.path.exists(index_file):
+        try:
+            with open(index_file, "r", encoding="utf-8") as f:
+                history_list = json.load(f)
+        except: pass
+    
+    # 路径
+    archive_path_rel = f"archives/smart/{date_str}/{time_str}/"
+    display_time = f"{date_str} {time_str.replace('-', ':')}"
+    
+    entry = {"display": display_time, "path": archive_path_rel}
+    
+    # Check duplicate
+    if not any(e['path'] == entry['path'] for e in history_list):
+        history_list.insert(0, entry)
+        if len(history_list) > 365: history_list = history_list[:365] # 保留最近一年的(假设每天2次)
+        
+        with open(index_file, "w", encoding="utf-8") as f:
+            json.dump(history_list, f, ensure_ascii=False, indent=2)
+        print(f"📇 [Index] Updated for {display_time}")
+
 if __name__ == "__main__":
     for key, config in FILES_CONFIG.items():
         process_module(key, config)
         # 稍微增加延时，防止触发新 API 的速率限制
         time.sleep(8)
-

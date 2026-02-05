@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="h-full">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>AI 全网原始局势监控 | Insight Pro</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Serif+SC:wght@700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: { extend: { fontFamily: { sans: ['Inter', 'sans-serif'], serif: ['"Noto Serif SC"', 'serif'] } } }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #f8fafc;
+            color: #1e293b;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .dark body {
+            background-color: #0f172a;
+            color: #f1f5f9;
+        }
+
+        [v-cloak] {
+            display: none;
+        }
+
+        .thin-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        .thin-scrollbar::-webkit-scrollbar-thumb {
+            background-color: #cbd5e1;
+            border-radius: 9999px;
+        }
+
+        .dark .thin-scrollbar::-webkit-scrollbar-thumb {
+            background-color: #334155;
+        }
+
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+</head>
+
+<body class="h-full flex overflow-hidden selection:bg-blue-500 selection:text-white">
+
+    <div id="app" v-cloak class="flex w-full h-full relative transition-colors duration-300">
+        <!-- Sidebar logic (Shared) -->
+        <div v-if="isMobileMenuOpen" @click="isMobileMenuOpen = false"
+            class="fixed inset-0 bg-black/50 z-30 md:hidden backdrop-blur-sm transition-opacity"></div>
+        <aside
+            :class="['fixed md:static inset-y-0 left-0 z-40 w-64 transform transition-transform duration-300 ease-in-out flex flex-col border-r shadow-2xl md:shadow-none', currentTheme.sidebarBg, currentTheme.sidebarBorder, isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0']">
+            <div class="p-6 flex items-center justify-between gap-3">
+                <div class="flex items-center gap-3">
+                    <div
+                        :class="['w-10 h-10 rounded-xl flex items-center justify-center text-xl shadow-lg', currentTheme.logoBg, currentTheme.logoText]">
+                        <i class="fa-solid fa-brain"></i></div>
+                    <div>
+                        <h1 :class="['font-bold text-lg', currentTheme.sidebarText]">Insight Pro</h1>
+                        <p class="text-[10px] opacity-60 uppercase tracking-wider">AI Powered Analytics</p>
+                    </div>
+                </div>
+                <button @click="isMobileMenuOpen = false" class="md:hidden text-slate-400"><i
+                        class="fa-solid fa-xmark text-xl"></i></button>
+            </div>
+            <nav class="flex-1 px-4 space-y-2 py-4">
+                <div class="text-xs font-bold uppercase tracking-wider opacity-50 mb-3 px-2"
+                    :class="currentTheme.sidebarText">核心视图</div>
+                <a href="smart.html" :class="navBtnClass('smart')"><i class="fa-solid fa-chart-pie w-5 opacity-70"></i>
+                    智能深度简报</a>
+                <a href="monitor.html" :class="navBtnClass('raw')"><i
+                        class="fa-solid fa-tower-broadcast w-5 opacity-70"></i> 原始数据监控</a>
+                <div class="my-4 border-t border-slate-200 dark:border-slate-800 opacity-50"></div>
+                <a href="about.html" :class="navBtnClass('contact')"><i
+                        class="fa-solid fa-circle-info w-5 opacity-70"></i> 说明/联系/加群</a>
+            </nav>
+            <div class="p-4 border-t" :class="currentTheme.sidebarBorder">
+                <button @click="toggleDarkMode"
+                    :class="['w-full flex items-center justify-center gap-2 py-2 rounded-lg transition-colors', currentTheme.sidebarHover, currentTheme.sidebarText]">
+                    <i :class="['fa-solid', isDarkMode ? 'fa-sun' : 'fa-moon']"></i><span class="text-sm">{{ isDarkMode
+                        ? '切换日间模式' : '切换深色模式' }}</span>
+                </button>
+            </div>
+        </aside>
+
+        <main
+            :class="['flex-1 flex flex-col h-full overflow-hidden relative transition-colors duration-300 w-full', currentTheme.mainBg]">
+            <div
+                class="bg-gradient-to-r from-indigo-500 to-purple-600 text-white text-[10px] md:text-xs text-center py-1 font-bold z-20">
+                每天七点更新AI简报，每三十分钟更新一次原始数据监控
+            </div>
+
+            <header
+                :class="['h-16 shrink-0 border-b flex items-center justify-between px-4 md:px-8 backdrop-blur-md z-10 transition-colors duration-300', currentTheme.headerBg, currentTheme.headerBorder]">
+                <div class="flex items-center gap-4">
+                    <button @click="isMobileMenuOpen = true"
+                        class="md:hidden text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200"><i
+                            class="fa-solid fa-bars text-xl"></i></button>
+                    <h2 class="text-lg md:text-xl font-bold flex items-center gap-2 transition-colors duration-300 truncate"
+                        :class="currentTheme.headerText">
+                        <i class="fa-solid fa-tower-broadcast text-xl md:text-2xl text-blue-500"></i>
+                        <span class="truncate">全网原始数据监控台</span>
+                    </h2>
+                </div>
+
+                <div class="flex items-center gap-3">
+                    <div class="text-xs font-medium px-3 py-1.5 rounded-full bg-black/5 dark:bg-white/10"
+                        :class="currentTheme.headerText">
+                        <i class="fa-regular fa-clock mr-1"></i> {{ timeAgo }}
+                    </div>
+                    <div class="relative">
+                        <select v-model="selectedHistory" @change="loadHistoryData"
+                            class="appearance-none bg-black/5 dark:bg-white/10 border-none rounded-full px-4 py-1.5 text-xs font-medium cursor-pointer hover:bg-black/10 transition-colors pr-8 focus:ring-0"
+                            :class="currentTheme.headerText">
+                            <option value="latest">⚡ 最新 (Latest)</option>
+                            <option v-for="h in historyIndex" :key="h.path" :value="h.path">🕒 {{ h.display }}</option>
+                        </select>
+                        <i class="fa-solid fa-clock-rotate-left absolute right-3 top-1/2 -translate-y-1/2 text-xs opacity-50 pointer-events-none"
+                            :class="currentTheme.headerText"></i>
+                    </div>
+                </div>
+            </header>
+
+            <div
+                class="flex-1 flex flex-col md:flex-row overflow-hidden bg-slate-100 dark:bg-slate-900 transition-colors duration-300">
+                <!-- Source Filter Sidebar -->
+                <div
+                    class="w-full md:w-48 bg-white dark:bg-slate-800 border-b md:border-b-0 md:border-r border-slate-200 dark:border-slate-700 flex flex-col shrink-0 transition-colors duration-300">
+                    <div class="p-3 md:p-4">
+                        <h3 class="hidden md:block text-xs font-bold uppercase text-slate-400 mb-4 px-2">来源分类</h3>
+                        <div
+                            class="flex items-center gap-2 overflow-x-auto hide-scrollbar pb-1 md:pb-0 md:flex-col md:gap-1 md:items-stretch">
+                            <button @click="rawCategory = 'all'" :class="rawNavClass('all') + ' shrink-0'"><span><i
+                                        class="fa-solid fa-border-all mr-2 opacity-70"></i>全部</span><span
+                                    class="text-xs opacity-50 bg-black/5 dark:bg-white/5 px-1.5 rounded-full ml-2">{{
+                                    totalRawSources }}</span></button>
+                            <button @click="rawCategory = 'fav'" :class="rawNavClass('fav') + ' shrink-0'"><span><i
+                                        class="fa-solid fa-star mr-2 opacity-70 text-yellow-500"></i>收藏</span><span
+                                    class="text-xs opacity-50 bg-black/5 dark:bg-white/5 px-1.5 rounded-full ml-2">{{
+                                    favoriteIds.size }}</span></button>
+                            <div class="hidden md:block my-4 border-t border-slate-100 dark:border-slate-700"></div>
+                            <button v-for="(count, cat) in rawCategoryCounts" :key="cat" @click="rawCategory = cat"
+                                :class="rawNavClass(cat) + ' shrink-0'">
+                                <span><i :class="['fa-solid mr-2 opacity-70', getCategoryIcon(cat)]"></i><span
+                                        class="capitalize">{{cat}}</span></span><span class="text-xs opacity-50 ml-2">{{
+                                    count }}</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex-1 flex flex-col overflow-hidden">
+                    <div
+                        class="p-3 md:p-4 border-b border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 flex items-center justify-between transition-colors duration-300">
+                        <div class="relative w-full md:w-96"><i
+                                class="fa-solid fa-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i><input
+                                v-model="searchText" type="text" placeholder="搜索来源 (如: 微博, 36kr)..."
+                                class="w-full pl-10 pr-4 py-2 bg-slate-100 dark:bg-slate-900 border-transparent focus:border-blue-500 focus:bg-white dark:focus:bg-slate-950 rounded-lg text-sm transition-all outline-none dark:text-slate-200 placeholder-slate-400">
+                        </div>
+                        <div class="hidden md:block text-sm text-slate-500">显示 {{ filteredRawList.length }} 个来源</div>
+                    </div>
+
+                    <div
+                        class="flex-1 overflow-y-auto p-4 md:p-6 thin-scrollbar bg-slate-50 dark:bg-slate-900 transition-colors duration-300">
+                        <div v-if="loading" class="flex justify-center py-20"><i
+                                class="fa-solid fa-circle-notch fa-spin text-3xl opacity-50"></i></div>
+                        <div v-else
+                            class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 items-start">
+                            <div v-for="platform in filteredRawList" :key="platform.id"
+                                class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 flex flex-col overflow-hidden hover:shadow-md transition-shadow group">
+                                <div
+                                    class="p-3 border-b border-slate-100 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/50 flex justify-between items-center shrink-0">
+                                    <div
+                                        class="font-bold text-sm flex items-center gap-2 text-slate-700 dark:text-slate-200">
+                                        <span class="w-2.5 h-2.5 rounded-full"
+                                            :class="getCategoryColorClass(platform.category)"></span>
+                                        <span class="truncate max-w-[150px] md:max-w-[120px]" :title="platform.id">{{
+                                            getDisplayName(platform.id) }}</span>
+                                    </div>
+                                    <div class="flex items-center gap-3">
+                                        <span
+                                            class="text-[10px] font-medium bg-slate-200 dark:bg-slate-700 px-1.5 py-0.5 rounded text-slate-500 dark:text-slate-400">{{
+                                            platform.items.length }}</span>
+                                        <button @click.stop="toggleFavorite(platform.id)"
+                                            class="text-lg transition-transform active:scale-125 hover:scale-110">
+                                            <i
+                                                :class="['fa-star', isFavorite(platform.id) ? 'fa-solid text-yellow-400' : 'fa-regular text-slate-300 hover:text-yellow-400']"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="p-3 overflow-y-auto thin-scrollbar" style="max-height: 320px;">
+                                    <ul class="space-y-2.5">
+                                        <li v-for="(news, idx) in platform.items" :key="idx" class="group/item">
+                                            <a :href="news.url" target="_blank" @click.stop
+                                                class="flex gap-2 items-start leading-tight">
+                                                <span
+                                                    class="text-[10px] text-slate-400 font-mono pt-0.5 w-4 shrink-0">{{
+                                                    idx + 1 }}.</span>
+                                                <span
+                                                    class="text-xs text-slate-600 dark:text-slate-300 group-hover/item:text-blue-600 dark:group-hover/item:text-blue-400 group-hover/item:underline break-words">{{
+                                                    news.title }}</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const { createApp, reactive, computed, ref, onMounted } = Vue
+        createApp({
+            setup() {
+                const loading = ref(true);
+                const isDarkMode = ref(false);
+                const isMobileMenuOpen = ref(false);
+                const rawCategory = ref('all');
+                const searchText = ref('');
+
+                // History
+                const historyIndex = ref([]);
+                const selectedHistory = ref('latest');
+                const lastUpdateTime = ref(new Date());
+
+                const rawData = reactive({ finance: [], global: [], tech: [], general: [] });
+                const favoriteIds = reactive(new Set());
+
+                const platformMap = { 'douyin': '抖音', 'zhihu': '知乎', 'weibo': '微博', 'bilibili-hot-search': 'B站热搜', 'baidu': '百度热搜', 'toutiao': '今日头条', 'tieba': '百度贴吧', '36kr-quick': '36氪快讯', '36kr-renqi': '36氪人气', 'wallstreetcn-hot': '华尔街见闻', 'wallstreetcn-news': '华尔街资讯', 'wallstreetcn-quick': '华尔街快讯', 'cls-hot': '财联社热门', 'cls-depth': '财联社深度', 'xueqiu-hotstock': '雪球热股', 'gelonghui': '格隆汇', 'jin10': '金十数据', 'thepaper': '澎湃新闻', 'sspai': '少数派', 'ithome': 'IT之家', 'huxiu': '虎嗅', 'geekpark': '极客公园', 'zaobao': '联合早报', 'cankaoxiaoxi': '参考消息', 'fastbull-express': '法布财经', 'douban': '豆瓣', 'hupu': '虎扑', 'steam': 'Steam', 'v2ex-share': 'V2EX', 'solidot': 'Solidot', 'hackernews': 'HackerNews', 'github-trending-today': 'GitHub 榜', 'producthunt': 'ProductHunt' };
+
+                async function safeFetch(url) {
+                    try { const res = await fetch(url); return res.ok ? await res.json() : []; } catch (e) { return []; }
+                }
+
+                const loadHistoryData = async () => {
+                    loading.value = true;
+                    const basePath = selectedHistory.value === 'latest' ? './' : `./${selectedHistory.value}`;
+                    const t = new Date().getTime();
+
+                    const [f, g, tc, gen] = await Promise.all([
+                        safeFetch(`${basePath}data_finance.json?t=${t}`),
+                        safeFetch(`${basePath}data_global.json?t=${t}`),
+                        safeFetch(`${basePath}data_tech.json?t=${t}`),
+                        safeFetch(`${basePath}data_general.json?t=${t}`)
+                    ]);
+
+                    rawData.finance = f; rawData.global = g; rawData.tech = tc; rawData.general = gen;
+
+                    // Parse Time for "updated X mins ago"
+                    if (selectedHistory.value !== 'latest') {
+                        // Extract from path archives/raw/YYYY-MM-DD/HH-mm/
+                        const parts = selectedHistory.value.split('/');
+                        if (parts.length >= 4) {
+                            const dateStr = parts[2]; // YYYY-MM-DD
+                            const timeStr = parts[3]; // HH-mm
+                            lastUpdateTime.value = new Date(`${dateStr}T${timeStr.replace('-', ':')}:00`);
+                        }
+                    } else {
+                        lastUpdateTime.value = new Date(); // Approximate "now" if latest
+                    }
+                    loading.value = false;
+                };
+
+                const timeAgo = computed(() => {
+                    const now = new Date();
+                    const diffMs = now - lastUpdateTime.value;
+                    const diffMins = Math.floor(diffMs / 60000);
+                    if (diffMins < 1) return '刚刚更新';
+                    if (diffMins < 60) return `${diffMins} 分钟前更新`;
+                    const diffHours = Math.floor(diffMins / 60);
+                    if (diffHours < 24) return `${diffHours} 小时前更新`;
+                    return `${Math.floor(diffHours / 24)} 天前更新`;
+                });
+
+                onMounted(async () => {
+                    const dark = localStorage.getItem('darkMode'); if (dark === 'true') { isDarkMode.value = true; document.documentElement.classList.add('dark'); }
+                    const fav = localStorage.getItem('favorites'); if (fav) new Set(JSON.parse(fav)).forEach(id => favoriteIds.add(id));
+
+                    try {
+                        const indexRes = await fetch('./history/raw_index.json');
+                        if (indexRes.ok) historyIndex.value = await indexRes.json();
+                    } catch (e) { }
+
+                    await loadHistoryData();
+                });
+
+                const currentTheme = computed(() => {
+                    const dark = isDarkMode.value;
+                    return {
+                        sidebarBg: dark ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-200',
+                        sidebarText: dark ? 'text-slate-100' : 'text-slate-800',
+                        sidebarBorder: dark ? 'border-slate-800' : 'border-slate-200',
+                        sidebarHover: dark ? 'hover:bg-slate-800' : 'hover:bg-slate-100',
+                        headerBg: dark ? 'bg-slate-900/80' : 'bg-white/80',
+                        headerBorder: dark ? 'border-slate-800' : 'border-slate-200',
+                        headerText: dark ? 'text-slate-100' : 'text-slate-800',
+                        mainBg: dark ? 'bg-[#0f172a]' : 'bg-[#f8fafc]',
+                        logoBg: 'bg-slate-200 text-slate-600', logoText: ''
+                    };
+                });
+
+                const navBtnClass = (page) => `w-full text-left px-4 py-3 rounded-xl flex items-center gap-4 transition-all font-medium ${page === 'raw' ? (isDarkMode.value ? 'bg-slate-800 text-white shadow-inner' : 'bg-slate-100 text-slate-900 shadow-sm') : (isDarkMode.value ? 'text-slate-400 hover:bg-slate-800/50' : 'text-slate-500 hover:bg-slate-50')}`;
+                const rawNavClass = (cat) => `w-full text-left px-3 py-2 rounded-lg text-sm font-medium flex items-center justify-between transition-colors capitalize ${rawCategory.value === cat ? 'bg-slate-100 dark:bg-slate-700 text-slate-900 dark:text-slate-100' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700'}`;
+
+                const allPlatformList = computed(() => [
+                    ...rawData.finance.map(i => ({ ...i, category: 'finance' })),
+                    ...rawData.global.map(i => ({ ...i, category: 'global' })),
+                    ...rawData.tech.map(i => ({ ...i, category: 'tech' })),
+                    ...rawData.general.map(i => ({ ...i, category: 'general' }))
+                ]);
+
+                const filteredRawList = computed(() => {
+                    let allRaw = allPlatformList.value;
+                    if (rawCategory.value === 'fav') allRaw = allRaw.filter(item => favoriteIds.has(item.id));
+                    else if (rawCategory.value !== 'all') allRaw = allRaw.filter(item => item.category === rawCategory.value);
+                    if (searchText.value.trim()) {
+                        const key = searchText.value.toLowerCase();
+                        allRaw = allRaw.filter(item => (platformMap[item.id] || item.id).toLowerCase().includes(key) || item.id.toLowerCase().includes(key));
+                    }
+                    return allRaw;
+                });
+
+                const rawCategoryCounts = computed(() => ({ finance: rawData.finance.length, global: rawData.global.length, tech: rawData.tech.length, general: rawData.general.length }));
+                const totalRawSources = computed(() => Object.values(rawCategoryCounts.value).reduce((a, b) => a + b, 0));
+
+                const toggleDarkMode = () => { isDarkMode.value = !isDarkMode.value; document.documentElement.classList.toggle('dark', isDarkMode.value); localStorage.setItem('darkMode', isDarkMode.value); };
+                const isFavorite = (id) => favoriteIds.has(id);
+                const toggleFavorite = (id) => { favoriteIds.has(id) ? favoriteIds.delete(id) : favoriteIds.add(id); localStorage.setItem('favorites', JSON.stringify([...favoriteIds])); };
+                const getDisplayName = (id) => platformMap[id] || id;
+                const getCategoryIcon = (cat) => ({ finance: 'fa-coins', global: 'fa-globe', tech: 'fa-microchip', general: 'fa-fire' }[cat] || 'fa-circle');
+                const getCategoryColorClass = (cat) => ({ finance: 'bg-amber-500', global: 'bg-blue-500', tech: 'bg-cyan-500', general: 'bg-rose-500' }[cat] || 'bg-slate-500');
+
+                return {
+                    loading, isDarkMode, isMobileMenuOpen, rawCategory, searchText,
+                    selectedHistory, historyIndex, loadHistoryData, timeAgo,
+                    currentTheme, navBtnClass, rawNavClass, toggleDarkMode,
+                    filteredRawList, rawCategoryCounts, totalRawSources, favoriteIds, isFavorite, toggleFavorite,
+                    getCategoryIcon, getCategoryColorClass, getDisplayName
+                }
+            }
+        }).mount('#app')
+    </script>
+</body>
+
+</html>
