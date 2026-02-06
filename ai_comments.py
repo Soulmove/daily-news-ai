@@ -2,7 +2,7 @@ import json
 import os
 import time
 import random
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
 from google import genai
 from google.genai import types
 
@@ -139,7 +139,7 @@ def process_batch(client, model_name, personas_list, news_text, category_name):
         print(f"   ⚠️ 错误: {e}")
         return []
 
-def generate_comments(category_key, config):
+def generate_comments(category_key, config, batch_time):
     client = get_random_client()
     if not client: return
     print(f"🔄 处理板块：{config['name']}")
@@ -161,12 +161,35 @@ def generate_comments(category_key, config):
     final_comments = all_comments[:35] if len(all_comments) > 35 else all_comments
 
     if final_comments:
-        output_data = { "date": datetime.now().strftime("%Y-%m-%d %H:%M"), "category": category_key, "comments": final_comments }
+        # Use batch_time
+        output_data = { "date": batch_time.strftime("%Y-%m-%d %H:%M"), "category": category_key, "comments": final_comments }
+        
+        # 1. Save Latest
         with open(config['out'], "w", encoding="utf-8") as f: json.dump(output_data, f, ensure_ascii=False, indent=2)
+        print(f"✅ Generated [Latest]: {config['out']}")
+
+        # 2. Save Archive (Follows batch_time)
+        date_str = batch_time.strftime("%Y-%m-%d")
+        time_str = batch_time.strftime("%H-%M")
+        
+        # Note: archives/smart/... created by ai_editor should exist if run in sequence. 
+        # But to be safe, we create it.
+        archive_dir = os.path.join("archives", "smart", date_str, time_str)
+        os.makedirs(archive_dir, exist_ok=True)
+        
+        archive_path = os.path.join(archive_dir, config['out'])
+        with open(archive_path, "w", encoding="utf-8") as f:
+            json.dump(output_data, f, ensure_ascii=False, indent=2)
+        print(f"📦 Generated [Archive]: {archive_path}")
+
         print(f"✅ 完成！生成 {len(final_comments)} 条评论。\n")
 
 if __name__ == "__main__":
-    print(f"🤖 AI 模拟评论启动...")
+    # 🕒 生成统一的批处理时间 (中国时区)
+    CN_TZ = timezone(timedelta(hours=8))
+    BATCH_TIME = datetime.now(CN_TZ)
+    print(f"🤖 AI 模拟评论启动，批处理时间: {BATCH_TIME.strftime('%Y-%m-%d %H:%M:%S')}")
+
     for key, config in FILES_CONFIG.items():
-        generate_comments(key, config)
+        generate_comments(key, config, BATCH_TIME)
         time.sleep(2)
