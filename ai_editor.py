@@ -170,7 +170,7 @@ def get_prompt(module_type, data_text):
         {format_instruction}
         """
 
-def process_module(key, config):
+def process_module(key, config, batch_time):
     print(f"🔄 Processing: {key} (Model: {MODEL_NAME})")
     
     current_api_key = os.environ.get(config['key_env']) or os.environ.get("GOOGLE_API_KEY")
@@ -232,9 +232,9 @@ def process_module(key, config):
                     break
         
         
-        # 定义时区
-        CN_TZ = timezone(timedelta(hours=8))
-        ai_json['date'] = datetime.now(CN_TZ).strftime("%Y-%m-%d %H:%M")
+        
+        # 使用传入的批处理时间 (保持一致性)
+        ai_json['date'] = batch_time.strftime("%Y-%m-%d %H:%M")
         
         # 5. 保存文件 (Latest & Archive)
         # 5.1 Save Latest
@@ -243,9 +243,8 @@ def process_module(key, config):
         print(f"✅ Generated [Latest]: {config['out']}")
         
         # 5.2 Save Archive
-        now = datetime.now(CN_TZ)
-        date_str = now.strftime("%Y-%m-%d")
-        time_str = now.strftime("%H-%M")
+        date_str = batch_time.strftime("%Y-%m-%d")
+        time_str = batch_time.strftime("%H-%M")
         
         archive_dir = os.path.join("archives", "smart", date_str, time_str)
         os.makedirs(archive_dir, exist_ok=True)
@@ -256,10 +255,6 @@ def process_module(key, config):
         print(f"📦 Generated [Archive]: {archive_path}")
         
         # 5.3 Update Index (Global)
-        # 注意: ai_editor 是循环调用的，我们需要一个锁或者只更新一次索引？
-        # 或者为了简单，每次都读写，虽然效率低但安全。
-        # 更好的方式是: process_module 只负责存文件，main 函数最后统一更新 index。
-        # 但这里为了改动最小，直接写函数更新吧，index 文件很小。
         update_smart_index(date_str, time_str)
         
     except Exception as e:
@@ -296,7 +291,12 @@ def update_smart_index(date_str, time_str):
         print(f"📇 [Index] Updated for {display_time}")
 
 if __name__ == "__main__":
+    # 🕒 生成统一的批处理时间 (中国时区)
+    CN_TZ = timezone(timedelta(hours=8))
+    BATCH_TIME = datetime.now(CN_TZ)
+    print(f"🚀 AI 编辑部启动，批处理时间: {BATCH_TIME.strftime('%Y-%m-%d %H:%M:%S')}")
+
     for key, config in FILES_CONFIG.items():
-        process_module(key, config)
+        process_module(key, config, BATCH_TIME)
         # 稍微增加延时，防止触发新 API 的速率限制
         time.sleep(8)
