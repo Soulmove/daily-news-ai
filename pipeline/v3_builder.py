@@ -1191,15 +1191,34 @@ def build_v3_artifacts(
     # Sort calendar cleanly: upcoming ascending first, past recent at tail
     calendar_items.sort(key=lambda c: (1 if c.get("is_past") else 0, str(c.get("scheduled_at") or "9999-12-31")))
 
+    from .ai_radar_builder import build_ai_progress_artifact
+    from .bilingual import enrich_bilingual_topics
+    from .finance_impact_builder import build_finance_impact_artifact
+
+    enrich_bilingual_topics(major_topics)
+    ai_progress_doc = build_ai_progress_artifact(
+        batch_id=batch_id,
+        generated_at_iso=generated_at_iso,
+        cat_docs=cat_docs,
+        tech_tools=tech_tools,
+    )
+    finance_impact_doc = build_finance_impact_artifact(
+        batch_id=batch_id,
+        generated_at_iso=generated_at_iso,
+        cat_docs=cat_docs,
+    )
+
     atomic_write_json(
         root / "data/topics.json",
         {
-            "schema_version": "3.5",
+            "schema_version": "4.0",
             "generated_at": generated_at_iso,
             "batch_id": batch_id,
             "topics": major_topics,
         },
     )
+    atomic_write_json(root / "data/ai_progress.json", ai_progress_doc)
+    atomic_write_json(root / "data/finance_impact.json", finance_impact_doc)
 
     atomic_write_json(
         root / "data/entities_index.json",
@@ -1313,6 +1332,8 @@ def build_v3_artifacts(
         "entities_count": len(entities_map),
         "storylines_count": len(storylines),
         "topics_count": len(major_topics),
+        "ai_progress_count": len(ai_progress_doc.get("timeline") or []),
+        "finance_impact_count": len(finance_impact_doc.get("cards") or []),
         "calendar_count": len(calendar_items),
         "calendar_ics_path": "data/calendar.ics",
         "calendar_ics_count": cal_ics_exported,

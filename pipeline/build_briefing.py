@@ -1581,6 +1581,18 @@ def build_briefing_batch(
 
     _postprocess_and_prune_cross_category(cat_docs, cat_manifest, max_per_category=12)
 
+    from .bilingual import enrich_bilingual_events
+
+    for doc in cat_docs.values():
+        ev_list = doc.get("events") or []
+        enrich_bilingual_events(ev_list)
+        ev_by_id = {e.get("event_id"): e for e in ev_list if e.get("event_id")}
+        for kc in doc.get("key_changes") or []:
+            matched_ev = ev_by_id.get(kc.get("event_id"))
+            if matched_ev:
+                kc["headline"] = matched_ev.get("title") or kc.get("headline")
+                kc["detail"] = (matched_ev.get("fact_summary") or kc.get("detail") or "")[:200]
+
     published_iso = to_iso_shanghai(now_shanghai())
     batch_status = "complete" if failed_cats == 0 else "partial"
     has_any_comments = any(bool(c.get("comments")) for c in comment_docs.values())
@@ -1661,12 +1673,14 @@ def build_briefing_batch(
         "categories": cat_manifest,
     }
     manifest["v3"] = {
-        "schema_version": "3.0",
+        "schema_version": "4.0",
         "generated_at": published_iso,
         "batch_id": batch_id,
         "entities_path": "data/entities_index.json",
         "storylines_path": "data/storylines_index.json",
         "topics_path": "data/topics.json",
+        "ai_progress_path": "data/ai_progress.json",
+        "finance_impact_path": "data/finance_impact.json",
         "calendar_path": "data/calendar.json",
         "tech_tools_path": "data/tech_tools.json",
         "radar_path": "data/radar.json",

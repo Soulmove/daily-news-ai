@@ -1,35 +1,35 @@
 {
   "schema_version": "3.0",
-  "batch_id": "smart-20261119-155131",
+  "batch_id": "smart-20261119-185329",
   "input_batch_id": "raw-20261119-153755",
   "input_cutoff_at": "2026-11-19T15:37:55+08:00",
-  "generated_at": "2026-11-19T15:51:31+08:00",
-  "published_at": "2026-11-19T15:54:58+08:00",
+  "generated_at": "2026-11-19T18:53:29+08:00",
+  "published_at": "2026-11-19T18:56:45+08:00",
   "category": "general",
   "category_label": "社会/热点",
   "generation_mode": "v3_ground_update",
   "key_changes": [
     {
-      "event_id": "evt_0af44c7592d5",
-      "storyline_id": "st_75a66746bad8",
-      "headline": "视频丨美国总统特朗普抵达深圳",
-      "detail": "视频丨美国总统特朗普抵达深圳（来源：澎湃新闻）",
-      "evidence_status": "multi_source",
-      "attribution_warning": null,
-      "source_count": 3,
-      "primary_url": "https://www.thepaper.cn/newsDetail_forward_34503719",
-      "source_name": "澎湃新闻"
-    },
-    {
-      "event_id": "evt_539c302507f5",
-      "storyline_id": "st_c58a80fec737",
-      "headline": "习近平和彭丽媛为来宾举行欢迎宴会",
-      "detail": "11月18日晚，国家主席习近平和夫人彭丽媛在深圳国际交流中心举行宴会，欢迎出席亚太经合组织第三十三次领导人非正式会议的来宾。宴会开始前，习近平主席夫妇同各经济体领导人、代表及配偶集",
+      "event_id": "evt_b370db245678",
+      "storyline_id": "st_b29544014d26",
+      "headline": "普京笔不离手记重点 特朗普专注聆听",
+      "detail": "11月19日，APEC领导人非正式会议期间，普京笔不离手记重点，特朗普专注聆听。",
       "evidence_status": "single_source",
       "attribution_warning": null,
       "source_count": 1,
-      "primary_url": "https://view.inews.qq.com/a/20261118A0FMRP00",
-      "source_name": "腾讯新闻综合早报"
+      "primary_url": "https://www.baidu.com/s?wd=%E6%99%AE%E4%BA%AC%E7%AC%94%E4%B8%8D%E7%A6%BB%E6%89%8B%E8%AE%B0%E9%87%8D%E7%82%B9+%E7%89%B9%E6%9C%97%E6%99%AE%E4%B8%93%E6%B3%A8%E8%81%86%E5%90%AC",
+      "source_name": "百度热搜"
+    },
+    {
+      "event_id": "evt_174f46f87bfb",
+      "storyline_id": "st_ac10dea7513a",
+      "headline": "APEC时间 外媒记者点赞深圳",
+      "detail": "11月18日至19日，亚太经合组织（APEC）第三十三次领导人非正式会议在深圳举行。位于深圳会展中心（福田）2号馆的新闻中心聚集了大批外媒记者。谈及深圳，受访外媒记者不吝赞美，称其最真切的感受为“活力、友好、非凡”。",
+      "evidence_status": "single_source",
+      "attribution_warning": null,
+      "source_count": 1,
+      "primary_url": "https://www.baidu.com/s?wd=APEC%E6%97%B6%E9%97%B4+%E5%A4%96%E5%AA%92%E8%AE%B0%E8%80%85%E7%82%B9%E8%B5%9E%E6%B7%B1%E5%9C%B3",
+      "source_name": "百度热搜"
     }
   ],
   "overview_sections": [
@@ -119,12 +119,464 @@
   "events": [
     {
       "schema_version": "3.0",
+      "event_id": "evt_b370db245678",
+      "storyline_id": "st_b29544014d26",
+      "article_ids": [
+        "baidu_2bcc650dfe98"
+      ],
+      "legacy_event_ids": [],
+      "title": "普京笔不离手记重点 特朗普专注聆听",
+      "category": "general",
+      "entities": [
+        "地缘冲突、能源与大宗商品",
+        "中美外交与元首峰会"
+      ],
+      "entity_ids": [
+        "ent_geopolitics_energy",
+        "ent_us_china_diplomacy",
+        "ent_apec_g20_summits"
+      ],
+      "matched_entities": [
+        {
+          "entity_id": "ent_geopolitics_energy",
+          "canonical_name": "地缘冲突、能源与大宗商品",
+          "entity_type": "macro",
+          "sector": "能源安全与避险资产",
+          "matched_aliases": [
+            "普京"
+          ],
+          "tickers": [],
+          "reason": "正文/实体匹配关键词「普京」"
+        },
+        {
+          "entity_id": "ent_us_china_diplomacy",
+          "canonical_name": "中美外交与元首峰会",
+          "entity_type": "macro",
+          "sector": "国际关系与地缘宏观",
+          "matched_aliases": [
+            "特朗普",
+            "中美"
+          ],
+          "tickers": [],
+          "reason": "正文/实体匹配关键词「特朗普 / 中美」"
+        },
+        {
+          "entity_id": "ent_apec_g20_summits",
+          "canonical_name": "APEC / 重大国际峰会与经贸协定",
+          "entity_type": "macro",
+          "sector": "全球治理与多边经贸",
+          "matched_aliases": [
+            "apec",
+            "领导人非正式会议"
+          ],
+          "tickers": [],
+          "reason": "正文/实体匹配关键词「apec / 领导人非正式会议」"
+        }
+      ],
+      "importance": "high",
+      "sentiment": "Neutral",
+      "special_note": null,
+      "material_stage": null,
+      "material_stage_label": null,
+      "evidence_status": "single_source",
+      "evidence_label": "单一独立来源线索",
+      "evidence_status_reason": "目前仅见 1 家独立来源（共 1 条引用含转载，含摘要/首段），尚未见独立渠道交叉或官方确认",
+      "attribution_warning": null,
+      "contradictions": [],
+      "material_depth": "title_and_excerpt",
+      "source_count": 1,
+      "platform_count": 1,
+      "independent_publisher_count": 1,
+      "reprint_count": 0,
+      "published_at": null,
+      "first_discovered_at": "2026-11-19T15:37:55+08:00",
+      "first_reported_at": null,
+      "latest_fact_update_at": null,
+      "latest_reported_at": null,
+      "fetched_at": "2026-11-19T15:37:55+08:00",
+      "input_batch_id": "raw-20261119-153755",
+      "fact_summary": "11月19日，APEC领导人非正式会议期间，普京笔不离手记重点，特朗普专注聆听。",
+      "fact_atoms": [
+        {
+          "atom_id": "fa_62210080",
+          "subject": "地缘冲突、能源与大宗商品",
+          "metric_or_action": "普京笔不离手记重点 特朗普专注聆听",
+          "value": null,
+          "unit": null,
+          "period": "单次披露/未注明周期",
+          "scope": "新闻事件陈述",
+          "fact_status": "reported_unconfirmed_by_filing",
+          "attribution": "百度热搜",
+          "source_ref": "baidu_2bcc650dfe98",
+          "source_url": "https://www.baidu.com/s?wd=%E6%99%AE%E4%BA%AC%E7%AC%94%E4%B8%8D%E7%A6%BB%E6%89%8B%E8%AE%B0%E9%87%8D%E7%82%B9+%E7%89%B9%E6%9C%97%E6%99%AE%E4%B8%93%E6%B3%A8%E8%81%86%E5%90%AC",
+          "source_excerpt_or_locator": "11月19日，APEC领导人非正式会议期间，普京笔不离手记重点，特朗普专注聆听。",
+          "published_at": null,
+          "discovered_at": "2026-11-19T15:37:55+08:00",
+          "revision": 1
+        }
+      ],
+      "ai_analysis": "【本批新晋突发】由高评分最新信源聚类直采，待后续批次持续追踪进展。",
+      "unverified_claims": [],
+      "speculation_or_outlook": null,
+      "sources": [
+        {
+          "item_id": "baidu_2bcc650dfe98",
+          "article_id": "baidu_2bcc650dfe98",
+          "source_id": "baidu",
+          "source_name": "百度热搜",
+          "source_kind": "news",
+          "source_tier": "aggregator_lead",
+          "publisher_family": "baidu",
+          "is_reprint_copy": false,
+          "title": "普京笔不离手记重点 特朗普专注聆听",
+          "url": "https://www.baidu.com/s?wd=%E6%99%AE%E4%BA%AC%E7%AC%94%E4%B8%8D%E7%A6%BB%E6%89%8B%E8%AE%B0%E9%87%8D%E7%82%B9+%E7%89%B9%E6%9C%97%E6%99%AE%E4%B8%93%E6%B3%A8%E8%81%86%E5%90%AC",
+          "published_at": null,
+          "published_at_source": null,
+          "fetched_at": "2026-11-19T15:37:55+08:00",
+          "excerpt": "11月19日，APEC领导人非正式会议期间，普京笔不离手记重点，特朗普专注聆听。",
+          "deep_fetch_status": null
+        }
+      ],
+      "verification": {
+        "all_refs_valid": true,
+        "has_primary_url": true,
+        "rejected_refs": [],
+        "has_first_party": false
+      },
+      "followup": null,
+      "is_new_in_batch": true,
+      "update_kind": "new_discovery",
+      "title_zh": "普京笔不离手记重点 特朗普专注聆听",
+      "summary_zh": "11月19日，APEC领导人非正式会议期间，普京笔不离手记重点，特朗普专注聆听。"
+    },
+    {
+      "schema_version": "3.0",
+      "event_id": "evt_174f46f87bfb",
+      "storyline_id": "st_ac10dea7513a",
+      "article_ids": [
+        "baidu_cf5ce93b9c78"
+      ],
+      "legacy_event_ids": [],
+      "title": "APEC时间 外媒记者点赞深圳",
+      "category": "general",
+      "entities": [
+        "APEC / 重大国际峰会与经贸协定"
+      ],
+      "entity_ids": [
+        "ent_apec_g20_summits"
+      ],
+      "matched_entities": [
+        {
+          "entity_id": "ent_apec_g20_summits",
+          "canonical_name": "APEC / 重大国际峰会与经贸协定",
+          "entity_type": "macro",
+          "sector": "全球治理与多边经贸",
+          "matched_aliases": [
+            "apec",
+            "亚太经合组织",
+            "领导人非正式会议"
+          ],
+          "tickers": [],
+          "reason": "正文/实体匹配关键词「apec / 亚太经合组织」"
+        }
+      ],
+      "importance": "high",
+      "sentiment": "Neutral",
+      "special_note": null,
+      "material_stage": null,
+      "material_stage_label": null,
+      "evidence_status": "single_source",
+      "evidence_label": "单一独立来源线索",
+      "evidence_status_reason": "目前仅见 1 家独立来源（共 1 条引用含转载，含摘要/首段），尚未见独立渠道交叉或官方确认",
+      "attribution_warning": null,
+      "contradictions": [],
+      "material_depth": "title_and_excerpt",
+      "source_count": 1,
+      "platform_count": 1,
+      "independent_publisher_count": 1,
+      "reprint_count": 0,
+      "published_at": null,
+      "first_discovered_at": "2026-11-19T15:37:55+08:00",
+      "first_reported_at": null,
+      "latest_fact_update_at": null,
+      "latest_reported_at": null,
+      "fetched_at": "2026-11-19T15:37:55+08:00",
+      "input_batch_id": "raw-20261119-153755",
+      "fact_summary": "11月18日至19日，亚太经合组织（APEC）第三十三次领导人非正式会议在深圳举行。位于深圳会展中心（福田）2号馆的新闻中心聚集了大批外媒记者。谈及深圳，受访外媒记者不吝赞美，称其最真切的感受为“活力、友好、非凡”。",
+      "fact_atoms": [
+        {
+          "atom_id": "fa_57647403",
+          "subject": "APEC / 重大国际峰会与经贸协定",
+          "metric_or_action": "APEC时间 外媒记者点赞深圳",
+          "value": null,
+          "unit": null,
+          "period": "单次披露/未注明周期",
+          "scope": "新闻事件陈述",
+          "fact_status": "reported_unconfirmed_by_filing",
+          "attribution": "百度热搜",
+          "source_ref": "baidu_cf5ce93b9c78",
+          "source_url": "https://www.baidu.com/s?wd=APEC%E6%97%B6%E9%97%B4+%E5%A4%96%E5%AA%92%E8%AE%B0%E8%80%85%E7%82%B9%E8%B5%9E%E6%B7%B1%E5%9C%B3",
+          "source_excerpt_or_locator": "11月18日至19日，亚太经合组织（APEC）第三十三次领导人非正式会议在深圳举行。位于深圳会展中心（福田）2号馆的新闻中心聚集了大批外媒记者。谈及深圳，受访外媒记者不吝赞美，称其最真切的感受为“活力、友好、非凡”。",
+          "published_at": null,
+          "discovered_at": "2026-11-19T15:37:55+08:00",
+          "revision": 1
+        }
+      ],
+      "ai_analysis": "【本批新晋突发】由高评分最新信源聚类直采，待后续批次持续追踪进展。",
+      "unverified_claims": [],
+      "speculation_or_outlook": null,
+      "sources": [
+        {
+          "item_id": "baidu_cf5ce93b9c78",
+          "article_id": "baidu_cf5ce93b9c78",
+          "source_id": "baidu",
+          "source_name": "百度热搜",
+          "source_kind": "news",
+          "source_tier": "aggregator_lead",
+          "publisher_family": "baidu",
+          "is_reprint_copy": false,
+          "title": "APEC时间 外媒记者点赞深圳",
+          "url": "https://www.baidu.com/s?wd=APEC%E6%97%B6%E9%97%B4+%E5%A4%96%E5%AA%92%E8%AE%B0%E8%80%85%E7%82%B9%E8%B5%9E%E6%B7%B1%E5%9C%B3",
+          "published_at": null,
+          "published_at_source": null,
+          "fetched_at": "2026-11-19T15:37:55+08:00",
+          "excerpt": "11月18日至19日，亚太经合组织（APEC）第三十三次领导人非正式会议在深圳举行。位于深圳会展中心（福田）2号馆的新闻中心聚集了大批外媒记者。谈及深圳，受访外媒记者不吝赞美，称其最真切的感受为“活力、友好、非凡”。",
+          "deep_fetch_status": null
+        }
+      ],
+      "verification": {
+        "all_refs_valid": true,
+        "has_primary_url": true,
+        "rejected_refs": [],
+        "has_first_party": false
+      },
+      "followup": null,
+      "is_new_in_batch": true,
+      "update_kind": "new_discovery",
+      "title_zh": "APEC时间 外媒记者点赞深圳",
+      "summary_zh": "11月18日至19日，亚太经合组织（APEC）第三十三次领导人非正式会议在深圳举行。位于深圳会展中心（福田）2号馆的新闻中心聚集了大批外媒记者。谈及深圳，受访外媒记者不吝赞美，称其最真切的感受为“活力、友好、非凡”。"
+    },
+    {
+      "schema_version": "3.0",
+      "event_id": "evt_3a513f85de6a",
+      "storyline_id": "st_407afd9dd3a4",
+      "article_ids": [
+        "baidu_a99732b88c75"
+      ],
+      "legacy_event_ids": [],
+      "title": "从一枚车厘子读懂亚太合作的甜头",
+      "category": "general",
+      "entities": [
+        "APEC / 重大国际峰会与经贸协定"
+      ],
+      "entity_ids": [
+        "ent_apec_g20_summits"
+      ],
+      "matched_entities": [
+        {
+          "entity_id": "ent_apec_g20_summits",
+          "canonical_name": "APEC / 重大国际峰会与经贸协定",
+          "entity_type": "macro",
+          "sector": "全球治理与多边经贸",
+          "matched_aliases": [
+            "亚太经合组织",
+            "apec",
+            "领导人非正式会议"
+          ],
+          "tickers": [],
+          "reason": "正文/实体匹配关键词「亚太经合组织 / apec」"
+        }
+      ],
+      "importance": "high",
+      "sentiment": "Neutral",
+      "special_note": null,
+      "material_stage": null,
+      "material_stage_label": null,
+      "evidence_status": "single_source",
+      "evidence_label": "单一独立来源线索",
+      "evidence_status_reason": "目前仅见 1 家独立来源（共 1 条引用含转载，含摘要/首段），尚未见独立渠道交叉或官方确认",
+      "attribution_warning": null,
+      "contradictions": [],
+      "material_depth": "title_and_excerpt",
+      "source_count": 1,
+      "platform_count": 1,
+      "independent_publisher_count": 1,
+      "reprint_count": 0,
+      "published_at": null,
+      "first_discovered_at": "2026-11-19T15:37:55+08:00",
+      "first_reported_at": null,
+      "latest_fact_update_at": null,
+      "latest_reported_at": null,
+      "fetched_at": "2026-11-19T15:37:55+08:00",
+      "input_batch_id": "raw-20261119-153755",
+      "fact_summary": "亚太经合组织（APEC）领导人非正式会议在深圳举行之际，智利政府18日在此举办车厘子展销会，正式开启今年在华销售季。这枚来自南半球的“小红果”，恰是诠释亚太合作的鲜活答案——十几年间，它从中国人的“轻奢礼品”，变成了冬天茶几上的“日常零食”。",
+      "fact_atoms": [
+        {
+          "atom_id": "fa_90726028",
+          "subject": "APEC / 重大国际峰会与经贸协定",
+          "metric_or_action": "从一枚车厘子读懂亚太合作的甜头",
+          "value": null,
+          "unit": null,
+          "period": "季度口径",
+          "scope": "新闻事件陈述",
+          "fact_status": "reported_unconfirmed_by_filing",
+          "attribution": "百度热搜",
+          "source_ref": "baidu_a99732b88c75",
+          "source_url": "https://www.baidu.com/s?wd=%E4%BB%8E%E4%B8%80%E6%9E%9A%E8%BD%A6%E5%8E%98%E5%AD%90%E8%AF%BB%E6%87%82%E4%BA%9A%E5%A4%AA%E5%90%88%E4%BD%9C%E7%9A%84%E7%94%9C%E5%A4%B4",
+          "source_excerpt_or_locator": "亚太经合组织（APEC）领导人非正式会议在深圳举行之际，智利政府18日在此举办车厘子展销会，正式开启今年在华销售季。这枚来自南半球的“小红果”，恰是诠释亚太合作的鲜活答案——十几年间，它从中国人的“轻奢礼品”，变成了冬天茶几上的“日常零食”。",
+          "published_at": null,
+          "discovered_at": "2026-11-19T15:37:55+08:00",
+          "revision": 1
+        }
+      ],
+      "ai_analysis": "【本批新晋突发】由高评分最新信源聚类直采，待后续批次持续追踪进展。",
+      "unverified_claims": [],
+      "speculation_or_outlook": null,
+      "sources": [
+        {
+          "item_id": "baidu_a99732b88c75",
+          "article_id": "baidu_a99732b88c75",
+          "source_id": "baidu",
+          "source_name": "百度热搜",
+          "source_kind": "news",
+          "source_tier": "aggregator_lead",
+          "publisher_family": "baidu",
+          "is_reprint_copy": false,
+          "title": "从一枚车厘子读懂亚太合作的甜头",
+          "url": "https://www.baidu.com/s?wd=%E4%BB%8E%E4%B8%80%E6%9E%9A%E8%BD%A6%E5%8E%98%E5%AD%90%E8%AF%BB%E6%87%82%E4%BA%9A%E5%A4%AA%E5%90%88%E4%BD%9C%E7%9A%84%E7%94%9C%E5%A4%B4",
+          "published_at": null,
+          "published_at_source": null,
+          "fetched_at": "2026-11-19T15:37:55+08:00",
+          "excerpt": "亚太经合组织（APEC）领导人非正式会议在深圳举行之际，智利政府18日在此举办车厘子展销会，正式开启今年在华销售季。这枚来自南半球的“小红果”，恰是诠释亚太合作的鲜活答案——十几年间，它从中国人的“轻奢礼品”，变成了冬天茶几上的“日常零食”。",
+          "deep_fetch_status": null
+        }
+      ],
+      "verification": {
+        "all_refs_valid": true,
+        "has_primary_url": true,
+        "rejected_refs": [],
+        "has_first_party": false
+      },
+      "followup": null,
+      "is_new_in_batch": true,
+      "update_kind": "new_discovery",
+      "title_zh": "从一枚车厘子读懂亚太合作的甜头",
+      "summary_zh": "亚太经合组织（APEC）领导人非正式会议在深圳举行之际，智利政府18日在此举办车厘子展销会，正式开启今年在华销售季。这枚来自南半球的“小红果”，恰是诠释亚太合作的鲜活答案——十几年间，它从中国人的“轻奢礼品”，变成了冬天茶几上的“日常零食”。"
+    },
+    {
+      "schema_version": "3.0",
+      "event_id": "evt_44036f80aba4",
+      "storyline_id": "st_00fb76f7ec56",
+      "article_ids": [
+        "baidu_ebd331e171bf"
+      ],
+      "legacy_event_ids": [],
+      "title": "李家超笑称“我是东道主啊”",
+      "category": "general",
+      "entities": [
+        "APEC / 重大国际峰会与经贸协定"
+      ],
+      "entity_ids": [
+        "ent_apec_g20_summits"
+      ],
+      "matched_entities": [
+        {
+          "entity_id": "ent_apec_g20_summits",
+          "canonical_name": "APEC / 重大国际峰会与经贸协定",
+          "entity_type": "macro",
+          "sector": "全球治理与多边经贸",
+          "matched_aliases": [
+            "apec"
+          ],
+          "tickers": [],
+          "reason": "正文/实体匹配关键词「apec」"
+        }
+      ],
+      "importance": "high",
+      "sentiment": "Neutral",
+      "special_note": null,
+      "material_stage": null,
+      "material_stage_label": null,
+      "evidence_status": "single_source",
+      "evidence_label": "单一独立来源线索",
+      "evidence_status_reason": "目前仅见 1 家独立来源（共 1 条引用含转载，含摘要/首段），尚未见独立渠道交叉或官方确认",
+      "attribution_warning": null,
+      "contradictions": [],
+      "material_depth": "title_and_excerpt",
+      "source_count": 1,
+      "platform_count": 1,
+      "independent_publisher_count": 1,
+      "reprint_count": 0,
+      "published_at": null,
+      "first_discovered_at": "2026-11-19T15:37:55+08:00",
+      "first_reported_at": null,
+      "latest_fact_update_at": null,
+      "latest_reported_at": null,
+      "fetched_at": "2026-11-19T15:37:55+08:00",
+      "input_batch_id": "raw-20261119-153755",
+      "fact_summary": "11月18日，李家超受访表示，此次参与APEC会议具有双重角色，他既是成员经济体代表，同时也是国家官员，并笑称希望发挥东道主的角色。",
+      "fact_atoms": [
+        {
+          "atom_id": "fa_7165865",
+          "subject": "APEC / 重大国际峰会与经贸协定",
+          "metric_or_action": "李家超笑称“我是东道主啊”",
+          "value": null,
+          "unit": null,
+          "period": "单次披露/未注明周期",
+          "scope": "新闻事件陈述",
+          "fact_status": "reported_unconfirmed_by_filing",
+          "attribution": "百度热搜",
+          "source_ref": "baidu_ebd331e171bf",
+          "source_url": "https://www.baidu.com/s?wd=%E6%9D%8E%E5%AE%B6%E8%B6%85%E7%AC%91%E7%A7%B0%E2%80%9C%E6%88%91%E6%98%AF%E4%B8%9C%E9%81%93%E4%B8%BB%E5%95%8A%E2%80%9D",
+          "source_excerpt_or_locator": "11月18日，李家超受访表示，此次参与APEC会议具有双重角色，他既是成员经济体代表，同时也是国家官员，并笑称希望发挥东道主的角色。",
+          "published_at": null,
+          "discovered_at": "2026-11-19T15:37:55+08:00",
+          "revision": 1
+        }
+      ],
+      "ai_analysis": "【本批新晋突发】由高评分最新信源聚类直采，待后续批次持续追踪进展。",
+      "unverified_claims": [],
+      "speculation_or_outlook": null,
+      "sources": [
+        {
+          "item_id": "baidu_ebd331e171bf",
+          "article_id": "baidu_ebd331e171bf",
+          "source_id": "baidu",
+          "source_name": "百度热搜",
+          "source_kind": "news",
+          "source_tier": "aggregator_lead",
+          "publisher_family": "baidu",
+          "is_reprint_copy": false,
+          "title": "李家超笑称“我是东道主啊”",
+          "url": "https://www.baidu.com/s?wd=%E6%9D%8E%E5%AE%B6%E8%B6%85%E7%AC%91%E7%A7%B0%E2%80%9C%E6%88%91%E6%98%AF%E4%B8%9C%E9%81%93%E4%B8%BB%E5%95%8A%E2%80%9D",
+          "published_at": null,
+          "published_at_source": null,
+          "fetched_at": "2026-11-19T15:37:55+08:00",
+          "excerpt": "11月18日，李家超受访表示，此次参与APEC会议具有双重角色，他既是成员经济体代表，同时也是国家官员，并笑称希望发挥东道主的角色。",
+          "deep_fetch_status": null
+        }
+      ],
+      "verification": {
+        "all_refs_valid": true,
+        "has_primary_url": true,
+        "rejected_refs": [],
+        "has_first_party": false
+      },
+      "followup": null,
+      "is_new_in_batch": true,
+      "update_kind": "new_discovery",
+      "title_zh": "李家超笑称“我是东道主啊”",
+      "summary_zh": "11月18日，李家超受访表示，此次参与APEC会议具有双重角色，他既是成员经济体代表，同时也是国家官员，并笑称希望发挥东道主的角色。"
+    },
+    {
+      "schema_version": "3.0",
       "event_id": "evt_0af44c7592d5",
       "storyline_id": "st_75a66746bad8",
       "article_ids": [
         "thepaper_9543f7cfd2e3",
         "baidu_6af2a83bcc80",
-        "bilibili-hot-search_c6b4ffc98ae4"
+        "bilibili-hot-search_c6b4ffc98ae4",
+        "thepaper_acdb0490d283"
       ],
       "legacy_event_ids": [],
       "title": "视频丨美国总统特朗普抵达深圳",
@@ -160,7 +612,7 @@
       "attribution_warning": null,
       "contradictions": [],
       "material_depth": "title_only",
-      "source_count": 3,
+      "source_count": 4,
       "platform_count": 3,
       "independent_publisher_count": 2,
       "reprint_count": 1,
@@ -174,7 +626,7 @@
       "fact_summary": "视频丨美国总统特朗普抵达深圳（来源：澎湃新闻）",
       "fact_atoms": [
         {
-          "atom_id": "fa_67627719",
+          "atom_id": "fa_85112501",
           "subject": "中美外交与元首峰会",
           "metric_or_action": "视频丨美国总统特朗普抵达深圳",
           "value": null,
@@ -245,6 +697,23 @@
           "fetched_at": "2026-11-19T15:37:55+08:00",
           "excerpt": null,
           "deep_fetch_status": null
+        },
+        {
+          "item_id": "thepaper_acdb0490d283",
+          "article_id": "thepaper_acdb0490d283",
+          "source_id": "thepaper",
+          "source_name": "澎湃新闻",
+          "source_kind": "news",
+          "source_tier": "aggregator_lead",
+          "publisher_family": "thepaper",
+          "is_reprint_copy": false,
+          "title": "详讯丨习近平迎接美国总统特朗普",
+          "url": "https://www.thepaper.cn/newsDetail_forward_34504062",
+          "published_at": null,
+          "published_at_source": null,
+          "fetched_at": "2026-11-19T15:37:55+08:00",
+          "excerpt": null,
+          "deep_fetch_status": null
         }
       ],
       "verification": {
@@ -253,16 +722,25 @@
         "rejected_refs": [],
         "has_first_party": false
       },
-      "followup": null,
-      "is_new_in_batch": true,
-      "update_kind": "new_discovery"
+      "followup": {
+        "is_continuing": true,
+        "prev_batch_id": "smart-20261119-155131",
+        "prev_event_id": "evt_0af44c7592d5",
+        "prev_title": "视频丨美国总统特朗普抵达深圳",
+        "delta_note": "新增 1 条跟进/转载出处（核心事实待对比差异）"
+      },
+      "is_new_in_batch": false,
+      "update_kind": "continuing_coverage",
+      "title_zh": "视频丨美国总统特朗普抵达深圳",
+      "summary_zh": "视频丨美国总统特朗普抵达深圳（来源：澎湃新闻）"
     },
     {
       "schema_version": "3.0",
       "event_id": "evt_539c302507f5",
       "storyline_id": "st_c58a80fec737",
       "article_ids": [
-        "tencent-hot_d359ea1ff236"
+        "tencent-hot_d359ea1ff236",
+        "thepaper_c0aa64bf13af"
       ],
       "legacy_event_ids": [],
       "title": "习近平和彭丽媛为来宾举行欢迎宴会",
@@ -305,15 +783,15 @@
       "special_note": null,
       "material_stage": null,
       "material_stage_label": null,
-      "evidence_status": "single_source",
-      "evidence_label": "单一独立来源线索",
-      "evidence_status_reason": "目前仅见 1 家独立来源（共 1 条引用含转载，含摘要/首段），尚未见独立渠道交叉或官方确认",
+      "evidence_status": "multi_source",
+      "evidence_label": "多独立来源提及（待核官方全文）",
+      "evidence_status_reason": "已有 2 家独立媒体族提及（含摘要或正文首段）；多源转载不代表官方公告已证实",
       "attribution_warning": null,
       "contradictions": [],
       "material_depth": "title_and_excerpt",
-      "source_count": 1,
-      "platform_count": 1,
-      "independent_publisher_count": 1,
+      "source_count": 2,
+      "platform_count": 2,
+      "independent_publisher_count": 2,
       "reprint_count": 0,
       "published_at": null,
       "first_discovered_at": "2026-11-19T15:37:55+08:00",
@@ -325,14 +803,14 @@
       "fact_summary": "11月18日晚，国家主席习近平和夫人彭丽媛在深圳国际交流中心举行宴会，欢迎出席亚太经合组织第三十三次领导人非正式会议的来宾。宴会开始前，习近平主席夫妇同各经济体领导人、代表及配偶集体合影。",
       "fact_atoms": [
         {
-          "atom_id": "fa_60168539",
+          "atom_id": "fa_69288000",
           "subject": "中美外交与元首峰会",
           "metric_or_action": "习近平和彭丽媛为来宾举行欢迎宴会",
           "value": null,
           "unit": null,
           "period": "单次披露/未注明周期",
           "scope": "新闻事件陈述",
-          "fact_status": "reported_unconfirmed_by_filing",
+          "fact_status": "multi_source_reported",
           "attribution": "腾讯新闻综合早报",
           "source_ref": "tencent-hot_d359ea1ff236",
           "source_url": "https://view.inews.qq.com/a/20261118A0FMRP00",
@@ -362,6 +840,23 @@
           "fetched_at": "2026-11-19T15:37:55+08:00",
           "excerpt": "11月18日晚，国家主席习近平和夫人彭丽媛在深圳国际交流中心举行宴会，欢迎出席亚太经合组织第三十三次领导人非正式会议的来宾。宴会开始前，习近平主席夫妇同各经济体领导人、代表及配偶集体合影。",
           "deep_fetch_status": null
+        },
+        {
+          "item_id": "thepaper_c0aa64bf13af",
+          "article_id": "thepaper_c0aa64bf13af",
+          "source_id": "thepaper",
+          "source_name": "澎湃新闻",
+          "source_kind": "news",
+          "source_tier": "aggregator_lead",
+          "publisher_family": "thepaper",
+          "is_reprint_copy": false,
+          "title": "详讯丨习近平和彭丽媛为出席亚太经合组织第三十三次领导人非正式会议的来宾举行欢迎宴会",
+          "url": "https://www.thepaper.cn/newsDetail_forward_34505125",
+          "published_at": null,
+          "published_at_source": null,
+          "fetched_at": "2026-11-19T15:37:55+08:00",
+          "excerpt": null,
+          "deep_fetch_status": null
         }
       ],
       "verification": {
@@ -370,9 +865,17 @@
         "rejected_refs": [],
         "has_first_party": false
       },
-      "followup": null,
-      "is_new_in_batch": true,
-      "update_kind": "new_discovery"
+      "followup": {
+        "is_continuing": true,
+        "prev_batch_id": "smart-20261119-155131",
+        "prev_event_id": "evt_539c302507f5",
+        "prev_title": "习近平和彭丽媛为来宾举行欢迎宴会",
+        "delta_note": "较上期新增 1 家独立来源报道"
+      },
+      "is_new_in_batch": false,
+      "update_kind": "continuing_coverage",
+      "title_zh": "习近平和彭丽媛为来宾举行欢迎宴会",
+      "summary_zh": "11月18日晚，国家主席习近平和夫人彭丽媛在深圳国际交流中心举行宴会，欢迎出席亚太经合组织第三十三次领导人非正式会议的来宾。宴会开始前，习近平主席夫妇同各经济体领导人、代表及配偶集体合影。"
     },
     {
       "schema_version": "3.0",
@@ -457,7 +960,7 @@
       "fact_summary": "俄新社11月18日报道，俄罗斯总统助理乌沙科夫表示，俄罗斯总统普京与美国总统特朗普将在亚太经合组织（APEC）峰会期间举行多次会晤，无论采取何种形式，双方都将进行充分交流。此外，佩斯科夫表示，普京和特朗普可能会谈及乌克兰问题和伊朗问题。",
       "fact_atoms": [
         {
-          "atom_id": "fa_45194568",
+          "atom_id": "fa_37642222",
           "subject": "地缘冲突、能源与大宗商品",
           "metric_or_action": "普京与特朗普将在APEC峰会期间多次会面",
           "value": null,
@@ -502,9 +1005,17 @@
         "rejected_refs": [],
         "has_first_party": false
       },
-      "followup": null,
-      "is_new_in_batch": true,
-      "update_kind": "new_discovery"
+      "followup": {
+        "is_continuing": true,
+        "prev_batch_id": "smart-20261119-155131",
+        "prev_event_id": "evt_54d6f05be63a",
+        "prev_title": "普京与特朗普将在APEC峰会期间多次会面",
+        "delta_note": "在上期简报中已出现，本批持续关注（暂无新增独立变化）"
+      },
+      "is_new_in_batch": false,
+      "update_kind": "continuing_coverage",
+      "title_zh": "普京与特朗普将在APEC峰会期间多次会面",
+      "summary_zh": "俄新社11月18日报道，俄罗斯总统助理乌沙科夫表示，俄罗斯总统普京与美国总统特朗普将在亚太经合组织（APEC）峰会期间举行多次会晤，无论采取何种形式，双方都将进行充分交流。此外，佩斯科夫表示，普京和特朗普可能会谈及乌克兰问题和伊朗问题。"
     },
     {
       "schema_version": "3.0",
@@ -588,7 +1099,7 @@
       "fact_summary": "11月19日上午，亚太经合组织第三十三次领导人非正式会议在深圳举行。美国总统特朗普在会议上发表讲话。特朗普说，我期待同习近平主席和普京总统举行一次具有历史意义的三方会晤，为三方创造更多机遇。我们对此充满期待，非常期待。",
       "fact_atoms": [
         {
-          "atom_id": "fa_13843930",
+          "atom_id": "fa_54589939",
           "subject": "中美外交与元首峰会",
           "metric_or_action": "特朗普：期待同习主席、普京总统会晤",
           "value": null,
@@ -633,9 +1144,17 @@
         "rejected_refs": [],
         "has_first_party": false
       },
-      "followup": null,
-      "is_new_in_batch": true,
-      "update_kind": "new_discovery"
+      "followup": {
+        "is_continuing": true,
+        "prev_batch_id": "smart-20261119-155131",
+        "prev_event_id": "evt_fdf5da062b01",
+        "prev_title": "特朗普：期待同习主席、普京总统会晤",
+        "delta_note": "在上期简报中已出现，本批持续关注（暂无新增独立变化）"
+      },
+      "is_new_in_batch": false,
+      "update_kind": "continuing_coverage",
+      "title_zh": "特朗普：期待同习主席、普京总统会晤",
+      "summary_zh": "11月19日上午，亚太经合组织第三十三次领导人非正式会议在深圳举行。美国总统特朗普在会议上发表讲话。特朗普说，我期待同习近平主席和普京总统举行一次具有历史意义的三方会晤，为三方创造更多机遇。我们对此充满期待，非常期待。"
     },
     {
       "schema_version": "3.0",
@@ -726,7 +1245,7 @@
       "fact_summary": "11月19日，国家主席习近平在深圳会见来华出席亚太经合组织领导人非正式会议的美国总统特朗普。从北京到华盛顿，再到深圳，两国元首密集互动吸引世界目光。本次参加会见的美方代表有哪些？跟随“大国外交最前线”一起到现场看一看。",
       "fact_atoms": [
         {
-          "atom_id": "fa_21723161",
+          "atom_id": "fa_5642803",
           "subject": "中美外交与元首峰会",
           "metric_or_action": "中美元首深圳会晤，参加会见的美方代表有哪些？",
           "value": null,
@@ -858,13 +1377,15 @@
       },
       "followup": {
         "is_continuing": true,
-        "prev_batch_id": "smart-20261119-154421",
+        "prev_batch_id": "smart-20261119-155131",
         "prev_event_id": "evt_cc7121535050",
         "prev_title": "中美元首深圳会晤，参加会见的美方代表有哪些？",
-        "delta_note": "较上期新增 2 家独立来源报道"
+        "delta_note": "在上期简报中已出现，本批持续关注（暂无新增独立变化）"
       },
       "is_new_in_batch": false,
-      "update_kind": "continuing_coverage"
+      "update_kind": "continuing_coverage",
+      "title_zh": "中美元首深圳会晤，参加会见的美方代表有哪些？",
+      "summary_zh": "11月19日，国家主席习近平在深圳会见来华出席亚太经合组织领导人非正式会议的美国总统特朗普。从北京到华盛顿，再到深圳，两国元首密集互动吸引世界目光。本次参加会见的美方代表有哪些？跟随“大国外交最前线”一起到现场看一看。"
     },
     {
       "schema_version": "3.0",
@@ -925,7 +1446,7 @@
       "fact_summary": "11月19日上午，亚太经合组织第三十三次领导人非正式会议开始前，与会嘉宾在领导人休息室佩戴集体合影围巾。ToSun记者团在休息室独家记录到领导人之间互相整理围巾的温馨瞬间。",
       "fact_atoms": [
         {
-          "atom_id": "fa_22590022",
+          "atom_id": "fa_32828545",
           "subject": "APEC / 重大国际峰会与经贸协定",
           "metric_or_action": "休息室内，APEC领导人们互相整理围巾",
           "value": null,
@@ -1023,13 +1544,15 @@
       },
       "followup": {
         "is_continuing": true,
-        "prev_batch_id": "smart-20261119-154421",
+        "prev_batch_id": "smart-20261119-155131",
         "prev_event_id": "evt_207bb7044f04",
         "prev_title": "休息室内，APEC领导人们互相整理围巾",
         "delta_note": "在上期简报中已出现，本批持续关注（暂无新增独立变化）"
       },
       "is_new_in_batch": false,
-      "update_kind": "continuing_coverage"
+      "update_kind": "continuing_coverage",
+      "title_zh": "休息室内，APEC领导人们互相整理围巾",
+      "summary_zh": "11月19日上午，亚太经合组织第三十三次领导人非正式会议开始前，与会嘉宾在领导人休息室佩戴集体合影围巾。ToSun记者团在休息室独家记录到领导人之间互相整理围巾的温馨瞬间。"
     },
     {
       "schema_version": "3.0",
@@ -1114,7 +1637,7 @@
       "fact_summary": "11月19日，美国总统特朗普在深圳出席亚太经合组织第三十三次领导人非正式会议期间会见俄罗斯总统普京。特朗普看到普京后笑着打趣问道：“这是谁？”随即表示“这是我的朋友”，二人随后友好寒暄、握手致意。",
       "fact_atoms": [
         {
-          "atom_id": "fa_98636033",
+          "atom_id": "fa_71291226",
           "subject": "中美外交与元首峰会",
           "metric_or_action": "特朗普和普京会晤时开了个玩笑",
           "value": null,
@@ -1195,13 +1718,15 @@
       },
       "followup": {
         "is_continuing": true,
-        "prev_batch_id": "smart-20261119-154421",
+        "prev_batch_id": "smart-20261119-155131",
         "prev_event_id": "evt_7276ada3bf1c",
         "prev_title": "特朗普和普京会晤时开了个玩笑",
         "delta_note": "在上期简报中已出现，本批持续关注（暂无新增独立变化）"
       },
       "is_new_in_batch": false,
-      "update_kind": "continuing_coverage"
+      "update_kind": "continuing_coverage",
+      "title_zh": "特朗普和普京会晤时开了个玩笑",
+      "summary_zh": "11月19日，美国总统特朗普在深圳出席亚太经合组织第三十三次领导人非正式会议期间会见俄罗斯总统普京。特朗普看到普京后笑着打趣问道：“这是谁？”随即表示“这是我的朋友”，二人随后友好寒暄、握手致意。"
     },
     {
       "schema_version": "3.0",
@@ -1297,7 +1822,7 @@
       "fact_summary": "11月19日，APEC会议期间，中俄美三国元首在深圳举行会晤，中俄美国车历史首次同框。美国总统特朗普乘坐凯迪拉克，俄罗斯总统普京乘坐奥鲁斯，两者分别以冷硬折线和沉稳厚重彰显气场与威严。而红旗座驾自带内敛含蓄的东方气韵，展示了中国美美与共、利达天下的处世哲学。",
       "fact_atoms": [
         {
-          "atom_id": "fa_2054962",
+          "atom_id": "fa_51072345",
           "subject": "美联储 FOMC 与全球流动性",
           "metric_or_action": "中俄美元首座驾首次同框",
           "value": null,
@@ -1378,535 +1903,15 @@
       },
       "followup": {
         "is_continuing": true,
-        "prev_batch_id": "smart-20261119-154421",
+        "prev_batch_id": "smart-20261119-155131",
         "prev_event_id": "evt_a4ecadb14edc",
         "prev_title": "中俄美元首座驾首次同框",
         "delta_note": "在上期简报中已出现，本批持续关注（暂无新增独立变化）"
       },
       "is_new_in_batch": false,
-      "update_kind": "continuing_coverage"
-    },
-    {
-      "schema_version": "3.0",
-      "event_id": "evt_65af229ac47c",
-      "storyline_id": "st_ddc6815192d9",
-      "article_ids": [
-        "baidu_505e07e0f6e8",
-        "toutiao_af7f041148e0"
-      ],
-      "legacy_event_ids": [],
-      "title": "APEC围巾图案取自“中国年”会标",
-      "category": "general",
-      "entities": [
-        "APEC / 重大国际峰会与经贸协定"
-      ],
-      "entity_ids": [
-        "ent_apec_g20_summits"
-      ],
-      "matched_entities": [
-        {
-          "entity_id": "ent_apec_g20_summits",
-          "canonical_name": "APEC / 重大国际峰会与经贸协定",
-          "entity_type": "macro",
-          "sector": "全球治理与多边经贸",
-          "matched_aliases": [
-            "apec",
-            "领导人非正式会议"
-          ],
-          "tickers": [],
-          "reason": "正文/实体匹配关键词「apec / 领导人非正式会议」"
-        }
-      ],
-      "importance": "high",
-      "sentiment": "Neutral",
-      "special_note": null,
-      "material_stage": null,
-      "material_stage_label": null,
-      "evidence_status": "single_source",
-      "evidence_label": "单一独立来源线索",
-      "evidence_status_reason": "目前仅见 1 家独立来源（共 2 条引用含转载，含摘要/首段），尚未见独立渠道交叉或官方确认",
-      "attribution_warning": null,
-      "contradictions": [],
-      "material_depth": "title_and_excerpt",
-      "source_count": 2,
-      "platform_count": 2,
-      "independent_publisher_count": 1,
-      "reprint_count": 1,
-      "published_at": null,
-      "first_discovered_at": "2026-11-19T15:37:55+08:00",
-      "first_reported_at": null,
-      "latest_fact_update_at": null,
-      "latest_reported_at": null,
-      "fetched_at": "2026-11-19T15:37:55+08:00",
-      "input_batch_id": "raw-20261119-153755",
-      "fact_summary": "11月19日上午，APEC第三十三次领导人非正式会议前，与会经济体领导人佩戴特色围巾集体合影。围巾上的图案设计，取材自2026APEC“中国年”的会标。",
-      "fact_atoms": [
-        {
-          "atom_id": "fa_1596232",
-          "subject": "APEC / 重大国际峰会与经贸协定",
-          "metric_or_action": "APEC围巾图案取自“中国年”会标",
-          "value": null,
-          "unit": null,
-          "period": "单次披露/未注明周期",
-          "scope": "新闻事件陈述",
-          "fact_status": "reported_unconfirmed_by_filing",
-          "attribution": "百度热搜",
-          "source_ref": "baidu_505e07e0f6e8",
-          "source_url": "https://www.baidu.com/s?wd=APEC%E5%9B%B4%E5%B7%BE%E5%9B%BE%E6%A1%88%E5%8F%96%E8%87%AA%E2%80%9C%E4%B8%AD%E5%9B%BD%E5%B9%B4%E2%80%9D%E4%BC%9A%E6%A0%87",
-          "source_excerpt_or_locator": "11月19日上午，APEC第三十三次领导人非正式会议前，与会经济体领导人佩戴特色围巾集体合影。围巾上的图案设计，取材自2026APEC“中国年”的会标。",
-          "published_at": null,
-          "discovered_at": "2026-11-19T15:37:55+08:00",
-          "revision": 1
-        }
-      ],
-      "ai_analysis": "【本批新晋突发】由高评分最新信源聚类直采，待后续批次持续追踪进展。",
-      "unverified_claims": [],
-      "speculation_or_outlook": null,
-      "sources": [
-        {
-          "item_id": "baidu_505e07e0f6e8",
-          "article_id": "baidu_505e07e0f6e8",
-          "source_id": "baidu",
-          "source_name": "百度热搜",
-          "source_kind": "news",
-          "source_tier": "aggregator_lead",
-          "publisher_family": "baidu",
-          "is_reprint_copy": false,
-          "title": "APEC围巾图案取自“中国年”会标",
-          "url": "https://www.baidu.com/s?wd=APEC%E5%9B%B4%E5%B7%BE%E5%9B%BE%E6%A1%88%E5%8F%96%E8%87%AA%E2%80%9C%E4%B8%AD%E5%9B%BD%E5%B9%B4%E2%80%9D%E4%BC%9A%E6%A0%87",
-          "published_at": null,
-          "published_at_source": null,
-          "fetched_at": "2026-11-19T15:37:55+08:00",
-          "excerpt": "11月19日上午，APEC第三十三次领导人非正式会议前，与会经济体领导人佩戴特色围巾集体合影。围巾上的图案设计，取材自2026APEC“中国年”的会标。",
-          "deep_fetch_status": null
-        },
-        {
-          "item_id": "toutiao_af7f041148e0",
-          "article_id": "toutiao_af7f041148e0",
-          "source_id": "toutiao",
-          "source_name": "今日头条",
-          "source_kind": "news",
-          "source_tier": "aggregator_lead",
-          "publisher_family": "toutiao",
-          "is_reprint_copy": true,
-          "title": "APEC围巾图案取自“中国年”会标",
-          "url": "https://www.toutiao.com/trending/7709715926195421706",
-          "published_at": null,
-          "published_at_source": null,
-          "fetched_at": "2026-11-19T15:37:55+08:00",
-          "excerpt": null,
-          "deep_fetch_status": null
-        }
-      ],
-      "verification": {
-        "all_refs_valid": true,
-        "has_primary_url": true,
-        "rejected_refs": [],
-        "has_first_party": false
-      },
-      "followup": {
-        "is_continuing": true,
-        "prev_batch_id": "smart-20261119-154421",
-        "prev_event_id": "evt_65af229ac47c",
-        "prev_title": "APEC围巾图案取自“中国年”会标",
-        "delta_note": "在上期简报中已出现，本批持续关注（暂无新增独立变化）"
-      },
-      "is_new_in_batch": false,
-      "update_kind": "continuing_coverage"
-    },
-    {
-      "schema_version": "3.0",
-      "event_id": "evt_8bc113060bd1",
-      "storyline_id": "st_3e7604f3fb16",
-      "article_ids": [
-        "tencent-hot_8caf712d7f68"
-      ],
-      "legacy_event_ids": [],
-      "title": "中韩自贸协定第二阶段实质性完成谈判",
-      "category": "general",
-      "entities": [
-        "中国商务部",
-        "韩国",
-        "中韩自贸协定"
-      ],
-      "entity_ids": [
-        "ent_apec_g20_summits",
-        "ent_macro_fomc"
-      ],
-      "matched_entities": [
-        {
-          "entity_id": "ent_apec_g20_summits",
-          "canonical_name": "APEC / 重大国际峰会与经贸协定",
-          "entity_type": "macro",
-          "sector": "全球治理与多边经贸",
-          "matched_aliases": [
-            "自贸协定"
-          ],
-          "tickers": [],
-          "reason": "正文/实体匹配关键词「自贸协定」"
-        },
-        {
-          "entity_id": "ent_macro_fomc",
-          "canonical_name": "美联储 FOMC 与全球流动性",
-          "entity_type": "macro",
-          "sector": "宏观利率与汇率",
-          "matched_aliases": [
-            "美元"
-          ],
-          "tickers": [],
-          "reason": "正文/实体匹配关键词「美元」"
-        }
-      ],
-      "importance": "high",
-      "sentiment": "Bullish",
-      "special_note": null,
-      "material_stage": null,
-      "material_stage_label": null,
-      "evidence_status": "single_source",
-      "evidence_label": "单一独立来源线索",
-      "evidence_status_reason": "目前仅见 1 家独立来源（共 1 条引用含转载，含摘要/首段），尚未见独立渠道交叉或官方确认",
-      "attribution_warning": null,
-      "contradictions": [],
-      "material_depth": "title_and_excerpt",
-      "source_count": 1,
-      "platform_count": 1,
-      "independent_publisher_count": 1,
-      "reprint_count": 0,
-      "published_at": null,
-      "first_discovered_at": "2026-11-19T05:27:58+08:00",
-      "first_reported_at": null,
-      "latest_fact_update_at": null,
-      "latest_reported_at": null,
-      "fetched_at": "2026-11-19T15:37:55+08:00",
-      "input_batch_id": "raw-20261119-153755",
-      "fact_summary": "11月18日，商务部国际司负责人就实质性完成中韩自贸协定第二阶段谈判答记者问。双方历经8年多时间、共举行17轮正式谈判，于近日实质性完成第二阶段谈判。据中方统计，2026年1—10月中韩贸易额达4409亿美元，同比增长63.7%。",
-      "fact_atoms": [
-        {
-          "atom_id": "fa_68174426",
-          "subject": "中国商务部",
-          "metric_or_action": "中韩自贸协定第二阶段实质性完成谈判",
-          "value": "4409",
-          "unit": "亿美元",
-          "period": "同比 (YoY)",
-          "scope": "新闻事件陈述",
-          "fact_status": "reported_unconfirmed_by_filing",
-          "attribution": "腾讯新闻综合早报",
-          "source_ref": "tencent-hot_8caf712d7f68",
-          "source_url": "https://view.inews.qq.com/a/20261118A0HXH700",
-          "source_excerpt_or_locator": "11月18日，商务部国际司负责人就实质性完成中韩自贸协定第二阶段谈判答记者问。双方历经8年多时间、共举行17轮正式谈判，近日实质性完成第二阶段谈判。据中方统计，2026年1—10月中韩贸易额4409亿美元，同比增长63.7%。",
-          "published_at": null,
-          "discovered_at": "2026-11-19T05:27:58+08:00",
-          "revision": 1
-        }
-      ],
-      "ai_analysis": "历经八年多长跑完成第二阶段实质性谈判，叠加年内双边贸易额大幅增长，显示中韩在服务贸易、投资及产业链协同等领域具备较强的制度性开放诉求。",
-      "unverified_claims": [],
-      "speculation_or_outlook": null,
-      "sources": [
-        {
-          "item_id": "tencent-hot_8caf712d7f68",
-          "article_id": "tencent-hot_8caf712d7f68",
-          "source_id": "tencent-hot",
-          "source_name": "腾讯新闻综合早报",
-          "source_kind": "news",
-          "source_tier": "aggregator_lead",
-          "publisher_family": "tencent",
-          "is_reprint_copy": false,
-          "title": "商务部就实质性完成中韩自贸协定第二阶段谈判有关情况答记者问",
-          "url": "https://view.inews.qq.com/a/20261118A0HXH700",
-          "published_at": null,
-          "published_at_source": null,
-          "fetched_at": "2026-11-19T15:37:55+08:00",
-          "excerpt": "11月18日，商务部国际司负责人就实质性完成中韩自贸协定第二阶段谈判答记者问。双方历经8年多时间、共举行17轮正式谈判，近日实质性完成第二阶段谈判。据中方统计，2026年1—10月中韩贸易额4409亿美元，同比增长63.7%。",
-          "deep_fetch_status": null
-        }
-      ],
-      "verification": {
-        "all_refs_valid": true,
-        "has_primary_url": true,
-        "rejected_refs": [],
-        "has_first_party": false
-      },
-      "followup": {
-        "is_continuing": true,
-        "prev_batch_id": "smart-20261119-154421",
-        "prev_event_id": "evt_8bc113060bd1",
-        "prev_title": "中韩自贸协定第二阶段实质性完成谈判",
-        "delta_note": "在上期简报中已出现，本批持续关注（暂无新增独立变化）"
-      },
-      "is_new_in_batch": false,
-      "update_kind": "continuing_coverage"
-    },
-    {
-      "schema_version": "3.0",
-      "event_id": "evt_64b482e1a4c9",
-      "storyline_id": "st_b8ba6cd3e3fc",
-      "article_ids": [
-        "zhihu_131bdea0935b",
-        "douyin_5f6aa2f337b2"
-      ],
-      "legacy_event_ids": [],
-      "title": "国际金银价格突现跳水，现货黄金跌破3800美元关口",
-      "category": "general",
-      "entities": [
-        "现货黄金",
-        "现货白银"
-      ],
-      "entity_ids": [
-        "ent_geopolitics_energy",
-        "ent_macro_fomc"
-      ],
-      "matched_entities": [
-        {
-          "entity_id": "ent_geopolitics_energy",
-          "canonical_name": "地缘冲突、能源与大宗商品",
-          "entity_type": "macro",
-          "sector": "能源安全与避险资产",
-          "matched_aliases": [
-            "现货黄金"
-          ],
-          "tickers": [],
-          "reason": "正文/实体匹配关键词「现货黄金」"
-        },
-        {
-          "entity_id": "ent_macro_fomc",
-          "canonical_name": "美联储 FOMC 与全球流动性",
-          "entity_type": "macro",
-          "sector": "宏观利率与汇率",
-          "matched_aliases": [
-            "美元"
-          ],
-          "tickers": [],
-          "reason": "正文/实体匹配关键词「美元」"
-        }
-      ],
-      "importance": "high",
-      "sentiment": "Bearish",
-      "special_note": null,
-      "material_stage": null,
-      "material_stage_label": null,
-      "evidence_status": "multi_source",
-      "evidence_label": "多独立来源提及（待核官方全文）",
-      "evidence_status_reason": "已有 2 家独立媒体族提及（含摘要或正文首段）；多源转载不代表官方公告已证实",
-      "attribution_warning": null,
-      "contradictions": [],
-      "material_depth": "title_and_excerpt",
-      "source_count": 2,
-      "platform_count": 2,
-      "independent_publisher_count": 2,
-      "reprint_count": 0,
-      "published_at": null,
-      "first_discovered_at": "2026-11-18T11:44:38+08:00",
-      "first_reported_at": null,
-      "latest_fact_update_at": null,
-      "latest_reported_at": null,
-      "fetched_at": "2026-11-19T15:37:55+08:00",
-      "input_batch_id": "raw-20261119-153755",
-      "fact_summary": "11月18日，国际金银价格出现突然跳水。截至发稿，现货黄金下跌1.41%，报3793.078美元/盎司，跌破3800美元整数关口；现货白银下跌2.47%，报46.192美元/盎司。",
-      "fact_atoms": [
-        {
-          "atom_id": "fa_98769542",
-          "subject": "现货黄金",
-          "metric_or_action": "国际金银价格突现跳水，现货黄金跌破3800美元关口",
-          "value": "1.41",
-          "unit": "%",
-          "period": "单次披露/未注明周期",
-          "scope": "新闻事件陈述",
-          "fact_status": "multi_source_reported",
-          "attribution": "知乎热榜",
-          "source_ref": "zhihu_131bdea0935b",
-          "source_url": "https://www.zhihu.com/question/2106345289204372977",
-          "source_excerpt_or_locator": "11 月 18 日，国际金银价格突然跳水。截至发稿，现货黄金跌 1.41%，报 3793.078 美元 / 盎司，跌破 3800 美元关口；现货白银跌 2.47%，报 46.192 美元 / 盎司。 金价、银价，直线跳水！ | 每经网",
-          "published_at": null,
-          "discovered_at": "2026-11-18T11:44:38+08:00",
-          "revision": 1
-        }
-      ],
-      "ai_analysis": "贵金属在高位区间快速回落并跌破关键心理关口，容易引发市场对短期获利回吐及宏观利率预期重定价的担忧，进而引发“是否抄底”及长期配置逻辑的广泛讨论。",
-      "unverified_claims": [],
-      "speculation_or_outlook": null,
-      "sources": [
-        {
-          "item_id": "zhihu_131bdea0935b",
-          "article_id": "zhihu_131bdea0935b",
-          "source_id": "zhihu",
-          "source_name": "知乎热榜",
-          "source_kind": "discussion",
-          "source_tier": "aggregator_lead",
-          "publisher_family": "zhihu",
-          "is_reprint_copy": false,
-          "title": "现货黄金跌破 3800 美元关口，现在适合抄底黄金吗？黄金的长期配置逻辑还成立吗？",
-          "url": "https://www.zhihu.com/question/2106345289204372977",
-          "published_at": null,
-          "published_at_source": null,
-          "fetched_at": "2026-11-19T05:27:58+08:00",
-          "excerpt": "11 月 18 日，国际金银价格突然跳水。截至发稿，现货黄金跌 1.41%，报 3793.078 美元 / 盎司，跌破 3800 美元关口；现货白银跌 2.47%，报 46.192 美元 / 盎司。 金价、银价，直线跳水！ | 每经网",
-          "deep_fetch_status": null
-        },
-        {
-          "item_id": "douyin_5f6aa2f337b2",
-          "article_id": "douyin_5f6aa2f337b2",
-          "source_id": "douyin",
-          "source_name": "抖音热点",
-          "source_kind": "discussion",
-          "source_tier": "aggregator_lead",
-          "publisher_family": "douyin",
-          "is_reprint_copy": false,
-          "title": "现货黄金跌破3800美元关口",
-          "url": "https://www.douyin.com/hot/2751924",
-          "published_at": null,
-          "published_at_source": null,
-          "fetched_at": "2026-11-19T05:27:58+08:00",
-          "excerpt": "11 月 18 日，国际金银价格突然跳水。截至发稿，现货黄金跌 1.41%，报 3793.078 美元 / 盎司，跌破 3800 美元关口；现货白银跌 2.47%，报 46.192 美元 / 盎司。 金价、银价，直线跳水！ | 每经网",
-          "deep_fetch_status": null
-        }
-      ],
-      "verification": {
-        "all_refs_valid": true,
-        "has_primary_url": true,
-        "rejected_refs": [],
-        "has_first_party": false
-      },
-      "followup": {
-        "is_continuing": true,
-        "prev_batch_id": "smart-20261119-154421",
-        "prev_event_id": "evt_64b482e1a4c9",
-        "prev_title": "国际金银价格突现跳水，现货黄金跌破3800美元关口",
-        "delta_note": "在上期简报中已出现，本批持续关注（暂无新增独立变化）"
-      },
-      "is_new_in_batch": false,
-      "update_kind": "continuing_coverage"
-    },
-    {
-      "schema_version": "3.0",
-      "event_id": "evt_1a73b93ccf06",
-      "storyline_id": "st_af64dd180556",
-      "article_ids": [
-        "tencent-hot_f135893799ce",
-        "douyin_4063610abde0"
-      ],
-      "legacy_event_ids": [],
-      "title": "美联储理事沃勒再提加息50基点，内部政策节奏存分歧",
-      "category": "general",
-      "entities": [
-        "美联储",
-        "沃勒",
-        "沃什"
-      ],
-      "entity_ids": [
-        "ent_macro_fomc"
-      ],
-      "matched_entities": [
-        {
-          "entity_id": "ent_macro_fomc",
-          "canonical_name": "美联储 FOMC 与全球流动性",
-          "entity_type": "macro",
-          "sector": "宏观利率与汇率",
-          "matched_aliases": [
-            "美联储",
-            "加息",
-            "降息"
-          ],
-          "tickers": [],
-          "reason": "正文/实体匹配关键词「美联储 / 加息」"
-        }
-      ],
-      "importance": "high",
-      "sentiment": "Bearish",
-      "special_note": null,
-      "material_stage": null,
-      "material_stage_label": null,
-      "evidence_status": "multi_source",
-      "evidence_label": "多独立来源提及（待核官方全文）",
-      "evidence_status_reason": "已有 2 家独立媒体族提及（含摘要或正文首段）；多源转载不代表官方公告已证实",
-      "attribution_warning": null,
-      "contradictions": [],
-      "material_depth": "title_and_excerpt",
-      "source_count": 2,
-      "platform_count": 2,
-      "independent_publisher_count": 2,
-      "reprint_count": 0,
-      "published_at": null,
-      "first_discovered_at": "2026-11-19T05:27:58+08:00",
-      "first_reported_at": null,
-      "latest_fact_update_at": null,
-      "latest_reported_at": null,
-      "fetched_at": "2026-11-19T15:37:55+08:00",
-      "input_batch_id": "raw-20261119-153755",
-      "fact_summary": "美联储理事沃勒表示，通胀超预期并向多领域扩散，主张撤销去年三次降息后再加息；其称12月可一次性加息50基点，或加息25基点并暗示1月继续加息，必要时需要“震惊市场”。同时，沃什反对前瞻指引，美联储内部在加息节奏上存在分歧。",
-      "fact_atoms": [
-        {
-          "atom_id": "fa_12395153",
-          "subject": "美联储",
-          "metric_or_action": "美联储理事沃勒再提加息50基点，内部政策节奏存分歧",
-          "value": null,
-          "unit": null,
-          "period": "单次披露/未注明周期",
-          "scope": "新闻事件陈述",
-          "fact_status": "multi_source_reported",
-          "attribution": "腾讯新闻综合早报",
-          "source_ref": "tencent-hot_f135893799ce",
-          "source_url": "https://view.inews.qq.com/a/20261118A0GWM900",
-          "source_excerpt_or_locator": "美联储理事沃勒称通胀超预期并向多领域扩散，主张撤销去年三次降息后再加息，12月可一次性加50基点，或加25基点并暗示1月续加；沃什反对前瞻指引，内部加息节奏存分歧。",
-          "published_at": null,
-          "discovered_at": "2026-11-19T05:27:58+08:00",
-          "revision": 1
-        }
-      ],
-      "ai_analysis": "美联储官员释放强硬紧缩信号，若市场被迫重新定价12月及明年初的加息路径，将对全球无风险利率及包括黄金在内的风险与避险资产形成直接扰动。",
-      "unverified_claims": [],
-      "speculation_or_outlook": "12月美联储议息会议的加息幅度及内部表态分歧将成为短期全球金融市场定价焦点。",
-      "sources": [
-        {
-          "item_id": "tencent-hot_f135893799ce",
-          "article_id": "tencent-hot_f135893799ce",
-          "source_id": "tencent-hot",
-          "source_name": "腾讯新闻综合早报",
-          "source_kind": "news",
-          "source_tier": "aggregator_lead",
-          "publisher_family": "tencent",
-          "is_reprint_copy": false,
-          "title": "美联储理事沃勒再提加息50基点：必要时需要“震惊市场”",
-          "url": "https://view.inews.qq.com/a/20261118A0GWM900",
-          "published_at": null,
-          "published_at_source": null,
-          "fetched_at": "2026-11-19T15:37:55+08:00",
-          "excerpt": "美联储理事沃勒称通胀超预期并向多领域扩散，主张撤销去年三次降息后再加息，12月可一次性加50基点，或加25基点并暗示1月续加；沃什反对前瞻指引，内部加息节奏存分歧。",
-          "deep_fetch_status": null
-        },
-        {
-          "item_id": "douyin_4063610abde0",
-          "article_id": "douyin_4063610abde0",
-          "source_id": "douyin",
-          "source_name": "抖音热点",
-          "source_kind": "discussion",
-          "source_tier": "aggregator_lead",
-          "publisher_family": "douyin",
-          "is_reprint_copy": false,
-          "title": "美联储沃勒称12月或加息50基点",
-          "url": "https://www.douyin.com/hot/2753321",
-          "published_at": null,
-          "published_at_source": null,
-          "fetched_at": "2026-11-19T15:37:55+08:00",
-          "excerpt": null,
-          "deep_fetch_status": null
-        }
-      ],
-      "verification": {
-        "all_refs_valid": true,
-        "has_primary_url": true,
-        "rejected_refs": [],
-        "has_first_party": false
-      },
-      "followup": {
-        "is_continuing": true,
-        "prev_batch_id": "smart-20261119-154421",
-        "prev_event_id": "evt_1a73b93ccf06",
-        "prev_title": "美联储理事沃勒再提加息50基点，内部政策节奏存分歧",
-        "delta_note": "在上期简报中已出现，本批持续关注（暂无新增独立变化）"
-      },
-      "is_new_in_batch": false,
-      "update_kind": "continuing_coverage"
+      "update_kind": "continuing_coverage",
+      "title_zh": "中俄美元首座驾首次同框",
+      "summary_zh": "11月19日，APEC会议期间，中俄美三国元首在深圳举行会晤，中俄美国车历史首次同框。美国总统特朗普乘坐凯迪拉克，俄罗斯总统普京乘坐奥鲁斯，两者分别以冷硬折线和沉稳厚重彰显气场与威严。而红旗座驾自带内敛含蓄的东方气韵，展示了中国美美与共、利达天下的处世哲学。"
     }
   ]
 }
