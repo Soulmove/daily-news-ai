@@ -1,0 +1,88 @@
+name: 🕷️ Spider Worker (V3 Raw + Connectors Collector)
+
+on:
+  schedule:
+    # Hourly off-minute schedule avoids GitHub Actions sub-hour throttling drops (~60m honest cadence).
+    - cron: '17 * * * *'
+  workflow_dispatch:
+    inputs:
+      reason:
+        description: 'Manual trigger reason'
+        required: false
+        default: 'manual_dispatch'
+  repository_dispatch:
+    types: [trigger-crawl]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: data-pipeline-commit
+  cancel-in-progress: false
+
+jobs:
+  spider-job:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    env:
+      TZ: 'Asia/Shanghai'
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 🐍 Setup Python 3.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+          cache: 'pip'
+
+      - name: 📦 Install pinned dependencies
+        run: pip install -r requirements.txt
+
+      - name: 🕷️ Run V3 Raw + First-Party Connectors Crawler
+        run: |
+          python -m pipeline.fetch_raw --schedule-source "${{ github.event_name }}" --respect-cadence
+
+      - name: 📊 Write GitHub Step Summary
+        if: always()
+        run: |
+          python -c "
+          import json
+          m = json.load(open('data/manifest.json', encoding='utf-8'))
+          r = m.get('raw', {})
+          s = r.get('summary', {})
+          c = m.get('connectors', {}).get('summary', {})
+          print('### 🕷️ V3 Raw & First-Party Crawl Summary')
+          print(f'- **Batch ID**: `{r.get(\"latest_batch_id\")}`')
+          print(f'- **Fetched At**: `{r.get(\"fetched_at\")}`')
+          print(f'- **Status**: `{r.get(\"status\")}`')
+          print(f'- **Aggregator Sources**: ok={s.get(\"ok_sources\")}, stale={s.get(\"stale_sources\")}, empty={s.get(\"empty_sources\")}, error={s.get(\"error_sources\")}')
+          print(f'- **First-Party Connectors**: healthy={c.get(\"healthy_connectors\")}/{c.get(\"total_connectors\")}, items={c.get(\"total_first_party_items\")}, tools={c.get(\"tech_tools_count\")}, calendar={c.get(\"calendar_events_count\")}')
+          print(f'- **Items**: raw={s.get(\"total_raw_items\")}, deduped={s.get(\"deduped_events\")}, deep_enriched={s.get(\"deep_fetched_enriched\")}')
+          " >> "$GITHUB_STEP_SUMMARY" || true
+
+      - name: 🚀 Optional Active Push to Private Server
+        if: success()
+        continue-on-error: true
+        env:
+          TENCENT_INGEST_URL: ${{ secrets.TENCENT_INGEST_URL }}
+          TENCENT_INGEST_TOKEN: ${{ secrets.TENCENT_INGEST_TOKEN }}
+          TRIGGER_PUSH: '0'
+        run: python scripts/push_to_tencent.py
+
+      - name: 💾 Commit and push atomically
+        run: |
+          git config user.name 'Spider Bot'
+          git config user.email 'spider@bot.com'
+          git add data_*.json data/ archives/raw/ history/raw_index.json
+          if git diff --cached --quiet; then
+            echo "No data changes to commit."
+            exit 0
+          fi
+          git commit -m "🕷️ V3 Raw & Connectors Snapshot: $(date '+%Y-%m-%d %H:%M CST')"
+          for i in 1 2 3; do
+            git pull --rebase origin main && git push && exit 0
+            echo "Push retry $i after rebase..."
+            sleep 3
+          done
+          exit 1

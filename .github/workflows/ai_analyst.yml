@@ -1,0 +1,121 @@
+name: 🧠 AI Briefing Pipeline (V3 Grounded + Research Memory)
+
+on:
+  schedule:
+    # UTC 22:15, 00:15, 03:15, 06:15, 09:15, 13:15 => CST 06:15, 08:15, 11:15, 14:15, 17:15, 21:15
+    - cron: '15 22,0,3,6,9,13 * * *'
+  workflow_dispatch:
+    inputs:
+      include_comments:
+        description: 'Generate same-batch AI simulated perspectives'
+        type: boolean
+        default: true
+      max_raw_age_minutes:
+        description: 'Auto-crawl if latest raw batch is older than N minutes'
+        default: '45'
+  repository_dispatch:
+    types: [trigger-briefing]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: data-pipeline-commit
+  cancel-in-progress: false
+
+jobs:
+  ai-briefing-job:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      TZ: 'Asia/Shanghai'
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 🐍 Setup Python 3.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+          cache: 'pip'
+
+      - name: 📦 Install pinned dependencies
+        run: pip install -r requirements.txt
+
+      - name: 🔄 Ensure fresh raw snapshot (compensation check)
+        run: |
+          python -m pipeline.check_freshness --max-age-minutes "${{ github.event.inputs.max_raw_age_minutes || '45' }}" --schedule-source "ai_compensation_${{ github.event_name }}"
+
+      - name: 🧠 Build verified V3 AI briefing + research memory artifacts
+        env:
+          KEY_FINANCE: ${{ secrets.KEY_FINANCE }}
+          KEY_GLOBAL: ${{ secrets.KEY_GLOBAL }}
+          KEY_TECH: ${{ secrets.KEY_TECH }}
+          KEY_GENERAL: ${{ secrets.KEY_GENERAL }}
+          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+          KEY_1: ${{ secrets.KEY_1 }}
+          KEY_2: ${{ secrets.KEY_2 }}
+          KEY_3: ${{ secrets.KEY_3 }}
+          KEY_4: ${{ secrets.KEY_4 }}
+          KEY_5: ${{ secrets.KEY_5 }}
+          KEY_6: ${{ secrets.KEY_6 }}
+          KEY_7: ${{ secrets.KEY_7 }}
+          KEY_8: ${{ secrets.KEY_8 }}
+        run: |
+          EXTRA_ARGS=""
+          if [ "${{ github.event.inputs.include_comments }}" = "false" ]; then
+            EXTRA_ARGS="--no-comments"
+          fi
+          python -m pipeline.build_briefing --mode ai $EXTRA_ARGS
+
+      - name: 📊 Write GitHub Step Summary
+        if: always()
+        run: |
+          python - <<'EOF' >> "$GITHUB_STEP_SUMMARY" || true
+          import json
+          m = json.load(open('data/manifest.json', encoding='utf-8'))
+          s = m.get('smart', {})
+          v3 = m.get('v3', {})
+          print('### 🧠 V3 AI Briefing & Research Memory Summary')
+          print(f"- **Batch ID**: `{s.get('latest_batch_id')}`")
+          print(f"- **Input Raw Batch**: `{s.get('input_batch_id')}` (cutoff `{s.get('input_cutoff_at')}`)")
+          print(f"- **Status**: `{s.get('status')}` | **Has Simulated Perspectives**: `{s.get('has_comments')}`")
+          print(f"- **V3 Research Memory**: storylines={v3.get('storylines_count')}, entities={v3.get('entities_count')}, calendar={v3.get('calendar_count')}, tech_tools={v3.get('tech_tools_count')}")
+          for cat, info in (s.get('categories') or {}).items():
+              print(f"  - `{cat}`: status={info.get('status')}, fallback={info.get('is_fallback')}, items={info.get('item_count')}, verified={info.get('verified_count')}, needs_verification={info.get('needs_verification_count')}")
+          EOF
+
+      - name: 📣 Optional Daily Digest Push (Webhook / Telegram)
+        if: success()
+        continue-on-error: true
+        env:
+          DIGEST_WEBHOOK_URL: ${{ secrets.DIGEST_WEBHOOK_URL }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: python scripts/send_digest.py
+
+      - name: 🚀 Optional Active Push to Private Server
+        if: success()
+        continue-on-error: true
+        env:
+          TENCENT_INGEST_URL: ${{ secrets.TENCENT_INGEST_URL }}
+          TENCENT_INGEST_TOKEN: ${{ secrets.TENCENT_INGEST_TOKEN }}
+          TRIGGER_PUSH: '1'
+        run: python scripts/push_to_tencent.py
+
+      - name: 💾 Commit and push atomically
+        run: |
+          git config user.name 'AI Analyst'
+          git config user.email 'ai@bot.com'
+          git add data_*.json analysis_*.json comments_*.json data/ archives/ history/
+          if git diff --cached --quiet; then
+            echo "No briefing changes to commit."
+            exit 0
+          fi
+          git commit -m "🧠 V3 Briefing & Research Memory Batch: $(date '+%Y-%m-%d %H:%M CST')"
+          for i in 1 2 3; do
+            git pull --rebase origin main && git push && exit 0
+            echo "Push retry $i after rebase..."
+            sleep 3
+          done
+          exit 1

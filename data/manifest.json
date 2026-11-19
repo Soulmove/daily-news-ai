@@ -1,0 +1,198 @@
+{
+  "schema_version": "3.0",
+  "site_published_at": "2026-11-19T15:54:58+08:00",
+  "smart": {
+    "latest_batch_id": "smart-20261119-155131",
+    "latest_path": "archives/smart/2026-11-19/15-51/",
+    "meta_path": "archives/smart/2026-11-19/15-51/batch_meta.json",
+    "input_batch_id": "raw-20261119-153755",
+    "input_raw_path": "archives/raw/2026-11-19/15-37/",
+    "input_cutoff_at": "2026-11-19T15:37:55+08:00",
+    "generated_at": "2026-11-19T15:51:31+08:00",
+    "published_at": "2026-11-19T15:54:58+08:00",
+    "target_cadence_hours": 12,
+    "status": "complete",
+    "model_name": "deterministic-v3-grounding",
+    "configured_primary_model": "gemini-4-hydrogen",
+    "has_comments": true,
+    "categories": {
+      "finance": {
+        "batch_id": "smart-20261119-155131",
+        "path": "archives/smart/2026-11-19/15-51/analysis_finance.json",
+        "comments_path": "archives/smart/2026-11-19/15-51/comments_finance.json",
+        "input_batch_id": "raw-20261119-153755",
+        "input_cutoff_at": "2026-11-19T15:37:55+08:00",
+        "generated_at": "2026-11-19T15:51:31+08:00",
+        "status": "ok",
+        "is_fallback": false,
+        "fallback_reason": null,
+        "item_count": 12,
+        "verified_count": 12,
+        "needs_verification_count": 0,
+        "has_comments": true
+      },
+      "global": {
+        "batch_id": "smart-20261119-155131",
+        "path": "archives/smart/2026-11-19/15-51/analysis_global.json",
+        "comments_path": "archives/smart/2026-11-19/15-51/comments_global.json",
+        "input_batch_id": "raw-20261119-153755",
+        "input_cutoff_at": "2026-11-19T15:37:55+08:00",
+        "generated_at": "2026-11-19T15:51:31+08:00",
+        "status": "ok",
+        "is_fallback": false,
+        "fallback_reason": null,
+        "item_count": 12,
+        "verified_count": 12,
+        "needs_verification_count": 0,
+        "has_comments": true
+      },
+      "tech": {
+        "batch_id": "smart-20261119-155131",
+        "path": "archives/smart/2026-11-19/15-51/analysis_tech.json",
+        "comments_path": "archives/smart/2026-11-19/15-51/comments_tech.json",
+        "input_batch_id": "raw-20261119-153755",
+        "input_cutoff_at": "2026-11-19T15:37:55+08:00",
+        "generated_at": "2026-11-19T15:51:31+08:00",
+        "status": "ok",
+        "is_fallback": false,
+        "fallback_reason": null,
+        "item_count": 12,
+        "verified_count": 12,
+        "needs_verification_count": 0,
+        "has_comments": true
+      },
+      "general": {
+        "batch_id": "smart-20261119-155131",
+        "path": "archives/smart/2026-11-19/15-51/analysis_general.json",
+        "comments_path": "archives/smart/2026-11-19/15-51/comments_general.json",
+        "input_batch_id": "raw-20261119-153755",
+        "input_cutoff_at": "2026-11-19T15:37:55+08:00",
+        "generated_at": "2026-11-19T15:51:31+08:00",
+        "status": "ok",
+        "is_fallback": false,
+        "fallback_reason": null,
+        "item_count": 12,
+        "verified_count": 12,
+        "needs_verification_count": 0,
+        "has_comments": true
+      }
+    }
+  },
+  "raw": {
+    "latest_batch_id": "raw-20261119-153755",
+    "latest_path": "archives/raw/2026-11-19/15-37/",
+    "meta_path": "archives/raw/2026-11-19/15-37/meta.json",
+    "connectors_path": "archives/raw/2026-11-19/15-37/connectors.json",
+    "fetched_at": "2026-11-19T15:37:55+08:00",
+    "published_at": "2026-11-19T15:44:18+08:00",
+    "target_cadence_minutes": 30,
+    "schedule_source": "manual_cli",
+    "status": "ok",
+    "summary": {
+      "configured_sources": 54,
+      "ok_sources": 54,
+      "empty_sources": 0,
+      "error_sources": 0,
+      "stale_sources": 0,
+      "retired_sources": 5,
+      "total_raw_items": 1176,
+      "first_party_items": 16,
+      "healthy_connectors": 7,
+      "total_connectors": 8,
+      "deep_fetched_enriched": 9,
+      "deduped_events": 1017
+    },
+    "categories": {
+      "finance": {
+        "file": "data_finance.json",
+        "path": "archives/raw/2026-11-19/15-37/data_finance.json",
+        "status": "ok",
+        "source_count": 13,
+        "ok_sources": 13,
+        "error_sources": 0,
+        "empty_sources": 0,
+        "stale_sources": 0,
+        "item_count": 269
+      },
+      "global": {
+        "file": "data_global.json",
+        "path": "archives/raw/2026-11-19/15-37/data_global.json",
+        "status": "ok",
+        "source_count": 11,
+        "ok_sources": 11,
+        "error_sources": 0,
+        "empty_sources": 0,
+        "stale_sources": 0,
+        "item_count": 222
+      },
+      "tech": {
+        "file": "data_tech.json",
+        "path": "archives/raw/2026-11-19/15-37/data_tech.json",
+        "status": "ok",
+        "source_count": 15,
+        "ok_sources": 15,
+        "error_sources": 0,
+        "empty_sources": 0,
+        "stale_sources": 0,
+        "item_count": 343
+      },
+      "general": {
+        "file": "data_general.json",
+        "path": "archives/raw/2026-11-19/15-37/data_general.json",
+        "status": "ok",
+        "source_count": 15,
+        "ok_sources": 15,
+        "error_sources": 0,
+        "empty_sources": 0,
+        "stale_sources": 0,
+        "item_count": 342
+      }
+    }
+  },
+  "scheduler": {
+    "provider": "github_actions",
+    "raw_cron": "13,43 * * * *",
+    "smart_cron": "5 23,4 * * *",
+    "note": "受 GitHub Actions 公共调度队列影响，实际执行可能存在延迟；支持通过 repository_dispatch 接入外部定时触发。"
+  },
+  "connectors": {
+    "latest_path": "data/connectors_latest.json",
+    "fetched_at": "2026-11-19T15:37:55+08:00",
+    "summary": {
+      "total_connectors": 8,
+      "healthy_connectors": 7,
+      "total_first_party_items": 192,
+      "tech_tools_count": 10,
+      "calendar_events_count": 5
+    }
+  },
+  "v3": {
+    "schema_version": "3.0",
+    "generated_at": "2026-11-19T15:54:58+08:00",
+    "batch_id": "smart-20261119-155131",
+    "entities_path": "data/entities_index.json",
+    "storylines_path": "data/storylines_index.json",
+    "topics_path": "data/topics.json",
+    "calendar_path": "data/calendar.json",
+    "tech_tools_path": "data/tech_tools.json",
+    "radar_path": "data/radar.json",
+    "predictions_path": "data/predictions_public.json",
+    "connectors_path": "data/connectors_latest.json",
+    "entities_count": 24,
+    "storylines_count": 75,
+    "topics_count": 5,
+    "calendar_count": 16,
+    "calendar_ics_path": "data/calendar.ics",
+    "calendar_ics_count": 10,
+    "calendar_tbd_skipped": 6,
+    "feed_path": "data/feed.xml",
+    "feeds_by_category": {
+      "finance": "data/feed_finance.xml",
+      "global": "data/feed_global.xml",
+      "tech": "data/feed_tech.xml",
+      "general": "data/feed_general.xml"
+    },
+    "tech_tools_count": 10,
+    "radar_count": 48
+  }
+}

@@ -1,0 +1,149 @@
+{
+  "schema_version": "3.0",
+  "generated_at": "2026-11-19T15:51:31+08:00",
+  "batch_id": "smart-20261119-155131",
+  "note": "系统预置基于公开一手催化剂建立的可验证观察题；个人自建与修订记录保存在本地浏览器，导入导出可用。",
+  "predictions": [
+    {
+      "prediction_id": "pred_live_apec_2026_communique",
+      "mode": "live",
+      "status": "open",
+      "title": "深圳 APEC 中美元首会谈后是否发布具体的经贸关税或 AI 治理联合文本",
+      "target_entity_id": "ent_us_china_diplomacy",
+      "target_entity": "中美外交与元首峰会 / APEC",
+      "question": "截至 2026-11-23，中国外交部或美国白宫是否公开披露中美元首深圳会晤达成的新一轮关税调整/AI 治理具体书面成果？",
+      "created_at": "2026-11-19T15:44:21+08:00",
+      "due_at": "2026-11-23T20:00:00+08:00",
+      "win_rule": "外交部或白宫官网发布明确含关税豁免/调整或 AI 安全合作条款的官方通稿",
+      "lose_rule": "双方仅发表原则性表态与维持既有共识声明，未公布新增可量化经贸或 AI 条款",
+      "indeterminate_rule": "会谈推迟或核心文本未公开",
+      "supporting_evidence": [
+        "特朗普抵深并获高规格接待，双方就经贸与 AI 议题开展会谈"
+      ],
+      "opposing_evidence": [
+        "美方会前吹风偏向落实既有共识与管控分歧，而非签署全面新协议"
+      ],
+      "core_assumption": "元首级会晤实质成果均会通过白宫/外交部正式通稿体现",
+      "invalidation_trigger": "双方宣布取消双边经贸磋商议程",
+      "probability_pct": 45,
+      "probability_note": "基于当前公开吹风与峰会日程动态生成，固定 11 月 23 日结算",
+      "current_judgment": "预计偏向原则性框架与局部去风险表态，静待白宫/外交部通稿核验",
+      "versions": [
+        {
+          "version": 1,
+          "updated_at": "2026-11-19T15:44:21+08:00",
+          "judgment": "等待 11 月 19 日深圳会晤官方正式通稿披露",
+          "probability_pct": 45,
+          "reason": "由深圳 APEC 超级热点专题动态立项"
+        }
+      ],
+      "settlement": null
+    },
+    {
+      "prediction_id": "pred_seed_nvda_sec_502",
+      "mode": "live",
+      "status": "open",
+      "title": "英伟达临时管理层后是否在 14 天内披露永久 CEO 继任或董事回任安排",
+      "target_entity_id": "ent_nvidia",
+      "target_entity": "英伟达 (NVIDIA / NVDA.US)",
+      "question": "SEC EDGAR 已收录 NVDA 2026-11-12 8-K (Item 5.02)；截至到期日是否出现正式继任人选或复职 Form 8-K / 官方 IR 声明？",
+      "created_at": "2026-11-19T05:31:12+08:00",
+      "due_at": "2026-12-03T05:31:12+08:00",
+      "win_rule": "SEC EDGAR 出现新的 NVDA 8-K Item 5.02 官方后续人事任命文件，或 investor.nvidia.com 发布明确治理结论",
+      "lose_rule": "到期前 SEC 仅维持临时代理架构且无新任命文件，或官方澄清驳回社区传闻",
+      "indeterminate_rule": "仅见机构研报/猎头传闻而缺乏上市公司 8-K 或 IR 官方公告",
+      "supporting_evidence": [
+        "SEC EDGAR 已核验 2026-11-12 8-K (Items: 5.02, 9.01)"
+      ],
+      "opposing_evidence": [
+        "关于正式继任人选与复职传闻，截至目前尚无新的后续 8-K 增补披露"
+      ],
+      "core_assumption": "上市公司首席执行官变动及正式继任属美股重大法定披露事项，必受 SEC 8-K 4 个工作日强制披露约束",
+      "invalidation_trigger": "若英伟达 IR 正式澄清拒绝变更或公布明确长期继任方案",
+      "probability_pct": 60,
+      "probability_note": "基准概率基于当前 SEC EDGAR 连接器实采状态动态校准，到期日固定不再顺延",
+      "current_judgment": "SEC 8-K Item 5.02 已披露于 2026-11-12；正跟踪正式继任进展",
+      "versions": [
+        {
+          "version": 1,
+          "updated_at": "2026-11-19T05:31:12+08:00",
+          "judgment": "已追踪到 SEC 2026-11-12 8-K Item 5.02，等待后续正式继任公告",
+          "probability_pct": 60,
+          "reason": "由 V3 SEC EDGAR 连接器交叉核查生成初始观察记录"
+        }
+      ],
+      "settlement": null
+    },
+    {
+      "prediction_id": "pred_seed_qwen_release_ga",
+      "mode": "live",
+      "status": "open",
+      "title": "Qwen 系列新一代旗舰模型是否在 12 月 16 日前进入开源权重或 API 正式可用 (GA)",
+      "target_entity_id": "ent_qwen_alibaba",
+      "target_entity": "阿里巴巴 / 通义千问 (Qwen)",
+      "question": "截至 2026-12-16，Hugging Face `Qwen` 官方组织或阿里云官方 API 是否上线对应新版模型卡片/正式计费文档？",
+      "created_at": "2026-11-19T05:31:12+08:00",
+      "due_at": "2026-12-19T05:31:12+08:00",
+      "win_rule": "Hugging Face `Qwen` 组织出现新版模型仓库且含可用权重/许可证，或阿里云百炼上线正式 API 计费页",
+      "lose_rule": "到期前官方模型卡与 API 文档均未更新，且官方声明仅限内部测试或推迟发布",
+      "indeterminate_rule": "仅发布预告博文但未公开任何可试用权重、API 或定价说明",
+      "supporting_evidence": [
+        "科技报道出现 Qwen4-Max 相关讨论",
+        "Hugging Face Qwen 组织近期持续活跃更新模型"
+      ],
+      "opposing_evidence": [
+        "当前 Hugging Face Qwen 官方库尚未见同名新版仓库上架"
+      ],
+      "core_assumption": "通义千问重大版本均会通过 HF 或阿里云官方渠道同步文档与许可",
+      "invalidation_trigger": "官方辟谣非官方版本或延后发布",
+      "probability_pct": 55,
+      "probability_note": "主观基准判断，最终以 Hugging Face 官方模型卡 API 检查结果结算",
+      "current_judgment": "保持追踪，等待 Hugging Face / 官方文档连接器捕获一手上架记录",
+      "versions": [
+        {
+          "version": 1,
+          "updated_at": "2026-11-19T05:31:12+08:00",
+          "judgment": "待 Hugging Face 官方权重与阿里云文档验证",
+          "probability_pct": 55,
+          "reason": "基于科技新闻热榜线索与 HF 连接器比对建立"
+        }
+      ],
+      "settlement": null
+    },
+    {
+      "prediction_id": "pred_live_fomc_2026_12",
+      "mode": "live",
+      "status": "open",
+      "title": "美联储 2026 年 12 月 FOMC 议息会议是否维持鹰派按兵不动或加息 25bp",
+      "target_entity_id": "ent_macro_fomc",
+      "target_entity": "美联储 FOMC 与全球流动性",
+      "question": "北京时间 2026-12-10 03:00 公布的 FOMC 决议声明中，联邦基金利率区间是否上调或释放 2027 年进一步收紧信号？",
+      "created_at": "2026-11-19T15:44:21+08:00",
+      "due_at": "2026-12-10T04:30:00+08:00",
+      "win_rule": "Federal Reserve 12 月 FOMC 官方声明宣布加息或 SEP 点阵图上移 2027 年利率中值",
+      "lose_rule": "官方声明宣布降息或维持利率不变且 SEP 中值下调",
+      "indeterminate_rule": "声明未改变利率且点阵图与上期完全一致",
+      "supporting_evidence": [
+        "10 月 FOMC 会议纪要偏鹰，沃勒等官员讨论加息节奏"
+      ],
+      "opposing_evidence": [
+        "内部委员对紧缩幅度与通胀回落节奏存在明显分歧"
+      ],
+      "core_assumption": "以 Federal Reserve 官网 FOMC 决议原文与 SEP 点阵图为唯一结算口径",
+      "invalidation_trigger": "12 月会前核心通胀或就业数据出现断崖式走弱",
+      "probability_pct": 55,
+      "probability_note": "锚定 2026-12-10 官方决议发布时刻自动到期，不含付费期货隐含概率",
+      "current_judgment": "10 月纪要显露鹰派分歧，关注 12 月 SEP 点阵图方向",
+      "versions": [
+        {
+          "version": 1,
+          "updated_at": "2026-11-19T15:44:21+08:00",
+          "judgment": "等待 12 月 10 日 FOMC 正式声明与点阵图核验",
+          "probability_pct": 55,
+          "reason": "由 FOMC 10 月纪要与 12 月议息日程动态立项"
+        }
+      ],
+      "settlement": null
+    }
+  ]
+}
