@@ -23,6 +23,7 @@ def main() -> int:
     buf = io.BytesIO()
     include_paths = [
         "data",
+        "history",
         "analysis_general.json",
         "analysis_global.json",
         "analysis_tech.json",
@@ -35,11 +36,25 @@ def main() -> int:
         "data_global.json",
         "data_tech.json",
         "data_finance.json",
-        "archives/smart_index.json",
     ]
+    # Also include active archive batch files referenced in data/manifest.json
+    manifest_file = root / "data" / "manifest.json"
+    if manifest_file.exists():
+        import json
+
+        try:
+            m = json.loads(manifest_file.read_text(encoding="utf-8"))
+            for info in ((m.get("smart") or {}).get("categories") or {}).values():
+                if isinstance(info, dict):
+                    for k in ("path", "comments_path"):
+                        v = info.get(k)
+                        if isinstance(v, str) and v:
+                            include_paths.append(v.lstrip("./"))
+        except Exception:
+            pass
     count = 0
     with tarfile.open(fileobj=buf, mode="w:gz") as tf:
-        for rel in include_paths:
+        for rel in dict.fromkeys(include_paths):
             p = root / rel
             if p.exists():
                 tf.add(p, arcname=rel)
