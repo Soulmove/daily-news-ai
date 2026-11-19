@@ -50,6 +50,12 @@ def main() -> int:
                         v = info.get(k)
                         if isinstance(v, str) and v:
                             include_paths.append(v.lstrip("./"))
+            raw_m = m.get("raw") or {}
+            if isinstance(raw_m.get("meta_path"), str) and raw_m["meta_path"]:
+                include_paths.append(raw_m["meta_path"].lstrip("./"))
+            for info in (raw_m.get("categories") or {}).values():
+                if isinstance(info, dict) and isinstance(info.get("path"), str) and info["path"]:
+                    include_paths.append(info["path"].lstrip("./"))
         except Exception:
             pass
     count = 0
