@@ -50,13 +50,15 @@ _OFFLINE_PHRASE_MAP: List[tuple[re.Pattern[str], str]] = [
 ]
 
 
-def _translate_offline_fallback(text: str) -> str:
-    clean = (text or "").strip()
+def _translate_offline_fallback(text: str, *, is_summary: bool = False) -> str:
+    clean = re.sub(r"^(?:【[^】]{2,14}】\s*)+", "", (text or "").strip())
     if not clean or not is_mostly_english(clean):
         return clean
     for pat, zh in _OFFLINE_PHRASE_MAP:
         if pat.search(clean):
             return zh
+    if is_summary:
+        return "该条为海外主流媒体英文原报（云端 AI 批次将自动全文精译，您也可直接点击「原文」或切至 EN 模式阅读原版）。"
     t_low = clean.lower()
     prefix = "外媒快讯"
     if any(k in t_low for k in ("trump", "xi", "putin", "apec", "china", "white house")):
@@ -145,7 +147,7 @@ def enrich_bilingual_events(events: List[Dict[str, Any]]) -> None:
     if en_summaries_src:
         translated_s = _batch_translate_with_gemini(en_summaries_src, "zh")
         for pos, ev_idx in enumerate(en_summaries_idx):
-            zh_s = translated_s[pos] if translated_s else _translate_offline_fallback(en_summaries_src[pos])
+            zh_s = translated_s[pos] if translated_s else _translate_offline_fallback(en_summaries_src[pos], is_summary=True)
             events[ev_idx]["summary_zh"] = zh_s
             if events[ev_idx].get("fact_summary"):
                 events[ev_idx]["fact_summary"] = zh_s
@@ -168,7 +170,7 @@ def enrich_bilingual_topics(topics: List[Dict[str, Any]]) -> None:
             s = str(node.get("summary") or "").strip()
             if s and is_mostly_english(s):
                 node["summary_en"] = s
-                node["summary"] = _translate_offline_fallback(s)
+                node["summary"] = _translate_offline_fallback(s, is_summary=True)
                 node["summary_zh"] = node["summary"]
 
     if en_src:

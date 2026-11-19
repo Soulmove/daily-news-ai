@@ -412,7 +412,7 @@ def build_ai_progress_artifact(
             title = str(ev.get("title") or "").strip()
             if not title or not ai_kw_re.search(title):
                 continue
-            if any(bad in title for bad in ("听证会", "诈骗", "FCC", "FDA", "围巾", "座驾", "中期选举")):
+            if any(bad in title.lower() for bad in ("听证会", "诈骗", "fcc", "fda", "围巾", "座驾", "中期选举", "ipo", "募资", "发行价", "灰市", "selling pressure", "股票", "股价", "后悔当年")):
                 continue
             cid, cname, reg = _infer_company(title)
             src0 = (ev.get("sources") or [{}])[0]
@@ -492,7 +492,26 @@ def build_ai_progress_artifact(
             }
         )
 
-    weekly_highlights = [it for it in items if not it["id"].startswith("ai_tool_")][:6]
+    # Build Weekly AI Digest Summary: pick 6 diverse high-signal model/open-source releases across different labs!
+    weekly_highlights: List[Dict[str, Any]] = []
+    company_counts: Dict[str, int] = {}
+    for it in items:
+        if it["id"].startswith("ai_tool_"):
+            continue
+        cid = str(it.get("company_id") or "")
+        if company_counts.get(cid, 0) >= 1 and len(weekly_highlights) < 6:
+            continue
+        company_counts[cid] = company_counts.get(cid, 0) + 1
+        weekly_highlights.append(it)
+        if len(weekly_highlights) >= 6:
+            break
+    if len(weekly_highlights) < 6:
+        used_ids = {x["id"] for x in weekly_highlights}
+        for it in items:
+            if it["id"] not in used_ids and not it["id"].startswith("ai_tool_"):
+                weekly_highlights.append(it)
+                if len(weekly_highlights) >= 6:
+                    break
     open_source_count = sum(1 for it in items if it.get("is_open_source"))
     china_count = sum(1 for it in items if it.get("region") == "国内")
     global_count = sum(1 for it in items if it.get("region") == "海外")
