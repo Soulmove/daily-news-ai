@@ -1283,6 +1283,7 @@ def build_v3_artifacts(
     calendar_items.sort(key=lambda c: (1 if c.get("is_past") else 0, str(c.get("scheduled_at") or "9999-12-31")))
 
     from .ai_radar_builder import build_ai_progress_artifact
+    from .ai_live_refresh import merge_live_ai_items_into_doc
     from .bilingual import enrich_bilingual_topics
     from .finance_impact_builder import build_finance_impact_artifact
 
@@ -1293,6 +1294,17 @@ def build_v3_artifacts(
         cat_docs=cat_docs,
         tech_tools=tech_tools,
     )
+    wire_json_path = root / "data/live_wire.json"
+    if wire_json_path.exists():
+        try:
+            wire_disk = json.loads(wire_json_path.read_text(encoding="utf-8"))
+            ai_progress_doc, _ = merge_live_ai_items_into_doc(
+                ai_progress_doc,
+                list(wire_disk.get("items") or []),
+                generated_at_iso,
+            )
+        except Exception:
+            pass
     finance_impact_doc = build_finance_impact_artifact(
         batch_id=batch_id,
         generated_at_iso=generated_at_iso,

@@ -13,6 +13,10 @@ from pipeline.time_utils import now_shanghai, parse_iso_datetime, parse_publishe
 DEFAULT_HF_ORGS = [
     {"org": "Qwen", "name": "Qwen (通义千问)", "entity_id": "ent_qwen_alibaba"},
     {"org": "deepseek-ai", "name": "DeepSeek", "entity_id": "ent_deepseek"},
+    {"org": "tencent", "name": "Tencent Hunyuan", "entity_id": "ent_ai_infra_tools"},
+    {"org": "moonshotai", "name": "Moonshot (Kimi)", "entity_id": "ent_kimi_moonshot"},
+    {"org": "zai-org", "name": "Zhipu AI (GLM)", "entity_id": "ent_ai_infra_tools"},
+    {"org": "baichuan-inc", "name": "Baichuan", "entity_id": "ent_ai_infra_tools"},
     {"org": "google", "name": "Google / Gemma", "entity_id": "ent_google"},
     {"org": "meta-llama", "name": "Meta Llama", "entity_id": "ent_ai_infra_tools"},
 ]

@@ -34,7 +34,7 @@ _HTML_RE = re.compile(r"<[^>]+>")
 _WS_RE = re.compile(r"\s+")
 
 _AI_KW_RE = re.compile(
-    r"(?:ai|大模型|gemini|neon|carbon|hydrogen|openai|gpt|claude|anthropic|qwen|千问|kimi|混元|deepseek|算力|英伟达|nvidia|芯片|gpu|开源|agent|智能体|机器人)",
+    r"(?:ai|大模型|gemini|neon|carbon|hydrogen|openai|gpt|claude|anthropic|qwen|千问|kimi|混元|workbuddy|电脑操控|计算机控制|元宝|豆包|seedance|manus|minimax|智谱|glm|cursor|windsurf|antigravity|mcp|千亿.*大模型|腾讯.*ai|deepseek|算力|英伟达|nvidia|芯片|gpu|开源|agent|智能体|机器人)",
     re.I,
 )
 _FIN_KW_RE = re.compile(

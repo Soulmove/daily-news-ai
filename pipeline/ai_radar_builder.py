@@ -332,21 +332,96 @@ _CURATED_AI_MILESTONES: List[Dict[str, Any]] = [
 ]
 
 
-def _infer_company(title: str) -> tuple[str, str, str]:
-    t = title.lower()
-    if any(k in t for k in ("google", "gemini", "gemma", "deepmind", "genie")):
+FIRST_HAND_SOURCE_IDS = {
+    "huggingface-hub",
+    "hf-daily-papers",
+    "github-releases",
+    "rss-google-ai-blog",
+    "rss-deepmind-blog",
+    "rss-openai-news",
+    "rss-hf-blog",
+    "rss-nvidia-blog",
+    "rss-github-changelog",
+}
+
+FIRST_HAND_URL_HOSTS = (
+    "huggingface.co",
+    "github.com",
+    "openai.com",
+    "anthropic.com",
+    "deepmind.google",
+    "blog.google",
+    "deepseek.com",
+    "hunyuan.tencent.com",
+    "qwenlm.github.io",
+    "qwen.ai",
+    "moonshot.cn",
+    "zhipuai.cn",
+    "bigmodel.cn",
+    "nvidianews.nvidia.com",
+)
+
+
+def is_first_hand_ai_source(source_id: str = "", source_name: str = "", url: str = "") -> bool:
+    sid = str(source_id or "").strip().lower()
+    if sid in FIRST_HAND_SOURCE_IDS:
+        return True
+    sname = str(source_name or "").lower()
+    if any(k in sname for k in ("huggingface", "github releases", "openai news", "deepmind", "google ai", "一手")):
+        return True
+    lower_url = str(url or "").lower()
+    return any(host in lower_url for host in FIRST_HAND_URL_HOSTS)
+
+
+def normalize_ai_timestamp(raw_ts: Any, fallback_iso: str) -> str:
+    txt = str(raw_ts or "").strip()
+    if not txt:
+        return str(fallback_iso or "")[:19] + "+08:00" if len(str(fallback_iso or "")) >= 19 else str(fallback_iso or "")[:10]
+    if re.fullmatch(r"\d{4}-\d{2}-\d{2}", txt):
+        return txt
+    try:
+        from datetime import datetime, timezone, timedelta
+        bj = timezone(timedelta(hours=8))
+        norm = txt.replace("Z", "+00:00").replace(" ", "T", 1) if " " in txt and "T" not in txt else txt.replace("Z", "+00:00")
+        dt = datetime.fromisoformat(norm)
+        if dt.tzinfo is None:
+            dt = dt.replace(tzinfo=bj)
+        else:
+            dt = dt.astimezone(bj)
+        return dt.strftime("%Y-%m-%dT%H:%M:%S+08:00")
+    except Exception:
+        return txt[:19] if len(txt) >= 19 else txt[:10]
+
+
+AI_NOISE_RE = re.compile(
+    r"(?:回购股份|减持股份|增持股份|质押股份|股份回购|分红派息|限售股解禁|股票交易异常波动|年度股东大会|董事会决议公告|可转债|中标公告|业绩快报|成份股|指数纳入|调入.*股|港股通|black friday|geforce now)",
+    re.I,
+)
+AI_KW_RE = re.compile(
+    r"(?:大模型|模型|开源|\bai\b|gemini|neon|carbon|hydrogen|claude|fable|mythos|gpt|astra|qwen|千问|kimi|混元|workbuddy|元宝|豆包|seedance|manus|minimax|智谱|glm|cursor|windsurf|antigravity|mcp|deepseek|深度求索|diffusion|llama|vllm|ollama|agent|智能体|电脑操控|计算机控制|computer use|openai|anthropic|huggingface|github|强化学习)",
+    re.I,
+)
+AI_RELEASE_RE = re.compile(
+    r"(?:release|launch|announc|introduc|open[- ]source|weights|rollout|available|发布|开源|上线|推出|升级|开放|融资|千亿|百亿|突破|操控|preview|neon|astra|fable|mythos|qwen4|deepseek|kimi|genie|gemma|workbuddy|hunyuan)",
+    re.I,
+)
+
+
+def _infer_company(title: str, url: str = "") -> tuple[str, str, str]:
+    t = f"{title} {url}".lower()
+    if any(k in t for k in ("google", "谷歌", "gemini", "gemma", "deepmind", "genie", "deepmind.google", "blog.google")):
         return "google", "Google DeepMind", "海外"
     if any(k in t for k in ("anthropic", "claude")):
         return "anthropic", "Anthropic", "海外"
     if any(k in t for k in ("openai", "gpt-", "chatgpt", "sora", "codex")):
         return "openai", "OpenAI", "海外"
-    if any(k in t for k in ("qwen", "千问", "通义", "阿里")):
+    if any(k in t for k in ("qwen", "千问", "通义", "阿里", "huggingface.co/qwen")):
         return "qwen", "阿里千问 (Qwen)", "国内"
-    if any(k in t for k in ("kimi", "moonshot", "月之暗面")):
+    if any(k in t for k in ("kimi", "moonshot", "月之暗面", "huggingface.co/moonshotai")):
         return "kimi", "月之暗面 (Kimi)", "国内"
-    if any(k in t for k in ("混元", "hunyuan", "腾讯")):
+    if any(k in t for k in ("混元", "hunyuan", "workbuddy", "元宝", "腾讯", "huggingface.co/tencent")):
         return "tencent_hunyuan", "腾讯混元 (Hunyuan)", "国内"
-    if any(k in t for k in ("deepseek", "深度求索")):
+    if any(k in t for k in ("deepseek", "深度求索", "huggingface.co/deepseek-ai")):
         return "deepseek", "DeepSeek", "国内"
     return "indie_opensource", "独立实验室 & 开源黑马", "全球开源"
 
@@ -464,14 +539,8 @@ def build_ai_progress_artifact(
     for g in grounded:
         _add_item(g)
 
-    ai_kw_re = re.compile(
-        r"(?:模型|开源|gemini|neon|carbon|hydrogen|claude|fable|mythos|gpt|astra|qwen|千问|kimi|混元|deepseek|diffusion|llama|vllm|ollama|agent|openai|anthropic|huggingface|github|强化学习)",
-        re.I,
-    )
-    ai_release_re = re.compile(
-        r"(?:release|launch|announc|introduc|open[- ]source|weights|发布|开源|上线|推出|升级|preview|neon|astra|fable|mythos|qwen4|deepseek|kimi|genie|gemma)",
-        re.I,
-    )
+    ai_kw_re = AI_KW_RE
+    ai_release_re = AI_RELEASE_RE
     for cat in ("tech", "general", "finance", "global"):
         for ev in (cat_docs.get(cat) or {}).get("events") or []:
             title = str(ev.get("title") or "").strip()
@@ -530,7 +599,10 @@ def build_ai_progress_artifact(
             if any(bad in rtitle.lower() for bad in ("听证会", "诈骗", "fcc", "fda", "围巾", "座驾", "中期选举", "ipo", "募资", "发行价", "灰市", "selling pressure", "股票", "股价", "lawsuit", "sues")):
                 continue
             cid, cname, reg = _infer_company(rtitle)
-            pub_date = str(raw_it.get("published_at") or raw_it.get("fetched_at") or generated_at_iso)[:10]
+            pub_date = normalize_ai_timestamp(
+            raw_it.get("published_at") or raw_it.get("fetched_at") or generated_at_iso,
+            generated_at_iso,
+        )
             excerpt = str(raw_it.get("excerpt") or "")
             zh_title = ensure_zh_headline(rtitle, "tech")
             is_os = any(k in rtitle.lower() for k in ("开源", "open", "github", "hugging", "vllm", "llama.cpp", "gemma", "权重"))
