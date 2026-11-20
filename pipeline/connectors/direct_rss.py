@@ -22,7 +22,59 @@ _RSS_HEADERS = {
 }
 
 DIRECT_RSS_FEEDS: List[Dict[str, str]] = [
-    # Global / Geopolitics / Major Summits
+    # --- Official AI Labs & Developer Blogs (Zero-Lag Primary Sources) ---
+    {"id": "rss-google-ai-blog", "name": "Google AI 官方博客", "category": "tech", "url": "https://blog.google/technology/ai/rss/", "family": "google-blog"},
+    {"id": "rss-deepmind-blog", "name": "Google DeepMind 博客", "category": "tech", "url": "https://deepmind.google/blog/rss.xml", "family": "deepmind"},
+    {"id": "rss-openai-news", "name": "OpenAI 官方动态", "category": "tech", "url": "https://openai.com/news/rss.xml", "family": "openai"},
+    {"id": "rss-hf-blog", "name": "Hugging Face 官方博客", "category": "tech", "url": "https://huggingface.co/blog/feed.xml", "family": "huggingface"},
+    {"id": "rss-github-changelog", "name": "GitHub Changelog", "category": "tech", "url": "https://github.blog/changelog/feed/", "family": "github"},
+    {"id": "rss-nvidia-blog", "name": "NVIDIA 官方博客", "category": "tech", "url": "https://blogs.nvidia.com/feed/", "family": "nvidia"},
+    {"id": "rss-simonwillison", "name": "Simon Willison AI 追踪", "category": "tech", "url": "https://simonwillison.net/atom/everything/", "family": "simonwillison"},
+    # --- Real-Time AI Specialist & Tech Media ---
+    {"id": "rss-9to5google", "name": "9to5Google", "category": "tech", "url": "https://9to5google.com/feed/", "family": "9to5google"},
+    {"id": "rss-the-decoder", "name": "The Decoder (AI前沿)", "category": "tech", "url": "https://the-decoder.com/feed/", "family": "thedecoder"},
+    {"id": "rss-marktechpost", "name": "MarkTechPost (AI论文/模型)", "category": "tech", "url": "https://www.marktechpost.com/feed/", "family": "marktechpost"},
+    {"id": "rss-techcrunch", "name": "TechCrunch AI & Tech", "category": "tech", "url": "https://techcrunch.com/feed/", "family": "techcrunch"},
+    {"id": "rss-theverge", "name": "The Verge", "category": "tech", "url": "https://www.theverge.com/rss/index.xml", "family": "theverge"},
+    {"id": "rss-arstechnica", "name": "Ars Technica", "category": "tech", "url": "https://feeds.arstechnica.com/arstechnica/index", "family": "arstechnica"},
+    {"id": "rss-hn-frontpage", "name": "Hacker News 热榜", "category": "tech", "url": "https://hnrss.org/frontpage?points=60", "family": "hackernews"},
+    # --- Google News Zero-Lag Targeted Topic Search Radars (when:1d / when:2d) ---
+    {
+        "id": "rss-gnews-ai-models-en",
+        "name": "Google News 全球 AI 模型雷达",
+        "category": "tech",
+        "url": "https://news.google.com/rss/search?q=(Gemini+OR+OpenAI+OR+GPT+OR+Claude+OR+Anthropic+OR+Qwen+OR+DeepSeek+OR+Kimi+OR+Grok)+model+release+when:2d&hl=en-US&gl=US&ceid=US:en",
+        "family": "gnews-ai-en",
+    },
+    {
+        "id": "rss-gnews-ai-models-zh",
+        "name": "Google News 中文大模型雷达",
+        "category": "tech",
+        "url": "https://news.google.com/rss/search?q=(大模型+OR+Gemini+OR+OpenAI+OR+Claude+OR+千问+OR+DeepSeek+OR+Kimi+OR+混元)+发布+when:2d&hl=zh-CN&gl=CN&ceid=CN:zh-Hans",
+        "family": "gnews-ai-zh",
+    },
+    {
+        "id": "rss-gnews-opensource-ai",
+        "name": "Google News 开源 AI 与推理雷达",
+        "category": "tech",
+        "url": "https://news.google.com/rss/search?q=(%22open+source%22+LLM+OR+Hugging+Face+OR+vLLM+OR+llama.cpp+OR+AI+agent)+when:2d&hl=en-US&gl=US&ceid=US:en",
+        "family": "gnews-oss-ai",
+    },
+    {
+        "id": "rss-gnews-markets-zh",
+        "name": "Google News A股/美股宏观异动",
+        "category": "finance",
+        "url": "https://news.google.com/rss/search?q=(A股+OR+美股+OR+美联储+OR+央行+OR+加息+OR+降息+OR+黄金+OR+关税)+when:1d&hl=zh-CN&gl=CN&ceid=CN:zh-Hans",
+        "family": "gnews-fin-zh",
+    },
+    {
+        "id": "rss-gnews-reuters-bloomberg",
+        "name": "路透/彭博突发全球雷达",
+        "category": "global",
+        "url": "https://news.google.com/rss/search?q=(site:reuters.com+OR+site:bloomberg.com)+(Fed+OR+China+OR+Trump+OR+AI+OR+chip+OR+oil+OR+tariff)+when:1d&hl=en-US&gl=US&ceid=US:en",
+        "family": "gnews-wire",
+    },
+    # --- Global / Geopolitics / Major Summits ---
     {"id": "rss-gnews-world-zh", "name": "Google News 中文国际", "category": "global", "url": "https://news.google.com/rss/headlines/section/topic/WORLD?hl=zh-CN&gl=CN&ceid=CN:zh-Hans", "family": "gnews-zh"},
     {"id": "rss-gnews-world-en", "name": "Google News 英文国际", "category": "global", "url": "https://news.google.com/rss/headlines/section/topic/WORLD?hl=en-US&gl=US&ceid=US:en", "family": "gnews-en"},
     {"id": "rss-bbc-world", "name": "BBC News World", "category": "global", "url": "https://feeds.bbci.co.uk/news/world/rss.xml", "family": "bbc"},
@@ -30,12 +82,10 @@ DIRECT_RSS_FEEDS: List[Dict[str, str]] = [
     {"id": "rss-guardian-world", "name": "The Guardian World", "category": "global", "url": "https://www.theguardian.com/world/rss", "family": "guardian"},
     {"id": "rss-npr-world", "name": "NPR World", "category": "global", "url": "https://feeds.npr.org/1004/rss.xml", "family": "npr"},
     {"id": "rss-scmp-china", "name": "南华早报 SCMP China", "category": "global", "url": "https://www.scmp.com/rss/4/feed", "family": "scmp"},
-    # Finance / Markets
+    # --- Finance / Markets ---
     {"id": "rss-cnbc-world", "name": "CNBC Top News", "category": "finance", "url": "https://search.cnbc.com/rs/search/combinedcms/view.xml?partnerId=wrss01&id=100727362", "family": "cnbc"},
-    # Frontier Tech / AI / Aerospace
-    {"id": "rss-techcrunch", "name": "TechCrunch", "category": "tech", "url": "https://techcrunch.com/feed/", "family": "techcrunch"},
-    {"id": "rss-theverge", "name": "The Verge", "category": "tech", "url": "https://www.theverge.com/rss/index.xml", "family": "theverge"},
-    {"id": "rss-arstechnica", "name": "Ars Technica", "category": "tech", "url": "https://feeds.arstechnica.com/arstechnica/index", "family": "arstechnica"},
+    {"id": "rss-cnbc-tech", "name": "CNBC Tech & AI", "category": "finance", "url": "https://search.cnbc.com/rs/search/combinedcms/view.xml?partnerId=wrss01&id=19854910", "family": "cnbc"},
+    {"id": "rss-wsj-markets", "name": "WSJ Markets", "category": "finance", "url": "https://feeds.content.dowjones.io/public/rss/RSSMarketsMain", "family": "wsj"},
 ]
 
 _HTML_TAG_RE = re.compile(r"<[^>]+>")
@@ -180,7 +230,7 @@ def fetch_direct_rss_media(
     ok_feeds = 0
     errors: List[str] = []
 
-    with ThreadPoolExecutor(max_workers=6) as pool:
+    with ThreadPoolExecutor(max_workers=12) as pool:
         futures = [pool.submit(_fetch_one_feed, spec, fetched_iso, ref_dt) for spec in feed_list]
         for fut in as_completed(futures):
             spec, items, err = fut.result()

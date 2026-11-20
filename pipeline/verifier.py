@@ -8,7 +8,7 @@ from typing import Any, Dict, List, Optional, Set, Tuple
 from pipeline.connectors.base import repair_mojibake
 from pipeline.dedup import entities_conflict, extract_tokens, get_publisher_family, is_omnibus_digest_title, title_similarity
 from pipeline.time_utils import parse_iso_datetime
-from pipeline.entities import match_entities_with_reasons
+from pipeline.entities import ENTITY_REGISTRY, match_entities_with_reasons
 from pipeline.id_utils import (
     canonicalize_url,
     ensure_unique_event_id,
@@ -39,10 +39,10 @@ def dedupe_attribution_prefixes(text: str) -> str:
     cleaned = cleaned.replace("原始素材仅含标题，细节待查原文。", "").strip()
     return cleaned
 _PRODUCT_STAGE_PATTERNS = [
-    ("ga", "正式可用 (GA)", re.compile(r"(?:正式发布|正式上线|全面开放|开源权重|正式商用|general availability|ga\b|v\d+\.\d+)", re.I)),
-    ("beta", "测试开放 (Beta)", re.compile(r"(?:公测|内测|测试版|预览版|preview|beta|pre-release|rc\d*)", re.I)),
-    ("waitlist", "候补申请 (Waitlist)", re.compile(r"(?:waitlist|候补|申请试用|预约体验)", re.I)),
-    ("announced", "已宣布 (Announced)", re.compile(r"(?:首次亮相|公布|宣布|预告|剧透|planned|announced)", re.I)),
+    ("ga", "正式可用 (GA)", re.compile(r"(?:正式发布|正式上线|全面开放|开源权重|正式商用|general availability|\bga\b|v\d+\.\d+)", re.I)),
+    ("beta", "测试开放 (Beta)", re.compile(r"(?:公测|内测|测试版|预览版|\bpreview\b|\bbeta\b|pre-release|\brc\d*\b)", re.I)),
+    ("waitlist", "候补申请 (Waitlist)", re.compile(r"(?:\bwaitlist\b|候补|申请试用|预约体验)", re.I)),
+    ("announced", "已宣布 (Announced)", re.compile(r"(?:首次亮相|正式公布|官方宣布|\bannounced\b)", re.I)),
 ]
 
 
@@ -66,8 +66,24 @@ def _has_semantic_correspondence(event_text: str, raw_item: dict) -> bool:
     return len(shared) >= 3
 
 
-def infer_material_stage(text: str) -> Optional[Dict[str, str]]:
-    """Classify product/model release stage so announced != beta != GA."""
+_TECH_STAGE_CONTEXT_RE = re.compile(
+    r"(?:模型|开源|ai\b|gemini|neon|carbon|hydrogen|gpt|claude|qwen|千问|kimi|deepseek|混元|vllm|llama|sdk|api|软件|芯片|算法|算力|agent|智能体|版本|github|hugging\s*face)",
+    re.I,
+)
+_NON_TECH_POLITICAL_RE = re.compile(
+    r"(?:总统|首相|总理|外交|海峡|霍尔木兹|欧盟|脱欧|关税|峰会|选举|国会|参议院|众议院|停火|军队|导弹|制裁|会晤|访华|中东)",
+    re.I,
+)
+
+
+def infer_material_stage(text: str, category: str = "tech") -> Optional[Dict[str, str]]:
+    """Classify product/model release stage ONLY for genuine AI/tech product releases (never politics/diplomacy)."""
+    if category not in {"tech"}:
+        return None
+    if _NON_TECH_POLITICAL_RE.search(text) and not _TECH_STAGE_CONTEXT_RE.search(text):
+        return None
+    if not _TECH_STAGE_CONTEXT_RE.search(text):
+        return None
     for code, label, pat in _PRODUCT_STAGE_PATTERNS:
         if pat.search(text):
             return {"stage": code, "label": label}
@@ -82,6 +98,7 @@ def extract_structured_fact_atoms(
     sources: List[dict],
     evidence_status: str,
     first_discovered_at: str,
+    category: str = "tech",
 ) -> List[Dict[str, Any]]:
     """
     Produce structured fact records (subject, action/metric, value/unit/period, attribution, source locator, revision)
@@ -89,7 +106,7 @@ def extract_structured_fact_atoms(
     """
     atoms: List[Dict[str, Any]] = []
     primary_subject = entities[0] if entities else "相关主体"
-    stage = infer_material_stage(f"{title} {fact_summary}")
+    stage = infer_material_stage(f"{title} {fact_summary}", category=category)
 
     # Detect quantitative metrics with explicit period/scope qualifier
     combined = f"{title} {fact_summary}"
@@ -326,13 +343,20 @@ def verify_and_enrich_event(
             f"目前仅见 1 家独立来源（共 {len(valid_sources)} 条引用含转载，{depth_desc}），尚未见独立渠道交叉或官方确认"
         )
 
-    # Resolve canonical entities with disambiguation
+    # Resolve canonical entities cleanly from text without letting stale canonical names self-perpetuate
     raw_entities = raw_event.get("entities")
     entities_list = [str(e).strip() for e in raw_entities if str(e).strip()][:6] if isinstance(raw_entities, list) else []
-    matched_entity_objs = match_entities_with_reasons(f"{title} {fact_summary[:140]}", entities_list)
+    canonical_name_set = {ed.canonical_name for ed in ENTITY_REGISTRY}
+    non_canonical_hints = [e for e in entities_list if e not in canonical_name_set]
+    matched_entity_objs = match_entities_with_reasons(f"{title} {fact_summary[:140]}", non_canonical_hints)
+    matched_canonicals = {m["canonical_name"] for m in matched_entity_objs}
+    cleaned_entities = [e for e in entities_list if e not in canonical_name_set or e in matched_canonicals]
+    if matched_entity_objs:
+        for m in matched_entity_objs:
+            if m["canonical_name"] not in cleaned_entities and len(cleaned_entities) < 6:
+                cleaned_entities.append(m["canonical_name"])
+    entities_list = cleaned_entities[:6]
     entity_ids = [m["entity_id"] for m in matched_entity_objs]
-    if not entities_list and matched_entity_objs:
-        entities_list = [m["canonical_name"] for m in matched_entity_objs[:5]]
 
     # SEC EDGAR cross-corroboration on extraordinary executive departure rumors
     contradictions: List[str] = []
@@ -480,9 +504,10 @@ def verify_and_enrich_event(
         sources=valid_sources,
         evidence_status=evidence_status,
         first_discovered_at=first_discovered_at,
+        category=category,
     )
 
-    stage_info = infer_material_stage(f"{title} {fact_summary}")
+    stage_info = infer_material_stage(f"{title} {fact_summary}", category=category)
 
     return {
         "schema_version": "3.0",

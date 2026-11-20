@@ -1679,6 +1679,7 @@ def build_briefing_batch(
         "entities_path": "data/entities_index.json",
         "storylines_path": "data/storylines_index.json",
         "topics_path": "data/topics.json",
+        "live_wire_path": "data/live_wire.json",
         "ai_progress_path": "data/ai_progress.json",
         "finance_impact_path": "data/finance_impact.json",
         "calendar_path": "data/calendar.json",

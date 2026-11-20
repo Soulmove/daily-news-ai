@@ -16,10 +16,10 @@ _LAB_CATALOG: List[Dict[str, Any]] = [
         "company_name_en": "Google DeepMind",
         "region": "海外",
         "region_en": "Global",
-        "flagship_model": "Gemini 4 Carbon / Hydrogen · Omni · Project Genie 4",
+        "flagship_model": "Gemini 4 Carbon / Neon / Hydrogen · Omni · Project Genie 4",
         "open_source_line": "DiffusionGemma / Gemma 系列 / Modern Web Guidance 1.0",
-        "access_limits": "旗舰版按量计费且免费 API 限频；世界模型仍处研究预览/配额限制",
-        "access_limits_en": "Flagships billed per token; free API rate-limited; world models in preview",
+        "access_limits": "Neon 定价 $3/$15 百万 Token，旗舰 Carbon 更高；免费 AI Studio 限频；Genie 4 仍为预览",
+        "access_limits_en": "Neon API $3/$15 per 1M tokens; free AI Studio rate-limited; Genie 4 in preview",
     },
     {
         "company_id": "anthropic",
@@ -27,7 +27,7 @@ _LAB_CATALOG: List[Dict[str, Any]] = [
         "company_name_en": "Anthropic",
         "region": "海外",
         "region_en": "Global",
-        "flagship_model": "Claude Fable / Mythos 系列 · Claude Code",
+        "flagship_model": "Claude Fable 5.2 / Mythos 5.2 · Claude Code",
         "open_source_line": "MCP 协议生态与 Agent 工具链",
         "access_limits": "闭源商用为主，高阶模型价格偏高且存在并发与区域限制",
         "access_limits_en": "Closed-weight commercial API with premium pricing and regional limits",
@@ -38,10 +38,10 @@ _LAB_CATALOG: List[Dict[str, Any]] = [
         "company_name_en": "OpenAI",
         "region": "海外",
         "region_en": "Global",
-        "flagship_model": "GPT 系列旗舰 · GPT-Images 图像模型",
+        "flagship_model": "GPT-6.2 Astra / Sol · GPT-6 Cyber · GPT-Images 2.6",
         "open_source_line": "Codex CLI / OpenAI SDK",
-        "access_limits": "闭源订阅与 API 计费，多模态新功能按账户等级分批灰度推送",
-        "access_limits_en": "Closed API & subscription tiers; staged rollouts for multimodal models",
+        "access_limits": "闭源订阅与 API 计费，Cyber 等垂直版需企业白名单审批",
+        "access_limits_en": "Closed API & subscription tiers; specialized variants like Cyber gated to approved orgs",
     },
     {
         "company_id": "qwen",
@@ -102,23 +102,80 @@ _LAB_CATALOG: List[Dict[str, Any]] = [
 
 _CURATED_AI_MILESTONES: List[Dict[str, Any]] = [
     {
+        "id": "ai_google_gemini4_neon",
+        "date": "2026-11-18",
+        "company_id": "google",
+        "company_name": "Google DeepMind",
+        "region": "海外",
+        "category": "核心中杯旗舰",
+        "category_en": "Mid-Tier Powerhouse",
+        "title": "Google 正式发布「Gemini 4 Neon（氖）」：近 Carbon 旗舰智力 + 百万上下文 + 档位可调思考",
+        "title_en": "Google launches Gemini 4 Neon: near-Carbon intelligence at high speed with 1M unified context",
+        "what_it_does": "主打高频复杂任务的甜点旗舰：原生 100 万 Token 文本/图/视频/PDF 统一上下文，专攻全仓库级编程调试、多轮工具调用、STEM 推理与 Antigravity 多 Agent 编排调度。",
+        "what_it_does_en": "High-speed mid-tier powerhouse with 1M multimodal context and scalable thinking levels (high/xhigh) for agentic coding, repo debugging, and swarm orchestration.",
+        "who_cares": "软件工程师、AI Agent 开发者、重度多模态研究用户",
+        "limitations": "API 定价输入 $3 / 输出 $15 每百万 Token；消费端需 Gemini Advanced / AI Pro 付费订阅。",
+        "limitations_en": "API priced at $3/$15 per 1M input/output tokens; consumer access requires paid Gemini AI Pro tier.",
+        "source_name": "Google DeepMind / 9to5Google",
+        "source_url": "https://deepmind.google/",
+        "is_open_source": False,
+    },
+    {
+        "id": "ai_openai_gpt62_astra_sol",
+        "date": "2026-11-18",
+        "company_id": "openai",
+        "company_name": "OpenAI",
+        "region": "海外",
+        "category": "旗舰模型",
+        "category_en": "Flagship Model",
+        "title": "OpenAI 推出「GPT-6.2 Astra」与高性价比「GPT-6.2 Sol」，同步发布安全专版 GPT-6 Cyber",
+        "title_en": "OpenAI releases GPT-6.2 Astra, balanced GPT-6.2 Sol & enterprise GPT-6 Cyber",
+        "what_it_does": "Astra 瞄准顶尖复杂推理与多模态任务，Sol 主打日常高性价比调用，Cyber 与 Astra for Law 6.2 则切入企业网络安全与法律垂直场景。",
+        "what_it_does_en": "Astra leads frontier multimodal reasoning, Sol balances cost/speed, and Cyber/Law variants serve regulated enterprise workflows.",
+        "who_cares": "企业开发者、安全与法律团队、ChatGPT 重度用户",
+        "limitations": "全闭源计费；GPT-6 Cyber 仅面向通过合规审批的安全组织开放。",
+        "limitations_en": "Closed commercial API; GPT-6 Cyber restricted to vetted security organizations.",
+        "source_name": "OpenAI 官方",
+        "source_url": "https://openai.com/news/",
+        "is_open_source": False,
+    },
+    {
         "id": "ai_google_gemini4_hydrogen",
         "date": "2026-11-18",
         "company_id": "google",
         "company_name": "Google DeepMind",
         "region": "海外",
-        "category": "旗舰模型",
-        "category_en": "Flagship Model",
-        "title": "Google 推出主力模型「Gemini 4 Hydrogen（氢）」与旗舰「Carbon（碳）」",
-        "title_en": "Google launches Gemini 4 Hydrogen & flagship Gemini 4 Carbon",
-        "what_it_does": "日常高性价比主力与重度推理双档覆盖：适合长文档提炼、复杂代码开发、多模态音视频理解与 Agent 自动化。",
-        "what_it_does_en": "Dual-tier reasoning and daily workhorse for long-context analysis, coding, multimodal tasks, and agents.",
+        "category": "主力与旗舰",
+        "category_en": "Flagship & Workhorse",
+        "title": "Google 完善 Gemini 4 家族：轻快执行主力「Hydrogen（氢）」与重度科研旗舰「Carbon（碳）」",
+        "title_en": "Google rounds out Gemini 4 family: fast execution Hydrogen & heavy-research Carbon",
+        "what_it_does": "Hydrogen 负责高频自动化执行与子 Agent 并发，Carbon 专攻长周期科研难题，与最新 Neon 组成高中低三档完整梯队。",
+        "what_it_does_en": "Hydrogen powers fast agent execution while Carbon tackles long-horizon research, flanking the new Gemini 4 Neon.",
         "who_cares": "开发者、投研分析师、多模态内容创作者",
         "limitations": "Google AI Studio 免费档存在每分钟/每日调用限额，重度业务需付费配额。",
         "limitations_en": "Free AI Studio tier has strict per-minute/daily quotas.",
         "source_name": "Google AI 官方",
         "source_url": "https://ai.google.dev/",
         "is_open_source": False,
+    },
+    {
+        "id": "ai_deepseek_v4_pro",
+        "date": "2026-11-17",
+        "company_id": "deepseek",
+        "company_name": "DeepSeek",
+        "region": "国内",
+        "category": "开源与极速 API",
+        "category_en": "Open MoE & Fast API",
+        "title": "DeepSeek 持续迭代「DeepSeek V4-Pro」与低延迟 Flash 优化，领跑 OpenRouter 开发者调用量",
+        "title_en": "DeepSeek iterates on DeepSeek V4-Pro MoE & low-latency Flash, leading OpenRouter dev traffic",
+        "what_it_does": "以极低推理单价与稀疏 MoE 架构提供接近海外闭源旗舰的代码与数学能力，非常适合高并发 Agent、批处理翻译和中小团队降本替代。",
+        "what_it_does_en": "Ultra-low-cost MoE reasoning and coding model dominating high-volume developer workloads and budget-friendly agent pipelines.",
+        "who_cares": "独立开发者、创业公司、高频 API 调用业务",
+        "limitations": "高峰时段官方直连偶有排队，可通过多云/开源自建分流。",
+        "limitations_en": "Official endpoint may queue during peak hours; easily routed via open weights or cloud mirrors.",
+        "source_name": "DeepSeek / OpenRouter",
+        "source_url": "https://www.deepseek.com/",
+        "is_open_source": True,
     },
     {
         "id": "ai_google_diffusiongemma_genie4",
@@ -310,73 +367,77 @@ def _infer_what_it_does_zh(title: str, summary: str) -> str:
 
 
 def _query_gemini_google_search_ai_weekly() -> List[Dict[str, Any]]:
-    """Use Gemini + Google Search Grounding (on GitHub Actions) to summarize latest global & China AI model releases."""
-    api_key = (
-        os.environ.get("KEY_TECH")
-        or os.environ.get("GOOGLE_API_KEY")
-        or os.environ.get("KEY_2")
-        or ""
-    ).strip()
-    if not api_key:
+    """Use Gemini + Google Search Grounding rotating across ALL configured keys to catch zero-lag global & China AI releases."""
+    key_names = (
+        "KEY_TECH", "KEY_1", "KEY_2", "KEY_3", "KEY_4", "KEY_5", "KEY_6", "KEY_7", "KEY_8",
+        "GOOGLE_API_KEY", "KEY_FINANCE", "KEY_GLOBAL", "KEY_GENERAL",
+    )
+    keys: List[str] = []
+    for kn in key_names:
+        val = (os.environ.get(kn) or "").strip()
+        if val and val not in keys:
+            keys.append(val)
+    if not keys:
         return []
     try:
         from google import genai
         from google.genai import types
 
-        client = genai.Client(api_key=api_key)
         today = now_shanghai().strftime("%Y-%m-%d")
         prompt = (
-            f"今天是 {today}。请通过 Google 搜索整理最近 7 天内全球与中国最重磅的 6–10 条 AI 模型与开源项目进展"
-            "（重点覆盖 Google Gemini/Gemma、Anthropic Claude、OpenAI、阿里 Qwen、月之暗面 Kimi、DeepSeek、腾讯混元，以及 GitHub/Hugging Face 爆火的独立开源模型/推理引擎/多模态/机器人项目）。\n"
+            f"今天是 {today}。请通过 Google 搜索整理最近 7 天（尤其过去 24–72 小时内最新刚发布）全球与中国最重磅的 8–12 条 AI 模型与开源项目进展"
+            "（务必重点搜索并核查：Google Gemini 4 Neon/Carbon/Hydrogen/Gemma、OpenAI GPT-6.2 Astra/Sol/Codex、Anthropic Claude Fable/Mythos 5.x、阿里 Qwen4、月之暗面 Kimi K3、DeepSeek V4、腾讯混元 Hy4、xAI Grok、Meta Llama，以及 GitHub/Hugging Face 爆火的独立开源模型/推理引擎/多模态/机器人项目）。\n"
             "每条必须用小白能一眼看懂的中文说清「它具体能干什么」和「使用限制/门槛」。\n"
             "仅输出严格 JSON 数组，每项包含字段：\n"
             '{"date":"YYYY-MM-DD","company_name":"机构或研究员名","region":"海外|国内|全球开源","category":"旗舰模型|开源权重|多模态|Agent工具|推理引擎","title":"中文标题","title_en":"English title","what_it_does":"一句话小白说明它能干什么","what_it_does_en":"One-sentence English explanation","who_cares":"适用人群","limitations":"限制/收费/硬件门槛","limitations_en":"Limitations in English","source_name":"来源","source_url":"https://...","is_open_source":true}'
         )
-        for model_name in ("gemini-4-hydrogen", "gemini-2.5-flash"):
-            try:
-                resp = client.models.generate_content(
-                    model=model_name,
-                    contents=prompt,
-                    config=types.GenerateContentConfig(
-                        tools=[types.Tool(google_search=types.GoogleSearch())],
-                        temperature=0.2,
-                    ),
-                )
-                txt = (resp.text or "").strip()
-                m = re.search(r"\[[\s\S]*\]", txt)
-                if not m:
+        for api_key in keys[:6]:
+            client = genai.Client(api_key=api_key)
+            for model_name in ("gemini-4-hydrogen", "gemini-2.5-flash"):
+                try:
+                    resp = client.models.generate_content(
+                        model=model_name,
+                        contents=prompt,
+                        config=types.GenerateContentConfig(
+                            tools=[types.Tool(google_search=types.GoogleSearch())],
+                            temperature=0.2,
+                        ),
+                    )
+                    txt = (resp.text or "").strip()
+                    m = re.search(r"\[[\s\S]*\]", txt)
+                    if not m:
+                        continue
+                    arr = json.loads(m.group(0))
+                    if isinstance(arr, list) and arr:
+                        cleaned: List[Dict[str, Any]] = []
+                        for i, row in enumerate(arr[:14]):
+                            if not isinstance(row, dict) or not row.get("title"):
+                                continue
+                            cid, cname, reg = _infer_company(f"{row.get('company_name', '')} {row.get('title', '')}")
+                            cleaned.append(
+                                {
+                                    "id": f"ai_gsearch_{today}_{i}",
+                                    "date": str(row.get("date") or today)[:10],
+                                    "company_id": cid,
+                                    "company_name": str(row.get("company_name") or cname),
+                                    "region": str(row.get("region") or reg),
+                                    "category": str(row.get("category") or "AI 进展"),
+                                    "category_en": "AI Release",
+                                    "title": str(row.get("title")),
+                                    "title_en": str(row.get("title_en") or row.get("title")),
+                                    "what_it_does": str(row.get("what_it_does") or ""),
+                                    "what_it_does_en": str(row.get("what_it_does_en") or ""),
+                                    "who_cares": str(row.get("who_cares") or "AI 开发者与普通用户"),
+                                    "limitations": str(row.get("limitations") or "详见官方说明与许可证"),
+                                    "limitations_en": str(row.get("limitations_en") or "See official docs for limits"),
+                                    "source_name": str(row.get("source_name") or "Google Search Grounding"),
+                                    "source_url": str(row.get("source_url") or ""),
+                                    "is_open_source": bool(row.get("is_open_source")),
+                                }
+                            )
+                        return cleaned
+                except Exception:
                     continue
-                arr = json.loads(m.group(0))
-                if isinstance(arr, list) and arr:
-                    cleaned: List[Dict[str, Any]] = []
-                    for i, row in enumerate(arr[:12]):
-                        if not isinstance(row, dict) or not row.get("title"):
-                            continue
-                        cid, cname, reg = _infer_company(f"{row.get('company_name', '')} {row.get('title', '')}")
-                        cleaned.append(
-                            {
-                                "id": f"ai_gsearch_{today}_{i}",
-                                "date": str(row.get("date") or today)[:10],
-                                "company_id": cid,
-                                "company_name": str(row.get("company_name") or cname),
-                                "region": str(row.get("region") or reg),
-                                "category": str(row.get("category") or "AI 进展"),
-                                "category_en": "AI Release",
-                                "title": str(row.get("title")),
-                                "title_en": str(row.get("title_en") or row.get("title")),
-                                "what_it_does": str(row.get("what_it_does") or ""),
-                                "what_it_does_en": str(row.get("what_it_does_en") or ""),
-                                "who_cares": str(row.get("who_cares") or "AI 开发者与普通用户"),
-                                "limitations": str(row.get("limitations") or "详见官方说明与许可证"),
-                                "limitations_en": str(row.get("limitations_en") or "See official docs for limits"),
-                                "source_name": str(row.get("source_name") or "Google Search Grounding"),
-                                "source_url": str(row.get("source_url") or ""),
-                                "is_open_source": bool(row.get("is_open_source")),
-                            }
-                        )
-                    return cleaned
-            except Exception:
-                continue
     except Exception:
         return []
     return []
@@ -404,7 +465,11 @@ def build_ai_progress_artifact(
         _add_item(g)
 
     ai_kw_re = re.compile(
-        r"(?:模型|开源|gemini|claude|gpt|qwen|千问|kimi|混元|deepseek|diffusion|llama|vllm|ollama|agent|openai|anthropic|huggingface|github|强化学习)",
+        r"(?:模型|开源|gemini|neon|carbon|hydrogen|claude|fable|mythos|gpt|astra|qwen|千问|kimi|混元|deepseek|diffusion|llama|vllm|ollama|agent|openai|anthropic|huggingface|github|强化学习)",
+        re.I,
+    )
+    ai_release_re = re.compile(
+        r"(?:release|launch|announc|introduc|open[- ]source|weights|发布|开源|上线|推出|升级|preview|neon|astra|fable|mythos|qwen4|deepseek|kimi|genie|gemma)",
         re.I,
     )
     for cat in ("tech", "general", "finance", "global"):
@@ -441,6 +506,57 @@ def build_ai_progress_artifact(
                     "is_open_source": is_os,
                 }
             )
+
+    # Also ingest freshly crawled direct-RSS AI lab announcements & 7x24 flash wire AI drops (zero-lag)
+    try:
+        from pathlib import Path
+        from .bilingual import ensure_zh_headline
+        from .manifest import load_json_if_exists
+
+        raw_pool: List[dict] = []
+        conn_doc = load_json_if_exists(Path("data/connectors_latest.json"), default={})
+        if isinstance(conn_doc, dict):
+            raw_pool.extend(conn_doc.get("items") or [])
+        lw_doc = load_json_if_exists(Path("data/live_wire.json"), default={})
+        if isinstance(lw_doc, dict):
+            raw_pool.extend(lw_doc.get("items") or [])
+
+        for raw_it in raw_pool:
+            if not isinstance(raw_it, dict):
+                continue
+            rtitle = str(raw_it.get("title") or "").strip()
+            if not rtitle or not ai_kw_re.search(rtitle) or not ai_release_re.search(rtitle):
+                continue
+            if any(bad in rtitle.lower() for bad in ("听证会", "诈骗", "fcc", "fda", "围巾", "座驾", "中期选举", "ipo", "募资", "发行价", "灰市", "selling pressure", "股票", "股价", "lawsuit", "sues")):
+                continue
+            cid, cname, reg = _infer_company(rtitle)
+            pub_date = str(raw_it.get("published_at") or raw_it.get("fetched_at") or generated_at_iso)[:10]
+            excerpt = str(raw_it.get("excerpt") or "")
+            zh_title = ensure_zh_headline(rtitle, "tech")
+            is_os = any(k in rtitle.lower() for k in ("开源", "open", "github", "hugging", "vllm", "llama.cpp", "gemma", "权重"))
+            _add_item(
+                {
+                    "id": f"ai_raw_{raw_it.get('item_id') or raw_it.get('id') or len(items)}",
+                    "date": pub_date,
+                    "company_id": cid,
+                    "company_name": cname,
+                    "region": reg,
+                    "category": "开源突破" if is_os else "最新动态",
+                    "category_en": "Open Source" if is_os else "Latest Release",
+                    "title": zh_title,
+                    "title_en": rtitle,
+                    "what_it_does": _infer_what_it_does_zh(zh_title, excerpt),
+                    "what_it_does_en": excerpt[:160] or rtitle,
+                    "who_cares": "AI 开发者、科研人员与前沿用户",
+                    "limitations": "详见官方发布说明与接口配额。",
+                    "limitations_en": "See official release notes and API pricing.",
+                    "source_name": str(raw_it.get("source_name") or "直连 AI 雷达"),
+                    "source_url": str(raw_it.get("url") or raw_it.get("canonical_url") or ""),
+                    "is_open_source": is_os,
+                }
+            )
+    except Exception:
+        pass
 
     for tool in tech_tools[:12]:
         name = str(tool.get("name") or "").strip()

@@ -2,8 +2,8 @@ name: 🧠 AI Briefing Pipeline (V3 Grounded + Research Memory)
 
 on:
   schedule:
-    # UTC 22:15, 00:15, 03:15, 06:15, 09:15, 13:15 => CST 06:15, 08:15, 11:15, 14:15, 17:15, 21:15
-    - cron: '15 22,0,3,6,9,13 * * *'
+    # Hourly zero-lag AI briefing + Google Search Grounding AI model radar (24x/day across 13 rotating keys)
+    - cron: '30 * * * *'
   workflow_dispatch:
     inputs:
       include_comments:

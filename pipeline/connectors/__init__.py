@@ -7,7 +7,9 @@ from typing import Any, Dict, List
 
 from pipeline.connectors.arxiv_papers import fetch_arxiv_papers
 from pipeline.connectors.base import HttpCacheStore
+from pipeline.connectors.china_realtime import fetch_china_realtime_wires, refresh_live_wire_file
 from pipeline.connectors.direct_rss import fetch_direct_rss_media
+from pipeline.connectors.gemini_search_hunter import fetch_gemini_search_breaking_news
 from pipeline.connectors.github_releases import fetch_github_releases
 from pipeline.connectors.hkex_cninfo import fetch_cninfo_announcements, fetch_hkex_announcements
 from pipeline.connectors.huggingface_hub import fetch_huggingface_models
@@ -31,6 +33,8 @@ def run_all_first_party_connectors(base_dir: Path | str = ".") -> Dict[str, Any]
         prev_tools = prev_tt_doc.get("tools", []) if isinstance(prev_tt_doc, dict) else []
 
     runners = [
+        ("china-realtime-wires", lambda: fetch_china_realtime_wires(cache)),
+        ("gemini-search-hunter", lambda: fetch_gemini_search_breaking_news(cache, base_dir=root)),
         ("direct-rss-media", lambda: fetch_direct_rss_media(cache)),
         ("sec-edgar", lambda: fetch_sec_edgar(cache, base_dir=str(root))),
         ("github-releases", lambda: fetch_github_releases(cache, previous_tools=prev_tools, previous_items=prev_items)),
@@ -90,6 +94,12 @@ def run_all_first_party_connectors(base_dir: Path | str = ".") -> Dict[str, Any]
             cur.update(upd)
 
     cache.save()
+
+    # Also write/update data/live_wire.json combining 7x24 domestic wires + breaking direct RSS headlines
+    try:
+        refresh_live_wire_file(root, extra_items=all_items[:60])
+    except Exception:
+        pass
 
     ok_connectors = sum(1 for r in reports if r["status"] in {"ok", "cached_304", "partial"})
     return {

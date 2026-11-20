@@ -58,7 +58,8 @@ def _translate_offline_fallback(text: str, *, is_summary: bool = False) -> str:
         if pat.search(clean):
             return zh
     if is_summary:
-        return "该条为海外主流媒体英文原报（云端 AI 批次将自动全文精译，您也可直接点击「原文」或切至 EN 模式阅读原版）。"
+        # Preserve original English excerpt (first 120 chars) instead of generic placeholder text (A5)
+        return clean[:120].rstrip() + ("…" if len(clean) > 120 else "")
     t_low = clean.lower()
     prefix = "外媒快讯"
     if any(k in t_low for k in ("trump", "xi", "putin", "apec", "china", "white house")):
@@ -74,38 +75,51 @@ def _translate_offline_fallback(text: str, *, is_summary: bool = False) -> str:
     return f"【{prefix}】{clean}"
 
 
+def ensure_zh_headline(text: str, category: str = "") -> str:
+    """Fast deterministic Chinese headline normalizer for raw direct-RSS / flash wire items."""
+    del category
+    return _translate_offline_fallback(text, is_summary=False)
+
+
+_LEGACY_PLACEHOLDER_SUMMARY_RE = re.compile(r"该条为海外主流媒体英文原报|云端\s*AI\s*批次将自动")
+
+
 def _batch_translate_with_gemini(texts: List[str], target_lang: str = "zh") -> Optional[List[str]]:
-    api_key = (
-        os.environ.get("KEY_GLOBAL")
-        or os.environ.get("GOOGLE_API_KEY")
-        or os.environ.get("KEY_1")
-        or ""
-    ).strip()
-    if not api_key or not texts:
+    key_names = (
+        "KEY_GLOBAL", "KEY_1", "KEY_2", "KEY_3", "KEY_4", "KEY_5", "KEY_6", "KEY_7", "KEY_8",
+        "GOOGLE_API_KEY", "KEY_TECH", "KEY_FINANCE", "KEY_GENERAL",
+    )
+    keys: List[str] = []
+    for kn in key_names:
+        v = (os.environ.get(kn) or "").strip()
+        if v and v not in keys:
+            keys.append(v)
+    if not keys or not texts:
         return None
     try:
         from google import genai
         from google.genai import types
 
-        client = genai.Client(api_key=api_key)
         lang_desc = "自然流畅、专业简洁的中文新闻表达" if target_lang == "zh" else "concise, journalistic English"
         prompt = (
             f"将下面 JSON 数组中的每条新闻文本精准翻译为{lang_desc}，保留专有名词与数字，严禁增删条目。\n"
             f"只输出严格 JSON 字符串数组（长度必须与输入完全一致）：\n"
             + json.dumps(texts, ensure_ascii=False)
         )
-        for model_name in ("gemini-4-hydrogen", "gemini-2.5-flash"):
-            try:
-                resp = client.models.generate_content(
-                    model=model_name,
-                    contents=prompt,
-                    config=types.GenerateContentConfig(temperature=0.1, response_mime_type="application/json"),
-                )
-                parsed = json.loads(resp.text or "[]")
-                if isinstance(parsed, list) and len(parsed) == len(texts):
-                    return [str(x).strip() for x in parsed]
-            except Exception:
-                continue
+        for api_key in keys[:5]:
+            client = genai.Client(api_key=api_key)
+            for model_name in ("gemini-4-hydrogen", "gemini-2.5-flash"):
+                try:
+                    resp = client.models.generate_content(
+                        model=model_name,
+                        contents=prompt,
+                        config=types.GenerateContentConfig(temperature=0.1, response_mime_type="application/json"),
+                    )
+                    parsed = json.loads(resp.text or "[]")
+                    if isinstance(parsed, list) and len(parsed) == len(texts):
+                        return [str(x).strip() for x in parsed]
+                except Exception:
+                    continue
     except Exception:
         return None
     return None
@@ -120,6 +134,18 @@ def enrich_bilingual_events(events: List[Dict[str, Any]]) -> None:
     for idx, ev in enumerate(events):
         title = str(ev.get("title") or "").strip()
         summary = str(ev.get("fact_summary") or ev.get("summary") or "").strip()
+        src0 = (ev.get("sources") or [{}])[0] if isinstance(ev.get("sources"), list) and ev.get("sources") else {}
+        en_raw = str(ev.get("summary_en") or src0.get("excerpt") or ev.get("title_en") or src0.get("title") or "").strip()
+
+        # Scrub legacy identical placeholder summary back to original English excerpt (first 120 chars)
+        if _LEGACY_PLACEHOLDER_SUMMARY_RE.search(summary):
+            fallback_en = (en_raw or title)[:120].rstrip() + ("…" if len(en_raw or title) > 120 else "")
+            summary = fallback_en
+            ev["fact_summary"] = fallback_en
+            ev["summary"] = fallback_en
+            ev["summary_zh"] = ""
+            if en_raw:
+                ev["summary_en"] = en_raw
 
         if is_mostly_english(title):
             ev.setdefault("title_en", title)
@@ -168,7 +194,11 @@ def enrich_bilingual_topics(topics: List[Dict[str, Any]]) -> None:
             else:
                 node["title_zh"] = t
             s = str(node.get("summary") or "").strip()
-            if s and is_mostly_english(s):
+            if _LEGACY_PLACEHOLDER_SUMMARY_RE.search(s):
+                s = str(node.get("summary_en") or node.get("title_en") or node.get("title") or "")[:120]
+                node["summary"] = s
+                node["summary_zh"] = s
+            elif s and is_mostly_english(s):
                 node["summary_en"] = s
                 node["summary"] = _translate_offline_fallback(s, is_summary=True)
                 node["summary_zh"] = node["summary"]

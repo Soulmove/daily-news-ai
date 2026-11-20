@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from functools import lru_cache
+
 from datetime import timedelta
 import re
 from typing import Dict, List, Optional, Set, Tuple
@@ -117,6 +119,18 @@ def _extract_filing_subject(text: str) -> Optional[str]:
     return f"SEC:{head[:24]}" if head else None
 
 
+@lru_cache(maxsize=8192)
+def _cached_primary_entities(txt: str) -> frozenset[str]:
+    from pipeline.entities import match_entities_with_reasons
+
+    hits = match_entities_with_reasons(txt)
+    return frozenset(
+        h["entity_id"]
+        for h in hits
+        if h.get("entity_id") and h["entity_id"] not in _GENERIC_BUCKET_ENTITIES
+    )
+
+
 def entities_conflict(
     text_a: str,
     text_b: str,
@@ -137,8 +151,6 @@ def entities_conflict(
         if (item_a or {}).get("source_kind") == "official_filing" or (item_b or {}).get("source_kind") == "official_filing":
             return True
 
-    from pipeline.entities import match_entities_with_reasons
-
     def _primary_entity_set(txt: str, item: Optional[dict]) -> Set[str]:
         explicit = {
             str(e)
@@ -147,12 +159,7 @@ def entities_conflict(
         }
         if explicit:
             return explicit
-        hits = match_entities_with_reasons(txt)
-        return {
-            h["entity_id"]
-            for h in hits
-            if h.get("entity_id") and h["entity_id"] not in _GENERIC_BUCKET_ENTITIES
-        }
+        return set(_cached_primary_entities(txt))
 
     ents_a = _primary_entity_set(text_a, item_a)
     ents_b = _primary_entity_set(text_b, item_b)

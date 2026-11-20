@@ -726,6 +726,17 @@ def build_v3_artifacts(
         matched_primary_ent = entities_map.get((ev.get("entity_ids") or [None])[0] or "")
         next_catalyst = _infer_domain_next_catalyst(ev, matched_primary_ent)
 
+        def _scrub_ph(txt: str) -> str:
+            if not txt or "该条为海外主流媒体英文原报" in txt or "云端 AI 批次将自动" in txt:
+                return ev.get("fact_summary") or ev.get("summary_en") or ev.get("title") or ""
+            return txt
+
+        diff["new_facts"] = [_scrub_ph(x) for x in (diff.get("new_facts") or [])]
+        diff["unchanged_background"] = [_scrub_ph(x) for x in (diff.get("unchanged_background") or [])]
+        for tn in timeline:
+            if isinstance(tn, dict) and tn.get("fact_summary"):
+                tn["fact_summary"] = _scrub_ph(str(tn["fact_summary"]))
+
         storylines[st_id] = {
             "storyline_id": st_id,
             "current_event_id": ev["event_id"],
@@ -950,6 +961,21 @@ def build_v3_artifacts(
         if any(title_similarity(old_title, stitle) >= 0.50 for _, stitle in seen_storyline_titles):
             continue
         clean_old = dict(old_st)
+        def _scrub_old_ph(txt: str) -> str:
+            if not txt or "该条为海外主流媒体英文原报" in txt or "云端 AI 批次将自动" in txt:
+                src0_t = ((clean_old.get("sources") or [{}])[0]).get("excerpt") or ((clean_old.get("sources") or [{}])[0]).get("title") or clean_old.get("summary_en") or clean_old.get("title_en") or clean_old.get("title") or ""
+                return str(src0_t)[:120]
+            return txt
+        fd_old = clean_old.get("fact_diff")
+        if isinstance(fd_old, dict):
+            fd_old["new_facts"] = [_scrub_old_ph(str(x)) for x in (fd_old.get("new_facts") or [])]
+            fd_old["unchanged_background"] = [_scrub_old_ph(str(x)) for x in (fd_old.get("unchanged_background") or [])]
+        for tn in clean_old.get("timeline") or []:
+            if isinstance(tn, dict) and tn.get("fact_summary"):
+                tn["fact_summary"] = _scrub_old_ph(str(tn["fact_summary"]))
+        if "美元首" in old_title and "美联储 FOMC 与全球流动性" in (clean_old.get("entities") or []):
+            clean_old["entities"] = [e for e in clean_old["entities"] if e != "美联储 FOMC 与全球流动性"]
+            clean_old["entity_ids"] = [eid for eid in (clean_old.get("entity_ids") or []) if eid != "ent_macro_fomc"]
         ent_ids_old = clean_old.get("entity_ids") or []
         prim_old = entities_map.get(ent_ids_old[0]) if ent_ids_old else None
         domain_cat = _infer_domain_next_catalyst(clean_old, prim_old)

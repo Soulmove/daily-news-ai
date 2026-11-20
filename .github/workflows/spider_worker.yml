@@ -2,8 +2,8 @@ name: 🕷️ Spider Worker (V3 Raw + Connectors Collector)
 
 on:
   schedule:
-    # Hourly off-minute schedule avoids GitHub Actions sub-hour throttling drops (~60m honest cadence).
-    - cron: '17 * * * *'
+    # Zero-lag 20-minute cadence across 30+ direct RSS feeds + 7x24 real-time wires + first-party connectors
+    - cron: '*/20 * * * *'
   workflow_dispatch:
     inputs:
       reason:
@@ -39,9 +39,23 @@ jobs:
       - name: 📦 Install pinned dependencies
         run: pip install -r requirements.txt
 
-      - name: 🕷️ Run V3 Raw + First-Party Connectors Crawler
+      - name: 🕷️ Run V5 Omni-Source Zero-Lag Crawler
+        env:
+          KEY_TECH: ${{ secrets.KEY_TECH }}
+          KEY_GLOBAL: ${{ secrets.KEY_GLOBAL }}
+          KEY_FINANCE: ${{ secrets.KEY_FINANCE }}
+          KEY_GENERAL: ${{ secrets.KEY_GENERAL }}
+          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+          KEY_1: ${{ secrets.KEY_1 }}
+          KEY_2: ${{ secrets.KEY_2 }}
+          KEY_3: ${{ secrets.KEY_3 }}
+          KEY_4: ${{ secrets.KEY_4 }}
+          KEY_5: ${{ secrets.KEY_5 }}
+          KEY_6: ${{ secrets.KEY_6 }}
+          KEY_7: ${{ secrets.KEY_7 }}
+          KEY_8: ${{ secrets.KEY_8 }}
         run: |
-          python -m pipeline.fetch_raw --schedule-source "${{ github.event_name }}" --respect-cadence
+          python -m pipeline.fetch_raw --schedule-source "${{ github.event_name }}"
 
       - name: 📊 Write GitHub Step Summary
         if: always()

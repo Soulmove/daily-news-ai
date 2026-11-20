@@ -226,7 +226,7 @@ ENTITY_REGISTRY: List[EntityDef] = [
         canonical_name="腾讯 (Tencent)",
         entity_type="company",
         sector="互联网 / AI模型与应用",
-        aliases=("腾讯", "tencent", "混元", "hunyuan", "00700", "微信"),
+        aliases=("腾讯", "tencent", "混元", "hunyuan", "00700", "微信小程序", "微信生态", "微信支付"),
         tickers=(TickerRef("00700", "HK", "HKEX", "HKD"),),
         hkex_code="00700",
         operating_variables=("云与企业服务AI增量", "资本开支与回购节奏", "游戏/广告基本盘"),
@@ -260,7 +260,7 @@ ENTITY_REGISTRY: List[EntityDef] = [
         canonical_name="AI 推理与框架生态 (vLLM / llama.cpp / Transformers)",
         entity_type="tech",
         sector="AI 开源基础设施",
-        aliases=("vllm", "llama.cpp", "transformers", "pytorch", "sglang", "agent", "智能体", "mcp"),
+        aliases=("vllm", "llama.cpp", "transformers", "pytorch", "sglang", "ai agent", "coding agent", "agentic", "智能体", "mcp"),
         github_repos=(
             "vllm-project/vllm",
             "ggml-org/llama.cpp",
@@ -277,7 +277,7 @@ ENTITY_REGISTRY: List[EntityDef] = [
         canonical_name="美联储 FOMC 与全球流动性",
         entity_type="macro",
         sector="宏观利率与汇率",
-        aliases=("美联储", "fomc", "fed", "降息", "加息", "鲍威尔", "美元", "央行", "准备金率", "cpi"),
+        aliases=("美联储", "fomc", "fed", "降息", "加息", "鲍威尔", "美元指数", "美元汇率", "美元流动性", "美元走强", "美元走弱", "强美元", "联邦储备", "准备金率", "cpi"),
         operating_variables=("联邦基金目标利率区间", "点阵图与资产负债表缩表节奏", "美债长端收益率与美元指数"),
         validation_milestones=("Federal Reserve 官方 FOMC 声明与日历",),
         default_watched=True,
@@ -357,6 +357,13 @@ def _find_alias_pos(text_lower: str, alias: str, *, allow_negated: bool = False)
         return None
     idx = text_lower.find(a)
     while idx != -1:
+        after_char = text_lower[idx + len(a) : idx + len(a) + 1]
+        if a == "美元" and after_char == "首":
+            idx = text_lower.find(a, idx + len(a))
+            continue
+        if a == "中美" and after_char == "洲":
+            idx = text_lower.find(a, idx + len(a))
+            continue
         if allow_negated or not _NEGATED_MENTION_PREFIX_RE.search(text_lower[max(0, idx - 10) : idx]):
             return idx
         idx = text_lower.find(a, idx + len(a))

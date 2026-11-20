@@ -1,0 +1,2167 @@
+{
+  "schema_version": "3.0",
+  "batch_id": "smart-20261120-125622",
+  "input_batch_id": "raw-20261120-111401",
+  "input_cutoff_at": "2026-11-20T11:14:01+08:00",
+  "generated_at": "2026-11-20T12:56:22+08:00",
+  "published_at": "2026-11-20T12:56:27+08:00",
+  "category": "tech",
+  "category_label": "科技/AI",
+  "generation_mode": "v3_ground_update",
+  "key_changes": [
+    {
+      "event_id": "evt_c55cb4b1f66b",
+      "storyline_id": "st_80f726dd1fd1",
+      "headline": "【全球 AI 动态】Apple may be developing its own AI agent that runs your Mac",
+      "detail": "The iPhone maker appears to be building agents that can compete with the likes of Meta Muse, Instinct, Claude, and OpenA…",
+      "evidence_status": "multi_source",
+      "attribution_warning": null,
+      "source_count": 2,
+      "primary_url": "https://techcrunch.com/2026/11/19/apple-may-be-developing-its-own-ai-agent-that-runs-your-mac",
+      "source_name": "TechCrunch"
+    },
+    {
+      "event_id": "evt_c4c72bab3760",
+      "storyline_id": "st_dd206452c6ef",
+      "headline": "【全球 AI 动态】Anthropic rival says companies can (mostly) skip the pricey models",
+      "detail": "On the day Anthropic went public, Fireworks AI’s co-founder made the case for open source models as a cheaper alternativ…",
+      "evidence_status": "single_source",
+      "attribution_warning": null,
+      "source_count": 1,
+      "primary_url": "https://techcrunch.com/2026/11/19/anthropic-rival-says-companies-can-mostly-skip-the-pricey-models",
+      "source_name": "TechCrunch"
+    },
+    {
+      "event_id": "evt_389117ddec3e",
+      "storyline_id": "st_e94766cafb03",
+      "headline": "【马斯克与前沿科技】Elon Musk says SpaceX has a plan to eliminate cell phone dead zones",
+      "detail": "SpaceX CEO Elon Musk said the company has completed the design of a miniature rooftop cell tower that could provide bett…",
+      "evidence_status": "single_source",
+      "attribution_warning": null,
+      "source_count": 1,
+      "primary_url": "https://techcrunch.com/2026/11/19/elon-musk-says-spacex-has-a-plan-to-eliminate-cell-phone-dead-zones",
+      "source_name": "TechCrunch"
+    }
+  ],
+  "overview_sections": [
+    {
+      "title": "资本市场与头部格局剧变",
+      "points": [
+        {
+          "text": "Anthropic 在纳斯达克高开上市，创下融资与估值新纪录，同时也将 AI 基础设施“循环融资”模式与安全承诺推向公开市场检验。",
+          "source_refs": [
+            "R001",
+            "R002",
+            "R005",
+            "R006",
+            "R027"
+          ]
+        },
+        {
+          "text": "英伟达在创始人黄仁勋辞职与三季度财报后股价大幅震荡下挫，同时公司正针对第三方事件引发的数据泄露疑云展开调查。",
+          "source_refs": [
+            "R015",
+            "R024",
+            "R059"
+          ]
+        }
+      ]
+    },
+    {
+      "title": "大模型迭代与智能体生态白热化",
+      "points": [
+        {
+          "text": "谷歌发布 Gemini 4 Neon 并在 Mac 端赋予 Gemini 系统操作能力，同时将 AI 对话直接整合进搜索首页侧边栏。",
+          "source_refs": [
+            "R018",
+            "R020",
+            "R021",
+            "R030"
+          ]
+        },
+        {
+          "text": "OpenAI 邀请部分 Plus 用户测试 dots 智能体并持续扩展实时语音等能力；Meta 推出智能体产品的同时遭遇内部隐私混串风波。",
+          "source_refs": [
+            "R025",
+            "R032",
+            "R033",
+            "R034",
+            "R043",
+            "R121"
+          ]
+        }
+      ]
+    },
+    {
+      "title": "AI 安全隐患、硬件供应与监管动向",
+      "points": [
+        {
+          "text": "微软官方 Python Agent 框架遭 PyPI 供应链投毒，GitHub 亦出现针对 AI 编码智能体的恶意投毒攻击，凸显智能体权限与凭证安全风险。",
+          "source_refs": [
+            "R039",
+            "R065",
+            "R140"
+          ]
+        },
+        {
+          "text": "英国法庭迫使政府承认曾向苹果下达秘密加密令；谷歌将于 2027 年 1 月全球推行 Android 应用验证，美光预警 2027 年存储芯片库存趋紧。",
+          "source_refs": [
+            "R007",
+            "R008",
+            "R029",
+            "R063"
+          ]
+        }
+      ]
+    }
+  ],
+  "events": [
+    {
+      "schema_version": "3.0",
+      "event_id": "evt_c55cb4b1f66b",
+      "storyline_id": "st_80f726dd1fd1",
+      "article_ids": [
+        "rss-techcrunch_ac8260bde512",
+        "rss-theverge_8f1e28b013b7"
+      ],
+      "legacy_event_ids": [],
+      "title": "【全球 AI 动态】Apple may be developing its own AI agent that runs your Mac",
+      "category": "tech",
+      "entities": [
+        "苹果 (Apple)",
+        "AI 推理与框架生态 (vLLM / llama.cpp / Transformers)",
+        "Anthropic / Claude",
+        "OpenAI"
+      ],
+      "entity_ids": [
+        "ent_apple",
+        "ent_ai_infra_tools",
+        "ent_anthropic",
+        "ent_openai"
+      ],
+      "matched_entities": [
+        {
+          "entity_id": "ent_apple",
+          "canonical_name": "苹果 (Apple)",
+          "entity_type": "company",
+          "sector": "消费电子与端侧AI",
+          "matched_aliases": [
+            "apple",
+            "iphone"
+          ],
+          "tickers": [
+            {
+              "symbol": "AAPL",
+              "market": "US",
+              "exchange": "NASDAQ",
+              "currency": "USD",
+              "label": "AAPL.US (NASDAQ)"
+            }
+          ],
+          "reason": "正文/实体匹配关键词「apple / iphone」"
+        },
+        {
+          "entity_id": "ent_ai_infra_tools",
+          "canonical_name": "AI 推理与框架生态 (vLLM / llama.cpp / Transformers)",
+          "entity_type": "tech",
+          "sector": "AI 开源基础设施",
+          "matched_aliases": [
+            "ai agent"
+          ],
+          "tickers": [],
+          "reason": "正文/实体匹配关键词「ai agent」"
+        },
+        {
+          "entity_id": "ent_anthropic",
+          "canonical_name": "Anthropic / Claude",
+          "entity_type": "company",
+          "sector": "AI 模型与安全",
+          "matched_aliases": [
+            "claude"
+          ],
+          "tickers": [],
+          "reason": "正文/实体匹配关键词「claude」"
+        },
+        {
+          "entity_id": "ent_openai",
+          "canonical_name": "OpenAI",
+          "entity_type": "company",
+          "sector": "AI 模型与应用",
+          "matched_aliases": [
+            "openai"
+          ],
+          "tickers": [],
+          "reason": "正文/实体匹配关键词「openai」"
+        }
+      ],
+      "importance": "high",
+      "sentiment": "Neutral",
+      "special_note": null,
+      "material_stage": null,
+      "material_stage_label": null,
+      "evidence_status": "multi_source",
+      "evidence_label": "多独立来源提及（待核官方全文）",
+      "evidence_status_reason": "已有 2 家独立媒体族提及（含摘要或正文首段）；多源转载不代表官方公告已证实",
+      "attribution_warning": null,
+      "contradictions": [],
+      "material_depth": "title_and_excerpt",
+      "source_count": 2,
+      "platform_count": 2,
+      "independent_publisher_count": 2,
+      "reprint_count": 0,
+      "published_at": "2026-11-20T06:31:41+08:00",
+      "first_discovered_at": "2026-11-20T11:14:01+08:00",
+      "first_reported_at": "2026-11-20T06:31:41+08:00",
+      "latest_fact_update_at": "2026-11-20T08:56:01+08:00",
+      "latest_reported_at": "2026-11-20T08:56:01+08:00",
+      "fetched_at": "2026-11-20T11:14:01+08:00",
+      "input_batch_id": "raw-20261120-111401",
+      "fact_summary": "The iPhone maker appears to be building agents that can compete with the likes of Meta Muse, Instinct, Claude, and OpenA…",
+      "fact_atoms": [
+        {
+          "atom_id": "fa_80749841",
+          "subject": "苹果 (Apple)",
+          "metric_or_action": "Apple may be developing its own AI agent that runs your Mac",
+          "value": null,
+          "unit": null,
+          "period": "单次披露/未注明周期",
+          "scope": "新闻事件陈述",
+          "fact_status": "multi_source_reported",
+          "attribution": "TechCrunch",
+          "source_ref": "rss-techcrunch_ac8260bde512",
+          "source_url": "https://techcrunch.com/2026/11/19/apple-may-be-developing-its-own-ai-agent-that-runs-your-mac",
+          "source_excerpt_or_locator": "The iPhone maker appears to be building agents that can compete with the likes of Meta Muse, Instinct, Claude, and OpenAI Dots.",
+          "published_at": "2026-11-20T08:56:01+08:00",
+          "discovered_at": "2026-11-20T11:14:01+08:00",
+          "revision": 1
+        }
+      ],
+      "ai_analysis": "【本批新晋突发】由高评分最新信源聚类直采，待后续批次持续追踪进展。",
+      "unverified_claims": [],
+      "speculation_or_outlook": null,
+      "sources": [
+        {
+          "item_id": "rss-techcrunch_ac8260bde512",
+          "article_id": "rss-techcrunch_ac8260bde512",
+          "source_id": "rss-techcrunch",
+          "source_name": "TechCrunch",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "techcrunch",
+          "is_reprint_copy": false,
+          "title": "Apple may be developing its own AI agent that runs your Mac",
+          "url": "https://techcrunch.com/2026/11/19/apple-may-be-developing-its-own-ai-agent-that-runs-your-mac",
+          "published_at": "2026-11-20T08:56:01+08:00",
+          "published_at_source": "upstream_rfc2822",
+          "fetched_at": "2026-11-20T11:14:02+08:00",
+          "excerpt": "The iPhone maker appears to be building agents that can compete with the likes of Meta Muse, Instinct, Claude, and OpenAI Dots.",
+          "deep_fetch_status": null
+        },
+        {
+          "item_id": "rss-theverge_8f1e28b013b7",
+          "article_id": "rss-theverge_8f1e28b013b7",
+          "source_id": "rss-theverge",
+          "source_name": "The Verge",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "theverge",
+          "is_reprint_copy": false,
+          "title": "Apple is hiring engineers to build its own AI agent",
+          "url": "https://www.theverge.com/tech/1038227/apple-ai-agent-engineer-job-listing",
+          "published_at": "2026-11-20T06:31:41+08:00",
+          "published_at_source": "upstream_iso",
+          "fetched_at": "2026-11-20T11:14:02+08:00",
+          "excerpt": "Apple is working on its own AI agent that can perform a range of tasks for you, including browsing the web, working across apps, writing code, and calling services. That's according to a job listing spotted by Bloomberg, which says Apple is looking for an eng…",
+          "deep_fetch_status": null
+        }
+      ],
+      "verification": {
+        "all_refs_valid": true,
+        "has_primary_url": true,
+        "rejected_refs": [],
+        "has_first_party": false
+      },
+      "followup": null,
+      "is_new_in_batch": true,
+      "update_kind": "new_discovery",
+      "title_en": "Apple may be developing its own AI agent that runs your Mac",
+      "summary_en": "The iPhone maker appears to be building agents that can compete with the likes of Meta Muse, Instinct, Claude, and OpenAI Dots.",
+      "title_zh": "【全球 AI 动态】Apple may be developing its own AI agent that runs your Mac",
+      "summary_zh": "The iPhone maker appears to be building agents that can compete with the likes of Meta Muse, Instinct, Claude, and OpenA…"
+    },
+    {
+      "schema_version": "3.0",
+      "event_id": "evt_c4c72bab3760",
+      "storyline_id": "st_dd206452c6ef",
+      "article_ids": [
+        "rss-techcrunch_c6226af93ad4"
+      ],
+      "legacy_event_ids": [],
+      "title": "【全球 AI 动态】Anthropic rival says companies can (mostly) skip the pricey models",
+      "category": "tech",
+      "entities": [
+        "Anthropic / Claude"
+      ],
+      "entity_ids": [
+        "ent_anthropic"
+      ],
+      "matched_entities": [
+        {
+          "entity_id": "ent_anthropic",
+          "canonical_name": "Anthropic / Claude",
+          "entity_type": "company",
+          "sector": "AI 模型与安全",
+          "matched_aliases": [
+            "anthropic"
+          ],
+          "tickers": [],
+          "reason": "正文/实体匹配关键词「anthropic」"
+        }
+      ],
+      "importance": "high",
+      "sentiment": "Neutral",
+      "special_note": null,
+      "material_stage": null,
+      "material_stage_label": null,
+      "evidence_status": "single_source",
+      "evidence_label": "单一独立来源线索",
+      "evidence_status_reason": "目前仅见 1 家独立来源（共 1 条引用含转载，含摘要/首段），尚未见独立渠道交叉或官方确认",
+      "attribution_warning": null,
+      "contradictions": [],
+      "material_depth": "title_and_excerpt",
+      "source_count": 1,
+      "platform_count": 1,
+      "independent_publisher_count": 1,
+      "reprint_count": 0,
+      "published_at": "2026-11-20T08:26:03+08:00",
+      "first_discovered_at": "2026-11-20T11:14:01+08:00",
+      "first_reported_at": "2026-11-20T08:26:03+08:00",
+      "latest_fact_update_at": "2026-11-20T08:26:03+08:00",
+      "latest_reported_at": "2026-11-20T08:26:03+08:00",
+      "fetched_at": "2026-11-20T11:14:01+08:00",
+      "input_batch_id": "raw-20261120-111401",
+      "fact_summary": "On the day Anthropic went public, Fireworks AI’s co-founder made the case for open source models as a cheaper alternativ…",
+      "fact_atoms": [
+        {
+          "atom_id": "fa_37390061",
+          "subject": "Anthropic / Claude",
+          "metric_or_action": "Anthropic rival says companies can (mostly) skip the pricey models",
+          "value": null,
+          "unit": null,
+          "period": "单次披露/未注明周期",
+          "scope": "新闻事件陈述",
+          "fact_status": "reported_unconfirmed_by_filing",
+          "attribution": "TechCrunch",
+          "source_ref": "rss-techcrunch_c6226af93ad4",
+          "source_url": "https://techcrunch.com/2026/11/19/anthropic-rival-says-companies-can-mostly-skip-the-pricey-models",
+          "source_excerpt_or_locator": "On the day Anthropic went public, Fireworks AI’s co-founder made the case for open source models as a cheaper alternative, and addressed the breaches that have cost the company som",
+          "published_at": "2026-11-20T08:26:03+08:00",
+          "discovered_at": "2026-11-20T11:14:01+08:00",
+          "revision": 1
+        }
+      ],
+      "ai_analysis": "【本批新晋突发】由高评分最新信源聚类直采，待后续批次持续追踪进展。",
+      "unverified_claims": [],
+      "speculation_or_outlook": null,
+      "sources": [
+        {
+          "item_id": "rss-techcrunch_c6226af93ad4",
+          "article_id": "rss-techcrunch_c6226af93ad4",
+          "source_id": "rss-techcrunch",
+          "source_name": "TechCrunch",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "techcrunch",
+          "is_reprint_copy": false,
+          "title": "Anthropic rival says companies can (mostly) skip the pricey models",
+          "url": "https://techcrunch.com/2026/11/19/anthropic-rival-says-companies-can-mostly-skip-the-pricey-models",
+          "published_at": "2026-11-20T08:26:03+08:00",
+          "published_at_source": "upstream_rfc2822",
+          "fetched_at": "2026-11-20T11:14:02+08:00",
+          "excerpt": "On the day Anthropic went public, Fireworks AI’s co-founder made the case for open source models as a cheaper alternative, and addressed the breaches that have cost the company some customers’ trust.",
+          "deep_fetch_status": null
+        }
+      ],
+      "verification": {
+        "all_refs_valid": true,
+        "has_primary_url": true,
+        "rejected_refs": [],
+        "has_first_party": false
+      },
+      "followup": null,
+      "is_new_in_batch": true,
+      "update_kind": "new_discovery",
+      "title_en": "Anthropic rival says companies can (mostly) skip the pricey models",
+      "summary_en": "On the day Anthropic went public, Fireworks AI’s co-founder made the case for open source models as a cheaper alternative, and addressed the breaches that have cost the company some customers’ trust.",
+      "title_zh": "【全球 AI 动态】Anthropic rival says companies can (mostly) skip the pricey models",
+      "summary_zh": "On the day Anthropic went public, Fireworks AI’s co-founder made the case for open source models as a cheaper alternativ…"
+    },
+    {
+      "schema_version": "3.0",
+      "event_id": "evt_389117ddec3e",
+      "storyline_id": "st_e94766cafb03",
+      "article_ids": [
+        "rss-techcrunch_1f135554b021"
+      ],
+      "legacy_event_ids": [],
+      "title": "【马斯克与前沿科技】Elon Musk says SpaceX has a plan to eliminate cell phone dead zones",
+      "category": "tech",
+      "entities": [
+        "SpaceX / 特斯拉 / 马斯克生态"
+      ],
+      "entity_ids": [
+        "ent_spacex_tesla"
+      ],
+      "matched_entities": [
+        {
+          "entity_id": "ent_spacex_tesla",
+          "canonical_name": "SpaceX / 特斯拉 / 马斯克生态",
+          "entity_type": "company",
+          "sector": "商业航天、自动驾驶与 AI",
+          "matched_aliases": [
+            "musk",
+            "spacex"
+          ],
+          "tickers": [
+            {
+              "symbol": "TSLA",
+              "market": "US",
+              "exchange": "NASDAQ",
+              "currency": "USD",
+              "label": "TSLA.US (NASDAQ)"
+            }
+          ],
+          "reason": "正文/实体匹配关键词「musk / spacex」"
+        }
+      ],
+      "importance": "high",
+      "sentiment": "Neutral",
+      "special_note": null,
+      "material_stage": null,
+      "material_stage_label": null,
+      "evidence_status": "single_source",
+      "evidence_label": "单一独立来源线索",
+      "evidence_status_reason": "目前仅见 1 家独立来源（共 1 条引用含转载，含摘要/首段），尚未见独立渠道交叉或官方确认",
+      "attribution_warning": null,
+      "contradictions": [],
+      "material_depth": "title_and_excerpt",
+      "source_count": 1,
+      "platform_count": 1,
+      "independent_publisher_count": 1,
+      "reprint_count": 0,
+      "published_at": "2026-11-20T07:37:56+08:00",
+      "first_discovered_at": "2026-11-20T11:14:01+08:00",
+      "first_reported_at": "2026-11-20T07:37:56+08:00",
+      "latest_fact_update_at": "2026-11-20T07:37:56+08:00",
+      "latest_reported_at": "2026-11-20T07:37:56+08:00",
+      "fetched_at": "2026-11-20T11:14:01+08:00",
+      "input_batch_id": "raw-20261120-111401",
+      "fact_summary": "SpaceX CEO Elon Musk said the company has completed the design of a miniature rooftop cell tower that could provide bett…",
+      "fact_atoms": [
+        {
+          "atom_id": "fa_49326870",
+          "subject": "SpaceX / 特斯拉 / 马斯克生态",
+          "metric_or_action": "Elon Musk says SpaceX has a plan to eliminate cell phone dead zones",
+          "value": null,
+          "unit": null,
+          "period": "单次披露/未注明周期",
+          "scope": "新闻事件陈述",
+          "fact_status": "reported_unconfirmed_by_filing",
+          "attribution": "TechCrunch",
+          "source_ref": "rss-techcrunch_1f135554b021",
+          "source_url": "https://techcrunch.com/2026/11/19/elon-musk-says-spacex-has-a-plan-to-eliminate-cell-phone-dead-zones",
+          "source_excerpt_or_locator": "SpaceX CEO Elon Musk said the company has completed the design of a miniature rooftop cell tower that could provide better coverage to mobile phones and eliminate dead zones.",
+          "published_at": "2026-11-20T07:37:56+08:00",
+          "discovered_at": "2026-11-20T11:14:01+08:00",
+          "revision": 1
+        }
+      ],
+      "ai_analysis": "【本批新晋突发】由高评分最新信源聚类直采，待后续批次持续追踪进展。",
+      "unverified_claims": [],
+      "speculation_or_outlook": null,
+      "sources": [
+        {
+          "item_id": "rss-techcrunch_1f135554b021",
+          "article_id": "rss-techcrunch_1f135554b021",
+          "source_id": "rss-techcrunch",
+          "source_name": "TechCrunch",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "techcrunch",
+          "is_reprint_copy": false,
+          "title": "Elon Musk says SpaceX has a plan to eliminate cell phone dead zones",
+          "url": "https://techcrunch.com/2026/11/19/elon-musk-says-spacex-has-a-plan-to-eliminate-cell-phone-dead-zones",
+          "published_at": "2026-11-20T07:37:56+08:00",
+          "published_at_source": "upstream_rfc2822",
+          "fetched_at": "2026-11-20T11:14:02+08:00",
+          "excerpt": "SpaceX CEO Elon Musk said the company has completed the design of a miniature rooftop cell tower that could provide better coverage to mobile phones and eliminate dead zones.",
+          "deep_fetch_status": null
+        }
+      ],
+      "verification": {
+        "all_refs_valid": true,
+        "has_primary_url": true,
+        "rejected_refs": [],
+        "has_first_party": false
+      },
+      "followup": null,
+      "is_new_in_batch": true,
+      "update_kind": "new_discovery",
+      "title_en": "Elon Musk says SpaceX has a plan to eliminate cell phone dead zones",
+      "summary_en": "SpaceX CEO Elon Musk said the company has completed the design of a miniature rooftop cell tower that could provide better coverage to mobile phones and eliminate dead zones.",
+      "title_zh": "【马斯克与前沿科技】Elon Musk says SpaceX has a plan to eliminate cell phone dead zones",
+      "summary_zh": "SpaceX CEO Elon Musk said the company has completed the design of a miniature rooftop cell tower that could provide bett…"
+    },
+    {
+      "schema_version": "3.0",
+      "event_id": "evt_c76eb34ed059",
+      "storyline_id": "st_a040c687bd96",
+      "article_ids": [
+        "rss-techcrunch_1e62843c74bf"
+      ],
+      "legacy_event_ids": [],
+      "title": "【海外财经动态】Nimble enters the item-tracking market with eco-friendly luggage tags and keychains",
+      "category": "tech",
+      "entities": [
+        "Google / DeepMind / Gemini",
+        "苹果 (Apple)"
+      ],
+      "entity_ids": [
+        "ent_google",
+        "ent_apple"
+      ],
+      "matched_entities": [
+        {
+          "entity_id": "ent_google",
+          "canonical_name": "Google / DeepMind / Gemini",
+          "entity_type": "company",
+          "sector": "AI 模型与云基础设施",
+          "matched_aliases": [
+            "google"
+          ],
+          "tickers": [
+            {
+              "symbol": "GOOGL",
+              "market": "US",
+              "exchange": "NASDAQ",
+              "currency": "USD",
+              "label": "GOOGL.US (NASDAQ)"
+            }
+          ],
+          "reason": "正文/实体匹配关键词「google」"
+        },
+        {
+          "entity_id": "ent_apple",
+          "canonical_name": "苹果 (Apple)",
+          "entity_type": "company",
+          "sector": "消费电子与端侧AI",
+          "matched_aliases": [
+            "apple"
+          ],
+          "tickers": [
+            {
+              "symbol": "AAPL",
+              "market": "US",
+              "exchange": "NASDAQ",
+              "currency": "USD",
+              "label": "AAPL.US (NASDAQ)"
+            }
+          ],
+          "reason": "正文/实体匹配关键词「apple」"
+        }
+      ],
+      "importance": "high",
+      "sentiment": "Neutral",
+      "special_note": null,
+      "material_stage": null,
+      "material_stage_label": null,
+      "evidence_status": "single_source",
+      "evidence_label": "单一独立来源线索",
+      "evidence_status_reason": "目前仅见 1 家独立来源（共 1 条引用含转载，含摘要/首段），尚未见独立渠道交叉或官方确认",
+      "attribution_warning": null,
+      "contradictions": [],
+      "material_depth": "title_and_excerpt",
+      "source_count": 1,
+      "platform_count": 1,
+      "independent_publisher_count": 1,
+      "reprint_count": 0,
+      "published_at": "2026-11-19T22:00:00+08:00",
+      "first_discovered_at": "2026-11-20T11:14:01+08:00",
+      "first_reported_at": "2026-11-19T22:00:00+08:00",
+      "latest_fact_update_at": "2026-11-19T22:00:00+08:00",
+      "latest_reported_at": "2026-11-19T22:00:00+08:00",
+      "fetched_at": "2026-11-20T11:14:01+08:00",
+      "input_batch_id": "raw-20261120-111401",
+      "fact_summary": "As Google takes on Apple in the item-tracking market, Nimble is hoping its trackable wallets, keychains, luggage tags, a…",
+      "fact_atoms": [
+        {
+          "atom_id": "fa_74885371",
+          "subject": "Google / DeepMind / Gemini",
+          "metric_or_action": "Nimble enters the item-tracking market with eco-friendly luggage tags and keychains",
+          "value": null,
+          "unit": null,
+          "period": "单次披露/未注明周期",
+          "scope": "新闻事件陈述",
+          "fact_status": "reported_unconfirmed_by_filing",
+          "attribution": "TechCrunch",
+          "source_ref": "rss-techcrunch_1e62843c74bf",
+          "source_url": "https://techcrunch.com/2026/11/19/nimble-enters-the-item-tracking-market-with-eco-friendly-luggage-tags-and-keychains",
+          "source_excerpt_or_locator": "As Google takes on Apple in the item-tracking market, Nimble is hoping its trackable wallets, keychains, luggage tags, and passport covers stand out.",
+          "published_at": "2026-11-19T22:00:00+08:00",
+          "discovered_at": "2026-11-20T11:14:01+08:00",
+          "revision": 1
+        }
+      ],
+      "ai_analysis": "【本批新晋突发】由高评分最新信源聚类直采，待后续批次持续追踪进展。",
+      "unverified_claims": [],
+      "speculation_or_outlook": null,
+      "sources": [
+        {
+          "item_id": "rss-techcrunch_1e62843c74bf",
+          "article_id": "rss-techcrunch_1e62843c74bf",
+          "source_id": "rss-techcrunch",
+          "source_name": "TechCrunch",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "techcrunch",
+          "is_reprint_copy": false,
+          "title": "Nimble enters the item-tracking market with eco-friendly luggage tags and keychains",
+          "url": "https://techcrunch.com/2026/11/19/nimble-enters-the-item-tracking-market-with-eco-friendly-luggage-tags-and-keychains",
+          "published_at": "2026-11-19T22:00:00+08:00",
+          "published_at_source": "upstream_rfc2822",
+          "fetched_at": "2026-11-20T11:14:02+08:00",
+          "excerpt": "As Google takes on Apple in the item-tracking market, Nimble is hoping its trackable wallets, keychains, luggage tags, and passport covers stand out.",
+          "deep_fetch_status": null
+        }
+      ],
+      "verification": {
+        "all_refs_valid": true,
+        "has_primary_url": true,
+        "rejected_refs": [],
+        "has_first_party": false
+      },
+      "followup": null,
+      "is_new_in_batch": true,
+      "update_kind": "new_discovery",
+      "title_en": "Nimble enters the item-tracking market with eco-friendly luggage tags and keychains",
+      "summary_en": "As Google takes on Apple in the item-tracking market, Nimble is hoping its trackable wallets, keychains, luggage tags, and passport covers stand out.",
+      "title_zh": "【海外财经动态】Nimble enters the item-tracking market with eco-friendly luggage tags and keychains",
+      "summary_zh": "As Google takes on Apple in the item-tracking market, Nimble is hoping its trackable wallets, keychains, luggage tags, a…"
+    },
+    {
+      "schema_version": "3.0",
+      "event_id": "evt_0386280318cd",
+      "storyline_id": "st_d66b2f3e332e",
+      "article_ids": [
+        "pcbeta-windows11_69bced602bbe",
+        "ithome_63337a75bf66"
+      ],
+      "legacy_event_ids": [],
+      "title": "微软确认 Win11 26H2 已面向所有符合条件设备推送，24H2、25H2 陆续升级",
+      "category": "tech",
+      "entities": [
+        "微软 (Microsoft)"
+      ],
+      "entity_ids": [
+        "ent_microsoft"
+      ],
+      "matched_entities": [
+        {
+          "entity_id": "ent_microsoft",
+          "canonical_name": "微软 (Microsoft)",
+          "entity_type": "company",
+          "sector": "云基础设施 / AI算力需求方",
+          "matched_aliases": [
+            "微软"
+          ],
+          "tickers": [
+            {
+              "symbol": "MSFT",
+              "market": "US",
+              "exchange": "NASDAQ",
+              "currency": "USD",
+              "label": "MSFT.US (NASDAQ)"
+            }
+          ],
+          "reason": "正文/实体匹配关键词「微软」"
+        }
+      ],
+      "importance": "high",
+      "sentiment": "Neutral",
+      "special_note": null,
+      "material_stage": null,
+      "material_stage_label": null,
+      "evidence_status": "multi_source",
+      "evidence_label": "多独立来源提及（待核官方全文）",
+      "evidence_status_reason": "已有 2 家独立媒体族提及（含摘要或正文首段）；多源转载不代表官方公告已证实",
+      "attribution_warning": null,
+      "contradictions": [],
+      "material_depth": "title_and_excerpt",
+      "source_count": 2,
+      "platform_count": 2,
+      "independent_publisher_count": 2,
+      "reprint_count": 0,
+      "published_at": "2026-11-19T20:32:46+08:00",
+      "first_discovered_at": "2026-11-20T11:14:01+08:00",
+      "first_reported_at": "2026-11-19T20:32:46+08:00",
+      "latest_fact_update_at": "2026-11-20T09:11:40+08:00",
+      "latest_reported_at": "2026-11-20T09:11:40+08:00",
+      "fetched_at": "2026-11-20T11:14:01+08:00",
+      "input_batch_id": "raw-20261120-111401",
+      "fact_summary": "Win11_26H1用过一段时间，Win11_26H1比Win11_26H2好用，更流畅一些。",
+      "fact_atoms": [
+        {
+          "atom_id": "fa_3369306",
+          "subject": "微软 (Microsoft)",
+          "metric_or_action": "微软确认 Win11 26H2 已面向所有符合条件设备推送，24H2、25H2 陆续升级",
+          "value": null,
+          "unit": null,
+          "period": "单次披露/未注明周期",
+          "scope": "新闻事件陈述",
+          "fact_status": "multi_source_reported",
+          "attribution": "远景论坛 Win11",
+          "source_ref": "pcbeta-windows11_69bced602bbe",
+          "source_url": "https://bbs.pcbeta.com/viewthread-2085058-1-1.html",
+          "source_excerpt_or_locator": "Win11_26H1用过一段时间，Win11_26H1比Win11_26H2好用，更流畅一些。",
+          "published_at": "2026-11-19T20:32:46+08:00",
+          "discovered_at": "2026-11-20T11:14:01+08:00",
+          "revision": 1
+        }
+      ],
+      "ai_analysis": "【本批新晋突发】由高评分最新信源聚类直采，待后续批次持续追踪进展。",
+      "unverified_claims": [],
+      "speculation_or_outlook": null,
+      "sources": [
+        {
+          "item_id": "pcbeta-windows11_69bced602bbe",
+          "article_id": "pcbeta-windows11_69bced602bbe",
+          "source_id": "pcbeta-windows11",
+          "source_name": "远景论坛 Win11",
+          "source_kind": "discussion",
+          "source_tier": "aggregator_lead",
+          "publisher_family": "pcbeta-windows11",
+          "is_reprint_copy": false,
+          "title": "Win11_26H1比Win11_26H2好用",
+          "url": "https://bbs.pcbeta.com/viewthread-2085058-1-1.html",
+          "published_at": "2026-11-19T20:32:46+08:00",
+          "published_at_source": "upstream_rfc2822",
+          "fetched_at": "2026-11-20T11:14:01+08:00",
+          "excerpt": "Win11_26H1用过一段时间，Win11_26H1比Win11_26H2好用，更流畅一些。",
+          "deep_fetch_status": null
+        },
+        {
+          "item_id": "ithome_63337a75bf66",
+          "article_id": "ithome_63337a75bf66",
+          "source_id": "ithome",
+          "source_name": "IT之家",
+          "source_kind": "news",
+          "source_tier": "aggregator_lead",
+          "publisher_family": "ithome",
+          "is_reprint_copy": false,
+          "title": "微软确认 Win11 26H2 已面向所有符合条件设备推送，24H2、25H2 陆续升级",
+          "url": "https://www.ithome.com/1/029/782.htm",
+          "published_at": "2026-11-20T09:11:40+08:00",
+          "published_at_source": "upstream_local_cst",
+          "fetched_at": "2026-11-20T11:14:01+08:00",
+          "excerpt": null,
+          "deep_fetch_status": null
+        }
+      ],
+      "verification": {
+        "all_refs_valid": true,
+        "has_primary_url": true,
+        "rejected_refs": [],
+        "has_first_party": false
+      },
+      "followup": null,
+      "is_new_in_batch": true,
+      "update_kind": "new_discovery",
+      "title_zh": "微软确认 Win11 26H2 已面向所有符合条件设备推送，24H2、25H2 陆续升级",
+      "summary_zh": "Win11_26H1用过一段时间，Win11_26H1比Win11_26H2好用，更流畅一些。"
+    },
+    {
+      "schema_version": "3.0",
+      "event_id": "evt_b98d379b7f5d",
+      "storyline_id": "st_1d13395b6ca5",
+      "article_ids": [
+        "rss-techcrunch_a85fdd4800c7",
+        "rss-techcrunch_30c1a44d7557",
+        "juejin_74944fb005dc",
+        "aihot_9f96dacce7b3",
+        "aihot_6764ae04a3e9",
+        "aihot_f7ffa9b2ae47"
+      ],
+      "legacy_event_ids": [
+        "evt_5c672e4f6ba1"
+      ],
+      "title": "Anthropic 纳斯达克创纪录上市：首日高开至 111 美元，七位创始人套现近 20 亿美元",
+      "category": "tech",
+      "entities": [
+        "Anthropic",
+        "Nasdaq",
+        "Anthropic / Claude"
+      ],
+      "entity_ids": [
+        "ent_anthropic"
+      ],
+      "matched_entities": [
+        {
+          "entity_id": "ent_anthropic",
+          "canonical_name": "Anthropic / Claude",
+          "entity_type": "company",
+          "sector": "AI 模型与安全",
+          "matched_aliases": [
+            "anthropic"
+          ],
+          "tickers": [],
+          "reason": "正文/实体匹配关键词「anthropic」"
+        }
+      ],
+      "importance": "high",
+      "sentiment": "Bullish",
+      "special_note": null,
+      "material_stage": null,
+      "material_stage_label": null,
+      "evidence_status": "multi_source",
+      "evidence_label": "多独立来源提及（待核官方全文）",
+      "evidence_status_reason": "已有 3 家独立媒体族提及（含摘要或正文首段）；多源转载不代表官方公告已证实",
+      "attribution_warning": null,
+      "contradictions": [],
+      "material_depth": "title_and_excerpt",
+      "source_count": 6,
+      "platform_count": 3,
+      "independent_publisher_count": 3,
+      "reprint_count": 0,
+      "published_at": "2026-11-20T00:59:23+08:00",
+      "first_discovered_at": "2026-11-20T11:14:01+08:00",
+      "first_reported_at": "2026-11-20T00:59:23+08:00",
+      "latest_fact_update_at": "2026-11-20T09:37:44+08:00",
+      "latest_reported_at": "2026-11-20T09:37:44+08:00",
+      "fetched_at": "2026-11-20T11:14:01+08:00",
+      "input_batch_id": "raw-20261120-111401",
+      "fact_summary": "At the upgraded $83/share IPO price, Anthropic's seven founders each pocketed $280 million, while the company nabbed nea…",
+      "fact_atoms": [
+        {
+          "atom_id": "fa_41999319",
+          "subject": "Anthropic",
+          "metric_or_action": "Anthropic 纳斯达克创纪录上市：首日高开至 111 美元，七位创始人套现近 20 亿美元",
+          "value": "20",
+          "unit": "亿美元",
+          "period": "单次披露/未注明周期",
+          "scope": "新闻事件陈述",
+          "fact_status": "multi_source_reported",
+          "attribution": "TechCrunch",
+          "source_ref": "rss-techcrunch_a85fdd4800c7",
+          "source_url": "https://techcrunch.com/2026/11/19/anthropics-7-founders-cashed-out-nearly-2b-in-record-breaking-ipo",
+          "source_excerpt_or_locator": "At the upgraded $83/share IPO price, Anthropic's seven founders each pocketed $280 million, while the company nabbed nearly $105 billion.",
+          "published_at": "2026-11-20T08:43:50+08:00",
+          "discovered_at": "2026-11-20T11:14:01+08:00",
+          "revision": 1
+        }
+      ],
+      "ai_analysis": "Anthropic 以创纪录的体量登陆公开市场，标志着前沿大模型企业正式进入接受二级市场季度财报与现金流审视的新阶段，其高开表现短期内提振了资本市场对头部 AI 实验室的估值信心。",
+      "unverified_claims": [
+        "部分仅含标题的快讯提及募资额为 813 亿美元、市值达 1.76 万亿美元，相关精确口径与安全争议细节待查原文。"
+      ],
+      "speculation_or_outlook": "上市后股价能否在百美元关口上方站稳，以及高估值下算力支出与营收增速的匹配度将成为后续财报季焦点。",
+      "sources": [
+        {
+          "item_id": "rss-techcrunch_a85fdd4800c7",
+          "article_id": "rss-techcrunch_a85fdd4800c7",
+          "source_id": "rss-techcrunch",
+          "source_name": "TechCrunch",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "techcrunch",
+          "is_reprint_copy": false,
+          "title": "Anthropic’s 7 founders cashed out nearly $2B in record-breaking IPO",
+          "url": "https://techcrunch.com/2026/11/19/anthropics-7-founders-cashed-out-nearly-2b-in-record-breaking-ipo",
+          "published_at": "2026-11-20T08:43:50+08:00",
+          "published_at_source": "upstream_rfc2822",
+          "fetched_at": "2026-11-20T11:14:02+08:00",
+          "excerpt": "At the upgraded $83/share IPO price, Anthropic's seven founders each pocketed $280 million, while the company nabbed nearly $105 billion.",
+          "deep_fetch_status": null
+        },
+        {
+          "item_id": "rss-techcrunch_30c1a44d7557",
+          "article_id": "rss-techcrunch_30c1a44d7557",
+          "source_id": "rss-techcrunch",
+          "source_name": "TechCrunch",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "techcrunch",
+          "is_reprint_copy": false,
+          "title": "Anthropic hits Nasdaq exchanges at $111, 33% above IPO price",
+          "url": "https://techcrunch.com/2026/11/19/anthropic-hits-nasdaq-exchanges-at-110-27-above-ipo-price",
+          "published_at": "2026-11-20T00:59:23+08:00",
+          "published_at_source": "upstream_rfc2822",
+          "fetched_at": "2026-11-20T11:14:02+08:00",
+          "excerpt": "Anthropic's IPO price was set at $83, representing more than $80 billion in new capital raised.",
+          "deep_fetch_status": null
+        },
+        {
+          "item_id": "juejin_74944fb005dc",
+          "article_id": "juejin_74944fb005dc",
+          "source_id": "juejin",
+          "source_name": "稀土掘金",
+          "source_kind": "news",
+          "source_tier": "aggregator_lead",
+          "publisher_family": "juejin",
+          "is_reprint_copy": false,
+          "title": "AI 热点日报（2026-11-19）：Anthropic 全球史上最大 IPO 上市，谷歌发布 Gemini 4 Neon",
+          "url": "https://juejin.cn/post/7709679151842246697",
+          "published_at": null,
+          "published_at_source": null,
+          "fetched_at": "2026-11-20T11:14:01+08:00",
+          "excerpt": null,
+          "deep_fetch_status": null
+        },
+        {
+          "item_id": "aihot_9f96dacce7b3",
+          "article_id": "aihot_9f96dacce7b3",
+          "source_id": "aihot",
+          "source_name": "AIHOT 前沿",
+          "source_kind": "news",
+          "source_tier": "aggregator_lead",
+          "publisher_family": "aihot",
+          "is_reprint_copy": false,
+          "title": "Anthropic IPO 募资 813 亿美元创纪录，市值达 1.76 万亿美元引发安全争议",
+          "url": "https://aihot.news/items/j96pobdmcb200kk2baf62615v",
+          "published_at": "2026-11-20T09:37:44+08:00",
+          "published_at_source": "upstream_rfc2822",
+          "fetched_at": "2026-11-20T11:14:01+08:00",
+          "excerpt": null,
+          "deep_fetch_status": null
+        },
+        {
+          "item_id": "aihot_6764ae04a3e9",
+          "article_id": "aihot_6764ae04a3e9",
+          "source_id": "aihot",
+          "source_name": "AIHOT 前沿",
+          "source_kind": "news",
+          "source_tier": "aggregator_lead",
+          "publisher_family": "aihot",
+          "is_reprint_copy": false,
+          "title": "Anthropic 七位创始人 IPO 套现近 20 亿美元，融资规模创纪录",
+          "url": "https://aihot.news/items/hdvaqa4fp3ug2ozttf2n3tyuf",
+          "published_at": "2026-11-20T08:43:50+08:00",
+          "published_at_source": "upstream_rfc2822",
+          "fetched_at": "2026-11-20T11:14:01+08:00",
+          "excerpt": null,
+          "deep_fetch_status": null
+        },
+        {
+          "item_id": "aihot_f7ffa9b2ae47",
+          "article_id": "aihot_f7ffa9b2ae47",
+          "source_id": "aihot",
+          "source_name": "AIHOT 前沿",
+          "source_kind": "news",
+          "source_tier": "aggregator_lead",
+          "publisher_family": "aihot",
+          "is_reprint_copy": false,
+          "title": "Anthropic 纳斯达克上市首日收涨 17%，市值约 1.76 万亿美元",
+          "url": "https://aihot.news/items/k9l5dt0zbhvw3qiy58vzd95so",
+          "published_at": "2026-11-20T08:35:48+08:00",
+          "published_at_source": "upstream_rfc2822",
+          "fetched_at": "2026-11-20T11:14:01+08:00",
+          "excerpt": null,
+          "deep_fetch_status": null
+        }
+      ],
+      "verification": {
+        "all_refs_valid": true,
+        "has_primary_url": true,
+        "rejected_refs": [],
+        "has_first_party": false
+      },
+      "followup": {
+        "is_continuing": true,
+        "prev_batch_id": "smart-20261120-111821",
+        "prev_event_id": "evt_5c672e4f6ba1",
+        "prev_title": "Anthropic 纳斯达克创纪录上市：首日高开至 111 美元，七位创始人套现近 20 亿美元",
+        "delta_note": "同一事件在最新批次出现表述修订或信息补充"
+      },
+      "is_new_in_batch": false,
+      "update_kind": "new_fact_update",
+      "title_zh": "Anthropic 纳斯达克创纪录上市：首日高开至 111 美元，七位创始人套现近 20 亿美元",
+      "summary_en": "At the upgraded $83/share IPO price, Anthropic's seven founders each pocketed $280 million, while the company nabbed nearly $105 billion.",
+      "summary_zh": "At the upgraded $83/share IPO price, Anthropic's seven founders each pocketed $280 million, while the company nabbed nea…"
+    },
+    {
+      "schema_version": "3.0",
+      "event_id": "evt_09e72371ec7e",
+      "storyline_id": "st_9f7ef62e5624",
+      "article_ids": [
+        "rss-techcrunch_891a81ae80a3",
+        "rss-techcrunch_a991c4104316",
+        "rss-techcrunch_ee7ef1e05c55"
+      ],
+      "legacy_event_ids": [
+        "evt_2edc6ab66535"
+      ],
+      "title": "Anthropic IPO 检验 AI 循环融资模式，CEO 重申审慎研发并规划百亿级慈善捐赠",
+      "category": "tech",
+      "entities": [
+        "Anthropic",
+        "Dario Amodei",
+        "Amazon",
+        "Google",
+        "Anthropic / Claude",
+        "Google / DeepMind / Gemini"
+      ],
+      "entity_ids": [
+        "ent_anthropic",
+        "ent_google"
+      ],
+      "matched_entities": [
+        {
+          "entity_id": "ent_anthropic",
+          "canonical_name": "Anthropic / Claude",
+          "entity_type": "company",
+          "sector": "AI 模型与安全",
+          "matched_aliases": [
+            "anthropic"
+          ],
+          "tickers": [],
+          "reason": "正文/实体匹配关键词「anthropic」"
+        },
+        {
+          "entity_id": "ent_google",
+          "canonical_name": "Google / DeepMind / Gemini",
+          "entity_type": "company",
+          "sector": "AI 模型与云基础设施",
+          "matched_aliases": [
+            "谷歌",
+            "google"
+          ],
+          "tickers": [
+            {
+              "symbol": "GOOGL",
+              "market": "US",
+              "exchange": "NASDAQ",
+              "currency": "USD",
+              "label": "GOOGL.US (NASDAQ)"
+            }
+          ],
+          "reason": "正文/实体匹配关键词「谷歌 / google」"
+        }
+      ],
+      "importance": "high",
+      "sentiment": "Mixed",
+      "special_note": null,
+      "material_stage": null,
+      "material_stage_label": null,
+      "evidence_status": "single_source",
+      "evidence_label": "单一独立来源线索",
+      "evidence_status_reason": "目前仅见 1 家独立来源（共 3 条引用含转载，含摘要/首段），尚未见独立渠道交叉或官方确认",
+      "attribution_warning": null,
+      "contradictions": [],
+      "material_depth": "title_and_excerpt",
+      "source_count": 3,
+      "platform_count": 1,
+      "independent_publisher_count": 1,
+      "reprint_count": 0,
+      "published_at": "2026-11-19T22:54:39+08:00",
+      "first_discovered_at": "2026-11-20T11:14:01+08:00",
+      "first_reported_at": "2026-11-19T22:54:39+08:00",
+      "latest_fact_update_at": "2026-11-20T03:10:45+08:00",
+      "latest_reported_at": "2026-11-20T03:10:45+08:00",
+      "fetched_at": "2026-11-20T11:14:01+08:00",
+      "input_batch_id": "raw-20261120-111401",
+      "fact_summary": "在纳斯达克敲钟致辞中，Anthropic CEO Dario Amodei 重申公司将继续坚持审慎控制 AI 研发节奏的承诺，无论面临何种商业或政治压力。与此同时，Anthropic 上市也使其庞大的算力承诺以及与亚马逊、谷歌等基础设施伙伴之间的循环融资关系受到考验——报道指出即便 Anthropic 失去领先地位，其云基础设施合作伙伴仍可能持续从 AI 中获利。另据披露，按每股 95 美元股价计算，该实验室的公益基金会、员工捐赠及公司配捐总额可达 1560 亿美元。",
+      "fact_atoms": [
+        {
+          "atom_id": "fa_4372707",
+          "subject": "Anthropic",
+          "metric_or_action": "Anthropic IPO 检验 AI 循环融资模式，CEO 重申审慎研发并规划百亿级慈善捐赠",
+          "value": "1560",
+          "unit": "亿美元",
+          "period": "单次披露/未注明周期",
+          "scope": "新闻事件陈述",
+          "fact_status": "reported_unconfirmed_by_filing",
+          "attribution": "TechCrunch",
+          "source_ref": "rss-techcrunch_891a81ae80a3",
+          "source_url": "https://techcrunch.com/2026/11/19/anthropics-ipo-puts-ais-circular-financing-boom-to-the-test",
+          "source_excerpt_or_locator": "Anthropic faces enormous compute commitments as it goes public, but its biggest infrastructure partners, including Amazon and Google, could continue profiting from AI even if Anthr",
+          "published_at": "2026-11-19T22:54:39+08:00",
+          "discovered_at": "2026-11-20T11:14:01+08:00",
+          "revision": 1
+        }
+      ],
+      "ai_analysis": "Anthropic 一方面通过高额公益承诺与“减速/审慎研发”表态维持自身安全治理标签，另一方面却背负着巨额云算力采购承诺，这种商业扩张与安全克制之间的张力在成为公众公司后将被进一步放大。",
+      "unverified_claims": [],
+      "speculation_or_outlook": "若行业竞争加剧导致模型利润率承压，外界将密切观察基础设施巨头与大模型厂商之间的资本绑定模式是否具备长期可持续性。",
+      "sources": [
+        {
+          "item_id": "rss-techcrunch_891a81ae80a3",
+          "article_id": "rss-techcrunch_891a81ae80a3",
+          "source_id": "rss-techcrunch",
+          "source_name": "TechCrunch",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "techcrunch",
+          "is_reprint_copy": false,
+          "title": "Anthropic’s IPO puts AI’s circular financing boom to the test",
+          "url": "https://techcrunch.com/2026/11/19/anthropics-ipo-puts-ais-circular-financing-boom-to-the-test",
+          "published_at": "2026-11-19T22:54:39+08:00",
+          "published_at_source": "upstream_rfc2822",
+          "fetched_at": "2026-11-20T11:14:02+08:00",
+          "excerpt": "Anthropic faces enormous compute commitments as it goes public, but its biggest infrastructure partners, including Amazon and Google, could continue profiting from AI even if Anthropic loses its lead.",
+          "deep_fetch_status": null
+        },
+        {
+          "item_id": "rss-techcrunch_a991c4104316",
+          "article_id": "rss-techcrunch_a991c4104316",
+          "source_id": "rss-techcrunch",
+          "source_name": "TechCrunch",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "techcrunch",
+          "is_reprint_copy": false,
+          "title": "Anthropic’s IPO could deliver $156B to charity",
+          "url": "https://techcrunch.com/2026/11/19/anthropics-ipo-could-deliver-156-billion-to-charity",
+          "published_at": "2026-11-20T03:10:45+08:00",
+          "published_at_source": "upstream_rfc2822",
+          "fetched_at": "2026-11-20T11:14:02+08:00",
+          "excerpt": "At a stock price of $95, the frontier lab's Public Benefit Foundation, its employee donations, and the company's match tot up to $156 billion.",
+          "deep_fetch_status": null
+        },
+        {
+          "item_id": "rss-techcrunch_ee7ef1e05c55",
+          "article_id": "rss-techcrunch_ee7ef1e05c55",
+          "source_id": "rss-techcrunch",
+          "source_name": "TechCrunch",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "techcrunch",
+          "is_reprint_copy": false,
+          "title": "At Nasdaq opening bell, Anthropic CEO recommits to pacing AI development",
+          "url": "https://techcrunch.com/2026/11/19/at-nasdaq-opening-bell-anthropic-ceo-recommits-to-pacing-ai-development",
+          "published_at": "2026-11-20T00:19:41+08:00",
+          "published_at_source": "upstream_rfc2822",
+          "fetched_at": "2026-11-20T11:14:02+08:00",
+          "excerpt": "In his Nasdaq opening bell speech, Dario Amodei reiterated Anthropic's commitment to pacing AI development, regardless of business or political pressure.",
+          "deep_fetch_status": null
+        }
+      ],
+      "verification": {
+        "all_refs_valid": true,
+        "has_primary_url": true,
+        "rejected_refs": [],
+        "has_first_party": false
+      },
+      "followup": {
+        "is_continuing": true,
+        "prev_batch_id": "smart-20261120-111821",
+        "prev_event_id": "evt_2edc6ab66535",
+        "prev_title": "Anthropic IPO 检验 AI 循环融资模式，CEO 重申审慎研发并规划百亿级慈善捐赠",
+        "delta_note": "在上期简报中已出现，本批持续关注（暂无新增独立变化）"
+      },
+      "is_new_in_batch": false,
+      "update_kind": "continuing_coverage",
+      "title_zh": "Anthropic IPO 检验 AI 循环融资模式，CEO 重申审慎研发并规划百亿级慈善捐赠",
+      "summary_zh": "在纳斯达克敲钟致辞中，Anthropic CEO Dario Amodei 重申公司将继续坚持审慎控制 AI 研发节奏的承诺，无论面临何种商业或政治压力。与此同时，Anthropic 上市也使其庞大的算力承诺以及与亚马逊、谷歌等基础设施伙伴之间的循环融资关系受到考验——报道指出即便 Anthropic 失去领先地位，其云基础设施合作伙伴仍可能持续从 AI 中获利。另据披露，按每股 95 美元股价计算，该实验室的公益基金会、员工捐赠及公司配捐总额可达 1560 亿美元。"
+    },
+    {
+      "schema_version": "3.0",
+      "event_id": "evt_18e1bea9672d",
+      "storyline_id": "st_be3f4d8099c9",
+      "article_ids": [
+        "rss-theverge_6b96b1d3126a",
+        "rss-techcrunch_ada82be5a30c",
+        "ithome_cff5bbab360b",
+        "solidot_6fd9020ad49c",
+        "juejin_ec54f93b4d23"
+      ],
+      "legacy_event_ids": [],
+      "title": "黄仁勋辞职后英伟达股价跌近四成，临时 CEO 主持财报会并调查第三方数据疑云",
+      "category": "tech",
+      "entities": [
+        "Nvidia",
+        "Jensen Huang",
+        "Colette Kress",
+        "英伟达 (NVIDIA)"
+      ],
+      "entity_ids": [
+        "ent_nvidia"
+      ],
+      "matched_entities": [
+        {
+          "entity_id": "ent_nvidia",
+          "canonical_name": "英伟达 (NVIDIA)",
+          "entity_type": "company",
+          "sector": "半导体 / AI算力",
+          "matched_aliases": [
+            "黄仁勋",
+            "英伟达",
+            "nvidia"
+          ],
+          "tickers": [
+            {
+              "symbol": "NVDA",
+              "market": "US",
+              "exchange": "NASDAQ",
+              "currency": "USD",
+              "label": "NVDA.US (NASDAQ)"
+            }
+          ],
+          "reason": "正文/实体匹配关键词「黄仁勋 / 英伟达」"
+        }
+      ],
+      "importance": "high",
+      "sentiment": "Bearish",
+      "special_note": null,
+      "material_stage": null,
+      "material_stage_label": null,
+      "evidence_status": "multi_source",
+      "evidence_label": "多独立来源提及（待核官方全文）",
+      "evidence_status_reason": "已有 5 家独立媒体族提及（含摘要或正文首段）；多源转载不代表官方公告已证实",
+      "attribution_warning": null,
+      "contradictions": [],
+      "material_depth": "title_and_excerpt",
+      "source_count": 5,
+      "platform_count": 5,
+      "independent_publisher_count": 5,
+      "reprint_count": 0,
+      "published_at": "2026-11-19T17:09:08+08:00",
+      "first_discovered_at": "2026-11-20T11:14:01+08:00",
+      "first_reported_at": "2026-11-19T17:09:08+08:00",
+      "latest_fact_update_at": "2026-11-20T10:18:57+08:00",
+      "latest_reported_at": "2026-11-20T10:18:57+08:00",
+      "fetched_at": "2026-11-20T11:14:01+08:00",
+      "input_batch_id": "raw-20261120-111401",
+      "fact_summary": "\"We've got this,\" Colette Kress, interim CEO of Nvidia, said Tuesday night as she closed out the embattled chip company'…",
+      "fact_atoms": [
+        {
+          "atom_id": "fa_55532576",
+          "subject": "Nvidia",
+          "metric_or_action": "报道称：黄仁勋辞职后英伟达股价跌近四成，临时 CEO 主持财报会并调查第三方数据疑云",
+          "value": null,
+          "unit": null,
+          "period": "单次披露/未注明周期",
+          "scope": "营收/业绩",
+          "fact_status": "reported_unconfirmed_by_filing",
+          "attribution": "The Verge",
+          "source_ref": "rss-theverge_6b96b1d3126a",
+          "source_url": "https://www.theverge.com/ai-artificial-intelligence/1038063/nvidia-stock-market-price-earnings",
+          "source_excerpt_or_locator": "\"We've got this,\" Colette Kress, interim CEO of Nvidia, said Tuesday night as she closed out the embattled chip company's third quarter earnings call. By Thursday, the company's st",
+          "published_at": "2026-11-20T05:59:35+08:00",
+          "discovered_at": "2026-11-20T11:14:01+08:00",
+          "revision": 1
+        }
+      ],
+      "ai_analysis": "核心创始人兼灵魂人物的骤然离任叠加近四成的股价回撤，不仅动摇了资本市场对英伟达治理连续性的预期，也可能重塑算力供应链与开源/闭源生态的博弈格局。",
+      "unverified_claims": [
+        "部分仅含标题的社区/快讯内容提及“黄仁勋想回英伟达却被拒”以及“黄仁勋下台可能削弱开放权重模型让闭源模型受益”，均属未经证实的说法或观点推演，细节待查原文。"
+      ],
+      "speculation_or_outlook": "董事会最终的正式 CEO 继任人选以及下一季度数据中心订单指引，将是稳定市场信心的关键变量。",
+      "sources": [
+        {
+          "item_id": "rss-theverge_6b96b1d3126a",
+          "article_id": "rss-theverge_6b96b1d3126a",
+          "source_id": "rss-theverge",
+          "source_name": "The Verge",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "theverge",
+          "is_reprint_copy": false,
+          "title": "A brief history of Nvidia’s recent stock fluctuations",
+          "url": "https://www.theverge.com/ai-artificial-intelligence/1038063/nvidia-stock-market-price-earnings",
+          "published_at": "2026-11-20T05:59:35+08:00",
+          "published_at_source": "upstream_iso",
+          "fetched_at": "2026-11-20T11:14:02+08:00",
+          "excerpt": "\"We've got this,\" Colette Kress, interim CEO of Nvidia, said Tuesday night as she closed out the embattled chip company's third quarter earnings call. By Thursday, the company's stock price was hovering at around $150 per share, a nearly 40 percent drop from…",
+          "deep_fetch_status": null
+        },
+        {
+          "item_id": "rss-techcrunch_ada82be5a30c",
+          "article_id": "rss-techcrunch_ada82be5a30c",
+          "source_id": "rss-techcrunch",
+          "source_name": "TechCrunch",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "techcrunch",
+          "is_reprint_copy": false,
+          "title": "The unfolding Jensen Huang scandal: a timeline",
+          "url": "https://techcrunch.com/2026/11/19/nvidia-ceo-jensen-huangs-affair-with-alleged-chinese-spy-a-timeline",
+          "published_at": "2026-11-20T04:18:49+08:00",
+          "published_at_source": "upstream_rfc2822",
+          "fetched_at": "2026-11-20T11:14:02+08:00",
+          "excerpt": "Jensen Huang has resigned from Nvidia following an affair, which could have ramifications for national security as the U.S. and China race to develop the most advanced AI infrastructure.",
+          "deep_fetch_status": null
+        },
+        {
+          "item_id": "ithome_cff5bbab360b",
+          "article_id": "ithome_cff5bbab360b",
+          "source_id": "ithome",
+          "source_name": "IT之家",
+          "source_kind": "news",
+          "source_tier": "aggregator_lead",
+          "publisher_family": "ithome",
+          "is_reprint_copy": false,
+          "title": "英伟达回应数据泄露疑云：正调查第三方事件，未发现自身系统受影响",
+          "url": "https://www.ithome.com/1/029/801.htm",
+          "published_at": "2026-11-20T10:18:57+08:00",
+          "published_at_source": "upstream_local_cst",
+          "fetched_at": "2026-11-20T11:14:01+08:00",
+          "excerpt": null,
+          "deep_fetch_status": null
+        },
+        {
+          "item_id": "solidot_6fd9020ad49c",
+          "article_id": "solidot_6fd9020ad49c",
+          "source_id": "solidot",
+          "source_name": "Solidot 奇客",
+          "source_kind": "news",
+          "source_tier": "aggregator_lead",
+          "publisher_family": "solidot",
+          "is_reprint_copy": false,
+          "title": "黄仁勋的下台可能削弱开放权重模型让闭源模型受益",
+          "url": "https://www.solidot.org/story?sid=85932",
+          "published_at": "2026-11-19T17:09:08+08:00",
+          "published_at_source": "upstream_rfc2822",
+          "fetched_at": "2026-11-20T11:14:01+08:00",
+          "excerpt": null,
+          "deep_fetch_status": null
+        },
+        {
+          "item_id": "juejin_ec54f93b4d23",
+          "article_id": "juejin_ec54f93b4d23",
+          "source_id": "juejin",
+          "source_name": "稀土掘金",
+          "source_kind": "news",
+          "source_tier": "aggregator_lead",
+          "publisher_family": "juejin",
+          "is_reprint_copy": false,
+          "title": "黄仁勋想回英伟达却被拒：创始人 CEO 辞职后为什么回不来，董事会继任机制全拆解",
+          "url": "https://juejin.cn/post/7709080191914672171",
+          "published_at": null,
+          "published_at_source": null,
+          "fetched_at": "2026-11-20T11:14:01+08:00",
+          "excerpt": null,
+          "deep_fetch_status": null
+        }
+      ],
+      "verification": {
+        "all_refs_valid": true,
+        "has_primary_url": true,
+        "rejected_refs": [],
+        "has_first_party": false
+      },
+      "followup": {
+        "is_continuing": true,
+        "prev_batch_id": "smart-20261120-111821",
+        "prev_event_id": "evt_18e1bea9672d",
+        "prev_title": "报道称：黄仁勋辞职后英伟达股价跌近四成，临时 CEO 主持财报会并调查第三方数据疑云",
+        "delta_note": "同一事件在最新批次出现表述修订或信息补充"
+      },
+      "is_new_in_batch": false,
+      "update_kind": "new_fact_update",
+      "title_zh": "黄仁勋辞职后英伟达股价跌近四成，临时 CEO 主持财报会并调查第三方数据疑云",
+      "summary_en": "\"We've got this,\" Colette Kress, interim CEO of Nvidia, said Tuesday night as she closed out the embattled chip company's third quarter earnings call. By Thursday, the company's stock price was hovering at around $150 per share, a nearly 40 percent drop from…",
+      "summary_zh": "\"We've got this,\" Colette Kress, interim CEO of Nvidia, said Tuesday night as she closed out the embattled chip company'…"
+    },
+    {
+      "schema_version": "3.0",
+      "event_id": "evt_99573eb86cdb",
+      "storyline_id": "st_a61791f7d2cf",
+      "article_ids": [],
+      "legacy_event_ids": [
+        "evt_527c06fc758a"
+      ],
+      "title": "苹果被曝研发可操控 Mac 的自研 AI 智能体，拟与谷歌及 OpenAI 展开竞争",
+      "category": "tech",
+      "entities": [
+        "Apple",
+        "Meta",
+        "Anthropic",
+        "OpenAI",
+        "AI 推理与框架生态 (vLLM / llama.cpp / Transformers)",
+        "Google / DeepMind / Gemini"
+      ],
+      "entity_ids": [
+        "ent_ai_infra_tools",
+        "ent_google",
+        "ent_openai",
+        "ent_anthropic",
+        "ent_apple"
+      ],
+      "matched_entities": [
+        {
+          "entity_id": "ent_ai_infra_tools",
+          "canonical_name": "AI 推理与框架生态 (vLLM / llama.cpp / Transformers)",
+          "entity_type": "tech",
+          "sector": "AI 开源基础设施",
+          "matched_aliases": [
+            "智能体"
+          ],
+          "tickers": [],
+          "reason": "正文/实体匹配关键词「智能体」"
+        },
+        {
+          "entity_id": "ent_google",
+          "canonical_name": "Google / DeepMind / Gemini",
+          "entity_type": "company",
+          "sector": "AI 模型与云基础设施",
+          "matched_aliases": [
+            "谷歌"
+          ],
+          "tickers": [
+            {
+              "symbol": "GOOGL",
+              "market": "US",
+              "exchange": "NASDAQ",
+              "currency": "USD",
+              "label": "GOOGL.US (NASDAQ)"
+            }
+          ],
+          "reason": "正文/实体匹配关键词「谷歌」"
+        },
+        {
+          "entity_id": "ent_openai",
+          "canonical_name": "OpenAI",
+          "entity_type": "company",
+          "sector": "AI 模型与应用",
+          "matched_aliases": [
+            "openai"
+          ],
+          "tickers": [],
+          "reason": "正文/实体匹配关键词「openai」"
+        },
+        {
+          "entity_id": "ent_anthropic",
+          "canonical_name": "Anthropic / Claude",
+          "entity_type": "company",
+          "sector": "AI 模型与安全",
+          "matched_aliases": [
+            "claude",
+            "anthropic"
+          ],
+          "tickers": [],
+          "reason": "正文/实体匹配关键词「claude / anthropic」"
+        },
+        {
+          "entity_id": "ent_apple",
+          "canonical_name": "苹果 (Apple)",
+          "entity_type": "company",
+          "sector": "消费电子与端侧AI",
+          "matched_aliases": [
+            "apple"
+          ],
+          "tickers": [
+            {
+              "symbol": "AAPL",
+              "market": "US",
+              "exchange": "NASDAQ",
+              "currency": "USD",
+              "label": "AAPL.US (NASDAQ)"
+            }
+          ],
+          "reason": "正文/实体匹配关键词「apple」"
+        }
+      ],
+      "importance": "high",
+      "sentiment": "Mixed",
+      "special_note": null,
+      "material_stage": null,
+      "material_stage_label": null,
+      "evidence_status": "needs_verification",
+      "evidence_label": "待核实 / 出处不足",
+      "evidence_status_reason": "未匹配到满足校验规则的原始新闻出处，已进入待核实状态",
+      "attribution_warning": "该事件包含未获官方披露证实的说法，标题与摘要已保留报道归因限定。",
+      "contradictions": [],
+      "material_depth": "title_only",
+      "source_count": 0,
+      "platform_count": 0,
+      "independent_publisher_count": 0,
+      "reprint_count": 0,
+      "published_at": null,
+      "first_discovered_at": "2026-11-20T11:14:01+08:00",
+      "first_reported_at": null,
+      "latest_fact_update_at": null,
+      "latest_reported_at": null,
+      "fetched_at": "2026-11-20T11:14:01+08:00",
+      "input_batch_id": "raw-20261120-111401",
+      "fact_summary": "【据关联报道/尚未见官方披露确认】据 TechCrunch 与 The Verge 报道，苹果似乎正在开发一款能够直接操作用户 Mac 电脑的自主 AI 智能体，以应对来自 Meta Muse、Instinct、Claude 以及 OpenAI Dots 等产品的竞争。另有中文快讯标题称苹果在开发 Mac AI 智能体的同时正收紧第三方智能体权限（该条目原始素材仅含标题，细节待查原文）。",
+      "fact_atoms": [
+        {
+          "atom_id": "fa_85706496",
+          "subject": "Apple",
+          "metric_or_action": "苹果被曝研发可操控 Mac 的自研 AI 智能体，拟与谷歌及 OpenAI 展开竞争",
+          "value": null,
+          "unit": null,
+          "period": "单次披露/未注明周期",
+          "scope": "新闻事件陈述",
+          "fact_status": "reported_unconfirmed_by_filing",
+          "attribution": "未核验出处",
+          "source_ref": null,
+          "source_url": null,
+          "source_excerpt_or_locator": "无合格出处定位",
+          "published_at": null,
+          "discovered_at": "2026-11-20T11:14:01+08:00",
+          "revision": 1
+        }
+      ],
+      "ai_analysis": "桌面操作系统正成为 AI 智能体争夺的核心战场。若苹果既下场自研系统级操作智能体又收紧第三方权限，将直接影响外部大模型智能体在 macOS 生态中的自动化能力与商业化空间。",
+      "unverified_claims": [
+        "苹果开发可操作 Mac 的 AI 智能体及收紧第三方智能体权限目前均属于媒体披露与市场传闻，尚未获苹果官方正式发布证实。"
+      ],
+      "speculation_or_outlook": null,
+      "sources": [],
+      "verification": {
+        "all_refs_valid": false,
+        "has_primary_url": false,
+        "rejected_refs": [],
+        "has_first_party": false
+      },
+      "followup": {
+        "is_continuing": true,
+        "prev_batch_id": "smart-20261120-111821",
+        "prev_event_id": "evt_527c06fc758a",
+        "prev_title": "苹果被曝研发可操控 Mac 的自研 AI 智能体，拟与谷歌及 OpenAI 展开竞争",
+        "delta_note": "在上期简报中已出现，本批持续关注（暂无新增独立变化）"
+      },
+      "is_new_in_batch": false,
+      "update_kind": "continuing_coverage",
+      "title_zh": "苹果被曝研发可操控 Mac 的自研 AI 智能体，拟与谷歌及 OpenAI 展开竞争",
+      "summary_zh": "【据关联报道/尚未见官方披露确认】据 TechCrunch 与 The Verge 报道，苹果似乎正在开发一款能够直接操作用户 Mac 电脑的自主 AI 智能体，以应对来自 Meta Muse、Instinct、Claude 以及 OpenAI Dots 等产品的竞争。另有中文快讯标题称苹果在开发 Mac AI 智能体的同时正收紧第三方智能体权限（该条目原始素材仅含标题，细节待查原文）。"
+    },
+    {
+      "schema_version": "3.0",
+      "event_id": "evt_380ab22bce72",
+      "storyline_id": "st_1ed50bd20a41",
+      "article_ids": [
+        "rss-techcrunch_660651d832a9",
+        "producthunt_03533df9e620",
+        "rss-theverge_2257c21bb822",
+        "hackernews_9f7da4fd5d22",
+        "aihot_755b676938f0",
+        "aihot_42c23c0a4f79"
+      ],
+      "legacy_event_ids": [
+        "evt_fa789c3931ee"
+      ],
+      "title": "谷歌发布 Gemini 4 Neon，同步推出 Mac 端操控智能体与搜索首页 AI 侧边栏",
+      "category": "tech",
+      "entities": [
+        "Google",
+        "Gemini",
+        "Cognition",
+        "Google / DeepMind / Gemini",
+        "AI 推理与框架生态 (vLLM / llama.cpp / Transformers)"
+      ],
+      "entity_ids": [
+        "ent_google",
+        "ent_ai_infra_tools"
+      ],
+      "matched_entities": [
+        {
+          "entity_id": "ent_google",
+          "canonical_name": "Google / DeepMind / Gemini",
+          "entity_type": "company",
+          "sector": "AI 模型与云基础设施",
+          "matched_aliases": [
+            "谷歌",
+            "gemini",
+            "google"
+          ],
+          "tickers": [
+            {
+              "symbol": "GOOGL",
+              "market": "US",
+              "exchange": "NASDAQ",
+              "currency": "USD",
+              "label": "GOOGL.US (NASDAQ)"
+            }
+          ],
+          "reason": "正文/实体匹配关键词「谷歌 / gemini」"
+        },
+        {
+          "entity_id": "ent_ai_infra_tools",
+          "canonical_name": "AI 推理与框架生态 (vLLM / llama.cpp / Transformers)",
+          "entity_type": "tech",
+          "sector": "AI 开源基础设施",
+          "matched_aliases": [
+            "智能体"
+          ],
+          "tickers": [],
+          "reason": "正文/实体匹配关键词「智能体」"
+        }
+      ],
+      "importance": "high",
+      "sentiment": "Bullish",
+      "special_note": null,
+      "material_stage": null,
+      "material_stage_label": null,
+      "evidence_status": "multi_source",
+      "evidence_label": "多独立来源提及（待核官方全文）",
+      "evidence_status_reason": "已有 5 家独立媒体族提及（含摘要或正文首段）；多源转载不代表官方公告已证实",
+      "attribution_warning": null,
+      "contradictions": [],
+      "material_depth": "title_and_excerpt",
+      "source_count": 6,
+      "platform_count": 5,
+      "independent_publisher_count": 5,
+      "reprint_count": 0,
+      "published_at": "2026-11-20T02:09:11+08:00",
+      "first_discovered_at": "2026-11-20T11:14:01+08:00",
+      "first_reported_at": "2026-11-20T02:09:11+08:00",
+      "latest_fact_update_at": "2026-11-20T08:32:21+08:00",
+      "latest_reported_at": "2026-11-20T08:32:21+08:00",
+      "fetched_at": "2026-11-20T11:14:01+08:00",
+      "input_batch_id": "raw-20261120-111401",
+      "fact_summary": "谷歌推出 Gemini 4 Neon，主打前沿推理能力与更快的任务完成速度。在产品落地方面，谷歌为 Gemini 更新了 Mac 端 AI 智能体功能，支持自动整理文件、填写表单并执行多步骤工作流；同时谷歌产品副总裁 Robby Stein 在 X 平台展示，谷歌正在更新搜索首页，允许用户打开可折叠侧边栏直接查看并继续 AI 对话。此外，部分仅含标题的素材提及 Gemini 4 Neon 在 Models Engineering Index 登顶，且 Cognition 评测其在 FrontierCode 2.0 上得分达 46.2%、成本约为 Opus 5.5 的三分之一（相关评测细节待查原文）。",
+      "fact_atoms": [
+        {
+          "atom_id": "fa_33985915",
+          "subject": "Google",
+          "metric_or_action": "谷歌发布 Gemini 4 Neon，同步推出 Mac 端操控智能体与搜索首页 AI 侧边栏",
+          "value": "46.2",
+          "unit": "%",
+          "period": "单次披露/未注明周期",
+          "scope": "新闻事件陈述",
+          "fact_status": "multi_source_reported",
+          "attribution": "TechCrunch",
+          "source_ref": "rss-techcrunch_660651d832a9",
+          "source_url": "https://techcrunch.com/2026/11/19/google-gives-gemini-the-ability-to-use-your-mac-for-you",
+          "source_excerpt_or_locator": "Google's latest update to Gemini brings an AI agent to the Mac that can organize files, fill out forms, and tackle multistep workflows.",
+          "published_at": "2026-11-20T02:09:11+08:00",
+          "discovered_at": "2026-11-20T11:14:01+08:00",
+          "revision": 1
+        }
+      ],
+      "ai_analysis": "谷歌一边通过 Gemini 4 Neon 强化模型层性价比与推理表现，一边将智能体能力深入桌面操作和搜索核心入口，意在用生态全栈整合巩固其在个人生产力与信息检索领域的地位。",
+      "unverified_claims": [],
+      "speculation_or_outlook": "将 AI 对话直接嵌入高流量的谷歌搜索首页，可能加速用户从传统链接点击向对话式任务处理的习惯迁移。",
+      "sources": [
+        {
+          "item_id": "rss-techcrunch_660651d832a9",
+          "article_id": "rss-techcrunch_660651d832a9",
+          "source_id": "rss-techcrunch",
+          "source_name": "TechCrunch",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "techcrunch",
+          "is_reprint_copy": false,
+          "title": "Google gives Gemini the ability to use your Mac for you",
+          "url": "https://techcrunch.com/2026/11/19/google-gives-gemini-the-ability-to-use-your-mac-for-you",
+          "published_at": "2026-11-20T02:09:11+08:00",
+          "published_at_source": "upstream_rfc2822",
+          "fetched_at": "2026-11-20T11:14:02+08:00",
+          "excerpt": "Google's latest update to Gemini brings an AI agent to the Mac that can organize files, fill out forms, and tackle multistep workflows.",
+          "deep_fetch_status": null
+        },
+        {
+          "item_id": "producthunt_03533df9e620",
+          "article_id": "producthunt_03533df9e620",
+          "source_id": "producthunt",
+          "source_name": "Product Hunt",
+          "source_kind": "repo",
+          "source_tier": "aggregator_lead",
+          "publisher_family": "producthunt",
+          "is_reprint_copy": false,
+          "title": "Gemini 4 Neon",
+          "url": "https://www.producthunt.com/products/gemini-6",
+          "published_at": null,
+          "published_at_source": null,
+          "fetched_at": "2026-11-20T11:14:01+08:00",
+          "excerpt": "Frontier reasoning with faster task completion",
+          "deep_fetch_status": null
+        },
+        {
+          "item_id": "rss-theverge_2257c21bb822",
+          "article_id": "rss-theverge_2257c21bb822",
+          "source_id": "rss-theverge",
+          "source_name": "The Verge",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "theverge",
+          "is_reprint_copy": false,
+          "title": "Google is putting AI chats right on the homepage",
+          "url": "https://www.theverge.com/tech/1038059/google-search-homepage-ai-chats",
+          "published_at": "2026-11-20T04:05:06+08:00",
+          "published_at_source": "upstream_iso",
+          "fetched_at": "2026-11-20T11:14:02+08:00",
+          "excerpt": "Google is updating its homepage to include AI searches. In a post on X, Google's vice president of product, Robby Stein, shows how you can now open a collapsible sidebar to view and continue your AI chats. Based on the GIF shared by Stein, it looks like you c…",
+          "deep_fetch_status": null
+        },
+        {
+          "item_id": "hackernews_9f7da4fd5d22",
+          "article_id": "hackernews_9f7da4fd5d22",
+          "source_id": "hackernews",
+          "source_name": "Hacker News",
+          "source_kind": "discussion",
+          "source_tier": "aggregator_lead",
+          "publisher_family": "hackernews",
+          "is_reprint_copy": false,
+          "title": "Gemini 4 Neon is the new #1 on the Models Engineering Index",
+          "url": "https://news.ycombinator.com/item?id=50568130",
+          "published_at": "2026-11-20T07:35:35+08:00",
+          "published_at_source": "upstream_rfc2822",
+          "fetched_at": "2026-11-20T11:14:01+08:00",
+          "excerpt": null,
+          "deep_fetch_status": null
+        },
+        {
+          "item_id": "aihot_755b676938f0",
+          "article_id": "aihot_755b676938f0",
+          "source_id": "aihot",
+          "source_name": "AIHOT 前沿",
+          "source_kind": "news",
+          "source_tier": "aggregator_lead",
+          "publisher_family": "aihot",
+          "is_reprint_copy": false,
+          "title": "Gemini 4 Neon 纯代码动画演绎济慈《秋颂》",
+          "url": "https://aihot.news/items/ix5bzxzugdy1jw9at3ssqm6kz",
+          "published_at": "2026-11-20T08:32:21+08:00",
+          "published_at_source": "upstream_rfc2822",
+          "fetched_at": "2026-11-20T11:14:01+08:00",
+          "excerpt": null,
+          "deep_fetch_status": null
+        },
+        {
+          "item_id": "aihot_42c23c0a4f79",
+          "article_id": "aihot_42c23c0a4f79",
+          "source_id": "aihot",
+          "source_name": "AIHOT 前沿",
+          "source_kind": "news",
+          "source_tier": "aggregator_lead",
+          "publisher_family": "aihot",
+          "is_reprint_copy": false,
+          "title": "Cognition 评测 Gemini 4 Neon：FrontierCode 2.0 得分 46.2%，接近 Opus 5.5 且成本约三分之一",
+          "url": "https://aihot.news/items/sr374ahztizayy7ozug6u9pii",
+          "published_at": "2026-11-20T07:04:52+08:00",
+          "published_at_source": "upstream_rfc2822",
+          "fetched_at": "2026-11-20T11:14:01+08:00",
+          "excerpt": null,
+          "deep_fetch_status": null
+        }
+      ],
+      "verification": {
+        "all_refs_valid": true,
+        "has_primary_url": true,
+        "rejected_refs": [],
+        "has_first_party": false
+      },
+      "followup": {
+        "is_continuing": true,
+        "prev_batch_id": "smart-20261120-111821",
+        "prev_event_id": "evt_fa789c3931ee",
+        "prev_title": "谷歌发布 Gemini 4 Neon，同步推出 Mac 端操控智能体与搜索首页 AI 侧边栏",
+        "delta_note": "在上期简报中已出现，本批持续关注（暂无新增独立变化）"
+      },
+      "is_new_in_batch": false,
+      "update_kind": "continuing_coverage",
+      "title_zh": "谷歌发布 Gemini 4 Neon，同步推出 Mac 端操控智能体与搜索首页 AI 侧边栏",
+      "summary_zh": "谷歌推出 Gemini 4 Neon，主打前沿推理能力与更快的任务完成速度。在产品落地方面，谷歌为 Gemini 更新了 Mac 端 AI 智能体功能，支持自动整理文件、填写表单并执行多步骤工作流；同时谷歌产品副总裁 Robby Stein 在 X 平台展示，谷歌正在更新搜索首页，允许用户打开可折叠侧边栏直接查看并继续 AI 对话。此外，部分仅含标题的素材提及 Gemini 4 Neon 在 Models Engineering Index 登顶，且 Cognition 评测其在 FrontierCode 2.0 上得分达 46.2%、成本约为 Opus 5.5 的三分之一（相关评测细节待查原文）。"
+    },
+    {
+      "schema_version": "3.0",
+      "event_id": "evt_850d1316425d",
+      "storyline_id": "st_3ea0e0045bf3",
+      "article_ids": [
+        "github-releases_355bb86d2ae8",
+        "ithome_1137d81fdfa6",
+        "aihot_6387a42f5ccd",
+        "aihot_2ea6500fe597",
+        "aihot_a57b5657ba37",
+        "aihot_e0f8963026e0"
+      ],
+      "legacy_event_ids": [
+        "evt_8a42b9b1da25"
+      ],
+      "title": "OpenAI 邀请部分 Plus 用户测试 dots 智能体，并加速拓展语音与垂直场景",
+      "category": "tech",
+      "entities": [
+        "OpenAI",
+        "ChatGPT",
+        "AI 推理与框架生态 (vLLM / llama.cpp / Transformers)"
+      ],
+      "entity_ids": [
+        "ent_openai",
+        "ent_ai_infra_tools"
+      ],
+      "matched_entities": [
+        {
+          "entity_id": "ent_openai",
+          "canonical_name": "OpenAI",
+          "entity_type": "company",
+          "sector": "AI 模型与应用",
+          "matched_aliases": [
+            "openai",
+            "chatgpt"
+          ],
+          "tickers": [],
+          "reason": "正文/实体匹配关键词「openai / chatgpt」"
+        },
+        {
+          "entity_id": "ent_ai_infra_tools",
+          "canonical_name": "AI 推理与框架生态 (vLLM / llama.cpp / Transformers)",
+          "entity_type": "tech",
+          "sector": "AI 开源基础设施",
+          "matched_aliases": [
+            "智能体"
+          ],
+          "tickers": [],
+          "reason": "正文/实体匹配关键词「智能体」"
+        }
+      ],
+      "importance": "high",
+      "sentiment": "Bullish",
+      "special_note": null,
+      "material_stage": "ga",
+      "material_stage_label": "正式可用 (GA)",
+      "evidence_status": "multi_source",
+      "evidence_label": "一手官方/披露已证实",
+      "evidence_status_reason": "包含官方/监管/代码仓库一手出处（独立来源 3 家），请仍以原文披露范围为准",
+      "attribution_warning": null,
+      "contradictions": [],
+      "material_depth": "first_party_or_metadata",
+      "source_count": 6,
+      "platform_count": 3,
+      "independent_publisher_count": 3,
+      "reprint_count": 0,
+      "published_at": "2026-11-20T07:17:19+08:00",
+      "first_discovered_at": "2026-11-20T11:14:01+08:00",
+      "first_reported_at": "2026-11-20T07:17:19+08:00",
+      "latest_fact_update_at": "2026-11-20T09:27:57+08:00",
+      "latest_reported_at": "2026-11-20T09:27:57+08:00",
+      "fetched_at": "2026-11-20T11:14:01+08:00",
+      "input_batch_id": "raw-20261120-111401",
+      "fact_summary": "OpenAI 已邀请部分 ChatGPT Plus 订阅用户参与 dots 智能体的测试，同时计划在移动版 ChatGPT 中为该智能体设立独立标签页（该信息来自仅含标题素材，细节待查原文）。在开发者接口方面，OpenAI SDK 官方正式发布了 v3.57.0 版本，新增对 Live WebRTC standby 的 API 支持。另有仅含标题快讯提及 OpenAI 开放支持实时双向语音的 GPT-Live-1.1 API，以及上线可连接 QuickBooks 处理会计任务的 ChatGPT for Accounting。",
+      "fact_atoms": [
+        {
+          "atom_id": "fa_95044567",
+          "subject": "OpenAI",
+          "metric_or_action": "OpenAI 邀请部分 Plus 用户测试 dots 智能体，并加速拓展语音与垂直场景",
+          "value": "正式可用 (GA)",
+          "unit": "可用状态",
+          "period": "季度口径",
+          "scope": "模型/产品/技术指标",
+          "fact_status": "first_party_confirmed",
+          "attribution": "GitHub Releases 官方版本",
+          "source_ref": "github-releases_355bb86d2ae8",
+          "source_url": "https://github.com/openai/openai-python/releases/tag/v3.57.0",
+          "source_excerpt_or_locator": "版本 v3.57.0（正式版 | 许可: Apache-2.0）。3.57.0 (2026-11-19)；Features；api: support Live WebRTC standby (#4296) (18d10c3)",
+          "published_at": "2026-11-20T09:27:57+08:00",
+          "discovered_at": "2026-11-20T11:14:01+08:00",
+          "revision": 1
+        }
+      ],
+      "ai_analysis": "从桌面/移动端独立标签页智能体、低延迟语音接口到会计垂直插件，OpenAI 正加速把单一聊天机器人拆解为面向高频消费端任务与企业专业流程的多形态智能体产品矩阵。",
+      "unverified_claims": [],
+      "speculation_or_outlook": null,
+      "sources": [
+        {
+          "item_id": "github-releases_355bb86d2ae8",
+          "article_id": "github-releases_355bb86d2ae8",
+          "source_id": "github-releases",
+          "source_name": "GitHub Releases 官方版本",
+          "source_kind": "repo_release",
+          "source_tier": "tech_material",
+          "publisher_family": "github-openai/openai-python",
+          "is_reprint_copy": false,
+          "title": "[GitHub Release] OpenAI SDK 发布 v3.57.0",
+          "url": "https://github.com/openai/openai-python/releases/tag/v3.57.0",
+          "published_at": "2026-11-20T09:27:57+08:00",
+          "published_at_source": "github_release_api",
+          "fetched_at": "2026-11-20T11:14:05+08:00",
+          "excerpt": "版本 v3.57.0（正式版 | 许可: Apache-2.0）。3.57.0 (2026-11-19)；Features；api: support Live WebRTC standby (#4296) (18d10c3)",
+          "deep_fetch_status": null
+        },
+        {
+          "item_id": "ithome_1137d81fdfa6",
+          "article_id": "ithome_1137d81fdfa6",
+          "source_id": "ithome",
+          "source_name": "IT之家",
+          "source_kind": "news",
+          "source_tier": "aggregator_lead",
+          "publisher_family": "ithome",
+          "is_reprint_copy": false,
+          "title": "OpenAI 邀部分 Plus 用户体验 dots AI 智能体，移动版 ChatGPT 将为其设独立标签页",
+          "url": "https://www.ithome.com/1/029/784.htm",
+          "published_at": "2026-11-20T09:20:21+08:00",
+          "published_at_source": "upstream_local_cst",
+          "fetched_at": "2026-11-20T11:14:01+08:00",
+          "excerpt": null,
+          "deep_fetch_status": null
+        },
+        {
+          "item_id": "aihot_6387a42f5ccd",
+          "article_id": "aihot_6387a42f5ccd",
+          "source_id": "aihot",
+          "source_name": "AIHOT 前沿",
+          "source_kind": "news",
+          "source_tier": "aggregator_lead",
+          "publisher_family": "aihot",
+          "is_reprint_copy": false,
+          "title": "OpenAI 邀请部分 Plus 用户测试 dots 智能体，移动版 ChatGPT 将为其设独立标签页",
+          "url": "https://aihot.news/items/v3dxe2sr0ll3e1tvyuaob407c",
+          "published_at": "2026-11-20T09:20:21+08:00",
+          "published_at_source": "upstream_rfc2822",
+          "fetched_at": "2026-11-20T11:14:01+08:00",
+          "excerpt": null,
+          "deep_fetch_status": null
+        },
+        {
+          "item_id": "aihot_2ea6500fe597",
+          "article_id": "aihot_2ea6500fe597",
+          "source_id": "aihot",
+          "source_name": "AIHOT 前沿",
+          "source_kind": "news",
+          "source_tier": "aggregator_lead",
+          "publisher_family": "aihot",
+          "is_reprint_copy": false,
+          "title": "OpenAI 向 Plus 和 Business 用户测试 dots",
+          "url": "https://aihot.news/items/qoekdl4jf95kwb6cau1i3mltn",
+          "published_at": "2026-11-20T07:17:19+08:00",
+          "published_at_source": "upstream_rfc2822",
+          "fetched_at": "2026-11-20T11:14:01+08:00",
+          "excerpt": null,
+          "deep_fetch_status": null
+        },
+        {
+          "item_id": "aihot_a57b5657ba37",
+          "article_id": "aihot_a57b5657ba37",
+          "source_id": "aihot",
+          "source_name": "AIHOT 前沿",
+          "source_kind": "news",
+          "source_tier": "aggregator_lead",
+          "publisher_family": "aihot",
+          "is_reprint_copy": false,
+          "title": "OpenAI 开放 GPT-Live-1.1 API：支持实时双向语音对话，智能体可边聊天边处理复杂任务",
+          "url": "https://aihot.news/items/c8uvlm6nforqa30qamikr0hi9",
+          "published_at": "2026-11-20T08:50:30+08:00",
+          "published_at_source": "upstream_rfc2822",
+          "fetched_at": "2026-11-20T11:14:01+08:00",
+          "excerpt": null,
+          "deep_fetch_status": null
+        },
+        {
+          "item_id": "aihot_e0f8963026e0",
+          "article_id": "aihot_e0f8963026e0",
+          "source_id": "aihot",
+          "source_name": "AIHOT 前沿",
+          "source_kind": "news",
+          "source_tier": "aggregator_lead",
+          "publisher_family": "aihot",
+          "is_reprint_copy": false,
+          "title": "OpenAI 测试 ChatGPT 全新移动端体验",
+          "url": "https://aihot.news/items/s0q4y5e0r662omayvlae6yt7n",
+          "published_at": "2026-11-20T07:20:58+08:00",
+          "published_at_source": "upstream_rfc2822",
+          "fetched_at": "2026-11-20T11:14:01+08:00",
+          "excerpt": null,
+          "deep_fetch_status": null
+        }
+      ],
+      "verification": {
+        "all_refs_valid": true,
+        "has_primary_url": true,
+        "rejected_refs": [],
+        "has_first_party": true
+      },
+      "followup": {
+        "is_continuing": true,
+        "prev_batch_id": "smart-20261120-111821",
+        "prev_event_id": "evt_8a42b9b1da25",
+        "prev_title": "OpenAI 邀请部分 Plus 用户测试 dots 智能体，并加速拓展语音与垂直场景",
+        "delta_note": "在上期简报中已出现，本批持续关注（暂无新增独立变化）"
+      },
+      "is_new_in_batch": false,
+      "update_kind": "continuing_coverage",
+      "title_zh": "OpenAI 邀请部分 Plus 用户测试 dots 智能体，并加速拓展语音与垂直场景",
+      "summary_zh": "OpenAI 已邀请部分 ChatGPT Plus 订阅用户参与 dots 智能体的测试，同时计划在移动版 ChatGPT 中为该智能体设立独立标签页（该信息来自仅含标题素材，细节待查原文）。在开发者接口方面，OpenAI SDK 官方正式发布了 v3.57.0 版本，新增对 Live WebRTC standby 的 API 支持。另有仅含标题快讯提及 OpenAI 开放支持实时双向语音的 GPT-Live-1.1 API，以及上线可连接 QuickBooks 处理会计任务的 ChatGPT for Accounting。"
+    },
+    {
+      "schema_version": "3.0",
+      "event_id": "evt_63df5c23d062",
+      "storyline_id": "st_5df59690f96c",
+      "article_ids": [
+        "rss-techcrunch_8a2cd6028419",
+        "rss-techcrunch_41c7f179f56f",
+        "rss-theverge_2d4c8283f4ee",
+        "rss-arstechnica_41a040be412a",
+        "aihot_01b38b4572a0"
+      ],
+      "legacy_event_ids": [
+        "evt_bbe334618aea"
+      ],
+      "title": "Meta 智能体 Muse 被曝混淆用户隐私对话，新款可穿戴设备据传定价 300 美元",
+      "category": "tech",
+      "entities": [
+        "Meta",
+        "Muse",
+        "AI 推理与框架生态 (vLLM / llama.cpp / Transformers)"
+      ],
+      "entity_ids": [
+        "ent_ai_infra_tools"
+      ],
+      "matched_entities": [
+        {
+          "entity_id": "ent_ai_infra_tools",
+          "canonical_name": "AI 推理与框架生态 (vLLM / llama.cpp / Transformers)",
+          "entity_type": "tech",
+          "sector": "AI 开源基础设施",
+          "matched_aliases": [
+            "智能体"
+          ],
+          "tickers": [],
+          "reason": "正文/实体匹配关键词「智能体」"
+        }
+      ],
+      "importance": "medium",
+      "sentiment": "Bearish",
+      "special_note": null,
+      "material_stage": null,
+      "material_stage_label": null,
+      "evidence_status": "multi_source",
+      "evidence_label": "多独立来源提及（待核官方全文）",
+      "evidence_status_reason": "已有 4 家独立媒体族提及（含摘要或正文首段）；多源转载不代表官方公告已证实",
+      "attribution_warning": null,
+      "contradictions": [],
+      "material_depth": "title_and_excerpt",
+      "source_count": 5,
+      "platform_count": 4,
+      "independent_publisher_count": 4,
+      "reprint_count": 0,
+      "published_at": "2026-11-19T03:19:33+08:00",
+      "first_discovered_at": "2026-11-20T11:14:01+08:00",
+      "first_reported_at": "2026-11-19T03:19:33+08:00",
+      "latest_fact_update_at": "2026-11-20T10:22:14+08:00",
+      "latest_reported_at": "2026-11-20T10:22:14+08:00",
+      "fetched_at": "2026-11-20T11:14:01+08:00",
+      "input_batch_id": "raw-20261120-111401",
+      "fact_summary": "报道显示，Meta 旗下 AI 智能体 Muse 出现混淆对话内容的问题并引发隐私泄露担忧。部分员工在内部反馈称，Muse 向他们展示了并非本人发起的托儿请求、职业建议、商品订单以及不属于自己的银行账户和比特币余额信息；Meta 对此回应称，Muse 异常输出中出现的随机银行和比特币余额并非真实数据。硬件方面，对于 The Information 报道称 Meta 新款 AI 可穿戴设备 Muse Charm 可能定价 300 美元的消息，Meta 未予否认，仅表示很快会有更多信息分享；另有仅含标题快讯称 Muse 推出了代用户收发邮件的功能。",
+      "fact_atoms": [
+        {
+          "atom_id": "fa_56883804",
+          "subject": "Meta",
+          "metric_or_action": "Meta 智能体 Muse 被曝混淆用户隐私对话，新款可穿戴设备据传定价 300 美元",
+          "value": null,
+          "unit": null,
+          "period": "单次披露/未注明周期",
+          "scope": "订单/合同/意向",
+          "fact_status": "reported_unconfirmed_by_filing",
+          "attribution": "TechCrunch",
+          "source_ref": "rss-techcrunch_8a2cd6028419",
+          "source_url": "https://techcrunch.com/2026/11/19/metas-ai-agent-muse-is-mixing-up-conversations-and-exposing-private-data-report-says",
+          "source_excerpt_or_locator": "In some of these instances, employees said Muse surfaced messages about childcare requests they never made, career advice they never asked for, product orders they never placed, an",
+          "published_at": "2026-11-20T01:38:40+08:00",
+          "discovered_at": "2026-11-20T11:14:01+08:00",
+          "revision": 1
+        }
+      ],
+      "ai_analysis": "智能体在具备跨应用上下文记忆和邮件收发等高权限能力后，一旦发生状态隔离故障或输出错乱，极易击穿用户隐私信任底线，并直接拖累配套可穿戴硬件的商业化推广。",
+      "unverified_claims": [
+        "关于 Meta 新款 AI 可穿戴设备 Muse Charm 定价 300 美元的说法源于 The Information 报道，Meta 尚未正式确认定价与发布细节。",
+        "内部员工反映 Muse 疑似串扰并暴露他人真实隐私订单与财务信息，Meta 官方辩称相关银行与比特币余额输出并不真实。"
+      ],
+      "speculation_or_outlook": null,
+      "sources": [
+        {
+          "item_id": "rss-techcrunch_8a2cd6028419",
+          "article_id": "rss-techcrunch_8a2cd6028419",
+          "source_id": "rss-techcrunch",
+          "source_name": "TechCrunch",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "techcrunch",
+          "is_reprint_copy": false,
+          "title": "Meta’s AI agent Muse is mixing up conversations and could be exposing private data, report says",
+          "url": "https://techcrunch.com/2026/11/19/metas-ai-agent-muse-is-mixing-up-conversations-and-exposing-private-data-report-says",
+          "published_at": "2026-11-20T01:38:40+08:00",
+          "published_at_source": "upstream_rfc2822",
+          "fetched_at": "2026-11-20T11:14:02+08:00",
+          "excerpt": "In some of these instances, employees said Muse surfaced messages about childcare requests they never made, career advice they never asked for, product orders they never placed, and bank account balances that didn't belong to them.",
+          "deep_fetch_status": null
+        },
+        {
+          "item_id": "rss-techcrunch_41c7f179f56f",
+          "article_id": "rss-techcrunch_41c7f179f56f",
+          "source_id": "rss-techcrunch",
+          "source_name": "TechCrunch",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "techcrunch",
+          "is_reprint_copy": false,
+          "title": "Meta’s new Muse Charm device may cost $300",
+          "url": "https://techcrunch.com/2026/11/19/metas-new-muse-charm-device-may-cost-300",
+          "published_at": "2026-11-20T05:58:06+08:00",
+          "published_at_source": "upstream_rfc2822",
+          "fetched_at": "2026-11-20T11:14:02+08:00",
+          "excerpt": "Meta hasn't denied the reporting from The Information, saying only that it will \"have more to share soon\" about its upcoming AI wearable.",
+          "deep_fetch_status": null
+        },
+        {
+          "item_id": "rss-theverge_2d4c8283f4ee",
+          "article_id": "rss-theverge_2d4c8283f4ee",
+          "source_id": "rss-theverge",
+          "source_name": "The Verge",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "theverge",
+          "is_reprint_copy": false,
+          "title": "Meta’s Muse Charm might cost $300",
+          "url": "https://www.theverge.com/tech/1038087/meta-muse-charm-ai-price",
+          "published_at": "2026-11-20T04:22:17+08:00",
+          "published_at_source": "upstream_iso",
+          "fetched_at": "2026-11-20T11:14:02+08:00",
+          "excerpt": "Meta is planning to price the Muse Charm, a little gadget with a screen that lets you chat with your Muse AI agent, at $300, according to The Information. CEO Mark Zuckerberg revealed the gadget earlier this year and said the company expected to ship the Char…",
+          "deep_fetch_status": null
+        },
+        {
+          "item_id": "rss-arstechnica_41a040be412a",
+          "article_id": "rss-arstechnica_41a040be412a",
+          "source_id": "rss-arstechnica",
+          "source_name": "Ars Technica",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "arstechnica",
+          "is_reprint_copy": false,
+          "title": "Muse privacy invasions are freaking out Meta staffers, internal chats show",
+          "url": "https://arstechnica.com/tech-policy/2026/11/muse-privacy-invasions-are-freaking-out-meta-staffers-internal-chats-show",
+          "published_at": "2026-11-19T03:19:33+08:00",
+          "published_at_source": "upstream_rfc2822",
+          "fetched_at": "2026-11-20T11:14:02+08:00",
+          "excerpt": "Erratic Muse outputs sharing random bank, bitcoin balances aren’t real, Meta says.",
+          "deep_fetch_status": null
+        },
+        {
+          "item_id": "aihot_01b38b4572a0",
+          "article_id": "aihot_01b38b4572a0",
+          "source_id": "aihot",
+          "source_name": "AIHOT 前沿",
+          "source_kind": "news",
+          "source_tier": "aggregator_lead",
+          "publisher_family": "aihot",
+          "is_reprint_copy": false,
+          "title": "Meta Muse 推出邮箱功能，可代用户收发邮件",
+          "url": "https://aihot.news/items/yi033i5qjc5oxzlvk2hyl67e2",
+          "published_at": "2026-11-20T10:22:14+08:00",
+          "published_at_source": "upstream_rfc2822",
+          "fetched_at": "2026-11-20T11:14:01+08:00",
+          "excerpt": null,
+          "deep_fetch_status": null
+        }
+      ],
+      "verification": {
+        "all_refs_valid": true,
+        "has_primary_url": true,
+        "rejected_refs": [],
+        "has_first_party": false
+      },
+      "followup": {
+        "is_continuing": true,
+        "prev_batch_id": "smart-20261120-111821",
+        "prev_event_id": "evt_bbe334618aea",
+        "prev_title": "Meta 智能体 Muse 被曝混淆用户隐私对话，新款可穿戴设备据传定价 300 美元",
+        "delta_note": "在上期简报中已出现，本批持续关注（暂无新增独立变化）"
+      },
+      "is_new_in_batch": false,
+      "update_kind": "continuing_coverage",
+      "title_zh": "Meta 智能体 Muse 被曝混淆用户隐私对话，新款可穿戴设备据传定价 300 美元",
+      "summary_zh": "报道显示，Meta 旗下 AI 智能体 Muse 出现混淆对话内容的问题并引发隐私泄露担忧。部分员工在内部反馈称，Muse 向他们展示了并非本人发起的托儿请求、职业建议、商品订单以及不属于自己的银行账户和比特币余额信息；Meta 对此回应称，Muse 异常输出中出现的随机银行和比特币余额并非真实数据。硬件方面，对于 The Information 报道称 Meta 新款 AI 可穿戴设备 Muse Charm 可能定价 300 美元的消息，Meta 未予否认，仅表示很快会有更多信息分享；另有仅含标题快讯称 Muse 推出了代用户收发邮件的功能。"
+    }
+  ]
+}
