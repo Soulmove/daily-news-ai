@@ -17,6 +17,61 @@ from pipeline.manifest import atomic_write_json, load_json_if_exists
 from pipeline.time_utils import SHANGHAI_TZ, now_shanghai, parse_iso_datetime, to_iso_shanghai
 
 
+_PUNCT_ONLY_RE = re.compile(r"^[\W_\s“”\"'‘’•·.,!?;:()（）【】《》<>—\-]+$")
+_TRAD_TO_SIMP_MAP = {
+    "數": "数", "測": "测", "經": "经", "濟": "济", "美": "美", "國": "国", "中": "中",
+    "營": "营", "市": "市", "場": "场", "價": "价", "格": "格", "據": "据", "現": "现",
+    "發": "发", "開": "开", "技": "技", "術": "术", "系": "系", "統": "统", "網": "网",
+    "雲": "云", "億": "亿", "萬": "万", "選": "选", "際": "际", "廣": "广", "電": "电",
+    "長": "长", "點": "点", "問": "问", "預": "预", "銀": "银", "業": "业", "體": "体",
+    "產": "产", "會": "会", "議": "议", "說": "说", "報": "报", "與": "与", "為": "为",
+    "從": "从", "進": "进", "過": "过", "這": "这", "個": "个", "對": "对", "將": "将",
+    "應": "应", "還": "还", "無": "无", "關": "关", "實": "实", "時": "时", "間": "间",
+    "調": "调", "漲": "涨", "貨": "货", "幣": "币", "資": "资", "財": "财", "務": "务",
+    "額": "额", "潤": "润", "虧": "亏", "損": "损", "買": "买", "賣": "卖", "證": "证",
+    "債": "债", "匯": "汇", "貿": "贸", "稅": "税", "製": "制", "廠": "厂", "設": "设",
+    "備": "备", "計": "计", "軟": "软", "絡": "络", "訊": "讯", "號": "号", "頻": "频",
+    "視": "视", "聽": "听", "圖": "图", "書": "书", "寫": "写", "讀": "读", "學": "学",
+    "醫": "医", "藥": "药", "衛": "卫", "環": "环", "氣": "气", "礦": "矿", "鐵": "铁",
+    "鋼": "钢", "銅": "铜", "鋁": "铝", "黃": "黄", "糧": "粮", "農": "农", "運": "运",
+    "輸": "输", "艦": "舰", "彈": "弹", "軍": "军", "戰": "战", "爭": "争", "談": "谈",
+    "協": "协", "條": "条", "規": "规", "則": "则", "監": "监", "罰": "罚", "鎖": "锁",
+    "擴": "扩", "張": "张", "減": "减", "強": "强", "穩": "稳", "動": "动", "險": "险",
+    "變": "变", "轉": "转", "來": "来", "見": "见", "認": "认", "識": "识", "覺": "觉",
+    "擔": "担", "憂": "忧", "樂": "乐", "觀": "观", "謹": "谨", "極": "极", "專": "专",
+    "門": "门", "獨": "独", "聯": "联", "離": "离", "斷": "断", "續": "续", "結": "结",
+    "勝": "胜", "負": "负", "優": "优", "壞": "坏", "錯": "错", "虛": "虚", "藍": "蓝",
+    "綠": "绿", "紅": "红", "區": "区", "參": "参", "倍": "倍",
+    "總": "总", "組": "组", "織": "织", "線": "线", "標": "标", "準": "准", "評": "评",
+    "級": "级", "頭": "头", "風": "风", "機": "机", "構": "构", "創": "创", "競": "竞",
+    "領": "领", "導": "导", "執": "执", "員": "员", "華": "华", "灣": "湾", "臺": "台",
+    "東": "东", "車": "车", "題": "题", "該": "该", "聲": "声", "稱": "称", "佈": "布",
+    "達": "达", "舉": "举", "黨": "党", "隊": "队", "擊": "击", "護": "护", "歐": "欧",
+    "亞": "亚", "烏": "乌", "韓": "韩", "蘇": "苏", "漢": "汉", "複": "复", "雜": "杂",
+    "難": "难", "雖": "虽", "雙": "双", "單": "单", "隻": "只", "們": "们", "裡": "里",
+    "後": "后", "歲": "岁", "僅": "仅", "給": "给", "讓": "让", "並": "并", "卻": "却",
+    "於": "于", "講": "讲", "論": "论", "衝": "冲", "徵": "征",
+}
+_TRAD_TO_SIMP_TRANS = str.maketrans(_TRAD_TO_SIMP_MAP)
+
+
+def normalize_simplified_zh(text: str) -> str:
+    """Normalize known Traditional Chinese characters to Simplified Chinese deterministically."""
+    if not text:
+        return ""
+    return text.translate(_TRAD_TO_SIMP_TRANS)
+
+
+def _clean_bullet_items(items: Any) -> List[str]:
+    out: List[str] = []
+    for raw in _as_str_list(items):
+        cleaned = normalize_simplified_zh(raw).strip()
+        if len(cleaned) < 2 or _PUNCT_ONLY_RE.fullmatch(cleaned):
+            continue
+        out.append(cleaned)
+    return out
+
+
 def _as_str_list(val: Any) -> List[str]:
     if isinstance(val, str):
         return [val] if val.strip() else []
@@ -28,7 +83,15 @@ def _as_str_list(val: Any) -> List[str]:
 def _extract_sentences(text: str) -> List[str]:
     if not text:
         return []
-    parts = [p.strip() for p in re.split(r"[。；\n]+", text) if p.strip()]
+    # Split after sentence-ending punctuation (keeping closing quotes attached cleanly to the sentence)
+    raw_parts = re.split(r"(?<=[。；][”’\"'\)\]】])|(?<=[。；])(?![”’\"'\)\]】])|\n+", normalize_simplified_zh(text))
+    parts: List[str] = []
+    for raw in raw_parts:
+        cleaned = raw.strip().rstrip("。；;").strip()
+        # Drop stray fragments (< 2 chars) and punctuation-only fragments (B4)
+        if len(cleaned) < 2 or _PUNCT_ONLY_RE.fullmatch(cleaned):
+            continue
+        parts.append(cleaned)
     return parts
 
 
@@ -132,7 +195,7 @@ def _build_investment_card(event: dict, entities_map: Dict[str, dict]) -> Option
         "related_assets": assets[:6],
         "validation_nodes": list(dict.fromkeys(milestones))[:4],
         "financial_actuals_preview": (primary_ent.get("financial_actuals") or [])[:4] if primary_ent else [],
-        "market_data_disclosure": "当前静态版本暂未接入付费实时行情、估值倍數及华尔街一致预期接口；相关资产仅呈现可验证业务关联与 SEC/交易所历史公开披露事实。",
+        "market_data_disclosure": "当前静态版本暂未接入付费实时行情、估值倍数及华尔街一致预期接口；相关资产仅呈现可验证业务关联与 SEC/交易所历史公开披露事实。",
     }
 
 
@@ -731,8 +794,9 @@ def build_v3_artifacts(
                 return ev.get("fact_summary") or ev.get("summary_en") or ev.get("title") or ""
             return txt
 
-        diff["new_facts"] = [_scrub_ph(x) for x in (diff.get("new_facts") or [])]
-        diff["unchanged_background"] = [_scrub_ph(x) for x in (diff.get("unchanged_background") or [])]
+        diff["new_facts"] = _clean_bullet_items([_scrub_ph(x) for x in (diff.get("new_facts") or [])])
+        diff["unchanged_background"] = _clean_bullet_items([_scrub_ph(x) for x in (diff.get("unchanged_background") or [])])
+        diff["corrections"] = _clean_bullet_items(diff.get("corrections") or [])
         for tn in timeline:
             if isinstance(tn, dict) and tn.get("fact_summary"):
                 tn["fact_summary"] = _scrub_ph(str(tn["fact_summary"]))
@@ -968,8 +1032,9 @@ def build_v3_artifacts(
             return txt
         fd_old = clean_old.get("fact_diff")
         if isinstance(fd_old, dict):
-            fd_old["new_facts"] = [_scrub_old_ph(str(x)) for x in (fd_old.get("new_facts") or [])]
-            fd_old["unchanged_background"] = [_scrub_old_ph(str(x)) for x in (fd_old.get("unchanged_background") or [])]
+            fd_old["new_facts"] = _clean_bullet_items([_scrub_old_ph(str(x)) for x in (fd_old.get("new_facts") or [])])
+            fd_old["unchanged_background"] = _clean_bullet_items([_scrub_old_ph(str(x)) for x in (fd_old.get("unchanged_background") or [])])
+            fd_old["corrections"] = _clean_bullet_items(fd_old.get("corrections") or [])
         for tn in clean_old.get("timeline") or []:
             if isinstance(tn, dict) and tn.get("fact_summary"):
                 tn["fact_summary"] = _scrub_old_ph(str(tn["fact_summary"]))
