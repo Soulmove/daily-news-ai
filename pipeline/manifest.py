@@ -23,6 +23,10 @@ def atomic_write_json(path: Path | str, payload: Any, indent: int = 2) -> None:
         with os.fdopen(fd, "w", encoding="utf-8") as fh:
             json.dump(payload, fh, ensure_ascii=False, indent=indent)
             fh.write("\n")
+        try:
+            os.chmod(tmp_name, 0o644)
+        except OSError:
+            pass
         os.replace(tmp_name, target)
     except Exception:
         if os.path.exists(tmp_name):
