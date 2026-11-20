@@ -1,46 +1,46 @@
 {
   "schema_version": "3.0",
-  "batch_id": "smart-20261120-135141",
+  "batch_id": "smart-20261120-184412",
   "input_batch_id": "raw-20261120-111401",
   "input_cutoff_at": "2026-11-20T11:14:01+08:00",
-  "generated_at": "2026-11-20T13:51:41+08:00",
-  "published_at": "2026-11-20T13:51:46+08:00",
+  "generated_at": "2026-11-20T18:44:12+08:00",
+  "published_at": "2026-11-20T18:44:18+08:00",
   "category": "tech",
   "category_label": "科技/AI",
   "generation_mode": "v3_ground_update",
   "key_changes": [
     {
-      "event_id": "evt_e22197fd20ba",
-      "storyline_id": "st_c27d06cceeb2",
-      "headline": "【全球 AI 动态】These tech outages are giving Y2K, AI agent style",
-      "detail": "Are the recent outages in the airline booking systems, banking platforms, and productivity platforms really a coincidenc…",
+      "event_id": "evt_978708da8a18",
+      "storyline_id": "st_2de7c440bce1",
+      "headline": "【全球 AI 动态】Google gives Gemini the ability to use your Mac for you",
+      "detail": "Google's latest update to Gemini brings an AI agent to the Mac that can organize files, fill out forms, and tackle multi…",
       "evidence_status": "single_source",
       "attribution_warning": null,
       "source_count": 1,
-      "primary_url": "https://techcrunch.com/2026/11/19/these-tech-outages-are-giving-y2k-ai-agent-style",
+      "primary_url": "https://techcrunch.com/2026/11/19/google-gives-gemini-the-ability-to-use-your-mac-for-you",
       "source_name": "TechCrunch"
     },
     {
-      "event_id": "evt_a17824be7577",
-      "storyline_id": "st_c92b3b40a13e",
-      "headline": "【外媒快讯】Former Alibaba exec’s Everful raises $48.5M to connect retailers with Chinese factories",
-      "detail": "Everful has raised $48.5 million to expand its factory-direct sourcing platform, helping retailers source products from…",
+      "event_id": "evt_1d1a84823e2e",
+      "storyline_id": "st_c6ca638f4673",
+      "headline": "【全球芯片动态】The unfolding Jensen Huang scandal: a timeline",
+      "detail": "Jensen Huang has resigned from Nvidia following an affair, which could have ramifications for national security as the U…",
       "evidence_status": "single_source",
       "attribution_warning": null,
       "source_count": 1,
-      "primary_url": "https://techcrunch.com/2026/11/19/former-alibaba-execs-everful-raises-48-5m-to-connect-retailers-with-chinese-factories",
+      "primary_url": "https://techcrunch.com/2026/11/19/nvidia-ceo-jensen-huangs-affair-with-alleged-chinese-spy-a-timeline",
       "source_name": "TechCrunch"
     },
     {
-      "event_id": "evt_b9204b1cedb5",
-      "storyline_id": "st_38229c816cb1",
-      "headline": "【全球 AI 动态】Google turns to Blue Origin for a rocket, but its long-term problem remains",
-      "detail": "\"Project Suncatcher is a long-term moonshot.\"",
+      "event_id": "evt_c1857947796a",
+      "storyline_id": "st_50a9887acc3d",
+      "headline": "【国际外交动态】Meta’s AI agent Muse is mixing up conversations and could be exposing private data, report says",
+      "detail": "In some of these instances, employees said Muse surfaced messages about childcare requests they never made, career advic…",
       "evidence_status": "single_source",
       "attribution_warning": null,
       "source_count": 1,
-      "primary_url": "https://arstechnica.com/space/2026/11/google-turns-to-blue-origin-for-a-rocket-but-its-long-term-problem-remains",
-      "source_name": "Ars Technica"
+      "primary_url": "https://techcrunch.com/2026/11/19/metas-ai-agent-muse-is-mixing-up-conversations-and-exposing-private-data-report-says",
+      "source_name": "TechCrunch"
     }
   ],
   "overview_sections": [
@@ -118,13 +118,276 @@
   "events": [
     {
       "schema_version": "3.0",
-      "event_id": "evt_e22197fd20ba",
-      "storyline_id": "st_c27d06cceeb2",
+      "event_id": "evt_978708da8a18",
+      "storyline_id": "st_2de7c440bce1",
       "article_ids": [
-        "rss-techcrunch_899d43715255"
+        "rss-techcrunch_660651d832a9"
       ],
       "legacy_event_ids": [],
-      "title": "【全球 AI 动态】These tech outages are giving Y2K, AI agent style",
+      "title": "【全球 AI 动态】Google gives Gemini the ability to use your Mac for you",
+      "category": "tech",
+      "entities": [
+        "Google / DeepMind / Gemini",
+        "AI 推理与框架生态 (vLLM / llama.cpp / Transformers)"
+      ],
+      "entity_ids": [
+        "ent_google",
+        "ent_ai_infra_tools"
+      ],
+      "entity_confidences": {
+        "Google / DeepMind / Gemini": 0.96,
+        "AI 推理与框架生态 (vLLM / llama.cpp / Transformers)": 0.76
+      },
+      "matched_entities": [
+        {
+          "entity_id": "ent_google",
+          "canonical_name": "Google / DeepMind / Gemini",
+          "entity_type": "company",
+          "sector": "AI 模型与云基础设施",
+          "matched_aliases": [
+            "google",
+            "gemini"
+          ],
+          "tickers": [
+            {
+              "symbol": "GOOGL",
+              "market": "US",
+              "exchange": "NASDAQ",
+              "currency": "USD",
+              "label": "GOOGL.US (NASDAQ)"
+            }
+          ],
+          "reason": "正文/实体匹配关键词「google / gemini」",
+          "confidence": 0.96
+        },
+        {
+          "entity_id": "ent_ai_infra_tools",
+          "canonical_name": "AI 推理与框架生态 (vLLM / llama.cpp / Transformers)",
+          "entity_type": "tech",
+          "sector": "AI 开源基础设施",
+          "matched_aliases": [
+            "ai agent"
+          ],
+          "tickers": [],
+          "reason": "正文/实体匹配关键词「ai agent」",
+          "confidence": 0.76
+        }
+      ],
+      "importance": "high",
+      "sentiment": "Neutral",
+      "special_note": null,
+      "material_stage": null,
+      "material_stage_label": null,
+      "material_stage_confidence": null,
+      "evidence_status": "single_source",
+      "evidence_label": "单一独立来源线索",
+      "evidence_status_reason": "目前仅见 1 家独立来源（共 1 条引用含转载，含摘要/首段），尚未见独立渠道交叉或官方确认",
+      "attribution_warning": null,
+      "contradictions": [],
+      "material_depth": "title_and_excerpt",
+      "source_count": 1,
+      "platform_count": 1,
+      "independent_publisher_count": 1,
+      "reprint_count": 0,
+      "published_at": "2026-11-20T02:09:11+08:00",
+      "first_discovered_at": "2026-11-20T11:14:01+08:00",
+      "first_reported_at": "2026-11-20T02:09:11+08:00",
+      "latest_fact_update_at": "2026-11-20T02:09:11+08:00",
+      "latest_reported_at": "2026-11-20T02:09:11+08:00",
+      "fetched_at": "2026-11-20T11:14:01+08:00",
+      "input_batch_id": "raw-20261120-111401",
+      "fact_summary": "Google's latest update to Gemini brings an AI agent to the Mac that can organize files, fill out forms, and tackle multi…",
+      "fact_atoms": [
+        {
+          "atom_id": "fa_14295540",
+          "subject": "Google / DeepMind / Gemini",
+          "metric_or_action": "Google gives Gemini the ability to use your Mac for you",
+          "value": null,
+          "unit": null,
+          "period": "单次披露/未注明周期",
+          "scope": "新闻事件陈述",
+          "fact_status": "reported_unconfirmed_by_filing",
+          "attribution": "TechCrunch",
+          "source_ref": "rss-techcrunch_660651d832a9",
+          "source_url": "https://techcrunch.com/2026/11/19/google-gives-gemini-the-ability-to-use-your-mac-for-you",
+          "source_excerpt_or_locator": "Google's latest update to Gemini brings an AI agent to the Mac that can organize files, fill out forms, and tackle multistep workflows.",
+          "published_at": "2026-11-20T02:09:11+08:00",
+          "discovered_at": "2026-11-20T11:14:01+08:00",
+          "revision": 1
+        }
+      ],
+      "ai_analysis": "【本批新晋突发】由高评分最新信源聚类直采，待后续批次持续追踪进展。",
+      "unverified_claims": [],
+      "speculation_or_outlook": null,
+      "sources": [
+        {
+          "item_id": "rss-techcrunch_660651d832a9",
+          "article_id": "rss-techcrunch_660651d832a9",
+          "source_id": "rss-techcrunch",
+          "source_name": "TechCrunch",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "techcrunch",
+          "is_reprint_copy": false,
+          "title": "Google gives Gemini the ability to use your Mac for you",
+          "url": "https://techcrunch.com/2026/11/19/google-gives-gemini-the-ability-to-use-your-mac-for-you",
+          "published_at": "2026-11-20T02:09:11+08:00",
+          "published_at_source": "upstream_rfc2822",
+          "fetched_at": "2026-11-20T11:14:02+08:00",
+          "excerpt": "Google's latest update to Gemini brings an AI agent to the Mac that can organize files, fill out forms, and tackle multistep workflows.",
+          "deep_fetch_status": null
+        }
+      ],
+      "verification": {
+        "all_refs_valid": true,
+        "has_primary_url": true,
+        "rejected_refs": [],
+        "has_first_party": false
+      },
+      "followup": null,
+      "is_new_in_batch": true,
+      "update_kind": "new_discovery",
+      "translation_attempts": 2,
+      "translation_error": "no_api_key",
+      "title_en": "Google gives Gemini the ability to use your Mac for you",
+      "summary_en": "Google's latest update to Gemini brings an AI agent to the Mac that can organize files, fill out forms, and tackle multistep workflows.",
+      "translation_status": "retry_fallback",
+      "title_zh": "【全球 AI 动态】Google gives Gemini the ability to use your Mac for you",
+      "summary_zh": "Google's latest update to Gemini brings an AI agent to the Mac that can organize files, fill out forms, and tackle multi…"
+    },
+    {
+      "schema_version": "3.0",
+      "event_id": "evt_1d1a84823e2e",
+      "storyline_id": "st_c6ca638f4673",
+      "article_ids": [
+        "rss-techcrunch_ada82be5a30c"
+      ],
+      "legacy_event_ids": [],
+      "title": "【全球芯片动态】The unfolding Jensen Huang scandal: a timeline",
+      "category": "tech",
+      "entities": [
+        "英伟达 (NVIDIA)"
+      ],
+      "entity_ids": [
+        "ent_nvidia"
+      ],
+      "entity_confidences": {
+        "英伟达 (NVIDIA)": 0.96
+      },
+      "matched_entities": [
+        {
+          "entity_id": "ent_nvidia",
+          "canonical_name": "英伟达 (NVIDIA)",
+          "entity_type": "company",
+          "sector": "半导体 / AI算力",
+          "matched_aliases": [
+            "jensen huang",
+            "nvidia"
+          ],
+          "tickers": [
+            {
+              "symbol": "NVDA",
+              "market": "US",
+              "exchange": "NASDAQ",
+              "currency": "USD",
+              "label": "NVDA.US (NASDAQ)"
+            }
+          ],
+          "reason": "正文/实体匹配关键词「jensen huang / nvidia」",
+          "confidence": 0.96
+        }
+      ],
+      "importance": "high",
+      "sentiment": "Neutral",
+      "special_note": null,
+      "material_stage": null,
+      "material_stage_label": null,
+      "material_stage_confidence": null,
+      "evidence_status": "single_source",
+      "evidence_label": "单一独立来源线索",
+      "evidence_status_reason": "目前仅见 1 家独立来源（共 1 条引用含转载，含摘要/首段），尚未见独立渠道交叉或官方确认",
+      "attribution_warning": null,
+      "contradictions": [],
+      "material_depth": "title_and_excerpt",
+      "source_count": 1,
+      "platform_count": 1,
+      "independent_publisher_count": 1,
+      "reprint_count": 0,
+      "published_at": "2026-11-20T04:18:49+08:00",
+      "first_discovered_at": "2026-11-20T11:14:01+08:00",
+      "first_reported_at": "2026-11-20T04:18:49+08:00",
+      "latest_fact_update_at": "2026-11-20T04:18:49+08:00",
+      "latest_reported_at": "2026-11-20T04:18:49+08:00",
+      "fetched_at": "2026-11-20T11:14:01+08:00",
+      "input_batch_id": "raw-20261120-111401",
+      "fact_summary": "Jensen Huang has resigned from Nvidia following an affair, which could have ramifications for national security as the U…",
+      "fact_atoms": [
+        {
+          "atom_id": "fa_94702899",
+          "subject": "英伟达 (NVIDIA)",
+          "metric_or_action": "The unfolding Jensen Huang scandal: a timeline",
+          "value": null,
+          "unit": null,
+          "period": "单次披露/未注明周期",
+          "scope": "新闻事件陈述",
+          "fact_status": "reported_unconfirmed_by_filing",
+          "attribution": "TechCrunch",
+          "source_ref": "rss-techcrunch_ada82be5a30c",
+          "source_url": "https://techcrunch.com/2026/11/19/nvidia-ceo-jensen-huangs-affair-with-alleged-chinese-spy-a-timeline",
+          "source_excerpt_or_locator": "Jensen Huang has resigned from Nvidia following an affair, which could have ramifications for national security as the U.S. and China race to develop the most advanced AI infrastru",
+          "published_at": "2026-11-20T04:18:49+08:00",
+          "discovered_at": "2026-11-20T11:14:01+08:00",
+          "revision": 1
+        }
+      ],
+      "ai_analysis": "【本批新晋突发】由高评分最新信源聚类直采，待后续批次持续追踪进展。",
+      "unverified_claims": [],
+      "speculation_or_outlook": null,
+      "sources": [
+        {
+          "item_id": "rss-techcrunch_ada82be5a30c",
+          "article_id": "rss-techcrunch_ada82be5a30c",
+          "source_id": "rss-techcrunch",
+          "source_name": "TechCrunch",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "techcrunch",
+          "is_reprint_copy": false,
+          "title": "The unfolding Jensen Huang scandal: a timeline",
+          "url": "https://techcrunch.com/2026/11/19/nvidia-ceo-jensen-huangs-affair-with-alleged-chinese-spy-a-timeline",
+          "published_at": "2026-11-20T04:18:49+08:00",
+          "published_at_source": "upstream_rfc2822",
+          "fetched_at": "2026-11-20T11:14:02+08:00",
+          "excerpt": "Jensen Huang has resigned from Nvidia following an affair, which could have ramifications for national security as the U.S. and China race to develop the most advanced AI infrastructure.",
+          "deep_fetch_status": null
+        }
+      ],
+      "verification": {
+        "all_refs_valid": true,
+        "has_primary_url": true,
+        "rejected_refs": [],
+        "has_first_party": false
+      },
+      "followup": null,
+      "is_new_in_batch": true,
+      "update_kind": "new_discovery",
+      "translation_attempts": 2,
+      "translation_error": "no_api_key",
+      "title_en": "The unfolding Jensen Huang scandal: a timeline",
+      "summary_en": "Jensen Huang has resigned from Nvidia following an affair, which could have ramifications for national security as the U.S. and China race to develop the most advanced AI infrastructure.",
+      "translation_status": "retry_fallback",
+      "title_zh": "【全球芯片动态】The unfolding Jensen Huang scandal: a timeline",
+      "summary_zh": "Jensen Huang has resigned from Nvidia following an affair, which could have ramifications for national security as the U…"
+    },
+    {
+      "schema_version": "3.0",
+      "event_id": "evt_c1857947796a",
+      "storyline_id": "st_50a9887acc3d",
+      "article_ids": [
+        "rss-techcrunch_8a2cd6028419"
+      ],
+      "legacy_event_ids": [],
+      "title": "【国际外交动态】Meta’s AI agent Muse is mixing up conversations and could be exposing private data, report says",
       "category": "tech",
       "entities": [
         "AI 推理与框架生态 (vLLM / llama.cpp / Transformers)"
@@ -132,6 +395,9 @@
       "entity_ids": [
         "ent_ai_infra_tools"
       ],
+      "entity_confidences": {
+        "AI 推理与框架生态 (vLLM / llama.cpp / Transformers)": 0.86
+      },
       "matched_entities": [
         {
           "entity_id": "ent_ai_infra_tools",
@@ -142,7 +408,8 @@
             "ai agent"
           ],
           "tickers": [],
-          "reason": "正文/实体匹配关键词「ai agent」"
+          "reason": "正文/实体匹配关键词「ai agent」",
+          "confidence": 0.86
         }
       ],
       "importance": "high",
@@ -150,6 +417,370 @@
       "special_note": null,
       "material_stage": null,
       "material_stage_label": null,
+      "material_stage_confidence": null,
+      "evidence_status": "single_source",
+      "evidence_label": "单一独立来源线索",
+      "evidence_status_reason": "目前仅见 1 家独立来源（共 1 条引用含转载，含摘要/首段），尚未见独立渠道交叉或官方确认",
+      "attribution_warning": null,
+      "contradictions": [],
+      "material_depth": "title_and_excerpt",
+      "source_count": 1,
+      "platform_count": 1,
+      "independent_publisher_count": 1,
+      "reprint_count": 0,
+      "published_at": "2026-11-20T01:38:40+08:00",
+      "first_discovered_at": "2026-11-20T11:14:01+08:00",
+      "first_reported_at": "2026-11-20T01:38:40+08:00",
+      "latest_fact_update_at": "2026-11-20T01:38:40+08:00",
+      "latest_reported_at": "2026-11-20T01:38:40+08:00",
+      "fetched_at": "2026-11-20T11:14:01+08:00",
+      "input_batch_id": "raw-20261120-111401",
+      "fact_summary": "In some of these instances, employees said Muse surfaced messages about childcare requests they never made, career advic…",
+      "fact_atoms": [
+        {
+          "atom_id": "fa_2355639",
+          "subject": "AI 推理与框架生态 (vLLM / llama.cpp / Transformers)",
+          "metric_or_action": "Meta’s AI agent Muse is mixing up conversations and could be exposing private data, report says",
+          "value": null,
+          "unit": null,
+          "period": "单次披露/未注明周期",
+          "scope": "新闻事件陈述",
+          "fact_status": "reported_unconfirmed_by_filing",
+          "attribution": "TechCrunch",
+          "source_ref": "rss-techcrunch_8a2cd6028419",
+          "source_url": "https://techcrunch.com/2026/11/19/metas-ai-agent-muse-is-mixing-up-conversations-and-exposing-private-data-report-says",
+          "source_excerpt_or_locator": "In some of these instances, employees said Muse surfaced messages about childcare requests they never made, career advice they never asked for, product orders they never placed, an",
+          "published_at": "2026-11-20T01:38:40+08:00",
+          "discovered_at": "2026-11-20T11:14:01+08:00",
+          "revision": 1
+        }
+      ],
+      "ai_analysis": "【本批新晋突发】由高评分最新信源聚类直采，待后续批次持续追踪进展。",
+      "unverified_claims": [],
+      "speculation_or_outlook": null,
+      "sources": [
+        {
+          "item_id": "rss-techcrunch_8a2cd6028419",
+          "article_id": "rss-techcrunch_8a2cd6028419",
+          "source_id": "rss-techcrunch",
+          "source_name": "TechCrunch",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "techcrunch",
+          "is_reprint_copy": false,
+          "title": "Meta’s AI agent Muse is mixing up conversations and could be exposing private data, report says",
+          "url": "https://techcrunch.com/2026/11/19/metas-ai-agent-muse-is-mixing-up-conversations-and-exposing-private-data-report-says",
+          "published_at": "2026-11-20T01:38:40+08:00",
+          "published_at_source": "upstream_rfc2822",
+          "fetched_at": "2026-11-20T11:14:02+08:00",
+          "excerpt": "In some of these instances, employees said Muse surfaced messages about childcare requests they never made, career advice they never asked for, product orders they never placed, and bank account balances that didn't belong to them.",
+          "deep_fetch_status": null
+        }
+      ],
+      "verification": {
+        "all_refs_valid": true,
+        "has_primary_url": true,
+        "rejected_refs": [],
+        "has_first_party": false
+      },
+      "followup": null,
+      "is_new_in_batch": true,
+      "update_kind": "new_discovery",
+      "translation_attempts": 2,
+      "translation_error": "no_api_key",
+      "title_en": "Meta’s AI agent Muse is mixing up conversations and could be exposing private data, report says",
+      "summary_en": "In some of these instances, employees said Muse surfaced messages about childcare requests they never made, career advice they never asked for, product orders they never placed, and bank account balances that didn't belong to them.",
+      "translation_status": "retry_fallback",
+      "title_zh": "【国际外交动态】Meta’s AI agent Muse is mixing up conversations and could be exposing private data, report says",
+      "summary_zh": "In some of these instances, employees said Muse surfaced messages about childcare requests they never made, career advic…"
+    },
+    {
+      "schema_version": "3.0",
+      "event_id": "evt_bf014d0005a0",
+      "storyline_id": "st_6361d5a54c5c",
+      "article_ids": [
+        "rss-theverge_6b96b1d3126a"
+      ],
+      "legacy_event_ids": [],
+      "title": "【全球芯片动态】A brief history of Nvidia’s recent stock fluctuations",
+      "category": "tech",
+      "entities": [
+        "英伟达 (NVIDIA)"
+      ],
+      "entity_ids": [
+        "ent_nvidia"
+      ],
+      "entity_confidences": {
+        "英伟达 (NVIDIA)": 0.86
+      },
+      "matched_entities": [
+        {
+          "entity_id": "ent_nvidia",
+          "canonical_name": "英伟达 (NVIDIA)",
+          "entity_type": "company",
+          "sector": "半导体 / AI算力",
+          "matched_aliases": [
+            "nvidia"
+          ],
+          "tickers": [
+            {
+              "symbol": "NVDA",
+              "market": "US",
+              "exchange": "NASDAQ",
+              "currency": "USD",
+              "label": "NVDA.US (NASDAQ)"
+            }
+          ],
+          "reason": "正文/实体匹配关键词「nvidia」",
+          "confidence": 0.86
+        }
+      ],
+      "importance": "high",
+      "sentiment": "Neutral",
+      "special_note": null,
+      "material_stage": null,
+      "material_stage_label": null,
+      "material_stage_confidence": null,
+      "evidence_status": "single_source",
+      "evidence_label": "单一独立来源线索",
+      "evidence_status_reason": "目前仅见 1 家独立来源（共 1 条引用含转载，含摘要/首段），尚未见独立渠道交叉或官方确认",
+      "attribution_warning": null,
+      "contradictions": [],
+      "material_depth": "title_and_excerpt",
+      "source_count": 1,
+      "platform_count": 1,
+      "independent_publisher_count": 1,
+      "reprint_count": 0,
+      "published_at": "2026-11-20T05:59:35+08:00",
+      "first_discovered_at": "2026-11-20T11:14:01+08:00",
+      "first_reported_at": "2026-11-20T05:59:35+08:00",
+      "latest_fact_update_at": "2026-11-20T05:59:35+08:00",
+      "latest_reported_at": "2026-11-20T05:59:35+08:00",
+      "fetched_at": "2026-11-20T11:14:01+08:00",
+      "input_batch_id": "raw-20261120-111401",
+      "fact_summary": "\"We've got this,\" Colette Kress, interim CEO of Nvidia, said Tuesday night as she closed out the embattled chip company'…",
+      "fact_atoms": [
+        {
+          "atom_id": "fa_23291601",
+          "subject": "英伟达 (NVIDIA)",
+          "metric_or_action": "A brief history of Nvidia’s recent stock fluctuations",
+          "value": null,
+          "unit": null,
+          "period": "单次披露/未注明周期",
+          "scope": "新闻事件陈述",
+          "fact_status": "reported_unconfirmed_by_filing",
+          "attribution": "The Verge",
+          "source_ref": "rss-theverge_6b96b1d3126a",
+          "source_url": "https://www.theverge.com/ai-artificial-intelligence/1038063/nvidia-stock-market-price-earnings",
+          "source_excerpt_or_locator": "\"We've got this,\" Colette Kress, interim CEO of Nvidia, said Tuesday night as she closed out the embattled chip company's third quarter earnings call. By Thursday, the company's st",
+          "published_at": "2026-11-20T05:59:35+08:00",
+          "discovered_at": "2026-11-20T11:14:01+08:00",
+          "revision": 1
+        }
+      ],
+      "ai_analysis": "【本批新晋突发】由高评分最新信源聚类直采，待后续批次持续追踪进展。",
+      "unverified_claims": [],
+      "speculation_or_outlook": null,
+      "sources": [
+        {
+          "item_id": "rss-theverge_6b96b1d3126a",
+          "article_id": "rss-theverge_6b96b1d3126a",
+          "source_id": "rss-theverge",
+          "source_name": "The Verge",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "theverge",
+          "is_reprint_copy": false,
+          "title": "A brief history of Nvidia’s recent stock fluctuations",
+          "url": "https://www.theverge.com/ai-artificial-intelligence/1038063/nvidia-stock-market-price-earnings",
+          "published_at": "2026-11-20T05:59:35+08:00",
+          "published_at_source": "upstream_iso",
+          "fetched_at": "2026-11-20T11:14:02+08:00",
+          "excerpt": "\"We've got this,\" Colette Kress, interim CEO of Nvidia, said Tuesday night as she closed out the embattled chip company's third quarter earnings call. By Thursday, the company's stock price was hovering at around $150 per share, a nearly 40 percent drop from…",
+          "deep_fetch_status": null
+        }
+      ],
+      "verification": {
+        "all_refs_valid": true,
+        "has_primary_url": true,
+        "rejected_refs": [],
+        "has_first_party": false
+      },
+      "followup": null,
+      "is_new_in_batch": true,
+      "update_kind": "new_discovery",
+      "translation_attempts": 2,
+      "translation_error": "no_api_key",
+      "title_en": "A brief history of Nvidia’s recent stock fluctuations",
+      "summary_en": "\"We've got this,\" Colette Kress, interim CEO of Nvidia, said Tuesday night as she closed out the embattled chip company's third quarter earnings call. By Thursday, the company's stock price was hovering at around $150 per share, a nearly 40 percent drop from…",
+      "translation_status": "retry_fallback",
+      "title_zh": "【全球芯片动态】A brief history of Nvidia’s recent stock fluctuations",
+      "summary_zh": "\"We've got this,\" Colette Kress, interim CEO of Nvidia, said Tuesday night as she closed out the embattled chip company'…"
+    },
+    {
+      "schema_version": "3.0",
+      "event_id": "evt_cebf892a5c07",
+      "storyline_id": "st_277ef0dff3ef",
+      "article_ids": [
+        "rss-theverge_2257c21bb822"
+      ],
+      "legacy_event_ids": [],
+      "title": "【全球 AI 动态】Google is putting AI chats right on the homepage",
+      "category": "tech",
+      "entities": [
+        "Google / DeepMind / Gemini"
+      ],
+      "entity_ids": [
+        "ent_google"
+      ],
+      "entity_confidences": {
+        "Google / DeepMind / Gemini": 0.86
+      },
+      "matched_entities": [
+        {
+          "entity_id": "ent_google",
+          "canonical_name": "Google / DeepMind / Gemini",
+          "entity_type": "company",
+          "sector": "AI 模型与云基础设施",
+          "matched_aliases": [
+            "google"
+          ],
+          "tickers": [
+            {
+              "symbol": "GOOGL",
+              "market": "US",
+              "exchange": "NASDAQ",
+              "currency": "USD",
+              "label": "GOOGL.US (NASDAQ)"
+            }
+          ],
+          "reason": "正文/实体匹配关键词「google」",
+          "confidence": 0.86
+        }
+      ],
+      "importance": "high",
+      "sentiment": "Neutral",
+      "special_note": null,
+      "material_stage": null,
+      "material_stage_label": null,
+      "material_stage_confidence": null,
+      "evidence_status": "single_source",
+      "evidence_label": "单一独立来源线索",
+      "evidence_status_reason": "目前仅见 1 家独立来源（共 1 条引用含转载，含摘要/首段），尚未见独立渠道交叉或官方确认",
+      "attribution_warning": null,
+      "contradictions": [],
+      "material_depth": "title_and_excerpt",
+      "source_count": 1,
+      "platform_count": 1,
+      "independent_publisher_count": 1,
+      "reprint_count": 0,
+      "published_at": "2026-11-20T04:05:06+08:00",
+      "first_discovered_at": "2026-11-20T11:14:01+08:00",
+      "first_reported_at": "2026-11-20T04:05:06+08:00",
+      "latest_fact_update_at": "2026-11-20T04:05:06+08:00",
+      "latest_reported_at": "2026-11-20T04:05:06+08:00",
+      "fetched_at": "2026-11-20T11:14:01+08:00",
+      "input_batch_id": "raw-20261120-111401",
+      "fact_summary": "Google is updating its homepage to include AI searches. In a post on X, Google's vice president of product, Robby Stein,…",
+      "fact_atoms": [
+        {
+          "atom_id": "fa_21624249",
+          "subject": "Google / DeepMind / Gemini",
+          "metric_or_action": "Google is putting AI chats right on the homepage",
+          "value": null,
+          "unit": null,
+          "period": "单次披露/未注明周期",
+          "scope": "新闻事件陈述",
+          "fact_status": "reported_unconfirmed_by_filing",
+          "attribution": "The Verge",
+          "source_ref": "rss-theverge_2257c21bb822",
+          "source_url": "https://www.theverge.com/tech/1038059/google-search-homepage-ai-chats",
+          "source_excerpt_or_locator": "Google is updating its homepage to include AI searches. In a post on X, Google's vice president of product, Robby Stein, shows how you can now open a collapsible sidebar to view an",
+          "published_at": "2026-11-20T04:05:06+08:00",
+          "discovered_at": "2026-11-20T11:14:01+08:00",
+          "revision": 1
+        }
+      ],
+      "ai_analysis": "【本批新晋突发】由高评分最新信源聚类直采，待后续批次持续追踪进展。",
+      "unverified_claims": [],
+      "speculation_or_outlook": null,
+      "sources": [
+        {
+          "item_id": "rss-theverge_2257c21bb822",
+          "article_id": "rss-theverge_2257c21bb822",
+          "source_id": "rss-theverge",
+          "source_name": "The Verge",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "theverge",
+          "is_reprint_copy": false,
+          "title": "Google is putting AI chats right on the homepage",
+          "url": "https://www.theverge.com/tech/1038059/google-search-homepage-ai-chats",
+          "published_at": "2026-11-20T04:05:06+08:00",
+          "published_at_source": "upstream_iso",
+          "fetched_at": "2026-11-20T11:14:02+08:00",
+          "excerpt": "Google is updating its homepage to include AI searches. In a post on X, Google's vice president of product, Robby Stein, shows how you can now open a collapsible sidebar to view and continue your AI chats. Based on the GIF shared by Stein, it looks like you c…",
+          "deep_fetch_status": null
+        }
+      ],
+      "verification": {
+        "all_refs_valid": true,
+        "has_primary_url": true,
+        "rejected_refs": [],
+        "has_first_party": false
+      },
+      "followup": null,
+      "is_new_in_batch": true,
+      "update_kind": "new_discovery",
+      "translation_attempts": 2,
+      "translation_error": "no_api_key",
+      "title_en": "Google is putting AI chats right on the homepage",
+      "summary_en": "Google is updating its homepage to include AI searches. In a post on X, Google's vice president of product, Robby Stein, shows how you can now open a collapsible sidebar to view and continue your AI chats. Based on the GIF shared by Stein, it looks like you c…",
+      "translation_status": "retry_fallback",
+      "title_zh": "【全球 AI 动态】Google is putting AI chats right on the homepage",
+      "summary_zh": "Google is updating its homepage to include AI searches. In a post on X, Google's vice president of product, Robby Stein,…"
+    },
+    {
+      "schema_version": "3.0",
+      "event_id": "evt_a3c1bfbe2210",
+      "storyline_id": "st_c27d06cceeb2",
+      "article_ids": [
+        "rss-techcrunch_899d43715255"
+      ],
+      "legacy_event_ids": [
+        "evt_e22197fd20ba"
+      ],
+      "title": "【全球 AI 动态】These tech outages are giving Y2K, AI agent style",
+      "category": "tech",
+      "entities": [
+        "AI 推理与框架生态 (vLLM / llama.cpp / Transformers)"
+      ],
+      "entity_ids": [
+        "ent_ai_infra_tools"
+      ],
+      "entity_confidences": {
+        "AI 推理与框架生态 (vLLM / llama.cpp / Transformers)": 0.86
+      },
+      "matched_entities": [
+        {
+          "entity_id": "ent_ai_infra_tools",
+          "canonical_name": "AI 推理与框架生态 (vLLM / llama.cpp / Transformers)",
+          "entity_type": "tech",
+          "sector": "AI 开源基础设施",
+          "matched_aliases": [
+            "ai agent"
+          ],
+          "tickers": [],
+          "reason": "正文/实体匹配关键词「ai agent」",
+          "confidence": 0.86
+        }
+      ],
+      "importance": "high",
+      "sentiment": "Neutral",
+      "special_note": null,
+      "material_stage": null,
+      "material_stage_label": null,
+      "material_stage_confidence": null,
       "evidence_status": "single_source",
       "evidence_label": "单一独立来源线索",
       "evidence_status_reason": "目前仅见 1 家独立来源（共 1 条引用含转载，含摘要/首段），尚未见独立渠道交叉或官方确认",
@@ -170,9 +801,9 @@
       "fact_summary": "Are the recent outages in the airline booking systems, banking platforms, and productivity platforms really a coincidenc…",
       "fact_atoms": [
         {
-          "atom_id": "fa_83981856",
+          "atom_id": "fa_60180944",
           "subject": "AI 推理与框架生态 (vLLM / llama.cpp / Transformers)",
-          "metric_or_action": "These tech outages are giving Y2K, AI agent style",
+          "metric_or_action": "【全球 AI 动态】These tech outages are giving Y2K, AI agent style",
           "value": null,
           "unit": null,
           "period": "单次披露/未注明周期",
@@ -215,22 +846,32 @@
         "rejected_refs": [],
         "has_first_party": false
       },
-      "followup": null,
-      "is_new_in_batch": true,
-      "update_kind": "new_discovery",
-      "title_en": "These tech outages are giving Y2K, AI agent style",
-      "summary_en": "Are the recent outages in the airline booking systems, banking platforms, and productivity platforms really a coincidence? There's actually likely something deeper going on, cybersecurity experts say.",
+      "followup": {
+        "is_continuing": true,
+        "prev_batch_id": "smart-20261120-135141",
+        "prev_event_id": "evt_e22197fd20ba",
+        "prev_title": "【全球 AI 动态】These tech outages are giving Y2K, AI agent style",
+        "delta_note": "在上期简报中已出现，本批持续关注（暂无新增独立变化）"
+      },
+      "is_new_in_batch": false,
+      "update_kind": "continuing_coverage",
+      "translation_attempts": 1,
+      "translation_error": "no_api_key",
       "title_zh": "【全球 AI 动态】These tech outages are giving Y2K, AI agent style",
+      "translation_status": "retry_fallback",
+      "summary_en": "Are the recent outages in the airline booking systems, banking platforms, and productivity platforms really a coincidenc…",
       "summary_zh": "Are the recent outages in the airline booking systems, banking platforms, and productivity platforms really a coincidenc…"
     },
     {
       "schema_version": "3.0",
-      "event_id": "evt_a17824be7577",
+      "event_id": "evt_5bf8b538daeb",
       "storyline_id": "st_c92b3b40a13e",
       "article_ids": [
         "rss-techcrunch_334c00474ec8"
       ],
-      "legacy_event_ids": [],
+      "legacy_event_ids": [
+        "evt_a17824be7577"
+      ],
       "title": "【外媒快讯】Former Alibaba exec’s Everful raises $48.5M to connect retailers with Chinese factories",
       "category": "tech",
       "entities": [
@@ -239,6 +880,9 @@
       "entity_ids": [
         "ent_qwen_alibaba"
       ],
+      "entity_confidences": {
+        "阿里巴巴 / 通义千问 (Qwen)": 0.86
+      },
       "matched_entities": [
         {
           "entity_id": "ent_qwen_alibaba",
@@ -264,7 +908,8 @@
               "label": "BABA.US (NYSE)"
             }
           ],
-          "reason": "正文/实体匹配关键词「alibaba」"
+          "reason": "正文/实体匹配关键词「alibaba」",
+          "confidence": 0.86
         }
       ],
       "importance": "high",
@@ -272,6 +917,7 @@
       "special_note": null,
       "material_stage": null,
       "material_stage_label": null,
+      "material_stage_confidence": null,
       "evidence_status": "single_source",
       "evidence_label": "单一独立来源线索",
       "evidence_status_reason": "目前仅见 1 家独立来源（共 1 条引用含转载，含摘要/首段），尚未见独立渠道交叉或官方确认",
@@ -292,9 +938,9 @@
       "fact_summary": "Everful has raised $48.5 million to expand its factory-direct sourcing platform, helping retailers source products from…",
       "fact_atoms": [
         {
-          "atom_id": "fa_96157450",
+          "atom_id": "fa_27695737",
           "subject": "阿里巴巴 / 通义千问 (Qwen)",
-          "metric_or_action": "Former Alibaba exec’s Everful raises $48.5M to connect retailers with Chinese factories",
+          "metric_or_action": "【外媒快讯】Former Alibaba exec’s Everful raises $48.5M to connect retailers with Chinese factories",
           "value": null,
           "unit": null,
           "period": "单次披露/未注明周期",
@@ -337,22 +983,33 @@
         "rejected_refs": [],
         "has_first_party": false
       },
-      "followup": null,
-      "is_new_in_batch": true,
-      "update_kind": "new_discovery",
-      "title_en": "Former Alibaba exec’s Everful raises $48.5M to connect retailers with Chinese factories",
-      "summary_en": "Everful has raised $48.5 million to expand its factory-direct sourcing platform, helping retailers source products from overseas manufacturers.",
+      "followup": {
+        "is_continuing": true,
+        "prev_batch_id": "smart-20261120-135141",
+        "prev_event_id": "evt_a17824be7577",
+        "prev_title": "【外媒快讯】Former Alibaba exec’s Everful raises $48.5M to connect retailers with Chinese factories",
+        "delta_note": "在上期简报中已出现，本批持续关注（暂无新增独立变化）"
+      },
+      "is_new_in_batch": false,
+      "update_kind": "continuing_coverage",
+      "translation_attempts": 2,
+      "translation_error": "no_api_key",
+      "title_en": "【外媒快讯】Former Alibaba exec’s Everful raises $48.5M to connect retailers with Chinese factories",
+      "summary_en": "Everful has raised $48.5 million to expand its factory-direct sourcing platform, helping retailers source products from…",
+      "translation_status": "retry_fallback",
       "title_zh": "【外媒快讯】Former Alibaba exec’s Everful raises $48.5M to connect retailers with Chinese factories",
       "summary_zh": "Everful has raised $48.5 million to expand its factory-direct sourcing platform, helping retailers source products from…"
     },
     {
       "schema_version": "3.0",
-      "event_id": "evt_b9204b1cedb5",
+      "event_id": "evt_15f5a18fae8a",
       "storyline_id": "st_38229c816cb1",
       "article_ids": [
         "rss-arstechnica_b9feaf59d5c7"
       ],
-      "legacy_event_ids": [],
+      "legacy_event_ids": [
+        "evt_b9204b1cedb5"
+      ],
       "title": "【全球 AI 动态】Google turns to Blue Origin for a rocket, but its long-term problem remains",
       "category": "tech",
       "entities": [
@@ -361,6 +1018,9 @@
       "entity_ids": [
         "ent_google"
       ],
+      "entity_confidences": {
+        "Google / DeepMind / Gemini": 0.86
+      },
       "matched_entities": [
         {
           "entity_id": "ent_google",
@@ -379,7 +1039,8 @@
               "label": "GOOGL.US (NASDAQ)"
             }
           ],
-          "reason": "正文/实体匹配关键词「google」"
+          "reason": "正文/实体匹配关键词「google」",
+          "confidence": 0.86
         }
       ],
       "importance": "high",
@@ -387,6 +1048,7 @@
       "special_note": null,
       "material_stage": null,
       "material_stage_label": null,
+      "material_stage_confidence": null,
       "evidence_status": "single_source",
       "evidence_label": "单一独立来源线索",
       "evidence_status_reason": "目前仅见 1 家独立来源（共 1 条引用含转载，含摘要/首段），尚未见独立渠道交叉或官方确认",
@@ -407,9 +1069,9 @@
       "fact_summary": "\"Project Suncatcher is a long-term moonshot.\"",
       "fact_atoms": [
         {
-          "atom_id": "fa_34943797",
+          "atom_id": "fa_89445913",
           "subject": "Google / DeepMind / Gemini",
-          "metric_or_action": "Google turns to Blue Origin for a rocket, but its long-term problem remains",
+          "metric_or_action": "【全球 AI 动态】Google turns to Blue Origin for a rocket, but its long-term problem remains",
           "value": null,
           "unit": null,
           "period": "单次披露/未注明周期",
@@ -452,22 +1114,33 @@
         "rejected_refs": [],
         "has_first_party": false
       },
-      "followup": null,
-      "is_new_in_batch": true,
-      "update_kind": "new_discovery",
-      "title_en": "Google turns to Blue Origin for a rocket, but its long-term problem remains",
+      "followup": {
+        "is_continuing": true,
+        "prev_batch_id": "smart-20261120-135141",
+        "prev_event_id": "evt_b9204b1cedb5",
+        "prev_title": "【全球 AI 动态】Google turns to Blue Origin for a rocket, but its long-term problem remains",
+        "delta_note": "在上期简报中已出现，本批持续关注（暂无新增独立变化）"
+      },
+      "is_new_in_batch": false,
+      "update_kind": "continuing_coverage",
+      "translation_attempts": 2,
+      "translation_error": "no_api_key",
+      "title_en": "【全球 AI 动态】Google turns to Blue Origin for a rocket, but its long-term problem remains",
       "summary_en": "\"Project Suncatcher is a long-term moonshot.\"",
+      "translation_status": "retry_fallback",
       "title_zh": "【全球 AI 动态】Google turns to Blue Origin for a rocket, but its long-term problem remains",
       "summary_zh": "\"Project Suncatcher is a long-term moonshot.\""
     },
     {
       "schema_version": "3.0",
-      "event_id": "evt_b99ad248407a",
+      "event_id": "evt_c4085c65213f",
       "storyline_id": "st_29a360bb3ed2",
       "article_ids": [
         "rss-arstechnica_b245c7e298e6"
       ],
-      "legacy_event_ids": [],
+      "legacy_event_ids": [
+        "evt_b99ad248407a"
+      ],
       "title": "【全球 AI 动态】Google will launch Android app verification requirement globally in January 2027",
       "category": "tech",
       "entities": [
@@ -476,6 +1149,9 @@
       "entity_ids": [
         "ent_google"
       ],
+      "entity_confidences": {
+        "Google / DeepMind / Gemini": 0.86
+      },
       "matched_entities": [
         {
           "entity_id": "ent_google",
@@ -494,7 +1170,8 @@
               "label": "GOOGL.US (NASDAQ)"
             }
           ],
-          "reason": "正文/实体匹配关键词「google」"
+          "reason": "正文/实体匹配关键词「google」",
+          "confidence": 0.86
         }
       ],
       "importance": "high",
@@ -502,6 +1179,7 @@
       "special_note": null,
       "material_stage": null,
       "material_stage_label": null,
+      "material_stage_confidence": null,
       "evidence_status": "single_source",
       "evidence_label": "单一独立来源线索",
       "evidence_status_reason": "目前仅见 1 家独立来源（共 1 条引用含转载，含摘要/首段），尚未见独立渠道交叉或官方确认",
@@ -522,9 +1200,9 @@
       "fact_summary": "Google says almost all developers have already gotten on board with verification.",
       "fact_atoms": [
         {
-          "atom_id": "fa_22741511",
+          "atom_id": "fa_7540372",
           "subject": "Google / DeepMind / Gemini",
-          "metric_or_action": "Google will launch Android app verification requirement globally in January 2027",
+          "metric_or_action": "【全球 AI 动态】Google will launch Android app verification requirement globally in January 2027",
           "value": null,
           "unit": null,
           "period": "单次披露/未注明周期",
@@ -567,22 +1245,33 @@
         "rejected_refs": [],
         "has_first_party": false
       },
-      "followup": null,
-      "is_new_in_batch": true,
-      "update_kind": "new_discovery",
-      "title_en": "Google will launch Android app verification requirement globally in January 2027",
+      "followup": {
+        "is_continuing": true,
+        "prev_batch_id": "smart-20261120-135141",
+        "prev_event_id": "evt_b99ad248407a",
+        "prev_title": "【全球 AI 动态】Google will launch Android app verification requirement globally in January 2027",
+        "delta_note": "在上期简报中已出现，本批持续关注（暂无新增独立变化）"
+      },
+      "is_new_in_batch": false,
+      "update_kind": "continuing_coverage",
+      "translation_attempts": 2,
+      "translation_error": "no_api_key",
+      "title_en": "【全球 AI 动态】Google will launch Android app verification requirement globally in January 2027",
       "summary_en": "Google says almost all developers have already gotten on board with verification.",
+      "translation_status": "retry_fallback",
       "title_zh": "【全球 AI 动态】Google will launch Android app verification requirement globally in January 2027",
       "summary_zh": "Google says almost all developers have already gotten on board with verification."
     },
     {
       "schema_version": "3.0",
-      "event_id": "evt_a01746ce8bc8",
+      "event_id": "evt_fd5aa80a2dde",
       "storyline_id": "st_a26a8ed2bb9a",
       "article_ids": [
         "rss-arstechnica_81eaac95dd3a"
       ],
-      "legacy_event_ids": [],
+      "legacy_event_ids": [
+        "evt_a01746ce8bc8"
+      ],
       "title": "【国际外交动态】Ukraine blew up Putin’s bridge using relay drones to bypass Starlink limits",
       "category": "tech",
       "entities": [
@@ -591,6 +1280,9 @@
       "entity_ids": [
         "ent_spacex_tesla"
       ],
+      "entity_confidences": {
+        "SpaceX / 特斯拉 / 马斯克生态": 0.86
+      },
       "matched_entities": [
         {
           "entity_id": "ent_spacex_tesla",
@@ -609,7 +1301,8 @@
               "label": "TSLA.US (NASDAQ)"
             }
           ],
-          "reason": "正文/实体匹配关键词「starlink」"
+          "reason": "正文/实体匹配关键词「starlink」",
+          "confidence": 0.86
         }
       ],
       "importance": "high",
@@ -617,6 +1310,7 @@
       "special_note": null,
       "material_stage": null,
       "material_stage_label": null,
+      "material_stage_confidence": null,
       "evidence_status": "single_source",
       "evidence_label": "单一独立来源线索",
       "evidence_status_reason": "目前仅见 1 家独立来源（共 1 条引用含转载，含摘要/首段），尚未见独立渠道交叉或官方确认",
@@ -637,9 +1331,9 @@
       "fact_summary": "Ukraine's strike used homegrown tech while adapting battlefield lessons from its adversary.",
       "fact_atoms": [
         {
-          "atom_id": "fa_62272135",
+          "atom_id": "fa_23131506",
           "subject": "SpaceX / 特斯拉 / 马斯克生态",
-          "metric_or_action": "Ukraine blew up Putin’s bridge using relay drones to bypass Starlink limits",
+          "metric_or_action": "【国际外交动态】Ukraine blew up Putin’s bridge using relay drones to bypass Starlink limits",
           "value": null,
           "unit": null,
           "period": "单次披露/未注明周期",
@@ -682,37 +1376,47 @@
         "rejected_refs": [],
         "has_first_party": false
       },
-      "followup": null,
-      "is_new_in_batch": true,
-      "update_kind": "new_discovery",
-      "title_en": "Ukraine blew up Putin’s bridge using relay drones to bypass Starlink limits",
-      "summary_en": "Ukraine's strike used homegrown tech while adapting battlefield lessons from its adversary.",
+      "followup": {
+        "is_continuing": true,
+        "prev_batch_id": "smart-20261120-135141",
+        "prev_event_id": "evt_a01746ce8bc8",
+        "prev_title": "【国际外交动态】Ukraine blew up Putin’s bridge using relay drones to bypass Starlink limits",
+        "delta_note": "在上期简报中已出现，本批持续关注（暂无新增独立变化）"
+      },
+      "is_new_in_batch": false,
+      "update_kind": "continuing_coverage",
+      "translation_attempts": 1,
+      "translation_error": "no_api_key",
       "title_zh": "【国际外交动态】Ukraine blew up Putin’s bridge using relay drones to bypass Starlink limits",
+      "translation_status": "retry_fallback",
+      "summary_en": "Ukraine's strike used homegrown tech while adapting battlefield lessons from its adversary.",
       "summary_zh": "Ukraine's strike used homegrown tech while adapting battlefield lessons from its adversary."
     },
     {
       "schema_version": "3.0",
-      "event_id": "evt_163c7914b200",
+      "event_id": "evt_7ef138b1e3bb",
       "storyline_id": "st_80f726dd1fd1",
       "article_ids": [
         "rss-techcrunch_ac8260bde512",
         "rss-theverge_8f1e28b013b7"
       ],
       "legacy_event_ids": [
-        "evt_c55cb4b1f66b"
+        "evt_163c7914b200"
       ],
       "title": "【全球 AI 动态】Apple may be developing its own AI agent that runs your Mac",
       "category": "tech",
       "entities": [
         "苹果 (Apple)",
-        "AI 推理与框架生态 (vLLM / llama.cpp / Transformers)",
-        "Anthropic / Claude"
+        "AI 推理与框架生态 (vLLM / llama.cpp / Transformers)"
       ],
       "entity_ids": [
         "ent_apple",
-        "ent_ai_infra_tools",
-        "ent_anthropic"
+        "ent_ai_infra_tools"
       ],
+      "entity_confidences": {
+        "苹果 (Apple)": 0.99,
+        "AI 推理与框架生态 (vLLM / llama.cpp / Transformers)": 0.86
+      },
       "matched_entities": [
         {
           "entity_id": "ent_apple",
@@ -732,7 +1436,8 @@
               "label": "AAPL.US (NASDAQ)"
             }
           ],
-          "reason": "正文/实体匹配关键词「apple / iphone」"
+          "reason": "正文/实体匹配关键词「apple / iphone」",
+          "confidence": 0.99
         },
         {
           "entity_id": "ent_ai_infra_tools",
@@ -743,18 +1448,8 @@
             "ai agent"
           ],
           "tickers": [],
-          "reason": "正文/实体匹配关键词「ai agent」"
-        },
-        {
-          "entity_id": "ent_anthropic",
-          "canonical_name": "Anthropic / Claude",
-          "entity_type": "company",
-          "sector": "AI 模型与安全",
-          "matched_aliases": [
-            "claude"
-          ],
-          "tickers": [],
-          "reason": "正文/实体匹配关键词「claude」"
+          "reason": "正文/实体匹配关键词「ai agent」",
+          "confidence": 0.86
         }
       ],
       "importance": "high",
@@ -762,6 +1457,7 @@
       "special_note": null,
       "material_stage": null,
       "material_stage_label": null,
+      "material_stage_confidence": null,
       "evidence_status": "multi_source",
       "evidence_label": "多独立来源提及（待核官方全文）",
       "evidence_status_reason": "已有 2 家独立媒体族提及（含摘要或正文首段）；多源转载不代表官方公告已证实",
@@ -782,7 +1478,7 @@
       "fact_summary": "The iPhone maker appears to be building agents that can compete with the likes of Meta Muse, Instinct, Claude, and OpenA…",
       "fact_atoms": [
         {
-          "atom_id": "fa_49231230",
+          "atom_id": "fa_64871285",
           "subject": "苹果 (Apple)",
           "metric_or_action": "【全球 AI 动态】Apple may be developing its own AI agent that runs your Mac",
           "value": null,
@@ -846,15 +1542,18 @@
       },
       "followup": {
         "is_continuing": true,
-        "prev_batch_id": "smart-20261120-125622",
-        "prev_event_id": "evt_c55cb4b1f66b",
+        "prev_batch_id": "smart-20261120-135141",
+        "prev_event_id": "evt_163c7914b200",
         "prev_title": "【全球 AI 动态】Apple may be developing its own AI agent that runs your Mac",
         "delta_note": "在上期简报中已出现，本批持续关注（暂无新增独立变化）"
       },
       "is_new_in_batch": false,
       "update_kind": "continuing_coverage",
+      "translation_attempts": 2,
+      "translation_error": "no_api_key",
       "title_en": "【全球 AI 动态】Apple may be developing its own AI agent that runs your Mac",
       "summary_en": "The iPhone maker appears to be building agents that can compete with the likes of Meta Muse, Instinct, Claude, and OpenA…",
+      "translation_status": "retry_fallback",
       "title_zh": "【全球 AI 动态】Apple may be developing its own AI agent that runs your Mac",
       "summary_zh": "The iPhone maker appears to be building agents that can compete with the likes of Meta Muse, Instinct, Claude, and OpenA…"
     },
@@ -865,9 +1564,7 @@
       "article_ids": [
         "rss-techcrunch_c6226af93ad4"
       ],
-      "legacy_event_ids": [
-        "evt_c4c72bab3760"
-      ],
+      "legacy_event_ids": [],
       "title": "【全球 AI 动态】Anthropic rival says companies can (mostly) skip the pricey models",
       "category": "tech",
       "entities": [
@@ -876,6 +1573,9 @@
       "entity_ids": [
         "ent_anthropic"
       ],
+      "entity_confidences": {
+        "Anthropic / Claude": 0.86
+      },
       "matched_entities": [
         {
           "entity_id": "ent_anthropic",
@@ -886,7 +1586,8 @@
             "anthropic"
           ],
           "tickers": [],
-          "reason": "正文/实体匹配关键词「anthropic」"
+          "reason": "正文/实体匹配关键词「anthropic」",
+          "confidence": 0.86
         }
       ],
       "importance": "high",
@@ -894,6 +1595,7 @@
       "special_note": null,
       "material_stage": null,
       "material_stage_label": null,
+      "material_stage_confidence": null,
       "evidence_status": "single_source",
       "evidence_label": "单一独立来源线索",
       "evidence_status_reason": "目前仅见 1 家独立来源（共 1 条引用含转载，含摘要/首段），尚未见独立渠道交叉或官方确认",
@@ -914,7 +1616,7 @@
       "fact_summary": "On the day Anthropic went public, Fireworks AI’s co-founder made the case for open source models as a cheaper alternativ…",
       "fact_atoms": [
         {
-          "atom_id": "fa_148610",
+          "atom_id": "fa_42293999",
           "subject": "Anthropic / Claude",
           "metric_or_action": "【全球 AI 动态】Anthropic rival says companies can (mostly) skip the pricey models",
           "value": null,
@@ -961,800 +1663,20 @@
       },
       "followup": {
         "is_continuing": true,
-        "prev_batch_id": "smart-20261120-125622",
-        "prev_event_id": "evt_c4c72bab3760",
+        "prev_batch_id": "smart-20261120-135141",
+        "prev_event_id": "evt_0f2a2744e4ef",
         "prev_title": "【全球 AI 动态】Anthropic rival says companies can (mostly) skip the pricey models",
         "delta_note": "在上期简报中已出现，本批持续关注（暂无新增独立变化）"
       },
       "is_new_in_batch": false,
       "update_kind": "continuing_coverage",
+      "translation_attempts": 2,
+      "translation_error": "no_api_key",
       "title_en": "【全球 AI 动态】Anthropic rival says companies can (mostly) skip the pricey models",
       "summary_en": "On the day Anthropic went public, Fireworks AI’s co-founder made the case for open source models as a cheaper alternativ…",
+      "translation_status": "retry_fallback",
       "title_zh": "【全球 AI 动态】Anthropic rival says companies can (mostly) skip the pricey models",
       "summary_zh": "On the day Anthropic went public, Fireworks AI’s co-founder made the case for open source models as a cheaper alternativ…"
-    },
-    {
-      "schema_version": "3.0",
-      "event_id": "evt_9e5ab5f6765a",
-      "storyline_id": "st_e94766cafb03",
-      "article_ids": [
-        "rss-techcrunch_1f135554b021"
-      ],
-      "legacy_event_ids": [
-        "evt_389117ddec3e"
-      ],
-      "title": "【马斯克与前沿科技】Elon Musk says SpaceX has a plan to eliminate cell phone dead zones",
-      "category": "tech",
-      "entities": [
-        "SpaceX / 特斯拉 / 马斯克生态"
-      ],
-      "entity_ids": [
-        "ent_spacex_tesla"
-      ],
-      "matched_entities": [
-        {
-          "entity_id": "ent_spacex_tesla",
-          "canonical_name": "SpaceX / 特斯拉 / 马斯克生态",
-          "entity_type": "company",
-          "sector": "商业航天、自动驾驶与 AI",
-          "matched_aliases": [
-            "马斯克",
-            "musk",
-            "spacex"
-          ],
-          "tickers": [
-            {
-              "symbol": "TSLA",
-              "market": "US",
-              "exchange": "NASDAQ",
-              "currency": "USD",
-              "label": "TSLA.US (NASDAQ)"
-            }
-          ],
-          "reason": "正文/实体匹配关键词「马斯克 / musk」"
-        }
-      ],
-      "importance": "high",
-      "sentiment": "Neutral",
-      "special_note": null,
-      "material_stage": null,
-      "material_stage_label": null,
-      "evidence_status": "single_source",
-      "evidence_label": "单一独立来源线索",
-      "evidence_status_reason": "目前仅见 1 家独立来源（共 1 条引用含转载，含摘要/首段），尚未见独立渠道交叉或官方确认",
-      "attribution_warning": null,
-      "contradictions": [],
-      "material_depth": "title_and_excerpt",
-      "source_count": 1,
-      "platform_count": 1,
-      "independent_publisher_count": 1,
-      "reprint_count": 0,
-      "published_at": "2026-11-20T07:37:56+08:00",
-      "first_discovered_at": "2026-11-20T11:14:01+08:00",
-      "first_reported_at": "2026-11-20T07:37:56+08:00",
-      "latest_fact_update_at": "2026-11-20T07:37:56+08:00",
-      "latest_reported_at": "2026-11-20T07:37:56+08:00",
-      "fetched_at": "2026-11-20T11:14:01+08:00",
-      "input_batch_id": "raw-20261120-111401",
-      "fact_summary": "SpaceX CEO Elon Musk said the company has completed the design of a miniature rooftop cell tower that could provide bett…",
-      "fact_atoms": [
-        {
-          "atom_id": "fa_15339392",
-          "subject": "SpaceX / 特斯拉 / 马斯克生态",
-          "metric_or_action": "【马斯克与前沿科技】Elon Musk says SpaceX has a plan to eliminate cell phone dead zones",
-          "value": null,
-          "unit": null,
-          "period": "单次披露/未注明周期",
-          "scope": "新闻事件陈述",
-          "fact_status": "reported_unconfirmed_by_filing",
-          "attribution": "TechCrunch",
-          "source_ref": "rss-techcrunch_1f135554b021",
-          "source_url": "https://techcrunch.com/2026/11/19/elon-musk-says-spacex-has-a-plan-to-eliminate-cell-phone-dead-zones",
-          "source_excerpt_or_locator": "SpaceX CEO Elon Musk said the company has completed the design of a miniature rooftop cell tower that could provide better coverage to mobile phones and eliminate dead zones.",
-          "published_at": "2026-11-20T07:37:56+08:00",
-          "discovered_at": "2026-11-20T11:14:01+08:00",
-          "revision": 1
-        }
-      ],
-      "ai_analysis": "【本批新晋突发】由高评分最新信源聚类直采，待后续批次持续追踪进展。",
-      "unverified_claims": [],
-      "speculation_or_outlook": null,
-      "sources": [
-        {
-          "item_id": "rss-techcrunch_1f135554b021",
-          "article_id": "rss-techcrunch_1f135554b021",
-          "source_id": "rss-techcrunch",
-          "source_name": "TechCrunch",
-          "source_kind": "news",
-          "source_tier": "direct_media",
-          "publisher_family": "techcrunch",
-          "is_reprint_copy": false,
-          "title": "Elon Musk says SpaceX has a plan to eliminate cell phone dead zones",
-          "url": "https://techcrunch.com/2026/11/19/elon-musk-says-spacex-has-a-plan-to-eliminate-cell-phone-dead-zones",
-          "published_at": "2026-11-20T07:37:56+08:00",
-          "published_at_source": "upstream_rfc2822",
-          "fetched_at": "2026-11-20T11:14:02+08:00",
-          "excerpt": "SpaceX CEO Elon Musk said the company has completed the design of a miniature rooftop cell tower that could provide better coverage to mobile phones and eliminate dead zones.",
-          "deep_fetch_status": null
-        }
-      ],
-      "verification": {
-        "all_refs_valid": true,
-        "has_primary_url": true,
-        "rejected_refs": [],
-        "has_first_party": false
-      },
-      "followup": {
-        "is_continuing": true,
-        "prev_batch_id": "smart-20261120-125622",
-        "prev_event_id": "evt_389117ddec3e",
-        "prev_title": "【马斯克与前沿科技】Elon Musk says SpaceX has a plan to eliminate cell phone dead zones",
-        "delta_note": "在上期简报中已出现，本批持续关注（暂无新增独立变化）"
-      },
-      "is_new_in_batch": false,
-      "update_kind": "continuing_coverage",
-      "title_zh": "【马斯克与前沿科技】Elon Musk says SpaceX has a plan to eliminate cell phone dead zones",
-      "summary_en": "SpaceX CEO Elon Musk said the company has completed the design of a miniature rooftop cell tower that could provide bett…",
-      "summary_zh": "SpaceX CEO Elon Musk said the company has completed the design of a miniature rooftop cell tower that could provide bett…"
-    },
-    {
-      "schema_version": "3.0",
-      "event_id": "evt_a9d500328bc6",
-      "storyline_id": "st_a040c687bd96",
-      "article_ids": [
-        "rss-techcrunch_1e62843c74bf"
-      ],
-      "legacy_event_ids": [
-        "evt_c76eb34ed059"
-      ],
-      "title": "【海外财经动态】Nimble enters the item-tracking market with eco-friendly luggage tags and keychains",
-      "category": "tech",
-      "entities": [
-        "Google / DeepMind / Gemini",
-        "苹果 (Apple)"
-      ],
-      "entity_ids": [
-        "ent_google",
-        "ent_apple"
-      ],
-      "matched_entities": [
-        {
-          "entity_id": "ent_google",
-          "canonical_name": "Google / DeepMind / Gemini",
-          "entity_type": "company",
-          "sector": "AI 模型与云基础设施",
-          "matched_aliases": [
-            "google"
-          ],
-          "tickers": [
-            {
-              "symbol": "GOOGL",
-              "market": "US",
-              "exchange": "NASDAQ",
-              "currency": "USD",
-              "label": "GOOGL.US (NASDAQ)"
-            }
-          ],
-          "reason": "正文/实体匹配关键词「google」"
-        },
-        {
-          "entity_id": "ent_apple",
-          "canonical_name": "苹果 (Apple)",
-          "entity_type": "company",
-          "sector": "消费电子与端侧AI",
-          "matched_aliases": [
-            "apple"
-          ],
-          "tickers": [
-            {
-              "symbol": "AAPL",
-              "market": "US",
-              "exchange": "NASDAQ",
-              "currency": "USD",
-              "label": "AAPL.US (NASDAQ)"
-            }
-          ],
-          "reason": "正文/实体匹配关键词「apple」"
-        }
-      ],
-      "importance": "high",
-      "sentiment": "Neutral",
-      "special_note": null,
-      "material_stage": null,
-      "material_stage_label": null,
-      "evidence_status": "single_source",
-      "evidence_label": "单一独立来源线索",
-      "evidence_status_reason": "目前仅见 1 家独立来源（共 1 条引用含转载，含摘要/首段），尚未见独立渠道交叉或官方确认",
-      "attribution_warning": null,
-      "contradictions": [],
-      "material_depth": "title_and_excerpt",
-      "source_count": 1,
-      "platform_count": 1,
-      "independent_publisher_count": 1,
-      "reprint_count": 0,
-      "published_at": "2026-11-19T22:00:00+08:00",
-      "first_discovered_at": "2026-11-20T11:14:01+08:00",
-      "first_reported_at": "2026-11-19T22:00:00+08:00",
-      "latest_fact_update_at": "2026-11-19T22:00:00+08:00",
-      "latest_reported_at": "2026-11-19T22:00:00+08:00",
-      "fetched_at": "2026-11-20T11:14:01+08:00",
-      "input_batch_id": "raw-20261120-111401",
-      "fact_summary": "As Google takes on Apple in the item-tracking market, Nimble is hoping its trackable wallets, keychains, luggage tags, a…",
-      "fact_atoms": [
-        {
-          "atom_id": "fa_27923433",
-          "subject": "Google / DeepMind / Gemini",
-          "metric_or_action": "【海外财经动态】Nimble enters the item-tracking market with eco-friendly luggage tags and keychains",
-          "value": null,
-          "unit": null,
-          "period": "单次披露/未注明周期",
-          "scope": "新闻事件陈述",
-          "fact_status": "reported_unconfirmed_by_filing",
-          "attribution": "TechCrunch",
-          "source_ref": "rss-techcrunch_1e62843c74bf",
-          "source_url": "https://techcrunch.com/2026/11/19/nimble-enters-the-item-tracking-market-with-eco-friendly-luggage-tags-and-keychains",
-          "source_excerpt_or_locator": "As Google takes on Apple in the item-tracking market, Nimble is hoping its trackable wallets, keychains, luggage tags, and passport covers stand out.",
-          "published_at": "2026-11-19T22:00:00+08:00",
-          "discovered_at": "2026-11-20T11:14:01+08:00",
-          "revision": 1
-        }
-      ],
-      "ai_analysis": "【本批新晋突发】由高评分最新信源聚类直采，待后续批次持续追踪进展。",
-      "unverified_claims": [],
-      "speculation_or_outlook": null,
-      "sources": [
-        {
-          "item_id": "rss-techcrunch_1e62843c74bf",
-          "article_id": "rss-techcrunch_1e62843c74bf",
-          "source_id": "rss-techcrunch",
-          "source_name": "TechCrunch",
-          "source_kind": "news",
-          "source_tier": "direct_media",
-          "publisher_family": "techcrunch",
-          "is_reprint_copy": false,
-          "title": "Nimble enters the item-tracking market with eco-friendly luggage tags and keychains",
-          "url": "https://techcrunch.com/2026/11/19/nimble-enters-the-item-tracking-market-with-eco-friendly-luggage-tags-and-keychains",
-          "published_at": "2026-11-19T22:00:00+08:00",
-          "published_at_source": "upstream_rfc2822",
-          "fetched_at": "2026-11-20T11:14:02+08:00",
-          "excerpt": "As Google takes on Apple in the item-tracking market, Nimble is hoping its trackable wallets, keychains, luggage tags, and passport covers stand out.",
-          "deep_fetch_status": null
-        }
-      ],
-      "verification": {
-        "all_refs_valid": true,
-        "has_primary_url": true,
-        "rejected_refs": [],
-        "has_first_party": false
-      },
-      "followup": {
-        "is_continuing": true,
-        "prev_batch_id": "smart-20261120-125622",
-        "prev_event_id": "evt_c76eb34ed059",
-        "prev_title": "【海外财经动态】Nimble enters the item-tracking market with eco-friendly luggage tags and keychains",
-        "delta_note": "在上期简报中已出现，本批持续关注（暂无新增独立变化）"
-      },
-      "is_new_in_batch": false,
-      "update_kind": "continuing_coverage",
-      "title_zh": "【海外财经动态】Nimble enters the item-tracking market with eco-friendly luggage tags and keychains",
-      "summary_en": "As Google takes on Apple in the item-tracking market, Nimble is hoping its trackable wallets, keychains, luggage tags, a…",
-      "summary_zh": "As Google takes on Apple in the item-tracking market, Nimble is hoping its trackable wallets, keychains, luggage tags, a…"
-    },
-    {
-      "schema_version": "3.0",
-      "event_id": "evt_0386280318cd",
-      "storyline_id": "st_d66b2f3e332e",
-      "article_ids": [
-        "pcbeta-windows11_69bced602bbe",
-        "ithome_63337a75bf66"
-      ],
-      "legacy_event_ids": [],
-      "title": "微软确认 Win11 26H2 已面向所有符合条件设备推送，24H2、25H2 陆续升级",
-      "category": "tech",
-      "entities": [
-        "微软 (Microsoft)"
-      ],
-      "entity_ids": [
-        "ent_microsoft"
-      ],
-      "matched_entities": [
-        {
-          "entity_id": "ent_microsoft",
-          "canonical_name": "微软 (Microsoft)",
-          "entity_type": "company",
-          "sector": "云基础设施 / AI算力需求方",
-          "matched_aliases": [
-            "微软"
-          ],
-          "tickers": [
-            {
-              "symbol": "MSFT",
-              "market": "US",
-              "exchange": "NASDAQ",
-              "currency": "USD",
-              "label": "MSFT.US (NASDAQ)"
-            }
-          ],
-          "reason": "正文/实体匹配关键词「微软」"
-        }
-      ],
-      "importance": "high",
-      "sentiment": "Neutral",
-      "special_note": null,
-      "material_stage": null,
-      "material_stage_label": null,
-      "evidence_status": "multi_source",
-      "evidence_label": "多独立来源提及（待核官方全文）",
-      "evidence_status_reason": "已有 2 家独立媒体族提及（含摘要或正文首段）；多源转载不代表官方公告已证实",
-      "attribution_warning": null,
-      "contradictions": [],
-      "material_depth": "title_and_excerpt",
-      "source_count": 2,
-      "platform_count": 2,
-      "independent_publisher_count": 2,
-      "reprint_count": 0,
-      "published_at": "2026-11-19T20:32:46+08:00",
-      "first_discovered_at": "2026-11-20T11:14:01+08:00",
-      "first_reported_at": "2026-11-19T20:32:46+08:00",
-      "latest_fact_update_at": "2026-11-20T09:11:40+08:00",
-      "latest_reported_at": "2026-11-20T09:11:40+08:00",
-      "fetched_at": "2026-11-20T11:14:01+08:00",
-      "input_batch_id": "raw-20261120-111401",
-      "fact_summary": "Win11_26H1用过一段时间，Win11_26H1比Win11_26H2好用，更流畅一些。",
-      "fact_atoms": [
-        {
-          "atom_id": "fa_96708409",
-          "subject": "微软 (Microsoft)",
-          "metric_or_action": "微软确认 Win11 26H2 已面向所有符合条件设备推送，24H2、25H2 陆续升级",
-          "value": null,
-          "unit": null,
-          "period": "单次披露/未注明周期",
-          "scope": "新闻事件陈述",
-          "fact_status": "multi_source_reported",
-          "attribution": "远景论坛 Win11",
-          "source_ref": "pcbeta-windows11_69bced602bbe",
-          "source_url": "https://bbs.pcbeta.com/viewthread-2085058-1-1.html",
-          "source_excerpt_or_locator": "Win11_26H1用过一段时间，Win11_26H1比Win11_26H2好用，更流畅一些。",
-          "published_at": "2026-11-19T20:32:46+08:00",
-          "discovered_at": "2026-11-20T11:14:01+08:00",
-          "revision": 1
-        }
-      ],
-      "ai_analysis": "【本批新晋突发】由高评分最新信源聚类直采，待后续批次持续追踪进展。",
-      "unverified_claims": [],
-      "speculation_or_outlook": null,
-      "sources": [
-        {
-          "item_id": "pcbeta-windows11_69bced602bbe",
-          "article_id": "pcbeta-windows11_69bced602bbe",
-          "source_id": "pcbeta-windows11",
-          "source_name": "远景论坛 Win11",
-          "source_kind": "discussion",
-          "source_tier": "aggregator_lead",
-          "publisher_family": "pcbeta-windows11",
-          "is_reprint_copy": false,
-          "title": "Win11_26H1比Win11_26H2好用",
-          "url": "https://bbs.pcbeta.com/viewthread-2085058-1-1.html",
-          "published_at": "2026-11-19T20:32:46+08:00",
-          "published_at_source": "upstream_rfc2822",
-          "fetched_at": "2026-11-20T11:14:01+08:00",
-          "excerpt": "Win11_26H1用过一段时间，Win11_26H1比Win11_26H2好用，更流畅一些。",
-          "deep_fetch_status": null
-        },
-        {
-          "item_id": "ithome_63337a75bf66",
-          "article_id": "ithome_63337a75bf66",
-          "source_id": "ithome",
-          "source_name": "IT之家",
-          "source_kind": "news",
-          "source_tier": "aggregator_lead",
-          "publisher_family": "ithome",
-          "is_reprint_copy": false,
-          "title": "微软确认 Win11 26H2 已面向所有符合条件设备推送，24H2、25H2 陆续升级",
-          "url": "https://www.ithome.com/1/029/782.htm",
-          "published_at": "2026-11-20T09:11:40+08:00",
-          "published_at_source": "upstream_local_cst",
-          "fetched_at": "2026-11-20T11:14:01+08:00",
-          "excerpt": null,
-          "deep_fetch_status": null
-        }
-      ],
-      "verification": {
-        "all_refs_valid": true,
-        "has_primary_url": true,
-        "rejected_refs": [],
-        "has_first_party": false
-      },
-      "followup": {
-        "is_continuing": true,
-        "prev_batch_id": "smart-20261120-125622",
-        "prev_event_id": "evt_0386280318cd",
-        "prev_title": "微软确认 Win11 26H2 已面向所有符合条件设备推送，24H2、25H2 陆续升级",
-        "delta_note": "在上期简报中已出现，本批持续关注（暂无新增独立变化）"
-      },
-      "is_new_in_batch": false,
-      "update_kind": "continuing_coverage",
-      "title_zh": "微软确认 Win11 26H2 已面向所有符合条件设备推送，24H2、25H2 陆续升级",
-      "summary_zh": "Win11_26H1用过一段时间，Win11_26H1比Win11_26H2好用，更流畅一些。"
-    },
-    {
-      "schema_version": "3.0",
-      "event_id": "evt_b98d379b7f5d",
-      "storyline_id": "st_1d13395b6ca5",
-      "article_ids": [
-        "rss-techcrunch_a85fdd4800c7",
-        "rss-techcrunch_30c1a44d7557",
-        "juejin_74944fb005dc",
-        "aihot_9f96dacce7b3",
-        "aihot_6764ae04a3e9",
-        "aihot_f7ffa9b2ae47"
-      ],
-      "legacy_event_ids": [],
-      "title": "Anthropic 纳斯达克创纪录上市：首日高开至 111 美元，七位创始人套现近 20 亿美元",
-      "category": "tech",
-      "entities": [
-        "Anthropic",
-        "Nasdaq",
-        "Anthropic / Claude"
-      ],
-      "entity_ids": [
-        "ent_anthropic"
-      ],
-      "matched_entities": [
-        {
-          "entity_id": "ent_anthropic",
-          "canonical_name": "Anthropic / Claude",
-          "entity_type": "company",
-          "sector": "AI 模型与安全",
-          "matched_aliases": [
-            "anthropic"
-          ],
-          "tickers": [],
-          "reason": "正文/实体匹配关键词「anthropic」"
-        }
-      ],
-      "importance": "high",
-      "sentiment": "Bullish",
-      "special_note": null,
-      "material_stage": null,
-      "material_stage_label": null,
-      "evidence_status": "multi_source",
-      "evidence_label": "多独立来源提及（待核官方全文）",
-      "evidence_status_reason": "已有 3 家独立媒体族提及（含摘要或正文首段）；多源转载不代表官方公告已证实",
-      "attribution_warning": null,
-      "contradictions": [],
-      "material_depth": "title_and_excerpt",
-      "source_count": 6,
-      "platform_count": 3,
-      "independent_publisher_count": 3,
-      "reprint_count": 0,
-      "published_at": "2026-11-20T00:59:23+08:00",
-      "first_discovered_at": "2026-11-20T11:14:01+08:00",
-      "first_reported_at": "2026-11-20T00:59:23+08:00",
-      "latest_fact_update_at": "2026-11-20T09:37:44+08:00",
-      "latest_reported_at": "2026-11-20T09:37:44+08:00",
-      "fetched_at": "2026-11-20T11:14:01+08:00",
-      "input_batch_id": "raw-20261120-111401",
-      "fact_summary": "At the upgraded $83/share IPO price, Anthropic's seven founders each pocketed $280 million, while the company nabbed nea…",
-      "fact_atoms": [
-        {
-          "atom_id": "fa_81680833",
-          "subject": "Anthropic",
-          "metric_or_action": "Anthropic 纳斯达克创纪录上市：首日高开至 111 美元，七位创始人套现近 20 亿美元",
-          "value": "20",
-          "unit": "亿美元",
-          "period": "单次披露/未注明周期",
-          "scope": "新闻事件陈述",
-          "fact_status": "multi_source_reported",
-          "attribution": "TechCrunch",
-          "source_ref": "rss-techcrunch_a85fdd4800c7",
-          "source_url": "https://techcrunch.com/2026/11/19/anthropics-7-founders-cashed-out-nearly-2b-in-record-breaking-ipo",
-          "source_excerpt_or_locator": "At the upgraded $83/share IPO price, Anthropic's seven founders each pocketed $280 million, while the company nabbed nearly $105 billion.",
-          "published_at": "2026-11-20T08:43:50+08:00",
-          "discovered_at": "2026-11-20T11:14:01+08:00",
-          "revision": 1
-        }
-      ],
-      "ai_analysis": "Anthropic 以创纪录的体量登陆公开市场，标志着前沿大模型企业正式进入接受二级市场季度财报与现金流审视的新阶段，其高开表现短期内提振了资本市场对头部 AI 实验室的估值信心。",
-      "unverified_claims": [
-        "部分仅含标题的快讯提及募资额为 813 亿美元、市值达 1.76 万亿美元，相关精确口径与安全争议细节待查原文。"
-      ],
-      "speculation_or_outlook": "上市后股价能否在百美元关口上方站稳，以及高估值下算力支出与营收增速的匹配度将成为后续财报季焦点。",
-      "sources": [
-        {
-          "item_id": "rss-techcrunch_a85fdd4800c7",
-          "article_id": "rss-techcrunch_a85fdd4800c7",
-          "source_id": "rss-techcrunch",
-          "source_name": "TechCrunch",
-          "source_kind": "news",
-          "source_tier": "direct_media",
-          "publisher_family": "techcrunch",
-          "is_reprint_copy": false,
-          "title": "Anthropic’s 7 founders cashed out nearly $2B in record-breaking IPO",
-          "url": "https://techcrunch.com/2026/11/19/anthropics-7-founders-cashed-out-nearly-2b-in-record-breaking-ipo",
-          "published_at": "2026-11-20T08:43:50+08:00",
-          "published_at_source": "upstream_rfc2822",
-          "fetched_at": "2026-11-20T11:14:02+08:00",
-          "excerpt": "At the upgraded $83/share IPO price, Anthropic's seven founders each pocketed $280 million, while the company nabbed nearly $105 billion.",
-          "deep_fetch_status": null
-        },
-        {
-          "item_id": "rss-techcrunch_30c1a44d7557",
-          "article_id": "rss-techcrunch_30c1a44d7557",
-          "source_id": "rss-techcrunch",
-          "source_name": "TechCrunch",
-          "source_kind": "news",
-          "source_tier": "direct_media",
-          "publisher_family": "techcrunch",
-          "is_reprint_copy": false,
-          "title": "Anthropic hits Nasdaq exchanges at $111, 33% above IPO price",
-          "url": "https://techcrunch.com/2026/11/19/anthropic-hits-nasdaq-exchanges-at-110-27-above-ipo-price",
-          "published_at": "2026-11-20T00:59:23+08:00",
-          "published_at_source": "upstream_rfc2822",
-          "fetched_at": "2026-11-20T11:14:02+08:00",
-          "excerpt": "Anthropic's IPO price was set at $83, representing more than $80 billion in new capital raised.",
-          "deep_fetch_status": null
-        },
-        {
-          "item_id": "juejin_74944fb005dc",
-          "article_id": "juejin_74944fb005dc",
-          "source_id": "juejin",
-          "source_name": "稀土掘金",
-          "source_kind": "news",
-          "source_tier": "aggregator_lead",
-          "publisher_family": "juejin",
-          "is_reprint_copy": false,
-          "title": "AI 热点日报（2026-11-19）：Anthropic 全球史上最大 IPO 上市，谷歌发布 Gemini 4 Neon",
-          "url": "https://juejin.cn/post/7709679151842246697",
-          "published_at": null,
-          "published_at_source": null,
-          "fetched_at": "2026-11-20T11:14:01+08:00",
-          "excerpt": null,
-          "deep_fetch_status": null
-        },
-        {
-          "item_id": "aihot_9f96dacce7b3",
-          "article_id": "aihot_9f96dacce7b3",
-          "source_id": "aihot",
-          "source_name": "AIHOT 前沿",
-          "source_kind": "news",
-          "source_tier": "aggregator_lead",
-          "publisher_family": "aihot",
-          "is_reprint_copy": false,
-          "title": "Anthropic IPO 募资 813 亿美元创纪录，市值达 1.76 万亿美元引发安全争议",
-          "url": "https://aihot.news/items/j96pobdmcb200kk2baf62615v",
-          "published_at": "2026-11-20T09:37:44+08:00",
-          "published_at_source": "upstream_rfc2822",
-          "fetched_at": "2026-11-20T11:14:01+08:00",
-          "excerpt": null,
-          "deep_fetch_status": null
-        },
-        {
-          "item_id": "aihot_6764ae04a3e9",
-          "article_id": "aihot_6764ae04a3e9",
-          "source_id": "aihot",
-          "source_name": "AIHOT 前沿",
-          "source_kind": "news",
-          "source_tier": "aggregator_lead",
-          "publisher_family": "aihot",
-          "is_reprint_copy": false,
-          "title": "Anthropic 七位创始人 IPO 套现近 20 亿美元，融资规模创纪录",
-          "url": "https://aihot.news/items/hdvaqa4fp3ug2ozttf2n3tyuf",
-          "published_at": "2026-11-20T08:43:50+08:00",
-          "published_at_source": "upstream_rfc2822",
-          "fetched_at": "2026-11-20T11:14:01+08:00",
-          "excerpt": null,
-          "deep_fetch_status": null
-        },
-        {
-          "item_id": "aihot_f7ffa9b2ae47",
-          "article_id": "aihot_f7ffa9b2ae47",
-          "source_id": "aihot",
-          "source_name": "AIHOT 前沿",
-          "source_kind": "news",
-          "source_tier": "aggregator_lead",
-          "publisher_family": "aihot",
-          "is_reprint_copy": false,
-          "title": "Anthropic 纳斯达克上市首日收涨 17%，市值约 1.76 万亿美元",
-          "url": "https://aihot.news/items/k9l5dt0zbhvw3qiy58vzd95so",
-          "published_at": "2026-11-20T08:35:48+08:00",
-          "published_at_source": "upstream_rfc2822",
-          "fetched_at": "2026-11-20T11:14:01+08:00",
-          "excerpt": null,
-          "deep_fetch_status": null
-        }
-      ],
-      "verification": {
-        "all_refs_valid": true,
-        "has_primary_url": true,
-        "rejected_refs": [],
-        "has_first_party": false
-      },
-      "followup": {
-        "is_continuing": true,
-        "prev_batch_id": "smart-20261120-125622",
-        "prev_event_id": "evt_b98d379b7f5d",
-        "prev_title": "Anthropic 纳斯达克创纪录上市：首日高开至 111 美元，七位创始人套现近 20 亿美元",
-        "delta_note": "在上期简报中已出现，本批持续关注（暂无新增独立变化）"
-      },
-      "is_new_in_batch": false,
-      "update_kind": "continuing_coverage",
-      "title_zh": "Anthropic 纳斯达克创纪录上市：首日高开至 111 美元，七位创始人套现近 20 亿美元",
-      "summary_en": "At the upgraded $83/share IPO price, Anthropic's seven founders each pocketed $280 million, while the company nabbed nea…",
-      "summary_zh": "At the upgraded $83/share IPO price, Anthropic's seven founders each pocketed $280 million, while the company nabbed nea…"
-    },
-    {
-      "schema_version": "3.0",
-      "event_id": "evt_09e72371ec7e",
-      "storyline_id": "st_9f7ef62e5624",
-      "article_ids": [
-        "rss-techcrunch_891a81ae80a3",
-        "rss-techcrunch_a991c4104316",
-        "rss-techcrunch_ee7ef1e05c55"
-      ],
-      "legacy_event_ids": [],
-      "title": "Anthropic IPO 检验 AI 循环融资模式，CEO 重申审慎研发并规划百亿级慈善捐赠",
-      "category": "tech",
-      "entities": [
-        "Anthropic",
-        "Dario Amodei",
-        "Amazon",
-        "Google",
-        "Anthropic / Claude",
-        "Google / DeepMind / Gemini"
-      ],
-      "entity_ids": [
-        "ent_anthropic",
-        "ent_google"
-      ],
-      "matched_entities": [
-        {
-          "entity_id": "ent_anthropic",
-          "canonical_name": "Anthropic / Claude",
-          "entity_type": "company",
-          "sector": "AI 模型与安全",
-          "matched_aliases": [
-            "anthropic"
-          ],
-          "tickers": [],
-          "reason": "正文/实体匹配关键词「anthropic」"
-        },
-        {
-          "entity_id": "ent_google",
-          "canonical_name": "Google / DeepMind / Gemini",
-          "entity_type": "company",
-          "sector": "AI 模型与云基础设施",
-          "matched_aliases": [
-            "谷歌",
-            "google"
-          ],
-          "tickers": [
-            {
-              "symbol": "GOOGL",
-              "market": "US",
-              "exchange": "NASDAQ",
-              "currency": "USD",
-              "label": "GOOGL.US (NASDAQ)"
-            }
-          ],
-          "reason": "正文/实体匹配关键词「谷歌 / google」"
-        }
-      ],
-      "importance": "high",
-      "sentiment": "Mixed",
-      "special_note": null,
-      "material_stage": null,
-      "material_stage_label": null,
-      "evidence_status": "single_source",
-      "evidence_label": "单一独立来源线索",
-      "evidence_status_reason": "目前仅见 1 家独立来源（共 3 条引用含转载，含摘要/首段），尚未见独立渠道交叉或官方确认",
-      "attribution_warning": null,
-      "contradictions": [],
-      "material_depth": "title_and_excerpt",
-      "source_count": 3,
-      "platform_count": 1,
-      "independent_publisher_count": 1,
-      "reprint_count": 0,
-      "published_at": "2026-11-19T22:54:39+08:00",
-      "first_discovered_at": "2026-11-20T11:14:01+08:00",
-      "first_reported_at": "2026-11-19T22:54:39+08:00",
-      "latest_fact_update_at": "2026-11-20T03:10:45+08:00",
-      "latest_reported_at": "2026-11-20T03:10:45+08:00",
-      "fetched_at": "2026-11-20T11:14:01+08:00",
-      "input_batch_id": "raw-20261120-111401",
-      "fact_summary": "在纳斯达克敲钟致辞中，Anthropic CEO Dario Amodei 重申公司将继续坚持审慎控制 AI 研发节奏的承诺，无论面临何种商业或政治压力。与此同时，Anthropic 上市也使其庞大的算力承诺以及与亚马逊、谷歌等基础设施伙伴之间的循环融资关系受到考验——报道指出即便 Anthropic 失去领先地位，其云基础设施合作伙伴仍可能持续从 AI 中获利。另据披露，按每股 95 美元股价计算，该实验室的公益基金会、员工捐赠及公司配捐总额可达 1560 亿美元。",
-      "fact_atoms": [
-        {
-          "atom_id": "fa_4763254",
-          "subject": "Anthropic",
-          "metric_or_action": "Anthropic IPO 检验 AI 循环融资模式，CEO 重申审慎研发并规划百亿级慈善捐赠",
-          "value": "1560",
-          "unit": "亿美元",
-          "period": "单次披露/未注明周期",
-          "scope": "新闻事件陈述",
-          "fact_status": "reported_unconfirmed_by_filing",
-          "attribution": "TechCrunch",
-          "source_ref": "rss-techcrunch_891a81ae80a3",
-          "source_url": "https://techcrunch.com/2026/11/19/anthropics-ipo-puts-ais-circular-financing-boom-to-the-test",
-          "source_excerpt_or_locator": "Anthropic faces enormous compute commitments as it goes public, but its biggest infrastructure partners, including Amazon and Google, could continue profiting from AI even if Anthr",
-          "published_at": "2026-11-19T22:54:39+08:00",
-          "discovered_at": "2026-11-20T11:14:01+08:00",
-          "revision": 1
-        }
-      ],
-      "ai_analysis": "Anthropic 一方面通过高额公益承诺与“减速/审慎研发”表态维持自身安全治理标签，另一方面却背负着巨额云算力采购承诺，这种商业扩张与安全克制之间的张力在成为公众公司后将被进一步放大。",
-      "unverified_claims": [],
-      "speculation_or_outlook": "若行业竞争加剧导致模型利润率承压，外界将密切观察基础设施巨头与大模型厂商之间的资本绑定模式是否具备长期可持续性。",
-      "sources": [
-        {
-          "item_id": "rss-techcrunch_891a81ae80a3",
-          "article_id": "rss-techcrunch_891a81ae80a3",
-          "source_id": "rss-techcrunch",
-          "source_name": "TechCrunch",
-          "source_kind": "news",
-          "source_tier": "direct_media",
-          "publisher_family": "techcrunch",
-          "is_reprint_copy": false,
-          "title": "Anthropic’s IPO puts AI’s circular financing boom to the test",
-          "url": "https://techcrunch.com/2026/11/19/anthropics-ipo-puts-ais-circular-financing-boom-to-the-test",
-          "published_at": "2026-11-19T22:54:39+08:00",
-          "published_at_source": "upstream_rfc2822",
-          "fetched_at": "2026-11-20T11:14:02+08:00",
-          "excerpt": "Anthropic faces enormous compute commitments as it goes public, but its biggest infrastructure partners, including Amazon and Google, could continue profiting from AI even if Anthropic loses its lead.",
-          "deep_fetch_status": null
-        },
-        {
-          "item_id": "rss-techcrunch_a991c4104316",
-          "article_id": "rss-techcrunch_a991c4104316",
-          "source_id": "rss-techcrunch",
-          "source_name": "TechCrunch",
-          "source_kind": "news",
-          "source_tier": "direct_media",
-          "publisher_family": "techcrunch",
-          "is_reprint_copy": false,
-          "title": "Anthropic’s IPO could deliver $156B to charity",
-          "url": "https://techcrunch.com/2026/11/19/anthropics-ipo-could-deliver-156-billion-to-charity",
-          "published_at": "2026-11-20T03:10:45+08:00",
-          "published_at_source": "upstream_rfc2822",
-          "fetched_at": "2026-11-20T11:14:02+08:00",
-          "excerpt": "At a stock price of $95, the frontier lab's Public Benefit Foundation, its employee donations, and the company's match tot up to $156 billion.",
-          "deep_fetch_status": null
-        },
-        {
-          "item_id": "rss-techcrunch_ee7ef1e05c55",
-          "article_id": "rss-techcrunch_ee7ef1e05c55",
-          "source_id": "rss-techcrunch",
-          "source_name": "TechCrunch",
-          "source_kind": "news",
-          "source_tier": "direct_media",
-          "publisher_family": "techcrunch",
-          "is_reprint_copy": false,
-          "title": "At Nasdaq opening bell, Anthropic CEO recommits to pacing AI development",
-          "url": "https://techcrunch.com/2026/11/19/at-nasdaq-opening-bell-anthropic-ceo-recommits-to-pacing-ai-development",
-          "published_at": "2026-11-20T00:19:41+08:00",
-          "published_at_source": "upstream_rfc2822",
-          "fetched_at": "2026-11-20T11:14:02+08:00",
-          "excerpt": "In his Nasdaq opening bell speech, Dario Amodei reiterated Anthropic's commitment to pacing AI development, regardless of business or political pressure.",
-          "deep_fetch_status": null
-        }
-      ],
-      "verification": {
-        "all_refs_valid": true,
-        "has_primary_url": true,
-        "rejected_refs": [],
-        "has_first_party": false
-      },
-      "followup": {
-        "is_continuing": true,
-        "prev_batch_id": "smart-20261120-125622",
-        "prev_event_id": "evt_09e72371ec7e",
-        "prev_title": "Anthropic IPO 检验 AI 循环融资模式，CEO 重申审慎研发并规划百亿级慈善捐赠",
-        "delta_note": "在上期简报中已出现，本批持续关注（暂无新增独立变化）"
-      },
-      "is_new_in_batch": false,
-      "update_kind": "continuing_coverage",
-      "title_zh": "Anthropic IPO 检验 AI 循环融资模式，CEO 重申审慎研发并规划百亿级慈善捐赠",
-      "summary_zh": "在纳斯达克敲钟致辞中，Anthropic CEO Dario Amodei 重申公司将继续坚持审慎控制 AI 研发节奏的承诺，无论面临何种商业或政治压力。与此同时，Anthropic 上市也使其庞大的算力承诺以及与亚马逊、谷歌等基础设施伙伴之间的循环融资关系受到考验——报道指出即便 Anthropic 失去领先地位，其云基础设施合作伙伴仍可能持续从 AI 中获利。另据披露，按每股 95 美元股价计算，该实验室的公益基金会、员工捐赠及公司配捐总额可达 1560 亿美元。"
     }
   ]
 }

@@ -76,8 +76,15 @@ _NON_TECH_POLITICAL_RE = re.compile(
 )
 
 
-def infer_material_stage(text: str, category: str = "tech") -> Optional[Dict[str, str]]:
-    """Classify product/model release stage ONLY for genuine AI/tech product releases (never politics/diplomacy)."""
+STAGE_CONFIDENCE_THRESHOLD = 0.70
+
+
+def infer_material_stage(
+    text: str,
+    category: str = "tech",
+    min_confidence: float = STAGE_CONFIDENCE_THRESHOLD,
+) -> Optional[Dict[str, Any]]:
+    """Classify product/model release stage strictly with confidence gating (threshold >= 0.70)."""
     if category not in {"tech"}:
         return None
     if _NON_TECH_POLITICAL_RE.search(text) and not _TECH_STAGE_CONTEXT_RE.search(text):
@@ -85,8 +92,24 @@ def infer_material_stage(text: str, category: str = "tech") -> Optional[Dict[str
     if not _TECH_STAGE_CONTEXT_RE.search(text):
         return None
     for code, label, pat in _PRODUCT_STAGE_PATTERNS:
-        if pat.search(text):
-            return {"stage": code, "label": label}
+        m = pat.search(text)
+        if not m:
+            continue
+        conf = 0.68
+        if _TECH_STAGE_CONTEXT_RE.search(text[:80]):
+            conf += 0.10
+        if m.start() < 90:
+            conf += 0.10
+        if re.search(r"(?:v\d+\.\d+|开源权重|\bapi\b|\bsdk\b|大模型|发布|上线|general availability)", text, re.I):
+            conf += 0.08
+        if _NON_TECH_POLITICAL_RE.search(text):
+            conf -= 0.18
+        if re.search(r"(?:可能|或将|传闻|rumor|reportedly|planned)", text, re.I) and code in {"announced", "beta", "ga"}:
+            conf -= 0.12
+        conf = round(max(0.0, min(0.99, conf)), 2)
+        if conf < min_confidence:
+            return None
+        return {"stage": code, "label": label, "confidence": conf}
     return None
 
 
@@ -519,12 +542,18 @@ def verify_and_enrich_event(
         "category": category,
         "entities": entities_list,
         "entity_ids": entity_ids,
+        "entity_confidences": {
+            m["canonical_name"]: m.get("confidence", 1.0)
+            for m in matched_entity_objs
+            if m.get("canonical_name")
+        },
         "matched_entities": matched_entity_objs,
         "importance": raw_event.get("importance", "normal") if raw_event.get("importance") in {"high", "medium", "normal"} else "normal",
         "sentiment": raw_event.get("sentiment"),
         "special_note": raw_event.get("special_note"),
         "material_stage": stage_info["stage"] if stage_info else None,
         "material_stage_label": stage_info["label"] if stage_info else None,
+        "material_stage_confidence": stage_info["confidence"] if stage_info else None,
         "evidence_status": evidence_status,
         "evidence_label": EVIDENCE_LABELS[evidence_status],
         "evidence_status_reason": evidence_reason,

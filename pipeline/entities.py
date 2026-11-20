@@ -374,9 +374,39 @@ def _match_alias(text_lower: str, alias: str) -> bool:
     return _find_alias_pos(text_lower, alias, allow_negated=False) is not None
 
 
+ENTITY_CONFIDENCE_THRESHOLD = 0.65
+
+
+def _score_entity_confidence(edef: EntityDef, hit_aliases: Sequence[str], earliest_pos: int) -> float:
+    """Compute deterministic [0, 0.99] confidence for a matched entity mention."""
+    hit_set = {a.lower() for a in hit_aliases if a}
+    score = 0.58
+    if earliest_pos < 80:
+        score += 0.18
+    elif earliest_pos < 130:
+        score += 0.08
+
+    if edef.canonical_name.lower() in hit_set:
+        score += 0.16
+
+    has_cjk_2 = any(bool(re.search(r"[\u4e00-\u9fff]", a)) and len(a) >= 2 for a in hit_aliases)
+    max_len = max((len(a) for a in hit_aliases), default=0)
+    if has_cjk_2 or max_len >= 4:
+        score += 0.10 if earliest_pos < 130 else 0.05
+    elif max_len <= 3 and len(hit_set) <= 1:
+        score -= 0.08
+
+    if len(hit_set) >= 2:
+        score += 0.10
+    if edef.required_context:
+        score += 0.06
+    return round(max(0.0, min(0.99, score)), 2)
+
+
 def match_entities_with_reasons(
     text: str,
     explicit_entities: Optional[Sequence[str]] = None,
+    min_confidence: float = ENTITY_CONFIDENCE_THRESHOLD,
 ) -> List[Dict[str, Any]]:
     """
     Resolve canonical entities referenced in an event or text with explicit explanation strings.
@@ -413,7 +443,20 @@ def match_entities_with_reasons(
                 )
             )
     scored_matches.sort(key=lambda x: x[0])
-    return [m for _, m in scored_matches]
+    registry_by_id = {ed.entity_id: ed for ed in ENTITY_REGISTRY}
+    filtered: List[Dict[str, Any]] = []
+    for earliest_pos, m in scored_matches:
+        edef = registry_by_id.get(m["entity_id"])
+        if edef is None:
+            continue
+        hit_aliases = [al for al in edef.aliases if _find_alias_pos(lowered, al, allow_negated=False) is not None]
+        conf = _score_entity_confidence(edef, hit_aliases, earliest_pos)
+        if conf < min_confidence:
+            continue
+        enriched = dict(m)
+        enriched["confidence"] = conf
+        filtered.append(enriched)
+    return filtered
 
 
 def build_entities_index_base() -> Dict[str, Dict[str, Any]]:

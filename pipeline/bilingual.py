@@ -4,11 +4,14 @@ from __future__ import annotations
 
 import json
 import os
+from pathlib import Path
 import re
-from typing import Any, Dict, List, Optional
+import time
+from typing import Any, Dict, List, Optional, Tuple
 
 _CJK_RE = re.compile(r"[\u4e00-\u9fff]")
 _LATIN_RE = re.compile(r"[A-Za-z]")
+DEFAULT_OVERRIDES_PATH = Path(__file__).resolve().parent.parent / "data" / "translation_overrides.json"
 
 
 def is_mostly_english(text: str) -> bool:
@@ -50,13 +53,20 @@ _OFFLINE_PHRASE_MAP: List[tuple[re.Pattern[str], str]] = [
 ]
 
 
+def _lookup_offline_phrase(clean: str) -> Optional[str]:
+    for pat, zh in _OFFLINE_PHRASE_MAP:
+        if pat.search(clean):
+            return zh
+    return None
+
+
 def _translate_offline_fallback(text: str, *, is_summary: bool = False) -> str:
     clean = re.sub(r"^(?:【[^】]{2,14}】\s*)+", "", (text or "").strip())
     if not clean or not is_mostly_english(clean):
         return clean
-    for pat, zh in _OFFLINE_PHRASE_MAP:
-        if pat.search(clean):
-            return zh
+    exact = _lookup_offline_phrase(clean)
+    if exact:
+        return exact
     if is_summary:
         # Preserve original English excerpt (first 120 chars) instead of generic placeholder text (A5)
         return clean[:120].rstrip() + ("…" if len(clean) > 120 else "")
@@ -75,6 +85,34 @@ def _translate_offline_fallback(text: str, *, is_summary: bool = False) -> str:
     return f"【{prefix}】{clean}"
 
 
+def load_translation_overrides(overrides_path: Optional[Path] = None) -> Dict[str, Any]:
+    """Load optional manual ZH translation dictionary keyed by source English text."""
+    path = overrides_path or DEFAULT_OVERRIDES_PATH
+    try:
+        if path.exists():
+            raw = json.loads(path.read_text(encoding="utf-8"))
+            if isinstance(raw, dict):
+                return raw
+    except Exception:
+        return {}
+    return {}
+
+
+def _resolve_override(text: str, field: str, overrides: Dict[str, Any]) -> Optional[str]:
+    if not overrides or not text:
+        return None
+    clean = text.strip()
+    candidates = [overrides.get(clean), overrides.get(clean.lower())]
+    for entry in candidates:
+        if isinstance(entry, str) and entry.strip():
+            return entry.strip()
+        if isinstance(entry, dict):
+            val = entry.get(field) or entry.get("zh") or entry.get("title_zh")
+            if isinstance(val, str) and val.strip():
+                return val.strip()
+    return None
+
+
 def ensure_zh_headline(text: str, category: str = "") -> str:
     """Fast deterministic Chinese headline normalizer for raw direct-RSS / flash wire items."""
     del category
@@ -84,7 +122,28 @@ def ensure_zh_headline(text: str, category: str = "") -> str:
 _LEGACY_PLACEHOLDER_SUMMARY_RE = re.compile(r"该条为海外主流媒体英文原报|云端\s*AI\s*批次将自动")
 
 
-def _batch_translate_with_gemini(texts: List[str], target_lang: str = "zh") -> Optional[List[str]]:
+def _batch_translate_with_gemini(
+    texts: List[str],
+    target_lang: str = "zh",
+    *,
+    max_retries: int = 2,
+    backoff_base: float = 0.5,
+) -> Optional[List[str]]:
+    translated, _, _ = _translate_texts_with_pipeline(
+        texts, target_lang=target_lang, max_retries=max_retries, backoff_base=backoff_base
+    )
+    return translated
+
+
+def _translate_texts_with_pipeline(
+    texts: List[str],
+    target_lang: str = "zh",
+    *,
+    max_retries: int = 2,
+    backoff_base: float = 0.5,
+    chunk_size: int = 12,
+) -> Tuple[Optional[List[str]], int, Optional[str]]:
+    """Translate in bounded chunks with exponential backoff retries across Gemini keys/models."""
     key_names = (
         "KEY_GLOBAL", "KEY_1", "KEY_2", "KEY_3", "KEY_4", "KEY_5", "KEY_6", "KEY_7", "KEY_8",
         "GOOGLE_API_KEY", "KEY_TECH", "KEY_FINANCE", "KEY_GENERAL",
@@ -95,37 +154,65 @@ def _batch_translate_with_gemini(texts: List[str], target_lang: str = "zh") -> O
         if v and v not in keys:
             keys.append(v)
     if not keys or not texts:
-        return None
+        return None, 0, "no_api_key" if texts and not keys else None
     try:
         from google import genai
         from google.genai import types
+    except Exception as exc:
+        return None, 0, type(exc).__name__
 
-        lang_desc = "自然流畅、专业简洁的中文新闻表达" if target_lang == "zh" else "concise, journalistic English"
+    lang_desc = "自然流畅、专业简洁的中文新闻表达" if target_lang == "zh" else "concise, journalistic English"
+    all_out: List[str] = []
+    total_attempts = 0
+    last_error: Optional[str] = None
+
+    for start in range(0, len(texts), max(1, chunk_size)):
+        chunk = texts[start : start + max(1, chunk_size)]
         prompt = (
             f"将下面 JSON 数组中的每条新闻文本精准翻译为{lang_desc}，保留专有名词与数字，严禁增删条目。\n"
             f"只输出严格 JSON 字符串数组（长度必须与输入完全一致）：\n"
-            + json.dumps(texts, ensure_ascii=False)
+            + json.dumps(chunk, ensure_ascii=False)
         )
-        for api_key in keys[:5]:
-            client = genai.Client(api_key=api_key)
-            for model_name in ("gemini-4-hydrogen", "gemini-2.5-flash"):
-                try:
-                    resp = client.models.generate_content(
-                        model=model_name,
-                        contents=prompt,
-                        config=types.GenerateContentConfig(temperature=0.1, response_mime_type="application/json"),
-                    )
-                    parsed = json.loads(resp.text or "[]")
-                    if isinstance(parsed, list) and len(parsed) == len(texts):
-                        return [str(x).strip() for x in parsed]
-                except Exception:
-                    continue
-    except Exception:
-        return None
-    return None
+        chunk_result: Optional[List[str]] = None
+        for attempt in range(max_retries + 1):
+            total_attempts += 1
+            for api_key in keys[:5]:
+                client = genai.Client(api_key=api_key)
+                for model_name in ("gemini-4-hydrogen", "gemini-2.5-flash"):
+                    try:
+                        resp = client.models.generate_content(
+                            model=model_name,
+                            contents=prompt,
+                            config=types.GenerateContentConfig(temperature=0.1, response_mime_type="application/json"),
+                        )
+                        parsed = json.loads(resp.text or "[]")
+                        if isinstance(parsed, list) and len(parsed) == len(chunk):
+                            chunk_result = [str(x).strip() for x in parsed]
+                            break
+                    except Exception as exc:
+                        last_error = f"{type(exc).__name__}: {str(exc)[:80]}"
+                        continue
+                if chunk_result is not None:
+                    break
+            if chunk_result is not None:
+                break
+            if attempt < max_retries and backoff_base > 0:
+                time.sleep(min(4.0, backoff_base * (2 ** attempt)))
+        if chunk_result is None:
+            return None, total_attempts, last_error or "chunk_translation_failed"
+        all_out.extend(chunk_result)
+
+    return all_out, total_attempts, None
 
 
-def enrich_bilingual_events(events: List[Dict[str, Any]]) -> None:
+def enrich_bilingual_events(
+    events: List[Dict[str, Any]],
+    *,
+    overrides: Optional[Dict[str, Any]] = None,
+    max_retries: int = 2,
+    backoff_base: float = 0.5,
+) -> None:
+    manual_dict = overrides if overrides is not None else load_translation_overrides()
     en_titles_idx: List[int] = []
     en_titles_src: List[str] = []
     en_summaries_idx: List[int] = []
@@ -147,41 +234,134 @@ def enrich_bilingual_events(events: List[Dict[str, Any]]) -> None:
             if en_raw:
                 ev["summary_en"] = en_raw
 
+        ev.setdefault("translation_attempts", 0)
+        ev.setdefault("translation_error", None)
+
         if is_mostly_english(title):
             ev.setdefault("title_en", title)
-            if not ev.get("title_zh"):
+            manual_zh = _resolve_override(title, "title_zh", manual_dict)
+            if manual_zh:
+                ev["title_zh"] = manual_zh
+                ev["title"] = manual_zh
+                ev["translation_status"] = "manual"
+                ev["translation_error"] = None
+            elif not ev.get("title_zh"):
                 en_titles_idx.append(idx)
                 en_titles_src.append(title)
+            else:
+                ev.setdefault("translation_status", "translated")
         else:
             ev.setdefault("title_zh", title)
+            ev.setdefault("translation_status", "native_zh")
 
         if is_mostly_english(summary):
             ev.setdefault("summary_en", summary)
-            if not ev.get("summary_zh"):
+            manual_sz = _resolve_override(summary, "summary_zh", manual_dict) or _resolve_override(
+                str(ev.get("title_en") or title), "summary_zh", manual_dict
+            )
+            if manual_sz:
+                ev["summary_zh"] = manual_sz
+                if ev.get("fact_summary"):
+                    ev["fact_summary"] = manual_sz
+                if ev.get("summary"):
+                    ev["summary"] = manual_sz
+            elif not ev.get("summary_zh"):
                 en_summaries_idx.append(idx)
                 en_summaries_src.append(summary[:260])
         else:
             ev.setdefault("summary_zh", summary)
 
+    t_attempts = 0
     if en_titles_src:
-        translated = _batch_translate_with_gemini(en_titles_src, "zh")
+        translated, t_attempts, t_err = _translate_texts_with_pipeline(
+            en_titles_src, "zh", max_retries=max_retries, backoff_base=backoff_base
+        )
         for pos, ev_idx in enumerate(en_titles_idx):
-            zh_val = translated[pos] if translated else _translate_offline_fallback(en_titles_src[pos])
-            events[ev_idx]["title_zh"] = zh_val
-            events[ev_idx]["title"] = zh_val
+            src_title = en_titles_src[pos]
+            ev = events[ev_idx]
+            ev["translation_attempts"] = int(ev.get("translation_attempts") or 0) + max(t_attempts, 1)
+            if translated and translated[pos]:
+                zh_val = translated[pos]
+                ev["translation_status"] = "translated"
+                ev["translation_error"] = None
+            else:
+                exact_zh = _lookup_offline_phrase(src_title)
+                if exact_zh:
+                    zh_val = exact_zh
+                    ev["translation_status"] = "translated"
+                    ev["translation_error"] = None
+                else:
+                    zh_val = _translate_offline_fallback(src_title)
+                    ev["translation_status"] = "retry_fallback"
+                    ev["translation_error"] = t_err or "llm_unavailable_fallback"
+            ev["title_zh"] = zh_val
+            ev["title"] = zh_val
 
     if en_summaries_src:
-        translated_s = _batch_translate_with_gemini(en_summaries_src, "zh")
+        translated_s, s_attempts, s_err = _translate_texts_with_pipeline(
+            en_summaries_src, "zh", max_retries=max_retries, backoff_base=backoff_base
+        )
         for pos, ev_idx in enumerate(en_summaries_idx):
-            zh_s = translated_s[pos] if translated_s else _translate_offline_fallback(en_summaries_src[pos], is_summary=True)
-            events[ev_idx]["summary_zh"] = zh_s
-            if events[ev_idx].get("fact_summary"):
-                events[ev_idx]["fact_summary"] = zh_s
-            if events[ev_idx].get("summary"):
-                events[ev_idx]["summary"] = zh_s
+            ev = events[ev_idx]
+            src_sum = en_summaries_src[pos]
+            if t_attempts == 0:
+                ev["translation_attempts"] = int(ev.get("translation_attempts") or 0) + max(s_attempts, 1)
+            if translated_s and translated_s[pos]:
+                zh_s = translated_s[pos]
+            else:
+                exact_s = _lookup_offline_phrase(src_sum)
+                if exact_s:
+                    zh_s = exact_s
+                else:
+                    zh_s = _translate_offline_fallback(src_sum, is_summary=True)
+                    if ev.get("translation_status") == "native_zh":
+                        ev["translation_status"] = "retry_fallback"
+                        ev["translation_error"] = s_err or "llm_unavailable_fallback"
+            ev["summary_zh"] = zh_s
+            if ev.get("fact_summary"):
+                ev["fact_summary"] = zh_s
+            if ev.get("summary"):
+                ev["summary"] = zh_s
 
 
-def enrich_bilingual_topics(topics: List[Dict[str, Any]]) -> None:
+def retry_pending_translations(
+    events: List[Dict[str, Any]],
+    *,
+    overrides: Optional[Dict[str, Any]] = None,
+    max_retries: int = 2,
+    backoff_base: float = 0.5,
+) -> int:
+    """Retry any events left in `retry_fallback` using updated overrides or live LLM translation."""
+    pending: List[Dict[str, Any]] = []
+    for ev in events:
+        if ev.get("translation_status") != "retry_fallback":
+            continue
+        title_en = str(ev.get("title_en") or "").strip()
+        if title_en:
+            ev["title"] = title_en
+            ev["title_zh"] = ""
+        sum_en = str(ev.get("summary_en") or "").strip()
+        if sum_en and is_mostly_english(str(ev.get("fact_summary") or ev.get("summary") or sum_en)):
+            ev["summary_zh"] = ""
+            if "fact_summary" in ev:
+                ev["fact_summary"] = sum_en
+            if "summary" in ev:
+                ev["summary"] = sum_en
+        pending.append(ev)
+    if not pending:
+        return 0
+    enrich_bilingual_events(pending, overrides=overrides, max_retries=max_retries, backoff_base=backoff_base)
+    return sum(1 for ev in pending if ev.get("translation_status") in {"translated", "manual"})
+
+
+def enrich_bilingual_topics(
+    topics: List[Dict[str, Any]],
+    *,
+    overrides: Optional[Dict[str, Any]] = None,
+    max_retries: int = 2,
+    backoff_base: float = 0.5,
+) -> None:
+    manual_dict = overrides if overrides is not None else load_translation_overrides()
     en_idx: List[tuple[int, int]] = []
     en_src: List[str] = []
     for ti, tp in enumerate(topics):
@@ -189,10 +369,17 @@ def enrich_bilingual_topics(topics: List[Dict[str, Any]]) -> None:
             t = str(node.get("title") or "").strip()
             if is_mostly_english(t):
                 node["title_en"] = t
-                en_idx.append((ti, ni))
-                en_src.append(t)
+                manual_zh = _resolve_override(t, "title_zh", manual_dict)
+                if manual_zh:
+                    node["title_zh"] = manual_zh
+                    node["title"] = manual_zh
+                    node["translation_status"] = "manual"
+                else:
+                    en_idx.append((ti, ni))
+                    en_src.append(t)
             else:
                 node["title_zh"] = t
+                node.setdefault("translation_status", "native_zh")
             s = str(node.get("summary") or "").strip()
             if _LEGACY_PLACEHOLDER_SUMMARY_RE.search(s):
                 s = str(node.get("summary_en") or node.get("title_en") or node.get("title") or "")[:120]
@@ -200,13 +387,31 @@ def enrich_bilingual_topics(topics: List[Dict[str, Any]]) -> None:
                 node["summary_zh"] = s
             elif s and is_mostly_english(s):
                 node["summary_en"] = s
-                node["summary"] = _translate_offline_fallback(s, is_summary=True)
+                manual_s = _resolve_override(s, "summary_zh", manual_dict)
+                node["summary"] = manual_s or _translate_offline_fallback(s, is_summary=True)
                 node["summary_zh"] = node["summary"]
 
     if en_src:
-        translated = _batch_translate_with_gemini(en_src, "zh")
+        translated, attempts, err = _translate_texts_with_pipeline(
+            en_src, "zh", max_retries=max_retries, backoff_base=backoff_base
+        )
         for pos, (ti, ni) in enumerate(en_idx):
-            zh_t = translated[pos] if translated else _translate_offline_fallback(en_src[pos])
+            src_t = en_src[pos]
             node = topics[ti]["timeline"][ni]
+            node["translation_attempts"] = max(attempts, 1)
+            if translated and translated[pos]:
+                zh_t = translated[pos]
+                node["translation_status"] = "translated"
+                node["translation_error"] = None
+            else:
+                exact_t = _lookup_offline_phrase(src_t)
+                if exact_t:
+                    zh_t = exact_t
+                    node["translation_status"] = "translated"
+                    node["translation_error"] = None
+                else:
+                    zh_t = _translate_offline_fallback(src_t)
+                    node["translation_status"] = "retry_fallback"
+                    node["translation_error"] = err or "llm_unavailable_fallback"
             node["title_zh"] = zh_t
             node["title"] = zh_t
