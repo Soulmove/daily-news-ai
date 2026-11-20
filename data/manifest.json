@@ -1,6 +1,6 @@
 {
   "schema_version": "3.0",
-  "site_published_at": "2026-11-20T19:49:44+08:00",
+  "site_published_at": "2026-11-20T21:52:23+08:00",
   "smart": {
     "latest_batch_id": "smart-20261120-194938",
     "latest_path": "archives/smart/2026-11-20/19-49/",
@@ -79,73 +79,73 @@
     }
   },
   "raw": {
-    "latest_batch_id": "raw-20261120-111401",
-    "latest_path": "archives/raw/2026-11-20/11-14/",
-    "meta_path": "archives/raw/2026-11-20/11-14/meta.json",
-    "connectors_path": "archives/raw/2026-11-20/11-14/connectors.json",
-    "fetched_at": "2026-11-20T11:14:01+08:00",
-    "published_at": "2026-11-20T11:18:21+08:00",
+    "latest_batch_id": "raw-20261120-214820",
+    "latest_path": "archives/raw/2026-11-20/21-48/",
+    "meta_path": "archives/raw/2026-11-20/21-48/meta.json",
+    "connectors_path": "archives/raw/2026-11-20/21-48/connectors.json",
+    "fetched_at": "2026-11-20T21:48:20+08:00",
+    "published_at": "2026-11-20T21:52:23+08:00",
     "target_cadence_minutes": 30,
-    "schedule_source": "ai_compensation_schedule",
-    "status": "ok",
+    "schedule_source": "schedule",
+    "status": "partial",
     "summary": {
-      "configured_sources": 54,
-      "ok_sources": 54,
+      "configured_sources": 79,
+      "ok_sources": 77,
       "empty_sources": 0,
-      "error_sources": 0,
+      "error_sources": 2,
       "stale_sources": 0,
       "retired_sources": 5,
-      "total_raw_items": 1177,
-      "first_party_items": 14,
-      "healthy_connectors": 6,
-      "total_connectors": 8,
-      "deep_fetched_enriched": 5,
-      "deduped_events": 985
+      "total_raw_items": 1527,
+      "first_party_items": 17,
+      "healthy_connectors": 7,
+      "total_connectors": 10,
+      "deep_fetched_enriched": 10,
+      "deduped_events": 1224
     },
     "categories": {
       "finance": {
         "file": "data_finance.json",
-        "path": "archives/raw/2026-11-20/11-14/data_finance.json",
+        "path": "archives/raw/2026-11-20/21-48/data_finance.json",
+        "status": "partial",
+        "source_count": 19,
+        "ok_sources": 18,
+        "error_sources": 1,
+        "empty_sources": 0,
+        "stale_sources": 0,
+        "item_count": 375
+      },
+      "global": {
+        "file": "data_global.json",
+        "path": "archives/raw/2026-11-20/21-48/data_global.json",
         "status": "ok",
         "source_count": 13,
         "ok_sources": 13,
         "error_sources": 0,
         "empty_sources": 0,
         "stale_sources": 0,
-        "item_count": 273
-      },
-      "global": {
-        "file": "data_global.json",
-        "path": "archives/raw/2026-11-20/11-14/data_global.json",
-        "status": "ok",
-        "source_count": 11,
-        "ok_sources": 11,
-        "error_sources": 0,
-        "empty_sources": 0,
-        "stale_sources": 0,
-        "item_count": 224
+        "item_count": 267
       },
       "tech": {
         "file": "data_tech.json",
-        "path": "archives/raw/2026-11-20/11-14/data_tech.json",
-        "status": "ok",
-        "source_count": 15,
-        "ok_sources": 15,
-        "error_sources": 0,
+        "path": "archives/raw/2026-11-20/21-48/data_tech.json",
+        "status": "partial",
+        "source_count": 32,
+        "ok_sources": 31,
+        "error_sources": 1,
         "empty_sources": 0,
         "stale_sources": 0,
-        "item_count": 339
+        "item_count": 538
       },
       "general": {
         "file": "data_general.json",
-        "path": "archives/raw/2026-11-20/11-14/data_general.json",
+        "path": "archives/raw/2026-11-20/21-48/data_general.json",
         "status": "ok",
         "source_count": 15,
         "ok_sources": 15,
         "error_sources": 0,
         "empty_sources": 0,
         "stale_sources": 0,
-        "item_count": 341
+        "item_count": 347
       }
     }
   },
@@ -157,12 +157,12 @@
   },
   "connectors": {
     "latest_path": "data/connectors_latest.json",
-    "fetched_at": "2026-11-20T11:14:01+08:00",
+    "fetched_at": "2026-11-20T21:48:20+08:00",
     "summary": {
-      "total_connectors": 8,
-      "healthy_connectors": 6,
-      "total_first_party_items": 192,
-      "tech_tools_count": 10,
+      "total_connectors": 10,
+      "healthy_connectors": 7,
+      "total_first_party_items": 546,
+      "tech_tools_count": 13,
       "calendar_events_count": 5
     }
   },
