@@ -1,245 +1,330 @@
 {
   "schema_version": "5.0",
-  "generated_at": "2026-11-21T05:54:52+08:00",
-  "batch_id": "smart-20261121-055452",
+  "generated_at": "2026-11-21T11:21:23+08:00",
+  "batch_id": "smart-20261121-112123",
   "disclaimer": "量化区间为基于历史传导规律的事件推演参考，不构成任何具体个股买卖建议。",
   "disclaimer_en": "Impact ranges are event-driven analytical models for reference only, not financial advice.",
-  "total_mapped_events": 38,
+  "total_mapped_events": 36,
   "event_impacts": [
     {
-      "id": "imp_evt_273102b6452c",
-      "event_id": "evt_273102b6452c",
-      "rule_id": "us_china_apec_tariff",
-      "event_title": "特朗普结束亚洲行在白宫举行记者会：高度评价深圳峰会，并威胁对美企海外建数据中心征重税",
-      "event_title_en": "特朗普结束亚洲行在白宫举行记者会：高度评价深圳峰会，并威胁对美企海外建数据中心征重税",
-      "event_summary": "11月20日，美国总统特朗普结束亚洲之行返回华盛顿并在白宫举行新闻发布会。他评价在深圳举行的APEC领导人非正式会议是一场非常成功的经济会议，称中俄美元首三方会晤“史无前例”“意义非常重大”，会晤气氛极其热烈且三人关系融洽。同场讲话中，特朗普誓言阻止美国企业在海外建设数据中心，并威胁对此征收“巨额税款”（tremend",
+      "id": "imp_evt_255f0bc3d9a8",
+      "event_id": "evt_255f0bc3d9a8",
+      "rule_id": "ai_compute_ipo_chip",
+      "event_title": "甲骨文宣布已筹足履行OpenAI合同全部资金，预计2029财年自由现金流超300亿美元",
+      "event_title_en": "甲骨文宣布已筹足履行OpenAI合同全部资金，预计2029财年自由现金流超300亿美元",
+      "event_summary": "甲骨文（ORCL.N）表示在本月早些时候完成最后一轮融资后，已筹足履行与OpenAI基础设施合同所需的全部资金，成为本轮投资周期中首家落实全部所需资金的超大规模云服务商。公司称与OpenAI合建的阿比林园区已接近完工，下一座吉瓦级园区Shackelford已取得全部许可，英伟达Vera Rubin机架预计将在未来几周内",
       "category": "finance",
-      "published_at": "2026-11-21T05:02:07+08:00",
-      "source_name": "华尔街见闻 · 资讯",
-      "source_url": "https://wallstreetcn.com/articles/3786411",
-      "tag": "地缘外交 · 关税",
-      "tag_en": "Geopolitics & Tariffs",
-      "polarity": "divergent",
-      "intensity": 5,
-      "one_liner": "大国高层会晤重估未来关税清单与科技管制边界：释放缓和催化中概与出口链修复，摩擦升级则利好国产替代。",
-      "one_liner_en": "US-China summits reprice tariff schedules and export curbs, swinging Chinese ADRs, exporters, and domestic semiconductors.",
-      "bars": [
-        {
-          "market": "美股",
-          "sector": "中概互联 (KWEB)",
-          "sector_en": "China ADRs (KWEB)",
-          "pct_low": 2.5,
-          "pct_high": 6.0,
-          "direction": "positive",
-          "logic": "外交缓和信号最直接修复外资风险偏好"
-        },
-        {
-          "market": "A股",
-          "sector": "出口链 / 消费电子 / 航运",
-          "sector_en": "Exporters & Shipping",
-          "pct_low": 2.0,
-          "pct_high": 5.0,
-          "direction": "positive",
-          "logic": "对美敞口高的家电与航运对关税边际最敏感"
-        },
-        {
-          "market": "A股",
-          "sector": "国产半导体设备 / 信创",
-          "sector_en": "Domestic Semis",
-          "pct_low": 1.8,
-          "pct_high": 4.5,
-          "direction": "positive",
-          "logic": "无论管制松紧，自主可控均为中线确定主线"
-        },
-        {
-          "market": "美股",
-          "sector": "在华营收美股 (AAPL/TSLA)",
-          "sector_en": "China-Exposed US Tech",
-          "pct_low": 1.2,
-          "pct_high": 3.5,
-          "direction": "positive",
-          "logic": "供应链与亚太市场关税担忧阶段缓解"
-        }
-      ],
-      "if_then": [
-        {
-          "cond": "若落地关税豁免/联合公报",
-          "result": "KWEB 领涨 +4%~+7%，A股出口链 +3%~+6%",
-          "tone": "bullish"
-        },
-        {
-          "cond": "若加码芯片/关税限制",
-          "result": "出口链 -2%~-5%，国产半导体逆势 +2%~+5%",
-          "tone": "bearish"
-        }
-      ],
-      "milestones": [
-        {
-          "date": "已发生",
-          "status": "done",
-          "label": "元首抵深与多边经贸谈判启动"
-        },
-        {
-          "date": "当前",
-          "status": "current",
-          "label": "双边会晤与经贸框架磋商窗口"
-        },
-        {
-          "date": "下周",
-          "status": "upcoming",
-          "label": "追踪联合声明与具体关税清单细则"
-        }
-      ]
-    },
-    {
-      "id": "imp_evt_ae821e626af0",
-      "event_id": "evt_ae821e626af0",
-      "rule_id": "fed_rate_gold_usd",
-      "event_title": "全球避险情绪波及新兴市场与中概股，金龙中国指数本周累跌9.13%",
-      "event_title_en": "全球避险情绪波及新兴市场与中概股，金龙中国指数本周累跌9.13%",
-      "event_summary": "全球风险偏好恶化叠加美国加息预期持续施压，中概股与新兴市场资产普遍下挫。纳斯达克金龙中国指数周五收跌3.37%，报5018.26点，本周累计下跌9.13%，逼近2022年11月低位；热门中概股中阿特斯太阳能初步收跌25%，日月光半导体跌14.1%，小鹏跌14%，万国数据跌9.8%，理想跌7.7%，百度跌6.75%，网易",
-      "category": "finance",
-      "published_at": "2026-11-21T04:49:27+08:00",
+      "published_at": "2026-11-21T09:28:46+08:00",
       "source_name": "金十数据",
-      "source_url": "https://flash.jin10.com/detail/20261121050200915800",
+      "source_url": "https://flash.jin10.com/detail/20261121092846250800",
+      "tag": "AI 算力 · 芯片链",
+      "tag_en": "AI Compute & Semis",
+      "polarity": "bullish",
+      "intensity": 5,
+      "one_liner": "AI 巨头巨额融资与芯片路线迭代锁定全球算力资本开支，直接拉动上游光模块、服务器液冷与芯片封装订单。",
+      "one_liner_en": "Massive AI capital raises and silicon roadmaps anchor 2027 capex across optics, cooling, foundries, and GPU peers.",
+      "bars": [
+        {
+          "market": "A股",
+          "sector": "CPO 光模块 / 液冷 / PCB",
+          "sector_en": "A-Share Optics & Cooling",
+          "pct_low": 2.2,
+          "pct_high": 5.5,
+          "direction": "positive",
+          "logic": "海外云厂与大模型资本开支直接转化为订单"
+        },
+        {
+          "market": "A股",
+          "sector": "国产算力 / 封测与存储",
+          "sector_en": "Domestic Compute & Memory",
+          "pct_low": 1.5,
+          "pct_high": 4.0,
+          "direction": "positive",
+          "logic": "HBM 紧缺与算力国产化双轮驱动"
+        },
+        {
+          "market": "美股",
+          "sector": "算力芯片 (NVDA / AMD / TSM)",
+          "sector_en": "US AI Semis",
+          "pct_low": 1.8,
+          "pct_high": 4.8,
+          "direction": "positive",
+          "logic": "核心业绩与二线替代方案同步重估"
+        },
+        {
+          "market": "美股",
+          "sector": "云巨头与 AI 电力 (AMZN/VST)",
+          "sector_en": "Hyperscalers & Power",
+          "pct_low": 1.2,
+          "pct_high": 3.2,
+          "direction": "positive",
+          "logic": "大模型训练推理锁定云消耗与数据中心电力"
+        }
+      ],
+      "if_then": [
+        {
+          "cond": "若挂牌/财报超预期",
+          "result": "光模块与算力链共振 +2.5%~+5.5%",
+          "tone": "bullish"
+        },
+        {
+          "cond": "若高开抽血或出口收紧",
+          "result": "高位算力短线回吐 -2%~-4%",
+          "tone": "bearish"
+        }
+      ],
+      "milestones": [
+        {
+          "date": "已发生",
+          "status": "done",
+          "label": "头部芯片财报/大模型 IPO 定价超预期"
+        },
+        {
+          "date": "当前",
+          "status": "current",
+          "label": "二级市场重估 AI 算力与云厂商估值锚"
+        },
+        {
+          "date": "下月",
+          "status": "upcoming",
+          "label": "验证云巨头季度 Capex 指引与出货量"
+        }
+      ]
+    },
+    {
+      "id": "imp_evt_f65981efc4c1",
+      "event_id": "evt_f65981efc4c1",
+      "rule_id": "us_china_apec_tariff",
+      "event_title": "特朗普在白宫评深圳APEC及中美俄首次元首三方会晤，称达成三方和平宣言",
+      "event_title_en": "特朗普在白宫评深圳APEC及中美俄首次元首三方会晤，称达成三方和平宣言",
+      "event_summary": "美国总统特朗普11月20日在白宫新闻发布会上表示，日前在中国深圳举行的亚太经合组织（APEC）领导人非正式会议是一场非常成功的经济会议，中美俄三国领导人还举行了首次三方会晤。特朗普称此次会晤“史无前例”“意义非常重大”，会晤成果“是一份史无前例的三方和平宣言”，三国已正式达成“绝不能让核冲突发生”的共识。不过CNBC援",
+      "category": "finance",
+      "published_at": "2026-11-21T08:11:24+08:00",
+      "source_name": "金十数据",
+      "source_url": "https://flash.jin10.com/detail/20261121081124254800",
+      "tag": "地缘外交 · 关税",
+      "tag_en": "Geopolitics & Tariffs",
+      "polarity": "bullish",
+      "intensity": 5,
+      "one_liner": "大国高层会晤重估未来关税清单与科技管制边界：释放缓和催化中概与出口链修复，摩擦升级则利好国产替代。",
+      "one_liner_en": "US-China summits reprice tariff schedules and export curbs, swinging Chinese ADRs, exporters, and domestic semiconductors.",
+      "bars": [
+        {
+          "market": "美股",
+          "sector": "中概互联 (KWEB)",
+          "sector_en": "China ADRs (KWEB)",
+          "pct_low": 2.5,
+          "pct_high": 6.0,
+          "direction": "positive",
+          "logic": "外交缓和信号最直接修复外资风险偏好"
+        },
+        {
+          "market": "A股",
+          "sector": "出口链 / 消费电子 / 航运",
+          "sector_en": "Exporters & Shipping",
+          "pct_low": 2.0,
+          "pct_high": 5.0,
+          "direction": "positive",
+          "logic": "对美敞口高的家电与航运对关税边际最敏感"
+        },
+        {
+          "market": "A股",
+          "sector": "国产半导体设备 / 信创",
+          "sector_en": "Domestic Semis",
+          "pct_low": 1.8,
+          "pct_high": 4.5,
+          "direction": "positive",
+          "logic": "无论管制松紧，自主可控均为中线确定主线"
+        },
+        {
+          "market": "美股",
+          "sector": "在华营收美股 (AAPL/TSLA)",
+          "sector_en": "China-Exposed US Tech",
+          "pct_low": 1.2,
+          "pct_high": 3.5,
+          "direction": "positive",
+          "logic": "供应链与亚太市场关税担忧阶段缓解"
+        }
+      ],
+      "if_then": [
+        {
+          "cond": "若落地关税豁免/联合公报",
+          "result": "KWEB 领涨 +4%~+7%，A股出口链 +3%~+6%",
+          "tone": "bullish"
+        },
+        {
+          "cond": "若加码芯片/关税限制",
+          "result": "出口链 -2%~-5%，国产半导体逆势 +2%~+5%",
+          "tone": "bearish"
+        }
+      ],
+      "milestones": [
+        {
+          "date": "已发生",
+          "status": "done",
+          "label": "元首抵深与多边经贸谈判启动"
+        },
+        {
+          "date": "当前",
+          "status": "current",
+          "label": "双边会晤与经贸框架磋商窗口"
+        },
+        {
+          "date": "下周",
+          "status": "upcoming",
+          "label": "追踪联合声明与具体关税清单细则"
+        }
+      ]
+    },
+    {
+      "id": "imp_evt_774a9b356ecb",
+      "event_id": "evt_774a9b356ecb",
+      "rule_id": "fed_rate_gold_usd",
+      "event_title": "国际金价单周暴跌近9%创14个月新低，工商银行等四大行提示贵金属风险",
+      "event_title_en": "国际金价单周暴跌近9%创14个月新低，工商银行等四大行提示贵金属风险",
+      "event_summary": "11月20日纽约尾盘，现货黄金收跌2.40%报3538.49美元/盎司，盘中最低下探3502.98美元/盎司，本周累计下跌8.91%，创8个月最大单周跌幅及14个月新低，较1月29日历史高点5595.47美元累计回撤超37.39%。COMEX黄金期货周跌8.94%报3539美元/盎司；现货白银周五跌4.04%报41.1",
+      "category": "finance",
+      "published_at": "2026-11-21T06:06:22+08:00",
+      "source_name": "Google News A股/美股宏观异动",
+      "source_url": "https://news.google.com/rss/articles/CBMiaEFVX3lxTFBvaE41SmViWm9xUjNYd0VPYlQydW9BWTRCTTgxNzVFQkpLaXRSUlhRQV9pS2JvT3c5c1Y2VnBid1VuaHlxM2RtNmhHR01HamtONzNNZllOYS1hTFBLczJlVXJNQmU1U3dz?oc=5",
       "tag": "央行利率 · 流动性",
       "tag_en": "Fed & Liquidity",
+      "polarity": "bearish",
+      "intensity": 5,
+      "one_liner": "利率预期直接改写全球资产折现率：鹰派利空黄金与高估值成长股，利好美元与高股息银行；鸽派则反向修复。",
+      "one_liner_en": "Rate expectations reprice global discount rates: hawkish surprises weigh on gold and growth tech while supporting banks/USD.",
+      "bars": [
+        {
+          "market": "A股",
+          "sector": "黄金与有色金属",
+          "sector_en": "A-Share Gold & Metals",
+          "pct_low": -4.5,
+          "pct_high": -1.8,
+          "direction": "negative",
+          "logic": "实际利率与美元走强压制贵金属定价"
+        },
+        {
+          "market": "A股",
+          "sector": "银行 / 高股息红利",
+          "sector_en": "A-Share Banks & Dividend",
+          "pct_low": 0.8,
+          "pct_high": 2.4,
+          "direction": "positive",
+          "logic": "高利率与避险期资金偏好稳定分红"
+        },
+        {
+          "market": "美股",
+          "sector": "纳指成长科技 (QQQ)",
+          "sector_en": "Nasdaq Growth (QQQ)",
+          "pct_low": -4.0,
+          "pct_high": -1.5,
+          "direction": "negative",
+          "logic": "美债收益率抬升压缩远期估值倍数"
+        },
+        {
+          "market": "大宗",
+          "sector": "现货黄金 (GLD)",
+          "sector_en": "Spot Gold (GLD)",
+          "pct_low": -5.0,
+          "pct_high": -2.0,
+          "direction": "negative",
+          "logic": "无息资产短线遭遇美元虹吸"
+        }
+      ],
+      "if_then": [
+        {
+          "cond": "若释放降息/暂停加息",
+          "result": "纳指 & 黄金快速修复 +2%~+4.5%",
+          "tone": "bullish"
+        },
+        {
+          "cond": "若加息 +25bp 落地",
+          "result": "黄金有色承压 -2%~-4%，红利抗跌",
+          "tone": "bearish"
+        }
+      ],
+      "milestones": [
+        {
+          "date": "已发生",
+          "status": "done",
+          "label": "纪要/官员偏鹰表态引发利率重定价"
+        },
+        {
+          "date": "当前",
+          "status": "current",
+          "label": "市场博弈 12 月议息路径与美元 104 关口"
+        },
+        {
+          "date": "12-10",
+          "status": "upcoming",
+          "label": "FOMC 议息决议与最新点阵图落地验证"
+        }
+      ]
+    },
+    {
+      "id": "imp_evt_39d70073da86",
+      "event_id": "evt_39d70073da86",
+      "rule_id": "us_china_apec_tariff",
+      "event_title": "美伊柏林斡旋暂未破局，特朗普称无法接受伊朗所提协议",
+      "event_title_en": "美伊柏林斡旋暂未破局，特朗普称无法接受伊朗所提协议",
+      "event_summary": "据知情人士透露，美国总统特使威特科夫与特朗普女婿库什纳于11月19日在柏林与卡塔尔首相兼外交大臣穆罕默德及其特使举行会晤，就美伊停火、重启核谈判及防止战火重燃的斡旋工作进行讨论。特朗普20日在新闻发布会上表示，伊朗想要达成协议，但伊方提出的协议他无法接受。伊朗方面在部分仅含标题的快讯中传出正与调解人讨论建立信任措施及浓",
+      "category": "finance",
+      "published_at": "2026-11-21T05:49:18+08:00",
+      "source_name": "华尔街见闻 · 快讯",
+      "source_url": "https://wallstreetcn.com/livenews/3203601",
+      "tag": "地缘外交 · 关税",
+      "tag_en": "Geopolitics & Tariffs",
       "polarity": "divergent",
       "intensity": 5,
-      "one_liner": "利率预期直接改写全球资产折现率：鹰派利空黄金与高估值成长股，利好美元与高股息银行；鸽派则反向修复。",
-      "one_liner_en": "Rate expectations reprice global discount rates: hawkish surprises weigh on gold and growth tech while supporting banks/USD.",
+      "one_liner": "大国高层会晤重估未来关税清单与科技管制边界：释放缓和催化中概与出口链修复，摩擦升级则利好国产替代。",
+      "one_liner_en": "US-China summits reprice tariff schedules and export curbs, swinging Chinese ADRs, exporters, and domestic semiconductors.",
       "bars": [
         {
-          "market": "A股",
-          "sector": "黄金与有色金属",
-          "sector_en": "A-Share Gold & Metals",
-          "pct_low": -4.5,
-          "pct_high": -1.8,
-          "direction": "negative",
-          "logic": "实际利率与美元走强压制贵金属定价"
-        },
-        {
-          "market": "A股",
-          "sector": "银行 / 高股息红利",
-          "sector_en": "A-Share Banks & Dividend",
-          "pct_low": 0.8,
-          "pct_high": 2.4,
-          "direction": "positive",
-          "logic": "高利率与避险期资金偏好稳定分红"
-        },
-        {
           "market": "美股",
-          "sector": "纳指成长科技 (QQQ)",
-          "sector_en": "Nasdaq Growth (QQQ)",
-          "pct_low": -4.0,
-          "pct_high": -1.5,
-          "direction": "negative",
-          "logic": "美债收益率抬升压缩远期估值倍数"
-        },
-        {
-          "market": "大宗",
-          "sector": "现货黄金 (GLD)",
-          "sector_en": "Spot Gold (GLD)",
-          "pct_low": -5.0,
-          "pct_high": -2.0,
-          "direction": "negative",
-          "logic": "无息资产短线遭遇美元虹吸"
-        }
-      ],
-      "if_then": [
-        {
-          "cond": "若释放降息/暂停加息",
-          "result": "纳指 & 黄金快速修复 +2%~+4.5%",
-          "tone": "bullish"
-        },
-        {
-          "cond": "若加息 +25bp 落地",
-          "result": "黄金有色承压 -2%~-4%，红利抗跌",
-          "tone": "bearish"
-        }
-      ],
-      "milestones": [
-        {
-          "date": "已发生",
-          "status": "done",
-          "label": "纪要/官员偏鹰表态引发利率重定价"
-        },
-        {
-          "date": "当前",
-          "status": "current",
-          "label": "市场博弈 12 月议息路径与美元 104 关口"
-        },
-        {
-          "date": "12-10",
-          "status": "upcoming",
-          "label": "FOMC 议息决议与最新点阵图落地验证"
-        }
-      ]
-    },
-    {
-      "id": "imp_evt_33cc6b3ae679",
-      "event_id": "evt_33cc6b3ae679",
-      "rule_id": "ai_compute_ipo_chip",
-      "event_title": "AI抛售潮引爆美股“黑色星期五”，标普500与道指双双收于回调区间",
-      "event_title_en": "AI抛售潮引爆美股“黑色星期五”，标普500与道指双双收于回调区间",
-      "event_summary": "周五美股全线重挫，截至收盘，标普500指数跌265.44点（跌幅3.70%）报6910.39点，道琼斯工业平均指数跌949.73点（跌幅1.93%）报48147.33点，两大基准指数双双收于回调区间；纳斯达克综合指数收跌5.28%报22617.733点，纳斯达克100指数收跌5.61%报25028.982点，单日市值蒸",
-      "category": "finance",
-      "published_at": "2026-11-21T03:14:07+08:00",
-      "source_name": "华尔街见闻 · 快讯",
-      "source_url": "https://wallstreetcn.com/livenews/3203552",
-      "tag": "AI 算力 · 芯片链",
-      "tag_en": "AI Compute & Semis",
-      "polarity": "bullish",
-      "intensity": 5,
-      "one_liner": "AI 巨头巨额融资与芯片路线迭代锁定全球算力资本开支，直接拉动上游光模块、服务器液冷与芯片封装订单。",
-      "one_liner_en": "Massive AI capital raises and silicon roadmaps anchor 2027 capex across optics, cooling, foundries, and GPU peers.",
-      "bars": [
-        {
-          "market": "A股",
-          "sector": "CPO 光模块 / 液冷 / PCB",
-          "sector_en": "A-Share Optics & Cooling",
-          "pct_low": 2.2,
-          "pct_high": 5.5,
+          "sector": "中概互联 (KWEB)",
+          "sector_en": "China ADRs (KWEB)",
+          "pct_low": 2.5,
+          "pct_high": 6.0,
           "direction": "positive",
-          "logic": "海外云厂与大模型资本开支直接转化为订单"
+          "logic": "外交缓和信号最直接修复外资风险偏好"
         },
         {
           "market": "A股",
-          "sector": "国产算力 / 封测与存储",
-          "sector_en": "Domestic Compute & Memory",
-          "pct_low": 1.5,
-          "pct_high": 4.0,
+          "sector": "出口链 / 消费电子 / 航运",
+          "sector_en": "Exporters & Shipping",
+          "pct_low": 2.0,
+          "pct_high": 5.0,
           "direction": "positive",
-          "logic": "HBM 紧缺与算力国产化双轮驱动"
+          "logic": "对美敞口高的家电与航运对关税边际最敏感"
         },
         {
-          "market": "美股",
-          "sector": "算力芯片 (NVDA / AMD / TSM)",
-          "sector_en": "US AI Semis",
+          "market": "A股",
+          "sector": "国产半导体设备 / 信创",
+          "sector_en": "Domestic Semis",
           "pct_low": 1.8,
-          "pct_high": 4.8,
+          "pct_high": 4.5,
           "direction": "positive",
-          "logic": "核心业绩与二线替代方案同步重估"
+          "logic": "无论管制松紧，自主可控均为中线确定主线"
         },
         {
           "market": "美股",
-          "sector": "云巨头与 AI 电力 (AMZN/VST)",
-          "sector_en": "Hyperscalers & Power",
+          "sector": "在华营收美股 (AAPL/TSLA)",
+          "sector_en": "China-Exposed US Tech",
           "pct_low": 1.2,
-          "pct_high": 3.2,
+          "pct_high": 3.5,
           "direction": "positive",
-          "logic": "大模型训练推理锁定云消耗与数据中心电力"
+          "logic": "供应链与亚太市场关税担忧阶段缓解"
         }
       ],
       "if_then": [
         {
-          "cond": "若挂牌/财报超预期",
-          "result": "光模块与算力链共振 +2.5%~+5.5%",
+          "cond": "若落地关税豁免/联合公报",
+          "result": "KWEB 领涨 +4%~+7%，A股出口链 +3%~+6%",
           "tone": "bullish"
         },
         {
-          "cond": "若高开抽血或出口收紧",
-          "result": "高位算力短线回吐 -2%~-4%",
+          "cond": "若加码芯片/关税限制",
+          "result": "出口链 -2%~-5%，国产半导体逆势 +2%~+5%",
           "tone": "bearish"
         }
       ],
@@ -247,84 +332,84 @@
         {
           "date": "已发生",
           "status": "done",
-          "label": "头部芯片财报/大模型 IPO 定价超预期"
+          "label": "元首抵深与多边经贸谈判启动"
         },
         {
           "date": "当前",
           "status": "current",
-          "label": "二级市场重估 AI 算力与云厂商估值锚"
+          "label": "双边会晤与经贸框架磋商窗口"
         },
         {
-          "date": "下月",
+          "date": "下周",
           "status": "upcoming",
-          "label": "验证云巨头季度 Capex 指引与出货量"
+          "label": "追踪联合声明与具体关税清单细则"
         }
       ]
     },
     {
-      "id": "imp_evt_5f83aaa3ec01",
-      "event_id": "evt_5f83aaa3ec01",
-      "rule_id": "ai_compute_ipo_chip",
-      "event_title": "英伟达单日重挫14%并创2008年来最长周连跌，前CEO黄仁勋将赴美参议院作证",
-      "event_title_en": "英伟达单日重挫14%并创2008年来最长周连跌，前CEO黄仁勋将赴美参议院作证",
-      "event_summary": "英伟达（NVDA）周五收盘暴跌14.01%，录得2008年金融危机以来最长的周度连跌纪录，总市值滑落至苹果与微软之后位列全球第三；另有仅含标题的快讯称其本周累计重挫23%（创2008年10月以来最大单周跌幅）。公司治理与监管方面，美国参议院银行委员会主席蒂姆·斯科特表示，英伟达前CEO黄仁勋将在参议院银行委员会公开听证",
+      "id": "imp_evt_2b368a18abc3",
+      "event_id": "evt_2b368a18abc3",
+      "rule_id": "us_china_apec_tariff",
+      "event_title": "报道称：特朗普呼吁黄仁勋道歉后重返英伟达，并威胁对海外建数据中心美企征重税",
+      "event_title_en": "报道称：特朗普呼吁黄仁勋道歉后重返英伟达，并威胁对海外建数据中心美企征重税",
+      "event_summary": "【据关联报道/尚未见官方披露确认】11月20日，特朗普在白宫新闻发布会上公开呼吁深陷丑闻的英伟达前任CEO黄仁勋进行“重大道歉”并重返原职，并表示自己此前与中国领导人谈及了黄仁勋。但美国财长贝森特向CNBC表示，他在中国参加的会谈中并未提及黄仁勋，且英伟达芯片出口政策没有改变。此外，特朗普还在白宫表态誓言阻止美国公司在",
       "category": "finance",
-      "published_at": "2026-11-21T02:43:31+08:00",
-      "source_name": "财联社 · 电报",
-      "source_url": "https://www.cls.cn/detail/2540690",
-      "tag": "AI 算力 · 芯片链",
-      "tag_en": "AI Compute & Semis",
-      "polarity": "bearish",
+      "published_at": "2026-11-21T05:04:26+08:00",
+      "source_name": "CNBC Top News",
+      "source_url": "https://www.cnbc.com/2026/11/20/treasury-secretary-scott-bessent.html",
+      "tag": "地缘外交 · 关税",
+      "tag_en": "Geopolitics & Tariffs",
+      "polarity": "divergent",
       "intensity": 5,
-      "one_liner": "AI 巨头巨额融资与芯片路线迭代锁定全球算力资本开支，直接拉动上游光模块、服务器液冷与芯片封装订单。",
-      "one_liner_en": "Massive AI capital raises and silicon roadmaps anchor 2027 capex across optics, cooling, foundries, and GPU peers.",
+      "one_liner": "大国高层会晤重估未来关税清单与科技管制边界：释放缓和催化中概与出口链修复，摩擦升级则利好国产替代。",
+      "one_liner_en": "US-China summits reprice tariff schedules and export curbs, swinging Chinese ADRs, exporters, and domestic semiconductors.",
       "bars": [
         {
-          "market": "A股",
-          "sector": "CPO 光模块 / 液冷 / PCB",
-          "sector_en": "A-Share Optics & Cooling",
-          "pct_low": 2.2,
-          "pct_high": 5.5,
-          "direction": "positive",
-          "logic": "海外云厂与大模型资本开支直接转化为订单"
-        },
-        {
-          "market": "A股",
-          "sector": "国产算力 / 封测与存储",
-          "sector_en": "Domestic Compute & Memory",
-          "pct_low": 1.5,
-          "pct_high": 4.0,
-          "direction": "positive",
-          "logic": "HBM 紧缺与算力国产化双轮驱动"
-        },
-        {
           "market": "美股",
-          "sector": "算力芯片 (NVDA / AMD / TSM)",
-          "sector_en": "US AI Semis",
+          "sector": "中概互联 (KWEB)",
+          "sector_en": "China ADRs (KWEB)",
+          "pct_low": 2.5,
+          "pct_high": 6.0,
+          "direction": "positive",
+          "logic": "外交缓和信号最直接修复外资风险偏好"
+        },
+        {
+          "market": "A股",
+          "sector": "出口链 / 消费电子 / 航运",
+          "sector_en": "Exporters & Shipping",
+          "pct_low": 2.0,
+          "pct_high": 5.0,
+          "direction": "positive",
+          "logic": "对美敞口高的家电与航运对关税边际最敏感"
+        },
+        {
+          "market": "A股",
+          "sector": "国产半导体设备 / 信创",
+          "sector_en": "Domestic Semis",
           "pct_low": 1.8,
-          "pct_high": 4.8,
+          "pct_high": 4.5,
           "direction": "positive",
-          "logic": "核心业绩与二线替代方案同步重估"
+          "logic": "无论管制松紧，自主可控均为中线确定主线"
         },
         {
           "market": "美股",
-          "sector": "云巨头与 AI 电力 (AMZN/VST)",
-          "sector_en": "Hyperscalers & Power",
+          "sector": "在华营收美股 (AAPL/TSLA)",
+          "sector_en": "China-Exposed US Tech",
           "pct_low": 1.2,
-          "pct_high": 3.2,
+          "pct_high": 3.5,
           "direction": "positive",
-          "logic": "大模型训练推理锁定云消耗与数据中心电力"
+          "logic": "供应链与亚太市场关税担忧阶段缓解"
         }
       ],
       "if_then": [
         {
-          "cond": "若挂牌/财报超预期",
-          "result": "光模块与算力链共振 +2.5%~+5.5%",
+          "cond": "若落地关税豁免/联合公报",
+          "result": "KWEB 领涨 +4%~+7%，A股出口链 +3%~+6%",
           "tone": "bullish"
         },
         {
-          "cond": "若高开抽血或出口收紧",
-          "result": "高位算力短线回吐 -2%~-4%",
+          "cond": "若加码芯片/关税限制",
+          "result": "出口链 -2%~-5%，国产半导体逆势 +2%~+5%",
           "tone": "bearish"
         }
       ],
@@ -332,31 +417,31 @@
         {
           "date": "已发生",
           "status": "done",
-          "label": "头部芯片财报/大模型 IPO 定价超预期"
+          "label": "元首抵深与多边经贸谈判启动"
         },
         {
           "date": "当前",
           "status": "current",
-          "label": "二级市场重估 AI 算力与云厂商估值锚"
+          "label": "双边会晤与经贸框架磋商窗口"
         },
         {
-          "date": "下月",
+          "date": "下周",
           "status": "upcoming",
-          "label": "验证云巨头季度 Capex 指引与出货量"
+          "label": "追踪联合声明与具体关税清单细则"
         }
       ]
     },
     {
-      "id": "imp_evt_c09223f839fd",
-      "event_id": "evt_c09223f839fd",
+      "id": "imp_evt_add2ce522061",
+      "event_id": "evt_add2ce522061",
       "rule_id": "fed_rate_gold_usd",
-      "event_title": "美元走强与加息预期压顶，国际现货黄金跌破3600美元创逾一年新低",
-      "event_title_en": "美元走强与加息预期压顶，国际现货黄金跌破3600美元创逾一年新低",
-      "event_summary": "11月20日亚洲交易时段，伦敦现货黄金跌破3600美元/盎司关口，盘中最深下探至3514美元附近，创下14个月（一年多）以来的新低；国内上海金盘中最低下探至755元/克，上期所沪金夜盘收跌2.77%，沪银夜盘收跌6.60%。外汇市场上，尽管周五纽约尾盘ICE美元指数微跌0.08%报103.808点，但本周仍累涨0.39",
+      "event_title": "美联储时隔三年多重启加息25基点，官员密集“放鹰”与美债避险上涨并行",
+      "event_title_en": "美联储时隔三年多重启加息25基点，官员密集“放鹰”与美债避险上涨并行",
+      "event_summary": "报道显示美联储时隔三年多重启加息25个基点，内部预计年内还会升息一次。多位美联储官员近期密集释放鹰派信号：理事库克为10月异见投票辩护，称通胀压力紧迫、利率需更快上调；费城联储主席保尔森表示不排除连续加息且强调“有节奏”，利率必须更高；戴利亦强调审慎紧缩的重要性。不过受股市暴跌引发的避险情绪推动，美债连续五个交易日走强",
       "category": "finance",
-      "published_at": "2026-11-20T21:37:00+08:00",
-      "source_name": "华尔街见闻 A股快讯",
-      "source_url": "https://wallstreetcn.com/livenews/3203570",
+      "published_at": "2026-11-21T02:13:01+08:00",
+      "source_name": "Google News A股/美股宏观异动",
+      "source_url": "https://news.google.com/rss/articles/CBMiUEFVX3lxTE5aMHhGWV9SRHR1TWdVbVFPVC1FcTFSX25ubFdvTmtySm9TZVRDSWhPUU5DbVlhRHBiU2hpLVhKdVFaRjFXTU1FREJpR2tramdL?oc=5",
       "tag": "央行利率 · 流动性",
       "tag_en": "Fed & Liquidity",
       "polarity": "bearish",
@@ -432,271 +517,186 @@
       ]
     },
     {
-      "id": "imp_evt_3210971abbc0",
-      "event_id": "evt_3210971abbc0",
-      "rule_id": "us_china_apec_tariff",
-      "event_title": "报道称：习近平与特朗普深圳会晤就军事AI安全达成共识，中美两军在上海举行海上军事安全磋商",
-      "event_title_en": "报道称：习近平与特朗普深圳会晤就军事AI安全达成共识，中美两军在上海举行海上军事安全磋商",
-      "event_summary": "【据关联报道/尚未见官方披露确认】美国财政部长贝森特表示，特朗普与习近平在深圳会晤中同意军事人工智能决策应保留人工介入，特朗普亦表示双方就制定AI安全领域共同措施达成一致。在台湾问题上，习近平敦促美方在台湾问题上“做正确的事”。与此同时，中美两军于11月18日至20日在上海平行举行2026年度中美海上军事安全磋商机制第",
+      "id": "imp_evt_71844e1b663e",
+      "event_id": "evt_71844e1b663e",
+      "rule_id": "ai_compute_ipo_chip",
+      "event_title": "美股AI抛售潮扩大：纳指抹去年内涨幅，英伟达单日暴跌14%",
+      "event_title_en": "美股AI抛售潮扩大：纳指抹去年内涨幅，英伟达单日暴跌14%",
+      "event_summary": "11月20日（周五）美股全线重挫，纳指收跌约5.3%并抹去2026年全部涨幅，标普500指数与道指收盘步入回调区间；美股七巨头指数跌5.01%，本周累跌10.28%。英伟达收盘暴跌14%，创2025年1月以来最大单日跌幅，本周累跌23%（创2008年10月以来最大周跌幅），市值跌至全球第四。新云厂商Nebius与IRE",
+      "category": "finance",
+      "published_at": "2026-11-20T18:08:25+08:00",
+      "source_name": "Google News A股/美股宏观异动",
+      "source_url": "https://news.google.com/rss/articles/CBMiYEFVX3lxTE4yQk53NnJqbTJfOVVqQ3lma1h0WGFYUHptaHMyRERlVHlhVl9NWW9pZHFRU1gxUjJWUG1RaXREczJnYi1uLXhZdjZiRWo5YmYyN1I1bTJpX0JaMXB5MmpzZA?oc=5",
+      "tag": "AI 算力 · 芯片链",
+      "tag_en": "AI Compute & Semis",
+      "polarity": "bearish",
+      "intensity": 5,
+      "one_liner": "AI 巨头巨额融资与芯片路线迭代锁定全球算力资本开支，直接拉动上游光模块、服务器液冷与芯片封装订单。",
+      "one_liner_en": "Massive AI capital raises and silicon roadmaps anchor 2027 capex across optics, cooling, foundries, and GPU peers.",
+      "bars": [
+        {
+          "market": "A股",
+          "sector": "CPO 光模块 / 液冷 / PCB",
+          "sector_en": "A-Share Optics & Cooling",
+          "pct_low": 2.2,
+          "pct_high": 5.5,
+          "direction": "positive",
+          "logic": "海外云厂与大模型资本开支直接转化为订单"
+        },
+        {
+          "market": "A股",
+          "sector": "国产算力 / 封测与存储",
+          "sector_en": "Domestic Compute & Memory",
+          "pct_low": 1.5,
+          "pct_high": 4.0,
+          "direction": "positive",
+          "logic": "HBM 紧缺与算力国产化双轮驱动"
+        },
+        {
+          "market": "美股",
+          "sector": "算力芯片 (NVDA / AMD / TSM)",
+          "sector_en": "US AI Semis",
+          "pct_low": 1.8,
+          "pct_high": 4.8,
+          "direction": "positive",
+          "logic": "核心业绩与二线替代方案同步重估"
+        },
+        {
+          "market": "美股",
+          "sector": "云巨头与 AI 电力 (AMZN/VST)",
+          "sector_en": "Hyperscalers & Power",
+          "pct_low": 1.2,
+          "pct_high": 3.2,
+          "direction": "positive",
+          "logic": "大模型训练推理锁定云消耗与数据中心电力"
+        }
+      ],
+      "if_then": [
+        {
+          "cond": "若挂牌/财报超预期",
+          "result": "光模块与算力链共振 +2.5%~+5.5%",
+          "tone": "bullish"
+        },
+        {
+          "cond": "若高开抽血或出口收紧",
+          "result": "高位算力短线回吐 -2%~-4%",
+          "tone": "bearish"
+        }
+      ],
+      "milestones": [
+        {
+          "date": "已发生",
+          "status": "done",
+          "label": "头部芯片财报/大模型 IPO 定价超预期"
+        },
+        {
+          "date": "当前",
+          "status": "current",
+          "label": "二级市场重估 AI 算力与云厂商估值锚"
+        },
+        {
+          "date": "下月",
+          "status": "upcoming",
+          "label": "验证云巨头季度 Capex 指引与出货量"
+        }
+      ]
+    },
+    {
+      "id": "imp_evt_e4e66035d504",
+      "event_id": "evt_e4e66035d504",
+      "rule_id": "ai_compute_ipo_chip",
+      "event_title": "Anthropic完成935亿美元创纪录IPO后次日下挫8.5%，盘中逼近破发",
+      "event_title_en": "Anthropic完成935亿美元创纪录IPO后次日下挫8.5%，盘中逼近破发",
+      "event_summary": "AI公司Anthropic通过行使超额配售权（绿鞋机制），以每股83美元发行总计11.27亿股，募资总额达935亿美元，创下历史最大规模IPO。11月19日上市首日该股收涨17.07%报97.17美元，盘中最高触及115.10美元；但11月20日（上市次日）股价收跌8.5%报88.91美元，盘中一度跌至83.05美元，",
+      "category": "finance",
+      "published_at": "2026-11-20T12:51:28+08:00",
+      "source_name": "CNBC Top News",
+      "source_url": "https://www.cnbc.com/2026/11/20/anthropic-defies-odds-holding-ipo-despite-massively-disruptive-market.html",
+      "tag": "AI 算力 · 芯片链",
+      "tag_en": "AI Compute & Semis",
+      "polarity": "bullish",
+      "intensity": 5,
+      "one_liner": "AI 巨头巨额融资与芯片路线迭代锁定全球算力资本开支，直接拉动上游光模块、服务器液冷与芯片封装订单。",
+      "one_liner_en": "Massive AI capital raises and silicon roadmaps anchor 2027 capex across optics, cooling, foundries, and GPU peers.",
+      "bars": [
+        {
+          "market": "A股",
+          "sector": "CPO 光模块 / 液冷 / PCB",
+          "sector_en": "A-Share Optics & Cooling",
+          "pct_low": 2.2,
+          "pct_high": 5.5,
+          "direction": "positive",
+          "logic": "海外云厂与大模型资本开支直接转化为订单"
+        },
+        {
+          "market": "A股",
+          "sector": "国产算力 / 封测与存储",
+          "sector_en": "Domestic Compute & Memory",
+          "pct_low": 1.5,
+          "pct_high": 4.0,
+          "direction": "positive",
+          "logic": "HBM 紧缺与算力国产化双轮驱动"
+        },
+        {
+          "market": "美股",
+          "sector": "算力芯片 (NVDA / AMD / TSM)",
+          "sector_en": "US AI Semis",
+          "pct_low": 1.8,
+          "pct_high": 4.8,
+          "direction": "positive",
+          "logic": "核心业绩与二线替代方案同步重估"
+        },
+        {
+          "market": "美股",
+          "sector": "云巨头与 AI 电力 (AMZN/VST)",
+          "sector_en": "Hyperscalers & Power",
+          "pct_low": 1.2,
+          "pct_high": 3.2,
+          "direction": "positive",
+          "logic": "大模型训练推理锁定云消耗与数据中心电力"
+        }
+      ],
+      "if_then": [
+        {
+          "cond": "若挂牌/财报超预期",
+          "result": "光模块与算力链共振 +2.5%~+5.5%",
+          "tone": "bullish"
+        },
+        {
+          "cond": "若高开抽血或出口收紧",
+          "result": "高位算力短线回吐 -2%~-4%",
+          "tone": "bearish"
+        }
+      ],
+      "milestones": [
+        {
+          "date": "已发生",
+          "status": "done",
+          "label": "头部芯片财报/大模型 IPO 定价超预期"
+        },
+        {
+          "date": "当前",
+          "status": "current",
+          "label": "二级市场重估 AI 算力与云厂商估值锚"
+        },
+        {
+          "date": "下月",
+          "status": "upcoming",
+          "label": "验证云巨头季度 Capex 指引与出货量"
+        }
+      ]
+    },
+    {
+      "id": "imp_evt_e854283f8012",
+      "event_id": "evt_e854283f8012",
+      "rule_id": "fed_rate_gold_usd",
+      "event_title": "美股AI板块抛售潮重挫纳指超5%，Anthropic上市次日抹去涨幅、美债走强且金价大跌",
+      "event_title_en": "美股AI板块抛售潮重挫纳指超5%，Anthropic上市次日抹去涨幅、美债走强且金价大跌",
+      "event_summary": "AI初创企业Anthropic在完成超1000亿美元IPO后，11月20日上市第二个交易日股价大幅下挫，几乎抹去首日全部涨幅。受投资者质疑AI巨额资本开支回报影响，科技股遭遇猛烈抛售：纳斯达克指数暴跌超5%并抹去2026年全部涨幅，英伟达股价暴跌14%，标普500指数与道琼斯工业平均指数均跌入回调区间，资金转向价值股。",
       "category": "global",
-      "published_at": "2026-11-20T18:55:02+08:00",
-      "source_name": "联合早报",
-      "source_url": "https://www.zaochenbao.com/news/china/202611/2085916.html",
-      "tag": "地缘外交 · 关税",
-      "tag_en": "Geopolitics & Tariffs",
-      "polarity": "bullish",
-      "intensity": 5,
-      "one_liner": "大国高层会晤重估未来关税清单与科技管制边界：释放缓和催化中概与出口链修复，摩擦升级则利好国产替代。",
-      "one_liner_en": "US-China summits reprice tariff schedules and export curbs, swinging Chinese ADRs, exporters, and domestic semiconductors.",
-      "bars": [
-        {
-          "market": "美股",
-          "sector": "中概互联 (KWEB)",
-          "sector_en": "China ADRs (KWEB)",
-          "pct_low": 2.5,
-          "pct_high": 6.0,
-          "direction": "positive",
-          "logic": "外交缓和信号最直接修复外资风险偏好"
-        },
-        {
-          "market": "A股",
-          "sector": "出口链 / 消费电子 / 航运",
-          "sector_en": "Exporters & Shipping",
-          "pct_low": 2.0,
-          "pct_high": 5.0,
-          "direction": "positive",
-          "logic": "对美敞口高的家电与航运对关税边际最敏感"
-        },
-        {
-          "market": "A股",
-          "sector": "国产半导体设备 / 信创",
-          "sector_en": "Domestic Semis",
-          "pct_low": 1.8,
-          "pct_high": 4.5,
-          "direction": "positive",
-          "logic": "无论管制松紧，自主可控均为中线确定主线"
-        },
-        {
-          "market": "美股",
-          "sector": "在华营收美股 (AAPL/TSLA)",
-          "sector_en": "China-Exposed US Tech",
-          "pct_low": 1.2,
-          "pct_high": 3.5,
-          "direction": "positive",
-          "logic": "供应链与亚太市场关税担忧阶段缓解"
-        }
-      ],
-      "if_then": [
-        {
-          "cond": "若落地关税豁免/联合公报",
-          "result": "KWEB 领涨 +4%~+7%，A股出口链 +3%~+6%",
-          "tone": "bullish"
-        },
-        {
-          "cond": "若加码芯片/关税限制",
-          "result": "出口链 -2%~-5%，国产半导体逆势 +2%~+5%",
-          "tone": "bearish"
-        }
-      ],
-      "milestones": [
-        {
-          "date": "已发生",
-          "status": "done",
-          "label": "元首抵深与多边经贸谈判启动"
-        },
-        {
-          "date": "当前",
-          "status": "current",
-          "label": "双边会晤与经贸框架磋商窗口"
-        },
-        {
-          "date": "下周",
-          "status": "upcoming",
-          "label": "追踪联合声明与具体关税清单细则"
-        }
-      ]
-    },
-    {
-      "id": "imp_evt_2211dad4fca7",
-      "event_id": "evt_2211dad4fca7",
-      "rule_id": "ai_compute_ipo_chip",
-      "event_title": "Anthropic完成创纪录935亿美元IPO，上市次日随大盘收跌超8%",
-      "event_title_en": "Anthropic完成创纪录935亿美元IPO，上市次日随大盘收跌超8%",
-      "event_summary": "前沿AI实验室Anthropic在创纪录的IPO中以每股83美元发行总计11.27亿股，在承销商行使超额配售权后通过IPO筹集935亿美元，轻松超过SpaceX上市时的862亿美元；同时公司通过私募配售筹集260亿美元，使总融资额达到1195亿美元。然而在整体科技股抛售潮中，Anthropic未能提振市场对AI板块的信",
-      "category": "finance",
-      "published_at": "2026-11-20T08:00:00+08:00",
-      "source_name": "财联社 · 电报",
-      "source_url": "https://www.cls.cn/detail/2540683",
-      "tag": "AI 算力 · 芯片链",
-      "tag_en": "AI Compute & Semis",
-      "polarity": "bullish",
-      "intensity": 5,
-      "one_liner": "AI 巨头巨额融资与芯片路线迭代锁定全球算力资本开支，直接拉动上游光模块、服务器液冷与芯片封装订单。",
-      "one_liner_en": "Massive AI capital raises and silicon roadmaps anchor 2027 capex across optics, cooling, foundries, and GPU peers.",
-      "bars": [
-        {
-          "market": "A股",
-          "sector": "CPO 光模块 / 液冷 / PCB",
-          "sector_en": "A-Share Optics & Cooling",
-          "pct_low": 2.2,
-          "pct_high": 5.5,
-          "direction": "positive",
-          "logic": "海外云厂与大模型资本开支直接转化为订单"
-        },
-        {
-          "market": "A股",
-          "sector": "国产算力 / 封测与存储",
-          "sector_en": "Domestic Compute & Memory",
-          "pct_low": 1.5,
-          "pct_high": 4.0,
-          "direction": "positive",
-          "logic": "HBM 紧缺与算力国产化双轮驱动"
-        },
-        {
-          "market": "美股",
-          "sector": "算力芯片 (NVDA / AMD / TSM)",
-          "sector_en": "US AI Semis",
-          "pct_low": 1.8,
-          "pct_high": 4.8,
-          "direction": "positive",
-          "logic": "核心业绩与二线替代方案同步重估"
-        },
-        {
-          "market": "美股",
-          "sector": "云巨头与 AI 电力 (AMZN/VST)",
-          "sector_en": "Hyperscalers & Power",
-          "pct_low": 1.2,
-          "pct_high": 3.2,
-          "direction": "positive",
-          "logic": "大模型训练推理锁定云消耗与数据中心电力"
-        }
-      ],
-      "if_then": [
-        {
-          "cond": "若挂牌/财报超预期",
-          "result": "光模块与算力链共振 +2.5%~+5.5%",
-          "tone": "bullish"
-        },
-        {
-          "cond": "若高开抽血或出口收紧",
-          "result": "高位算力短线回吐 -2%~-4%",
-          "tone": "bearish"
-        }
-      ],
-      "milestones": [
-        {
-          "date": "已发生",
-          "status": "done",
-          "label": "头部芯片财报/大模型 IPO 定价超预期"
-        },
-        {
-          "date": "当前",
-          "status": "current",
-          "label": "二级市场重估 AI 算力与云厂商估值锚"
-        },
-        {
-          "date": "下月",
-          "status": "upcoming",
-          "label": "验证云巨头季度 Capex 指引与出货量"
-        }
-      ]
-    },
-    {
-      "id": "imp_evt_8ea5fc66949f",
-      "event_id": "evt_8ea5fc66949f",
-      "rule_id": "us_china_apec_tariff",
-      "event_title": "习近平、特朗普与普京在深圳APEC举行首次三方会晤，达成反核冲突共识",
-      "event_title_en": "习近平、特朗普与普京在深圳APEC举行首次三方会晤，达成反核冲突共识",
-      "event_summary": "11月19日在中国深圳举行的亚太经合组织（APEC）领导人非正式会议期间，中国国家主席习近平、美国总统特朗普和俄罗斯总统普京举行了首次三方会晤，围绕维护世界和平、促进大国关系战略稳定主题深入沟通，并在峰会最后一天同框握手（报道提及高市被保持在一段距离之外）。美方会后披露，三国正式达成“绝不能让核冲突发生”的共识并形成三",
-      "category": "finance",
-      "published_at": "2026-11-19T18:54:07+08:00",
-      "source_name": "华尔街见闻 · 资讯",
-      "source_url": "https://wallstreetcn.com/articles/3786411",
-      "tag": "地缘外交 · 关税",
-      "tag_en": "Geopolitics & Tariffs",
-      "polarity": "bearish",
-      "intensity": 5,
-      "one_liner": "大国高层会晤重估未来关税清单与科技管制边界：释放缓和催化中概与出口链修复，摩擦升级则利好国产替代。",
-      "one_liner_en": "US-China summits reprice tariff schedules and export curbs, swinging Chinese ADRs, exporters, and domestic semiconductors.",
-      "bars": [
-        {
-          "market": "美股",
-          "sector": "中概互联 (KWEB)",
-          "sector_en": "China ADRs (KWEB)",
-          "pct_low": 2.5,
-          "pct_high": 6.0,
-          "direction": "positive",
-          "logic": "外交缓和信号最直接修复外资风险偏好"
-        },
-        {
-          "market": "A股",
-          "sector": "出口链 / 消费电子 / 航运",
-          "sector_en": "Exporters & Shipping",
-          "pct_low": 2.0,
-          "pct_high": 5.0,
-          "direction": "positive",
-          "logic": "对美敞口高的家电与航运对关税边际最敏感"
-        },
-        {
-          "market": "A股",
-          "sector": "国产半导体设备 / 信创",
-          "sector_en": "Domestic Semis",
-          "pct_low": 1.8,
-          "pct_high": 4.5,
-          "direction": "positive",
-          "logic": "无论管制松紧，自主可控均为中线确定主线"
-        },
-        {
-          "market": "美股",
-          "sector": "在华营收美股 (AAPL/TSLA)",
-          "sector_en": "China-Exposed US Tech",
-          "pct_low": 1.2,
-          "pct_high": 3.5,
-          "direction": "positive",
-          "logic": "供应链与亚太市场关税担忧阶段缓解"
-        }
-      ],
-      "if_then": [
-        {
-          "cond": "若落地关税豁免/联合公报",
-          "result": "KWEB 领涨 +4%~+7%，A股出口链 +3%~+6%",
-          "tone": "bullish"
-        },
-        {
-          "cond": "若加码芯片/关税限制",
-          "result": "出口链 -2%~-5%，国产半导体逆势 +2%~+5%",
-          "tone": "bearish"
-        }
-      ],
-      "milestones": [
-        {
-          "date": "已发生",
-          "status": "done",
-          "label": "元首抵深与多边经贸谈判启动"
-        },
-        {
-          "date": "当前",
-          "status": "current",
-          "label": "双边会晤与经贸框架磋商窗口"
-        },
-        {
-          "date": "下周",
-          "status": "upcoming",
-          "label": "追踪联合声明与具体关税清单细则"
-        }
-      ]
-    },
-    {
-      "id": "imp_evt_f968e4f18e2c",
-      "event_id": "evt_f968e4f18e2c",
-      "rule_id": "fed_rate_gold_usd",
-      "event_title": "美联储时隔三年多重启加息25个基点，市场对12月后续加息定价出现分歧",
-      "event_title_en": "美联储时隔三年多重启加息25个基点，市场对12月后续加息定价出现分歧",
-      "event_summary": "据财联社报道，美联储时隔三年多重启加息25个基点，内部预计年内还会升息一次，且此前公布的会议纪要释放鹰派信号。不过，随着美股暴跌及市场波动加剧，最新行情显示交易员不再充分消化美联储12月加息的情景。CNBC报道称，美联储主席沃什希望联储官员减少公开讲话，但官员近期反而频繁发声；此外，财联社电报标题称费城联储行长主张以“",
-      "category": "finance",
-      "published_at": "2026-11-19T09:23:18+08:00",
-      "source_name": "华尔街见闻 · 快讯",
-      "source_url": "https://wallstreetcn.com/livenews/3203552",
+      "published_at": "2026-11-19T20:26:01+08:00",
+      "source_name": "Google News 中文国际",
+      "source_url": "https://news.google.com/rss/articles/CBMiU0FVX3lxTE1GSmRaSnZzbXpjYTB3VFZLbW5vZ01XUFNuZXdDdlRWRGZPd2dsbzBxYU81dVpJMW9xcnhKM3E5b0VqMlZ1dEF4cHdyRHMwZ3JJQjlV?oc=5",
       "tag": "央行利率 · 流动性",
       "tag_en": "Fed & Liquidity",
       "polarity": "bearish",
@@ -772,92 +772,16 @@
       ]
     },
     {
-      "id": "imp_evt_bd36d32a80a9",
-      "event_id": "evt_bd36d32a80a9",
-      "rule_id": "china_macro_policy_ev",
-      "event_title": "马斯克从深圳突访特斯拉上海超级工厂，称将继续在华扩产并交流机器人进展",
-      "event_title_en": "马斯克从深圳突访特斯拉上海超级工厂，称将继续在华扩产并交流机器人进展",
-      "event_summary": "11月19日，特斯拉CEO马斯克在24小时的中国行程中专门从深圳飞往上海，到访位于临港的特斯拉上海超级工厂。飞往上海前，马斯克表示特斯拉将继续在中国提高产量；在工厂期间，他与中国团队面对面分享了辅助驾驶技术和人形机器人等项目的最新进展，并赞赏上海工厂的制造实力及中国团队的执行力。11月20日，特斯拉副总裁陶琳在微博发文",
-      "category": "general",
-      "published_at": "2026-11-21T05:54:52+08:00",
-      "source_name": "百度热搜",
-      "source_url": "https://www.baidu.com/s?wd=%E9%A9%AC%E6%96%AF%E5%85%8B%E6%94%B6%E5%88%B0%E7%89%B9%E6%96%AF%E6%8B%89%E4%B8%8A%E6%B5%B7%E5%B7%A5%E5%8E%82%E7%89%B9%E5%88%AB%E7%A4%BC%E7%89%A9",
-      "tag": "内需政策 · 新能源智驾",
-      "tag_en": "China Policy & EV/Robotics",
-      "polarity": "bullish",
-      "intensity": 4,
-      "one_liner": "国内宏观稳增长政策或新能源/智驾产业突破，直接提振内需消费、汽车智能化供应链及港股顺周期资产估值。",
-      "one_liner_en": "Pro-growth policy or EV/robotics breakthroughs lift China domestic demand, smart-auto supply chains, and HK cyclical equities.",
-      "bars": [
-        {
-          "market": "A股",
-          "sector": "汽车智能化 / 机器人 / 锂电",
-          "sector_en": "Smart EV & Robotics",
-          "pct_low": 1.8,
-          "pct_high": 4.5,
-          "direction": "positive",
-          "logic": "政策补贴或智驾放量带动全产业链订单"
-        },
-        {
-          "market": "A股",
-          "sector": "大消费 / 顺周期 / 券商",
-          "sector_en": "Consumer & Brokers",
-          "pct_low": 1.2,
-          "pct_high": 3.5,
-          "direction": "positive",
-          "logic": "流动性宽松与稳增长预期改善风险偏好"
-        },
-        {
-          "market": "美股",
-          "sector": "新能源车与智驾 (TSLA / LI)",
-          "sector_en": "EV & Autonomy",
-          "pct_low": 1.5,
-          "pct_high": 4.2,
-          "direction": "positive",
-          "logic": "Robotaxi 与人形机器人进度成为核心定价因子"
-        }
-      ],
-      "if_then": [
-        {
-          "cond": "若配套细则/销量超预期",
-          "result": "智驾机器人与顺周期走强 +2%~+5%",
-          "tone": "bullish"
-        },
-        {
-          "cond": "若数据不及预期",
-          "result": "顺周期短线回撤 -1.5%~-3%",
-          "tone": "bearish"
-        }
-      ],
-      "milestones": [
-        {
-          "date": "已发生",
-          "status": "done",
-          "label": "政策吹风或头部车企发布最新销量/技术进展"
-        },
-        {
-          "date": "当前",
-          "status": "current",
-          "label": "资金围绕龙头产业链进行业绩与估值切换"
-        },
-        {
-          "date": "月底",
-          "status": "upcoming",
-          "label": "追踪月度官方宏观/乘联会高频验证数据"
-        }
-      ]
-    },
-    {
-      "id": "imp_evt_285d28c046f7",
-      "event_id": "evt_285d28c046f7",
+      "id": "imp_evt_6970bd1b2ae4",
+      "event_id": "evt_6970bd1b2ae4",
       "rule_id": "ai_model_software_agent",
-      "event_title": "Signal 在 iOS 27 与 Android 端屏蔽截屏，防范系统级 AI 智能体读取私人聊天",
-      "event_title_en": "Signal 在 iOS 27 与 Android 端屏蔽截屏，防范系统级 AI 智能体读取私人聊天",
-      "event_summary": "加密通讯应用 Signal 宣布在 iOS 27 和 Android 端屏蔽截屏功能，以阻止 Apple Siri AI、Google Gemini Intelligence 以及 Meta Muse 等系统级 AI 智能体读取用户的私人聊天内容。Signal 公开将 AI 智能体读取屏幕内容的行为定性为对隐私的“生存",
+      "event_title": "近 200 万条诱饵请求测试揭示 AI 服务链隐私泄露，零数据保留承诺在部分链路失效",
+      "event_title_en": "近 200 万条诱饵请求测试揭示 AI 服务链隐私泄露，零数据保留承诺在部分链路失效",
+      "event_summary": "安全公司 Dragos 首席研究官 HD Moore 向多家 AI 服务商发送了近 200 万条带有可追踪“诱饵”测试秘密的请求，结果发现 AI 服务链存在黑客窃取提示词、转售商泄露数据以及未遵守隐私设置和零数据保留承诺等问题。在终端防护方面，加密通讯应用 Signal 宣布在 iOS 27 与安卓平台上拦截屏幕截图，",
       "category": "tech",
-      "published_at": "2026-11-21T03:50:27+08:00",
-      "source_name": "The Decoder (AI前沿)",
-      "source_url": "https://the-decoder.com/signal-blocks-screenshots-on-ios-27-and-android-to-stop-ai-agents-from-reading-private-chats",
+      "published_at": "2026-11-21T10:03:24+08:00",
+      "source_name": "IT之家 实时快讯",
+      "source_url": "https://www.ithome.com/1/030/322.htm",
       "tag": "AI 模型 · 应用商业化",
       "tag_en": "AI Models & Software",
       "polarity": "bullish",
@@ -933,19 +857,19 @@
       ]
     },
     {
-      "id": "imp_evt_e91a768dc621",
-      "event_id": "evt_e91a768dc621",
+      "id": "imp_evt_c395f9ae842d",
+      "event_id": "evt_c395f9ae842d",
       "rule_id": "oil_energy_geopolitics",
-      "event_title": "美国制裁伊朗石油网络并聚焦核僵局，国际油价小幅收涨",
-      "event_title_en": "美国制裁伊朗石油网络并聚焦核僵局，国际油价小幅收涨",
-      "event_summary": "中东地缘局势依然紧张。美国财政部宣布制裁部分伊朗石油网络成员（原始素材仅含标题，具体制裁名单待查原文）。美国副总统万斯周五在白宫记者会上拒绝明确表态若伊朗继续推进核计划是否会授权再次发动军事打击，强调今年2月袭击的决定由总统特朗普作出；特朗普称万斯此前表态遗漏了“当时袭击是必要的”这一点，并表示美方对伊朗“保持耐心”。",
+      "event_title": "Enbridge管道因污染检测长期中断，美国北达科他州钻探商改用卡车运油",
+      "event_title_en": "Enbridge管道因污染检测长期中断，美国北达科他州钻探商改用卡车运油",
+      "event_summary": "由于Enbridge Inc.运营的一条原油管道在污染报告激增、公司实施有机氯化物检测后运营率长期低于正常水平，美国北达科他州的石油生产商正改用卡车将巴肯（Bakken）原油运往达科他输油管道的交付点。Energy Aspects全球原油主管杰里米·欧文表示，生产商的储罐正在被填满，且无法调集足够卡车疏散现有产量，这可",
       "category": "finance",
-      "published_at": "2026-11-21T02:02:31+08:00",
-      "source_name": "金十数据",
-      "source_url": "https://flash.jin10.com/detail/20261121045741483800",
+      "published_at": "2026-11-21T06:48:07+08:00",
+      "source_name": "华尔街见闻 美股快讯",
+      "source_url": "https://wallstreetcn.com/livenews/3203614",
       "tag": "能源原油 · 地缘风险",
       "tag_en": "Energy & Geopolitics",
-      "polarity": "bearish",
+      "polarity": "divergent",
       "intensity": 4,
       "one_liner": "地缘冲突或产油国决议直接左右国际油价与海运运价：油价飙升利好油气采掘与油运，但推高通胀并挤压航空/化工利润。",
       "one_liner_en": "Geopolitical shocks reprice crude oil and freight: upstream energy & tankers benefit while airlines and inflation-sensitive growth face margin squeeze.",
@@ -1018,173 +942,97 @@
       ]
     },
     {
-      "id": "imp_evt_5cf3274dbc14",
-      "event_id": "evt_5cf3274dbc14",
-      "rule_id": "china_macro_policy_ev",
-      "event_title": "欧美自动驾驶审批分化：特斯拉获意大利许可、奔驰在德获批城市辅助驾驶，Waymo 暂停全美高速服务",
-      "event_title_en": "欧美自动驾驶审批分化：特斯拉获意大利许可、奔驰在德获批城市辅助驾驶，Waymo 暂停全美高速服务",
-      "event_summary": "欧美自动驾驶商业化出现明显区域分化。在欧洲，意大利交通部长马泰奥·萨尔维尼宣布向特斯拉辅助驾驶系统（TAD）颁发临时型式认证，使意大利成为欧洲第 12 个批准该系统的国家，也是欧盟主要汽车市场中首个放行国；同日，梅赛德斯-奔驰宣布成为德国首家依据联合国高级驾驶辅助系统新规获批开展点到点辅助驾驶（MB.DRIVE ASS",
+      "id": "imp_evt_c02e1b96d687",
+      "event_id": "evt_c02e1b96d687",
+      "rule_id": "ai_model_software_agent",
+      "event_title": "OpenAI 公布 GPT-6.2 反蒸馏防护进展，思考链提取成功率降至 0.2%",
+      "event_title_en": "OpenAI 公布 GPT-6.2 反蒸馏防护进展，思考链提取成功率降至 0.2%",
+      "event_summary": "当地时间 11 月 20 日，OpenAI 发布关于对抗性蒸馏防御机制的公告，称其已加强 GPT-6.2 Astra 和 GPT-6.2 Sol 对内部推理思考链（Chain-of-Thought）的保护，将模型训练、安全护栏、检测与执行相结合。在自适应红队测试中，攻击者提取受保护内部推理过程的成功率从 54% 降至 ",
       "category": "tech",
-      "published_at": "2026-11-20T21:34:23+08:00",
-      "source_name": "IT之家 实时快讯",
-      "source_url": "https://www.ithome.com/1/030/276.htm",
-      "tag": "内需政策 · 新能源智驾",
-      "tag_en": "China Policy & EV/Robotics",
+      "published_at": "2026-11-21T04:31:50+08:00",
+      "source_name": "Google News 中文大模型雷达",
+      "source_url": "https://news.google.com/rss/articles/CBMiTEFVX3lxTE5wZmRkcTBEM3ZXOE9zMjMxamNtdjY1Z0tXajE4aWs4bFZ5d1lYUzRoNmlfdU9GV3pZRkxFQ0lTTDRyek5RQzlIMWxiMjE?oc=5",
+      "tag": "AI 模型 · 应用商业化",
+      "tag_en": "AI Models & Software",
       "polarity": "bullish",
       "intensity": 4,
-      "one_liner": "国内宏观稳增长政策或新能源/智驾产业突破，直接提振内需消费、汽车智能化供应链及港股顺周期资产估值。",
-      "one_liner_en": "Pro-growth policy or EV/robotics breakthroughs lift China domestic demand, smart-auto supply chains, and HK cyclical equities.",
+      "one_liner": "新一代高性价比推理模型（如 Gemini 4 Neon、GPT-6.2、Qwen4、混元 Hy4）大幅压低 Token 成本，直接引爆 AI 应用、编程与端侧换机潮。",
+      "one_liner_en": "Faster, cheaper frontier models slash inference unit costs, accelerating SaaS/Agent adoption and edge device upgrades.",
       "bars": [
         {
           "market": "A股",
-          "sector": "汽车智能化 / 机器人 / 锂电",
-          "sector_en": "Smart EV & Robotics",
+          "sector": "AI 应用软件 / Agent / 办公",
+          "sector_en": "A-Share AI Apps & SaaS",
           "pct_low": 1.8,
-          "pct_high": 4.5,
+          "pct_high": 4.6,
           "direction": "positive",
-          "logic": "政策补贴或智驾放量带动全产业链订单"
+          "logic": "底层模型降本增效直接打开应用端商业利润率"
         },
         {
           "market": "A股",
-          "sector": "大消费 / 顺周期 / 券商",
-          "sector_en": "Consumer & Brokers",
+          "sector": "端侧 AI 硬件 (AI手机/PC/耳机)",
+          "sector_en": "Edge AI Hardware",
           "pct_low": 1.2,
           "pct_high": 3.5,
           "direction": "positive",
-          "logic": "流动性宽松与稳增长预期改善风险偏好"
+          "logic": "轻量高智模型加速本地离线部署与换机周期"
         },
         {
           "market": "美股",
-          "sector": "新能源车与智驾 (TSLA / LI)",
-          "sector_en": "EV & Autonomy",
+          "sector": "云平台与 AI 软件 (GOOGL/MSFT)",
+          "sector_en": "Cloud & AI Platforms",
           "pct_low": 1.5,
-          "pct_high": 4.2,
+          "pct_high": 3.8,
           "direction": "positive",
-          "logic": "Robotaxi 与人形机器人进度成为核心定价因子"
-        }
-      ],
-      "if_then": [
-        {
-          "cond": "若配套细则/销量超预期",
-          "result": "智驾机器人与顺周期走强 +2%~+5%",
-          "tone": "bullish"
-        },
-        {
-          "cond": "若数据不及预期",
-          "result": "顺周期短线回撤 -1.5%~-3%",
-          "tone": "bearish"
-        }
-      ],
-      "milestones": [
-        {
-          "date": "已发生",
-          "status": "done",
-          "label": "政策吹风或头部车企发布最新销量/技术进展"
-        },
-        {
-          "date": "当前",
-          "status": "current",
-          "label": "资金围绕龙头产业链进行业绩与估值切换"
-        },
-        {
-          "date": "月底",
-          "status": "upcoming",
-          "label": "追踪月度官方宏观/乘联会高频验证数据"
-        }
-      ]
-    },
-    {
-      "id": "imp_evt_dfb1f2588c36",
-      "event_id": "evt_dfb1f2588c36",
-      "rule_id": "oil_energy_geopolitics",
-      "event_title": "报道称：特朗普寻求明年1月前达成俄乌和平协议，欧洲近40国柏林集会争取“上桌”",
-      "event_title_en": "报道称：特朗普寻求明年1月前达成俄乌和平协议，欧洲近40国柏林集会争取“上桌”",
-      "event_summary": "《金融时报》报道称美国总统特朗普寻求在明年1月前达成乌克兰和平协议。俄罗斯副外长明确表示，乌克兰加入北约“完全不可接受”。面对美俄互动，近40个国家在柏林举行会议争取参与谈判，德国总理默茨表示欧洲将“很快”加入乌克兰问题谈判。",
-      "category": "global",
-      "published_at": "2026-11-20T17:23:58+08:00",
-      "source_name": "Google News 英文国际",
-      "source_url": "https://news.google.com/rss/articles/CBMihAFBVV95cUxOa18tQmF3YkRHVXNLbTI4N1pxOFAzeUdOeVlaM3k4b2ZSZVpKZVhFTzFxMmxMUm5Nb1lkT0I2WTFiRlA2SWJMZG1HSl9VVW0xSUU1VWhidjMtZHZ5T2N4Z2hwazlvWUdfN0hDUjRJeFoxeDY1a1JHcDduaUJwUFlKWE5Jb3U?oc=5",
-      "tag": "能源原油 · 地缘风险",
-      "tag_en": "Energy & Geopolitics",
-      "polarity": "bullish",
-      "intensity": 4,
-      "one_liner": "地缘冲突或产油国决议直接左右国际油价与海运运价：油价飙升利好油气采掘与油运，但推高通胀并挤压航空/化工利润。",
-      "one_liner_en": "Geopolitical shocks reprice crude oil and freight: upstream energy & tankers benefit while airlines and inflation-sensitive growth face margin squeeze.",
-      "bars": [
-        {
-          "market": "A股",
-          "sector": "石油石化 / 油运 / 煤炭",
-          "sector_en": "Oil & Tankers",
-          "pct_low": 2.0,
-          "pct_high": 5.0,
-          "direction": "positive",
-          "logic": "布伦特油价与 VLCC 运价跳升直接增厚上游盈利"
-        },
-        {
-          "market": "A股",
-          "sector": "航空机场 / 基础化工",
-          "sector_en": "Airlines & Chemicals",
-          "pct_low": -3.2,
-          "pct_high": -1.2,
-          "direction": "negative",
-          "logic": "航油与原材料成本上升挤压毛利率"
+          "logic": "头部模型迭代巩固开发者粘性与云 API 收入"
         },
         {
           "market": "美股",
-          "sector": "美国能源板块 (XLE / XOM)",
-          "sector_en": "US Energy (XLE)",
-          "pct_low": 1.8,
-          "pct_high": 4.2,
-          "direction": "positive",
-          "logic": "现金流随油价中枢上移同步扩张"
-        },
-        {
-          "market": "大宗",
-          "sector": "布伦特原油 / 黄金避险",
-          "sector_en": "Brent Crude & Gold",
-          "pct_low": 2.0,
-          "pct_high": 6.0,
-          "direction": "positive",
-          "logic": "供给中断溢价与地缘避险共振"
+          "sector": "传统无壁垒工具软件",
+          "sector_en": "Legacy SaaS",
+          "pct_low": -3.0,
+          "pct_high": -1.0,
+          "direction": "negative",
+          "logic": "原生多模态与编程 Agent 挤压单点旧软件生存空间"
         }
       ],
       "if_then": [
         {
-          "cond": "若冲突升级/海峡受阻",
-          "result": "油气与黄金急涨 +3%~+6%，航空承压",
-          "tone": "bearish"
+          "cond": "若 API 调用量/付费转化爆发",
+          "result": "AI 应用与云厂迎来戴维斯双击 +2%~+5%",
+          "tone": "bullish"
         },
         {
-          "cond": "若达成停火/增产协议",
-          "result": "油价回落 -3%~-6%，航空与成长股反弹",
-          "tone": "bullish"
+          "cond": "若价格战吞噬毛利",
+          "result": "纯模型套壳公司承压 -2%~-4%",
+          "tone": "bearish"
         }
       ],
       "milestones": [
         {
           "date": "已发生",
           "status": "done",
-          "label": "产油区/航道局势出现突发变量"
+          "label": "新一轮旗舰/端侧模型密集发布并公布定价"
         },
         {
           "date": "当前",
           "status": "current",
-          "label": "原油期货计入风险溢价，观察是否实质断供"
+          "label": "开发者实测迁移与企业 API 接入高峰期"
         },
         {
-          "date": "下周",
+          "date": "下季",
           "status": "upcoming",
-          "label": "关注 OPEC+ 产量指引及外交斡旋结果"
+          "label": "核验云厂 AI 收入占比与爆款应用留存"
         }
       ]
     },
     {
-      "id": "imp_evt_458ecfbb019d",
-      "event_id": "evt_458ecfbb019d",
+      "id": "imp_evt_d24d540c230a",
+      "event_id": "evt_d24d540c230a",
       "rule_id": "oil_energy_geopolitics",
-      "event_title": "乌军袭击克里米亚大桥后俄军报复空袭致乌至少8死28伤，波兰谴责俄方侵犯领空",
-      "event_title_en": "乌军袭击克里米亚大桥后俄军报复空袭致乌至少8死28伤，波兰谴责俄方侵犯领空",
-      "event_summary": "乌克兰发动创纪录规模无人机袭击，再次击中并损毁连接俄本土与克里米亚的克里米亚大桥，俄政府已敲定大桥修复方案。普京称大桥再遭袭后俄方不再就海上停火等问题谈判，并誓言报复。随后俄军对乌克兰基辅、利沃夫等多地发动大规模空袭（动用“锆石”导弹打击铁路枢纽等目标），造成至少8人死亡、28人受伤，基辅桥梁遇袭、多国使馆受损；乌空军",
+      "event_title": "克里米亚大桥再遭袭后俄军大规模空袭乌克兰致8死28伤，导弹落入波兰触发北约警报",
+      "event_title_en": "克里米亚大桥再遭袭后俄军大规模空袭乌克兰致8死28伤，导弹落入波兰触发北约警报",
+      "event_summary": "在克里米亚大桥再遭袭击并导致桥拱发生15度偏移后，俄政府敲定了大桥修复方案，普京宣布俄方不再就海上停火等问题谈判，并誓言展开更沉重打击。11月20日，俄军对乌克兰多地发动大规模导弹空袭，击中基辅3座桥梁、关键铁路枢纽及乌战略变电站，并波及多国驻乌使馆受损，基辅与利沃夫等地袭击共造成至少8人死亡、28人受伤。空袭期间，俄",
       "category": "global",
       "published_at": "2026-11-20T10:50:15+08:00",
       "source_name": "Google News 中文国际",
@@ -1264,16 +1112,101 @@
       ]
     },
     {
-      "id": "imp_evt_2ae10afe1af0",
-      "event_id": "evt_2ae10afe1af0",
+      "id": "imp_evt_f339db4b2877",
+      "event_id": "evt_f339db4b2877",
+      "rule_id": "oil_energy_geopolitics",
+      "event_title": "特朗普力促明年1月前达成俄乌和平协议，库什纳称俄接受北约式安全保障且欧洲将“上桌”",
+      "event_title_en": "特朗普力促明年1月前达成俄乌和平协议，库什纳称俄接受北约式安全保障且欧洲将“上桌”",
+      "event_summary": "据《金融时报》等媒体报道，美国总统特朗普正寻求在明年1月前达成乌克兰和平协议。美国特使库什纳公开表示，俄罗斯已同意欧洲加入乌克兰问题谈判，并对向乌克兰提供类似北约的安全保障持“可接受”态度。德国总理默茨11月20日表示欧洲将“很快”加入谈判，近40国在柏林举行会议争取“上桌”；俄总统普京则喊话欧洲代表赴莫斯科谈判。与此",
+      "category": "global",
+      "published_at": "2026-11-20T01:13:23+08:00",
+      "source_name": "Google News 中文国际",
+      "source_url": "https://news.google.com/rss/articles/CBMiZkFVX3lxTE04NlpnRlk2Y0VuTmtPRFo2c3JIc2dBQkJ1aGotclZ0V2sxM3pNTVFnWUplNlJHRmVHVUY2VlZ5Q0JPSW9ud3dzTVpDUE9JbU1SczVuOHc1Z09TbGU0U2NGclJqck9uUQ?oc=5",
+      "tag": "能源原油 · 地缘风险",
+      "tag_en": "Energy & Geopolitics",
+      "polarity": "bullish",
+      "intensity": 4,
+      "one_liner": "地缘冲突或产油国决议直接左右国际油价与海运运价：油价飙升利好油气采掘与油运，但推高通胀并挤压航空/化工利润。",
+      "one_liner_en": "Geopolitical shocks reprice crude oil and freight: upstream energy & tankers benefit while airlines and inflation-sensitive growth face margin squeeze.",
+      "bars": [
+        {
+          "market": "A股",
+          "sector": "石油石化 / 油运 / 煤炭",
+          "sector_en": "Oil & Tankers",
+          "pct_low": 2.0,
+          "pct_high": 5.0,
+          "direction": "positive",
+          "logic": "布伦特油价与 VLCC 运价跳升直接增厚上游盈利"
+        },
+        {
+          "market": "A股",
+          "sector": "航空机场 / 基础化工",
+          "sector_en": "Airlines & Chemicals",
+          "pct_low": -3.2,
+          "pct_high": -1.2,
+          "direction": "negative",
+          "logic": "航油与原材料成本上升挤压毛利率"
+        },
+        {
+          "market": "美股",
+          "sector": "美国能源板块 (XLE / XOM)",
+          "sector_en": "US Energy (XLE)",
+          "pct_low": 1.8,
+          "pct_high": 4.2,
+          "direction": "positive",
+          "logic": "现金流随油价中枢上移同步扩张"
+        },
+        {
+          "market": "大宗",
+          "sector": "布伦特原油 / 黄金避险",
+          "sector_en": "Brent Crude & Gold",
+          "pct_low": 2.0,
+          "pct_high": 6.0,
+          "direction": "positive",
+          "logic": "供给中断溢价与地缘避险共振"
+        }
+      ],
+      "if_then": [
+        {
+          "cond": "若冲突升级/海峡受阻",
+          "result": "油气与黄金急涨 +3%~+6%，航空承压",
+          "tone": "bearish"
+        },
+        {
+          "cond": "若达成停火/增产协议",
+          "result": "油价回落 -3%~-6%，航空与成长股反弹",
+          "tone": "bullish"
+        }
+      ],
+      "milestones": [
+        {
+          "date": "已发生",
+          "status": "done",
+          "label": "产油区/航道局势出现突发变量"
+        },
+        {
+          "date": "当前",
+          "status": "current",
+          "label": "原油期货计入风险溢价，观察是否实质断供"
+        },
+        {
+          "date": "下周",
+          "status": "upcoming",
+          "label": "关注 OPEC+ 产量指引及外交斡旋结果"
+        }
+      ]
+    },
+    {
+      "id": "imp_evt_c0d649a5b331",
+      "event_id": "evt_c0d649a5b331",
       "rule_id": "ai_model_software_agent",
-      "event_title": "谷歌密集发布 Gemini 4 Neon 与 Argon 模型，并在 Mac 端上线后台桌面操作功能",
-      "event_title_en": "谷歌密集发布 Gemini 4 Neon 与 Argon 模型，并在 Mac 端上线后台桌面操作功能",
-      "event_summary": "Google DeepMind 正式发布 Gemini 4 Neon 模型，支持 100 万（1M）上下文窗口，定价为每百万输入/输出 tokens 3 美元与 15 美元，在 Artificial Analysis 智能指数取得 61 分（升至全球第三）并位列 AA Coding Agent Index 第一；谷歌方",
+      "event_title": "谷歌发布 Gemini 4 Neon 模型并升级 Mac 端后台操控与搜索首页 AI 入口",
+      "event_title_en": "谷歌发布 Gemini 4 Neon 模型并升级 Mac 端后台操控与搜索首页 AI 入口",
+      "event_summary": "Google DeepMind 发布支持 100 万上下文窗口的 Gemini 4 Neon 模型，定价为每百万输入/输出 tokens 3 美元和 15 美元，在 AA 智能指数中获得 61 分，并在 AA 编程智能体指数榜单排名第一。在产品侧，谷歌为 Mac 版 Gemini 引入“Computer Use”功能，",
       "category": "tech",
-      "published_at": "2026-11-19T05:35:43+08:00",
-      "source_name": "Google News 中文大模型雷达",
-      "source_url": "https://news.google.com/rss/articles/CBMiU0FVX3lxTE50Sk5Vb0ZEVXY0WWhodXR6MWVqZ3ZETzBYal9hM0ZwNUNvbFRYZnZzMjl0VzhIU3BlWlA5UW81VXMzVF9CRy0wUERRQ0dFZGw5ejVV?oc=5",
+      "published_at": "2026-11-19T13:16:43+08:00",
+      "source_name": "Google News 全球 AI 模型雷达",
+      "source_url": "https://news.google.com/rss/articles/CBMimwFBVV95cUxNZ2lXOUx4Y1Zaa0hCZzg4MlBKRnFaUTc4M2k3OENYR0JYZEdUV3Y5cEZmUl95d3NVRFIzV0FZMTNqZG5SSTNIWE1lN05rTWFIU1N0V0c1bDgwQzZicnBLNDREb2s1RzR3WlJEeDVNZkF0UjBHemlKRUs0cGpzNTZxeUt1Z1FLTnJpV0JZbG4wZ3F4SmRnWTRsQ3RtOA?oc=5",
       "tag": "AI 模型 · 应用商业化",
       "tag_en": "AI Models & Software",
       "polarity": "bullish",
@@ -1350,78 +1283,78 @@
     }
   ],
   "event_impact_map": {
-    "evt_8ea5fc66949f": {
-      "event_id": "evt_8ea5fc66949f",
-      "tag": "地缘外交 · 关税",
-      "tag_en": "Geopolitics & Tariffs",
+    "evt_71844e1b663e": {
+      "event_id": "evt_71844e1b663e",
+      "tag": "AI 算力 · 芯片链",
+      "tag_en": "AI Compute & Semis",
       "polarity": "bearish",
       "intensity": 5,
-      "one_liner": "大国高层会晤重估未来关税清单与科技管制边界：释放缓和催化中概与出口链修复，摩擦升级则利好国产替代。",
+      "one_liner": "AI 巨头巨额融资与芯片路线迭代锁定全球算力资本开支，直接拉动上游光模块、服务器液冷与芯片封装订单。",
       "top_a": {
         "market": "A股",
-        "sector": "出口链 / 消费电子 / 航运",
-        "sector_en": "Exporters & Shipping",
-        "pct_low": 2.0,
-        "pct_high": 5.0,
+        "sector": "CPO 光模块 / 液冷 / PCB",
+        "sector_en": "A-Share Optics & Cooling",
+        "pct_low": 2.2,
+        "pct_high": 5.5,
         "direction": "positive",
-        "logic": "对美敞口高的家电与航运对关税边际最敏感"
+        "logic": "海外云厂与大模型资本开支直接转化为订单"
       },
       "top_us": {
         "market": "美股",
-        "sector": "中概互联 (KWEB)",
-        "sector_en": "China ADRs (KWEB)",
-        "pct_low": 2.5,
-        "pct_high": 6.0,
+        "sector": "算力芯片 (NVDA / AMD / TSM)",
+        "sector_en": "US AI Semis",
+        "pct_low": 1.8,
+        "pct_high": 4.8,
         "direction": "positive",
-        "logic": "外交缓和信号最直接修复外资风险偏好"
+        "logic": "核心业绩与二线替代方案同步重估"
       },
       "bars": [
         {
+          "market": "A股",
+          "sector": "CPO 光模块 / 液冷 / PCB",
+          "sector_en": "A-Share Optics & Cooling",
+          "pct_low": 2.2,
+          "pct_high": 5.5,
+          "direction": "positive",
+          "logic": "海外云厂与大模型资本开支直接转化为订单"
+        },
+        {
+          "market": "A股",
+          "sector": "国产算力 / 封测与存储",
+          "sector_en": "Domestic Compute & Memory",
+          "pct_low": 1.5,
+          "pct_high": 4.0,
+          "direction": "positive",
+          "logic": "HBM 紧缺与算力国产化双轮驱动"
+        },
+        {
           "market": "美股",
-          "sector": "中概互联 (KWEB)",
-          "sector_en": "China ADRs (KWEB)",
-          "pct_low": 2.5,
-          "pct_high": 6.0,
-          "direction": "positive",
-          "logic": "外交缓和信号最直接修复外资风险偏好"
-        },
-        {
-          "market": "A股",
-          "sector": "出口链 / 消费电子 / 航运",
-          "sector_en": "Exporters & Shipping",
-          "pct_low": 2.0,
-          "pct_high": 5.0,
-          "direction": "positive",
-          "logic": "对美敞口高的家电与航运对关税边际最敏感"
-        },
-        {
-          "market": "A股",
-          "sector": "国产半导体设备 / 信创",
-          "sector_en": "Domestic Semis",
+          "sector": "算力芯片 (NVDA / AMD / TSM)",
+          "sector_en": "US AI Semis",
           "pct_low": 1.8,
-          "pct_high": 4.5,
+          "pct_high": 4.8,
           "direction": "positive",
-          "logic": "无论管制松紧，自主可控均为中线确定主线"
+          "logic": "核心业绩与二线替代方案同步重估"
         },
         {
           "market": "美股",
-          "sector": "在华营收美股 (AAPL/TSLA)",
-          "sector_en": "China-Exposed US Tech",
+          "sector": "云巨头与 AI 电力 (AMZN/VST)",
+          "sector_en": "Hyperscalers & Power",
           "pct_low": 1.2,
-          "pct_high": 3.5,
+          "pct_high": 3.2,
           "direction": "positive",
-          "logic": "供应链与亚太市场关税担忧阶段缓解"
+          "logic": "大模型训练推理锁定云消耗与数据中心电力"
         }
       ],
       "if_then": [
         {
-          "cond": "若落地关税豁免/联合公报",
-          "result": "KWEB 领涨 +4%~+7%，A股出口链 +3%~+6%",
+          "cond": "若挂牌/财报超预期",
+          "result": "光模块与算力链共振 +2.5%~+5.5%",
           "tone": "bullish"
         },
         {
-          "cond": "若加码芯片/关税限制",
-          "result": "出口链 -2%~-5%，国产半导体逆势 +2%~+5%",
+          "cond": "若高开抽血或出口收紧",
+          "result": "高位算力短线回吐 -2%~-4%",
           "tone": "bearish"
         }
       ],
@@ -1429,92 +1362,92 @@
         {
           "date": "已发生",
           "status": "done",
-          "label": "元首抵深与多边经贸谈判启动"
+          "label": "头部芯片财报/大模型 IPO 定价超预期"
         },
         {
           "date": "当前",
           "status": "current",
-          "label": "双边会晤与经贸框架磋商窗口"
+          "label": "二级市场重估 AI 算力与云厂商估值锚"
         },
         {
-          "date": "下周",
+          "date": "下月",
           "status": "upcoming",
-          "label": "追踪联合声明与具体关税清单细则"
+          "label": "验证云巨头季度 Capex 指引与出货量"
         }
       ]
     },
-    "evt_273102b6452c": {
-      "event_id": "evt_273102b6452c",
-      "tag": "地缘外交 · 关税",
-      "tag_en": "Geopolitics & Tariffs",
-      "polarity": "divergent",
+    "evt_e4e66035d504": {
+      "event_id": "evt_e4e66035d504",
+      "tag": "AI 算力 · 芯片链",
+      "tag_en": "AI Compute & Semis",
+      "polarity": "bullish",
       "intensity": 5,
-      "one_liner": "大国高层会晤重估未来关税清单与科技管制边界：释放缓和催化中概与出口链修复，摩擦升级则利好国产替代。",
+      "one_liner": "AI 巨头巨额融资与芯片路线迭代锁定全球算力资本开支，直接拉动上游光模块、服务器液冷与芯片封装订单。",
       "top_a": {
         "market": "A股",
-        "sector": "出口链 / 消费电子 / 航运",
-        "sector_en": "Exporters & Shipping",
-        "pct_low": 2.0,
-        "pct_high": 5.0,
+        "sector": "CPO 光模块 / 液冷 / PCB",
+        "sector_en": "A-Share Optics & Cooling",
+        "pct_low": 2.2,
+        "pct_high": 5.5,
         "direction": "positive",
-        "logic": "对美敞口高的家电与航运对关税边际最敏感"
+        "logic": "海外云厂与大模型资本开支直接转化为订单"
       },
       "top_us": {
         "market": "美股",
-        "sector": "中概互联 (KWEB)",
-        "sector_en": "China ADRs (KWEB)",
-        "pct_low": 2.5,
-        "pct_high": 6.0,
+        "sector": "算力芯片 (NVDA / AMD / TSM)",
+        "sector_en": "US AI Semis",
+        "pct_low": 1.8,
+        "pct_high": 4.8,
         "direction": "positive",
-        "logic": "外交缓和信号最直接修复外资风险偏好"
+        "logic": "核心业绩与二线替代方案同步重估"
       },
       "bars": [
         {
+          "market": "A股",
+          "sector": "CPO 光模块 / 液冷 / PCB",
+          "sector_en": "A-Share Optics & Cooling",
+          "pct_low": 2.2,
+          "pct_high": 5.5,
+          "direction": "positive",
+          "logic": "海外云厂与大模型资本开支直接转化为订单"
+        },
+        {
+          "market": "A股",
+          "sector": "国产算力 / 封测与存储",
+          "sector_en": "Domestic Compute & Memory",
+          "pct_low": 1.5,
+          "pct_high": 4.0,
+          "direction": "positive",
+          "logic": "HBM 紧缺与算力国产化双轮驱动"
+        },
+        {
           "market": "美股",
-          "sector": "中概互联 (KWEB)",
-          "sector_en": "China ADRs (KWEB)",
-          "pct_low": 2.5,
-          "pct_high": 6.0,
-          "direction": "positive",
-          "logic": "外交缓和信号最直接修复外资风险偏好"
-        },
-        {
-          "market": "A股",
-          "sector": "出口链 / 消费电子 / 航运",
-          "sector_en": "Exporters & Shipping",
-          "pct_low": 2.0,
-          "pct_high": 5.0,
-          "direction": "positive",
-          "logic": "对美敞口高的家电与航运对关税边际最敏感"
-        },
-        {
-          "market": "A股",
-          "sector": "国产半导体设备 / 信创",
-          "sector_en": "Domestic Semis",
+          "sector": "算力芯片 (NVDA / AMD / TSM)",
+          "sector_en": "US AI Semis",
           "pct_low": 1.8,
-          "pct_high": 4.5,
+          "pct_high": 4.8,
           "direction": "positive",
-          "logic": "无论管制松紧，自主可控均为中线确定主线"
+          "logic": "核心业绩与二线替代方案同步重估"
         },
         {
           "market": "美股",
-          "sector": "在华营收美股 (AAPL/TSLA)",
-          "sector_en": "China-Exposed US Tech",
+          "sector": "云巨头与 AI 电力 (AMZN/VST)",
+          "sector_en": "Hyperscalers & Power",
           "pct_low": 1.2,
-          "pct_high": 3.5,
+          "pct_high": 3.2,
           "direction": "positive",
-          "logic": "供应链与亚太市场关税担忧阶段缓解"
+          "logic": "大模型训练推理锁定云消耗与数据中心电力"
         }
       ],
       "if_then": [
         {
-          "cond": "若落地关税豁免/联合公报",
-          "result": "KWEB 领涨 +4%~+7%，A股出口链 +3%~+6%",
+          "cond": "若挂牌/财报超预期",
+          "result": "光模块与算力链共振 +2.5%~+5.5%",
           "tone": "bullish"
         },
         {
-          "cond": "若加码芯片/关税限制",
-          "result": "出口链 -2%~-5%，国产半导体逆势 +2%~+5%",
+          "cond": "若高开抽血或出口收紧",
+          "result": "高位算力短线回吐 -2%~-4%",
           "tone": "bearish"
         }
       ],
@@ -1522,22 +1455,22 @@
         {
           "date": "已发生",
           "status": "done",
-          "label": "元首抵深与多边经贸谈判启动"
+          "label": "头部芯片财报/大模型 IPO 定价超预期"
         },
         {
           "date": "当前",
           "status": "current",
-          "label": "双边会晤与经贸框架磋商窗口"
+          "label": "二级市场重估 AI 算力与云厂商估值锚"
         },
         {
-          "date": "下周",
+          "date": "下月",
           "status": "upcoming",
-          "label": "追踪联合声明与具体关税清单细则"
+          "label": "验证云巨头季度 Capex 指引与出货量"
         }
       ]
     },
-    "evt_f968e4f18e2c": {
-      "event_id": "evt_f968e4f18e2c",
+    "evt_add2ce522061": {
+      "event_id": "evt_add2ce522061",
       "tag": "央行利率 · 流动性",
       "tag_en": "Fed & Liquidity",
       "polarity": "bearish",
@@ -1629,287 +1562,8 @@
         }
       ]
     },
-    "evt_33cc6b3ae679": {
-      "event_id": "evt_33cc6b3ae679",
-      "tag": "AI 算力 · 芯片链",
-      "tag_en": "AI Compute & Semis",
-      "polarity": "bullish",
-      "intensity": 5,
-      "one_liner": "AI 巨头巨额融资与芯片路线迭代锁定全球算力资本开支，直接拉动上游光模块、服务器液冷与芯片封装订单。",
-      "top_a": {
-        "market": "A股",
-        "sector": "CPO 光模块 / 液冷 / PCB",
-        "sector_en": "A-Share Optics & Cooling",
-        "pct_low": 2.2,
-        "pct_high": 5.5,
-        "direction": "positive",
-        "logic": "海外云厂与大模型资本开支直接转化为订单"
-      },
-      "top_us": {
-        "market": "美股",
-        "sector": "算力芯片 (NVDA / AMD / TSM)",
-        "sector_en": "US AI Semis",
-        "pct_low": 1.8,
-        "pct_high": 4.8,
-        "direction": "positive",
-        "logic": "核心业绩与二线替代方案同步重估"
-      },
-      "bars": [
-        {
-          "market": "A股",
-          "sector": "CPO 光模块 / 液冷 / PCB",
-          "sector_en": "A-Share Optics & Cooling",
-          "pct_low": 2.2,
-          "pct_high": 5.5,
-          "direction": "positive",
-          "logic": "海外云厂与大模型资本开支直接转化为订单"
-        },
-        {
-          "market": "A股",
-          "sector": "国产算力 / 封测与存储",
-          "sector_en": "Domestic Compute & Memory",
-          "pct_low": 1.5,
-          "pct_high": 4.0,
-          "direction": "positive",
-          "logic": "HBM 紧缺与算力国产化双轮驱动"
-        },
-        {
-          "market": "美股",
-          "sector": "算力芯片 (NVDA / AMD / TSM)",
-          "sector_en": "US AI Semis",
-          "pct_low": 1.8,
-          "pct_high": 4.8,
-          "direction": "positive",
-          "logic": "核心业绩与二线替代方案同步重估"
-        },
-        {
-          "market": "美股",
-          "sector": "云巨头与 AI 电力 (AMZN/VST)",
-          "sector_en": "Hyperscalers & Power",
-          "pct_low": 1.2,
-          "pct_high": 3.2,
-          "direction": "positive",
-          "logic": "大模型训练推理锁定云消耗与数据中心电力"
-        }
-      ],
-      "if_then": [
-        {
-          "cond": "若挂牌/财报超预期",
-          "result": "光模块与算力链共振 +2.5%~+5.5%",
-          "tone": "bullish"
-        },
-        {
-          "cond": "若高开抽血或出口收紧",
-          "result": "高位算力短线回吐 -2%~-4%",
-          "tone": "bearish"
-        }
-      ],
-      "milestones": [
-        {
-          "date": "已发生",
-          "status": "done",
-          "label": "头部芯片财报/大模型 IPO 定价超预期"
-        },
-        {
-          "date": "当前",
-          "status": "current",
-          "label": "二级市场重估 AI 算力与云厂商估值锚"
-        },
-        {
-          "date": "下月",
-          "status": "upcoming",
-          "label": "验证云巨头季度 Capex 指引与出货量"
-        }
-      ]
-    },
-    "evt_2211dad4fca7": {
-      "event_id": "evt_2211dad4fca7",
-      "tag": "AI 算力 · 芯片链",
-      "tag_en": "AI Compute & Semis",
-      "polarity": "bullish",
-      "intensity": 5,
-      "one_liner": "AI 巨头巨额融资与芯片路线迭代锁定全球算力资本开支，直接拉动上游光模块、服务器液冷与芯片封装订单。",
-      "top_a": {
-        "market": "A股",
-        "sector": "CPO 光模块 / 液冷 / PCB",
-        "sector_en": "A-Share Optics & Cooling",
-        "pct_low": 2.2,
-        "pct_high": 5.5,
-        "direction": "positive",
-        "logic": "海外云厂与大模型资本开支直接转化为订单"
-      },
-      "top_us": {
-        "market": "美股",
-        "sector": "算力芯片 (NVDA / AMD / TSM)",
-        "sector_en": "US AI Semis",
-        "pct_low": 1.8,
-        "pct_high": 4.8,
-        "direction": "positive",
-        "logic": "核心业绩与二线替代方案同步重估"
-      },
-      "bars": [
-        {
-          "market": "A股",
-          "sector": "CPO 光模块 / 液冷 / PCB",
-          "sector_en": "A-Share Optics & Cooling",
-          "pct_low": 2.2,
-          "pct_high": 5.5,
-          "direction": "positive",
-          "logic": "海外云厂与大模型资本开支直接转化为订单"
-        },
-        {
-          "market": "A股",
-          "sector": "国产算力 / 封测与存储",
-          "sector_en": "Domestic Compute & Memory",
-          "pct_low": 1.5,
-          "pct_high": 4.0,
-          "direction": "positive",
-          "logic": "HBM 紧缺与算力国产化双轮驱动"
-        },
-        {
-          "market": "美股",
-          "sector": "算力芯片 (NVDA / AMD / TSM)",
-          "sector_en": "US AI Semis",
-          "pct_low": 1.8,
-          "pct_high": 4.8,
-          "direction": "positive",
-          "logic": "核心业绩与二线替代方案同步重估"
-        },
-        {
-          "market": "美股",
-          "sector": "云巨头与 AI 电力 (AMZN/VST)",
-          "sector_en": "Hyperscalers & Power",
-          "pct_low": 1.2,
-          "pct_high": 3.2,
-          "direction": "positive",
-          "logic": "大模型训练推理锁定云消耗与数据中心电力"
-        }
-      ],
-      "if_then": [
-        {
-          "cond": "若挂牌/财报超预期",
-          "result": "光模块与算力链共振 +2.5%~+5.5%",
-          "tone": "bullish"
-        },
-        {
-          "cond": "若高开抽血或出口收紧",
-          "result": "高位算力短线回吐 -2%~-4%",
-          "tone": "bearish"
-        }
-      ],
-      "milestones": [
-        {
-          "date": "已发生",
-          "status": "done",
-          "label": "头部芯片财报/大模型 IPO 定价超预期"
-        },
-        {
-          "date": "当前",
-          "status": "current",
-          "label": "二级市场重估 AI 算力与云厂商估值锚"
-        },
-        {
-          "date": "下月",
-          "status": "upcoming",
-          "label": "验证云巨头季度 Capex 指引与出货量"
-        }
-      ]
-    },
-    "evt_5f83aaa3ec01": {
-      "event_id": "evt_5f83aaa3ec01",
-      "tag": "AI 算力 · 芯片链",
-      "tag_en": "AI Compute & Semis",
-      "polarity": "bearish",
-      "intensity": 5,
-      "one_liner": "AI 巨头巨额融资与芯片路线迭代锁定全球算力资本开支，直接拉动上游光模块、服务器液冷与芯片封装订单。",
-      "top_a": {
-        "market": "A股",
-        "sector": "CPO 光模块 / 液冷 / PCB",
-        "sector_en": "A-Share Optics & Cooling",
-        "pct_low": 2.2,
-        "pct_high": 5.5,
-        "direction": "positive",
-        "logic": "海外云厂与大模型资本开支直接转化为订单"
-      },
-      "top_us": {
-        "market": "美股",
-        "sector": "算力芯片 (NVDA / AMD / TSM)",
-        "sector_en": "US AI Semis",
-        "pct_low": 1.8,
-        "pct_high": 4.8,
-        "direction": "positive",
-        "logic": "核心业绩与二线替代方案同步重估"
-      },
-      "bars": [
-        {
-          "market": "A股",
-          "sector": "CPO 光模块 / 液冷 / PCB",
-          "sector_en": "A-Share Optics & Cooling",
-          "pct_low": 2.2,
-          "pct_high": 5.5,
-          "direction": "positive",
-          "logic": "海外云厂与大模型资本开支直接转化为订单"
-        },
-        {
-          "market": "A股",
-          "sector": "国产算力 / 封测与存储",
-          "sector_en": "Domestic Compute & Memory",
-          "pct_low": 1.5,
-          "pct_high": 4.0,
-          "direction": "positive",
-          "logic": "HBM 紧缺与算力国产化双轮驱动"
-        },
-        {
-          "market": "美股",
-          "sector": "算力芯片 (NVDA / AMD / TSM)",
-          "sector_en": "US AI Semis",
-          "pct_low": 1.8,
-          "pct_high": 4.8,
-          "direction": "positive",
-          "logic": "核心业绩与二线替代方案同步重估"
-        },
-        {
-          "market": "美股",
-          "sector": "云巨头与 AI 电力 (AMZN/VST)",
-          "sector_en": "Hyperscalers & Power",
-          "pct_low": 1.2,
-          "pct_high": 3.2,
-          "direction": "positive",
-          "logic": "大模型训练推理锁定云消耗与数据中心电力"
-        }
-      ],
-      "if_then": [
-        {
-          "cond": "若挂牌/财报超预期",
-          "result": "光模块与算力链共振 +2.5%~+5.5%",
-          "tone": "bullish"
-        },
-        {
-          "cond": "若高开抽血或出口收紧",
-          "result": "高位算力短线回吐 -2%~-4%",
-          "tone": "bearish"
-        }
-      ],
-      "milestones": [
-        {
-          "date": "已发生",
-          "status": "done",
-          "label": "头部芯片财报/大模型 IPO 定价超预期"
-        },
-        {
-          "date": "当前",
-          "status": "current",
-          "label": "二级市场重估 AI 算力与云厂商估值锚"
-        },
-        {
-          "date": "下月",
-          "status": "upcoming",
-          "label": "验证云巨头季度 Capex 指引与出货量"
-        }
-      ]
-    },
-    "evt_c09223f839fd": {
-      "event_id": "evt_c09223f839fd",
+    "evt_774a9b356ecb": {
+      "event_id": "evt_774a9b356ecb",
       "tag": "央行利率 · 流动性",
       "tag_en": "Fed & Liquidity",
       "polarity": "bearish",
@@ -2001,11 +1655,941 @@
         }
       ]
     },
-    "evt_ae821e626af0": {
-      "event_id": "evt_ae821e626af0",
+    "evt_f65981efc4c1": {
+      "event_id": "evt_f65981efc4c1",
+      "tag": "地缘外交 · 关税",
+      "tag_en": "Geopolitics & Tariffs",
+      "polarity": "bullish",
+      "intensity": 5,
+      "one_liner": "大国高层会晤重估未来关税清单与科技管制边界：释放缓和催化中概与出口链修复，摩擦升级则利好国产替代。",
+      "top_a": {
+        "market": "A股",
+        "sector": "出口链 / 消费电子 / 航运",
+        "sector_en": "Exporters & Shipping",
+        "pct_low": 2.0,
+        "pct_high": 5.0,
+        "direction": "positive",
+        "logic": "对美敞口高的家电与航运对关税边际最敏感"
+      },
+      "top_us": {
+        "market": "美股",
+        "sector": "中概互联 (KWEB)",
+        "sector_en": "China ADRs (KWEB)",
+        "pct_low": 2.5,
+        "pct_high": 6.0,
+        "direction": "positive",
+        "logic": "外交缓和信号最直接修复外资风险偏好"
+      },
+      "bars": [
+        {
+          "market": "美股",
+          "sector": "中概互联 (KWEB)",
+          "sector_en": "China ADRs (KWEB)",
+          "pct_low": 2.5,
+          "pct_high": 6.0,
+          "direction": "positive",
+          "logic": "外交缓和信号最直接修复外资风险偏好"
+        },
+        {
+          "market": "A股",
+          "sector": "出口链 / 消费电子 / 航运",
+          "sector_en": "Exporters & Shipping",
+          "pct_low": 2.0,
+          "pct_high": 5.0,
+          "direction": "positive",
+          "logic": "对美敞口高的家电与航运对关税边际最敏感"
+        },
+        {
+          "market": "A股",
+          "sector": "国产半导体设备 / 信创",
+          "sector_en": "Domestic Semis",
+          "pct_low": 1.8,
+          "pct_high": 4.5,
+          "direction": "positive",
+          "logic": "无论管制松紧，自主可控均为中线确定主线"
+        },
+        {
+          "market": "美股",
+          "sector": "在华营收美股 (AAPL/TSLA)",
+          "sector_en": "China-Exposed US Tech",
+          "pct_low": 1.2,
+          "pct_high": 3.5,
+          "direction": "positive",
+          "logic": "供应链与亚太市场关税担忧阶段缓解"
+        }
+      ],
+      "if_then": [
+        {
+          "cond": "若落地关税豁免/联合公报",
+          "result": "KWEB 领涨 +4%~+7%，A股出口链 +3%~+6%",
+          "tone": "bullish"
+        },
+        {
+          "cond": "若加码芯片/关税限制",
+          "result": "出口链 -2%~-5%，国产半导体逆势 +2%~+5%",
+          "tone": "bearish"
+        }
+      ],
+      "milestones": [
+        {
+          "date": "已发生",
+          "status": "done",
+          "label": "元首抵深与多边经贸谈判启动"
+        },
+        {
+          "date": "当前",
+          "status": "current",
+          "label": "双边会晤与经贸框架磋商窗口"
+        },
+        {
+          "date": "下周",
+          "status": "upcoming",
+          "label": "追踪联合声明与具体关税清单细则"
+        }
+      ]
+    },
+    "evt_2b368a18abc3": {
+      "event_id": "evt_2b368a18abc3",
+      "tag": "地缘外交 · 关税",
+      "tag_en": "Geopolitics & Tariffs",
+      "polarity": "divergent",
+      "intensity": 5,
+      "one_liner": "大国高层会晤重估未来关税清单与科技管制边界：释放缓和催化中概与出口链修复，摩擦升级则利好国产替代。",
+      "top_a": {
+        "market": "A股",
+        "sector": "出口链 / 消费电子 / 航运",
+        "sector_en": "Exporters & Shipping",
+        "pct_low": 2.0,
+        "pct_high": 5.0,
+        "direction": "positive",
+        "logic": "对美敞口高的家电与航运对关税边际最敏感"
+      },
+      "top_us": {
+        "market": "美股",
+        "sector": "中概互联 (KWEB)",
+        "sector_en": "China ADRs (KWEB)",
+        "pct_low": 2.5,
+        "pct_high": 6.0,
+        "direction": "positive",
+        "logic": "外交缓和信号最直接修复外资风险偏好"
+      },
+      "bars": [
+        {
+          "market": "美股",
+          "sector": "中概互联 (KWEB)",
+          "sector_en": "China ADRs (KWEB)",
+          "pct_low": 2.5,
+          "pct_high": 6.0,
+          "direction": "positive",
+          "logic": "外交缓和信号最直接修复外资风险偏好"
+        },
+        {
+          "market": "A股",
+          "sector": "出口链 / 消费电子 / 航运",
+          "sector_en": "Exporters & Shipping",
+          "pct_low": 2.0,
+          "pct_high": 5.0,
+          "direction": "positive",
+          "logic": "对美敞口高的家电与航运对关税边际最敏感"
+        },
+        {
+          "market": "A股",
+          "sector": "国产半导体设备 / 信创",
+          "sector_en": "Domestic Semis",
+          "pct_low": 1.8,
+          "pct_high": 4.5,
+          "direction": "positive",
+          "logic": "无论管制松紧，自主可控均为中线确定主线"
+        },
+        {
+          "market": "美股",
+          "sector": "在华营收美股 (AAPL/TSLA)",
+          "sector_en": "China-Exposed US Tech",
+          "pct_low": 1.2,
+          "pct_high": 3.5,
+          "direction": "positive",
+          "logic": "供应链与亚太市场关税担忧阶段缓解"
+        }
+      ],
+      "if_then": [
+        {
+          "cond": "若落地关税豁免/联合公报",
+          "result": "KWEB 领涨 +4%~+7%，A股出口链 +3%~+6%",
+          "tone": "bullish"
+        },
+        {
+          "cond": "若加码芯片/关税限制",
+          "result": "出口链 -2%~-5%，国产半导体逆势 +2%~+5%",
+          "tone": "bearish"
+        }
+      ],
+      "milestones": [
+        {
+          "date": "已发生",
+          "status": "done",
+          "label": "元首抵深与多边经贸谈判启动"
+        },
+        {
+          "date": "当前",
+          "status": "current",
+          "label": "双边会晤与经贸框架磋商窗口"
+        },
+        {
+          "date": "下周",
+          "status": "upcoming",
+          "label": "追踪联合声明与具体关税清单细则"
+        }
+      ]
+    },
+    "evt_39d70073da86": {
+      "event_id": "evt_39d70073da86",
+      "tag": "地缘外交 · 关税",
+      "tag_en": "Geopolitics & Tariffs",
+      "polarity": "divergent",
+      "intensity": 5,
+      "one_liner": "大国高层会晤重估未来关税清单与科技管制边界：释放缓和催化中概与出口链修复，摩擦升级则利好国产替代。",
+      "top_a": {
+        "market": "A股",
+        "sector": "出口链 / 消费电子 / 航运",
+        "sector_en": "Exporters & Shipping",
+        "pct_low": 2.0,
+        "pct_high": 5.0,
+        "direction": "positive",
+        "logic": "对美敞口高的家电与航运对关税边际最敏感"
+      },
+      "top_us": {
+        "market": "美股",
+        "sector": "中概互联 (KWEB)",
+        "sector_en": "China ADRs (KWEB)",
+        "pct_low": 2.5,
+        "pct_high": 6.0,
+        "direction": "positive",
+        "logic": "外交缓和信号最直接修复外资风险偏好"
+      },
+      "bars": [
+        {
+          "market": "美股",
+          "sector": "中概互联 (KWEB)",
+          "sector_en": "China ADRs (KWEB)",
+          "pct_low": 2.5,
+          "pct_high": 6.0,
+          "direction": "positive",
+          "logic": "外交缓和信号最直接修复外资风险偏好"
+        },
+        {
+          "market": "A股",
+          "sector": "出口链 / 消费电子 / 航运",
+          "sector_en": "Exporters & Shipping",
+          "pct_low": 2.0,
+          "pct_high": 5.0,
+          "direction": "positive",
+          "logic": "对美敞口高的家电与航运对关税边际最敏感"
+        },
+        {
+          "market": "A股",
+          "sector": "国产半导体设备 / 信创",
+          "sector_en": "Domestic Semis",
+          "pct_low": 1.8,
+          "pct_high": 4.5,
+          "direction": "positive",
+          "logic": "无论管制松紧，自主可控均为中线确定主线"
+        },
+        {
+          "market": "美股",
+          "sector": "在华营收美股 (AAPL/TSLA)",
+          "sector_en": "China-Exposed US Tech",
+          "pct_low": 1.2,
+          "pct_high": 3.5,
+          "direction": "positive",
+          "logic": "供应链与亚太市场关税担忧阶段缓解"
+        }
+      ],
+      "if_then": [
+        {
+          "cond": "若落地关税豁免/联合公报",
+          "result": "KWEB 领涨 +4%~+7%，A股出口链 +3%~+6%",
+          "tone": "bullish"
+        },
+        {
+          "cond": "若加码芯片/关税限制",
+          "result": "出口链 -2%~-5%，国产半导体逆势 +2%~+5%",
+          "tone": "bearish"
+        }
+      ],
+      "milestones": [
+        {
+          "date": "已发生",
+          "status": "done",
+          "label": "元首抵深与多边经贸谈判启动"
+        },
+        {
+          "date": "当前",
+          "status": "current",
+          "label": "双边会晤与经贸框架磋商窗口"
+        },
+        {
+          "date": "下周",
+          "status": "upcoming",
+          "label": "追踪联合声明与具体关税清单细则"
+        }
+      ]
+    },
+    "evt_255f0bc3d9a8": {
+      "event_id": "evt_255f0bc3d9a8",
+      "tag": "AI 算力 · 芯片链",
+      "tag_en": "AI Compute & Semis",
+      "polarity": "bullish",
+      "intensity": 5,
+      "one_liner": "AI 巨头巨额融资与芯片路线迭代锁定全球算力资本开支，直接拉动上游光模块、服务器液冷与芯片封装订单。",
+      "top_a": {
+        "market": "A股",
+        "sector": "CPO 光模块 / 液冷 / PCB",
+        "sector_en": "A-Share Optics & Cooling",
+        "pct_low": 2.2,
+        "pct_high": 5.5,
+        "direction": "positive",
+        "logic": "海外云厂与大模型资本开支直接转化为订单"
+      },
+      "top_us": {
+        "market": "美股",
+        "sector": "算力芯片 (NVDA / AMD / TSM)",
+        "sector_en": "US AI Semis",
+        "pct_low": 1.8,
+        "pct_high": 4.8,
+        "direction": "positive",
+        "logic": "核心业绩与二线替代方案同步重估"
+      },
+      "bars": [
+        {
+          "market": "A股",
+          "sector": "CPO 光模块 / 液冷 / PCB",
+          "sector_en": "A-Share Optics & Cooling",
+          "pct_low": 2.2,
+          "pct_high": 5.5,
+          "direction": "positive",
+          "logic": "海外云厂与大模型资本开支直接转化为订单"
+        },
+        {
+          "market": "A股",
+          "sector": "国产算力 / 封测与存储",
+          "sector_en": "Domestic Compute & Memory",
+          "pct_low": 1.5,
+          "pct_high": 4.0,
+          "direction": "positive",
+          "logic": "HBM 紧缺与算力国产化双轮驱动"
+        },
+        {
+          "market": "美股",
+          "sector": "算力芯片 (NVDA / AMD / TSM)",
+          "sector_en": "US AI Semis",
+          "pct_low": 1.8,
+          "pct_high": 4.8,
+          "direction": "positive",
+          "logic": "核心业绩与二线替代方案同步重估"
+        },
+        {
+          "market": "美股",
+          "sector": "云巨头与 AI 电力 (AMZN/VST)",
+          "sector_en": "Hyperscalers & Power",
+          "pct_low": 1.2,
+          "pct_high": 3.2,
+          "direction": "positive",
+          "logic": "大模型训练推理锁定云消耗与数据中心电力"
+        }
+      ],
+      "if_then": [
+        {
+          "cond": "若挂牌/财报超预期",
+          "result": "光模块与算力链共振 +2.5%~+5.5%",
+          "tone": "bullish"
+        },
+        {
+          "cond": "若高开抽血或出口收紧",
+          "result": "高位算力短线回吐 -2%~-4%",
+          "tone": "bearish"
+        }
+      ],
+      "milestones": [
+        {
+          "date": "已发生",
+          "status": "done",
+          "label": "头部芯片财报/大模型 IPO 定价超预期"
+        },
+        {
+          "date": "当前",
+          "status": "current",
+          "label": "二级市场重估 AI 算力与云厂商估值锚"
+        },
+        {
+          "date": "下月",
+          "status": "upcoming",
+          "label": "验证云巨头季度 Capex 指引与出货量"
+        }
+      ]
+    },
+    "evt_1751fc7ee426": {
+      "event_id": "evt_1751fc7ee426",
+      "tag": "AI 算力 · 芯片链",
+      "tag_en": "AI Compute & Semis",
+      "polarity": "bullish",
+      "intensity": 5,
+      "one_liner": "AI 巨头巨额融资与芯片路线迭代锁定全球算力资本开支，直接拉动上游光模块、服务器液冷与芯片封装订单。",
+      "top_a": {
+        "market": "A股",
+        "sector": "CPO 光模块 / 液冷 / PCB",
+        "sector_en": "A-Share Optics & Cooling",
+        "pct_low": 2.2,
+        "pct_high": 5.5,
+        "direction": "positive",
+        "logic": "海外云厂与大模型资本开支直接转化为订单"
+      },
+      "top_us": {
+        "market": "美股",
+        "sector": "算力芯片 (NVDA / AMD / TSM)",
+        "sector_en": "US AI Semis",
+        "pct_low": 1.8,
+        "pct_high": 4.8,
+        "direction": "positive",
+        "logic": "核心业绩与二线替代方案同步重估"
+      },
+      "bars": [
+        {
+          "market": "A股",
+          "sector": "CPO 光模块 / 液冷 / PCB",
+          "sector_en": "A-Share Optics & Cooling",
+          "pct_low": 2.2,
+          "pct_high": 5.5,
+          "direction": "positive",
+          "logic": "海外云厂与大模型资本开支直接转化为订单"
+        },
+        {
+          "market": "A股",
+          "sector": "国产算力 / 封测与存储",
+          "sector_en": "Domestic Compute & Memory",
+          "pct_low": 1.5,
+          "pct_high": 4.0,
+          "direction": "positive",
+          "logic": "HBM 紧缺与算力国产化双轮驱动"
+        },
+        {
+          "market": "美股",
+          "sector": "算力芯片 (NVDA / AMD / TSM)",
+          "sector_en": "US AI Semis",
+          "pct_low": 1.8,
+          "pct_high": 4.8,
+          "direction": "positive",
+          "logic": "核心业绩与二线替代方案同步重估"
+        },
+        {
+          "market": "美股",
+          "sector": "云巨头与 AI 电力 (AMZN/VST)",
+          "sector_en": "Hyperscalers & Power",
+          "pct_low": 1.2,
+          "pct_high": 3.2,
+          "direction": "positive",
+          "logic": "大模型训练推理锁定云消耗与数据中心电力"
+        }
+      ],
+      "if_then": [
+        {
+          "cond": "若挂牌/财报超预期",
+          "result": "光模块与算力链共振 +2.5%~+5.5%",
+          "tone": "bullish"
+        },
+        {
+          "cond": "若高开抽血或出口收紧",
+          "result": "高位算力短线回吐 -2%~-4%",
+          "tone": "bearish"
+        }
+      ],
+      "milestones": [
+        {
+          "date": "已发生",
+          "status": "done",
+          "label": "头部芯片财报/大模型 IPO 定价超预期"
+        },
+        {
+          "date": "当前",
+          "status": "current",
+          "label": "二级市场重估 AI 算力与云厂商估值锚"
+        },
+        {
+          "date": "下月",
+          "status": "upcoming",
+          "label": "验证云巨头季度 Capex 指引与出货量"
+        }
+      ]
+    },
+    "evt_c395f9ae842d": {
+      "event_id": "evt_c395f9ae842d",
+      "tag": "能源原油 · 地缘风险",
+      "tag_en": "Energy & Geopolitics",
+      "polarity": "divergent",
+      "intensity": 4,
+      "one_liner": "地缘冲突或产油国决议直接左右国际油价与海运运价：油价飙升利好油气采掘与油运，但推高通胀并挤压航空/化工利润。",
+      "top_a": {
+        "market": "A股",
+        "sector": "石油石化 / 油运 / 煤炭",
+        "sector_en": "Oil & Tankers",
+        "pct_low": 2.0,
+        "pct_high": 5.0,
+        "direction": "positive",
+        "logic": "布伦特油价与 VLCC 运价跳升直接增厚上游盈利"
+      },
+      "top_us": {
+        "market": "美股",
+        "sector": "美国能源板块 (XLE / XOM)",
+        "sector_en": "US Energy (XLE)",
+        "pct_low": 1.8,
+        "pct_high": 4.2,
+        "direction": "positive",
+        "logic": "现金流随油价中枢上移同步扩张"
+      },
+      "bars": [
+        {
+          "market": "A股",
+          "sector": "石油石化 / 油运 / 煤炭",
+          "sector_en": "Oil & Tankers",
+          "pct_low": 2.0,
+          "pct_high": 5.0,
+          "direction": "positive",
+          "logic": "布伦特油价与 VLCC 运价跳升直接增厚上游盈利"
+        },
+        {
+          "market": "A股",
+          "sector": "航空机场 / 基础化工",
+          "sector_en": "Airlines & Chemicals",
+          "pct_low": -3.2,
+          "pct_high": -1.2,
+          "direction": "negative",
+          "logic": "航油与原材料成本上升挤压毛利率"
+        },
+        {
+          "market": "美股",
+          "sector": "美国能源板块 (XLE / XOM)",
+          "sector_en": "US Energy (XLE)",
+          "pct_low": 1.8,
+          "pct_high": 4.2,
+          "direction": "positive",
+          "logic": "现金流随油价中枢上移同步扩张"
+        },
+        {
+          "market": "大宗",
+          "sector": "布伦特原油 / 黄金避险",
+          "sector_en": "Brent Crude & Gold",
+          "pct_low": 2.0,
+          "pct_high": 6.0,
+          "direction": "positive",
+          "logic": "供给中断溢价与地缘避险共振"
+        }
+      ],
+      "if_then": [
+        {
+          "cond": "若冲突升级/海峡受阻",
+          "result": "油气与黄金急涨 +3%~+6%，航空承压",
+          "tone": "bearish"
+        },
+        {
+          "cond": "若达成停火/增产协议",
+          "result": "油价回落 -3%~-6%，航空与成长股反弹",
+          "tone": "bullish"
+        }
+      ],
+      "milestones": [
+        {
+          "date": "已发生",
+          "status": "done",
+          "label": "产油区/航道局势出现突发变量"
+        },
+        {
+          "date": "当前",
+          "status": "current",
+          "label": "原油期货计入风险溢价，观察是否实质断供"
+        },
+        {
+          "date": "下周",
+          "status": "upcoming",
+          "label": "关注 OPEC+ 产量指引及外交斡旋结果"
+        }
+      ]
+    },
+    "evt_fdea8e4a3e2b": {
+      "event_id": "evt_fdea8e4a3e2b",
+      "tag": "地缘外交 · 关税",
+      "tag_en": "Geopolitics & Tariffs",
+      "polarity": "divergent",
+      "intensity": 5,
+      "one_liner": "大国高层会晤重估未来关税清单与科技管制边界：释放缓和催化中概与出口链修复，摩擦升级则利好国产替代。",
+      "top_a": {
+        "market": "A股",
+        "sector": "出口链 / 消费电子 / 航运",
+        "sector_en": "Exporters & Shipping",
+        "pct_low": 2.0,
+        "pct_high": 5.0,
+        "direction": "positive",
+        "logic": "对美敞口高的家电与航运对关税边际最敏感"
+      },
+      "top_us": {
+        "market": "美股",
+        "sector": "中概互联 (KWEB)",
+        "sector_en": "China ADRs (KWEB)",
+        "pct_low": 2.5,
+        "pct_high": 6.0,
+        "direction": "positive",
+        "logic": "外交缓和信号最直接修复外资风险偏好"
+      },
+      "bars": [
+        {
+          "market": "美股",
+          "sector": "中概互联 (KWEB)",
+          "sector_en": "China ADRs (KWEB)",
+          "pct_low": 2.5,
+          "pct_high": 6.0,
+          "direction": "positive",
+          "logic": "外交缓和信号最直接修复外资风险偏好"
+        },
+        {
+          "market": "A股",
+          "sector": "出口链 / 消费电子 / 航运",
+          "sector_en": "Exporters & Shipping",
+          "pct_low": 2.0,
+          "pct_high": 5.0,
+          "direction": "positive",
+          "logic": "对美敞口高的家电与航运对关税边际最敏感"
+        },
+        {
+          "market": "A股",
+          "sector": "国产半导体设备 / 信创",
+          "sector_en": "Domestic Semis",
+          "pct_low": 1.8,
+          "pct_high": 4.5,
+          "direction": "positive",
+          "logic": "无论管制松紧，自主可控均为中线确定主线"
+        },
+        {
+          "market": "美股",
+          "sector": "在华营收美股 (AAPL/TSLA)",
+          "sector_en": "China-Exposed US Tech",
+          "pct_low": 1.2,
+          "pct_high": 3.5,
+          "direction": "positive",
+          "logic": "供应链与亚太市场关税担忧阶段缓解"
+        }
+      ],
+      "if_then": [
+        {
+          "cond": "若落地关税豁免/联合公报",
+          "result": "KWEB 领涨 +4%~+7%，A股出口链 +3%~+6%",
+          "tone": "bullish"
+        },
+        {
+          "cond": "若加码芯片/关税限制",
+          "result": "出口链 -2%~-5%，国产半导体逆势 +2%~+5%",
+          "tone": "bearish"
+        }
+      ],
+      "milestones": [
+        {
+          "date": "已发生",
+          "status": "done",
+          "label": "元首抵深与多边经贸谈判启动"
+        },
+        {
+          "date": "当前",
+          "status": "current",
+          "label": "双边会晤与经贸框架磋商窗口"
+        },
+        {
+          "date": "下周",
+          "status": "upcoming",
+          "label": "追踪联合声明与具体关税清单细则"
+        }
+      ]
+    },
+    "evt_f5a944337c75": {
+      "event_id": "evt_f5a944337c75",
+      "tag": "地缘外交 · 关税",
+      "tag_en": "Geopolitics & Tariffs",
+      "polarity": "bullish",
+      "intensity": 5,
+      "one_liner": "大国高层会晤重估未来关税清单与科技管制边界：释放缓和催化中概与出口链修复，摩擦升级则利好国产替代。",
+      "top_a": {
+        "market": "A股",
+        "sector": "出口链 / 消费电子 / 航运",
+        "sector_en": "Exporters & Shipping",
+        "pct_low": 2.0,
+        "pct_high": 5.0,
+        "direction": "positive",
+        "logic": "对美敞口高的家电与航运对关税边际最敏感"
+      },
+      "top_us": {
+        "market": "美股",
+        "sector": "中概互联 (KWEB)",
+        "sector_en": "China ADRs (KWEB)",
+        "pct_low": 2.5,
+        "pct_high": 6.0,
+        "direction": "positive",
+        "logic": "外交缓和信号最直接修复外资风险偏好"
+      },
+      "bars": [
+        {
+          "market": "美股",
+          "sector": "中概互联 (KWEB)",
+          "sector_en": "China ADRs (KWEB)",
+          "pct_low": 2.5,
+          "pct_high": 6.0,
+          "direction": "positive",
+          "logic": "外交缓和信号最直接修复外资风险偏好"
+        },
+        {
+          "market": "A股",
+          "sector": "出口链 / 消费电子 / 航运",
+          "sector_en": "Exporters & Shipping",
+          "pct_low": 2.0,
+          "pct_high": 5.0,
+          "direction": "positive",
+          "logic": "对美敞口高的家电与航运对关税边际最敏感"
+        },
+        {
+          "market": "A股",
+          "sector": "国产半导体设备 / 信创",
+          "sector_en": "Domestic Semis",
+          "pct_low": 1.8,
+          "pct_high": 4.5,
+          "direction": "positive",
+          "logic": "无论管制松紧，自主可控均为中线确定主线"
+        },
+        {
+          "market": "美股",
+          "sector": "在华营收美股 (AAPL/TSLA)",
+          "sector_en": "China-Exposed US Tech",
+          "pct_low": 1.2,
+          "pct_high": 3.5,
+          "direction": "positive",
+          "logic": "供应链与亚太市场关税担忧阶段缓解"
+        }
+      ],
+      "if_then": [
+        {
+          "cond": "若落地关税豁免/联合公报",
+          "result": "KWEB 领涨 +4%~+7%，A股出口链 +3%~+6%",
+          "tone": "bullish"
+        },
+        {
+          "cond": "若加码芯片/关税限制",
+          "result": "出口链 -2%~-5%，国产半导体逆势 +2%~+5%",
+          "tone": "bearish"
+        }
+      ],
+      "milestones": [
+        {
+          "date": "已发生",
+          "status": "done",
+          "label": "元首抵深与多边经贸谈判启动"
+        },
+        {
+          "date": "当前",
+          "status": "current",
+          "label": "双边会晤与经贸框架磋商窗口"
+        },
+        {
+          "date": "下周",
+          "status": "upcoming",
+          "label": "追踪联合声明与具体关税清单细则"
+        }
+      ]
+    },
+    "evt_eb69a6ab9e28": {
+      "event_id": "evt_eb69a6ab9e28",
+      "tag": "地缘外交 · 关税",
+      "tag_en": "Geopolitics & Tariffs",
+      "polarity": "divergent",
+      "intensity": 5,
+      "one_liner": "大国高层会晤重估未来关税清单与科技管制边界：释放缓和催化中概与出口链修复，摩擦升级则利好国产替代。",
+      "top_a": {
+        "market": "A股",
+        "sector": "出口链 / 消费电子 / 航运",
+        "sector_en": "Exporters & Shipping",
+        "pct_low": 2.0,
+        "pct_high": 5.0,
+        "direction": "positive",
+        "logic": "对美敞口高的家电与航运对关税边际最敏感"
+      },
+      "top_us": {
+        "market": "美股",
+        "sector": "中概互联 (KWEB)",
+        "sector_en": "China ADRs (KWEB)",
+        "pct_low": 2.5,
+        "pct_high": 6.0,
+        "direction": "positive",
+        "logic": "外交缓和信号最直接修复外资风险偏好"
+      },
+      "bars": [
+        {
+          "market": "美股",
+          "sector": "中概互联 (KWEB)",
+          "sector_en": "China ADRs (KWEB)",
+          "pct_low": 2.5,
+          "pct_high": 6.0,
+          "direction": "positive",
+          "logic": "外交缓和信号最直接修复外资风险偏好"
+        },
+        {
+          "market": "A股",
+          "sector": "出口链 / 消费电子 / 航运",
+          "sector_en": "Exporters & Shipping",
+          "pct_low": 2.0,
+          "pct_high": 5.0,
+          "direction": "positive",
+          "logic": "对美敞口高的家电与航运对关税边际最敏感"
+        },
+        {
+          "market": "A股",
+          "sector": "国产半导体设备 / 信创",
+          "sector_en": "Domestic Semis",
+          "pct_low": 1.8,
+          "pct_high": 4.5,
+          "direction": "positive",
+          "logic": "无论管制松紧，自主可控均为中线确定主线"
+        },
+        {
+          "market": "美股",
+          "sector": "在华营收美股 (AAPL/TSLA)",
+          "sector_en": "China-Exposed US Tech",
+          "pct_low": 1.2,
+          "pct_high": 3.5,
+          "direction": "positive",
+          "logic": "供应链与亚太市场关税担忧阶段缓解"
+        }
+      ],
+      "if_then": [
+        {
+          "cond": "若落地关税豁免/联合公报",
+          "result": "KWEB 领涨 +4%~+7%，A股出口链 +3%~+6%",
+          "tone": "bullish"
+        },
+        {
+          "cond": "若加码芯片/关税限制",
+          "result": "出口链 -2%~-5%，国产半导体逆势 +2%~+5%",
+          "tone": "bearish"
+        }
+      ],
+      "milestones": [
+        {
+          "date": "已发生",
+          "status": "done",
+          "label": "元首抵深与多边经贸谈判启动"
+        },
+        {
+          "date": "当前",
+          "status": "current",
+          "label": "双边会晤与经贸框架磋商窗口"
+        },
+        {
+          "date": "下周",
+          "status": "upcoming",
+          "label": "追踪联合声明与具体关税清单细则"
+        }
+      ]
+    },
+    "evt_dd2fa0172a58": {
+      "event_id": "evt_dd2fa0172a58",
+      "tag": "地缘外交 · 关税",
+      "tag_en": "Geopolitics & Tariffs",
+      "polarity": "divergent",
+      "intensity": 5,
+      "one_liner": "大国高层会晤重估未来关税清单与科技管制边界：释放缓和催化中概与出口链修复，摩擦升级则利好国产替代。",
+      "top_a": {
+        "market": "A股",
+        "sector": "出口链 / 消费电子 / 航运",
+        "sector_en": "Exporters & Shipping",
+        "pct_low": 2.0,
+        "pct_high": 5.0,
+        "direction": "positive",
+        "logic": "对美敞口高的家电与航运对关税边际最敏感"
+      },
+      "top_us": {
+        "market": "美股",
+        "sector": "中概互联 (KWEB)",
+        "sector_en": "China ADRs (KWEB)",
+        "pct_low": 2.5,
+        "pct_high": 6.0,
+        "direction": "positive",
+        "logic": "外交缓和信号最直接修复外资风险偏好"
+      },
+      "bars": [
+        {
+          "market": "美股",
+          "sector": "中概互联 (KWEB)",
+          "sector_en": "China ADRs (KWEB)",
+          "pct_low": 2.5,
+          "pct_high": 6.0,
+          "direction": "positive",
+          "logic": "外交缓和信号最直接修复外资风险偏好"
+        },
+        {
+          "market": "A股",
+          "sector": "出口链 / 消费电子 / 航运",
+          "sector_en": "Exporters & Shipping",
+          "pct_low": 2.0,
+          "pct_high": 5.0,
+          "direction": "positive",
+          "logic": "对美敞口高的家电与航运对关税边际最敏感"
+        },
+        {
+          "market": "A股",
+          "sector": "国产半导体设备 / 信创",
+          "sector_en": "Domestic Semis",
+          "pct_low": 1.8,
+          "pct_high": 4.5,
+          "direction": "positive",
+          "logic": "无论管制松紧，自主可控均为中线确定主线"
+        },
+        {
+          "market": "美股",
+          "sector": "在华营收美股 (AAPL/TSLA)",
+          "sector_en": "China-Exposed US Tech",
+          "pct_low": 1.2,
+          "pct_high": 3.5,
+          "direction": "positive",
+          "logic": "供应链与亚太市场关税担忧阶段缓解"
+        }
+      ],
+      "if_then": [
+        {
+          "cond": "若落地关税豁免/联合公报",
+          "result": "KWEB 领涨 +4%~+7%，A股出口链 +3%~+6%",
+          "tone": "bullish"
+        },
+        {
+          "cond": "若加码芯片/关税限制",
+          "result": "出口链 -2%~-5%，国产半导体逆势 +2%~+5%",
+          "tone": "bearish"
+        }
+      ],
+      "milestones": [
+        {
+          "date": "已发生",
+          "status": "done",
+          "label": "元首抵深与多边经贸谈判启动"
+        },
+        {
+          "date": "当前",
+          "status": "current",
+          "label": "双边会晤与经贸框架磋商窗口"
+        },
+        {
+          "date": "下周",
+          "status": "upcoming",
+          "label": "追踪联合声明与具体关税清单细则"
+        }
+      ]
+    },
+    "evt_e854283f8012": {
+      "event_id": "evt_e854283f8012",
       "tag": "央行利率 · 流动性",
       "tag_en": "Fed & Liquidity",
-      "polarity": "divergent",
+      "polarity": "bearish",
       "intensity": 5,
       "one_liner": "利率预期直接改写全球资产折现率：鹰派利空黄金与高估值成长股，利好美元与高股息银行；鸽派则反向修复。",
       "top_a": {
@@ -2094,11 +2678,11 @@
         }
       ]
     },
-    "evt_e91a768dc621": {
-      "event_id": "evt_e91a768dc621",
+    "evt_d24d540c230a": {
+      "event_id": "evt_d24d540c230a",
       "tag": "能源原油 · 地缘风险",
       "tag_en": "Energy & Geopolitics",
-      "polarity": "bearish",
+      "polarity": "divergent",
       "intensity": 4,
       "one_liner": "地缘冲突或产油国决议直接左右国际油价与海运运价：油价飙升利好油气采掘与油运，但推高通胀并挤压航空/化工利润。",
       "top_a": {
@@ -2187,194 +2771,101 @@
         }
       ]
     },
-    "evt_1a23ab2d39e8": {
-      "event_id": "evt_1a23ab2d39e8",
-      "tag": "AI 算力 · 芯片链",
-      "tag_en": "AI Compute & Semis",
+    "evt_f339db4b2877": {
+      "event_id": "evt_f339db4b2877",
+      "tag": "能源原油 · 地缘风险",
+      "tag_en": "Energy & Geopolitics",
       "polarity": "bullish",
-      "intensity": 5,
-      "one_liner": "AI 巨头巨额融资与芯片路线迭代锁定全球算力资本开支，直接拉动上游光模块、服务器液冷与芯片封装订单。",
+      "intensity": 4,
+      "one_liner": "地缘冲突或产油国决议直接左右国际油价与海运运价：油价飙升利好油气采掘与油运，但推高通胀并挤压航空/化工利润。",
       "top_a": {
         "market": "A股",
-        "sector": "CPO 光模块 / 液冷 / PCB",
-        "sector_en": "A-Share Optics & Cooling",
-        "pct_low": 2.2,
-        "pct_high": 5.5,
-        "direction": "positive",
-        "logic": "海外云厂与大模型资本开支直接转化为订单"
-      },
-      "top_us": {
-        "market": "美股",
-        "sector": "算力芯片 (NVDA / AMD / TSM)",
-        "sector_en": "US AI Semis",
-        "pct_low": 1.8,
-        "pct_high": 4.8,
-        "direction": "positive",
-        "logic": "核心业绩与二线替代方案同步重估"
-      },
-      "bars": [
-        {
-          "market": "A股",
-          "sector": "CPO 光模块 / 液冷 / PCB",
-          "sector_en": "A-Share Optics & Cooling",
-          "pct_low": 2.2,
-          "pct_high": 5.5,
-          "direction": "positive",
-          "logic": "海外云厂与大模型资本开支直接转化为订单"
-        },
-        {
-          "market": "A股",
-          "sector": "国产算力 / 封测与存储",
-          "sector_en": "Domestic Compute & Memory",
-          "pct_low": 1.5,
-          "pct_high": 4.0,
-          "direction": "positive",
-          "logic": "HBM 紧缺与算力国产化双轮驱动"
-        },
-        {
-          "market": "美股",
-          "sector": "算力芯片 (NVDA / AMD / TSM)",
-          "sector_en": "US AI Semis",
-          "pct_low": 1.8,
-          "pct_high": 4.8,
-          "direction": "positive",
-          "logic": "核心业绩与二线替代方案同步重估"
-        },
-        {
-          "market": "美股",
-          "sector": "云巨头与 AI 电力 (AMZN/VST)",
-          "sector_en": "Hyperscalers & Power",
-          "pct_low": 1.2,
-          "pct_high": 3.2,
-          "direction": "positive",
-          "logic": "大模型训练推理锁定云消耗与数据中心电力"
-        }
-      ],
-      "if_then": [
-        {
-          "cond": "若挂牌/财报超预期",
-          "result": "光模块与算力链共振 +2.5%~+5.5%",
-          "tone": "bullish"
-        },
-        {
-          "cond": "若高开抽血或出口收紧",
-          "result": "高位算力短线回吐 -2%~-4%",
-          "tone": "bearish"
-        }
-      ],
-      "milestones": [
-        {
-          "date": "已发生",
-          "status": "done",
-          "label": "头部芯片财报/大模型 IPO 定价超预期"
-        },
-        {
-          "date": "当前",
-          "status": "current",
-          "label": "二级市场重估 AI 算力与云厂商估值锚"
-        },
-        {
-          "date": "下月",
-          "status": "upcoming",
-          "label": "验证云巨头季度 Capex 指引与出货量"
-        }
-      ]
-    },
-    "evt_3210971abbc0": {
-      "event_id": "evt_3210971abbc0",
-      "tag": "地缘外交 · 关税",
-      "tag_en": "Geopolitics & Tariffs",
-      "polarity": "bullish",
-      "intensity": 5,
-      "one_liner": "大国高层会晤重估未来关税清单与科技管制边界：释放缓和催化中概与出口链修复，摩擦升级则利好国产替代。",
-      "top_a": {
-        "market": "A股",
-        "sector": "出口链 / 消费电子 / 航运",
-        "sector_en": "Exporters & Shipping",
+        "sector": "石油石化 / 油运 / 煤炭",
+        "sector_en": "Oil & Tankers",
         "pct_low": 2.0,
         "pct_high": 5.0,
         "direction": "positive",
-        "logic": "对美敞口高的家电与航运对关税边际最敏感"
+        "logic": "布伦特油价与 VLCC 运价跳升直接增厚上游盈利"
       },
       "top_us": {
         "market": "美股",
-        "sector": "中概互联 (KWEB)",
-        "sector_en": "China ADRs (KWEB)",
-        "pct_low": 2.5,
-        "pct_high": 6.0,
+        "sector": "美国能源板块 (XLE / XOM)",
+        "sector_en": "US Energy (XLE)",
+        "pct_low": 1.8,
+        "pct_high": 4.2,
         "direction": "positive",
-        "logic": "外交缓和信号最直接修复外资风险偏好"
+        "logic": "现金流随油价中枢上移同步扩张"
       },
       "bars": [
         {
-          "market": "美股",
-          "sector": "中概互联 (KWEB)",
-          "sector_en": "China ADRs (KWEB)",
-          "pct_low": 2.5,
-          "pct_high": 6.0,
-          "direction": "positive",
-          "logic": "外交缓和信号最直接修复外资风险偏好"
-        },
-        {
           "market": "A股",
-          "sector": "出口链 / 消费电子 / 航运",
-          "sector_en": "Exporters & Shipping",
+          "sector": "石油石化 / 油运 / 煤炭",
+          "sector_en": "Oil & Tankers",
           "pct_low": 2.0,
           "pct_high": 5.0,
           "direction": "positive",
-          "logic": "对美敞口高的家电与航运对关税边际最敏感"
+          "logic": "布伦特油价与 VLCC 运价跳升直接增厚上游盈利"
         },
         {
           "market": "A股",
-          "sector": "国产半导体设备 / 信创",
-          "sector_en": "Domestic Semis",
-          "pct_low": 1.8,
-          "pct_high": 4.5,
-          "direction": "positive",
-          "logic": "无论管制松紧，自主可控均为中线确定主线"
+          "sector": "航空机场 / 基础化工",
+          "sector_en": "Airlines & Chemicals",
+          "pct_low": -3.2,
+          "pct_high": -1.2,
+          "direction": "negative",
+          "logic": "航油与原材料成本上升挤压毛利率"
         },
         {
           "market": "美股",
-          "sector": "在华营收美股 (AAPL/TSLA)",
-          "sector_en": "China-Exposed US Tech",
-          "pct_low": 1.2,
-          "pct_high": 3.5,
+          "sector": "美国能源板块 (XLE / XOM)",
+          "sector_en": "US Energy (XLE)",
+          "pct_low": 1.8,
+          "pct_high": 4.2,
           "direction": "positive",
-          "logic": "供应链与亚太市场关税担忧阶段缓解"
+          "logic": "现金流随油价中枢上移同步扩张"
+        },
+        {
+          "market": "大宗",
+          "sector": "布伦特原油 / 黄金避险",
+          "sector_en": "Brent Crude & Gold",
+          "pct_low": 2.0,
+          "pct_high": 6.0,
+          "direction": "positive",
+          "logic": "供给中断溢价与地缘避险共振"
         }
       ],
       "if_then": [
         {
-          "cond": "若落地关税豁免/联合公报",
-          "result": "KWEB 领涨 +4%~+7%，A股出口链 +3%~+6%",
-          "tone": "bullish"
+          "cond": "若冲突升级/海峡受阻",
+          "result": "油气与黄金急涨 +3%~+6%，航空承压",
+          "tone": "bearish"
         },
         {
-          "cond": "若加码芯片/关税限制",
-          "result": "出口链 -2%~-5%，国产半导体逆势 +2%~+5%",
-          "tone": "bearish"
+          "cond": "若达成停火/增产协议",
+          "result": "油价回落 -3%~-6%，航空与成长股反弹",
+          "tone": "bullish"
         }
       ],
       "milestones": [
         {
           "date": "已发生",
           "status": "done",
-          "label": "元首抵深与多边经贸谈判启动"
+          "label": "产油区/航道局势出现突发变量"
         },
         {
           "date": "当前",
           "status": "current",
-          "label": "双边会晤与经贸框架磋商窗口"
+          "label": "原油期货计入风险溢价，观察是否实质断供"
         },
         {
           "date": "下周",
           "status": "upcoming",
-          "label": "追踪联合声明与具体关税清单细则"
+          "label": "关注 OPEC+ 产量指引及外交斡旋结果"
         }
       ]
     },
-    "evt_85fe4828b8dd": {
-      "event_id": "evt_85fe4828b8dd",
+    "evt_760ce64aa9b7": {
+      "event_id": "evt_760ce64aa9b7",
       "tag": "地缘外交 · 关税",
       "tag_en": "Geopolitics & Tariffs",
       "polarity": "divergent",
@@ -2466,8 +2957,8 @@
         }
       ]
     },
-    "evt_5321ffbfe399": {
-      "event_id": "evt_5321ffbfe399",
+    "evt_c6a42e25d92c": {
+      "event_id": "evt_c6a42e25d92c",
       "tag": "央行利率 · 流动性",
       "tag_en": "Fed & Liquidity",
       "polarity": "bearish",
@@ -2559,380 +3050,8 @@
         }
       ]
     },
-    "evt_09a45ab1a05f": {
-      "event_id": "evt_09a45ab1a05f",
-      "tag": "地缘外交 · 关税",
-      "tag_en": "Geopolitics & Tariffs",
-      "polarity": "divergent",
-      "intensity": 5,
-      "one_liner": "大国高层会晤重估未来关税清单与科技管制边界：释放缓和催化中概与出口链修复，摩擦升级则利好国产替代。",
-      "top_a": {
-        "market": "A股",
-        "sector": "出口链 / 消费电子 / 航运",
-        "sector_en": "Exporters & Shipping",
-        "pct_low": 2.0,
-        "pct_high": 5.0,
-        "direction": "positive",
-        "logic": "对美敞口高的家电与航运对关税边际最敏感"
-      },
-      "top_us": {
-        "market": "美股",
-        "sector": "中概互联 (KWEB)",
-        "sector_en": "China ADRs (KWEB)",
-        "pct_low": 2.5,
-        "pct_high": 6.0,
-        "direction": "positive",
-        "logic": "外交缓和信号最直接修复外资风险偏好"
-      },
-      "bars": [
-        {
-          "market": "美股",
-          "sector": "中概互联 (KWEB)",
-          "sector_en": "China ADRs (KWEB)",
-          "pct_low": 2.5,
-          "pct_high": 6.0,
-          "direction": "positive",
-          "logic": "外交缓和信号最直接修复外资风险偏好"
-        },
-        {
-          "market": "A股",
-          "sector": "出口链 / 消费电子 / 航运",
-          "sector_en": "Exporters & Shipping",
-          "pct_low": 2.0,
-          "pct_high": 5.0,
-          "direction": "positive",
-          "logic": "对美敞口高的家电与航运对关税边际最敏感"
-        },
-        {
-          "market": "A股",
-          "sector": "国产半导体设备 / 信创",
-          "sector_en": "Domestic Semis",
-          "pct_low": 1.8,
-          "pct_high": 4.5,
-          "direction": "positive",
-          "logic": "无论管制松紧，自主可控均为中线确定主线"
-        },
-        {
-          "market": "美股",
-          "sector": "在华营收美股 (AAPL/TSLA)",
-          "sector_en": "China-Exposed US Tech",
-          "pct_low": 1.2,
-          "pct_high": 3.5,
-          "direction": "positive",
-          "logic": "供应链与亚太市场关税担忧阶段缓解"
-        }
-      ],
-      "if_then": [
-        {
-          "cond": "若落地关税豁免/联合公报",
-          "result": "KWEB 领涨 +4%~+7%，A股出口链 +3%~+6%",
-          "tone": "bullish"
-        },
-        {
-          "cond": "若加码芯片/关税限制",
-          "result": "出口链 -2%~-5%，国产半导体逆势 +2%~+5%",
-          "tone": "bearish"
-        }
-      ],
-      "milestones": [
-        {
-          "date": "已发生",
-          "status": "done",
-          "label": "元首抵深与多边经贸谈判启动"
-        },
-        {
-          "date": "当前",
-          "status": "current",
-          "label": "双边会晤与经贸框架磋商窗口"
-        },
-        {
-          "date": "下周",
-          "status": "upcoming",
-          "label": "追踪联合声明与具体关税清单细则"
-        }
-      ]
-    },
-    "evt_458ecfbb019d": {
-      "event_id": "evt_458ecfbb019d",
-      "tag": "能源原油 · 地缘风险",
-      "tag_en": "Energy & Geopolitics",
-      "polarity": "divergent",
-      "intensity": 4,
-      "one_liner": "地缘冲突或产油国决议直接左右国际油价与海运运价：油价飙升利好油气采掘与油运，但推高通胀并挤压航空/化工利润。",
-      "top_a": {
-        "market": "A股",
-        "sector": "石油石化 / 油运 / 煤炭",
-        "sector_en": "Oil & Tankers",
-        "pct_low": 2.0,
-        "pct_high": 5.0,
-        "direction": "positive",
-        "logic": "布伦特油价与 VLCC 运价跳升直接增厚上游盈利"
-      },
-      "top_us": {
-        "market": "美股",
-        "sector": "美国能源板块 (XLE / XOM)",
-        "sector_en": "US Energy (XLE)",
-        "pct_low": 1.8,
-        "pct_high": 4.2,
-        "direction": "positive",
-        "logic": "现金流随油价中枢上移同步扩张"
-      },
-      "bars": [
-        {
-          "market": "A股",
-          "sector": "石油石化 / 油运 / 煤炭",
-          "sector_en": "Oil & Tankers",
-          "pct_low": 2.0,
-          "pct_high": 5.0,
-          "direction": "positive",
-          "logic": "布伦特油价与 VLCC 运价跳升直接增厚上游盈利"
-        },
-        {
-          "market": "A股",
-          "sector": "航空机场 / 基础化工",
-          "sector_en": "Airlines & Chemicals",
-          "pct_low": -3.2,
-          "pct_high": -1.2,
-          "direction": "negative",
-          "logic": "航油与原材料成本上升挤压毛利率"
-        },
-        {
-          "market": "美股",
-          "sector": "美国能源板块 (XLE / XOM)",
-          "sector_en": "US Energy (XLE)",
-          "pct_low": 1.8,
-          "pct_high": 4.2,
-          "direction": "positive",
-          "logic": "现金流随油价中枢上移同步扩张"
-        },
-        {
-          "market": "大宗",
-          "sector": "布伦特原油 / 黄金避险",
-          "sector_en": "Brent Crude & Gold",
-          "pct_low": 2.0,
-          "pct_high": 6.0,
-          "direction": "positive",
-          "logic": "供给中断溢价与地缘避险共振"
-        }
-      ],
-      "if_then": [
-        {
-          "cond": "若冲突升级/海峡受阻",
-          "result": "油气与黄金急涨 +3%~+6%，航空承压",
-          "tone": "bearish"
-        },
-        {
-          "cond": "若达成停火/增产协议",
-          "result": "油价回落 -3%~-6%，航空与成长股反弹",
-          "tone": "bullish"
-        }
-      ],
-      "milestones": [
-        {
-          "date": "已发生",
-          "status": "done",
-          "label": "产油区/航道局势出现突发变量"
-        },
-        {
-          "date": "当前",
-          "status": "current",
-          "label": "原油期货计入风险溢价，观察是否实质断供"
-        },
-        {
-          "date": "下周",
-          "status": "upcoming",
-          "label": "关注 OPEC+ 产量指引及外交斡旋结果"
-        }
-      ]
-    },
-    "evt_dfb1f2588c36": {
-      "event_id": "evt_dfb1f2588c36",
-      "tag": "能源原油 · 地缘风险",
-      "tag_en": "Energy & Geopolitics",
-      "polarity": "bullish",
-      "intensity": 4,
-      "one_liner": "地缘冲突或产油国决议直接左右国际油价与海运运价：油价飙升利好油气采掘与油运，但推高通胀并挤压航空/化工利润。",
-      "top_a": {
-        "market": "A股",
-        "sector": "石油石化 / 油运 / 煤炭",
-        "sector_en": "Oil & Tankers",
-        "pct_low": 2.0,
-        "pct_high": 5.0,
-        "direction": "positive",
-        "logic": "布伦特油价与 VLCC 运价跳升直接增厚上游盈利"
-      },
-      "top_us": {
-        "market": "美股",
-        "sector": "美国能源板块 (XLE / XOM)",
-        "sector_en": "US Energy (XLE)",
-        "pct_low": 1.8,
-        "pct_high": 4.2,
-        "direction": "positive",
-        "logic": "现金流随油价中枢上移同步扩张"
-      },
-      "bars": [
-        {
-          "market": "A股",
-          "sector": "石油石化 / 油运 / 煤炭",
-          "sector_en": "Oil & Tankers",
-          "pct_low": 2.0,
-          "pct_high": 5.0,
-          "direction": "positive",
-          "logic": "布伦特油价与 VLCC 运价跳升直接增厚上游盈利"
-        },
-        {
-          "market": "A股",
-          "sector": "航空机场 / 基础化工",
-          "sector_en": "Airlines & Chemicals",
-          "pct_low": -3.2,
-          "pct_high": -1.2,
-          "direction": "negative",
-          "logic": "航油与原材料成本上升挤压毛利率"
-        },
-        {
-          "market": "美股",
-          "sector": "美国能源板块 (XLE / XOM)",
-          "sector_en": "US Energy (XLE)",
-          "pct_low": 1.8,
-          "pct_high": 4.2,
-          "direction": "positive",
-          "logic": "现金流随油价中枢上移同步扩张"
-        },
-        {
-          "market": "大宗",
-          "sector": "布伦特原油 / 黄金避险",
-          "sector_en": "Brent Crude & Gold",
-          "pct_low": 2.0,
-          "pct_high": 6.0,
-          "direction": "positive",
-          "logic": "供给中断溢价与地缘避险共振"
-        }
-      ],
-      "if_then": [
-        {
-          "cond": "若冲突升级/海峡受阻",
-          "result": "油气与黄金急涨 +3%~+6%，航空承压",
-          "tone": "bearish"
-        },
-        {
-          "cond": "若达成停火/增产协议",
-          "result": "油价回落 -3%~-6%，航空与成长股反弹",
-          "tone": "bullish"
-        }
-      ],
-      "milestones": [
-        {
-          "date": "已发生",
-          "status": "done",
-          "label": "产油区/航道局势出现突发变量"
-        },
-        {
-          "date": "当前",
-          "status": "current",
-          "label": "原油期货计入风险溢价，观察是否实质断供"
-        },
-        {
-          "date": "下周",
-          "status": "upcoming",
-          "label": "关注 OPEC+ 产量指引及外交斡旋结果"
-        }
-      ]
-    },
-    "evt_a1886f94b890": {
-      "event_id": "evt_a1886f94b890",
-      "tag": "能源原油 · 地缘风险",
-      "tag_en": "Energy & Geopolitics",
-      "polarity": "bearish",
-      "intensity": 4,
-      "one_liner": "地缘冲突或产油国决议直接左右国际油价与海运运价：油价飙升利好油气采掘与油运，但推高通胀并挤压航空/化工利润。",
-      "top_a": {
-        "market": "A股",
-        "sector": "石油石化 / 油运 / 煤炭",
-        "sector_en": "Oil & Tankers",
-        "pct_low": 2.0,
-        "pct_high": 5.0,
-        "direction": "positive",
-        "logic": "布伦特油价与 VLCC 运价跳升直接增厚上游盈利"
-      },
-      "top_us": {
-        "market": "美股",
-        "sector": "美国能源板块 (XLE / XOM)",
-        "sector_en": "US Energy (XLE)",
-        "pct_low": 1.8,
-        "pct_high": 4.2,
-        "direction": "positive",
-        "logic": "现金流随油价中枢上移同步扩张"
-      },
-      "bars": [
-        {
-          "market": "A股",
-          "sector": "石油石化 / 油运 / 煤炭",
-          "sector_en": "Oil & Tankers",
-          "pct_low": 2.0,
-          "pct_high": 5.0,
-          "direction": "positive",
-          "logic": "布伦特油价与 VLCC 运价跳升直接增厚上游盈利"
-        },
-        {
-          "market": "A股",
-          "sector": "航空机场 / 基础化工",
-          "sector_en": "Airlines & Chemicals",
-          "pct_low": -3.2,
-          "pct_high": -1.2,
-          "direction": "negative",
-          "logic": "航油与原材料成本上升挤压毛利率"
-        },
-        {
-          "market": "美股",
-          "sector": "美国能源板块 (XLE / XOM)",
-          "sector_en": "US Energy (XLE)",
-          "pct_low": 1.8,
-          "pct_high": 4.2,
-          "direction": "positive",
-          "logic": "现金流随油价中枢上移同步扩张"
-        },
-        {
-          "market": "大宗",
-          "sector": "布伦特原油 / 黄金避险",
-          "sector_en": "Brent Crude & Gold",
-          "pct_low": 2.0,
-          "pct_high": 6.0,
-          "direction": "positive",
-          "logic": "供给中断溢价与地缘避险共振"
-        }
-      ],
-      "if_then": [
-        {
-          "cond": "若冲突升级/海峡受阻",
-          "result": "油气与黄金急涨 +3%~+6%，航空承压",
-          "tone": "bearish"
-        },
-        {
-          "cond": "若达成停火/增产协议",
-          "result": "油价回落 -3%~-6%，航空与成长股反弹",
-          "tone": "bullish"
-        }
-      ],
-      "milestones": [
-        {
-          "date": "已发生",
-          "status": "done",
-          "label": "产油区/航道局势出现突发变量"
-        },
-        {
-          "date": "当前",
-          "status": "current",
-          "label": "原油期货计入风险溢价，观察是否实质断供"
-        },
-        {
-          "date": "下周",
-          "status": "upcoming",
-          "label": "关注 OPEC+ 产量指引及外交斡旋结果"
-        }
-      ]
-    },
-    "evt_a996943b4a3b": {
-      "event_id": "evt_a996943b4a3b",
+    "evt_2c6bb78aa125": {
+      "event_id": "evt_2c6bb78aa125",
       "tag": "AI 算力 · 芯片链",
       "tag_en": "AI Compute & Semis",
       "polarity": "bullish",
@@ -3024,8 +3143,8 @@
         }
       ]
     },
-    "evt_37cc0120a27e": {
-      "event_id": "evt_37cc0120a27e",
+    "evt_a5d7dcde72a6": {
+      "event_id": "evt_a5d7dcde72a6",
       "tag": "AI 算力 · 芯片链",
       "tag_en": "AI Compute & Semis",
       "polarity": "bullish",
@@ -3117,194 +3236,8 @@
         }
       ]
     },
-    "evt_5f9c435738ac": {
-      "event_id": "evt_5f9c435738ac",
-      "tag": "AI 算力 · 芯片链",
-      "tag_en": "AI Compute & Semis",
-      "polarity": "bearish",
-      "intensity": 5,
-      "one_liner": "AI 巨头巨额融资与芯片路线迭代锁定全球算力资本开支，直接拉动上游光模块、服务器液冷与芯片封装订单。",
-      "top_a": {
-        "market": "A股",
-        "sector": "CPO 光模块 / 液冷 / PCB",
-        "sector_en": "A-Share Optics & Cooling",
-        "pct_low": 2.2,
-        "pct_high": 5.5,
-        "direction": "positive",
-        "logic": "海外云厂与大模型资本开支直接转化为订单"
-      },
-      "top_us": {
-        "market": "美股",
-        "sector": "算力芯片 (NVDA / AMD / TSM)",
-        "sector_en": "US AI Semis",
-        "pct_low": 1.8,
-        "pct_high": 4.8,
-        "direction": "positive",
-        "logic": "核心业绩与二线替代方案同步重估"
-      },
-      "bars": [
-        {
-          "market": "A股",
-          "sector": "CPO 光模块 / 液冷 / PCB",
-          "sector_en": "A-Share Optics & Cooling",
-          "pct_low": 2.2,
-          "pct_high": 5.5,
-          "direction": "positive",
-          "logic": "海外云厂与大模型资本开支直接转化为订单"
-        },
-        {
-          "market": "A股",
-          "sector": "国产算力 / 封测与存储",
-          "sector_en": "Domestic Compute & Memory",
-          "pct_low": 1.5,
-          "pct_high": 4.0,
-          "direction": "positive",
-          "logic": "HBM 紧缺与算力国产化双轮驱动"
-        },
-        {
-          "market": "美股",
-          "sector": "算力芯片 (NVDA / AMD / TSM)",
-          "sector_en": "US AI Semis",
-          "pct_low": 1.8,
-          "pct_high": 4.8,
-          "direction": "positive",
-          "logic": "核心业绩与二线替代方案同步重估"
-        },
-        {
-          "market": "美股",
-          "sector": "云巨头与 AI 电力 (AMZN/VST)",
-          "sector_en": "Hyperscalers & Power",
-          "pct_low": 1.2,
-          "pct_high": 3.2,
-          "direction": "positive",
-          "logic": "大模型训练推理锁定云消耗与数据中心电力"
-        }
-      ],
-      "if_then": [
-        {
-          "cond": "若挂牌/财报超预期",
-          "result": "光模块与算力链共振 +2.5%~+5.5%",
-          "tone": "bullish"
-        },
-        {
-          "cond": "若高开抽血或出口收紧",
-          "result": "高位算力短线回吐 -2%~-4%",
-          "tone": "bearish"
-        }
-      ],
-      "milestones": [
-        {
-          "date": "已发生",
-          "status": "done",
-          "label": "头部芯片财报/大模型 IPO 定价超预期"
-        },
-        {
-          "date": "当前",
-          "status": "current",
-          "label": "二级市场重估 AI 算力与云厂商估值锚"
-        },
-        {
-          "date": "下月",
-          "status": "upcoming",
-          "label": "验证云巨头季度 Capex 指引与出货量"
-        }
-      ]
-    },
-    "evt_d4cfa00f3a40": {
-      "event_id": "evt_d4cfa00f3a40",
-      "tag": "AI 算力 · 芯片链",
-      "tag_en": "AI Compute & Semis",
-      "polarity": "bullish",
-      "intensity": 5,
-      "one_liner": "AI 巨头巨额融资与芯片路线迭代锁定全球算力资本开支，直接拉动上游光模块、服务器液冷与芯片封装订单。",
-      "top_a": {
-        "market": "A股",
-        "sector": "CPO 光模块 / 液冷 / PCB",
-        "sector_en": "A-Share Optics & Cooling",
-        "pct_low": 2.2,
-        "pct_high": 5.5,
-        "direction": "positive",
-        "logic": "海外云厂与大模型资本开支直接转化为订单"
-      },
-      "top_us": {
-        "market": "美股",
-        "sector": "算力芯片 (NVDA / AMD / TSM)",
-        "sector_en": "US AI Semis",
-        "pct_low": 1.8,
-        "pct_high": 4.8,
-        "direction": "positive",
-        "logic": "核心业绩与二线替代方案同步重估"
-      },
-      "bars": [
-        {
-          "market": "A股",
-          "sector": "CPO 光模块 / 液冷 / PCB",
-          "sector_en": "A-Share Optics & Cooling",
-          "pct_low": 2.2,
-          "pct_high": 5.5,
-          "direction": "positive",
-          "logic": "海外云厂与大模型资本开支直接转化为订单"
-        },
-        {
-          "market": "A股",
-          "sector": "国产算力 / 封测与存储",
-          "sector_en": "Domestic Compute & Memory",
-          "pct_low": 1.5,
-          "pct_high": 4.0,
-          "direction": "positive",
-          "logic": "HBM 紧缺与算力国产化双轮驱动"
-        },
-        {
-          "market": "美股",
-          "sector": "算力芯片 (NVDA / AMD / TSM)",
-          "sector_en": "US AI Semis",
-          "pct_low": 1.8,
-          "pct_high": 4.8,
-          "direction": "positive",
-          "logic": "核心业绩与二线替代方案同步重估"
-        },
-        {
-          "market": "美股",
-          "sector": "云巨头与 AI 电力 (AMZN/VST)",
-          "sector_en": "Hyperscalers & Power",
-          "pct_low": 1.2,
-          "pct_high": 3.2,
-          "direction": "positive",
-          "logic": "大模型训练推理锁定云消耗与数据中心电力"
-        }
-      ],
-      "if_then": [
-        {
-          "cond": "若挂牌/财报超预期",
-          "result": "光模块与算力链共振 +2.5%~+5.5%",
-          "tone": "bullish"
-        },
-        {
-          "cond": "若高开抽血或出口收紧",
-          "result": "高位算力短线回吐 -2%~-4%",
-          "tone": "bearish"
-        }
-      ],
-      "milestones": [
-        {
-          "date": "已发生",
-          "status": "done",
-          "label": "头部芯片财报/大模型 IPO 定价超预期"
-        },
-        {
-          "date": "当前",
-          "status": "current",
-          "label": "二级市场重估 AI 算力与云厂商估值锚"
-        },
-        {
-          "date": "下月",
-          "status": "upcoming",
-          "label": "验证云巨头季度 Capex 指引与出货量"
-        }
-      ]
-    },
-    "evt_2ae10afe1af0": {
-      "event_id": "evt_2ae10afe1af0",
+    "evt_c02e1b96d687": {
+      "event_id": "evt_c02e1b96d687",
       "tag": "AI 模型 · 应用商业化",
       "tag_en": "AI Models & Software",
       "polarity": "bullish",
@@ -3396,101 +3329,8 @@
         }
       ]
     },
-    "evt_f01a46cf5dc1": {
-      "event_id": "evt_f01a46cf5dc1",
-      "tag": "地缘外交 · 关税",
-      "tag_en": "Geopolitics & Tariffs",
-      "polarity": "divergent",
-      "intensity": 5,
-      "one_liner": "大国高层会晤重估未来关税清单与科技管制边界：释放缓和催化中概与出口链修复，摩擦升级则利好国产替代。",
-      "top_a": {
-        "market": "A股",
-        "sector": "出口链 / 消费电子 / 航运",
-        "sector_en": "Exporters & Shipping",
-        "pct_low": 2.0,
-        "pct_high": 5.0,
-        "direction": "positive",
-        "logic": "对美敞口高的家电与航运对关税边际最敏感"
-      },
-      "top_us": {
-        "market": "美股",
-        "sector": "中概互联 (KWEB)",
-        "sector_en": "China ADRs (KWEB)",
-        "pct_low": 2.5,
-        "pct_high": 6.0,
-        "direction": "positive",
-        "logic": "外交缓和信号最直接修复外资风险偏好"
-      },
-      "bars": [
-        {
-          "market": "美股",
-          "sector": "中概互联 (KWEB)",
-          "sector_en": "China ADRs (KWEB)",
-          "pct_low": 2.5,
-          "pct_high": 6.0,
-          "direction": "positive",
-          "logic": "外交缓和信号最直接修复外资风险偏好"
-        },
-        {
-          "market": "A股",
-          "sector": "出口链 / 消费电子 / 航运",
-          "sector_en": "Exporters & Shipping",
-          "pct_low": 2.0,
-          "pct_high": 5.0,
-          "direction": "positive",
-          "logic": "对美敞口高的家电与航运对关税边际最敏感"
-        },
-        {
-          "market": "A股",
-          "sector": "国产半导体设备 / 信创",
-          "sector_en": "Domestic Semis",
-          "pct_low": 1.8,
-          "pct_high": 4.5,
-          "direction": "positive",
-          "logic": "无论管制松紧，自主可控均为中线确定主线"
-        },
-        {
-          "market": "美股",
-          "sector": "在华营收美股 (AAPL/TSLA)",
-          "sector_en": "China-Exposed US Tech",
-          "pct_low": 1.2,
-          "pct_high": 3.5,
-          "direction": "positive",
-          "logic": "供应链与亚太市场关税担忧阶段缓解"
-        }
-      ],
-      "if_then": [
-        {
-          "cond": "若落地关税豁免/联合公报",
-          "result": "KWEB 领涨 +4%~+7%，A股出口链 +3%~+6%",
-          "tone": "bullish"
-        },
-        {
-          "cond": "若加码芯片/关税限制",
-          "result": "出口链 -2%~-5%，国产半导体逆势 +2%~+5%",
-          "tone": "bearish"
-        }
-      ],
-      "milestones": [
-        {
-          "date": "已发生",
-          "status": "done",
-          "label": "元首抵深与多边经贸谈判启动"
-        },
-        {
-          "date": "当前",
-          "status": "current",
-          "label": "双边会晤与经贸框架磋商窗口"
-        },
-        {
-          "date": "下周",
-          "status": "upcoming",
-          "label": "追踪联合声明与具体关税清单细则"
-        }
-      ]
-    },
-    "evt_285d28c046f7": {
-      "event_id": "evt_285d28c046f7",
+    "evt_c0d649a5b331": {
+      "event_id": "evt_c0d649a5b331",
       "tag": "AI 模型 · 应用商业化",
       "tag_en": "AI Models & Software",
       "polarity": "bullish",
@@ -3582,92 +3422,8 @@
         }
       ]
     },
-    "evt_5cf3274dbc14": {
-      "event_id": "evt_5cf3274dbc14",
-      "tag": "内需政策 · 新能源智驾",
-      "tag_en": "China Policy & EV/Robotics",
-      "polarity": "bullish",
-      "intensity": 4,
-      "one_liner": "国内宏观稳增长政策或新能源/智驾产业突破，直接提振内需消费、汽车智能化供应链及港股顺周期资产估值。",
-      "top_a": {
-        "market": "A股",
-        "sector": "汽车智能化 / 机器人 / 锂电",
-        "sector_en": "Smart EV & Robotics",
-        "pct_low": 1.8,
-        "pct_high": 4.5,
-        "direction": "positive",
-        "logic": "政策补贴或智驾放量带动全产业链订单"
-      },
-      "top_us": {
-        "market": "美股",
-        "sector": "新能源车与智驾 (TSLA / LI)",
-        "sector_en": "EV & Autonomy",
-        "pct_low": 1.5,
-        "pct_high": 4.2,
-        "direction": "positive",
-        "logic": "Robotaxi 与人形机器人进度成为核心定价因子"
-      },
-      "bars": [
-        {
-          "market": "A股",
-          "sector": "汽车智能化 / 机器人 / 锂电",
-          "sector_en": "Smart EV & Robotics",
-          "pct_low": 1.8,
-          "pct_high": 4.5,
-          "direction": "positive",
-          "logic": "政策补贴或智驾放量带动全产业链订单"
-        },
-        {
-          "market": "A股",
-          "sector": "大消费 / 顺周期 / 券商",
-          "sector_en": "Consumer & Brokers",
-          "pct_low": 1.2,
-          "pct_high": 3.5,
-          "direction": "positive",
-          "logic": "流动性宽松与稳增长预期改善风险偏好"
-        },
-        {
-          "market": "美股",
-          "sector": "新能源车与智驾 (TSLA / LI)",
-          "sector_en": "EV & Autonomy",
-          "pct_low": 1.5,
-          "pct_high": 4.2,
-          "direction": "positive",
-          "logic": "Robotaxi 与人形机器人进度成为核心定价因子"
-        }
-      ],
-      "if_then": [
-        {
-          "cond": "若配套细则/销量超预期",
-          "result": "智驾机器人与顺周期走强 +2%~+5%",
-          "tone": "bullish"
-        },
-        {
-          "cond": "若数据不及预期",
-          "result": "顺周期短线回撤 -1.5%~-3%",
-          "tone": "bearish"
-        }
-      ],
-      "milestones": [
-        {
-          "date": "已发生",
-          "status": "done",
-          "label": "政策吹风或头部车企发布最新销量/技术进展"
-        },
-        {
-          "date": "当前",
-          "status": "current",
-          "label": "资金围绕龙头产业链进行业绩与估值切换"
-        },
-        {
-          "date": "月底",
-          "status": "upcoming",
-          "label": "追踪月度官方宏观/乘联会高频验证数据"
-        }
-      ]
-    },
-    "evt_1ff90d24d6d0": {
-      "event_id": "evt_1ff90d24d6d0",
+    "evt_7c7e19dfc8d3": {
+      "event_id": "evt_7c7e19dfc8d3",
       "tag": "AI 算力 · 芯片链",
       "tag_en": "AI Compute & Semis",
       "polarity": "bullish",
@@ -3759,659 +3515,752 @@
         }
       ]
     },
-    "evt_8c438c698d6d": {
-      "event_id": "evt_8c438c698d6d",
-      "tag": "地缘外交 · 关税",
-      "tag_en": "Geopolitics & Tariffs",
+    "evt_bff6b800e9b7": {
+      "event_id": "evt_bff6b800e9b7",
+      "tag": "AI 算力 · 芯片链",
+      "tag_en": "AI Compute & Semis",
       "polarity": "bullish",
       "intensity": 5,
-      "one_liner": "大国高层会晤重估未来关税清单与科技管制边界：释放缓和催化中概与出口链修复，摩擦升级则利好国产替代。",
+      "one_liner": "AI 巨头巨额融资与芯片路线迭代锁定全球算力资本开支，直接拉动上游光模块、服务器液冷与芯片封装订单。",
       "top_a": {
         "market": "A股",
-        "sector": "出口链 / 消费电子 / 航运",
-        "sector_en": "Exporters & Shipping",
-        "pct_low": 2.0,
-        "pct_high": 5.0,
+        "sector": "CPO 光模块 / 液冷 / PCB",
+        "sector_en": "A-Share Optics & Cooling",
+        "pct_low": 2.2,
+        "pct_high": 5.5,
         "direction": "positive",
-        "logic": "对美敞口高的家电与航运对关税边际最敏感"
+        "logic": "海外云厂与大模型资本开支直接转化为订单"
       },
       "top_us": {
         "market": "美股",
-        "sector": "中概互联 (KWEB)",
-        "sector_en": "China ADRs (KWEB)",
-        "pct_low": 2.5,
-        "pct_high": 6.0,
-        "direction": "positive",
-        "logic": "外交缓和信号最直接修复外资风险偏好"
-      },
-      "bars": [
-        {
-          "market": "美股",
-          "sector": "中概互联 (KWEB)",
-          "sector_en": "China ADRs (KWEB)",
-          "pct_low": 2.5,
-          "pct_high": 6.0,
-          "direction": "positive",
-          "logic": "外交缓和信号最直接修复外资风险偏好"
-        },
-        {
-          "market": "A股",
-          "sector": "出口链 / 消费电子 / 航运",
-          "sector_en": "Exporters & Shipping",
-          "pct_low": 2.0,
-          "pct_high": 5.0,
-          "direction": "positive",
-          "logic": "对美敞口高的家电与航运对关税边际最敏感"
-        },
-        {
-          "market": "A股",
-          "sector": "国产半导体设备 / 信创",
-          "sector_en": "Domestic Semis",
-          "pct_low": 1.8,
-          "pct_high": 4.5,
-          "direction": "positive",
-          "logic": "无论管制松紧，自主可控均为中线确定主线"
-        },
-        {
-          "market": "美股",
-          "sector": "在华营收美股 (AAPL/TSLA)",
-          "sector_en": "China-Exposed US Tech",
-          "pct_low": 1.2,
-          "pct_high": 3.5,
-          "direction": "positive",
-          "logic": "供应链与亚太市场关税担忧阶段缓解"
-        }
-      ],
-      "if_then": [
-        {
-          "cond": "若落地关税豁免/联合公报",
-          "result": "KWEB 领涨 +4%~+7%，A股出口链 +3%~+6%",
-          "tone": "bullish"
-        },
-        {
-          "cond": "若加码芯片/关税限制",
-          "result": "出口链 -2%~-5%，国产半导体逆势 +2%~+5%",
-          "tone": "bearish"
-        }
-      ],
-      "milestones": [
-        {
-          "date": "已发生",
-          "status": "done",
-          "label": "元首抵深与多边经贸谈判启动"
-        },
-        {
-          "date": "当前",
-          "status": "current",
-          "label": "双边会晤与经贸框架磋商窗口"
-        },
-        {
-          "date": "下周",
-          "status": "upcoming",
-          "label": "追踪联合声明与具体关税清单细则"
-        }
-      ]
-    },
-    "evt_f977b2e181c5": {
-      "event_id": "evt_f977b2e181c5",
-      "tag": "地缘外交 · 关税",
-      "tag_en": "Geopolitics & Tariffs",
-      "polarity": "bullish",
-      "intensity": 5,
-      "one_liner": "大国高层会晤重估未来关税清单与科技管制边界：释放缓和催化中概与出口链修复，摩擦升级则利好国产替代。",
-      "top_a": {
-        "market": "A股",
-        "sector": "出口链 / 消费电子 / 航运",
-        "sector_en": "Exporters & Shipping",
-        "pct_low": 2.0,
-        "pct_high": 5.0,
-        "direction": "positive",
-        "logic": "对美敞口高的家电与航运对关税边际最敏感"
-      },
-      "top_us": {
-        "market": "美股",
-        "sector": "中概互联 (KWEB)",
-        "sector_en": "China ADRs (KWEB)",
-        "pct_low": 2.5,
-        "pct_high": 6.0,
-        "direction": "positive",
-        "logic": "外交缓和信号最直接修复外资风险偏好"
-      },
-      "bars": [
-        {
-          "market": "美股",
-          "sector": "中概互联 (KWEB)",
-          "sector_en": "China ADRs (KWEB)",
-          "pct_low": 2.5,
-          "pct_high": 6.0,
-          "direction": "positive",
-          "logic": "外交缓和信号最直接修复外资风险偏好"
-        },
-        {
-          "market": "A股",
-          "sector": "出口链 / 消费电子 / 航运",
-          "sector_en": "Exporters & Shipping",
-          "pct_low": 2.0,
-          "pct_high": 5.0,
-          "direction": "positive",
-          "logic": "对美敞口高的家电与航运对关税边际最敏感"
-        },
-        {
-          "market": "A股",
-          "sector": "国产半导体设备 / 信创",
-          "sector_en": "Domestic Semis",
-          "pct_low": 1.8,
-          "pct_high": 4.5,
-          "direction": "positive",
-          "logic": "无论管制松紧，自主可控均为中线确定主线"
-        },
-        {
-          "market": "美股",
-          "sector": "在华营收美股 (AAPL/TSLA)",
-          "sector_en": "China-Exposed US Tech",
-          "pct_low": 1.2,
-          "pct_high": 3.5,
-          "direction": "positive",
-          "logic": "供应链与亚太市场关税担忧阶段缓解"
-        }
-      ],
-      "if_then": [
-        {
-          "cond": "若落地关税豁免/联合公报",
-          "result": "KWEB 领涨 +4%~+7%，A股出口链 +3%~+6%",
-          "tone": "bullish"
-        },
-        {
-          "cond": "若加码芯片/关税限制",
-          "result": "出口链 -2%~-5%，国产半导体逆势 +2%~+5%",
-          "tone": "bearish"
-        }
-      ],
-      "milestones": [
-        {
-          "date": "已发生",
-          "status": "done",
-          "label": "元首抵深与多边经贸谈判启动"
-        },
-        {
-          "date": "当前",
-          "status": "current",
-          "label": "双边会晤与经贸框架磋商窗口"
-        },
-        {
-          "date": "下周",
-          "status": "upcoming",
-          "label": "追踪联合声明与具体关税清单细则"
-        }
-      ]
-    },
-    "evt_f820e9504abf": {
-      "event_id": "evt_f820e9504abf",
-      "tag": "地缘外交 · 关税",
-      "tag_en": "Geopolitics & Tariffs",
-      "polarity": "divergent",
-      "intensity": 5,
-      "one_liner": "大国高层会晤重估未来关税清单与科技管制边界：释放缓和催化中概与出口链修复，摩擦升级则利好国产替代。",
-      "top_a": {
-        "market": "A股",
-        "sector": "出口链 / 消费电子 / 航运",
-        "sector_en": "Exporters & Shipping",
-        "pct_low": 2.0,
-        "pct_high": 5.0,
-        "direction": "positive",
-        "logic": "对美敞口高的家电与航运对关税边际最敏感"
-      },
-      "top_us": {
-        "market": "美股",
-        "sector": "中概互联 (KWEB)",
-        "sector_en": "China ADRs (KWEB)",
-        "pct_low": 2.5,
-        "pct_high": 6.0,
-        "direction": "positive",
-        "logic": "外交缓和信号最直接修复外资风险偏好"
-      },
-      "bars": [
-        {
-          "market": "美股",
-          "sector": "中概互联 (KWEB)",
-          "sector_en": "China ADRs (KWEB)",
-          "pct_low": 2.5,
-          "pct_high": 6.0,
-          "direction": "positive",
-          "logic": "外交缓和信号最直接修复外资风险偏好"
-        },
-        {
-          "market": "A股",
-          "sector": "出口链 / 消费电子 / 航运",
-          "sector_en": "Exporters & Shipping",
-          "pct_low": 2.0,
-          "pct_high": 5.0,
-          "direction": "positive",
-          "logic": "对美敞口高的家电与航运对关税边际最敏感"
-        },
-        {
-          "market": "A股",
-          "sector": "国产半导体设备 / 信创",
-          "sector_en": "Domestic Semis",
-          "pct_low": 1.8,
-          "pct_high": 4.5,
-          "direction": "positive",
-          "logic": "无论管制松紧，自主可控均为中线确定主线"
-        },
-        {
-          "market": "美股",
-          "sector": "在华营收美股 (AAPL/TSLA)",
-          "sector_en": "China-Exposed US Tech",
-          "pct_low": 1.2,
-          "pct_high": 3.5,
-          "direction": "positive",
-          "logic": "供应链与亚太市场关税担忧阶段缓解"
-        }
-      ],
-      "if_then": [
-        {
-          "cond": "若落地关税豁免/联合公报",
-          "result": "KWEB 领涨 +4%~+7%，A股出口链 +3%~+6%",
-          "tone": "bullish"
-        },
-        {
-          "cond": "若加码芯片/关税限制",
-          "result": "出口链 -2%~-5%，国产半导体逆势 +2%~+5%",
-          "tone": "bearish"
-        }
-      ],
-      "milestones": [
-        {
-          "date": "已发生",
-          "status": "done",
-          "label": "元首抵深与多边经贸谈判启动"
-        },
-        {
-          "date": "当前",
-          "status": "current",
-          "label": "双边会晤与经贸框架磋商窗口"
-        },
-        {
-          "date": "下周",
-          "status": "upcoming",
-          "label": "追踪联合声明与具体关税清单细则"
-        }
-      ]
-    },
-    "evt_43ef6871e8c5": {
-      "event_id": "evt_43ef6871e8c5",
-      "tag": "地缘外交 · 关税",
-      "tag_en": "Geopolitics & Tariffs",
-      "polarity": "divergent",
-      "intensity": 5,
-      "one_liner": "大国高层会晤重估未来关税清单与科技管制边界：释放缓和催化中概与出口链修复，摩擦升级则利好国产替代。",
-      "top_a": {
-        "market": "A股",
-        "sector": "出口链 / 消费电子 / 航运",
-        "sector_en": "Exporters & Shipping",
-        "pct_low": 2.0,
-        "pct_high": 5.0,
-        "direction": "positive",
-        "logic": "对美敞口高的家电与航运对关税边际最敏感"
-      },
-      "top_us": {
-        "market": "美股",
-        "sector": "中概互联 (KWEB)",
-        "sector_en": "China ADRs (KWEB)",
-        "pct_low": 2.5,
-        "pct_high": 6.0,
-        "direction": "positive",
-        "logic": "外交缓和信号最直接修复外资风险偏好"
-      },
-      "bars": [
-        {
-          "market": "美股",
-          "sector": "中概互联 (KWEB)",
-          "sector_en": "China ADRs (KWEB)",
-          "pct_low": 2.5,
-          "pct_high": 6.0,
-          "direction": "positive",
-          "logic": "外交缓和信号最直接修复外资风险偏好"
-        },
-        {
-          "market": "A股",
-          "sector": "出口链 / 消费电子 / 航运",
-          "sector_en": "Exporters & Shipping",
-          "pct_low": 2.0,
-          "pct_high": 5.0,
-          "direction": "positive",
-          "logic": "对美敞口高的家电与航运对关税边际最敏感"
-        },
-        {
-          "market": "A股",
-          "sector": "国产半导体设备 / 信创",
-          "sector_en": "Domestic Semis",
-          "pct_low": 1.8,
-          "pct_high": 4.5,
-          "direction": "positive",
-          "logic": "无论管制松紧，自主可控均为中线确定主线"
-        },
-        {
-          "market": "美股",
-          "sector": "在华营收美股 (AAPL/TSLA)",
-          "sector_en": "China-Exposed US Tech",
-          "pct_low": 1.2,
-          "pct_high": 3.5,
-          "direction": "positive",
-          "logic": "供应链与亚太市场关税担忧阶段缓解"
-        }
-      ],
-      "if_then": [
-        {
-          "cond": "若落地关税豁免/联合公报",
-          "result": "KWEB 领涨 +4%~+7%，A股出口链 +3%~+6%",
-          "tone": "bullish"
-        },
-        {
-          "cond": "若加码芯片/关税限制",
-          "result": "出口链 -2%~-5%，国产半导体逆势 +2%~+5%",
-          "tone": "bearish"
-        }
-      ],
-      "milestones": [
-        {
-          "date": "已发生",
-          "status": "done",
-          "label": "元首抵深与多边经贸谈判启动"
-        },
-        {
-          "date": "当前",
-          "status": "current",
-          "label": "双边会晤与经贸框架磋商窗口"
-        },
-        {
-          "date": "下周",
-          "status": "upcoming",
-          "label": "追踪联合声明与具体关税清单细则"
-        }
-      ]
-    },
-    "evt_71e050ed51c5": {
-      "event_id": "evt_71e050ed51c5",
-      "tag": "地缘外交 · 关税",
-      "tag_en": "Geopolitics & Tariffs",
-      "polarity": "bullish",
-      "intensity": 5,
-      "one_liner": "大国高层会晤重估未来关税清单与科技管制边界：释放缓和催化中概与出口链修复，摩擦升级则利好国产替代。",
-      "top_a": {
-        "market": "A股",
-        "sector": "出口链 / 消费电子 / 航运",
-        "sector_en": "Exporters & Shipping",
-        "pct_low": 2.0,
-        "pct_high": 5.0,
-        "direction": "positive",
-        "logic": "对美敞口高的家电与航运对关税边际最敏感"
-      },
-      "top_us": {
-        "market": "美股",
-        "sector": "中概互联 (KWEB)",
-        "sector_en": "China ADRs (KWEB)",
-        "pct_low": 2.5,
-        "pct_high": 6.0,
-        "direction": "positive",
-        "logic": "外交缓和信号最直接修复外资风险偏好"
-      },
-      "bars": [
-        {
-          "market": "美股",
-          "sector": "中概互联 (KWEB)",
-          "sector_en": "China ADRs (KWEB)",
-          "pct_low": 2.5,
-          "pct_high": 6.0,
-          "direction": "positive",
-          "logic": "外交缓和信号最直接修复外资风险偏好"
-        },
-        {
-          "market": "A股",
-          "sector": "出口链 / 消费电子 / 航运",
-          "sector_en": "Exporters & Shipping",
-          "pct_low": 2.0,
-          "pct_high": 5.0,
-          "direction": "positive",
-          "logic": "对美敞口高的家电与航运对关税边际最敏感"
-        },
-        {
-          "market": "A股",
-          "sector": "国产半导体设备 / 信创",
-          "sector_en": "Domestic Semis",
-          "pct_low": 1.8,
-          "pct_high": 4.5,
-          "direction": "positive",
-          "logic": "无论管制松紧，自主可控均为中线确定主线"
-        },
-        {
-          "market": "美股",
-          "sector": "在华营收美股 (AAPL/TSLA)",
-          "sector_en": "China-Exposed US Tech",
-          "pct_low": 1.2,
-          "pct_high": 3.5,
-          "direction": "positive",
-          "logic": "供应链与亚太市场关税担忧阶段缓解"
-        }
-      ],
-      "if_then": [
-        {
-          "cond": "若落地关税豁免/联合公报",
-          "result": "KWEB 领涨 +4%~+7%，A股出口链 +3%~+6%",
-          "tone": "bullish"
-        },
-        {
-          "cond": "若加码芯片/关税限制",
-          "result": "出口链 -2%~-5%，国产半导体逆势 +2%~+5%",
-          "tone": "bearish"
-        }
-      ],
-      "milestones": [
-        {
-          "date": "已发生",
-          "status": "done",
-          "label": "元首抵深与多边经贸谈判启动"
-        },
-        {
-          "date": "当前",
-          "status": "current",
-          "label": "双边会晤与经贸框架磋商窗口"
-        },
-        {
-          "date": "下周",
-          "status": "upcoming",
-          "label": "追踪联合声明与具体关税清单细则"
-        }
-      ]
-    },
-    "evt_0bfafdc2da40": {
-      "event_id": "evt_0bfafdc2da40",
-      "tag": "能源原油 · 地缘风险",
-      "tag_en": "Energy & Geopolitics",
-      "polarity": "divergent",
-      "intensity": 4,
-      "one_liner": "地缘冲突或产油国决议直接左右国际油价与海运运价：油价飙升利好油气采掘与油运，但推高通胀并挤压航空/化工利润。",
-      "top_a": {
-        "market": "A股",
-        "sector": "石油石化 / 油运 / 煤炭",
-        "sector_en": "Oil & Tankers",
-        "pct_low": 2.0,
-        "pct_high": 5.0,
-        "direction": "positive",
-        "logic": "布伦特油价与 VLCC 运价跳升直接增厚上游盈利"
-      },
-      "top_us": {
-        "market": "美股",
-        "sector": "美国能源板块 (XLE / XOM)",
-        "sector_en": "US Energy (XLE)",
+        "sector": "算力芯片 (NVDA / AMD / TSM)",
+        "sector_en": "US AI Semis",
         "pct_low": 1.8,
-        "pct_high": 4.2,
+        "pct_high": 4.8,
         "direction": "positive",
-        "logic": "现金流随油价中枢上移同步扩张"
+        "logic": "核心业绩与二线替代方案同步重估"
       },
       "bars": [
         {
           "market": "A股",
-          "sector": "石油石化 / 油运 / 煤炭",
-          "sector_en": "Oil & Tankers",
-          "pct_low": 2.0,
-          "pct_high": 5.0,
+          "sector": "CPO 光模块 / 液冷 / PCB",
+          "sector_en": "A-Share Optics & Cooling",
+          "pct_low": 2.2,
+          "pct_high": 5.5,
           "direction": "positive",
-          "logic": "布伦特油价与 VLCC 运价跳升直接增厚上游盈利"
+          "logic": "海外云厂与大模型资本开支直接转化为订单"
         },
         {
           "market": "A股",
-          "sector": "航空机场 / 基础化工",
-          "sector_en": "Airlines & Chemicals",
-          "pct_low": -3.2,
-          "pct_high": -1.2,
-          "direction": "negative",
-          "logic": "航油与原材料成本上升挤压毛利率"
+          "sector": "国产算力 / 封测与存储",
+          "sector_en": "Domestic Compute & Memory",
+          "pct_low": 1.5,
+          "pct_high": 4.0,
+          "direction": "positive",
+          "logic": "HBM 紧缺与算力国产化双轮驱动"
         },
         {
           "market": "美股",
-          "sector": "美国能源板块 (XLE / XOM)",
-          "sector_en": "US Energy (XLE)",
+          "sector": "算力芯片 (NVDA / AMD / TSM)",
+          "sector_en": "US AI Semis",
           "pct_low": 1.8,
-          "pct_high": 4.2,
+          "pct_high": 4.8,
           "direction": "positive",
-          "logic": "现金流随油价中枢上移同步扩张"
+          "logic": "核心业绩与二线替代方案同步重估"
         },
         {
-          "market": "大宗",
-          "sector": "布伦特原油 / 黄金避险",
-          "sector_en": "Brent Crude & Gold",
-          "pct_low": 2.0,
-          "pct_high": 6.0,
+          "market": "美股",
+          "sector": "云巨头与 AI 电力 (AMZN/VST)",
+          "sector_en": "Hyperscalers & Power",
+          "pct_low": 1.2,
+          "pct_high": 3.2,
           "direction": "positive",
-          "logic": "供给中断溢价与地缘避险共振"
+          "logic": "大模型训练推理锁定云消耗与数据中心电力"
         }
       ],
       "if_then": [
         {
-          "cond": "若冲突升级/海峡受阻",
-          "result": "油气与黄金急涨 +3%~+6%，航空承压",
-          "tone": "bearish"
+          "cond": "若挂牌/财报超预期",
+          "result": "光模块与算力链共振 +2.5%~+5.5%",
+          "tone": "bullish"
         },
         {
-          "cond": "若达成停火/增产协议",
-          "result": "油价回落 -3%~-6%，航空与成长股反弹",
-          "tone": "bullish"
+          "cond": "若高开抽血或出口收紧",
+          "result": "高位算力短线回吐 -2%~-4%",
+          "tone": "bearish"
         }
       ],
       "milestones": [
         {
           "date": "已发生",
           "status": "done",
-          "label": "产油区/航道局势出现突发变量"
+          "label": "头部芯片财报/大模型 IPO 定价超预期"
         },
         {
           "date": "当前",
           "status": "current",
-          "label": "原油期货计入风险溢价，观察是否实质断供"
+          "label": "二级市场重估 AI 算力与云厂商估值锚"
         },
         {
-          "date": "下周",
+          "date": "下月",
           "status": "upcoming",
-          "label": "关注 OPEC+ 产量指引及外交斡旋结果"
+          "label": "验证云巨头季度 Capex 指引与出货量"
         }
       ]
     },
-    "evt_4de673dede5b": {
-      "event_id": "evt_4de673dede5b",
-      "tag": "能源原油 · 地缘风险",
-      "tag_en": "Energy & Geopolitics",
-      "polarity": "divergent",
+    "evt_6970bd1b2ae4": {
+      "event_id": "evt_6970bd1b2ae4",
+      "tag": "AI 模型 · 应用商业化",
+      "tag_en": "AI Models & Software",
+      "polarity": "bullish",
       "intensity": 4,
-      "one_liner": "地缘冲突或产油国决议直接左右国际油价与海运运价：油价飙升利好油气采掘与油运，但推高通胀并挤压航空/化工利润。",
+      "one_liner": "新一代高性价比推理模型（如 Gemini 4 Neon、GPT-6.2、Qwen4、混元 Hy4）大幅压低 Token 成本，直接引爆 AI 应用、编程与端侧换机潮。",
       "top_a": {
         "market": "A股",
-        "sector": "石油石化 / 油运 / 煤炭",
-        "sector_en": "Oil & Tankers",
-        "pct_low": 2.0,
-        "pct_high": 5.0,
+        "sector": "AI 应用软件 / Agent / 办公",
+        "sector_en": "A-Share AI Apps & SaaS",
+        "pct_low": 1.8,
+        "pct_high": 4.6,
         "direction": "positive",
-        "logic": "布伦特油价与 VLCC 运价跳升直接增厚上游盈利"
+        "logic": "底层模型降本增效直接打开应用端商业利润率"
       },
       "top_us": {
         "market": "美股",
-        "sector": "美国能源板块 (XLE / XOM)",
-        "sector_en": "US Energy (XLE)",
-        "pct_low": 1.8,
-        "pct_high": 4.2,
+        "sector": "云平台与 AI 软件 (GOOGL/MSFT)",
+        "sector_en": "Cloud & AI Platforms",
+        "pct_low": 1.5,
+        "pct_high": 3.8,
         "direction": "positive",
-        "logic": "现金流随油价中枢上移同步扩张"
+        "logic": "头部模型迭代巩固开发者粘性与云 API 收入"
       },
       "bars": [
         {
           "market": "A股",
-          "sector": "石油石化 / 油运 / 煤炭",
-          "sector_en": "Oil & Tankers",
-          "pct_low": 2.0,
-          "pct_high": 5.0,
+          "sector": "AI 应用软件 / Agent / 办公",
+          "sector_en": "A-Share AI Apps & SaaS",
+          "pct_low": 1.8,
+          "pct_high": 4.6,
           "direction": "positive",
-          "logic": "布伦特油价与 VLCC 运价跳升直接增厚上游盈利"
+          "logic": "底层模型降本增效直接打开应用端商业利润率"
         },
         {
           "market": "A股",
-          "sector": "航空机场 / 基础化工",
-          "sector_en": "Airlines & Chemicals",
-          "pct_low": -3.2,
-          "pct_high": -1.2,
-          "direction": "negative",
-          "logic": "航油与原材料成本上升挤压毛利率"
+          "sector": "端侧 AI 硬件 (AI手机/PC/耳机)",
+          "sector_en": "Edge AI Hardware",
+          "pct_low": 1.2,
+          "pct_high": 3.5,
+          "direction": "positive",
+          "logic": "轻量高智模型加速本地离线部署与换机周期"
         },
         {
           "market": "美股",
-          "sector": "美国能源板块 (XLE / XOM)",
-          "sector_en": "US Energy (XLE)",
-          "pct_low": 1.8,
-          "pct_high": 4.2,
+          "sector": "云平台与 AI 软件 (GOOGL/MSFT)",
+          "sector_en": "Cloud & AI Platforms",
+          "pct_low": 1.5,
+          "pct_high": 3.8,
           "direction": "positive",
-          "logic": "现金流随油价中枢上移同步扩张"
+          "logic": "头部模型迭代巩固开发者粘性与云 API 收入"
         },
         {
-          "market": "大宗",
-          "sector": "布伦特原油 / 黄金避险",
-          "sector_en": "Brent Crude & Gold",
-          "pct_low": 2.0,
-          "pct_high": 6.0,
-          "direction": "positive",
-          "logic": "供给中断溢价与地缘避险共振"
+          "market": "美股",
+          "sector": "传统无壁垒工具软件",
+          "sector_en": "Legacy SaaS",
+          "pct_low": -3.0,
+          "pct_high": -1.0,
+          "direction": "negative",
+          "logic": "原生多模态与编程 Agent 挤压单点旧软件生存空间"
         }
       ],
       "if_then": [
         {
-          "cond": "若冲突升级/海峡受阻",
-          "result": "油气与黄金急涨 +3%~+6%，航空承压",
-          "tone": "bearish"
+          "cond": "若 API 调用量/付费转化爆发",
+          "result": "AI 应用与云厂迎来戴维斯双击 +2%~+5%",
+          "tone": "bullish"
         },
         {
-          "cond": "若达成停火/增产协议",
-          "result": "油价回落 -3%~-6%，航空与成长股反弹",
-          "tone": "bullish"
+          "cond": "若价格战吞噬毛利",
+          "result": "纯模型套壳公司承压 -2%~-4%",
+          "tone": "bearish"
         }
       ],
       "milestones": [
         {
           "date": "已发生",
           "status": "done",
-          "label": "产油区/航道局势出现突发变量"
+          "label": "新一轮旗舰/端侧模型密集发布并公布定价"
         },
         {
           "date": "当前",
           "status": "current",
-          "label": "原油期货计入风险溢价，观察是否实质断供"
+          "label": "开发者实测迁移与企业 API 接入高峰期"
+        },
+        {
+          "date": "下季",
+          "status": "upcoming",
+          "label": "核验云厂 AI 收入占比与爆款应用留存"
+        }
+      ]
+    },
+    "evt_efe9a41f8516": {
+      "event_id": "evt_efe9a41f8516",
+      "tag": "AI 算力 · 芯片链",
+      "tag_en": "AI Compute & Semis",
+      "polarity": "bullish",
+      "intensity": 5,
+      "one_liner": "AI 巨头巨额融资与芯片路线迭代锁定全球算力资本开支，直接拉动上游光模块、服务器液冷与芯片封装订单。",
+      "top_a": {
+        "market": "A股",
+        "sector": "CPO 光模块 / 液冷 / PCB",
+        "sector_en": "A-Share Optics & Cooling",
+        "pct_low": 2.2,
+        "pct_high": 5.5,
+        "direction": "positive",
+        "logic": "海外云厂与大模型资本开支直接转化为订单"
+      },
+      "top_us": {
+        "market": "美股",
+        "sector": "算力芯片 (NVDA / AMD / TSM)",
+        "sector_en": "US AI Semis",
+        "pct_low": 1.8,
+        "pct_high": 4.8,
+        "direction": "positive",
+        "logic": "核心业绩与二线替代方案同步重估"
+      },
+      "bars": [
+        {
+          "market": "A股",
+          "sector": "CPO 光模块 / 液冷 / PCB",
+          "sector_en": "A-Share Optics & Cooling",
+          "pct_low": 2.2,
+          "pct_high": 5.5,
+          "direction": "positive",
+          "logic": "海外云厂与大模型资本开支直接转化为订单"
+        },
+        {
+          "market": "A股",
+          "sector": "国产算力 / 封测与存储",
+          "sector_en": "Domestic Compute & Memory",
+          "pct_low": 1.5,
+          "pct_high": 4.0,
+          "direction": "positive",
+          "logic": "HBM 紧缺与算力国产化双轮驱动"
+        },
+        {
+          "market": "美股",
+          "sector": "算力芯片 (NVDA / AMD / TSM)",
+          "sector_en": "US AI Semis",
+          "pct_low": 1.8,
+          "pct_high": 4.8,
+          "direction": "positive",
+          "logic": "核心业绩与二线替代方案同步重估"
+        },
+        {
+          "market": "美股",
+          "sector": "云巨头与 AI 电力 (AMZN/VST)",
+          "sector_en": "Hyperscalers & Power",
+          "pct_low": 1.2,
+          "pct_high": 3.2,
+          "direction": "positive",
+          "logic": "大模型训练推理锁定云消耗与数据中心电力"
+        }
+      ],
+      "if_then": [
+        {
+          "cond": "若挂牌/财报超预期",
+          "result": "光模块与算力链共振 +2.5%~+5.5%",
+          "tone": "bullish"
+        },
+        {
+          "cond": "若高开抽血或出口收紧",
+          "result": "高位算力短线回吐 -2%~-4%",
+          "tone": "bearish"
+        }
+      ],
+      "milestones": [
+        {
+          "date": "已发生",
+          "status": "done",
+          "label": "头部芯片财报/大模型 IPO 定价超预期"
+        },
+        {
+          "date": "当前",
+          "status": "current",
+          "label": "二级市场重估 AI 算力与云厂商估值锚"
+        },
+        {
+          "date": "下月",
+          "status": "upcoming",
+          "label": "验证云巨头季度 Capex 指引与出货量"
+        }
+      ]
+    },
+    "evt_528f1205a6ff": {
+      "event_id": "evt_528f1205a6ff",
+      "tag": "地缘外交 · 关税",
+      "tag_en": "Geopolitics & Tariffs",
+      "polarity": "divergent",
+      "intensity": 5,
+      "one_liner": "大国高层会晤重估未来关税清单与科技管制边界：释放缓和催化中概与出口链修复，摩擦升级则利好国产替代。",
+      "top_a": {
+        "market": "A股",
+        "sector": "出口链 / 消费电子 / 航运",
+        "sector_en": "Exporters & Shipping",
+        "pct_low": 2.0,
+        "pct_high": 5.0,
+        "direction": "positive",
+        "logic": "对美敞口高的家电与航运对关税边际最敏感"
+      },
+      "top_us": {
+        "market": "美股",
+        "sector": "中概互联 (KWEB)",
+        "sector_en": "China ADRs (KWEB)",
+        "pct_low": 2.5,
+        "pct_high": 6.0,
+        "direction": "positive",
+        "logic": "外交缓和信号最直接修复外资风险偏好"
+      },
+      "bars": [
+        {
+          "market": "美股",
+          "sector": "中概互联 (KWEB)",
+          "sector_en": "China ADRs (KWEB)",
+          "pct_low": 2.5,
+          "pct_high": 6.0,
+          "direction": "positive",
+          "logic": "外交缓和信号最直接修复外资风险偏好"
+        },
+        {
+          "market": "A股",
+          "sector": "出口链 / 消费电子 / 航运",
+          "sector_en": "Exporters & Shipping",
+          "pct_low": 2.0,
+          "pct_high": 5.0,
+          "direction": "positive",
+          "logic": "对美敞口高的家电与航运对关税边际最敏感"
+        },
+        {
+          "market": "A股",
+          "sector": "国产半导体设备 / 信创",
+          "sector_en": "Domestic Semis",
+          "pct_low": 1.8,
+          "pct_high": 4.5,
+          "direction": "positive",
+          "logic": "无论管制松紧，自主可控均为中线确定主线"
+        },
+        {
+          "market": "美股",
+          "sector": "在华营收美股 (AAPL/TSLA)",
+          "sector_en": "China-Exposed US Tech",
+          "pct_low": 1.2,
+          "pct_high": 3.5,
+          "direction": "positive",
+          "logic": "供应链与亚太市场关税担忧阶段缓解"
+        }
+      ],
+      "if_then": [
+        {
+          "cond": "若落地关税豁免/联合公报",
+          "result": "KWEB 领涨 +4%~+7%，A股出口链 +3%~+6%",
+          "tone": "bullish"
+        },
+        {
+          "cond": "若加码芯片/关税限制",
+          "result": "出口链 -2%~-5%，国产半导体逆势 +2%~+5%",
+          "tone": "bearish"
+        }
+      ],
+      "milestones": [
+        {
+          "date": "已发生",
+          "status": "done",
+          "label": "元首抵深与多边经贸谈判启动"
+        },
+        {
+          "date": "当前",
+          "status": "current",
+          "label": "双边会晤与经贸框架磋商窗口"
         },
         {
           "date": "下周",
           "status": "upcoming",
-          "label": "关注 OPEC+ 产量指引及外交斡旋结果"
+          "label": "追踪联合声明与具体关税清单细则"
         }
       ]
     },
-    "evt_ac7822b3b253": {
-      "event_id": "evt_ac7822b3b253",
+    "evt_857352e51f4a": {
+      "event_id": "evt_857352e51f4a",
+      "tag": "地缘外交 · 关税",
+      "tag_en": "Geopolitics & Tariffs",
+      "polarity": "divergent",
+      "intensity": 5,
+      "one_liner": "大国高层会晤重估未来关税清单与科技管制边界：释放缓和催化中概与出口链修复，摩擦升级则利好国产替代。",
+      "top_a": {
+        "market": "A股",
+        "sector": "出口链 / 消费电子 / 航运",
+        "sector_en": "Exporters & Shipping",
+        "pct_low": 2.0,
+        "pct_high": 5.0,
+        "direction": "positive",
+        "logic": "对美敞口高的家电与航运对关税边际最敏感"
+      },
+      "top_us": {
+        "market": "美股",
+        "sector": "中概互联 (KWEB)",
+        "sector_en": "China ADRs (KWEB)",
+        "pct_low": 2.5,
+        "pct_high": 6.0,
+        "direction": "positive",
+        "logic": "外交缓和信号最直接修复外资风险偏好"
+      },
+      "bars": [
+        {
+          "market": "美股",
+          "sector": "中概互联 (KWEB)",
+          "sector_en": "China ADRs (KWEB)",
+          "pct_low": 2.5,
+          "pct_high": 6.0,
+          "direction": "positive",
+          "logic": "外交缓和信号最直接修复外资风险偏好"
+        },
+        {
+          "market": "A股",
+          "sector": "出口链 / 消费电子 / 航运",
+          "sector_en": "Exporters & Shipping",
+          "pct_low": 2.0,
+          "pct_high": 5.0,
+          "direction": "positive",
+          "logic": "对美敞口高的家电与航运对关税边际最敏感"
+        },
+        {
+          "market": "A股",
+          "sector": "国产半导体设备 / 信创",
+          "sector_en": "Domestic Semis",
+          "pct_low": 1.8,
+          "pct_high": 4.5,
+          "direction": "positive",
+          "logic": "无论管制松紧，自主可控均为中线确定主线"
+        },
+        {
+          "market": "美股",
+          "sector": "在华营收美股 (AAPL/TSLA)",
+          "sector_en": "China-Exposed US Tech",
+          "pct_low": 1.2,
+          "pct_high": 3.5,
+          "direction": "positive",
+          "logic": "供应链与亚太市场关税担忧阶段缓解"
+        }
+      ],
+      "if_then": [
+        {
+          "cond": "若落地关税豁免/联合公报",
+          "result": "KWEB 领涨 +4%~+7%，A股出口链 +3%~+6%",
+          "tone": "bullish"
+        },
+        {
+          "cond": "若加码芯片/关税限制",
+          "result": "出口链 -2%~-5%，国产半导体逆势 +2%~+5%",
+          "tone": "bearish"
+        }
+      ],
+      "milestones": [
+        {
+          "date": "已发生",
+          "status": "done",
+          "label": "元首抵深与多边经贸谈判启动"
+        },
+        {
+          "date": "当前",
+          "status": "current",
+          "label": "双边会晤与经贸框架磋商窗口"
+        },
+        {
+          "date": "下周",
+          "status": "upcoming",
+          "label": "追踪联合声明与具体关税清单细则"
+        }
+      ]
+    },
+    "evt_8ecb129dfffb": {
+      "event_id": "evt_8ecb129dfffb",
+      "tag": "地缘外交 · 关税",
+      "tag_en": "Geopolitics & Tariffs",
+      "polarity": "divergent",
+      "intensity": 5,
+      "one_liner": "大国高层会晤重估未来关税清单与科技管制边界：释放缓和催化中概与出口链修复，摩擦升级则利好国产替代。",
+      "top_a": {
+        "market": "A股",
+        "sector": "出口链 / 消费电子 / 航运",
+        "sector_en": "Exporters & Shipping",
+        "pct_low": 2.0,
+        "pct_high": 5.0,
+        "direction": "positive",
+        "logic": "对美敞口高的家电与航运对关税边际最敏感"
+      },
+      "top_us": {
+        "market": "美股",
+        "sector": "中概互联 (KWEB)",
+        "sector_en": "China ADRs (KWEB)",
+        "pct_low": 2.5,
+        "pct_high": 6.0,
+        "direction": "positive",
+        "logic": "外交缓和信号最直接修复外资风险偏好"
+      },
+      "bars": [
+        {
+          "market": "美股",
+          "sector": "中概互联 (KWEB)",
+          "sector_en": "China ADRs (KWEB)",
+          "pct_low": 2.5,
+          "pct_high": 6.0,
+          "direction": "positive",
+          "logic": "外交缓和信号最直接修复外资风险偏好"
+        },
+        {
+          "market": "A股",
+          "sector": "出口链 / 消费电子 / 航运",
+          "sector_en": "Exporters & Shipping",
+          "pct_low": 2.0,
+          "pct_high": 5.0,
+          "direction": "positive",
+          "logic": "对美敞口高的家电与航运对关税边际最敏感"
+        },
+        {
+          "market": "A股",
+          "sector": "国产半导体设备 / 信创",
+          "sector_en": "Domestic Semis",
+          "pct_low": 1.8,
+          "pct_high": 4.5,
+          "direction": "positive",
+          "logic": "无论管制松紧，自主可控均为中线确定主线"
+        },
+        {
+          "market": "美股",
+          "sector": "在华营收美股 (AAPL/TSLA)",
+          "sector_en": "China-Exposed US Tech",
+          "pct_low": 1.2,
+          "pct_high": 3.5,
+          "direction": "positive",
+          "logic": "供应链与亚太市场关税担忧阶段缓解"
+        }
+      ],
+      "if_then": [
+        {
+          "cond": "若落地关税豁免/联合公报",
+          "result": "KWEB 领涨 +4%~+7%，A股出口链 +3%~+6%",
+          "tone": "bullish"
+        },
+        {
+          "cond": "若加码芯片/关税限制",
+          "result": "出口链 -2%~-5%，国产半导体逆势 +2%~+5%",
+          "tone": "bearish"
+        }
+      ],
+      "milestones": [
+        {
+          "date": "已发生",
+          "status": "done",
+          "label": "元首抵深与多边经贸谈判启动"
+        },
+        {
+          "date": "当前",
+          "status": "current",
+          "label": "双边会晤与经贸框架磋商窗口"
+        },
+        {
+          "date": "下周",
+          "status": "upcoming",
+          "label": "追踪联合声明与具体关税清单细则"
+        }
+      ]
+    },
+    "evt_a39ab7e66fb3": {
+      "event_id": "evt_a39ab7e66fb3",
+      "tag": "地缘外交 · 关税",
+      "tag_en": "Geopolitics & Tariffs",
+      "polarity": "divergent",
+      "intensity": 5,
+      "one_liner": "大国高层会晤重估未来关税清单与科技管制边界：释放缓和催化中概与出口链修复，摩擦升级则利好国产替代。",
+      "top_a": {
+        "market": "A股",
+        "sector": "出口链 / 消费电子 / 航运",
+        "sector_en": "Exporters & Shipping",
+        "pct_low": 2.0,
+        "pct_high": 5.0,
+        "direction": "positive",
+        "logic": "对美敞口高的家电与航运对关税边际最敏感"
+      },
+      "top_us": {
+        "market": "美股",
+        "sector": "中概互联 (KWEB)",
+        "sector_en": "China ADRs (KWEB)",
+        "pct_low": 2.5,
+        "pct_high": 6.0,
+        "direction": "positive",
+        "logic": "外交缓和信号最直接修复外资风险偏好"
+      },
+      "bars": [
+        {
+          "market": "美股",
+          "sector": "中概互联 (KWEB)",
+          "sector_en": "China ADRs (KWEB)",
+          "pct_low": 2.5,
+          "pct_high": 6.0,
+          "direction": "positive",
+          "logic": "外交缓和信号最直接修复外资风险偏好"
+        },
+        {
+          "market": "A股",
+          "sector": "出口链 / 消费电子 / 航运",
+          "sector_en": "Exporters & Shipping",
+          "pct_low": 2.0,
+          "pct_high": 5.0,
+          "direction": "positive",
+          "logic": "对美敞口高的家电与航运对关税边际最敏感"
+        },
+        {
+          "market": "A股",
+          "sector": "国产半导体设备 / 信创",
+          "sector_en": "Domestic Semis",
+          "pct_low": 1.8,
+          "pct_high": 4.5,
+          "direction": "positive",
+          "logic": "无论管制松紧，自主可控均为中线确定主线"
+        },
+        {
+          "market": "美股",
+          "sector": "在华营收美股 (AAPL/TSLA)",
+          "sector_en": "China-Exposed US Tech",
+          "pct_low": 1.2,
+          "pct_high": 3.5,
+          "direction": "positive",
+          "logic": "供应链与亚太市场关税担忧阶段缓解"
+        }
+      ],
+      "if_then": [
+        {
+          "cond": "若落地关税豁免/联合公报",
+          "result": "KWEB 领涨 +4%~+7%，A股出口链 +3%~+6%",
+          "tone": "bullish"
+        },
+        {
+          "cond": "若加码芯片/关税限制",
+          "result": "出口链 -2%~-5%，国产半导体逆势 +2%~+5%",
+          "tone": "bearish"
+        }
+      ],
+      "milestones": [
+        {
+          "date": "已发生",
+          "status": "done",
+          "label": "元首抵深与多边经贸谈判启动"
+        },
+        {
+          "date": "当前",
+          "status": "current",
+          "label": "双边会晤与经贸框架磋商窗口"
+        },
+        {
+          "date": "下周",
+          "status": "upcoming",
+          "label": "追踪联合声明与具体关税清单细则"
+        }
+      ]
+    },
+    "evt_4a701972d20e": {
+      "event_id": "evt_4a701972d20e",
+      "tag": "地缘外交 · 关税",
+      "tag_en": "Geopolitics & Tariffs",
+      "polarity": "bullish",
+      "intensity": 5,
+      "one_liner": "大国高层会晤重估未来关税清单与科技管制边界：释放缓和催化中概与出口链修复，摩擦升级则利好国产替代。",
+      "top_a": {
+        "market": "A股",
+        "sector": "出口链 / 消费电子 / 航运",
+        "sector_en": "Exporters & Shipping",
+        "pct_low": 2.0,
+        "pct_high": 5.0,
+        "direction": "positive",
+        "logic": "对美敞口高的家电与航运对关税边际最敏感"
+      },
+      "top_us": {
+        "market": "美股",
+        "sector": "中概互联 (KWEB)",
+        "sector_en": "China ADRs (KWEB)",
+        "pct_low": 2.5,
+        "pct_high": 6.0,
+        "direction": "positive",
+        "logic": "外交缓和信号最直接修复外资风险偏好"
+      },
+      "bars": [
+        {
+          "market": "美股",
+          "sector": "中概互联 (KWEB)",
+          "sector_en": "China ADRs (KWEB)",
+          "pct_low": 2.5,
+          "pct_high": 6.0,
+          "direction": "positive",
+          "logic": "外交缓和信号最直接修复外资风险偏好"
+        },
+        {
+          "market": "A股",
+          "sector": "出口链 / 消费电子 / 航运",
+          "sector_en": "Exporters & Shipping",
+          "pct_low": 2.0,
+          "pct_high": 5.0,
+          "direction": "positive",
+          "logic": "对美敞口高的家电与航运对关税边际最敏感"
+        },
+        {
+          "market": "A股",
+          "sector": "国产半导体设备 / 信创",
+          "sector_en": "Domestic Semis",
+          "pct_low": 1.8,
+          "pct_high": 4.5,
+          "direction": "positive",
+          "logic": "无论管制松紧，自主可控均为中线确定主线"
+        },
+        {
+          "market": "美股",
+          "sector": "在华营收美股 (AAPL/TSLA)",
+          "sector_en": "China-Exposed US Tech",
+          "pct_low": 1.2,
+          "pct_high": 3.5,
+          "direction": "positive",
+          "logic": "供应链与亚太市场关税担忧阶段缓解"
+        }
+      ],
+      "if_then": [
+        {
+          "cond": "若落地关税豁免/联合公报",
+          "result": "KWEB 领涨 +4%~+7%，A股出口链 +3%~+6%",
+          "tone": "bullish"
+        },
+        {
+          "cond": "若加码芯片/关税限制",
+          "result": "出口链 -2%~-5%，国产半导体逆势 +2%~+5%",
+          "tone": "bearish"
+        }
+      ],
+      "milestones": [
+        {
+          "date": "已发生",
+          "status": "done",
+          "label": "元首抵深与多边经贸谈判启动"
+        },
+        {
+          "date": "当前",
+          "status": "current",
+          "label": "双边会晤与经贸框架磋商窗口"
+        },
+        {
+          "date": "下周",
+          "status": "upcoming",
+          "label": "追踪联合声明与具体关税清单细则"
+        }
+      ]
+    },
+    "evt_ff931efd1aae": {
+      "event_id": "evt_ff931efd1aae",
       "tag": "央行利率 · 流动性",
       "tag_en": "Fed & Liquidity",
       "polarity": "bearish",
@@ -4503,162 +4352,78 @@
         }
       ]
     },
-    "evt_bd36d32a80a9": {
-      "event_id": "evt_bd36d32a80a9",
-      "tag": "内需政策 · 新能源智驾",
-      "tag_en": "China Policy & EV/Robotics",
-      "polarity": "bullish",
-      "intensity": 4,
-      "one_liner": "国内宏观稳增长政策或新能源/智驾产业突破，直接提振内需消费、汽车智能化供应链及港股顺周期资产估值。",
+    "evt_2d0ad04033ff": {
+      "event_id": "evt_2d0ad04033ff",
+      "tag": "央行利率 · 流动性",
+      "tag_en": "Fed & Liquidity",
+      "polarity": "bearish",
+      "intensity": 5,
+      "one_liner": "利率预期直接改写全球资产折现率：鹰派利空黄金与高估值成长股，利好美元与高股息银行；鸽派则反向修复。",
       "top_a": {
         "market": "A股",
-        "sector": "汽车智能化 / 机器人 / 锂电",
-        "sector_en": "Smart EV & Robotics",
-        "pct_low": 1.8,
-        "pct_high": 4.5,
-        "direction": "positive",
-        "logic": "政策补贴或智驾放量带动全产业链订单"
+        "sector": "黄金与有色金属",
+        "sector_en": "A-Share Gold & Metals",
+        "pct_low": -4.5,
+        "pct_high": -1.8,
+        "direction": "negative",
+        "logic": "实际利率与美元走强压制贵金属定价"
       },
       "top_us": {
         "market": "美股",
-        "sector": "新能源车与智驾 (TSLA / LI)",
-        "sector_en": "EV & Autonomy",
-        "pct_low": 1.5,
-        "pct_high": 4.2,
-        "direction": "positive",
-        "logic": "Robotaxi 与人形机器人进度成为核心定价因子"
+        "sector": "纳指成长科技 (QQQ)",
+        "sector_en": "Nasdaq Growth (QQQ)",
+        "pct_low": -4.0,
+        "pct_high": -1.5,
+        "direction": "negative",
+        "logic": "美债收益率抬升压缩远期估值倍数"
       },
       "bars": [
         {
           "market": "A股",
-          "sector": "汽车智能化 / 机器人 / 锂电",
-          "sector_en": "Smart EV & Robotics",
-          "pct_low": 1.8,
-          "pct_high": 4.5,
-          "direction": "positive",
-          "logic": "政策补贴或智驾放量带动全产业链订单"
-        },
-        {
-          "market": "A股",
-          "sector": "大消费 / 顺周期 / 券商",
-          "sector_en": "Consumer & Brokers",
-          "pct_low": 1.2,
-          "pct_high": 3.5,
-          "direction": "positive",
-          "logic": "流动性宽松与稳增长预期改善风险偏好"
-        },
-        {
-          "market": "美股",
-          "sector": "新能源车与智驾 (TSLA / LI)",
-          "sector_en": "EV & Autonomy",
-          "pct_low": 1.5,
-          "pct_high": 4.2,
-          "direction": "positive",
-          "logic": "Robotaxi 与人形机器人进度成为核心定价因子"
-        }
-      ],
-      "if_then": [
-        {
-          "cond": "若配套细则/销量超预期",
-          "result": "智驾机器人与顺周期走强 +2%~+5%",
-          "tone": "bullish"
-        },
-        {
-          "cond": "若数据不及预期",
-          "result": "顺周期短线回撤 -1.5%~-3%",
-          "tone": "bearish"
-        }
-      ],
-      "milestones": [
-        {
-          "date": "已发生",
-          "status": "done",
-          "label": "政策吹风或头部车企发布最新销量/技术进展"
-        },
-        {
-          "date": "当前",
-          "status": "current",
-          "label": "资金围绕龙头产业链进行业绩与估值切换"
-        },
-        {
-          "date": "月底",
-          "status": "upcoming",
-          "label": "追踪月度官方宏观/乘联会高频验证数据"
-        }
-      ]
-    },
-    "evt_21ab46f63cc5": {
-      "event_id": "evt_21ab46f63cc5",
-      "tag": "AI 模型 · 应用商业化",
-      "tag_en": "AI Models & Software",
-      "polarity": "bullish",
-      "intensity": 4,
-      "one_liner": "新一代高性价比推理模型（如 Gemini 4 Neon、GPT-6.2、Qwen4、混元 Hy4）大幅压低 Token 成本，直接引爆 AI 应用、编程与端侧换机潮。",
-      "top_a": {
-        "market": "A股",
-        "sector": "AI 应用软件 / Agent / 办公",
-        "sector_en": "A-Share AI Apps & SaaS",
-        "pct_low": 1.8,
-        "pct_high": 4.6,
-        "direction": "positive",
-        "logic": "底层模型降本增效直接打开应用端商业利润率"
-      },
-      "top_us": {
-        "market": "美股",
-        "sector": "云平台与 AI 软件 (GOOGL/MSFT)",
-        "sector_en": "Cloud & AI Platforms",
-        "pct_low": 1.5,
-        "pct_high": 3.8,
-        "direction": "positive",
-        "logic": "头部模型迭代巩固开发者粘性与云 API 收入"
-      },
-      "bars": [
-        {
-          "market": "A股",
-          "sector": "AI 应用软件 / Agent / 办公",
-          "sector_en": "A-Share AI Apps & SaaS",
-          "pct_low": 1.8,
-          "pct_high": 4.6,
-          "direction": "positive",
-          "logic": "底层模型降本增效直接打开应用端商业利润率"
-        },
-        {
-          "market": "A股",
-          "sector": "端侧 AI 硬件 (AI手机/PC/耳机)",
-          "sector_en": "Edge AI Hardware",
-          "pct_low": 1.2,
-          "pct_high": 3.5,
-          "direction": "positive",
-          "logic": "轻量高智模型加速本地离线部署与换机周期"
-        },
-        {
-          "market": "美股",
-          "sector": "云平台与 AI 软件 (GOOGL/MSFT)",
-          "sector_en": "Cloud & AI Platforms",
-          "pct_low": 1.5,
-          "pct_high": 3.8,
-          "direction": "positive",
-          "logic": "头部模型迭代巩固开发者粘性与云 API 收入"
-        },
-        {
-          "market": "美股",
-          "sector": "传统无壁垒工具软件",
-          "sector_en": "Legacy SaaS",
-          "pct_low": -3.0,
-          "pct_high": -1.0,
+          "sector": "黄金与有色金属",
+          "sector_en": "A-Share Gold & Metals",
+          "pct_low": -4.5,
+          "pct_high": -1.8,
           "direction": "negative",
-          "logic": "原生多模态与编程 Agent 挤压单点旧软件生存空间"
+          "logic": "实际利率与美元走强压制贵金属定价"
+        },
+        {
+          "market": "A股",
+          "sector": "银行 / 高股息红利",
+          "sector_en": "A-Share Banks & Dividend",
+          "pct_low": 0.8,
+          "pct_high": 2.4,
+          "direction": "positive",
+          "logic": "高利率与避险期资金偏好稳定分红"
+        },
+        {
+          "market": "美股",
+          "sector": "纳指成长科技 (QQQ)",
+          "sector_en": "Nasdaq Growth (QQQ)",
+          "pct_low": -4.0,
+          "pct_high": -1.5,
+          "direction": "negative",
+          "logic": "美债收益率抬升压缩远期估值倍数"
+        },
+        {
+          "market": "大宗",
+          "sector": "现货黄金 (GLD)",
+          "sector_en": "Spot Gold (GLD)",
+          "pct_low": -5.0,
+          "pct_high": -2.0,
+          "direction": "negative",
+          "logic": "无息资产短线遭遇美元虹吸"
         }
       ],
       "if_then": [
         {
-          "cond": "若 API 调用量/付费转化爆发",
-          "result": "AI 应用与云厂迎来戴维斯双击 +2%~+5%",
+          "cond": "若释放降息/暂停加息",
+          "result": "纳指 & 黄金快速修复 +2%~+4.5%",
           "tone": "bullish"
         },
         {
-          "cond": "若价格战吞噬毛利",
-          "result": "纯模型套壳公司承压 -2%~-4%",
+          "cond": "若加息 +25bp 落地",
+          "result": "黄金有色承压 -2%~-4%，红利抗跌",
           "tone": "bearish"
         }
       ],
@@ -4666,194 +4431,203 @@
         {
           "date": "已发生",
           "status": "done",
-          "label": "新一轮旗舰/端侧模型密集发布并公布定价"
+          "label": "纪要/官员偏鹰表态引发利率重定价"
         },
         {
           "date": "当前",
           "status": "current",
-          "label": "开发者实测迁移与企业 API 接入高峰期"
+          "label": "市场博弈 12 月议息路径与美元 104 关口"
         },
         {
-          "date": "下季",
+          "date": "12-10",
           "status": "upcoming",
-          "label": "核验云厂 AI 收入占比与爆款应用留存"
+          "label": "FOMC 议息决议与最新点阵图落地验证"
         }
       ]
     },
-    "evt_557da46858d4": {
-      "event_id": "evt_557da46858d4",
-      "tag": "AI 模型 · 应用商业化",
-      "tag_en": "AI Models & Software",
-      "polarity": "bullish",
+    "evt_1aed093691c9": {
+      "event_id": "evt_1aed093691c9",
+      "tag": "能源原油 · 地缘风险",
+      "tag_en": "Energy & Geopolitics",
+      "polarity": "divergent",
       "intensity": 4,
-      "one_liner": "新一代高性价比推理模型（如 Gemini 4 Neon、GPT-6.2、Qwen4、混元 Hy4）大幅压低 Token 成本，直接引爆 AI 应用、编程与端侧换机潮。",
+      "one_liner": "地缘冲突或产油国决议直接左右国际油价与海运运价：油价飙升利好油气采掘与油运，但推高通胀并挤压航空/化工利润。",
       "top_a": {
         "market": "A股",
-        "sector": "AI 应用软件 / Agent / 办公",
-        "sector_en": "A-Share AI Apps & SaaS",
-        "pct_low": 1.8,
-        "pct_high": 4.6,
-        "direction": "positive",
-        "logic": "底层模型降本增效直接打开应用端商业利润率"
-      },
-      "top_us": {
-        "market": "美股",
-        "sector": "云平台与 AI 软件 (GOOGL/MSFT)",
-        "sector_en": "Cloud & AI Platforms",
-        "pct_low": 1.5,
-        "pct_high": 3.8,
-        "direction": "positive",
-        "logic": "头部模型迭代巩固开发者粘性与云 API 收入"
-      },
-      "bars": [
-        {
-          "market": "A股",
-          "sector": "AI 应用软件 / Agent / 办公",
-          "sector_en": "A-Share AI Apps & SaaS",
-          "pct_low": 1.8,
-          "pct_high": 4.6,
-          "direction": "positive",
-          "logic": "底层模型降本增效直接打开应用端商业利润率"
-        },
-        {
-          "market": "A股",
-          "sector": "端侧 AI 硬件 (AI手机/PC/耳机)",
-          "sector_en": "Edge AI Hardware",
-          "pct_low": 1.2,
-          "pct_high": 3.5,
-          "direction": "positive",
-          "logic": "轻量高智模型加速本地离线部署与换机周期"
-        },
-        {
-          "market": "美股",
-          "sector": "云平台与 AI 软件 (GOOGL/MSFT)",
-          "sector_en": "Cloud & AI Platforms",
-          "pct_low": 1.5,
-          "pct_high": 3.8,
-          "direction": "positive",
-          "logic": "头部模型迭代巩固开发者粘性与云 API 收入"
-        },
-        {
-          "market": "美股",
-          "sector": "传统无壁垒工具软件",
-          "sector_en": "Legacy SaaS",
-          "pct_low": -3.0,
-          "pct_high": -1.0,
-          "direction": "negative",
-          "logic": "原生多模态与编程 Agent 挤压单点旧软件生存空间"
-        }
-      ],
-      "if_then": [
-        {
-          "cond": "若 API 调用量/付费转化爆发",
-          "result": "AI 应用与云厂迎来戴维斯双击 +2%~+5%",
-          "tone": "bullish"
-        },
-        {
-          "cond": "若价格战吞噬毛利",
-          "result": "纯模型套壳公司承压 -2%~-4%",
-          "tone": "bearish"
-        }
-      ],
-      "milestones": [
-        {
-          "date": "已发生",
-          "status": "done",
-          "label": "新一轮旗舰/端侧模型密集发布并公布定价"
-        },
-        {
-          "date": "当前",
-          "status": "current",
-          "label": "开发者实测迁移与企业 API 接入高峰期"
-        },
-        {
-          "date": "下季",
-          "status": "upcoming",
-          "label": "核验云厂 AI 收入占比与爆款应用留存"
-        }
-      ]
-    },
-    "evt_c0cfdeea1764": {
-      "event_id": "evt_c0cfdeea1764",
-      "tag": "科技财报 · 风险资产",
-      "tag_en": "Tech Earnings & Risk Assets",
-      "polarity": "bullish",
-      "intensity": 3,
-      "one_liner": "头部互联网与金融科技财报/回购及加密监管动态，直接牵引港股科技指数、中概股与美股高弹性风险资产情绪。",
-      "top_a": {
-        "market": "港股",
-        "sector": "恒生科技 / 互联网龙头",
-        "sector_en": "Hang Seng Tech",
-        "pct_low": 1.5,
-        "pct_high": 4.2,
-        "direction": "positive",
-        "logic": "利润率改善与大额回购提供底部估值支撑"
-      },
-      "top_us": {
-        "market": "美股",
-        "sector": "科技与加密概念 (COIN/MSTR)",
-        "sector_en": "US Tech & Crypto",
+        "sector": "石油石化 / 油运 / 煤炭",
+        "sector_en": "Oil & Tankers",
         "pct_low": 2.0,
-        "pct_high": 5.5,
+        "pct_high": 5.0,
         "direction": "positive",
-        "logic": "高弹性资金跟随风险偏好迅速放大波动"
+        "logic": "布伦特油价与 VLCC 运价跳升直接增厚上游盈利"
+      },
+      "top_us": {
+        "market": "美股",
+        "sector": "美国能源板块 (XLE / XOM)",
+        "sector_en": "US Energy (XLE)",
+        "pct_low": 1.8,
+        "pct_high": 4.2,
+        "direction": "positive",
+        "logic": "现金流随油价中枢上移同步扩张"
       },
       "bars": [
         {
-          "market": "港股",
-          "sector": "恒生科技 / 互联网龙头",
-          "sector_en": "Hang Seng Tech",
-          "pct_low": 1.5,
-          "pct_high": 4.2,
+          "market": "A股",
+          "sector": "石油石化 / 油运 / 煤炭",
+          "sector_en": "Oil & Tankers",
+          "pct_low": 2.0,
+          "pct_high": 5.0,
           "direction": "positive",
-          "logic": "利润率改善与大额回购提供底部估值支撑"
+          "logic": "布伦特油价与 VLCC 运价跳升直接增厚上游盈利"
         },
         {
           "market": "A股",
-          "sector": "金融科技 / 跨境支付",
-          "sector_en": "Fintech & Payments",
-          "pct_low": 1.2,
-          "pct_high": 3.8,
-          "direction": "positive",
-          "logic": "成交活跃度回升与数字资产合规化催化"
+          "sector": "航空机场 / 基础化工",
+          "sector_en": "Airlines & Chemicals",
+          "pct_low": -3.2,
+          "pct_high": -1.2,
+          "direction": "negative",
+          "logic": "航油与原材料成本上升挤压毛利率"
         },
         {
           "market": "美股",
-          "sector": "科技与加密概念 (COIN/MSTR)",
-          "sector_en": "US Tech & Crypto",
-          "pct_low": 2.0,
-          "pct_high": 5.5,
+          "sector": "美国能源板块 (XLE / XOM)",
+          "sector_en": "US Energy (XLE)",
+          "pct_low": 1.8,
+          "pct_high": 4.2,
           "direction": "positive",
-          "logic": "高弹性资金跟随风险偏好迅速放大波动"
+          "logic": "现金流随油价中枢上移同步扩张"
+        },
+        {
+          "market": "大宗",
+          "sector": "布伦特原油 / 黄金避险",
+          "sector_en": "Brent Crude & Gold",
+          "pct_low": 2.0,
+          "pct_high": 6.0,
+          "direction": "positive",
+          "logic": "供给中断溢价与地缘避险共振"
         }
       ],
       "if_then": [
         {
-          "cond": "若业绩指引/回购超预期",
-          "result": "恒生科技与相关链条走强 +2%~+4.5%",
-          "tone": "bullish"
+          "cond": "若冲突升级/海峡受阻",
+          "result": "油气与黄金急涨 +3%~+6%，航空承压",
+          "tone": "bearish"
         },
         {
-          "cond": "若增速放缓或监管收紧",
-          "result": "高弹性标的回调 -2%~-5%",
-          "tone": "bearish"
+          "cond": "若达成停火/增产协议",
+          "result": "油价回落 -3%~-6%，航空与成长股反弹",
+          "tone": "bullish"
         }
       ],
       "milestones": [
         {
           "date": "已发生",
           "status": "done",
-          "label": "财报披露或监管政策动态落地"
+          "label": "产油区/航道局势出现突发变量"
         },
         {
           "date": "当前",
           "status": "current",
-          "label": "机构重估季度盈利预测与资金仓位"
+          "label": "原油期货计入风险溢价，观察是否实质断供"
         },
         {
           "date": "下周",
           "status": "upcoming",
-          "label": "观察南向/外资连续净流入持续性"
+          "label": "关注 OPEC+ 产量指引及外交斡旋结果"
+        }
+      ]
+    },
+    "evt_50f3cb28f679": {
+      "event_id": "evt_50f3cb28f679",
+      "tag": "AI 算力 · 芯片链",
+      "tag_en": "AI Compute & Semis",
+      "polarity": "bullish",
+      "intensity": 5,
+      "one_liner": "AI 巨头巨额融资与芯片路线迭代锁定全球算力资本开支，直接拉动上游光模块、服务器液冷与芯片封装订单。",
+      "top_a": {
+        "market": "A股",
+        "sector": "CPO 光模块 / 液冷 / PCB",
+        "sector_en": "A-Share Optics & Cooling",
+        "pct_low": 2.2,
+        "pct_high": 5.5,
+        "direction": "positive",
+        "logic": "海外云厂与大模型资本开支直接转化为订单"
+      },
+      "top_us": {
+        "market": "美股",
+        "sector": "算力芯片 (NVDA / AMD / TSM)",
+        "sector_en": "US AI Semis",
+        "pct_low": 1.8,
+        "pct_high": 4.8,
+        "direction": "positive",
+        "logic": "核心业绩与二线替代方案同步重估"
+      },
+      "bars": [
+        {
+          "market": "A股",
+          "sector": "CPO 光模块 / 液冷 / PCB",
+          "sector_en": "A-Share Optics & Cooling",
+          "pct_low": 2.2,
+          "pct_high": 5.5,
+          "direction": "positive",
+          "logic": "海外云厂与大模型资本开支直接转化为订单"
+        },
+        {
+          "market": "A股",
+          "sector": "国产算力 / 封测与存储",
+          "sector_en": "Domestic Compute & Memory",
+          "pct_low": 1.5,
+          "pct_high": 4.0,
+          "direction": "positive",
+          "logic": "HBM 紧缺与算力国产化双轮驱动"
+        },
+        {
+          "market": "美股",
+          "sector": "算力芯片 (NVDA / AMD / TSM)",
+          "sector_en": "US AI Semis",
+          "pct_low": 1.8,
+          "pct_high": 4.8,
+          "direction": "positive",
+          "logic": "核心业绩与二线替代方案同步重估"
+        },
+        {
+          "market": "美股",
+          "sector": "云巨头与 AI 电力 (AMZN/VST)",
+          "sector_en": "Hyperscalers & Power",
+          "pct_low": 1.2,
+          "pct_high": 3.2,
+          "direction": "positive",
+          "logic": "大模型训练推理锁定云消耗与数据中心电力"
+        }
+      ],
+      "if_then": [
+        {
+          "cond": "若挂牌/财报超预期",
+          "result": "光模块与算力链共振 +2.5%~+5.5%",
+          "tone": "bullish"
+        },
+        {
+          "cond": "若高开抽血或出口收紧",
+          "result": "高位算力短线回吐 -2%~-4%",
+          "tone": "bearish"
+        }
+      ],
+      "milestones": [
+        {
+          "date": "已发生",
+          "status": "done",
+          "label": "头部芯片财报/大模型 IPO 定价超预期"
+        },
+        {
+          "date": "当前",
+          "status": "current",
+          "label": "二级市场重估 AI 算力与云厂商估值锚"
+        },
+        {
+          "date": "下月",
+          "status": "upcoming",
+          "label": "验证云巨头季度 Capex 指引与出货量"
         }
       ]
     }

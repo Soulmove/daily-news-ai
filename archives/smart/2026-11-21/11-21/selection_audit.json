@@ -1,0 +1,626 @@
+{
+  "finance": {
+    "total_clusters": 253,
+    "selected_for_prompt": 140,
+    "omitted_sample": [
+      {
+        "title": "美股期指齐跌 纳指期货跌近2% Anthropic盘前跌逾10% | 今夜看点",
+        "score": 46.0,
+        "reason": "低于候选池截断阈值"
+      },
+      {
+        "title": "华尔街官宣迄今最大GPU租赁融资 就算是SpaceX也得支付“AI溢价”",
+        "score": 46.0,
+        "reason": "低于候选池截断阈值"
+      },
+      {
+        "title": "八年前布局今日兑现 SK海力士拟全资持有铠侠第一大股东平台",
+        "score": 46.0,
+        "reason": "低于候选池截断阈值"
+      },
+      {
+        "title": "Nvidia’s Strong Fundamentals Give New CEO a Much-Needed Tailwind",
+        "score": 46.0,
+        "reason": "低于候选池截断阈值"
+      },
+      {
+        "title": "Wall Street Pledged to Mobilize $500 Billion for Nvidia—but Hasn’t Put Up a Dime",
+        "score": 46.0,
+        "reason": "低于候选池截断阈值"
+      },
+      {
+        "title": "[SEC 8-K] 英伟达 (NVIDIA) 提交监管文件 8-K (Items: 2.02,9.01) (2026-11-17)",
+        "score": 46.0,
+        "reason": "低于候选池截断阈值"
+      },
+      {
+        "title": "VerlInvest将收购华润所持Oatly权益。",
+        "score": 45.0,
+        "reason": "低于候选池截断阈值"
+      },
+      {
+        "title": "最新监管文件显示：GTCR考虑竞购Global Payments。",
+        "score": 45.0,
+        "reason": "低于候选池截断阈值"
+      },
+      {
+        "title": "美国卫生部长RFK Jr.的健康顾问委员会考虑利用人工智能（AI）来加速数据评估。",
+        "score": 45.0,
+        "reason": "低于候选池截断阈值"
+      },
+      {
+        "title": "惠誉预测，到2029年底，比利时的债务将升至GDP的115%以上。",
+        "score": 41.0,
+        "reason": "低于候选池截断阈值"
+      },
+      {
+        "title": "穆迪对英国的评级：AA3评级平衡了富裕、多元化的经济和强大的机构，以及温和的增长前景和充满挑战的财政前景。 与欧盟更紧密的经济合作以及人工智能带来的生产力提升，为经济增长带来了中期上行风险。 随着通胀放缓，预计债务负担能力将趋于稳定，但利息支出相对于财政收入仍将处于高位。 预计英国财政赤字将在2026年收窄至4.5%，2027年收窄至4%。 到本十年末，英国政府债务将从2025年占GDP的102%升至106%。 目前预测英国2026年实际GDP增速为1.4%，高于此前的0.…",
+        "score": 41.0,
+        "reason": "低于候选池截断阈值"
+      },
+      {
+        "title": "欧洲地中海地震中心：俄罗斯堪察加半岛东海岸发生了4.4级地震；震源深度88.9公里。",
+        "score": 41.0,
+        "reason": "低于候选池截断阈值"
+      },
+      {
+        "title": "据华盛顿邮报：美国国防部长赫格塞思对美加防务关系施加了新的限制。",
+        "score": 41.0,
+        "reason": "低于候选池截断阈值"
+      },
+      {
+        "title": "美媒：美国联邦调查局国家犯罪信息中心遭黑客攻击",
+        "score": 37.0,
+        "reason": "低于候选池截断阈值"
+      },
+      {
+        "title": "期货盯盘神器专属文章",
+        "score": 37.0,
+        "reason": "低于候选池截断阈值"
+      },
+      {
+        "title": "美豆风向标·11月21日",
+        "score": 37.0,
+        "reason": "低于候选池截断阈值"
+      },
+      {
+        "title": "美国收紧对加防务合作限制，美加传统盟友关系再现裂痕",
+        "score": 37.0,
+        "reason": "低于候选池截断阈值"
+      },
+      {
+        "title": "惠誉确认比利时信用评级，警告债务攀升",
+        "score": 37.0,
+        "reason": "低于候选池截断阈值"
+      },
+      {
+        "title": "U.S. media: FBI's National Crime Information Center reportedly hacked",
+        "score": 37.0,
+        "reason": "低于候选池截断阈值"
+      },
+      {
+        "title": "BYD said its flash-charging network had 31,014 charging connectors across 345 Chinese cities as of Nov. 20, serving more than 3.57 million users.",
+        "score": 37.0,
+        "reason": "低于候选池截断阈值"
+      },
+      {
+        "title": "EMSC: A magnitude 4.4 earthquake struck off the east coast of Russia’s Kamchatka Peninsula at a depth of 88.9 km.",
+        "score": 37.0,
+        "reason": "低于候选池截断阈值"
+      },
+      {
+        "title": "U.S. tightens limits on defense cooperation with Canada, exposing rift between traditional allies",
+        "score": 37.0,
+        "reason": "低于候选池截断阈值"
+      },
+      {
+        "title": "Denmark expels Russian military attaché; Moscow vows ‘appropriate response’",
+        "score": 37.0,
+        "reason": "低于候选池截断阈值"
+      },
+      {
+        "title": "Russia says Estonia's planned border closures create new 'Iron Curtain'",
+        "score": 37.0,
+        "reason": "低于候选池截断阈值"
+      },
+      {
+        "title": "Fitch affirms Belgium rating, warns of rising debt",
+        "score": 37.0,
+        "reason": "低于候选池截断阈值"
+      },
+      {
+        "title": "The Washington Post reports that Hegseth has imposed new restrictions on U.S.-Canada defense ties.",
+        "score": 37.0,
+        "reason": "低于候选池截断阈值"
+      },
+      {
+        "title": "Market news: Lutnick has demanded that battery startup Pure Lithium cede a 51% controlling stake to the U.S. government.",
+        "score": 37.0,
+        "reason": "低于候选池截断阈值"
+      },
+      {
+        "title": "Shanghai Shipping Exchange: Rates for three major dry bulk vessel classes edge lower this week; charter index reverses gains",
+        "score": 37.0,
+        "reason": "低于候选池截断阈值"
+      },
+      {
+        "title": "Myanmar president's office outlines new government's agenda and plans",
+        "score": 37.0,
+        "reason": "低于候选池截断阈值"
+      },
+      {
+        "title": "A magnitude 6.7 earthquake struck Peru on the 20th, with strong shaking reported in Lima and other areas, according to the Peruvian Geophysical Institute.",
+        "score": 37.0,
+        "reason": "低于候选池截断阈值"
+      }
+    ]
+  },
+  "global": {
+    "total_clusters": 237,
+    "selected_for_prompt": 140,
+    "omitted_sample": [
+      {
+        "title": "Vape users hospitalised after losing consciousness, prompting public health warning in New South Wales",
+        "score": 47.0,
+        "reason": "低于候选池截断阈值"
+      },
+      {
+        "title": "Dems aim to block Iran war funding. And, Army delays lead azide detonation in Iowa",
+        "score": 47.0,
+        "reason": "低于候选池截断阈值"
+      },
+      {
+        "title": "The U.K. and EU hold a rare summit to strengthen ties",
+        "score": 47.0,
+        "reason": "低于候选池截断阈值"
+      },
+      {
+        "title": "Wall St ends sharply lower on AI selloff, S&P 500, Dow in correction - Reuters",
+        "score": 47.0,
+        "reason": "低于候选池截断阈值"
+      },
+      {
+        "title": "The real ‘fifth force’: how quantum statistics shapes our world in profound ways",
+        "score": 47.0,
+        "reason": "低于候选池截断阈值"
+      },
+      {
+        "title": "How Beijing’s South China Sea stance benefits from a rare joint warning to the ICC",
+        "score": 47.0,
+        "reason": "低于候选池截断阈值"
+      },
+      {
+        "title": "Mexican leader Sheinbaum’s 21-hour economy-class journey draws praise in China",
+        "score": 47.0,
+        "reason": "低于候选池截断阈值"
+      },
+      {
+        "title": "Xi tells Southeast Asian leaders deeper AI cooperation is needed",
+        "score": 47.0,
+        "reason": "低于候选池截断阈值"
+      },
+      {
+        "title": "路透：美新规生效 台积电限制中国大陆客户使用先进制程",
+        "score": 46.0,
+        "reason": "低于候选池截断阈值"
+      },
+      {
+        "title": "中国外交部：缅甸种族灭绝案裁决不利于解决争端",
+        "score": 46.0,
+        "reason": "低于候选池截断阈值"
+      },
+      {
+        "title": "伊朗外交官：俄伊关系达到历史最高水平",
+        "score": 46.0,
+        "reason": "低于候选池截断阈值"
+      },
+      {
+        "title": "俄外交部：爱沙尼亚关闭边境口岸的决定将产生负面后果",
+        "score": 46.0,
+        "reason": "低于候选池截断阈值"
+      },
+      {
+        "title": "爆料：特朗普电话连线库什纳，对欧盟“一通痛骂”",
+        "score": 46.0,
+        "reason": "低于候选池截断阈值"
+      },
+      {
+        "title": "穆迪下调英伟达评级展望",
+        "score": 46.0,
+        "reason": "低于候选池截断阈值"
+      },
+      {
+        "title": "五角大楼官员：伊朗战争花费已超480亿美元",
+        "score": 46.0,
+        "reason": "低于候选池截断阈值"
+      },
+      {
+        "title": "CNN发现至少6所美列黑名单中国大学采购英伟达芯片",
+        "score": 46.0,
+        "reason": "低于候选池截断阈值"
+      },
+      {
+        "title": "惠誉预测，到2029年底，比利时的债务将升至GDP的115%以上。",
+        "score": 45.0,
+        "reason": "低于候选池截断阈值"
+      },
+      {
+        "title": "周五（11月20日）纽约尾盘，标普500股指期货最终跌3.14%，道指期货跌1.57%，纳斯达克100股指期货跌4.88%。 罗素2000股指期货跌2.31%。",
+        "score": 45.0,
+        "reason": "低于候选池截断阈值"
+      },
+      {
+        "title": "台湾股市基准指数暴跌18% 创35年来最差单周表现",
+        "score": 43.0,
+        "reason": "低于候选池截断阈值"
+      },
+      {
+        "title": "李强：中国愿与澳洲共同努力排除对正常经贸的干扰",
+        "score": 41.0,
+        "reason": "低于候选池截断阈值"
+      },
+      {
+        "title": "新中启动自贸升级谈判 新加坡将加入全球治理倡议之友小组",
+        "score": 41.0,
+        "reason": "低于候选池截断阈值"
+      },
+      {
+        "title": "Why are Bukele’s Salvadoran troops in Haiti and what have they achieved? - Al Jazeera",
+        "score": 37.0,
+        "reason": "低于候选池截断阈值"
+      },
+      {
+        "title": "美国航管局本周将公布全美航班停飞的路由器故障原因 - Mezha.net",
+        "score": 37.0,
+        "reason": "低于候选池截断阈值"
+      },
+      {
+        "title": "Bowen: Myanmar genocide verdict is historic and could have far-reaching implications",
+        "score": 37.0,
+        "reason": "低于候选池截断阈值"
+      },
+      {
+        "title": "Indonesian daycare principal jailed for five years over child abuse case",
+        "score": 37.0,
+        "reason": "低于候选池截断阈值"
+      },
+      {
+        "title": "Cumin-laced fizzy sodas are giving cola giants a tough fight in India",
+        "score": 37.0,
+        "reason": "低于候选池截断阈值"
+      },
+      {
+        "title": "Indian driver wins $1.3m in life-changing lottery prize",
+        "score": 37.0,
+        "reason": "低于候选池截断阈值"
+      },
+      {
+        "title": "Analysis: Trilateral summit high on spectacle, short on substance",
+        "score": 37.0,
+        "reason": "低于候选池截断阈值"
+      },
+      {
+        "title": "This is a remarkable diplomatic moment for China's Xi - but it comes with pitfalls",
+        "score": 37.0,
+        "reason": "低于候选池截断阈值"
+      },
+      {
+        "title": "Race to replant five South African baobabs after export blocked",
+        "score": 37.0,
+        "reason": "低于候选池截断阈值"
+      }
+    ]
+  },
+  "tech": {
+    "total_clusters": 485,
+    "selected_for_prompt": 140,
+    "omitted_sample": [
+      {
+        "title": "Rockstar says GTA VI made $3.79 billion in its first day",
+        "score": 47.0,
+        "reason": "低于候选池截断阈值"
+      },
+      {
+        "title": "Multiplying your Switch 2’s storage costs less than usual right now",
+        "score": 47.0,
+        "reason": "低于候选池截断阈值"
+      },
+      {
+        "title": "Teenage Engineering’s first CD player puts the spinning disc on display",
+        "score": 47.0,
+        "reason": "低于候选池截断阈值"
+      },
+      {
+        "title": "Boys Noize turns to the club (and an obscure Italian synth) for inspiration on 7LLVSION",
+        "score": 47.0,
+        "reason": "低于候选池截断阈值"
+      },
+      {
+        "title": "GitHub Enterprise Server 3.23 release candidate",
+        "score": 47.0,
+        "reason": "低于候选池截断阈值"
+      },
+      {
+        "title": "Pin your favorite repositories to your dashboard",
+        "score": 47.0,
+        "reason": "低于候选池截断阈值"
+      },
+      {
+        "title": "Quoting Ravi Vakil",
+        "score": 47.0,
+        "reason": "低于候选池截断阈值"
+      },
+      {
+        "title": "Nintendo Switch 2-ready smart glasses from Viture are at their lowest price ever (up to $160 off)",
+        "score": 47.0,
+        "reason": "低于候选池截断阈值"
+      },
+      {
+        "title": "Best Buy brings back 4K Blu-ray discs with an expanding collection, in-store availability [U]",
+        "score": 47.0,
+        "reason": "低于候选池截断阈值"
+      },
+      {
+        "title": "Is the Galaxy S26 Ultra still a good buy at the end of 2026?",
+        "score": 47.0,
+        "reason": "低于候选池截断阈值"
+      },
+      {
+        "title": "Friday’s Android app deals and freebies: Low Story, Tempest, Railways, Super Onion Boy 2, more",
+        "score": 47.0,
+        "reason": "低于候选池截断阈值"
+      },
+      {
+        "title": "Clicks Communicator hits a supply chain snag, and it isn’t because of RAM",
+        "score": 47.0,
+        "reason": "低于候选池截断阈值"
+      },
+      {
+        "title": "Hands-on: Sony’s Walkman-revival USB-C headphones are back in stock and worth a look",
+        "score": 47.0,
+        "reason": "低于候选池截断阈值"
+      },
+      {
+        "title": "Motorola accidentally releases ‘Moto Tag 3’ tracker early with new colors",
+        "score": 47.0,
+        "reason": "低于候选池截断阈值"
+      },
+      {
+        "title": "Expect Samsung’s good-value Galaxy devices to get more expensive, report says",
+        "score": 47.0,
+        "reason": "低于候选池截断阈值"
+      },
+      {
+        "title": "Black Friday Week deals: Moto Tag 2 $19, NXTPAPER Tab $190, Pixel Watch, Galaxy Watch, Amazon Echo Time, more",
+        "score": 47.0,
+        "reason": "低于候选池截断阈值"
+      },
+      {
+        "title": "Researcher plants 2m canaries into the AI supply chain. A privacy disaster surfaced.",
+        "score": 47.0,
+        "reason": "低于候选池截断阈值"
+      },
+      {
+        "title": "Watching as a giant star swallowed its neighbor and exploded",
+        "score": 47.0,
+        "reason": "低于候选池截断阈值"
+      },
+      {
+        "title": "NASA’s new Moon plan is taking shape, but some big questions remain",
+        "score": 47.0,
+        "reason": "低于候选池截断阈值"
+      },
+      {
+        "title": "Prisons get OK to jam contraband phones. CTIA says nearby phones will be jammed too.",
+        "score": 47.0,
+        "reason": "低于候选池截断阈值"
+      },
+      {
+        "title": "Army delays detonating \"catastrophically hazardous\" lead azide amid fear, anger",
+        "score": 47.0,
+        "reason": "低于候选池截断阈值"
+      },
+      {
+        "title": "Valve says it might have to raise the price of supply-limited Steam Machines",
+        "score": 47.0,
+        "reason": "低于候选池截断阈值"
+      },
+      {
+        "title": "US will soon announce root cause behind FAA nationwide ground stop",
+        "score": 47.0,
+        "reason": "低于候选池截断阈值"
+      },
+      {
+        "title": "Rocket Report: A weekend of ups and downs; Stoke celebrates engine milestone",
+        "score": 47.0,
+        "reason": "低于候选池截断阈值"
+      },
+      {
+        "title": "Only the Seminole Tribe can offer online gambling in Florida—and they're furious at DraftKings",
+        "score": 47.0,
+        "reason": "低于候选池截断阈值"
+      },
+      {
+        "title": "Science has a home here at Ars—please help keep it that way",
+        "score": 47.0,
+        "reason": "低于候选池截断阈值"
+      },
+      {
+        "title": "AI巨头集体调整安全策略 第三方“安检员”开始入驻办公室 - 东方财富网",
+        "score": 47.0,
+        "reason": "低于候选池截断阈值"
+      },
+      {
+        "title": "商汤(00020)小浣熊金融版发布，大模型能力融入金融深水区 提供者 智通财经 - 英为财情 Investing.com",
+        "score": 47.0,
+        "reason": "低于候选池截断阈值"
+      },
+      {
+        "title": "Open Source vs. Proprietary LLMs: A Decision Framework for 2026 - KDnuggets",
+        "score": 47.0,
+        "reason": "低于候选池截断阈值"
+      },
+      {
+        "title": "Bloomberg analysis of 10 million job postings shows AI-exposed roles in China fell 10 percentage points faster than others",
+        "score": 47.0,
+        "reason": "低于候选池截断阈值"
+      }
+    ]
+  },
+  "general": {
+    "total_clusters": 304,
+    "selected_for_prompt": 140,
+    "omitted_sample": [
+      {
+        "title": "逃出布迪秀",
+        "score": 0.0,
+        "reason": "无关注命中且单源仅标题"
+      },
+      {
+        "title": "黄金时段",
+        "score": 0.0,
+        "reason": "无关注命中且单源仅标题"
+      },
+      {
+        "title": "空枪",
+        "score": 0.0,
+        "reason": "无关注命中且单源仅标题"
+      },
+      {
+        "title": "生化危机：爆发夜",
+        "score": 0.0,
+        "reason": "无关注命中且单源仅标题"
+      },
+      {
+        "title": "不存在的罪人",
+        "score": 0.0,
+        "reason": "无关注命中且单源仅标题"
+      },
+      {
+        "title": "杯雪·一战成名",
+        "score": 0.0,
+        "reason": "无关注命中且单源仅标题"
+      },
+      {
+        "title": "敦煌英雄",
+        "score": 0.0,
+        "reason": "无关注命中且单源仅标题"
+      },
+      {
+        "title": "末世行者",
+        "score": 0.0,
+        "reason": "无关注命中且单源仅标题"
+      },
+      {
+        "title": "老千4：别西卜之歌",
+        "score": 0.0,
+        "reason": "无关注命中且单源仅标题"
+      },
+      {
+        "title": "复活男",
+        "score": 0.0,
+        "reason": "无关注命中且单源仅标题"
+      },
+      {
+        "title": "每时每刻",
+        "score": 0.0,
+        "reason": "无关注命中且单源仅标题"
+      },
+      {
+        "title": "有干净稳定的梯子推荐吗",
+        "score": 0.0,
+        "reason": "无关注命中且单源仅标题"
+      },
+      {
+        "title": "Workbuddy三大金刚电子书",
+        "score": 0.0,
+        "reason": "无关注命中且单源仅标题"
+      },
+      {
+        "title": "建议大家少在大平台上发帖或评论",
+        "score": 0.0,
+        "reason": "无关注命中且单源仅标题"
+      },
+      {
+        "title": "免费的两个月GPT plus会员要么？",
+        "score": 0.0,
+        "reason": "无关注命中且单源仅标题"
+      },
+      {
+        "title": "兄弟姐妹们，你们认为现在赚钱难吗？",
+        "score": 0.0,
+        "reason": "无关注命中且单源仅标题"
+      },
+      {
+        "title": "10万个ppt模版 全部免费下载 目前最全的了",
+        "score": 0.0,
+        "reason": "无关注命中且单源仅标题"
+      },
+      {
+        "title": "看看你注册多久了，我5年了",
+        "score": 0.0,
+        "reason": "无关注命中且单源仅标题"
+      },
+      {
+        "title": "兄弟们，去看这本书。",
+        "score": 0.0,
+        "reason": "无关注命中且单源仅标题"
+      },
+      {
+        "title": "GitHub 最近很火的电子书，《高性价比人生指南-用最少得钱、时间和精力换回寿命、金钱和自由》",
+        "score": 0.0,
+        "reason": "无关注命中且单源仅标题"
+      },
+      {
+        "title": "我不敢太高兴，可我真的很想说说这个28岁",
+        "score": 0.0,
+        "reason": "无关注命中且单源仅标题"
+      },
+      {
+        "title": "还有虫友记得虫部落寄出的猕猴桃吗？",
+        "score": 0.0,
+        "reason": "无关注命中且单源仅标题"
+      },
+      {
+        "title": "DiAuto v0.3.12 Android Auto车机端 免费版【10.8MB】",
+        "score": -5.0,
+        "reason": "无关注命中且单源仅标题"
+      },
+      {
+        "title": "网易云🎶share",
+        "score": -5.0,
+        "reason": "无关注命中且单源仅标题"
+      },
+      {
+        "title": "《塞尔达传说》任天堂独占游戏PC三连发【93GB】",
+        "score": -5.0,
+        "reason": "无关注命中且单源仅标题"
+      },
+      {
+        "title": "【最新版本】红果短剧播放器，支持win/mac双端（持续更新）17MB",
+        "score": -5.0,
+        "reason": "无关注命中且单源仅标题"
+      },
+      {
+        "title": "发达国家中，日本人出国旅游意愿为何那么低？",
+        "score": -10.0,
+        "reason": "无关注命中且单源仅标题"
+      },
+      {
+        "title": "有哪些事情是去了澳门才知道的？",
+        "score": -10.0,
+        "reason": "无关注命中且单源仅标题"
+      },
+      {
+        "title": "如果 GTA6 明年上 PC，什么配置可以发挥最完全体的画面效果？",
+        "score": -10.0,
+        "reason": "无关注命中且单源仅标题"
+      },
+      {
+        "title": "在中世纪时代拒绝骑士决斗，或在美国西部时代拒绝牛仔决斗，直接认怂，能活命么？",
+        "score": -10.0,
+        "reason": "无关注命中且单源仅标题"
+      }
+    ]
+  }
+}
