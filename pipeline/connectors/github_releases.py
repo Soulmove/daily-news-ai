@@ -25,6 +25,14 @@ DEFAULT_WATCHED_REPOS = [
 _PRERELEASE_TAG_RE = re.compile(r"(?:rc\d*|alpha|beta|preview|dev\d*)\b", re.I)
 
 
+_RAW_NOISE_LINE_RE = re.compile(
+    r"^(?:What's Changed|Highlights|TL;DR|Full Changelog(?:\s*:.*)?|Backwards Incompatible Changes|Deprecations|Features|New models|"
+    r"\|.*\|.*|.*\b\d[\d,]*\s+(?:commits?|PRs?|contributors?)\b.*|.*\bby\s+@\S+.*|.*@(?:dependabot|github-actions)\[bot\].*|"
+    r"(?:model|feat|fix|chore|refactor|ci|docs|test|build)\s*:\s*.*|\S+\s+https?:\/\/github\.com\/.*)$",
+    re.I,
+)
+
+
 def _clean_notes(body: Optional[str], max_len: int = 320) -> str:
     if not body:
         return ""
@@ -34,8 +42,11 @@ def _clean_notes(body: Optional[str], max_len: int = 320) -> str:
     lines = []
     for ln in stripped.splitlines():
         clean_ln = re.sub(r"\s+", " ", ln).strip().lstrip("#*-：:;； ").strip()
-        if len(clean_ln) > 3:
-            lines.append(clean_ln)
+        if len(clean_ln) <= 5 or _RAW_NOISE_LINE_RE.match(clean_ln):
+            continue
+        if re.search(r"\(\d{4,6}\)\s*$", clean_ln) and re.match(r"^(?:model|feat|fix|chore|api|eval|ggml|cuda|metal)\b", clean_ln, re.I):
+            continue
+        lines.append(clean_ln)
     joined = "；".join(lines[:4]).lstrip("；;:： ")
     if len(joined) > max_len:
         return joined[: max_len - 1].rstrip() + "…"
@@ -139,7 +150,7 @@ def fetch_github_releases(
                         "docs_url": f"https://github.com/{repo}#readme",
                         "summary": notes or "详见官方 Release 说明。",
                         "deployment_requirements": "见官方 README 与 Release 安装依赖说明",
-                        "pricing_or_cost": "开源软件（免费使用，受限于对应开源许可证与硬件成本）",
+                        "pricing_or_cost": "开源免费",
                         "checked_at": fetched_iso,
                         "source_name": "GitHub Releases API",
                         "source_url": html_url,

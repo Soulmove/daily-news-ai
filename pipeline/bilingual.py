@@ -213,13 +213,26 @@ _EXTRA_ZH_EN_PHRASES: Tuple[Tuple[str, str], ...] = (
 )
 
 
+def sanitize_en_output(text: str) -> str:
+    """Strip untranslated CJK bracket prefixes and collapse spaced/curly English apostrophes."""
+    s = str(text or "").strip()
+    if not s:
+        return ""
+    s = re.sub(r"^(?:【[^】]{1,24}】\s*)+", "", s)
+    s = re.sub(r"^\[[^\]]{2,48}\]\s*", "", s)
+    s = re.sub(r"([A-Za-z0-9])\s*[’‘']\s*(s|t|re|ve|ll|d|m)\b", r"\1'\2", s, flags=re.I)
+    s = re.sub(r"(?<=[A-Za-z0-9%])\s*[，]\s*(?=[A-Za-z0-9])", ", ", s)
+    s = re.sub(r"\s+([,.;:!?])", r"\1", s)
+    return re.sub(r"\s+", " ", s).strip()
+
+
 def _translate_zh_to_en_glossary(text: str, entities: Optional[List[str]] = None) -> str:
-    """Deterministic fast ZH->EN financial/tech phrase gloss when LLM translation is unavailable."""
-    raw = re.sub(r"^(?:【[^】]{2,18}】\s*)+", "", str(text or "").strip())
+    """Deterministic fast ZH->EN financial/tech phrase gloss; returns empty string rather than Chinglish."""
+    raw = sanitize_en_output(text)
     if not raw:
         return ""
     if is_mostly_english(raw):
-        return raw
+        return raw if len(_CJK_RE.findall(raw)) < 2 else ""
     translated = raw
     for zh_tok, en_tok in _EXTRA_ZH_EN_PHRASES:
         if zh_tok in translated:
@@ -227,34 +240,9 @@ def _translate_zh_to_en_glossary(text: str, entities: Optional[List[str]] = None
     for zh_tok, en_tok in _ZH_EN_PHRASE_PAIRS:
         if zh_tok in translated:
             translated = translated.replace(zh_tok, f" {en_tok} ")
-    translated = re.sub(r"\s+", " ", translated).strip()
-    nums = re.findall(r"\d+(?:\.\d+)?%?", raw)
-    if entities and len(_CJK_RE.findall(translated)) > len(_LATIN_RE.findall(translated)):
-        ent_en_map = {
-            "英伟达 (NVIDIA)": "NVIDIA",
-            "美联储 FOMC 与全球流动性": "Federal Reserve",
-            "台积电 (TSMC)": "TSMC",
-            "中芯国际 (SMIC)": "SMIC",
-            "阿里巴巴 / 通义千问 (Qwen)": "Alibaba Qwen",
-            "腾讯混元 (Hunyuan)": "Tencent Hunyuan",
-            "中美外交与元首峰会 / APEC": "US-China APEC",
-            "黄金 (Gold / 避险金属)": "Gold",
-            "原油 (Crude Oil / Brent / WTI)": "Crude Oil",
-        }
-        clean_ents = []
-        for e in entities[:2]:
-            es = str(e or "").strip()
-            mapped = ent_en_map.get(es)
-            if not mapped:
-                ascii_m = re.findall(r"[A-Za-z0-9.\-/]{2,}", es)
-                mapped = " ".join(ascii_m) if ascii_m else ""
-            if mapped:
-                clean_ents.append(mapped)
-        if clean_ents:
-            ent_tag = ", ".join(clean_ents)
-            if nums:
-                return f"[{ent_tag} · {' / '.join(nums[:3])}] {translated}"
-            return f"[{ent_tag}] {translated}"
+    translated = sanitize_en_output(translated)
+    if len(_CJK_RE.findall(translated)) >= 2:
+        return ""
     return translated
 
 
@@ -600,10 +588,17 @@ def enrich_bilingual_events(
 
     for pos, (ev_idx, field_name, zh_txt) in enumerate(combined_zh_items):
         ev = events[ev_idx]
-        ev[field_name] = (
-            (en_combined[pos] if en_combined and pos < len(en_combined) and en_combined[pos] else None)
-            or _translate_zh_to_en_glossary(zh_txt, ev.get("entities"))
-        )
+        cand = sanitize_en_output(en_combined[pos]) if (en_combined and pos < len(en_combined) and en_combined[pos]) else ""
+        if not cand or len(_CJK_RE.findall(cand)) >= 2:
+            cand = _translate_zh_to_en_glossary(zh_txt, ev.get("entities"))
+        ev[field_name] = cand
+
+    for ev in events:
+        for field_name in ("title_en", "summary_en", "ai_analysis_en"):
+            val = str(ev.get(field_name) or "").strip()
+            if val:
+                cleaned = sanitize_en_output(val)
+                ev[field_name] = "" if len(_CJK_RE.findall(cleaned)) >= 2 else cleaned
 
 
 def retry_pending_translations(
@@ -784,11 +779,11 @@ def enrich_bilingual_v3_records(
         llm_out, _, _ = _translate_texts_with_pipeline(batch_texts, "en", max_retries=1, backoff_base=0.3)
 
     for idx, (rec, dst_k, zh_src) in enumerate(pending_refs):
-        cand = llm_out[idx] if (llm_out and idx < len(llm_out) and llm_out[idx]) else None
-        if not cand or _has_cjk_text(cand):
+        cand = sanitize_en_output(llm_out[idx]) if (llm_out and idx < len(llm_out) and llm_out[idx]) else ""
+        if not cand or len(_CJK_RE.findall(cand)) >= 2:
             ents = rec.get("entities") or ([rec.get("company_name")] if rec.get("company_name") else None)
             cand = _translate_zh_to_en_glossary(zh_src, ents)
-        if cand and cand != rec.get(dst_k):
+        if cand != rec.get(dst_k):
             rec[dst_k] = cand
             changed = True
     return changed

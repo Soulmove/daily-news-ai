@@ -1307,7 +1307,7 @@ def build_v3_artifacts(
                         else "等待 SEC 8-K 核查（当前无官方披露）"
                     ),
                     "probability_pct": 60 if nvda_502 else 25,
-                    "reason": "由 V3 SEC EDGAR 连接器交叉核查生成初始观察记录",
+                    "reason": "由 SEC EDGAR 官方披露核查生成初始观察记录",
                 }
             ],
             "settlement": None,
@@ -1332,15 +1332,15 @@ def build_v3_artifacts(
             "core_assumption": "通义千问重大版本均会通过 HF 或阿里云官方渠道同步文档与许可",
             "invalidation_trigger": "官方辟谣非官方版本或延后发布",
             "probability_pct": 55,
-            "probability_note": "主观基准判断，最终以 Hugging Face 官方模型卡 API 检查结果结算",
-            "current_judgment": "保持追踪，等待 Hugging Face / 官方文档连接器捕获一手上架记录",
+            "probability_note": "主观基准判断，最终以 Hugging Face 官方模型卡核查结果结算",
+            "current_judgment": "保持追踪，等待 Hugging Face 或阿里云官方文档公布正式上架记录",
             "versions": [
                 {
                     "version": 1,
                     "updated_at": qwen_created,
                     "judgment": "待 Hugging Face 官方权重与阿里云文档验证",
                     "probability_pct": 55,
-                    "reason": "基于科技新闻热榜线索与 HF 连接器比对建立",
+                    "reason": "基于科技新闻线索与 Hugging Face 官方仓库比对建立",
                 }
             ],
             "settlement": None,
@@ -1566,8 +1566,8 @@ def build_v3_artifacts(
             "prediction_id": "pred_replay_anthropic_ipo_2026_11",
             "mode": "replay",
             "status": "settled",
-            "title": "历史回测：Anthropic 上市首周高位估值波动（创纪录募资 vs 次日破发压力）",
-            "title_en": "Replay: Anthropic Mega-IPO Valuation Volatility Window",
+            "title": "历史复盘：Anthropic 上市首周高位估值波动（创纪录募资 vs 次日破发压力）",
+            "title_en": "Review: Anthropic Mega-IPO Valuation Volatility Window",
             "target_entity_id": "ent_anthropic",
             "target_entity": "Anthropic / Claude",
             "question": "Anthropic 完成创纪录 IPO 后首个完整交易周，二级市场是否发生 >5% 的高估值回撤压力测试？",
@@ -1582,11 +1582,11 @@ def build_v3_artifacts(
             "core_assumption": "仅以交易所开盘价与媒体交叉核实收盘跌幅为结算基准",
             "invalidation_trigger": "发行中止",
             "probability_pct": 68,
-            "probability_note": "历史回测样题（单独计入 Replay 区，不混入 Live 战绩）",
+            "probability_note": "历史复盘样题（单独计分，不计入实时追踪胜率）",
             "current_judgment": "高估值 Mega-IPO 上市后短期估值消化压力显著",
             "current_judgment_en": "Rich valuation mega-IPO faced sharp near-term digestion pressure.",
             "versions": [
-                {"version": 1, "updated_at": "2026-11-18T10:00:00+08:00", "judgment": "提示首周高波动回撤风险", "probability_pct": 68, "reason": "历史回测初始立项"},
+                {"version": 1, "updated_at": "2026-11-18T10:00:00+08:00", "judgment": "提示首周高波动回撤风险", "probability_pct": 68, "reason": "历史复盘初始立项"},
             ],
             "settlement": {
                 "outcome": "correct",
@@ -1599,8 +1599,8 @@ def build_v3_artifacts(
             "prediction_id": "pred_replay_nvda_volatility_2026_11",
             "mode": "replay",
             "status": "settled",
-            "title": "历史回测：AI 高权重龙头（NVDA）与纳指高波期单日剧震检验",
-            "title_en": "Replay: NVDA & Nasdaq High-Volatility Session Test",
+            "title": "历史复盘：AI 高权重龙头（NVDA）与纳指高波期单日剧震检验",
+            "title_en": "Review: NVDA & Nasdaq High-Volatility Session Test",
             "target_entity_id": "ent_nvidia",
             "target_entity": "英伟达 (NVIDIA)",
             "question": "治理不确定性与海外算力税负升温期间，NVDA 单周内是否发生超过 8% 的单日剧烈回撤？",
@@ -1615,11 +1615,11 @@ def build_v3_artifacts(
             "core_assumption": "直接对接美股延迟/收盘行情数据源自动结算",
             "invalidation_trigger": "无",
             "probability_pct": 64,
-            "probability_note": "自动行情回测核验样本",
+            "probability_note": "自动行情复盘核验样本",
             "current_judgment": "高拥挤度叠加治理与政策变量易引发超 8% 尾部波动",
             "current_judgment_en": "Crowded positioning plus policy shock triggers >8% tail volatility.",
             "versions": [
-                {"version": 1, "updated_at": "2026-11-17T09:00:00+08:00", "judgment": "预警高波动风险", "probability_pct": 64, "reason": "历史波动回测立项"},
+                {"version": 1, "updated_at": "2026-11-17T09:00:00+08:00", "judgment": "预警高波动风险", "probability_pct": 64, "reason": "历史波动复盘立项"},
             ],
             "settlement": {
                 "outcome": "correct" if abs(float(((quotes_doc.get("quotes") or {}).get("NVDA") or {}).get("pct_change") or -14.01)) >= 8.0 else "incorrect",

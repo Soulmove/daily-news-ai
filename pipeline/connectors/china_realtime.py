@@ -69,12 +69,28 @@ _NON_TECH_CONSUMER_OR_CRIME_RE = re.compile(
     r"(?:帮信罪|刑拘|逮捕|派出所|警方|涉案|诈骗案|Steam|黑五.*游戏|游戏新史低|重制版|导剪版|折扣促销)",
     re.I,
 )
+_DISASTER_SOCIETY_RE = re.compile(
+    r"(?:地震|地震台网|地质调查局|\bUSGS\b|余震|震中|台风|强台风|暴雨|山洪|海啸|火山喷发|泥石流|灾情|救援人员|人员伤亡)",
+    re.I,
+)
+_DISASTER_FOREIGN_RE = re.compile(
+    r"(?:\bUSGS\b|日本|印尼|印度尼西亚|菲律宾|土耳其|智利|希腊|意大利|加州|阿拉斯加|堪察加|Timor|Chile|Indonesia|Japan|Greece|Turkey|Alaska|California)",
+    re.I,
+)
+_MACRO_STRATEGIST_RE = re.compile(
+    r"(?:(?:首席)?(?:投资|市场|宏观|财富)?策略师|经济学家|财富管理|财富经理|彭博经济研究|Bloomberg Economics|交易热潮|IPO.*交易)",
+    re.I,
+)
 
 
 def _classify_wire_item(title: str, content: str, default_cat: str) -> str:
     text = f"{title} {content}"
     if _NON_TECH_CONSUMER_OR_CRIME_RE.search(title):
         return "general"
+    if _DISASTER_SOCIETY_RE.search(title):
+        return "global" if _DISASTER_FOREIGN_RE.search(title) else "general"
+    if _MACRO_STRATEGIST_RE.search(title):
+        return "finance"
     if _AI_KW_RE.search(text):
         return "tech"
     if _CRYPTO_KW_RE.search(title) and not _GEO_PRIORITY_RE.search(title):

@@ -17,6 +17,7 @@ from pipeline.ai_radar_builder import (
     AI_KW_RE,
     AI_NOISE_RE,
     AI_RELEASE_RE,
+    _CURATED_AI_MILESTONES,
     _LAB_CATALOG,
     _infer_company,
     _infer_what_it_does_zh,
@@ -199,15 +200,20 @@ def _fetch_hf_daily_papers(fetched_iso: str) -> List[dict]:
         rows = resp.json()
         if not isinstance(rows, list):
             return []
-        for row in rows[:10]:
-            if not isinstance(row, dict):
-                continue
+        ranked = sorted(
+            [r for r in rows if isinstance(r, dict)],
+            key=lambda r: int(((r.get("paper") or {}).get("upvotes") or 0)),
+            reverse=True,
+        )
+        for row in ranked:
             paper = row.get("paper") or {}
             pid = str(paper.get("id") or "").strip()
             ptitle = str(row.get("title") or paper.get("title") or "").strip()
             if not pid or not ptitle:
                 continue
             upvotes = int(paper.get("upvotes") or 0)
+            if upvotes < 12:
+                continue
             pub_raw = row.get("publishedAt") or paper.get("publishedAt") or fetched_iso
             pub_iso, _ = parse_published_at(pub_raw, "hf-daily-papers")
             summary = re.sub(r"\s+", " ", str(paper.get("summary") or row.get("summary") or "").strip())[:240]
@@ -226,6 +232,8 @@ def _fetch_hf_daily_papers(fetched_iso: str) -> List[dict]:
                     "is_first_hand": True,
                 }
             )
+            if len(items) >= 4:
+                break
     except Exception:
         return []
     return items
@@ -385,6 +393,7 @@ def merge_live_ai_items_into_doc(
     _CANNED_WHO_RE = re.compile(r"^(?:AI 开发者、科研人员与前沿(?:关注者|用户)|AI 开发者、科技观察者与普通效率用户|AI 开发者与普通用户)$")
     _CANNED_LIMIT_RE = re.compile(r"^(?:具体额度、开源协议与硬件门槛以官方发布说明为准|详见官方发布说明与接口配额|详见原文披露的接口配额)")
 
+    curated_ids = {str(m.get("id") or "") for m in _CURATED_AI_MILESTONES if m.get("id")}
     rehomed_items: List[Dict[str, Any]] = []
     for comp in base["companies"]:
         cleaned_existing = []
@@ -392,15 +401,15 @@ def merge_live_ai_items_into_doc(
             it_title = str(it.get("title") or "")
             it_src = str(it.get("source_name") or "")
             it_url = str(it.get("source_url") or "")
-            is_curated = str(it.get("id") or "") in {
-                "ai_google_gemini4_neon", "ai_openai_gpt62_astra_sol", "ai_google_gemini4_hydrogen",
-                "ai_deepseek_v4_pro", "ai_google_diffusiongemma_genie4", "ai_anthropic_claude_fable",
-                "ai_tencent_hy4_flash", "ai_qwen4_max_preview", "ai_kimi_k31_pro",
-                "ai_radixark_daisyrose", "ai_vllm_llamacpp", "ai_openai_amd_chip_design",
-            }
+            is_curated = str(it.get("id") or "") in curated_ids
             if AI_NOISE_RE.search(it_title):
                 mutated = True
                 continue
+            if it_title.startswith("[HF Paper]"):
+                m_up = re.search(r"▲(\d+)", it_src)
+                if m_up and int(m_up.group(1)) < 12:
+                    mutated = True
+                    continue
             if not is_curated and not str(it.get("id") or "").startswith("ai_tool_") and not it.get("is_first_hand"):
                 if not AI_KW_RE.search(it_title):
                     mutated = True
@@ -483,6 +492,16 @@ def merge_live_ai_items_into_doc(
         _register(candidate)
         new_ids.append(candidate["id"])
         mutated = True
+
+    if len(seen_ids) >= 5:
+        for milestone in _CURATED_AI_MILESTONES:
+            cid = str(milestone.get("company_id") or "")
+            mid = str(milestone.get("id") or "")
+            target = by_company.get(cid)
+            if target is not None and not (target.get("items") or []) and mid not in seen_ids:
+                target.setdefault("items", []).append(deepcopy(milestone))
+                _register(milestone)
+                mutated = True
 
     all_items: List[Dict[str, Any]] = []
     unique_global: Dict[str, Dict[str, Any]] = {}
