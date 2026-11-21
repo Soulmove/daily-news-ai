@@ -161,6 +161,51 @@ def _has_cjk_text(text: str) -> bool:
     return len(_CJK_RE.findall(text or "")) >= 2
 
 
+_EXTRA_ZH_EN_PHRASES: Tuple[Tuple[str, str], ...] = (
+    ("时隔三年多重启", "restarts after over three years"),
+    ("重磅", "Major:"),
+    ("突发", "Breaking:"),
+    ("官员密集“放鹰”与", "as officials turn hawkish while"),
+    ("官员密集放鹰", "officials signal hawkish stance"),
+    ("美债避险上涨并行", "US Treasuries rally on safe-haven bids"),
+    ("避险上涨", "safe-haven rally"),
+    ("抛售潮扩大", "selloff widens"),
+    ("抹去年内涨幅", "erases YTD gains"),
+    ("创纪录IPO后次日下挫", "slides in day-two trading after record IPO"),
+    ("盘中逼近破发", "nears IPO issue price intraday"),
+    ("已筹足履行", "secures full funding for"),
+    ("合同全部资金", "contract obligations"),
+    ("洽谈1万亿美元收购", "explored $1T acquisition of"),
+    ("洽购", "in buyout talks for"),
+    ("陷入僵局", "hits deadlock"),
+    ("谈判", "talks"),
+    ("斡旋以恢复停火并重启核谈判", "mediate to restore ceasefire & restart nuclear talks"),
+    ("触雷爆炸", "strikes mine in"),
+    ("大规模空袭", "launches large-scale airstrikes on"),
+    ("呼吁加息控通胀", "urges rate hikes to curb inflation"),
+    ("官员对紧缩节奏存分歧", "officials diverge on tightening pace"),
+    ("警示AI经济风险", "warn of AI economic risks"),
+    ("据报因诚信问题接受", "reportedly accepts resignation over integrity issue of"),
+    ("明确表态不支持", "explicitly rejects support for"),
+    ("发表《和平宣言》", "issue joint Peace Declaration"),
+    ("非正式会议在深圳落幕", "Economic Leaders' Meeting concludes in Shenzhen"),
+    ("公布反蒸馏防护进展", "unveils anti-distillation safeguards"),
+    ("思考链提取成功率", "chain-of-thought extraction rate"),
+    ("零数据保留承诺在部分链路失效", "zero-data-retention guarantees fail across proxy chains"),
+    ("基点", "bps"),
+    ("联储理事", "Fed Governor"),
+    ("美债收益率", "Treasury yields"),
+    ("纽约尾盘", "NY close"),
+    ("月度营收", "monthly revenue"),
+    ("正式上线", "officially launches"),
+    ("开源", "open-source"),
+    ("人民币", "RMB"),
+    ("美元", "USD"),
+    ("亿元", "00M RMB"),
+    ("万亿", "T"),
+)
+
+
 def _translate_zh_to_en_glossary(text: str, entities: Optional[List[str]] = None) -> str:
     """Deterministic fast ZH->EN financial/tech phrase gloss when LLM translation is unavailable."""
     raw = re.sub(r"^(?:【[^】]{2,18}】\s*)+", "", str(text or "").strip())
@@ -169,16 +214,40 @@ def _translate_zh_to_en_glossary(text: str, entities: Optional[List[str]] = None
     if is_mostly_english(raw):
         return raw
     translated = raw
+    for zh_tok, en_tok in _EXTRA_ZH_EN_PHRASES:
+        if zh_tok in translated:
+            translated = translated.replace(zh_tok, f" {en_tok} ")
     for zh_tok, en_tok in _ZH_EN_PHRASE_PAIRS:
         if zh_tok in translated:
             translated = translated.replace(zh_tok, f" {en_tok} ")
     translated = re.sub(r"\s+", " ", translated).strip()
     nums = re.findall(r"\d+(?:\.\d+)?%?", raw)
     if entities and len(_CJK_RE.findall(translated)) > len(_LATIN_RE.findall(translated)):
-        ent_tag = ", ".join(str(e) for e in entities[:2])
-        if nums:
-            return f"[{ent_tag} · {' / '.join(nums[:3])}] {translated}"
-        return f"[{ent_tag}] {translated}"
+        ent_en_map = {
+            "英伟达 (NVIDIA)": "NVIDIA",
+            "美联储 FOMC 与全球流动性": "Federal Reserve",
+            "台积电 (TSMC)": "TSMC",
+            "中芯国际 (SMIC)": "SMIC",
+            "阿里巴巴 / 通义千问 (Qwen)": "Alibaba Qwen",
+            "腾讯混元 (Hunyuan)": "Tencent Hunyuan",
+            "中美外交与元首峰会 / APEC": "US-China APEC",
+            "黄金 (Gold / 避险金属)": "Gold",
+            "原油 (Crude Oil / Brent / WTI)": "Crude Oil",
+        }
+        clean_ents = []
+        for e in entities[:2]:
+            es = str(e or "").strip()
+            mapped = ent_en_map.get(es)
+            if not mapped:
+                ascii_m = re.findall(r"[A-Za-z0-9.\-/]{2,}", es)
+                mapped = " ".join(ascii_m) if ascii_m else ""
+            if mapped:
+                clean_ents.append(mapped)
+        if clean_ents:
+            ent_tag = ", ".join(clean_ents)
+            if nums:
+                return f"[{ent_tag} · {' / '.join(nums[:3])}] {translated}"
+            return f"[{ent_tag}] {translated}"
     return translated
 
 
@@ -630,3 +699,48 @@ def enrich_bilingual_topics(
                 (nd_en[pos] if nd_en and nd_en[pos] else None)
                 or _translate_zh_to_en_glossary(zh_node_src[pos], topic_list[ti].get("entities"))
             )
+
+
+def enrich_bilingual_v3_records(
+    records: List[Dict[str, Any]],
+    field_pairs: Sequence[Tuple[str, str]],
+    *,
+    max_llm_items: int = 36,
+) -> bool:
+    """Populate missing or CJK-tainted `*_en` fields on V3 records using Gemini (if key available) + glossary fallback."""
+    if not records:
+        return False
+    changed = False
+    pending_refs: List[Tuple[Dict[str, Any], str, str]] = []
+    for rec in records:
+        if not isinstance(rec, dict):
+            continue
+        for src_k, dst_k in field_pairs:
+            raw_val = str(rec.get(src_k) or "").strip()
+            if not raw_val:
+                continue
+            cur_en = str(rec.get(dst_k) or "").strip()
+            if not cur_en or _has_cjk_text(cur_en):
+                if _has_cjk_text(raw_val):
+                    pending_refs.append((rec, dst_k, raw_val))
+                else:
+                    rec[dst_k] = raw_val
+                    changed = True
+
+    if not pending_refs:
+        return changed
+
+    llm_out: Optional[List[str]] = None
+    if _has_llm_translation_key():
+        batch_texts = [t for _, _, t in pending_refs[:max_llm_items]]
+        llm_out, _, _ = _translate_texts_with_pipeline(batch_texts, "en", max_retries=1, backoff_base=0.3)
+
+    for idx, (rec, dst_k, zh_src) in enumerate(pending_refs):
+        cand = llm_out[idx] if (llm_out and idx < len(llm_out) and llm_out[idx]) else None
+        if not cand or _has_cjk_text(cand):
+            ents = rec.get("entities") or ([rec.get("company_name")] if rec.get("company_name") else None)
+            cand = _translate_zh_to_en_glossary(zh_src, ents)
+        if cand and cand != rec.get(dst_k):
+            rec[dst_k] = cand
+            changed = True
+    return changed

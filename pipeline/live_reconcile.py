@@ -6,10 +6,15 @@ from pathlib import Path
 import re
 from typing import Any, Dict, List, Optional
 
-from pipeline.bilingual import enrich_bilingual_events, enrich_bilingual_topics
-from pipeline.build_briefing import _postprocess_and_prune_cross_category
+from pipeline.bilingual import enrich_bilingual_events, enrich_bilingual_topics, enrich_bilingual_v3_records
+from pipeline.build_briefing import (
+    _build_key_changes_from_events,
+    _postprocess_and_prune_cross_category,
+    _smart_truncate,
+)
 from pipeline.connectors.base import HttpCacheStore
 from pipeline.connectors.sec_edgar import fetch_sec_edgar
+from pipeline.entities import ENTITY_REGISTRY
 from pipeline.manifest import atomic_write_json, load_json_if_exists
 from pipeline.market_quotes import refresh_market_quotes_file
 from pipeline.sources import CATEGORIES, CATEGORY_FILES
@@ -146,6 +151,33 @@ def refresh_and_sanitize_site_data(root: Path | str, *, refresh_sec: bool = Fals
                 connectors_payload["calendar_events"].extend(sec_res["calendar_items"])
         except Exception:
             pass
+    elif sec_stale_check.exists():
+        # Preserve newer SEC/6-K actuals (e.g. TSMC 2026-10 monthly/quarterly revenue) across fast non-SEC reconciliations
+        cached_sec = load_json_if_exists(sec_stale_check, default={})
+        if isinstance(cached_sec, dict):
+            cik_to_eid = {
+                str(getattr(ed, "cik", "") or "").zfill(10): ed.entity_id
+                for ed in ENTITY_REGISTRY
+                if getattr(ed, "cik", None)
+            }
+            for raw_key, cent in cached_sec.items():
+                if not isinstance(cent, dict):
+                    continue
+                eid = raw_key if str(raw_key).startswith("ent_") else cik_to_eid.get(str(raw_key).zfill(10))
+                if not eid:
+                    continue
+                cur = connectors_payload["entity_updates"].setdefault(eid, {})
+                c_acts = cent.get("actuals") or cent.get("financial_actuals") or []
+                old_acts = cur.get("financial_actuals") or []
+                max_new = max((str(a.get("period_end") or "") for a in c_acts), default="")
+                max_old = max((str(a.get("period_end") or "") for a in old_acts), default="")
+                if c_acts and max_new >= max_old:
+                    cur["financial_actuals"] = list(c_acts)
+                if cent.get("filings") and not cur.get("recent_filings"):
+                    cur["recent_filings"] = list(cent["filings"])
+                for fk in ("latest_8k_date", "has_recent_502_officer_change", "last_checked_at"):
+                    if cent.get(fk) and not cur.get(fk):
+                        cur[fk] = cent[fk]
 
     cat_docs: Dict[str, dict] = {}
     for cat in CATEGORIES:
@@ -165,10 +197,53 @@ def refresh_and_sanitize_site_data(root: Path | str, *, refresh_sec: bool = Fals
     if not cat_docs:
         return {"ok": False, "reason": "no_analysis_docs_found", "history_fixed": hist_fixed}
 
+    # Repair pre-existing truncated tails (e.g. '报4.9438%（周跌19.') and dirty mixed-CJK summary_en before postprocess
+    for doc in cat_docs.values():
+        for ev in doc.get("events") or []:
+            if not isinstance(ev, dict):
+                continue
+            fs = str(ev.get("fact_summary") or "").strip()
+            if fs:
+                open_i = max(fs.rfind("（"), fs.rfind("("))
+                close_i = max(fs.rfind("）"), fs.rfind(")"))
+                if open_i > close_i and open_i >= 12:
+                    fs = fs[:open_i].rstrip(" ，、,;；：:")
+                    if fs and not fs.endswith(("。", "！", "？", "…", "%")):
+                        fs += "。"
+                    elif fs.endswith("%"):
+                        fs += "。"
+                fs = re.sub(r"(\d+)\.$", r"\1。", fs)
+                ev["fact_summary"] = fs
+            se = str(ev.get("summary_en") or "")
+            if "周跌19." in se or (se and re.search(r"[\u4e00-\u9fff]{6,}", se)):
+                # Force clean English re-enrichment when legacy CJK leaked into summary_en
+                ev["summary_en"] = None
+            te = str(ev.get("title_en") or "")
+            if te and re.search(r"[\u4e00-\u9fff]{5,}", te):
+                ev["title_en"] = None
+
     _postprocess_and_prune_cross_category(cat_docs, cat_manifest, max_per_category=14)
 
     for cat, doc in cat_docs.items():
-        enrich_bilingual_events(doc.get("events") or [])
+        ev_list = doc.get("events") or []
+        enrich_bilingual_events(ev_list)
+        ev_by_id = {e.get("event_id"): e for e in ev_list if e.get("event_id")}
+        rebuilt_kc = []
+        seen_kc_eids = set()
+        for kc in doc.get("key_changes") or []:
+            eid_kc = kc.get("event_id")
+            if eid_kc and eid_kc in seen_kc_eids:
+                continue
+            matched_ev = ev_by_id.get(eid_kc)
+            if matched_ev:
+                seen_kc_eids.add(eid_kc)
+                kc["headline"] = matched_ev.get("title") or kc.get("headline")
+                kc["headline_en"] = matched_ev.get("title_en") or kc.get("headline_en")
+                kc["detail"] = _smart_truncate(matched_ev.get("fact_summary") or kc.get("detail") or "", 190)
+                if matched_ev.get("summary_en"):
+                    kc["detail_en"] = _smart_truncate(str(matched_ev.get("summary_en")), 190)
+                rebuilt_kc.append(kc)
+        doc["key_changes"] = rebuilt_kc or _build_key_changes_from_events(ev_list)
         doc["published_at"] = now_iso
         atomic_write_json(base / f"analysis_{cat}.json", doc)
         arc_rel = str((cat_manifest.get(cat) or {}).get("path") or "")
@@ -194,30 +269,50 @@ def refresh_and_sanitize_site_data(root: Path | str, *, refresh_sec: bool = Fals
         enrich_bilingual_topics(st_doc["storylines"])
         atomic_write_json(st_path, st_doc)
 
-    # Also ensure ai_progress.json items carry English title_en/what_it_does_en
-    from pipeline.bilingual import _has_cjk_text, _translate_zh_to_en_glossary
+    # Enrich V3 modules (Calendar, Predictions, AI Progress, Live Wire, Radar) with complete EN fields
+    cal_path = base / "data" / "calendar.json"
+    cal_doc = load_json_if_exists(cal_path, default={})
+    if isinstance(cal_doc, dict) and isinstance(cal_doc.get("events"), list):
+        if enrich_bilingual_v3_records(
+            cal_doc["events"],
+            [("title", "title_en"), ("watch_variable", "watch_variable_en"), ("actual_result", "actual_result_en")],
+        ):
+            atomic_write_json(cal_path, cal_doc)
+
+    pred_path = base / "data" / "predictions_public.json"
+    pred_doc = load_json_if_exists(pred_path, default={})
+    if isinstance(pred_doc, dict) and isinstance(pred_doc.get("predictions"), list):
+        if enrich_bilingual_v3_records(
+            pred_doc["predictions"],
+            [("title", "title_en"), ("question", "question_en"), ("win_rule", "win_rule_en")],
+        ):
+            atomic_write_json(pred_path, pred_doc)
+
+    rad_path = base / "data" / "radar.json"
+    rad_doc = load_json_if_exists(rad_path, default={})
+    if isinstance(rad_doc, dict) and isinstance(rad_doc.get("items"), list):
+        if enrich_bilingual_v3_records(rad_doc["items"], [("title", "title_en")]):
+            atomic_write_json(rad_path, rad_doc)
+
+    lw_path = base / "data" / "live_wire.json"
+    lw_doc = load_json_if_exists(lw_path, default={})
+    if isinstance(lw_doc, dict) and isinstance(lw_doc.get("items"), list):
+        if enrich_bilingual_v3_records(lw_doc["items"], [("title", "title_en")]):
+            atomic_write_json(lw_path, lw_doc)
+
     ai_p_path = base / "data" / "ai_progress.json"
     ai_p_doc = load_json_if_exists(ai_p_path, default={})
     if isinstance(ai_p_doc, dict):
         changed_ai = False
-        for item in ai_p_doc.get("timeline") or []:
-            if isinstance(item, dict):
-                te = str(item.get("title_en") or "")
-                if not te or _has_cjk_text(te):
-                    item["title_en"] = _translate_zh_to_en_glossary(str(item.get("title") or ""), [str(item.get("company_name") or "")])
-                    changed_ai = True
-                we = str(item.get("what_it_does_en") or "")
-                if not we or _has_cjk_text(we):
-                    item["what_it_does_en"] = _translate_zh_to_en_glossary(str(item.get("what_it_does") or ""), [str(item.get("company_name") or "")])
-                    changed_ai = True
+        if isinstance(ai_p_doc.get("timeline"), list):
+            changed_ai |= enrich_bilingual_v3_records(
+                ai_p_doc["timeline"], [("title", "title_en"), ("what_it_does", "what_it_does_en")]
+            )
         for comp in ai_p_doc.get("companies") or []:
-            if isinstance(comp, dict):
-                for item in comp.get("items") or []:
-                    if isinstance(item, dict):
-                        te = str(item.get("title_en") or "")
-                        if not te or _has_cjk_text(te):
-                            item["title_en"] = _translate_zh_to_en_glossary(str(item.get("title") or ""), [str(comp.get("company_name") or "")])
-                            changed_ai = True
+            if isinstance(comp, dict) and isinstance(comp.get("items"), list):
+                changed_ai |= enrich_bilingual_v3_records(
+                    comp["items"], [("title", "title_en"), ("what_it_does", "what_it_does_en")]
+                )
         if changed_ai:
             atomic_write_json(ai_p_path, ai_p_doc)
 

@@ -114,27 +114,105 @@ def _build_domain_scenario(
                 )
         return out
 
-    # 1. AI / Tech broad equity crash or flagship selloff (NVDA -14%, Nasdaq -5%, Anthropic IPO slide -8.5%)
+    # 1. Separate primary/IPO AI valuation pullback (Anthropic -8.5% / IPO slide) vs flagship chip equity crash
     if any(k in t for k in ("暴跌", "重挫", "下挫", "抛售潮", "抹去年内涨幅", "逼近破发", "破发")) and any(
         k in t for k in ("英伟达", "nvda", "纳指", "anthropic", "ai板块", "算力", "芯片")
     ):
+        is_ipo = "anthropic" in tl or "破发" in tl or "发行价" in tl or "上市" in tl
+        if is_ipo:
+            qqq_f, atr_v, _ = _volatility_scale("QQQ", quotes_map, intensity)
+            hstech_f, _, _ = _volatility_scale("HSTECH.HK", quotes_map, intensity)
+            mag_f = 1.15 if explicit_mag >= 8.0 else (0.95 if explicit_mag >= 4.0 else 0.85)
+            return {
+                "rule_id": "ai_ipo_pullback",
+                "tag": "头部大模型 IPO 破发 / 估值重锚",
+                "tag_en": "AI IPO Valuation Pullback",
+                "polarity": "bearish",
+                "intensity": intensity,
+                "one_liner": "高估值大模型上市即逼近破发、二级市场对 AI 应用与烧钱亏损商业化兑现更加苛刻，软件应用与云生态短期估值受压。",
+                "one_liner_en": "Flagship LLM IPO slide near issue price cools primary & SaaS AI multiples while forcing monetization discipline.",
+                "sample_basis": {
+                    "sample_n": 13,
+                    "volatility_pct": atr_v or 3.9,
+                    "volatility_source": "美股科技次新股与 QQQ 波动校准",
+                    "horizon": "1~3 个交易日",
+                    "confidence_label": "高置信（一二级估值直接锚定）",
+                    "confidence_label_en": "High (IPO Valuation Anchor)",
+                },
+                "affected_tickers": {
+                    "QQQ": -0.65,
+                    "IXIC": -0.6,
+                    "HSTECH.HK": -0.6,
+                    "00700.HK": -0.35,
+                    "515880.SH": -0.4,
+                    "601398.SH": 0.25,
+                },
+                "realized_quotes": _quote_snapshot(["IXIC", "QQQ", "HSTECH.HK"]),
+                "bars": [
+                    _bar(
+                        "美股",
+                        "AI 大模型与企业级 SaaS 软件 (QQQ / App)",
+                        "US AI Foundation & Enterprise SaaS",
+                        -4.8,
+                        -1.8,
+                        "一线大模型次新上市承压直接触发高 PS 倍数 AI 应用股估值下修。",
+                        "Secondary pressure on marquee AI IPO triggers multiple compression in AI SaaS.",
+                        min(1.3, qqq_f * 0.65 * mag_f),
+                        "QQQ",
+                    ),
+                    _bar(
+                        "港股",
+                        "港股大模型生态与云计算 (HSTECH / 00700)",
+                        "HKEX AI Cloud & Apps (HSTECH)",
+                        -2.9,
+                        -0.9,
+                        "一级市场估值锚松动压制港股 AI 应用与商业化平台溢价。",
+                        "Lower global LLM valuation benchmarks weigh on HK cloud/AI ecosystems.",
+                        min(1.2, hstech_f * 0.9 * mag_f),
+                        "HSTECH.HK",
+                    ),
+                    _bar(
+                        "A股",
+                        "AI 大模型应用 / 通用 SaaS 概念",
+                        "A-Share AI Apps & SaaS",
+                        -2.5,
+                        -0.7,
+                        "高估值纯概念应用板块受情绪外溢回吐，但现金流硬件相对企稳。",
+                        "Story-driven domestic AI application names pull back with overseas IPO weakness.",
+                        mag_f,
+                    ),
+                    _bar(
+                        "A股",
+                        "高股息红利 / 现金流资产防御",
+                        "A-Share High-Dividend Cashflow",
+                        0.4,
+                        1.4,
+                        "成长溢价挤泡沫期间，高股息低估值资产吸引避险配置。",
+                        "Defensives attract rotation during growth valuation digestion.",
+                        0.95,
+                        "601398.SH",
+                    ),
+                ],
+                "if_then": [
+                    {"cond": "若上市首周跌破发行价引发承销护盘失效", "result": "一二级 AI 融资估值折价传导至港股/美股软件应用", "tone": "bearish"},
+                    {"cond": "若企业级 ARR 签约增速公告超预期带动止跌企稳", "result": "头部 AI 平台估值中枢重新锚定", "tone": "neutral"},
+                ],
+                "milestones": [{"date": "未来 3 个交易日", "status": "current", "label": "观察发行价保卫战成交量与做空仓位变化"}],
+            }
+
         nvda_f, atr_v, _ = _volatility_scale("NVDA", quotes_map, intensity)
         qqq_f, _, _ = _volatility_scale("QQQ", quotes_map, intensity)
         semi_f, _, _ = _volatility_scale("512480.SH", quotes_map, max(3, intensity - 1))
         hstech_f, _, _ = _volatility_scale("HSTECH.HK", quotes_map, intensity)
-        is_ipo = "anthropic" in tl or "破发" in tl
+        mag_f = 1.18 if explicit_mag >= 10.0 else (0.96 if explicit_mag >= 4.5 else 0.84)
         return {
             "rule_id": "ai_equity_selloff",
-            "tag": "AI 算力与科技估值抛压" if not is_ipo else "大模型高估值 IPO 承压",
+            "tag": "AI 算力与科技估值抛压",
             "tag_en": "AI Equity Valuation Selloff",
             "polarity": "bearish",
             "intensity": intensity,
-            "one_liner": (
-                "核心 AI 算力龙头与高估值大模型标的放量下挫，触发纳指与港股/A股算力链同步去杠杆，红利防御资产相对抗跌。"
-                if not is_ipo
-                else "头部大模型 IPO 次日下挫并逼近破发，压制一二级市场 AI 估值锚，云算力与软件应用短期承压。"
-            ),
-            "one_liner_en": "Flagship AI equity plunge triggers risk-off repricing across US/HK/A-Share compute & software names.",
+            "one_liner": "核心 AI 算力龙头放量下挫，触发纳指与港股/A股算力链同步去杠杆，红利防御资产相对抗跌。",
+            "one_liner_en": "Flagship AI compute plunge triggers risk-off repricing across US/HK/A-Share compute chains.",
             "sample_basis": {
                 "sample_n": 18,
                 "volatility_pct": atr_v or 4.6,
@@ -162,33 +240,33 @@ def _build_domain_scenario(
                     "美股",
                     "AI 算力龙头 (NVDA / AMD / QQQ)",
                     "US AI Chips & Nasdaq (NVDA/QQQ)",
-                    -5.2,
-                    -2.1,
+                    -5.4,
+                    -2.2,
                     "高估值算力核心权重放量回撤，直接压制费半及纳指风险偏好。",
                     "Direct valuation compression on US flagship AI semis and Nasdaq.",
-                    min(1.6, nvda_f * 0.65),
+                    min(1.55, nvda_f * 0.58 * mag_f),
                     "NVDA",
                 ),
                 _bar(
                     "港股",
                     "恒生科指与大模型生态 (HSTECH / 00700)",
                     "HK Tech & AI Ecosystem (HSTECH)",
-                    -3.4,
+                    -3.5,
                     -1.1,
                     "外资风险预算收缩时，港股科技权重通常跟随纳指承压。",
                     "Foreign risk-off flows weigh on HKEX tech heavyweight multiples.",
-                    min(1.3, hstech_f),
+                    min(1.28, hstech_f * mag_f),
                     "HSTECH.HK",
                 ),
                 _bar(
                     "A股",
                     "CPO 光模块 / 算力硬件映射",
                     "A-Share Optical / AI Hardware",
-                    -3.6,
+                    -3.8,
                     -1.2,
                     "北美算力资本开支映射承压，短期交易情绪跟随海外龙头回落。",
                     "North American capex proxies retrace alongside US AI hardware peers.",
-                    min(1.3, semi_f),
+                    min(1.28, semi_f * mag_f),
                     "515880.SH",
                 ),
                 _bar(
@@ -199,7 +277,7 @@ def _build_domain_scenario(
                     1.2,
                     "成长赛道剧烈波动期间，资金倾向回流低波红利与高股息银行。",
                     "Capital rotates toward low-volatility dividend value during tech drawdowns.",
-                    0.9,
+                    0.9 * mag_f,
                     "601398.SH",
                 ),
             ],
@@ -317,18 +395,32 @@ def _build_domain_scenario(
         }
 
     # 5. Kinetic Geopolitical Escalation (Missiles in Poland / Tanker Mine in Hormuz / Iran-US Military Risk)
-    if any(k in t for k in ("霍尔木兹", "油轮触雷", "导弹落入", "空袭", "动武", "击落", "美伊")) and any(
-        k in t for k in ("伊朗", "乌克兰", "波兰", "北约", "以色列", "海峡", "导弹", "无人机", "油轮", "俄军", "管道")
+    if any(k in t for k in ("霍尔木兹", "油轮触雷", "导弹落入", "空袭", "动武", "击落", "美伊")) and (
+        any(k in t for k in ("伊朗", "乌克兰", "波兰", "北约", "以色列", "海峡", "导弹", "无人机", "油轮", "俄军", "管道", "谈判", "僵局"))
     ):
-        is_us_iran_talks_only = "美伊" in t and "谈判" in t and "触雷" not in t and "空袭" not in t and "动武" not in t
-        _, atr_v, _ = _volatility_scale("USO", quotes_map, intensity)
+        is_hormuz_mine = "霍尔木兹" in t and ("触雷" in t or "海峡" in t)
+        is_us_iran_talks_only = "美伊" in t and "谈判" in t and "触雷" not in t and "空袭" not in t and "动武" not in t and "导弹" not in t
+        sev = 1.24 if is_hormuz_mine else (0.72 if is_us_iran_talks_only else 1.04)
+        _, atr_v, _ = _volatility_scale("USO", quotes_map, 5 if is_hormuz_mine else (3 if is_us_iran_talks_only else 4))
         return {
             "rule_id": "geopolitics_energy_escalation",
-            "tag": "中东/东欧地缘冲突与航运能源风险" if not is_us_iran_talks_only else "美伊博弈与海湾能源避险",
+            "tag": (
+                "霍尔木兹航道触雷与油运飙升"
+                if is_hormuz_mine
+                else ("美伊外交博弈与温和避险" if is_us_iran_talks_only else "东欧/中东武装冲突与军工避险")
+            ),
             "tag_en": "Geopolitical & Energy Chokepoint Risk",
             "polarity": "divergent",
-            "intensity": intensity,
-            "one_liner": "航道与地缘冲突升级推升油运保费、能源供应溢价及黄金避险需求；高耗能下游化工与跨境航空承压。",
+            "intensity": 5 if is_hormuz_mine else (3 if is_us_iran_talks_only else 4),
+            "one_liner": (
+                "关键油运咽喉触雷险情推升超大型油轮运费、战争险保费及国际油价即时脉冲，直接利好油气开采与油运，航空及化工下游成本剧增。"
+                if is_hormuz_mine
+                else (
+                    "美伊谈判胶着延长海湾制裁风险溢价，但尚未演变为实质航道封锁，对油价与黄金呈温和避险支撑。"
+                    if is_us_iran_talks_only
+                    else "跨境导弹与防空警报触发军工防务及避险买盘升温，能源与黄金同步小幅抬升、欧洲航线与风险偏好短期承压。"
+                )
+            ),
             "one_liner_en": "Chokepoint & kinetic flare-ups lift crude, shipping rates, and gold while pressuring airlines.",
             "sample_basis": {
                 "sample_n": 22,
@@ -338,13 +430,13 @@ def _build_domain_scenario(
                 "confidence_label": "高置信（避险与商品直驱）",
                 "confidence_label_en": "High (Safe-Haven & Crude Drive)",
             },
-            "affected_tickers": {"USO": 0.9, "GLD": 0.7, "00883.HK": 0.8, "02899.HK": 0.6},
+            "affected_tickers": {"USO": round(0.9 * sev, 2), "GLD": round(0.65 * sev, 2), "00883.HK": round(0.8 * sev, 2), "02899.HK": round(0.55 * sev, 2)},
             "realized_quotes": _quote_snapshot(["USO", "GLD", "00883.HK", "02899.HK"]),
             "bars": [
-                _bar("美股", "原油与能源/防务避险 (USO / XLE)", "US Energy & Defense (USO)", 1.6, 4.4, "地缘供应中断风险直接在国际油价与防务链条计价。", "Supply disruption risk immediately reprices crude and defense.", 1.0, "USO"),
-                _bar("港股", "油气与贵金属避险 (00883 / 02899)", "HKEX Oil & Gold Safe Havens (00883/02899)", 1.4, 3.8, "避险情绪叠加现货原油、黄金同步走高。", "Offshore energy & bullion names capture risk-off hedging flows.", 1.0, "00883.HK"),
-                _bar("A股", "石油石化 / 油运与贵金属", "A-Share Oil, Tankers & Gold", 1.6, 4.2, "绕航与保费上行催化油运及能源开采。", "Freight & energy producers benefit from rerouting and risk premia.", 1.0),
-                _bar("A股", "航空机场 / 高耗能化工下游", "A-Share Airlines & Downstream Chem", -3.0, -1.0, "燃油成本飙升叠加国际航线绕飞压缩毛利。", "Higher jet-fuel & rerouting costs compress airline/chemical margins.", 1.0),
+                _bar("美股", "原油与能源/防务避险 (USO / XLE)", "US Energy & Defense (USO)", 1.6, 4.4, "地缘供应中断风险直接在国际油价与防务链条计价。", "Supply disruption risk immediately reprices crude and defense.", sev, "USO"),
+                _bar("港股", "油气与贵金属避险 (00883 / 02899)", "HKEX Oil & Gold Safe Havens (00883/02899)", 1.3, 3.6, "避险情绪叠加现货原油、黄金同步走高。", "Offshore energy & bullion names capture risk-off hedging flows.", sev, "00883.HK"),
+                _bar("A股", "石油石化 / 油运与贵金属", "A-Share Oil, Tankers & Gold", 1.5, 4.0, "绕航与保费上行催化油运及能源开采。", "Freight & energy producers benefit from rerouting and risk premia.", sev),
+                _bar("A股", "航空机场 / 高耗能化工下游", "A-Share Airlines & Downstream Chem", -2.9, -0.9, "燃油成本飙升叠加国际航线绕飞压缩毛利。", "Higher jet-fuel & rerouting costs compress airline/chemical margins.", min(1.2, sev)),
             ],
             "if_then": [
                 {"cond": "若冲突扩散导致实际油轮通行或管道长期中断", "result": "能源涨价预期演变为再通胀担忧，压制长端成长估值", "tone": "bearish"},
@@ -544,30 +636,59 @@ def _build_domain_scenario(
                 "if_then": [{"cond": "若双方正式宣布约束性收购报价", "result": "全行业安全软件 EV/Sales 估值中枢获提振", "tone": "bullish"}],
                 "milestones": [{"date": "2 周内", "status": "current", "label": "双方董事会是否公布正式并购条款或否认传闻"}],
             }
+        if any(k in t for k in ("反蒸馏", "蒸馏", "思考链提取", "黎曼")):
+            return None
         if any(k in t for k in ("甲骨文", "openai", "gemini", "混元", "千问", "deepseek", "llm")):
-            is_infra = "筹足" in t or "合同" in t or "现金流" in t
+            is_infra = "甲骨文" in t or "筹足" in t or "合同" in t or "自由现金流" in t
+            if not is_infra:
+                return {
+                    "rule_id": "ai_model_launch_catalyst",
+                    "tag": "旗舰大模型迭代与生态扩展",
+                    "tag_en": "Flagship AI Model Release & Ecosystem",
+                    "polarity": "bullish",
+                    "intensity": 3,
+                    "one_liner": "新一代旗舰推理/代码模型正式落地，加速端侧智能体与企业级开发工具调用需求，边际利好大模型平台与应用生态。",
+                    "one_liner_en": "New flagship reasoning & coding models accelerate agent workflows and AI software monetization.",
+                    "sample_basis": {
+                        "sample_n": 15,
+                        "volatility_pct": 2.9,
+                        "volatility_source": "主流大模型与软件应用催化样本",
+                        "horizon": "2~5 个交易日",
+                        "confidence_label": "中高置信（生态应用催化）",
+                        "confidence_label_en": "Moderate-High (Model Ecosystem Catalyst)",
+                    },
+                    "affected_tickers": {"GOOGL": 0.45, "QQQ": 0.3, "00700.HK": 0.4, "HSTECH.HK": 0.35},
+                    "realized_quotes": _quote_snapshot(["QQQ", "00700.HK", "HSTECH.HK"]),
+                    "bars": [
+                        _bar("美股", "AI 应用开发与云平台生态 (GOOGL / MSFT)", "US AI Platforms & Dev Ecosystem", 0.9, 2.7, "旗舰模型能力升级带动开发者 API 与 Agent 订阅增长预期。", "Model upgrades expand developer API consumption and Agent adoption.", 1.0, "QQQ"),
+                        _bar("港股", "大模型入口与云软件生态 (00700 / HSTECH)", "HKEX AI Ecosystem & Platforms", 0.8, 2.5, "开源/商用模型性能跃迁提升国内平台端侧融合预期。", "Stronger foundation models lift platform ecosystem monetization odds.", 1.0, "HSTECH.HK"),
+                        _bar("A股", "AI 应用 / Agent 工作流软件", "A-Share AI Apps & Agent Workflows", 1.1, 3.1, "模型能力下放拓宽企业自动化场景落地节奏。", "Expanded model capabilities speed enterprise workflow automation.", 1.0),
+                    ],
+                    "if_then": [{"cond": "若第三方基准测试与企业付费转化数据超预期", "result": "AI 应用与平台生态保持结构性活跃", "tone": "bullish"}],
+                    "milestones": [{"date": "未来 2~4 周", "status": "upcoming", "label": "观察开发者 API 活跃度与企业接入量反馈"}],
+                }
             return {
                 "rule_id": "ai_infra_or_model_catalyst",
-                "tag": "AI 算力现金流兑现与旗舰模型推进" if is_infra else "旗舰大模型迭代与生态扩展",
-                "tag_en": "AI Cloud Capex & Model Release",
+                "tag": "AI 算力现金流兑现与云基建订单",
+                "tag_en": "AI Cloud Capex & Contract Financing",
                 "polarity": "bullish",
                 "intensity": 3,
-                "one_liner": "云巨头履约资金与长周期自由现金流指引兑现，叠加旗舰多模态/Agent 模型落地，对产业链 AI 云设施及头部应用偏正面。",
-                "one_liner_en": "Confirmed cloud contract funding and flagship model drops support AI infra & leading ecosystem plays.",
+                "one_liner": "云巨头履约资金与长周期自由现金流指引兑现，直接缓解 AI 数据中心融资担忧，对算力基建及云生态偏正面。",
+                "one_liner_en": "Confirmed cloud contract funding and free-cash-flow guidance support AI infrastructure plays.",
                 "sample_basis": {
                     "sample_n": 17,
                     "volatility_pct": 3.1,
-                    "volatility_source": "科技模型/云基建催化历史样本",
+                    "volatility_source": "云基建融资与订单催化样本",
                     "horizon": "2~5 个交易日",
                     "confidence_label": "中高置信（受整体市场风偏约束）",
                     "confidence_label_en": "Moderate-High (Subject to Macro Beta)",
                 },
-                "affected_tickers": {"NVDA": 0.4, "QQQ": 0.35, "00700.HK": 0.5, "HSTECH.HK": 0.45},
+                "affected_tickers": {"ORCL": 0.7, "NVDA": 0.4, "QQQ": 0.35, "00700.HK": 0.4, "HSTECH.HK": 0.35},
                 "realized_quotes": _quote_snapshot(["QQQ", "00700.HK", "HSTECH.HK"]),
                 "bars": [
                     _bar("美股", "AI 云基建与头部软件生态 (ORCL / QQQ)", "US AI Cloud & Platforms", 1.1, 3.2, "大额算力订单融资落地缓解资本开支可持续性担忧。", "Secured contract financing reduces AI infrastructure solvency worries.", 1.0, "QQQ"),
-                    _bar("港股", "港股大模型与互联网入口 (00700 / HSTECH)", "HKEX AI Ecosystem & Platforms (00700)", 0.9, 2.8, "端侧与云端模型入口升级利好国内头部平台生态估值。", "Ecosystem monetization advances lift HK large-cap AI platforms.", 1.0, "00700.HK"),
-                    _bar("A股", "AI 应用 / Agent 工作流与算力租赁", "A-Share AI Apps & Compute Leasing", 1.2, 3.4, "Agent 后台操控能力拓宽商用工作流渗透率预期。", "Agent capabilities expand enterprise workflow adoption expectations.", 1.0),
+                    _bar("港股", "港股大模型与互联网入口 (00700 / HSTECH)", "HKEX AI Ecosystem & Platforms (00700)", 0.9, 2.8, "云端算力扩容确认产业链资本开支景气延续。", "Confirmed overseas cloud financing supports infrastructure sentiment.", 1.0, "00700.HK"),
+                    _bar("A股", "算力租赁与数据中心配套硬件", "A-Share Compute Leasing & Datacenter Infra", 1.2, 3.4, "云厂合同兑现强化上游服务器与电源配套景气预期。", "Cloud contract execution supports upstream datacenter hardware demand.", 1.0),
                 ],
                 "if_then": [{"cond": "若随后季度云资本开支未随宏观波动收缩", "result": "AI 云基建与端侧应用维持相对超额", "tone": "bullish"}],
                 "milestones": [{"date": "下一次财报季", "status": "upcoming", "label": "云合同 RPO 余额转化与商业化 ARR 增速验证"}],
@@ -718,11 +839,21 @@ def build_finance_impact_artifact(
             continue
 
         rid = scenario["rule_id"]
-        if used_rule_counts.get(rid, 0) >= 3:
+        occ_idx = used_rule_counts.get(rid, 0)
+        if occ_idx >= 3:
             continue
-        used_rule_counts[rid] = used_rule_counts.get(rid, 0) + 1
+        used_rule_counts[rid] = occ_idx + 1
 
+        # Differentiate secondary/indirect occurrences sharing the same macro rule so cards never clone identical % ranges
         bars = scenario["bars"]
+        if occ_idx > 0:
+            atten = max(0.68, 1.0 - 0.13 * occ_idx)
+            adj_bars = []
+            for b in bars:
+                nb = dict(b)
+                nb["pct_low"], nb["pct_high"] = _scale_band(float(b["pct_low"]), float(b["pct_high"]), atten)
+                adj_bars.append(nb)
+            bars = adj_bars
         card = {
             "id": f"imp_{eid}",
             "event_id": eid,

@@ -110,6 +110,17 @@ _LAB_CATALOG: List[Dict[str, Any]] = [
         "access_limits_en": "Community license terms & regional rollouts apply",
     },
     {
+        "company_id": "nvidia",
+        "company_name": "英伟达 (NVIDIA)",
+        "company_name_en": "NVIDIA AI / Omniverse / CUDA",
+        "region": "海外",
+        "region_en": "Global",
+        "flagship_model": "Nemotron / Cosmos / Omniverse / TensorRT",
+        "open_source_line": "Nemotron 开放权重、Cosmos 世界模型与本地/集群推理加速工具",
+        "access_limits": "部分企业微服务（NIM）与物理仿真栈需 NVIDIA GPU 环境支持",
+        "access_limits_en": "NVIDIA GPU environment required for TensorRT-LLM / NIM / Omniverse stacks",
+    },
+    {
         "company_id": "indie_opensource",
         "company_name": "独立实验室 & 开源黑马",
         "company_name_en": "Indie Labs & Open-Source Researchers",
@@ -416,7 +427,7 @@ def normalize_ai_timestamp(raw_ts: Any, fallback_iso: str) -> str:
 
 
 AI_NOISE_RE = re.compile(
-    r"(?:回购股份|减持股份|增持股份|质押股份|股份回购|分红派息|限售股解禁|股票交易异常波动|年度股东大会|董事会决议公告|可转债|中标公告|业绩快报|成份股|指数纳入|调入.*股|港股通|black friday|geforce now)",
+    r"(?:回购股份|减持股份|增持股份|质押股份|股份回购|分红派息|限售股解禁|股票交易异常波动|年度股东大会|董事会决议公告|可转债|中标公告|业绩快报|成份股|指数纳入|调入.*股|港股通|black friday|geforce now|win11.*copilot|windows\s*11.*copilot|强制集成.*copilot)",
     re.I,
 )
 AI_KW_RE = re.compile(
@@ -439,6 +450,8 @@ def _infer_company(title: str, url: str = "") -> tuple[str, str, str]:
         return "openai", "OpenAI", "海外"
     if any(k in t for k in ("microsoft", "微软", "win11", "windows 11", "copilot", "phi-4", "phi4", "azure ai")):
         return "microsoft", "微软 (Microsoft)", "海外"
+    if any(k in t for k in ("nvidia", "英伟达", "omniverse", "nemotron", "tensorrt", "blackwell", "rubin", "cuda")):
+        return "nvidia", "英伟达 (NVIDIA)", "海外"
     if any(k in t for k in ("meta ", "metaai", "llama", "zuckerberg")):
         return "meta", "Meta AI", "海外"
     if any(k in t for k in ("qwen", "千问", "通义", "阿里", "huggingface.co/qwen")):
@@ -454,17 +467,69 @@ def _infer_company(title: str, url: str = "") -> tuple[str, str, str]:
 
 def _infer_what_it_does_zh(title: str, summary: str) -> str:
     t = f"{title} {summary}".lower()
-    if any(k in t for k in ("vllm", "llama.cpp", "ollama", "推理引擎", "inference")):
+    if any(k in t for k in ("隐私泄露", "隐私数据", "零数据保留", "诱饵请求", "反蒸馏", "distillation", "合规审计", "安全风控", "privacy", "security")):
+        return "大模型安全、隐私合规与防泄漏动态：聚焦零数据保留机制校验、抗蒸馏防护与调用链审计。"
+    if any(k in t for k in ("vllm", "llama.cpp", "ollama", "sglang", "推理引擎", "inference")):
         return "开源本地/服务器推理加速工具：帮开发者和普通电脑更快、更省显存地运行各类开源大模型。"
-    if any(k in t for k in ("3d", "hair", "video", "视频", "music", "音乐", "image", "图像", "ar ")):
+    if any(k in t for k in ("agent", "coding", "编程", "code", "sdk", "cli", "harness", "tool use", "workbuddy", "电脑操控", "计算机控制")):
+        return "AI 编程与智能体（Agent）工具：自动读写代码、调用外部工具/SDK 并执行多步骤复杂任务。"
+    if any(k in t for k in ("robot", "具身", "机器人", "world model", "世界模型", "omniverse")):
+        return "具身智能/物理仿真模型工具：用于在虚拟或物理环境中训练机器人感知、规划与执行任务。"
+    if re.search(r"(?:视频|音乐|图像|多模态|画图)|\b(?:3d|hair|video|music|image|ar|vr)\b", t):
         return "多模态生成/创作模型：用于文字生成图像、视频、音乐或 3D 资产，降低设计与创作门槛。"
-    if any(k in t for k in ("robot", "具身", "机器人", "world model", "世界模型")):
-        return "具身智能/世界模型工具：用于在虚拟或物理环境中训练机器人感知、规划与执行任务。"
-    if any(k in t for k in ("agent", "coding", "编程", "code", "sdk", "cli", "harness")):
-        return "AI 编程与智能体（Agent）工具：自动读写代码、调用外部工具并执行多步骤复杂任务。"
-    if any(k in t for k in ("small", "mini", "flash", "nano", "27b", "7b", "8b", "端侧", "个人电脑")):
+    if re.search(r"(?:端侧|个人电脑|轻量模型|小模型)|\b(?:small|mini|flash|nano|27b|7b|8b)\b", t):
         return "轻量高效/端侧模型：主打低成本、高速度或支持个人电脑离线部署，适合日常高频使用。"
-    return (summary[:110] + "…") if len(summary) > 110 else (summary or "前沿 AI 模型或工具更新，提升推理、开发或多模态自动化效率。")
+    if summary and not re.search(r"^[A-Za-z0-9\s\W]+$", summary.strip()):
+        return (summary[:110] + "…") if len(summary) > 110 else summary
+    return "前沿 AI 模型研究与开发生态动态（点击下方「原文」查看实验细节、参数配额及官方技术文档）。"
+
+
+# Synonym-group clusters so ZH & EN variants of the exact same event collapse (e.g. "OpenAI 反蒸馏" == "Combatting adversarial distillation")
+_AI_TOPIC_CONCEPT_CLUSTERS = (
+    (("openai",), ("蒸馏", "distill")),
+    (("workbuddy",), ("电脑操控", "桌面", "computeruse")),
+    (("anthropic",), ("sdk",)),
+    (("win11", "windows11"), ("copilot",)),
+    (("deepseek",), ("千亿",)),
+    (("零数据保留", "诱饵请求", "隐私泄露", "隐私漏洞"), ("隐私", "zero", "诱饵")),
+)
+
+
+def is_similar_ai_release(
+    title_a: str,
+    url_a: str,
+    title_b: str,
+    url_b: str,
+) -> bool:
+    """Detect duplicate AI milestones across different publishers/languages/phrasings."""
+    ua = str(url_a or "").strip().lower().rstrip("/")
+    ub = str(url_b or "").strip().lower().rstrip("/")
+    if ua and ub and ua == ub:
+        return True
+    raw_a = str(title_a or "").lower()
+    raw_b = str(title_b or "").lower()
+    for grp1, grp2 in _AI_TOPIC_CONCEPT_CLUSTERS:
+        a_hit = any(k in raw_a for k in grp1) and any(k in raw_a for k in grp2)
+        b_hit = any(k in raw_b for k in grp1) and any(k in raw_b for k in grp2)
+        if a_hit and b_hit:
+            return True
+    na = re.sub(r"^【[^】]{1,24}】\s*", "", str(title_a or "").strip())
+    nb = re.sub(r"^【[^】]{1,24}】\s*", "", str(title_b or "").strip())
+    na = re.sub(r"[\s\-_·:：,，.。!！?？()（）\[\]【】'\"“”‘’/]+", "", na).lower()
+    nb = re.sub(r"[\s\-_·:：,，.。!！?？()（）\[\]【】'\"“”‘’/]+", "", nb).lower()
+    if not na or not nb:
+        return False
+    if na == nb:
+        return True
+    if len(na) >= 12 and len(nb) >= 12 and (na.startswith(nb[:16]) or nb.startswith(na[:16])):
+        return True
+    if len(na) >= 10 and len(nb) >= 10:
+        bga = {na[i : i + 2] for i in range(len(na) - 1)}
+        bgb = {nb[i : i + 2] for i in range(len(nb) - 1)}
+        union = bga | bgb
+        if union and (len(bga & bgb) / len(union)) >= 0.44:
+            return True
+    return False
 
 
 def _query_gemini_google_search_ai_weekly() -> List[Dict[str, Any]]:
@@ -555,8 +620,12 @@ def build_ai_progress_artifact(
     seen_titles: set[str] = set()
 
     def _add_item(it: Dict[str, Any]) -> None:
-        key = re.sub(r"\W+", "", str(it.get("title") or "").lower())[:26]
+        title = str(it.get("title") or "").strip()
+        url = str(it.get("source_url") or "").strip()
+        key = re.sub(r"\W+", "", title.lower())[:26]
         if not key or key in seen_titles:
+            return
+        if any(is_similar_ai_release(title, url, str(prev.get("title") or ""), str(prev.get("source_url") or "")) for prev in items):
             return
         seen_titles.add(key)
         items.append(it)

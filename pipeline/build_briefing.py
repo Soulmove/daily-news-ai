@@ -20,6 +20,7 @@ from pipeline.dedup import (
     get_publisher_family,
     is_omnibus_digest_title,
     score_cluster_for_briefing,
+    smart_truncate,
     title_similarity,
 )
 from pipeline.entities import ENTITY_REGISTRY, match_entities_with_reasons
@@ -362,13 +363,9 @@ def _parse_legacy_summary_sections(raw_summary: str) -> List[dict]:
 
 def _smart_truncate(text: str, max_len: int = 180) -> str:
     s = re.sub(r"\s+", " ", str(text or "")).strip()
-    if len(s) <= max_len:
-        return s
-    cut = s[: max_len - 1]
-    sep = max(cut.rfind("。"), cut.rfind("！"), cut.rfind("？"), cut.rfind("；"), cut.rfind("."))
-    if sep >= int(max_len * 0.55):
-        return cut[: sep + 1].rstrip()
-    return cut.rstrip(" ，、,;:") + "…"
+    if "_PIPELINE_JARGON_RE" in globals():
+        s = _PIPELINE_JARGON_RE.sub("", s).strip()
+    return smart_truncate(s, max_len=max_len)
 
 
 def _build_key_changes_from_events(events: List[dict]) -> List[dict]:
@@ -383,8 +380,8 @@ def _build_key_changes_from_events(events: List[dict]) -> List[dict]:
                 "evidence_status": ev["evidence_status"],
                 "attribution_warning": ev.get("attribution_warning"),
                 "source_count": ev["source_count"],
-                "primary_url": ev["sources"][0]["url"] if ev.get("sources") else None,
-                "source_name": ev["sources"][0]["source_name"] if ev.get("sources") else None,
+                "primary_url": ev["sources"][0].get("url") if ev.get("sources") else None,
+                "source_name": ev["sources"][0].get("source_name") if ev.get("sources") else None,
             }
         )
     return changes
@@ -776,18 +773,18 @@ def _build_deterministic_dialectic_comments(
             prev_unknown = None
 
         content_text = (prev_c.get("content") if prev_c else None) or (
-            f"核心依据：{str(pro_arg)[:58]}；反向校验：{str(con_arg)[:58]}"
+            f"核心依据：{_smart_truncate(str(pro_arg), 70)}；反向校验：{_smart_truncate(str(con_arg), 70)}"
         )
         out_comments.append(
             {
                 "id": f"sim_v3_{cat}_{idx + 1}",
                 "role": (prev_c.get("role") if prev_c else None) or PERSPECTIVE_ROLES[idx % len(PERSPECTIVE_ROLES)],
-                "perspective_tag": f"AI 辩证研判 · {(ev.get('entities') or [ev['title'][:10]])[0]}",
+                "perspective_tag": f"AI 辩证研判 · {(ev.get('entities') or [_smart_truncate(ev['title'], 14)])[0]}",
                 "target_event_id": eid,
-                "pro_argument": str(pro_arg)[:140],
-                "con_argument": str(con_arg)[:140],
-                "key_unknown": str(prev_unknown or unknown)[:130],
-                "next_catalyst": str(catalyst)[:120],
+                "pro_argument": _smart_truncate(str(pro_arg), 160),
+                "con_argument": _smart_truncate(str(con_arg), 160),
+                "key_unknown": _smart_truncate(str(prev_unknown or unknown), 150),
+                "next_catalyst": _smart_truncate(str(catalyst), 140),
                 "content": str(content_text).strip(),
                 "stance": (prev_c.get("stance") if prev_c else None) or "中性拆解",
             }
@@ -1158,12 +1155,17 @@ def _ground_update_category(
 
 _TRACKED_HKEX_CODES = {"00700", "09988", "00981", "03690"}
 _TOPIC_PAIRS = [
-    ({"黄仁勋", "英伟达"}, {"卸任", "辞任", "复职", "继任", "ceo"}),
-    ({"英伟达", "nvda", "纳指", "ai板块"}, {"暴跌", "重挫", "抛售潮", "14%", "抹去"}),
+    ({"黄仁勋", "英伟达"}, {"卸任", "辞任", "辞职", "复职", "重返", "继任", "ceo"}),
+    ({"英伟达", "nvda", "纳指", "ai板块", "美股ai"}, {"暴跌", "重挫", "抛售潮", "14%", "抹去", "蒸发", "破发"}),
     ({"黄金", "金价", "白银", "现货黄金"}, {"暴跌", "跳水", "大跌", "3600", "风险", "14个月新低"}),
     ({"软银", "孙正义"}, {"sk海力士", "海力士", "1万亿美元"}),
     ({"美伊", "伊朗", "霍尔木兹"}, {"柏林", "谈判", "僵局", "斡旋", "动武", "触雷"}),
     ({"微软", "azure", "microsoft"}, {"宕机", "恢复", "故障"}),
+    ({"微软", "win11", "windows"}, {"copilot", "强制", "默认", "争议"}),
+    ({"特朗普", "trump", "白宫"}, {"巨税", "征重税", "数据中心", "发布会", "关税"}),
+    ({"apec", "深圳", "峰会"}, {"三方", "双边", "和平宣言", "元首", "会晤"}),
+    ({"英国", "脱欧"}, {"欧盟", "峰会", "协议"}),
+    ({"美联储", "fomc"}, {"加息", "放鹰", "分歧", "库克", "紧缩"}),
 ]
 
 
@@ -1179,9 +1181,10 @@ for _ed in ENTITY_REGISTRY:
 
 _PIPELINE_JARGON_RE = re.compile(
     r"(?:（[^）]*原始素材[^）]*）|\([^)]*(?:R\d{2,4}|原始素材)[^)]*\)|"
+    r"[（(]\s*[、,，]?\s*(?:原始素材多?)?仅含?标题\s*[)）]|"
+    r"[、,，]?\s*(?:原始素材多?)?仅含?标题(?:[，,。；:\s]*(?:细节待查原文|具体[^。；;]*))?[。.]?\s*|"
     r"\[?R\d{2,4}\]?\s*(?:原始素材[^，,。；;)\s]*|[：:])?\s*|"
     r"(?:另)?据仅含标题的(?:快讯|资讯)[，,：:\s]*(?:报道|显示)?[，,]?\s*|"
-    r"原始素材多?仅含标题(?:[，,。；:\s]*(?:细节待查原文|具体[^。；;]*))?[。.]?\s*|"
     r"已拦截\s*\d+\s*条无效引用(?:（[^）]*）)?[；;，,。]*\s*)",
     re.I,
 )
@@ -1198,11 +1201,13 @@ _INTL_SUBJECT_RE = re.compile(
     re.I,
 )
 _DOMESTIC_CHINA_ENTITY_RE = re.compile(
-    r"(?:发改委|工信部|商务部|财政部|证监会|央行|中国人民银行|国家统计局|国务院|教育部|卫健委|市场监管总局|"
+    r"(?:发改委|工信部|商务部|财政部|证监会|(?<![欧日韩美英俄])(?<!欧洲)央行|中国人民银行|中国央行|国家统计局|国务院|教育部|卫健委|市场监管总局|工信|"
+    r"人民日报|新华社|央视新闻|经济日报|国资委|住建部|交通运输部|文旅部|最高法|最高检|"
     r"A股|沪深|科创板|创业板|北交所|上交所|深交所|顺德|佛山|广东|深圳|北京|上海|杭州|成都|重庆|武汉|江苏|浙江|山东|河南)"
 )
 _FINANCE_MARKET_RE = re.compile(
     r"(?:股价|市值|财报|营收|净利润|毛利率|回购|减持|增持|IPO|上市|破发|债券|国债|收益率|汇率|利率|加息|降息|降准|LPR|"
+    r"比特币|以太坊|BTC|ETH|加密货币|虚拟货币|Web3|"
     r"通胀|CPI|PPI|GDP|油价|金价|现货黄金|期货|上期所|证监会|SEC|8-K|10-Q|6-K|HKEX|港交所|做空|ETF|估值|FOMC)",
     re.I,
 )
@@ -1244,11 +1249,17 @@ def _reclassify_region_topic_events(cat_docs: Dict[str, dict]) -> None:
                 r"(?:美联储|FOMC|利率决议|财报|营收|回购|油价|金价|指数|股价)", title
             ):
                 target = "global"
+            elif re.search(r"(?:比特币|以太坊|\bBTC\b|\bETH\b|加密货币|虚拟货币|现货黄金|上期所|沪金)", title, re.I) and not _GEO_KINETIC_OR_DIPLO_RE.search(title):
+                target = "finance"
             elif cat == "global":
+                is_us_commerce = bool(re.search(r"(?:美国商务部|美商务部|美财长|美国财政部)", title))
                 if (
-                    _DOMESTIC_CHINA_ENTITY_RE.search(text)
-                    and not _INTL_SUBJECT_RE.search(text)
-                    and not _GEO_KINETIC_OR_DIPLO_RE.search(text)
+                    (_DOMESTIC_CHINA_ENTITY_RE.search(title) and not is_us_commerce)
+                    or (
+                        _DOMESTIC_CHINA_ENTITY_RE.search(text)
+                        and not _INTL_SUBJECT_RE.search(text)
+                        and not _GEO_KINETIC_OR_DIPLO_RE.search(text)
+                    )
                 ):
                     if _FINANCE_MARKET_RE.search(text):
                         target = "finance"
@@ -1262,7 +1273,7 @@ def _reclassify_region_topic_events(cat_docs: Dict[str, dict]) -> None:
         return
     for src_cat, dst_cat, ev in moves:
         src_evs = cat_docs[src_cat].get("events") or []
-        if len(src_evs) <= 3:
+        if len(src_evs) <= 1:
             continue
         if ev in src_evs:
             src_evs.remove(ev)
@@ -1276,6 +1287,15 @@ def _same_cross_category_story(ev_a: dict, ev_b: dict) -> bool:
     """Detect cross-category echoes (only same core story in titles, never collapsing distinct angles like MSFT/NVDA ratings)."""
     ta = str(ev_a.get("title") or "")
     tb = str(ev_b.get("title") or "")
+    la = ta.lower()
+    lb = tb.lower()
+    # Explicit shared macro/event-cluster topic pairs (even if headlines highlight adjacent tickers like NVDA vs Anthropic in the same market selloff)
+    distinct_angle_re = re.compile(r"(?:目标价|评级|tpu|走私|法院)")
+    if distinct_angle_re.search(la) == distinct_angle_re.search(lb):
+        for group1, group2 in _TOPIC_PAIRS:
+            if any(k in la for k in group1) and any(k in lb for k in group1):
+                if any(k in la for k in group2) and any(k in lb for k in group2):
+                    return True
     if entities_conflict(ta, tb, item_a=ev_a, item_b=ev_b):
         return False
     sim = title_similarity(ta, tb)
@@ -1285,16 +1305,6 @@ def _same_cross_category_story(ev_a: dict, ev_b: dict) -> bool:
     urls_b = {canonicalize_url(s.get("url")) for s in ev_b.get("sources") or [] if s.get("url")}
     if (urls_a & urls_b) and sim >= 0.25:
         return True
-    # Only compare titles (not background in fact_summary) and avoid collapsing distinct analyst/impact angles
-    la = ta.lower()
-    lb = tb.lower()
-    distinct_angle_re = re.compile(r"(?:目标价|评级|利好|tpu|走私|调查|法院)")
-    if distinct_angle_re.search(la) != distinct_angle_re.search(lb):
-        return False
-    for group1, group2 in _TOPIC_PAIRS:
-        if any(k in la for k in group1) and any(k in lb for k in group1):
-            if any(k in la for k in group2) and any(k in lb for k in group2):
-                return True
     return False
 
 
@@ -1466,11 +1476,11 @@ def _postprocess_and_prune_cross_category(
             continue
         for j in range(i + 1, len(kept_global)):
             c2, e2 = kept_global[j]
-            if c1 == c2 or (c2, e2["event_id"]) in drop_ids:
+            if (c2, e2["event_id"]) in drop_ids:
                 continue
             if _same_cross_category_story(e1, e2):
-                s1 = _quality_score(e1, c1) + ((2,) if c1 == "global" and any(k in e1.get("title", "") for k in ("元首", "会晤", "外长")) else (0,))
-                s2 = _quality_score(e2, c2) + ((2,) if c2 == "global" and any(k in e2.get("title", "") for k in ("元首", "会晤", "外长")) else (0,))
+                s1 = _quality_score(e1, c1) + ((2,) if c1 == "global" and any(k in e1.get("title", "") for k in ("元首", "会晤", "外长", "APEC", "和平协议", "美伊")) else (0,))
+                s2 = _quality_score(e2, c2) + ((2,) if c2 == "global" and any(k in e2.get("title", "") for k in ("元首", "会晤", "外长", "APEC", "和平协议", "美伊")) else (0,))
                 if s1 >= s2:
                     drop_ids.add((c2, e2["event_id"]))
                 else:
@@ -1480,9 +1490,12 @@ def _postprocess_and_prune_cross_category(
     for cat, doc in cat_docs.items():
         evs = doc.get("events", [])
         pruned = [ev for ev in evs if (cat, ev["event_id"]) not in drop_ids]
-        if len(pruned) >= 5:
-            evs = pruned
-        doc["events"] = evs[:max_per_category]
+        doc["events"] = pruned[:max_per_category]
+        for ev in doc["events"]:
+            if ev.get("fact_summary"):
+                ev["fact_summary"] = _PIPELINE_JARGON_RE.sub("", str(ev["fact_summary"])).strip()
+            if ev.get("ai_analysis"):
+                ev["ai_analysis"] = _PIPELINE_JARGON_RE.sub("", str(ev["ai_analysis"])).strip() or None
         doc["key_changes"] = _sync_key_changes_attribution(doc.get("key_changes") or [], doc["events"])
         if not doc["key_changes"]:
             doc["key_changes"] = _build_key_changes_from_events(doc["events"])

@@ -402,7 +402,9 @@ def verify_and_enrich_event(
 
     # Scrub internal pipeline jargon / placeholder tags / [R075] refs from public summaries
     _INTERNAL_JARGON_RE = re.compile(
-        r"(?:\[?R\d{2,4}\]?\s*[:：]?\s*|原始素材仅含标题(?:[，,。；:\s]*细节待查原文)?[。.]?\s*|"
+        r"(?:\[?R\d{2,4}\]?\s*[:：]?\s*|"
+        r"[（(]\s*[、,，]?\s*(?:原始素材多?)?仅含?标题\s*[)）]|"
+        r"[、,，]?\s*(?:原始素材多?)?仅含?标题(?:[，,。；:\s]*(?:细节待查原文|具体[^。；;]*))?[。.]?\s*|"
         r"已拦截\s*\d+\s*条无效引用(?:（[^）]*）)?[；;，,]?\s*)",
         re.I,
     )

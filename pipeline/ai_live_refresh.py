@@ -19,9 +19,12 @@ from pipeline.ai_radar_builder import (
     AI_RELEASE_RE,
     _LAB_CATALOG,
     _infer_company,
+    _infer_what_it_does_zh,
     is_first_hand_ai_source,
+    is_similar_ai_release,
     normalize_ai_timestamp,
 )
+from pipeline.build_briefing import _smart_truncate
 from pipeline.connectors.base import HttpCacheStore
 from pipeline.connectors.direct_rss import DIRECT_RSS_FEEDS, fetch_direct_rss_media
 from pipeline.connectors.github_releases import fetch_github_releases
@@ -81,20 +84,21 @@ def _sort_key_iso_desc(date_str: Any) -> Tuple[int, str]:
 
 def _summarize_release(title: str, excerpt: str, source_name: str, *, is_open_source: bool, is_first_hand: bool) -> Tuple[str, str]:
     clean_excerpt = re.sub(r"\s+", " ", str(excerpt or "").strip())
-    if _has_zh(clean_excerpt):
-        zh = clean_excerpt[:180] + ("…" if len(clean_excerpt) > 180 else "")
-    elif any(k in title.lower() for k in ("workbuddy", "computer use", "操控", "agent", "codex", "cursor", "cli")):
-        zh = f"智能体/操作能力进展（来源：{source_name}）：{title}"[:180]
+    inferred = _infer_what_it_does_zh(title, clean_excerpt)
+    if _has_zh(clean_excerpt) and len(clean_excerpt) >= 16 and not any(k in title.lower() for k in ("sdk", "agent", "cli", "coding", "workbuddy", "vllm", "sglang", "隐私", "泄露")):
+        zh = _smart_truncate(clean_excerpt, 180)
+    elif inferred:
+        zh = inferred
+    elif any(k in title.lower() for k in ("workbuddy", "computer use", "操控", "agent", "codex", "cursor", "cli", "sdk")):
+        zh = "AI 编程与智能体（Agent）工具：自动读写代码、调用外部工具/SDK 并执行多步骤复杂任务。"
     elif _FUNDING_RE.search(title):
-        zh = f"重点资本与生态催化（来源：{source_name}）：{title}"[:180]
+        zh = f"资本战略与产业融资动态（来源：{source_name}）：涉及核心算力投资或股权估值进展。"
     elif is_first_hand and is_open_source:
         zh = f"官方一手开源权重/工具发布（来源：{source_name}），支持本地推理部署或代码集成。"
-    elif is_first_hand:
-        zh = f"实验室官方一手发布（来源：{source_name}）：{title}"[:180]
     else:
-        zh = f"前沿模型与产品实时追踪（来源：{source_name}）：{title}"[:180]
+        zh = f"实验室官方一线研究动态（来源：{source_name}），点击下方「原文」查看实验细节与官方技术文档。"
 
-    en = clean_excerpt[:180] if clean_excerpt else title[:180]
+    en = _smart_truncate(clean_excerpt, 180) if clean_excerpt else _smart_truncate(title, 180)
     return zh, en
 
 
@@ -358,20 +362,24 @@ def merge_live_ai_items_into_doc(
         if tk:
             seen_titles[tk] = item
 
-    def _find_similar_title_match(tk: str) -> Optional[Dict[str, Any]]:
-        if not tk:
-            return None
-        if tk in seen_titles:
+    def _find_similar_title_match(title: str, url: str) -> Optional[Dict[str, Any]]:
+        tk = _norm_title_key(title)
+        if tk and tk in seen_titles:
             return seen_titles[tk]
-        if len(tk) >= 12:
-            for k_old, old_it in seen_titles.items():
-                if len(k_old) >= 12 and (tk.startswith(k_old) or k_old.startswith(tk)):
-                    return old_it
+        for old_it in seen_titles.values():
+            if is_similar_ai_release(
+                title,
+                url,
+                str(old_it.get("title") or ""),
+                str(old_it.get("source_url") or ""),
+            ):
+                return old_it
         return None
 
     new_ids: List[str] = []
     mutated = False
 
+    rehomed_items: List[Dict[str, Any]] = []
     for comp in base["companies"]:
         cleaned_existing = []
         for it in comp.get("items") or []:
@@ -382,13 +390,41 @@ def merge_live_ai_items_into_doc(
             if "GitHub Changelog" in str(it.get("source_name") or "") and not re.search(r"(?:copilot|\bai\b|model|agent|mcp)", it_title, re.I):
                 mutated = True
                 continue
+            # Repair mislabeled SDK/Agent or Privacy items and eliminate echoed raw titles
+            w_cur = str(it.get("what_it_does") or "")
+            tl_low = it_title.lower()
+            if (
+                (any(k in tl_low for k in ("sdk", "agent", "cli", "coding", "workbuddy")) and "多模态生成" in w_cur)
+                or (any(k in tl_low for k in ("隐私", "泄露", "诱饵", "反蒸馏", "distill", "privacy", "security")) and ("轻量" in w_cur or "端侧" in w_cur))
+                or ("实验室官方一手发布（来源：" in w_cur and it_title[:16] in w_cur)
+                or not w_cur.strip()
+            ):
+                it["what_it_does"] = _infer_what_it_does_zh(it_title, "")
+                mutated = True
+            # Move misrouted company items (e.g. Microsoft Copilot out of indie_opensource)
+            inf_cid, inf_cname, inf_reg = _infer_company(it_title, str(it.get("source_url") or ""))
+            if comp.get("company_id") == "indie_opensource" and inf_cid != "indie_opensource" and inf_cid in by_company:
+                it["company_id"] = inf_cid
+                it["company_name"] = inf_cname
+                it["region"] = inf_reg
+                rehomed_items.append(it)
+                mutated = True
+                continue
             cleaned_existing.append(it)
             _register(it)
         comp["items"] = cleaned_existing
+    for mv in rehomed_items:
+        target = by_company.get(mv["company_id"])
+        if target is not None:
+            target.setdefault("items", []).insert(0, mv)
+            _register(mv)
     for it in base.get("timeline") or []:
         it_title = str(it.get("title") or "")
         if AI_NOISE_RE.search(it_title):
             continue
+        if any(k in it_title.lower() for k in ("sdk", "agent", "cli", "coding", "workbuddy")) and "多模态生成" in str(it.get("what_it_does") or ""):
+            it["what_it_does"] = _infer_what_it_does_zh(it_title, "")
+            mutated = True
         _register(it)
 
     for raw_it in live_raw_items:
@@ -396,8 +432,10 @@ def merge_live_ai_items_into_doc(
         if candidate is None:
             continue
         uk = _norm_url_key(candidate.get("source_url"))
-        tk = _norm_title_key(candidate.get("title"))
-        existing = (seen_urls.get(uk) if uk else None) or _find_similar_title_match(tk)
+        existing = (seen_urls.get(uk) if uk else None) or _find_similar_title_match(
+            str(candidate.get("title") or ""),
+            str(candidate.get("source_url") or ""),
+        )
 
         if existing is not None:
             # Upgrade existing record with finer timestamp, richer title, or first-hand attribution
@@ -426,20 +464,21 @@ def merge_live_ai_items_into_doc(
     for comp in base["companies"]:
         deduped_comp: List[Dict[str, Any]] = []
         seen_local: Set[str] = set()
-        seen_local_titles: List[str] = []
         comp_sorted = sorted(comp.get("items") or [], key=lambda x: _sort_key_iso_desc(x.get("date")), reverse=True)
         for it in comp_sorted:
             key = _norm_url_key(it.get("source_url")) or _norm_title_key(it.get("title")) or str(it.get("id"))
-            tk = _norm_title_key(it.get("title"))
+            it_title = str(it.get("title") or "")
+            it_url = str(it.get("source_url") or "")
             if key in seen_local:
                 mutated = True
                 continue
-            if len(tk) >= 12 and any(len(k) >= 12 and (tk.startswith(k) or k.startswith(tk)) for k in seen_local_titles):
+            if any(
+                is_similar_ai_release(it_title, it_url, str(prev.get("title") or ""), str(prev.get("source_url") or ""))
+                for prev in deduped_comp
+            ):
                 mutated = True
                 continue
             seen_local.add(key)
-            if tk:
-                seen_local_titles.append(tk)
             deduped_comp.append(it)
         if len(deduped_comp) != len(comp.get("items") or []):
             mutated = True
@@ -449,7 +488,15 @@ def merge_live_ai_items_into_doc(
         comp["latest_headline"] = comp["items"][0]["title"] if comp["items"] else ""
         for it in comp["items"]:
             uk = _norm_url_key(it.get("source_url")) or _norm_title_key(it.get("title")) or str(it.get("id"))
-            if uk not in unique_global:
+            if uk not in unique_global and not any(
+                is_similar_ai_release(
+                    str(it.get("title") or ""),
+                    str(it.get("source_url") or ""),
+                    str(prev.get("title") or ""),
+                    str(prev.get("source_url") or ""),
+                )
+                for prev in unique_global.values()
+            ):
                 unique_global[uk] = it
 
     all_items = sorted(unique_global.values(), key=lambda x: _sort_key_iso_desc(x.get("date")), reverse=True)

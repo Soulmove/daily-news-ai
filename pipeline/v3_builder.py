@@ -10,8 +10,8 @@ import re
 from typing import Any, Dict, List, Optional
 from xml.sax.saxutils import escape as xml_escape
 
-from pipeline.dedup import is_omnibus_digest_title, title_similarity
-from pipeline.entities import ENTITY_BY_ID, build_entities_index_base
+from pipeline.dedup import is_omnibus_digest_title, smart_truncate, title_similarity
+from pipeline.entities import ENTITY_BY_ID, _match_alias, build_entities_index_base
 from pipeline.id_utils import make_storyline_id
 from pipeline.manifest import atomic_write_json, load_json_if_exists
 from pipeline.time_utils import SHANGHAI_TZ, now_shanghai, parse_iso_datetime, to_iso_shanghai
@@ -142,7 +142,7 @@ def _infer_domain_next_catalyst(event: dict, matched_primary_ent: Optional[dict]
         if val_list:
             return val_list[0]
     if event.get("speculation_or_outlook"):
-        return str(event["speculation_or_outlook"])[:90]
+        return smart_truncate(str(event["speculation_or_outlook"]), 90)
     return "关注涉事机构或主管部门下一轮正式公开声明"
 
 
@@ -539,7 +539,7 @@ def _build_major_topics(
                 {
                     "time": ev.get("first_reported_at") or ev.get("latest_reported_at") or ev.get("fetched_at"),
                     "title": str(ev.get("title") or "").strip(),
-                    "summary": str(ev.get("fact_summary") or "")[:160],
+                    "summary": smart_truncate(str(ev.get("fact_summary") or ""), 160),
                     "source_name": src0.get("source_name") or "简报汇总",
                     "url": src0.get("url"),
                     "event_id": ev.get("event_id"),
@@ -559,7 +559,7 @@ def _build_major_topics(
                 {
                     "time": it.get("published_at") or it.get("fetched_at"),
                     "title": str(it.get("title") or "").strip(),
-                    "summary": str(it.get("excerpt") or "")[:140],
+                    "summary": smart_truncate(str(it.get("excerpt") or ""), 140),
                     "source_name": it.get("source_name") or it.get("source_id") or "信源",
                     "url": it.get("url"),
                     "event_id": None,
@@ -727,10 +727,7 @@ def build_v3_artifacts(
             clean_sum = re.sub(r"\[([^\]]+)\]\([^)]+\)", r"\1", clean_sum)
             clean_sum = re.sub(r"[#*`|]+", " ", clean_sum)
             clean_sum = re.sub(r"\s+", " ", clean_sum).strip().lstrip("；;:：•- ")
-            if len(clean_sum) > 360:
-                cut = clean_sum[:360]
-                last_sep = max(cut.rfind("。"), cut.rfind("；"), cut.rfind("！"), cut.rfind("."))
-                clean_sum = (cut[: last_sep + 1] if last_sep > 180 else cut.rstrip()) + "…"
+            clean_sum = smart_truncate(clean_sum, 360)
             t["summary"] = clean_sum or "详见官方 Release 说明。"
         if str(t.get("license") or "").upper() == "NOASSERTION":
             t["license"] = "多许可证/自定义条款 (见仓库 LICENSE)"
@@ -853,8 +850,8 @@ def build_v3_artifacts(
             "entities": ev.get("entities", []),
             "entity_ids": ev.get("entity_ids", []),
             "current_stage": diff["change_type_label"],
-            "evidence_status": ev["evidence_status"],
-            "evidence_label": ev["evidence_label"],
+            "evidence_status": ev.get("evidence_status", "single_source"),
+            "evidence_label": ev.get("evidence_label") or "单一信源",
             "first_discovered_at": existing_st.get("first_discovered_at") or ev.get("first_discovered_at"),
             "first_reported_at": ev.get("first_reported_at"),
             "latest_fact_update_at": ev.get("latest_fact_update_at"),
@@ -1077,7 +1074,7 @@ def build_v3_artifacts(
         def _scrub_old_ph(txt: str) -> str:
             if not txt or "该条为海外主流媒体英文原报" in txt or "云端 AI 批次将自动" in txt:
                 src0_t = ((clean_old.get("sources") or [{}])[0]).get("excerpt") or ((clean_old.get("sources") or [{}])[0]).get("title") or clean_old.get("summary_en") or clean_old.get("title_en") or clean_old.get("title") or ""
-                return str(src0_t)[:120]
+                return smart_truncate(str(src0_t), 120)
             return txt
         fd_old = clean_old.get("fact_diff")
         if isinstance(fd_old, dict):
@@ -1130,10 +1127,44 @@ def build_v3_artifacts(
                 anchor_iso = to_iso_shanghai(anchor_dt)
                 is_topic_past = anchor_dt < generated_dt
                 first_url = next((n.get("url") for n in tp.get("timeline") or [] if n.get("url")), None)
+                actual_title = None
+                if is_topic_past and tp.get("timeline"):
+                    # Match actual_result strictly against catalyst-specific outcome keywords (prevents Oracle/math/gossip mismatch)
+                    tid = str(tp.get("topic_id") or "")
+                    for node in reversed(tp["timeline"]):
+                        nt = str(node.get("title") or "").strip()
+                        ntl = nt.lower()
+                        if "ai_ipo" in tid or "anthropic" in cal_t.lower():
+                            if "anthropic" in ntl and any(k in ntl for k in ("ipo", "上市", "破发", "募资")):
+                                actual_title = nt
+                                break
+                        elif "apec" in tid or "apec" in cal_t.lower():
+                            if any(bad in nt for bad in ("高市", "后背", "无视", "合影")):
+                                continue
+                            if any(k in ntl for k in ("apec第", "和平宣言", "中美元首", "联合声明", "公报", "闭幕", "落幕")):
+                                actual_title = nt
+                                break
+                        else:
+                            anchor_terms = tuple(tok for tok in re.findall(r"[a-z0-9]{3,}|[\u4e00-\u9fff]{2,4}", cal_t.lower()) if tok not in {"焦点", "窗口", "公布", "事件"})[:4]
+                            if anchor_terms and sum(1 for term in anchor_terms if term in ntl) >= 2:
+                                actual_title = nt
+                                break
+                cal_en_map = {
+                    "cal_topic_apec_trump_china": (
+                        "2026 Shenzhen APEC Summit & US-China/Trilateral Leader Meetings",
+                        "Official joint statements, tariff announcements & AI governance readout",
+                    ),
+                    "cal_topic_ai_ipo_models": (
+                        "Anthropic Mega-IPO Pricing & Secondary Debut Window",
+                        "Issue pricing, first-day trading volume & secondary valuation anchor",
+                    ),
+                }
+                cal_title_en, cal_watch_en = cal_en_map.get(cal_id, (cal_t, cal_w or "Official announcements and disclosures"))
                 calendar_items.append(
                     {
                         "calendar_id": cal_id,
                         "title": cal_t,
+                        "title_en": cal_title_en,
                         "scheduled_at": anchor_iso,
                         "original_time_note": f"{anchor_dt.strftime('%Y-%m-%d')} {'已结束窗口（请录入/核对实际结果）' if is_topic_past else '核心催化窗口'} (基于 {tp['source_count']} 家信源)",
                         "timezone": "Asia/Shanghai",
@@ -1144,8 +1175,9 @@ def build_v3_artifacts(
                         "entity_ids": [],
                         "storyline_id": None,
                         "watch_variable": cal_w or "官方联合声明与核心数据披露",
+                        "watch_variable_en": cal_watch_en,
                         "pre_expectation": "请结合顶部专题时间轴跟踪实时进展；不编造一致预期",
-                        "actual_result": (tp["timeline"][-1].get("title") if is_topic_past and tp.get("timeline") else None),
+                        "actual_result": actual_title,
                         "source_name": f"专题聚合 ({tp['source_count']} 源)",
                         "source_url": first_url,
                     }
@@ -1200,16 +1232,28 @@ def build_v3_artifacts(
         else ["SEC EDGAR 截至本批次最新 8-K 尚无 Item 5.02 官方高管离任披露"]
     )
     nvda_created, nvda_due = _keep_fixed_dates("pred_seed_nvda_sec_502", "2026-11-16T15:30:00+08:00", "2026-11-30T20:00:00+08:00")
-    qwen_created, qwen_due = _keep_fixed_dates("pred_seed_qwen_release_ga", "2026-11-16T15:30:00+08:00", "2026-12-16T20:00:00+08:00")
+    qwen_old = prev_preds_by_id.get("pred_seed_qwen_release_ga")
+    qwen_created = str(qwen_old["created_at"]) if (qwen_old and qwen_old.get("created_at")) else "2026-11-16T15:30:00+08:00"
+    qwen_due = "2026-12-16T20:00:00+08:00"
     seed_predictions: List[Dict[str, Any]] = [
         {
             "prediction_id": "pred_seed_nvda_sec_502",
             "mode": "live",
             "status": "open",
             "title": nvda_pred_title,
+            "title_en": (
+                "Will NVIDIA file a permanent CEO succession or reinstatement Form 8-K within 14 days?"
+                if nvda_502
+                else "Will SEC EDGAR Item 5.02 officially confirm NVIDIA leadership change rumors?"
+            ),
             "target_entity_id": "ent_nvidia",
-            "target_entity": "英伟达 (NVIDIA / NVDA.US)",
+            "target_entity": "英伟达 (NVIDIA)",
             "question": nvda_pred_question,
+            "question_en": (
+                f"Following NVDA's {nvda_502.get('filing_date', 'recent')} Form 8-K (Item 5.02), will SEC EDGAR or NVIDIA IR disclose a permanent CEO succession or reinstatement before expiry?"
+                if nvda_502
+                else "Before the due date, will SEC EDGAR receive a Form 8-K (Item 5.02) or official NVIDIA IR filing confirming executive turnover?"
+            ),
             "created_at": nvda_created,
             "due_at": nvda_due,
             "win_rule": "SEC EDGAR 出现新的 NVDA 8-K Item 5.02 官方后续人事任命文件，或 investor.nvidia.com 发布明确治理结论",
@@ -1250,9 +1294,11 @@ def build_v3_artifacts(
             "mode": "live",
             "status": "open",
             "title": "Qwen 系列新一代旗舰模型是否在 12 月 16 日前进入开源权重或 API 正式可用 (GA)",
+            "title_en": "Will Alibaba Qwen release next-gen open weights or API GA by Dec 16?",
             "target_entity_id": "ent_qwen_alibaba",
             "target_entity": "阿里巴巴 / 通义千问 (Qwen)",
             "question": "截至 2026-12-16，Hugging Face `Qwen` 官方组织或阿里云官方 API 是否上线对应新版模型卡片/正式计费文档？",
+            "question_en": "As of 2026-12-16, have Hugging Face `Qwen` or Alibaba Cloud API launched official next-gen model cards or GA pricing docs?",
             "created_at": qwen_created,
             "due_at": qwen_due,
             "win_rule": "Hugging Face `Qwen` 组织出现新版模型仓库且含可用权重/许可证，或阿里云百炼上线正式 API 计费页",
@@ -1289,9 +1335,11 @@ def build_v3_artifacts(
                 "mode": "live",
                 "status": "open",
                 "title": "深圳 APEC 中美元首会谈后是否发布具体的经贸关税或 AI 治理联合文本",
+                "title_en": "Will US-China Shenzhen APEC talks yield concrete tariff or AI governance joint texts?",
                 "target_entity_id": "ent_us_china_diplomacy",
                 "target_entity": "中美外交与元首峰会 / APEC",
                 "question": "截至 2026-11-23，中国外交部或美国白宫是否公开披露中美元首深圳会晤达成的新一轮关税调整/AI 治理具体书面成果？",
+                "question_en": "By 2026-11-23, will China's MFA or the White House publish concrete written tariff adjustments or AI governance commitments from the Shenzhen summit?",
                 "created_at": apec_created,
                 "due_at": apec_due,
                 "win_rule": "外交部或白宫官网发布明确含关税豁免/调整或 AI 安全合作条款的官方通稿",
@@ -1420,7 +1468,7 @@ def build_v3_artifacts(
         quotes_doc=quotes_doc,
     )
 
-    # Enrich entities_map (TSMC/Intel/SMIC etc.) with 30-day historical mentions & AI radar when current batch count is 0
+    # Enrich entities_map (TSMC/Intel/SMIC etc.) with word-boundary matched storylines; keep change_count_30d aligned with actual events
     for eid, ed in entities_map.items():
         if ed.get("change_count_30d", 0) == 0:
             aliases = [str(a).lower() for a in ([ed.get("canonical_name")] + list(ed.get("aliases") or [])) if a]
@@ -1430,10 +1478,9 @@ def build_v3_artifacts(
                 if not isinstance(st, dict):
                     continue
                 s_blob = f"{st.get('title', '')} {' '.join(st.get('entities') or [])}".lower()
-                if any(a in s_blob for a in aliases if len(a) >= 2):
+                if any(_match_alias(s_blob, a) for a in aliases if len(a) >= 2):
                     matched_st.append(st)
             if matched_st:
-                ed["change_count_30d"] = max(ed.get("change_count_30d", 0), len(matched_st))
                 for st in matched_st[:3]:
                     if not any(re_.get("storyline_id") == st.get("storyline_id") for re_ in ed.get("recent_events") or []):
                         srcs = st.get("sources") or []
@@ -1449,9 +1496,9 @@ def build_v3_artifacts(
                                 "primary_url": (srcs[0].get("url") if srcs else None),
                             }
                         )
-            # Also reflect SEC/HKEX regulatory filing count into entity recency when recent filings exist
+                ed["change_count_30d"] = len(ed.get("recent_events") or [])
             if ed.get("change_count_30d", 0) == 0 and ed.get("recent_filings"):
-                ed["change_count_30d"] = min(len(ed["recent_filings"]), 2)
+                # Keep change_count_30d strictly honest (= len(recent_events)); preserve filing freshness timestamp separately
                 ed["last_event_at"] = ed.get("last_event_at") or f"{ed['recent_filings'][0].get('filing_date', '')}T09:00:00+08:00"
 
     # Auto-settle due or verifiable predictions & include historical replay calibration benchmarks
@@ -1631,7 +1678,7 @@ def build_v3_artifacts(
         },
     )
 
-    site_url = os.environ.get("SITE_PUBLIC_URL", "https://soulmove.github.io/daily-news-ai/")
+    site_url = os.environ.get("SITE_PUBLIC_URL", "https://111.230.153.15/news/")
     site_base = site_url.rstrip("/") + "/"
     cal_ics_text, cal_ics_exported, cal_ics_skipped = _export_calendar_ics(
         calendar_items[:60], generated_at_iso=generated_at_iso, site_url=site_base

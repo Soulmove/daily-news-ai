@@ -454,3 +454,28 @@ def deduplicate_raw_items(items: List[dict], similarity_threshold: float = 0.58)
             indep = {rel[0].get("publisher_family") or "unknown"}
         c["independent_publisher_count"] = len(indep)
     return clusters
+
+
+def smart_truncate(text: str, max_len: int = 180) -> str:
+    """Truncate text cleanly at sentence/clause boundaries without splitting decimal numbers or unmatched brackets."""
+    s = re.sub(r"\s+", " ", str(text or "")).strip()
+    if not s or len(s) <= max_len:
+        return s
+    cut = s[: max_len - 1]
+    min_pos = int(max_len * 0.45)
+    best_end = -1
+    for m in re.finditer(r"[。！？；!?]|(?<!\d)\.(?!\d)(?=\s|$|[”\"）)\u4e00-\u9fa5])", cut):
+        if m.start() >= min_pos:
+            best_end = m.start()
+    if best_end >= min_pos:
+        return cut[: best_end + 1].rstrip()
+    open_idx = max(cut.rfind("（"), cut.rfind("("))
+    close_idx = max(cut.rfind("）"), cut.rfind(")"))
+    if open_idx > close_idx and open_idx >= min(3, min_pos):
+        cut = cut[:open_idx].rstrip()
+    # Avoid breaking inside a numeric decimal like "19.2%" at the very edge
+    cut = re.sub(r"\d+\.$", lambda m: cut[m.start() : m.end() - 1] if m.start() > 0 else "", cut).rstrip()
+    clause_m = re.match(r"^(.+[，,;；：:\s])[^，,;；：:\s]{1,12}$", cut)
+    if clause_m and len(clause_m.group(1)) >= int(max_len * 0.5):
+        cut = clause_m.group(1).rstrip()
+    return cut.rstrip(" ，、,;；：:(（「“") + "…"

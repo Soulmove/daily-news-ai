@@ -18,6 +18,7 @@ from xml.etree import ElementTree as ET
 import requests
 
 from pipeline.connectors.base import HttpCacheStore
+from pipeline.dedup import smart_truncate
 from pipeline.id_utils import canonicalize_url, make_raw_item_id
 from pipeline.manifest import atomic_write_json, load_json_if_exists
 from pipeline.time_utils import SHANGHAI_TZ, now_shanghai, parse_published_at, to_iso_shanghai
@@ -43,15 +44,16 @@ _GEO_PRIORITY_RE = re.compile(
     re.I,
 )
 _FIN_KW_RE = re.compile(
-    r"(?:a股|美股|港股|美联储|央行|降息|加息|黄金|原油|汇率|人民币|美元指数|美元汇率|纳指|标普|沪指|创业板|涨停|跌停|财报|ipo|关税|国债|cpi|非农|板块|回购)",
+    r"(?:a股|美股|港股|美联储|央行|降息|加息|黄金|原油|汇率|人民币|美元指数|美元汇率|纳指|标普|沪指|创业板|涨停|跌停|财报|ipo|关税|国债|cpi|非农|板块|回购|比特币|以太坊|\bBTC\b|\bETH\b|加密货币)",
     re.I,
 )
+_CRYPTO_KW_RE = re.compile(r"(?:比特币|以太坊|\bBTC\b|\bETH\b|加密货币|虚拟货币|币安)", re.I)
 _DOMESTIC_RE = re.compile(
-    r"(?:a股|沪指|深成指|创业板|上期所|深交所|上交所|北交所|国务院|发改委|工信部|央行|证监会|人民币|沪深|中芯|比亚迪|宁德时代|华为|腾讯|阿里|回购股份|股份有限公司)",
+    r"(?:a股|沪指|深成指|创业板|上期所|深交所|上交所|北交所|国务院|发改委|工信部|央行|证监会|人民币|沪深|中芯|比亚迪|宁德时代|华为|腾讯|阿里|回购股份|股份有限公司|人民日报|新华社|央视新闻|商务部)",
     re.I,
 )
 _GLOBAL_KW_RE = re.compile(
-    r"(?:特朗普|拜登|白宫|欧盟|联合国|apec|峰会|外交|中东|俄乌|停火|制裁|总统|首相|外交部|商务部|访华|日央行|欧洲央行)",
+    r"(?:特朗普|拜登|白宫|欧盟|联合国|apec|峰会|外交|中东|俄乌|停火|制裁|总统|首相|外交部|美商务部|美国商务部|访华|日央行|欧洲央行)",
     re.I,
 )
 
@@ -60,22 +62,28 @@ def _clean(raw: Any, max_len: int = 240) -> str:
     if not raw:
         return ""
     s = html.unescape(_HTML_RE.sub(" ", str(raw)))
-    s = _WS_RE.sub(" ", s).strip()
-    if len(s) > max_len:
-        cut = s[: max_len - 1]
-        sep = max(cut.rfind("。"), cut.rfind("！"), cut.rfind("？"), cut.rfind("；"), cut.rfind("."))
-        if sep >= int(max_len * 0.55):
-            return cut[: sep + 1].rstrip()
-        return cut.rstrip(" ，、,;:") + "…"
-    return s
+    return smart_truncate(s, max_len=max_len)
+
+
+_NON_TECH_CONSUMER_OR_CRIME_RE = re.compile(
+    r"(?:帮信罪|刑拘|逮捕|派出所|警方|涉案|诈骗案|Steam|黑五.*游戏|游戏新史低|重制版|导剪版|折扣促销)",
+    re.I,
+)
 
 
 def _classify_wire_item(title: str, content: str, default_cat: str) -> str:
     text = f"{title} {content}"
+    if _NON_TECH_CONSUMER_OR_CRIME_RE.search(title):
+        return "general"
     if _AI_KW_RE.search(text):
         return "tech"
+    if _CRYPTO_KW_RE.search(title) and not _GEO_PRIORITY_RE.search(title):
+        return "finance"
     if _GEO_PRIORITY_RE.search(text):
         return "global"
+    is_domestic_ministry = bool(re.search(r"(?:发改委|工信部|商务部|人民日报|新华社)", title) and not re.search(r"(?:美国商务部|美商务部)", title))
+    if is_domestic_ministry:
+        return "finance" if _FIN_KW_RE.search(text) else "general"
     if _FIN_KW_RE.search(text):
         return "finance"
     if _GLOBAL_KW_RE.search(text):
@@ -363,22 +371,55 @@ def refresh_live_wire_file(base_dir: Path | str = ".", extra_items: Optional[Lis
 
     merged: List[dict] = []
     seen_keys: set[str] = set()
+    seen_norms: List[str] = []
+
+    def _wire_titles_similar(norm_a: str, norm_b: str) -> bool:
+        if not norm_a or not norm_b:
+            return False
+        if norm_a == norm_b:
+            return True
+        if len(norm_a) >= 12 and len(norm_b) >= 12 and (norm_a.startswith(norm_b[:16]) or norm_b.startswith(norm_a[:16])):
+            return True
+        # Known wire multi-source cluster signatures
+        wire_clusters = (
+            ("孙正义", "海力士"),
+            ("软银", "海力士"),
+            ("openai", "蒸馏"),
+            ("apec", "深圳"),
+            ("美伊", "谈判"),
+        )
+        for a, b in wire_clusters:
+            if a in norm_a and b in norm_a and a in norm_b and b in norm_b:
+                return True
+        if len(norm_a) >= 10 and len(norm_b) >= 10:
+            bg_a = {norm_a[i : i + 2] for i in range(len(norm_a) - 1)}
+            bg_b = {norm_b[i : i + 2] for i in range(len(norm_b) - 1)}
+            union = bg_a | bg_b
+            if union and (len(bg_a & bg_b) / len(union)) >= 0.44:
+                return True
+        return False
 
     def _add(it: dict) -> None:
         title = str(it.get("title") or "").strip()
         if not title or len(title) < 4:
             return
-        k = re.sub(r"\W+", "", title.lower())[:28]
+        norm_full = re.sub(r"[\s\-_·:：,，.。!！?？()（）\[\]【】'\"]+", "", title.lower())
+        k = norm_full[:28]
         if not k or k in seen_keys:
             return
+        if any(_wire_titles_similar(norm_full, prev) for prev in seen_norms):
+            return
         seen_keys.add(k)
+        seen_norms.append(norm_full)
         pub = str(it.get("published_at") or it.get("fetched_at") or fetched_iso)
+        excerpt_clean = _clean(it.get("excerpt") or "", 240)
+        cat_norm = _classify_wire_item(title, excerpt_clean, str(it.get("category") or "general"))
         merged.append(
             {
                 "id": str(it.get("item_id") or it.get("id") or f"lw_{len(merged)}"),
                 "title": title,
-                "excerpt": _clean(it.get("excerpt") or "", 240),
-                "category": str(it.get("category") or "general"),
+                "excerpt": excerpt_clean,
+                "category": cat_norm,
                 "source_name": str(it.get("source_name") or "实时快讯"),
                 "url": str(it.get("url") or it.get("canonical_url") or ""),
                 "published_at": pub,
