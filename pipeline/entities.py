@@ -357,10 +357,21 @@ def _find_alias_pos(text_lower: str, alias: str, *, allow_negated: bool = False)
         return None
     idx = text_lower.find(a)
     while idx != -1:
+        before_char = text_lower[idx - 1 : idx] if idx > 0 else ""
         after_char = text_lower[idx + len(a) : idx + len(a) + 1]
-        if a == "美元" and after_char == "首":
-            idx = text_lower.find(a, idx + len(a))
-            continue
+        if a == "美元":
+            # Never treat numeric amounts like "1万亿美元" / "3600美元" or "美元首" as USD/Fed entity!
+            if after_char in ("首", "左", "以") or (before_char and (before_char.isdigit() or before_char in ("万", "亿", "千", "百", "多", "余", "约", "逾", "超", "近", "破"))):
+                idx = text_lower.find(a, idx + len(a))
+                continue
+            win = text_lower[max(0, idx - 6) : min(len(text_lower), idx + 12)]
+            if not any(k in win for k in ("美元指数", "美元汇率", "强美元", "弱美元", "美元兑", "美元贬", "美元涨", "美元走")):
+                idx = text_lower.find(a, idx + len(a))
+                continue
+        if a == "黄金":
+            if after_char in ("周", "时", "段", "期"):
+                idx = text_lower.find(a, idx + len(a))
+                continue
         if a == "中美" and after_char == "洲":
             idx = text_lower.find(a, idx + len(a))
             continue

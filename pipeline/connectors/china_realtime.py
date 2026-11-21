@@ -37,8 +37,17 @@ _AI_KW_RE = re.compile(
     r"(?:ai|大模型|gemini|neon|carbon|hydrogen|openai|gpt|claude|anthropic|qwen|千问|kimi|混元|workbuddy|电脑操控|计算机控制|元宝|豆包|seedance|manus|minimax|智谱|glm|cursor|windsurf|antigravity|mcp|千亿.*大模型|腾讯.*ai|deepseek|算力|英伟达|nvidia|芯片|gpu|开源|agent|智能体|机器人)",
     re.I,
 )
+_GEO_PRIORITY_RE = re.compile(
+    r"(?:导弹|空袭|无人机|击落|战机|航母|油轮|触雷|海峡|霍尔木兹|红海|"
+    r"停火|和平协议|俄乌|美伊|以色列|加沙|波兰|北约|外交|元首|白宫|峰会|联合国)",
+    re.I,
+)
 _FIN_KW_RE = re.compile(
-    r"(?:a股|美股|港股|美联储|央行|降息|加息|黄金|原油|汇率|人民币|美元|纳指|标普|沪指|创业板|涨停|跌停|财报|ipo|关税|国债|cpi|非农|板块)",
+    r"(?:a股|美股|港股|美联储|央行|降息|加息|黄金|原油|汇率|人民币|美元指数|美元汇率|纳指|标普|沪指|创业板|涨停|跌停|财报|ipo|关税|国债|cpi|非农|板块|回购)",
+    re.I,
+)
+_DOMESTIC_RE = re.compile(
+    r"(?:a股|沪指|深成指|创业板|上期所|深交所|上交所|北交所|国务院|发改委|工信部|央行|证监会|人民币|沪深|中芯|比亚迪|宁德时代|华为|腾讯|阿里|回购股份|股份有限公司)",
     re.I,
 )
 _GLOBAL_KW_RE = re.compile(
@@ -53,7 +62,11 @@ def _clean(raw: Any, max_len: int = 240) -> str:
     s = html.unescape(_HTML_RE.sub(" ", str(raw)))
     s = _WS_RE.sub(" ", s).strip()
     if len(s) > max_len:
-        return s[: max_len - 1].rstrip() + "…"
+        cut = s[: max_len - 1]
+        sep = max(cut.rfind("。"), cut.rfind("！"), cut.rfind("？"), cut.rfind("；"), cut.rfind("."))
+        if sep >= int(max_len * 0.55):
+            return cut[: sep + 1].rstrip()
+        return cut.rstrip(" ，、,;:") + "…"
     return s
 
 
@@ -61,10 +74,14 @@ def _classify_wire_item(title: str, content: str, default_cat: str) -> str:
     text = f"{title} {content}"
     if _AI_KW_RE.search(text):
         return "tech"
+    if _GEO_PRIORITY_RE.search(text):
+        return "global"
     if _FIN_KW_RE.search(text):
         return "finance"
     if _GLOBAL_KW_RE.search(text):
         return "global"
+    if default_cat == "global" and _DOMESTIC_RE.search(text) and not _GLOBAL_KW_RE.search(text):
+        return "finance"
     return default_cat
 
 
@@ -98,7 +115,7 @@ def _fetch_wallstreetcn_channel(channel: str, label: str, default_cat: str, fetc
                 if not title and content:
                     # Extract 【Headline】 if present
                     m = re.match(r"【([^】]{4,80})】", content)
-                    title = m.group(1) if m else content[:80]
+                    title = m.group(1) if m else _clean(content, 88)
                 if not title or len(title) < 4:
                     continue
                 uri = row.get("uri") or f"https://wallstreetcn.com/livenews/{row.get('id', '')}"
@@ -154,7 +171,7 @@ def _fetch_cls_telegraph(fetched_iso: str) -> Dict[str, Any]:
                 title = _clean(row.get("title"), max_len=160)
                 if not title and content:
                     m = re.match(r"【([^】]{4,80})】", content)
-                    title = m.group(1) if m else content[:80]
+                    title = m.group(1) if m else _clean(content, 88)
                 if not title or len(title) < 4:
                     continue
                 rid = row.get("id") or ""
@@ -360,7 +377,7 @@ def refresh_live_wire_file(base_dir: Path | str = ".", extra_items: Optional[Lis
             {
                 "id": str(it.get("item_id") or it.get("id") or f"lw_{len(merged)}"),
                 "title": title,
-                "excerpt": str(it.get("excerpt") or "")[:240],
+                "excerpt": _clean(it.get("excerpt") or "", 240),
                 "category": str(it.get("category") or "general"),
                 "source_name": str(it.get("source_name") or "实时快讯"),
                 "url": str(it.get("url") or it.get("canonical_url") or ""),

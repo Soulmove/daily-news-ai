@@ -85,6 +85,103 @@ def _translate_offline_fallback(text: str, *, is_summary: bool = False) -> str:
     return f"【{prefix}】{clean}"
 
 
+_LLM_ENV_KEYS = ("KEY_GLOBAL", "KEY_1", "KEY_2", "KEY_3", "KEY_4", "KEY_5", "KEY_6", "KEY_7", "KEY_8", "GEMINI_API_KEY")
+_ZH_EN_PHRASE_PAIRS: List[tuple[str, str]] = [
+    ("英伟达 (NVIDIA)", "NVIDIA"),
+    ("英伟达", "NVIDIA"),
+    ("台积电 (TSMC)", "TSMC"),
+    ("台积电", "TSMC"),
+    ("中芯国际", "SMIC"),
+    ("SK海力士", "SK Hynix"),
+    ("软银集团", "SoftBank"),
+    ("软银", "SoftBank"),
+    ("美联储", "Federal Reserve"),
+    ("欧洲央行", "ECB"),
+    ("日本央行", "Bank of Japan"),
+    ("央行", "Central Bank"),
+    ("霍尔木兹海峡", "Strait of Hormuz"),
+    ("阿里巴巴", "Alibaba"),
+    ("腾讯", "Tencent"),
+    ("华为", "Huawei"),
+    ("微软", "Microsoft"),
+    ("谷歌", "Google"),
+    ("苹果", "Apple"),
+    ("亚马逊", "Amazon"),
+    ("特斯拉", "Tesla"),
+    ("人工智能", "AI"),
+    ("大模型", "LLM"),
+    ("开源", "open-source"),
+    ("发布", "launches"),
+    ("上线", "rolls out"),
+    ("暴跌", "plunges"),
+    ("重挫", "slumps"),
+    ("大跌", "drops sharply"),
+    ("下挫", "slides"),
+    ("大涨", "surges"),
+    ("上涨", "rises"),
+    ("反弹", "rebounds"),
+    ("回购股份", "share buyback"),
+    ("回购", "buyback"),
+    ("增持", "stake increase"),
+    ("减持", "stake trim"),
+    ("财报", "earnings"),
+    ("营收", "revenue"),
+    ("净利润", "net profit"),
+    ("加息", "rate hike"),
+    ("降息", "rate cut"),
+    ("关税", "tariffs"),
+    ("出口管制", "export controls"),
+    ("和平协议", "peace deal"),
+    ("击落无人机", "shoots down drone"),
+    ("无人机", "drone"),
+    ("原油", "crude oil"),
+    ("黄金", "gold"),
+    ("金价", "gold prices"),
+    ("芯片", "chips"),
+    ("算力", "AI compute"),
+    ("港股", "HK stocks"),
+    ("美股", "US equities"),
+    ("A股", "China A-shares"),
+    ("纳指", "Nasdaq"),
+    ("交易员", "Traders"),
+    ("押注", "bets"),
+    ("数据显示", "data shows"),
+    ("据报道", "Reportedly"),
+    ("宣布", "announces"),
+    ("计划", "plans"),
+    ("预计", "expected"),
+]
+
+
+def _has_llm_translation_key() -> bool:
+    return any(bool((os.environ.get(k) or "").strip()) for k in _LLM_ENV_KEYS)
+
+
+def _has_cjk_text(text: str) -> bool:
+    return len(_CJK_RE.findall(text or "")) >= 2
+
+
+def _translate_zh_to_en_glossary(text: str, entities: Optional[List[str]] = None) -> str:
+    """Deterministic fast ZH->EN financial/tech phrase gloss when LLM translation is unavailable."""
+    raw = re.sub(r"^(?:【[^】]{2,18}】\s*)+", "", str(text or "").strip())
+    if not raw:
+        return ""
+    if is_mostly_english(raw):
+        return raw
+    translated = raw
+    for zh_tok, en_tok in _ZH_EN_PHRASE_PAIRS:
+        if zh_tok in translated:
+            translated = translated.replace(zh_tok, f" {en_tok} ")
+    translated = re.sub(r"\s+", " ", translated).strip()
+    nums = re.findall(r"\d+(?:\.\d+)?%?", raw)
+    if entities and len(_CJK_RE.findall(translated)) > len(_LATIN_RE.findall(translated)):
+        ent_tag = ", ".join(str(e) for e in entities[:2])
+        if nums:
+            return f"[{ent_tag} · {' / '.join(nums[:3])}] {translated}"
+        return f"[{ent_tag}] {translated}"
+    return translated
+
+
 def load_translation_overrides(overrides_path: Optional[Path] = None) -> Dict[str, Any]:
     """Load optional manual ZH translation dictionary keyed by source English text."""
     path = overrides_path or DEFAULT_OVERRIDES_PATH
@@ -323,6 +420,79 @@ def enrich_bilingual_events(
             if ev.get("summary"):
                 ev["summary"] = zh_s
 
+    # Populate missing English fields for native_zh events (sources first, then Gemini EN batch if keyed, else glossary)
+    zh_titles_idx: List[int] = []
+    zh_titles_src: List[str] = []
+    zh_sums_idx: List[int] = []
+    zh_sums_src: List[str] = []
+    zh_ai_idx: List[int] = []
+    zh_ai_src: List[str] = []
+    for idx, ev in enumerate(events):
+        srcs = ev.get("sources") if isinstance(ev.get("sources"), list) else []
+        if not ev.get("title_en"):
+            en_src_t = next((str(s.get("title") or "").strip() for s in srcs if is_mostly_english(str(s.get("title") or ""))), "")
+            if en_src_t:
+                ev["title_en"] = en_src_t
+            else:
+                t_val = str(ev.get("title") or "").strip()
+                man_en = _resolve_override(t_val, "title_en", manual_dict)
+                if man_en:
+                    ev["title_en"] = man_en
+                elif t_val and _has_cjk_text(t_val):
+                    zh_titles_idx.append(idx)
+                    zh_titles_src.append(t_val)
+        if not ev.get("summary_en"):
+            en_src_s = next((str(s.get("excerpt") or "").strip() for s in srcs if is_mostly_english(str(s.get("excerpt") or ""))), "")
+            if en_src_s:
+                ev["summary_en"] = en_src_s[:260]
+            else:
+                s_val = str(ev.get("fact_summary") or ev.get("summary") or "").strip()
+                man_se = _resolve_override(s_val, "summary_en", manual_dict)
+                if man_se:
+                    ev["summary_en"] = man_se
+                elif s_val and _has_cjk_text(s_val):
+                    zh_sums_idx.append(idx)
+                    zh_sums_src.append(s_val[:260])
+        ai_val = str(ev.get("ai_analysis") or "").strip()
+        if ai_val and not ev.get("ai_analysis_en") and _has_cjk_text(ai_val):
+            zh_ai_idx.append(idx)
+            zh_ai_src.append(ai_val[:240])
+
+    use_llm_en = _has_llm_translation_key()
+    if zh_titles_src:
+        en_trans = (
+            _translate_texts_with_pipeline(zh_titles_src, "en", max_retries=max_retries, backoff_base=backoff_base)[0]
+            if use_llm_en
+            else None
+        )
+        for pos, ev_idx in enumerate(zh_titles_idx):
+            ev = events[ev_idx]
+            ev["title_en"] = (en_trans[pos] if en_trans and en_trans[pos] else None) or _translate_zh_to_en_glossary(
+                zh_titles_src[pos], ev.get("entities")
+            )
+    if zh_sums_src:
+        en_sum_trans = (
+            _translate_texts_with_pipeline(zh_sums_src, "en", max_retries=max_retries, backoff_base=backoff_base)[0]
+            if use_llm_en
+            else None
+        )
+        for pos, ev_idx in enumerate(zh_sums_idx):
+            ev = events[ev_idx]
+            ev["summary_en"] = (en_sum_trans[pos] if en_sum_trans and en_sum_trans[pos] else None) or _translate_zh_to_en_glossary(
+                zh_sums_src[pos], ev.get("entities")
+            )
+    if zh_ai_src:
+        en_ai_trans = (
+            _translate_texts_with_pipeline(zh_ai_src, "en", max_retries=max_retries, backoff_base=backoff_base)[0]
+            if use_llm_en
+            else None
+        )
+        for pos, ev_idx in enumerate(zh_ai_idx):
+            ev = events[ev_idx]
+            ev["ai_analysis_en"] = (en_ai_trans[pos] if en_ai_trans and en_ai_trans[pos] else None) or _translate_zh_to_en_glossary(
+                zh_ai_src[pos], ev.get("entities")
+            )
+
 
 def retry_pending_translations(
     events: List[Dict[str, Any]],
@@ -355,16 +525,23 @@ def retry_pending_translations(
 
 
 def enrich_bilingual_topics(
-    topics: List[Dict[str, Any]],
+    topics: Any,
     *,
     overrides: Optional[Dict[str, Any]] = None,
     max_retries: int = 2,
     backoff_base: float = 0.5,
 ) -> None:
+    topic_list: List[Dict[str, Any]] = (
+        [v for v in topics.values() if isinstance(v, dict)]
+        if isinstance(topics, dict)
+        else [v for v in (topics or []) if isinstance(v, dict)]
+    )
+    if not topic_list:
+        return
     manual_dict = overrides if overrides is not None else load_translation_overrides()
     en_idx: List[tuple[int, int]] = []
     en_src: List[str] = []
-    for ti, tp in enumerate(topics):
+    for ti, tp in enumerate(topic_list):
         for ni, node in enumerate(tp.get("timeline") or []):
             t = str(node.get("title") or "").strip()
             if is_mostly_english(t):
@@ -397,7 +574,7 @@ def enrich_bilingual_topics(
         )
         for pos, (ti, ni) in enumerate(en_idx):
             src_t = en_src[pos]
-            node = topics[ti]["timeline"][ni]
+            node = topic_list[ti]["timeline"][ni]
             node["translation_attempts"] = max(attempts, 1)
             if translated and translated[pos]:
                 zh_t = translated[pos]
@@ -415,3 +592,41 @@ def enrich_bilingual_topics(
                     node["translation_error"] = err or "llm_unavailable_fallback"
             node["title_zh"] = zh_t
             node["title"] = zh_t
+
+    zh_topic_idx: List[int] = []
+    zh_topic_src: List[str] = []
+    zh_node_idx: List[tuple[int, int]] = []
+    zh_node_src: List[str] = []
+    for ti, tp in enumerate(topic_list):
+        tp_t = str(tp.get("title") or "").strip()
+        if tp_t and not tp.get("title_en") and _has_cjk_text(tp_t):
+            zh_topic_idx.append(ti)
+            zh_topic_src.append(tp_t)
+        elif tp_t and is_mostly_english(tp_t):
+            tp.setdefault("title_en", tp_t)
+        for ni, node in enumerate(tp.get("timeline") or []):
+            nt = str(node.get("title") or "").strip()
+            if nt and not node.get("title_en") and _has_cjk_text(nt):
+                zh_node_idx.append((ti, ni))
+                zh_node_src.append(nt)
+    if zh_topic_src:
+        tp_en = (
+            _translate_texts_with_pipeline(zh_topic_src, "en", max_retries=max_retries, backoff_base=backoff_base)[0]
+            if _has_llm_translation_key()
+            else None
+        )
+        for pos, ti in enumerate(zh_topic_idx):
+            topic_list[ti]["title_en"] = (tp_en[pos] if tp_en and tp_en[pos] else None) or _translate_zh_to_en_glossary(
+                zh_topic_src[pos], topic_list[ti].get("entities")
+            )
+    if zh_node_src:
+        nd_en = (
+            _translate_texts_with_pipeline(zh_node_src, "en", max_retries=max_retries, backoff_base=backoff_base)[0]
+            if _has_llm_translation_key()
+            else None
+        )
+        for pos, (ti, ni) in enumerate(zh_node_idx):
+            topic_list[ti]["timeline"][ni]["title_en"] = (
+                (nd_en[pos] if nd_en and nd_en[pos] else None)
+                or _translate_zh_to_en_glossary(zh_node_src[pos], topic_list[ti].get("entities"))
+            )

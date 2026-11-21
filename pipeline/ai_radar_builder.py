@@ -88,6 +88,28 @@ _LAB_CATALOG: List[Dict[str, Any]] = [
         "access_limits_en": "Peak-hour official API queuing; MIT weights allow easy self-hosting",
     },
     {
+        "company_id": "microsoft",
+        "company_name": "微软 (Microsoft)",
+        "company_name_en": "Microsoft AI / Copilot",
+        "region": "海外",
+        "region_en": "Global",
+        "flagship_model": "Copilot / Phi-4 / Windows AI",
+        "open_source_line": "Phi 系列小模型开放权重；Win11 Copilot 为闭源端侧整合",
+        "access_limits": "Windows 11 Copilot、Azure AI Foundry 与 GitHub Copilot 分级订阅",
+        "access_limits_en": "Integrated in Windows 11 Copilot, Azure AI & GitHub Copilot tiers",
+    },
+    {
+        "company_id": "meta",
+        "company_name": "Meta AI",
+        "company_name_en": "Meta AI / Llama",
+        "region": "海外",
+        "region_en": "Global",
+        "flagship_model": "Llama 系列 / Meta AI",
+        "open_source_line": "Llama 社区许可开源旗舰与端侧轻量系列",
+        "access_limits": "部分多模态模型受区域与商业规模许可条款限制",
+        "access_limits_en": "Community license terms & regional rollouts apply",
+    },
+    {
         "company_id": "indie_opensource",
         "company_name": "独立实验室 & 开源黑马",
         "company_name_en": "Indie Labs & Open-Source Researchers",
@@ -415,6 +437,10 @@ def _infer_company(title: str, url: str = "") -> tuple[str, str, str]:
         return "anthropic", "Anthropic", "海外"
     if any(k in t for k in ("openai", "gpt-", "chatgpt", "sora", "codex")):
         return "openai", "OpenAI", "海外"
+    if any(k in t for k in ("microsoft", "微软", "win11", "windows 11", "copilot", "phi-4", "phi4", "azure ai")):
+        return "microsoft", "微软 (Microsoft)", "海外"
+    if any(k in t for k in ("meta ", "metaai", "llama", "zuckerberg")):
+        return "meta", "Meta AI", "海外"
     if any(k in t for k in ("qwen", "千问", "通义", "阿里", "huggingface.co/qwen")):
         return "qwen", "阿里千问 (Qwen)", "国内"
     if any(k in t for k in ("kimi", "moonshot", "月之暗面", "huggingface.co/moonshotai")):

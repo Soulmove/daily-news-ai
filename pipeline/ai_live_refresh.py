@@ -148,8 +148,13 @@ def extract_ai_release_item(raw_it: Dict[str, Any], generated_at_iso: str) -> Op
         is_open_source=is_open_source,
         is_first_hand=is_first_hand,
     )
+    from pipeline.bilingual import _translate_zh_to_en_glossary, is_mostly_english
+
     raw_id = str(raw_it.get("item_id") or raw_it.get("id") or _norm_title_key(title))
     item_id = raw_id if raw_id.startswith("ai_") else f"ai_live_{raw_id}"
+    title_en_raw = str(raw_it.get("title_en") or "").strip()
+    title_en = title_en_raw if (title_en_raw and is_mostly_english(title_en_raw)) else _translate_zh_to_en_glossary(title, [comp_name])
+    what_en_clean = what_en if is_mostly_english(str(what_en or "")) else _translate_zh_to_en_glossary(str(what_zh or ""), [comp_name])
 
     return {
         "id": item_id,
@@ -160,9 +165,9 @@ def extract_ai_release_item(raw_it: Dict[str, Any], generated_at_iso: str) -> Op
         "category": category,
         "category_en": category_en,
         "title": title,
-        "title_en": str(raw_it.get("title_en") or title),
+        "title_en": title_en,
         "what_it_does": what_zh,
-        "what_it_does_en": what_en,
+        "what_it_does_en": what_en_clean,
         "who_cares": "AI 开发者、科研人员与前沿关注者",
         "limitations": "具体额度、开源协议与硬件门槛以官方发布说明为准。",
         "limitations_en": "Refer to official release notes for license, quota, and hardware specs.",

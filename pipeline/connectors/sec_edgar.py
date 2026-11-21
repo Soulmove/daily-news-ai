@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from datetime import timedelta
+import re
 import time
 from typing import Any, Dict, List, Optional
 
@@ -30,6 +31,102 @@ def _build_sec_doc_url(cik: str, accession: str, primary_doc: str) -> str:
     if primary_doc:
         return f"https://www.sec.gov/Archives/edgar/data/{cik_num}/{acc_clean}/{primary_doc}"
     return f"https://www.sec.gov/Archives/edgar/data/{cik_num}/{acc_clean}/"
+
+
+def _format_sec_filing_description(form: str, raw_desc: str, items: List[str], primary_doc: str) -> str:
+    """Translate bare SEC form codes like '6-K' / '8-K' / '10-Q' into clear Chinese+English titles."""
+    f = str(form or "").upper()
+    desc = str(raw_desc or "").strip()
+    doc_l = str(primary_doc or "").lower()
+    item_map = {
+        "1.01": "重大确定性协议签署",
+        "2.02": "季度/年度经营业绩披露",
+        "5.02": "董事/高管人事变动",
+        "5.03": "公司章程修订",
+        "7.01": "FD 规定重大信息披露",
+        "8.01": "其他重大事项公告",
+    }
+    if f == "6-K":
+        if "revenue" in doc_l:
+            return "月度营收报告 (Form 6-K Monthly Revenue)"
+        if "fsx" in doc_l or "financial" in doc_l:
+            return "季度合并审阅财务报表 (Form 6-K Financials)"
+        if "board" in doc_l:
+            return "董事会重要决议公告 (Form 6-K Board Resolution)"
+        if "dividend" in doc_l or "cash" in doc_l:
+            return "股息分派公告 (Form 6-K Dividend)"
+        if desc and desc.upper() not in {"6-K", "FORM 6-K"}:
+            return f"外国发行人重大披露 (Form 6-K · {desc[:48]})"
+        return "外国发行人重大披露 / 业绩声明 (Form 6-K)"
+    if f == "8-K":
+        matched = [item_map[str(it)] for it in (items or []) if str(it) in item_map]
+        if matched:
+            return f"重大事件公告 (Form 8-K · {' / '.join(matched[:2])})"
+        if desc and desc.upper() not in {"8-K", "FORM 8-K"}:
+            return f"重大事件公告 (Form 8-K · {desc[:48]})"
+        return "重大事件临时公告 (Form 8-K)"
+    if f == "10-Q":
+        return "美国上市公司季度财务报告 (Form 10-Q)"
+    if f == "10-K":
+        return "美国上市公司年度财务报告 (Form 10-K)"
+    if f == "20-F":
+        return "外国私人发行人年度综合报告 (Form 20-F)"
+    return desc or f
+
+
+def _extract_tsmc_6k_revenue_actuals(
+    cik: str,
+    recent: dict,
+    headers: Dict[str, str],
+) -> List[Dict[str, Any]]:
+    """Fallback when SEC CompanyFacts IFRS endpoint stops at 2024: extract 2025/2026 TSMC revenue from official 6-K reports."""
+    if cik != "0001046179":
+        return []
+    forms = recent.get("form") or []
+    acc_nums = recent.get("accessionNumber") or []
+    primary_docs = recent.get("primaryDocument") or []
+    filing_dates = recent.get("filingDate") or []
+    report_dates = recent.get("reportDate") or []
+    out: List[Dict[str, Any]] = []
+    seen_periods: set[str] = set()
+    for i, form in enumerate(forms):
+        if form != "6-K":
+            continue
+        pdoc = str(primary_docs[i] if i < len(primary_docs) else "")
+        if "revenue" not in pdoc.lower():
+            continue
+        acc = str(acc_nums[i] if i < len(acc_nums) else "")
+        if not acc or not pdoc:
+            continue
+        rdate = str(report_dates[i] if i < len(report_dates) else "")
+        fdate = str(filing_dates[i] if i < len(filing_dates) else "")
+        if not rdate or rdate in seen_periods:
+            continue
+        url = f"https://www.sec.gov/Archives/edgar/data/{int(cik)}/{acc.replace('-', '')}/{pdoc}"
+        res = polite_get(url, headers={**headers, "Accept": "text/html"}, cache=None, timeout=(5, 8), expect_json=False)
+        if not res.ok or not res.text:
+            continue
+        plain = re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", res.text))
+        m_mon = re.search(r"revenue\s+for\s+[A-Za-z]+\s+20\d{2}\s+was\s+approximately\s+NT\$\s*([\d,.]+)\s*billion", plain, re.I)
+        if m_mon:
+            val_b = float(m_mon.group(1).replace(",", ""))
+            seen_periods.add(rdate)
+            out.append(
+                {
+                    "metric": "月度合并营收 (TSMC 6-K)",
+                    "value": f"NT${val_b:,.2f}B",
+                    "raw_val": round(val_b * 1e9, 0),
+                    "unit": "TWD",
+                    "period_end": rdate,
+                    "filed": fdate,
+                    "form": "6-K",
+                    "frame": rdate[:7],
+                    "concept": "ifrs-6k-monthly-revenue",
+                }
+            )
+        if len(out) >= 4:
+            break
+    return out
 
 
 def _extract_quarterly_revenue(companyfacts: dict) -> List[Dict[str, Any]]:
@@ -166,12 +263,14 @@ def fetch_sec_edgar(
                 icodes = [icodes] if icodes else []
             doc_url = _build_sec_doc_url(cik, acc, pdoc)
             pub_iso, _ = parse_published_at(fdate, "sec-edgar")
+            pdoc_val = str(primary_docs[i] if i < len(primary_docs) else "")
+            readable_desc = _format_sec_filing_description(form, pdesc, icodes, pdoc_val)
             filing_rec = {
                 "form": form,
                 "filing_date": fdate,
                 "report_date": report_dates[i] if i < len(report_dates) else None,
                 "items": icodes,
-                "description": pdesc or form,
+                "description": readable_desc,
                 "url": doc_url,
             }
             ent_filings.append(filing_rec)
@@ -206,15 +305,23 @@ def fetch_sec_edgar(
             if len(ent_filings) >= 6:
                 break
 
-        # Refresh cached companyfacts if missing, stale, or mixing multiple currencies in one series
+        # Refresh cached companyfacts dynamically (>180 days old, missing, or mixing currencies)
         actuals = facts_cache.get(cik, {}).get("actuals", [])
         mixed_currencies = len({str(a.get("unit") or "") for a in actuals if a.get("unit")}) > 1
-        cache_is_stale = not actuals or str(actuals[0].get("period_end") or "") < "2024-06-01" or mixed_currencies
+        stale_cutoff = (now_dt - timedelta(days=180)).strftime("%Y-%m-%d")
+        cache_is_stale = not actuals or str(actuals[0].get("period_end") or "") < stale_cutoff or mixed_currencies
         if idx < fetch_facts_for_top_n and cache_is_stale:
             facts_url = f"https://data.sec.gov/api/xbrl/companyfacts/CIK{cik}.json"
             f_res = polite_get(facts_url, headers=headers, cache=cache, timeout=(6, 12), expect_json=True)
             if f_res.ok and isinstance(f_res.json_data, dict):
                 fresh_actuals = _extract_quarterly_revenue(f_res.json_data)
+                if cik == "0001046179":
+                    extra_tsmc = _extract_tsmc_6k_revenue_actuals(cik, recent, headers)
+                    if extra_tsmc:
+                        by_end = {str(a.get("period_end")): a for a in fresh_actuals}
+                        for row in extra_tsmc:
+                            by_end[str(row["period_end"])] = row
+                        fresh_actuals = sorted(by_end.values(), key=lambda x: str(x["period_end"]), reverse=True)[:4]
                 if fresh_actuals:
                     actuals = fresh_actuals
                     facts_cache[cik] = {"updated_at": fetched_iso, "actuals": actuals}

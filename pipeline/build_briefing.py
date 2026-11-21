@@ -22,7 +22,7 @@ from pipeline.dedup import (
     score_cluster_for_briefing,
     title_similarity,
 )
-from pipeline.entities import match_entities_with_reasons
+from pipeline.entities import ENTITY_REGISTRY, match_entities_with_reasons
 from pipeline.id_utils import canonicalize_url, is_generic_quote_or_homepage_url, make_raw_item_id
 from pipeline.manifest import (
     atomic_write_json,
@@ -235,7 +235,7 @@ def _build_ai_prompt(category: str, input_cutoff_at: str, catalog_text: str) -> 
 
 【严格事实与引用纪律 — 必须遵守】：
 1. 只能依据下面提供的素材条目输出，禁止编造任何素材中未提及的数字、日期、金额、百分比或公司动作。
-2. 若素材标注为 `(仅标题)`，说明没有正文或摘要：`fact_summary` 只能客观复述标题已明确表达的事实，并在需要时注明“原始素材仅含标题，细节待查原文”，禁止把标题脑补成具体数据或详细经过！
+2. 若素材标注为 `(仅标题)`，说明没有正文或摘要：`fact_summary` 只能客观复述标题已明确表达的事实，禁止脑补任何未经原文提及的具体数字、日期或因果，也不要输出“原始素材仅含标题”“R001”等采编术语！
 3. 每条新闻事件必须填写 `source_refs`（例如 `["R001", "R005"]`），只能引用下方方括号内真实存在的 R 编号；禁止输出 URL，禁止输出可信度百分比。
 4. 严格区分事实与判断：
    - `fact_summary`：只写素材里已出现的可核验事实。
@@ -360,6 +360,17 @@ def _parse_legacy_summary_sections(raw_summary: str) -> List[dict]:
     return parsed
 
 
+def _smart_truncate(text: str, max_len: int = 180) -> str:
+    s = re.sub(r"\s+", " ", str(text or "")).strip()
+    if len(s) <= max_len:
+        return s
+    cut = s[: max_len - 1]
+    sep = max(cut.rfind("。"), cut.rfind("！"), cut.rfind("？"), cut.rfind("；"), cut.rfind("."))
+    if sep >= int(max_len * 0.55):
+        return cut[: sep + 1].rstrip()
+    return cut.rstrip(" ，、,;:") + "…"
+
+
 def _build_key_changes_from_events(events: List[dict]) -> List[dict]:
     changes: List[dict] = []
     for ev in events[:3]:
@@ -368,7 +379,7 @@ def _build_key_changes_from_events(events: List[dict]) -> List[dict]:
                 "event_id": ev["event_id"],
                 "storyline_id": ev.get("storyline_id"),
                 "headline": ev["title"],
-                "detail": (ev.get("fact_summary") or "")[:90],
+                "detail": _smart_truncate(ev.get("fact_summary") or "", 120),
                 "evidence_status": ev["evidence_status"],
                 "attribution_warning": ev.get("attribution_warning"),
                 "source_count": ev["source_count"],
@@ -1148,8 +1159,117 @@ def _ground_update_category(
 _TRACKED_HKEX_CODES = {"00700", "09988", "00981", "03690"}
 _TOPIC_PAIRS = [
     ({"黄仁勋", "英伟达"}, {"卸任", "辞任", "复职", "继任", "ceo"}),
+    ({"英伟达", "nvda", "纳指", "ai板块"}, {"暴跌", "重挫", "抛售潮", "14%", "抹去"}),
+    ({"黄金", "金价", "白银", "现货黄金"}, {"暴跌", "跳水", "大跌", "3600", "风险", "14个月新低"}),
+    ({"软银", "孙正义"}, {"sk海力士", "海力士", "1万亿美元"}),
+    ({"美伊", "伊朗", "霍尔木兹"}, {"柏林", "谈判", "僵局", "斡旋", "动武", "触雷"}),
     ({"微软", "azure", "microsoft"}, {"宕机", "恢复", "故障"}),
 ]
+
+
+_ENTITY_ALIAS_CANON: Dict[str, str] = {}
+for _ed in ENTITY_REGISTRY:
+    _cname = str(getattr(_ed, "canonical_name", "") or "").strip()
+    if _cname:
+        _ENTITY_ALIAS_CANON[_cname.lower()] = _cname
+        for _al in getattr(_ed, "aliases", ()) or ():
+            _al_s = str(_al or "").strip().lower()
+            if len(_al_s) >= 2 and _al_s not in ("ai", "us", "hk", "美元", "黄金"):
+                _ENTITY_ALIAS_CANON[_al_s] = _cname
+
+_PIPELINE_JARGON_RE = re.compile(
+    r"(?:（[^）]*原始素材[^）]*）|\([^)]*(?:R\d{2,4}|原始素材)[^)]*\)|"
+    r"\[?R\d{2,4}\]?\s*(?:原始素材[^，,。；;)\s]*|[：:])?\s*|"
+    r"(?:另)?据仅含标题的(?:快讯|资讯)[，,：:\s]*(?:报道|显示)?[，,]?\s*|"
+    r"原始素材多?仅含标题(?:[，,。；:\s]*(?:细节待查原文|具体[^。；;]*))?[。.]?\s*|"
+    r"已拦截\s*\d+\s*条无效引用(?:（[^）]*）)?[；;，,。]*\s*)",
+    re.I,
+)
+_GEO_KINETIC_OR_DIPLO_RE = re.compile(
+    r"(?:导弹|空袭|击落(?:美军|无人)?机|无人机被击落|停火|和平协议|战区|领空|航母|军演|大使馆|"
+    r"北约|联合国安理会|外交照会|总统选举|国会大厦|美伊|俄乌|以哈|巴以|半岛局势|台海|南海)",
+    re.I,
+)
+_INTL_SUBJECT_RE = re.compile(
+    r"(?:美联储|FOMC|欧央行|欧洲央行|日本央行|英格兰银行|特朗普|白宫|五角大楼|美国国会|华盛顿|"
+    r"布鲁塞尔|莫斯科|基辅|德黑兰|特拉维夫|伦敦|巴黎|柏林|东京|首尔|APEC|G7|G20|IMF|WTO|关税|"
+    r"出口管制|实体清单|美股|纳指|标普|道指|港股|恒指|英伟达|NVIDIA|OpenAI|Anthropic|Google|"
+    r"DeepMind|Meta|微软|Microsoft|苹果|Apple|亚马逊|Amazon|特斯拉|Tesla|台积电|TSMC|ASML|SK海力士|软银|霍尔木兹|苏伊士)",
+    re.I,
+)
+_DOMESTIC_CHINA_ENTITY_RE = re.compile(
+    r"(?:发改委|工信部|商务部|财政部|证监会|央行|中国人民银行|国家统计局|国务院|教育部|卫健委|市场监管总局|"
+    r"A股|沪深|科创板|创业板|北交所|上交所|深交所|顺德|佛山|广东|深圳|北京|上海|杭州|成都|重庆|武汉|江苏|浙江|山东|河南)"
+)
+_FINANCE_MARKET_RE = re.compile(
+    r"(?:股价|市值|财报|营收|净利润|毛利率|回购|减持|增持|IPO|上市|破发|债券|国债|收益率|汇率|利率|加息|降息|降准|LPR|"
+    r"通胀|CPI|PPI|GDP|油价|金价|现货黄金|期货|上期所|证监会|SEC|8-K|10-Q|6-K|HKEX|港交所|做空|ETF|估值|FOMC)",
+    re.I,
+)
+_TECH_AI_RE = re.compile(
+    r"(?:大模型|LLM|GPT|Claude|Gemini|DeepSeek|Qwen|通义千问|Kimi|混元|OpenAI|Anthropic|Hugging Face|GitHub|"
+    r"开源|SGLang|vLLM|算力|GPU|TPU|HBM|光刻机|晶圆|2nm|3nm|Copilot|Agent|智能体|自动驾驶|机器人|量子|CVE|零日漏洞)",
+    re.I,
+)
+
+
+def _normalize_event_entities(entities: Any) -> List[str]:
+    if not isinstance(entities, list):
+        return []
+    out: List[str] = []
+    seen: Set[str] = set()
+    for raw_e in entities:
+        s = str(raw_e or "").strip()
+        if not s:
+            continue
+        canon = _ENTITY_ALIAS_CANON.get(s.lower(), s)
+        k = canon.lower()
+        if k not in seen:
+            seen.add(k)
+            out.append(canon)
+    return out[:6]
+
+
+def _reclassify_region_topic_events(cat_docs: Dict[str, dict]) -> None:
+    """Enforce region + topic category boundaries (e.g. Iran drone -> global, domestic A-share/policy out of global)."""
+    moves: List[Tuple[str, str, dict]] = []
+    for cat, doc in cat_docs.items():
+        evs = doc.get("events", []) or []
+        for ev in evs:
+            title = str(ev.get("title") or "")
+            summary = str(ev.get("fact_summary") or "")
+            text = f"{title} {summary[:140]}"
+            target = cat
+            if _GEO_KINETIC_OR_DIPLO_RE.search(title) and not re.search(
+                r"(?:美联储|FOMC|利率决议|财报|营收|回购|油价|金价|指数|股价)", title
+            ):
+                target = "global"
+            elif cat == "global":
+                if (
+                    _DOMESTIC_CHINA_ENTITY_RE.search(text)
+                    and not _INTL_SUBJECT_RE.search(text)
+                    and not _GEO_KINETIC_OR_DIPLO_RE.search(text)
+                ):
+                    if _FINANCE_MARKET_RE.search(text):
+                        target = "finance"
+                    elif _TECH_AI_RE.search(text):
+                        target = "tech"
+                    else:
+                        target = "general"
+            if target != cat and target in cat_docs:
+                moves.append((cat, target, ev))
+    if not moves:
+        return
+    for src_cat, dst_cat, ev in moves:
+        src_evs = cat_docs[src_cat].get("events") or []
+        if len(src_evs) <= 3:
+            continue
+        if ev in src_evs:
+            src_evs.remove(ev)
+            ev["category"] = dst_cat
+            dst_evs = cat_docs[dst_cat].setdefault("events", [])
+            if all(existing.get("event_id") != ev.get("event_id") for existing in dst_evs):
+                dst_evs.append(ev)
 
 
 def _same_cross_category_story(ev_a: dict, ev_b: dict) -> bool:
@@ -1214,6 +1334,24 @@ def _clean_single_event_sources_and_dates(ev: dict) -> dict:
             clean_srcs = pruned
 
     ev = dict(ev)
+    ev["entities"] = _normalize_event_entities(ev.get("entities"))
+    fact_s = _PIPELINE_JARGON_RE.sub("", str(ev.get("fact_summary") or "")).strip()
+    if fact_s:
+        ev["fact_summary"] = _smart_truncate(fact_s, 220)
+    for sum_k in ("summary", "summary_zh"):
+        if ev.get(sum_k):
+            cleaned_sk = _PIPELINE_JARGON_RE.sub("", str(ev[sum_k])).strip()
+            ev[sum_k] = _smart_truncate(cleaned_sk, 220) if cleaned_sk else ev.get("fact_summary", "")
+    if ev.get("ai_analysis"):
+        ai_s = _PIPELINE_JARGON_RE.sub("", str(ev["ai_analysis"])).strip()
+        ev["ai_analysis"] = _smart_truncate(ai_s, 190) if ai_s else None
+    if ev.get("speculation_or_outlook"):
+        sp_s = _PIPELINE_JARGON_RE.sub("", str(ev["speculation_or_outlook"])).strip()
+        ev["speculation_or_outlook"] = _smart_truncate(sp_s, 180) if sp_s else None
+    if ev.get("evidence_status_reason"):
+        rs_s = _PIPELINE_JARGON_RE.sub("", str(ev["evidence_status_reason"])).strip()
+        ev["evidence_status_reason"] = rs_s or "暂缺足够一手原文链接，已归入待核实区域"
+
     ev["sources"] = clean_srcs
     ev["source_count"] = len(clean_srcs)
     platforms = {s.get("source_id") for s in clean_srcs if s.get("source_id")}
@@ -1264,8 +1402,9 @@ def _postprocess_and_prune_cross_category(
 ) -> None:
     """
     Remove omnibus roundups, fix cross-entity source pollution, dedupe cross-category stories,
-    and enforce high-signal category compactness without invalidating manifest metrics.
+    enforce region/topic classification, and keep high-signal category compactness.
     """
+    _reclassify_region_topic_events(cat_docs)
     for cat, doc in cat_docs.items():
         raw_evs = [_clean_single_event_sources_and_dates(ev) for ev in doc.get("events", [])]
         filtered = [
@@ -1591,7 +1730,7 @@ def build_briefing_batch(
             matched_ev = ev_by_id.get(kc.get("event_id"))
             if matched_ev:
                 kc["headline"] = matched_ev.get("title") or kc.get("headline")
-                kc["detail"] = (matched_ev.get("fact_summary") or kc.get("detail") or "")[:200]
+                kc["detail"] = _smart_truncate(matched_ev.get("fact_summary") or kc.get("detail") or "", 190)
 
     published_iso = to_iso_shanghai(now_shanghai())
     batch_status = "complete" if failed_cats == 0 else "partial"

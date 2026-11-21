@@ -344,10 +344,10 @@ def verify_and_enrich_event(
 
     if len(valid_sources) == 0:
         evidence_status = "needs_verification"
-        reason_parts = ["未匹配到满足校验规则的原始新闻出处"]
+        reason_parts = ["未匹配到可供核验的原始新闻原文出处"]
         if rejected_refs:
-            reason_parts.append(f"已拦截 {len(rejected_refs)} 条无效引用（{rejected_refs[0]['reason']}）")
-        evidence_reason = "；".join(reason_parts) + "，已进入待核实状态"
+            reason_parts.append("部分链接无效或非原文新闻页，暂不作为直达出处")
+        evidence_reason = "；".join(reason_parts) + "，已归入待核实线索区"
     elif has_first_party:
         evidence_status = "official_confirmed"
         evidence_reason = f"包含官方/监管/代码仓库一手出处（独立来源 {len(independent_families)} 家），请仍以原文披露范围为准"
@@ -372,8 +372,44 @@ def verify_and_enrich_event(
     canonical_name_set = {ed.canonical_name for ed in ENTITY_REGISTRY}
     non_canonical_hints = [e for e in entities_list if e not in canonical_name_set]
     matched_entity_objs = match_entities_with_reasons(f"{title} {fact_summary[:140]}", non_canonical_hints)
+    # Normalize & merge entity alias variants (e.g. '英伟达' + '英伟达 (NVIDIA)' -> single canonical name)
+    _ENTITY_CANON_MAP: Dict[str, str] = {}
+    for ent_def in ENTITY_REGISTRY:
+        cname = str(getattr(ent_def, "canonical_name", "") or "").strip()
+        if not cname:
+            continue
+        _ENTITY_CANON_MAP[cname.lower()] = cname
+        for al in getattr(ent_def, "aliases", ()) or ():
+            a_low = str(al or "").strip().lower()
+            if len(a_low) >= 2 and a_low not in ("ai", "us", "hk", "美元", "黄金"):
+                _ENTITY_CANON_MAP[a_low] = cname
+
     matched_canonicals = {m["canonical_name"] for m in matched_entity_objs}
-    cleaned_entities = [e for e in entities_list if e not in canonical_name_set or e in matched_canonicals]
+    cleaned_entities: List[str] = []
+    seen_ent_norm: set[str] = set()
+    for raw_e in entities_list:
+        es = str(raw_e or "").strip()
+        if not es:
+            continue
+        if es in canonical_name_set and es not in matched_canonicals:
+            continue
+        canonical_resolved = _ENTITY_CANON_MAP.get(es.lower(), es)
+        # Do not merge distinct person names or short generic labels unless mapped in ENTITY_REGISTRY
+        norm_key = canonical_resolved.lower()
+        if norm_key not in seen_ent_norm:
+            seen_ent_norm.add(norm_key)
+            cleaned_entities.append(canonical_resolved)
+
+    # Scrub internal pipeline jargon / placeholder tags / [R075] refs from public summaries
+    _INTERNAL_JARGON_RE = re.compile(
+        r"(?:\[?R\d{2,4}\]?\s*[:：]?\s*|原始素材仅含标题(?:[，,。；:\s]*细节待查原文)?[。.]?\s*|"
+        r"已拦截\s*\d+\s*条无效引用(?:（[^）]*）)?[；;，,]?\s*)",
+        re.I,
+    )
+    fact_summary = _INTERNAL_JARGON_RE.sub("", fact_summary).strip()
+    if ai_analysis:
+        ai_analysis = _INTERNAL_JARGON_RE.sub("", str(ai_analysis)).strip() or None
+    evidence_reason = _INTERNAL_JARGON_RE.sub("", evidence_reason).strip()
     if matched_entity_objs:
         for m in matched_entity_objs:
             if m["canonical_name"] not in cleaned_entities and len(cleaned_entities) < 6:
