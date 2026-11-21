@@ -1,7 +1,7 @@
 {
-  "schema_version": "3.0",
-  "generated_at": "2026-11-21T11:21:23+08:00",
-  "batch_id": "smart-20261121-112123",
+  "schema_version": "4.1",
+  "generated_at": "2026-11-22T01:23:33+08:00",
+  "batch_id": "smart-20261122-012333",
   "note": "系统预置基于公开一手催化剂建立的可验证观察题；个人自建与修订记录保存在本地浏览器，导入导出可用。",
   "predictions": [
     {
@@ -9,9 +9,11 @@
       "mode": "live",
       "status": "open",
       "title": "深圳 APEC 中美元首会谈后是否发布具体的经贸关税或 AI 治理联合文本",
+      "title_en": "Will US-China Shenzhen APEC talks yield concrete tariff or AI governance joint texts?",
       "target_entity_id": "ent_us_china_diplomacy",
       "target_entity": "中美外交与元首峰会 / APEC",
       "question": "截至 2026-11-23，中国外交部或美国白宫是否公开披露中美元首深圳会晤达成的新一轮关税调整/AI 治理具体书面成果？",
+      "question_en": "By 2026-11-23, will China's MFA or the White House publish concrete written tariff adjustments or AI governance commitments from the Shenzhen summit?",
       "created_at": "2026-11-19T15:44:21+08:00",
       "due_at": "2026-11-23T20:00:00+08:00",
       "win_rule": "外交部或白宫官网发布明确含关税豁免/调整或 AI 安全合作条款的官方通稿",
@@ -44,9 +46,11 @@
       "mode": "live",
       "status": "open",
       "title": "英伟达临时管理层后是否在 14 天内披露永久 CEO 继任或董事回任安排",
+      "title_en": "Will NVIDIA file a permanent CEO succession or reinstatement Form 8-K within 14 days?",
       "target_entity_id": "ent_nvidia",
-      "target_entity": "英伟达 (NVIDIA / NVDA.US)",
+      "target_entity": "英伟达 (NVIDIA)",
       "question": "SEC EDGAR 已收录 NVDA 2026-11-12 8-K (Item 5.02)；截至到期日是否出现正式继任人选或复职 Form 8-K / 官方 IR 声明？",
+      "question_en": "Following NVDA's 2026-11-12 Form 8-K (Item 5.02), will SEC EDGAR or NVIDIA IR disclose a permanent CEO succession or reinstatement before expiry?",
       "created_at": "2026-11-19T05:31:12+08:00",
       "due_at": "2026-12-03T05:31:12+08:00",
       "win_rule": "SEC EDGAR 出现新的 NVDA 8-K Item 5.02 官方后续人事任命文件，或 investor.nvidia.com 发布明确治理结论",
@@ -61,7 +65,7 @@
       "core_assumption": "上市公司首席执行官变动及正式继任属美股重大法定披露事项，必受 SEC 8-K 4 个工作日强制披露约束",
       "invalidation_trigger": "若英伟达 IR 正式澄清拒绝变更或公布明确长期继任方案",
       "probability_pct": 60,
-      "probability_note": "基准概率基于当前 SEC EDGAR 连接器实采状态动态校准，到期日固定不再顺延",
+      "probability_note": "基准概率基于当前 SEC EDGAR 官方披露实采状态动态校准，到期日固定不再顺延",
       "current_judgment": "SEC 8-K Item 5.02 已披露于 2026-11-12；正跟踪正式继任进展",
       "versions": [
         {
@@ -69,7 +73,7 @@
           "updated_at": "2026-11-19T05:31:12+08:00",
           "judgment": "已追踪到 SEC 2026-11-12 8-K Item 5.02，等待后续正式继任公告",
           "probability_pct": 60,
-          "reason": "由 V3 SEC EDGAR 连接器交叉核查生成初始观察记录"
+          "reason": "由 SEC EDGAR 官方披露核查生成初始观察记录"
         }
       ],
       "settlement": null
@@ -79,11 +83,13 @@
       "mode": "live",
       "status": "open",
       "title": "Qwen 系列新一代旗舰模型是否在 12 月 16 日前进入开源权重或 API 正式可用 (GA)",
+      "title_en": "Will Alibaba Qwen release next-gen open weights or API GA by Dec 16?",
       "target_entity_id": "ent_qwen_alibaba",
       "target_entity": "阿里巴巴 / 通义千问 (Qwen)",
       "question": "截至 2026-12-16，Hugging Face `Qwen` 官方组织或阿里云官方 API 是否上线对应新版模型卡片/正式计费文档？",
+      "question_en": "As of 2026-12-16, have Hugging Face `Qwen` or Alibaba Cloud API launched official next-gen model cards or GA pricing docs?",
       "created_at": "2026-11-19T05:31:12+08:00",
-      "due_at": "2026-12-19T05:31:12+08:00",
+      "due_at": "2026-12-16T20:00:00+08:00",
       "win_rule": "Hugging Face `Qwen` 组织出现新版模型仓库且含可用权重/许可证，或阿里云百炼上线正式 API 计费页",
       "lose_rule": "到期前官方模型卡与 API 文档均未更新，且官方声明仅限内部测试或推迟发布",
       "indeterminate_rule": "仅发布预告博文但未公开任何可试用权重、API 或定价说明",
@@ -97,15 +103,15 @@
       "core_assumption": "通义千问重大版本均会通过 HF 或阿里云官方渠道同步文档与许可",
       "invalidation_trigger": "官方辟谣非官方版本或延后发布",
       "probability_pct": 55,
-      "probability_note": "主观基准判断，最终以 Hugging Face 官方模型卡 API 检查结果结算",
-      "current_judgment": "保持追踪，等待 Hugging Face / 官方文档连接器捕获一手上架记录",
+      "probability_note": "主观基准判断，最终以 Hugging Face 官方模型卡核查结果结算",
+      "current_judgment": "保持追踪，等待 Hugging Face 或阿里云官方文档公布正式上架记录",
       "versions": [
         {
           "version": 1,
           "updated_at": "2026-11-19T05:31:12+08:00",
           "judgment": "待 Hugging Face 官方权重与阿里云文档验证",
           "probability_pct": 55,
-          "reason": "基于科技新闻热榜线索与 HF 连接器比对建立"
+          "reason": "基于科技新闻线索与 Hugging Face 官方仓库比对建立"
         }
       ],
       "settlement": null
@@ -115,35 +121,124 @@
       "mode": "live",
       "status": "open",
       "title": "美联储 2026 年 12 月 FOMC 议息会议是否维持鹰派按兵不动或加息 25bp",
+      "title_en": "Will Dec 10 FOMC follow up with another hike or pause hawkishly?",
       "target_entity_id": "ent_macro_fomc",
       "target_entity": "美联储 FOMC 与全球流动性",
       "question": "北京时间 2026-12-10 03:00 公布的 FOMC 决议声明中，联邦基金利率区间是否上调或释放 2027 年进一步收紧信号？",
+      "question_en": "In the Dec 10, 2026 FOMC statement, will the Fed hike rates again or signal extended tightening into 2027?",
       "created_at": "2026-11-19T15:44:21+08:00",
       "due_at": "2026-12-10T04:30:00+08:00",
-      "win_rule": "Federal Reserve 12 月 FOMC 官方声明宣布加息或 SEP 点阵图上移 2027 年利率中值",
-      "lose_rule": "官方声明宣布降息或维持利率不变且 SEP 中值下调",
-      "indeterminate_rule": "声明未改变利率且点阵图与上期完全一致",
+      "win_rule": "Federal Reserve 12 月 FOMC 官方声明宣布继续加息或 SEP 点阵图上移 2027 年利率中值",
+      "lose_rule": "官方声明宣布暂停加息/降息且 SEP 点阵图中值下调",
+      "indeterminate_rule": "声明维持利率不变且未公布明确前瞻利率路径",
       "supporting_evidence": [
-        "10 月 FOMC 会议纪要偏鹰，沃勒等官员讨论加息节奏"
+        "10 月 FOMC 会议纪要偏鹰，官员讨论抗通胀与利率路径"
       ],
       "opposing_evidence": [
-        "内部委员对紧缩幅度与通胀回落节奏存在明显分歧"
+        "内部委员对连续紧缩节奏与就业/美债波动承压度存在分歧"
       ],
       "core_assumption": "以 Federal Reserve 官网 FOMC 决议原文与 SEP 点阵图为唯一结算口径",
-      "invalidation_trigger": "12 月会前核心通胀或就业数据出现断崖式走弱",
+      "invalidation_trigger": "12 月会前核心 CPI 或非农就业出现超预期走弱",
       "probability_pct": 55,
-      "probability_note": "锚定 2026-12-10 官方决议发布时刻自动到期，不含付费期货隐含概率",
-      "current_judgment": "10 月纪要显露鹰派分歧，关注 12 月 SEP 点阵图方向",
+      "probability_note": "结合最新利率决议上下文生成，锚定 2026-12-10 官方声明自动到期结算",
+      "current_judgment": "显露鹰派分歧，关注 12 月 SEP 点阵图方向",
+      "current_judgment_en": "Post-hike hawkish bias persists; watching Dec 10 SEP dot-plot path.",
       "versions": [
         {
           "version": 1,
           "updated_at": "2026-11-19T15:44:21+08:00",
           "judgment": "等待 12 月 10 日 FOMC 正式声明与点阵图核验",
           "probability_pct": 55,
-          "reason": "由 FOMC 10 月纪要与 12 月议息日程动态立项"
+          "reason": "由 FOMC 最新政策动向与 12 月议息日程动态立项"
         }
       ],
       "settlement": null
+    },
+    {
+      "prediction_id": "pred_replay_anthropic_ipo_2026_11",
+      "mode": "replay",
+      "status": "settled",
+      "title": "历史复盘：Anthropic 上市首周高位估值波动（创纪录募资 vs 次日破发压力）",
+      "title_en": "Review: Anthropic Mega-IPO Valuation Volatility Window",
+      "target_entity_id": "ent_anthropic",
+      "target_entity": "Anthropic / Claude",
+      "question": "Anthropic 完成创纪录 IPO 后首个完整交易周，二级市场是否发生 >5% 的高估值回撤压力测试？",
+      "question_en": "Did Anthropic suffer a >5% post-IPO drawdown pressure test within its first trading week?",
+      "created_at": "2026-11-18T10:00:00+08:00",
+      "due_at": "2026-11-20T22:30:00+08:00",
+      "win_rule": "公开行情与权威财经快讯确认单日下挫幅度大于 5%",
+      "lose_rule": "上市首周全程平稳收涨且最大回撤小于 5%",
+      "indeterminate_rule": "推迟挂牌未交易",
+      "supporting_evidence": [
+        "935 亿美元超高募资估值使一二级市场溢价收窄，上市次日放量下挫 8.5% 逼近破发"
+      ],
+      "opposing_evidence": [
+        "基石与机构长线锁仓意愿一度支撑发行价"
+      ],
+      "core_assumption": "仅以交易所开盘价与媒体交叉核实收盘跌幅为结算基准",
+      "invalidation_trigger": "发行中止",
+      "probability_pct": 68,
+      "probability_note": "历史复盘样题（单独计分，不计入实时追踪胜率）",
+      "current_judgment": "高估值 Mega-IPO 上市后短期估值消化压力显著",
+      "current_judgment_en": "Rich valuation mega-IPO faced sharp near-term digestion pressure.",
+      "versions": [
+        {
+          "version": 1,
+          "updated_at": "2026-11-18T10:00:00+08:00",
+          "judgment": "提示首周高波动回撤风险",
+          "probability_pct": 68,
+          "reason": "历史复盘初始立项"
+        }
+      ],
+      "settlement": {
+        "outcome": "correct",
+        "settled_at": "2026-11-20T22:30:00+08:00",
+        "evidence_url": "https://wallstreetcn.com/",
+        "note": "多源快讯实录确认上市次日下挫 8.5%、盘中逼近发行价，触发 >5% 压力检验。"
+      }
+    },
+    {
+      "prediction_id": "pred_replay_nvda_volatility_2026_11",
+      "mode": "replay",
+      "status": "settled",
+      "title": "历史复盘：AI 高权重龙头（NVDA）与纳指高波期单日剧震检验",
+      "title_en": "Review: NVDA & Nasdaq High-Volatility Session Test",
+      "target_entity_id": "ent_nvidia",
+      "target_entity": "英伟达 (NVIDIA)",
+      "question": "治理不确定性与海外算力税负升温期间，NVDA 单周内是否发生超过 8% 的单日剧烈回撤？",
+      "question_en": "Did NVDA experience a >8% single-day drawdown amid governance and data-center policy risk?",
+      "created_at": "2026-11-17T09:00:00+08:00",
+      "due_at": "2026-11-21T05:30:00+08:00",
+      "win_rule": "美股官方收盘行情单日跌幅超过 8%",
+      "lose_rule": "整周单日最大跌幅维持在 8% 以内",
+      "indeterminate_rule": "停牌无交易",
+      "supporting_evidence": [
+        "实际行情记录 NVDA 最新收盘 125.53 美元，单日实际下跌 -14.01%"
+      ],
+      "opposing_evidence": [
+        "前期 AI 硬件强基本面一度提供逢低买盘支撑"
+      ],
+      "core_assumption": "直接对接美股延迟/收盘行情数据源自动结算",
+      "invalidation_trigger": "无",
+      "probability_pct": 64,
+      "probability_note": "自动行情复盘核验样本",
+      "current_judgment": "高拥挤度叠加治理与政策变量易引发超 8% 尾部波动",
+      "current_judgment_en": "Crowded positioning plus policy shock triggers >8% tail volatility.",
+      "versions": [
+        {
+          "version": 1,
+          "updated_at": "2026-11-17T09:00:00+08:00",
+          "judgment": "预警高波动风险",
+          "probability_pct": 64,
+          "reason": "历史波动复盘立项"
+        }
+      ],
+      "settlement": {
+        "outcome": "correct",
+        "settled_at": "2026-11-21T05:30:00+08:00",
+        "evidence_url": "https://www.sec.gov/edgar/browse/?CIK=0001045810",
+        "note": "行情实测结算：NVDA 收报 125.53（-14.01%）。"
+      }
     }
   ]
 }

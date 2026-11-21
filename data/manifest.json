@@ -1,80 +1,82 @@
 {
   "schema_version": "4.1",
-  "site_published_at": "2026-11-22T01:22:45+08:00",
+  "site_published_at": "2026-11-22T01:29:20+08:00",
   "smart": {
-    "latest_batch_id": "smart-20261121-112123",
-    "latest_path": "archives/smart/2026-11-21/11-21/",
-    "meta_path": "archives/smart/2026-11-21/11-21/batch_meta.json",
-    "input_batch_id": "raw-20261121-104723",
-    "input_raw_path": "archives/raw/2026-11-21/10-47/",
-    "input_cutoff_at": "2026-11-21T10:47:23+08:00",
-    "generated_at": "2026-11-21T11:21:23+08:00",
-    "published_at": "2026-11-21T11:30:05+08:00",
-    "target_cadence_hours": 12,
+    "latest_batch_id": "smart-20261122-012333",
+    "latest_path": "archives/smart/2026-11-22/01-23/",
+    "meta_path": "archives/smart/2026-11-22/01-23/batch_meta.json",
+    "input_batch_id": "raw-20261122-012210",
+    "input_raw_path": "archives/raw/2026-11-22/01-22/",
+    "input_cutoff_at": "2026-11-22T01:22:10+08:00",
+    "generated_at": "2026-11-22T01:23:33+08:00",
+    "published_at": "2026-11-22T01:29:20+08:00",
+    "target_cadence_hours": 3,
     "status": "complete",
+    "generation_mode": "mode_ai",
+    "quality_flags": [],
     "model_name": "gemini-4-hydrogen",
     "configured_primary_model": "gemini-4-hydrogen",
-    "has_comments": true,
+    "has_comments": false,
     "categories": {
       "finance": {
-        "batch_id": "smart-20261121-112123",
-        "path": "archives/smart/2026-11-21/11-21/analysis_finance.json",
-        "comments_path": "archives/smart/2026-11-21/11-21/comments_finance.json",
-        "input_batch_id": "raw-20261121-104723",
-        "input_cutoff_at": "2026-11-21T10:47:23+08:00",
-        "generated_at": "2026-11-21T11:27:11+08:00",
+        "batch_id": "smart-20261122-012333",
+        "path": "archives/smart/2026-11-22/01-23/analysis_finance.json",
+        "comments_path": "archives/smart/2026-11-22/01-23/comments_finance.json",
+        "input_batch_id": "raw-20261122-012210",
+        "input_cutoff_at": "2026-11-22T01:22:10+08:00",
+        "generated_at": "2026-11-22T01:29:20+08:00",
         "status": "ok",
         "is_fallback": false,
         "fallback_reason": null,
-        "item_count": 12,
-        "verified_count": 12,
+        "item_count": 9,
+        "verified_count": 9,
         "needs_verification_count": 0,
-        "has_comments": true
+        "has_comments": false
       },
       "global": {
-        "batch_id": "smart-20261121-112123",
-        "path": "archives/smart/2026-11-21/11-21/analysis_global.json",
-        "comments_path": "archives/smart/2026-11-21/11-21/comments_global.json",
-        "input_batch_id": "raw-20261121-104723",
-        "input_cutoff_at": "2026-11-21T10:47:23+08:00",
-        "generated_at": "2026-11-21T11:25:01+08:00",
+        "batch_id": "smart-20261122-012333",
+        "path": "archives/smart/2026-11-22/01-23/analysis_global.json",
+        "comments_path": "archives/smart/2026-11-22/01-23/comments_global.json",
+        "input_batch_id": "raw-20261122-012210",
+        "input_cutoff_at": "2026-11-22T01:22:10+08:00",
+        "generated_at": "2026-11-22T01:27:11+08:00",
         "status": "ok",
         "is_fallback": false,
         "fallback_reason": null,
-        "item_count": 12,
-        "verified_count": 11,
-        "needs_verification_count": 1,
-        "has_comments": true
+        "item_count": 8,
+        "verified_count": 8,
+        "needs_verification_count": 0,
+        "has_comments": false
       },
       "tech": {
-        "batch_id": "smart-20261121-112123",
-        "path": "archives/smart/2026-11-21/11-21/analysis_tech.json",
-        "comments_path": "archives/smart/2026-11-21/11-21/comments_tech.json",
-        "input_batch_id": "raw-20261121-104723",
-        "input_cutoff_at": "2026-11-21T10:47:23+08:00",
-        "generated_at": "2026-11-21T11:24:48+08:00",
-        "status": "ok",
-        "is_fallback": false,
-        "fallback_reason": null,
-        "item_count": 10,
-        "verified_count": 9,
-        "needs_verification_count": 1,
-        "has_comments": true
-      },
-      "general": {
-        "batch_id": "smart-20261121-112123",
-        "path": "archives/smart/2026-11-21/11-21/analysis_general.json",
-        "comments_path": "archives/smart/2026-11-21/11-21/comments_general.json",
-        "input_batch_id": "raw-20261121-104723",
-        "input_cutoff_at": "2026-11-21T10:47:23+08:00",
-        "generated_at": "2026-11-21T11:24:49+08:00",
+        "batch_id": "smart-20261122-012333",
+        "path": "archives/smart/2026-11-22/01-23/analysis_tech.json",
+        "comments_path": "archives/smart/2026-11-22/01-23/comments_tech.json",
+        "input_batch_id": "raw-20261122-012210",
+        "input_cutoff_at": "2026-11-22T01:22:10+08:00",
+        "generated_at": "2026-11-22T01:27:19+08:00",
         "status": "ok",
         "is_fallback": false,
         "fallback_reason": null,
         "item_count": 12,
         "verified_count": 12,
         "needs_verification_count": 0,
-        "has_comments": true
+        "has_comments": false
+      },
+      "general": {
+        "batch_id": "smart-20261122-012333",
+        "path": "archives/smart/2026-11-22/01-23/analysis_general.json",
+        "comments_path": "archives/smart/2026-11-22/01-23/comments_general.json",
+        "input_batch_id": "raw-20261122-012210",
+        "input_cutoff_at": "2026-11-22T01:22:10+08:00",
+        "generated_at": "2026-11-22T01:26:14+08:00",
+        "status": "ok",
+        "is_fallback": false,
+        "fallback_reason": null,
+        "item_count": 12,
+        "verified_count": 12,
+        "needs_verification_count": 0,
+        "has_comments": false
       }
     }
   },
@@ -168,8 +170,8 @@
   },
   "v3": {
     "schema_version": "4.0",
-    "generated_at": "2026-11-21T11:30:05+08:00",
-    "batch_id": "smart-20261121-112123",
+    "generated_at": "2026-11-22T01:29:20+08:00",
+    "batch_id": "smart-20261122-012333",
     "entities_path": "data/entities_index.json",
     "storylines_path": "data/storylines_index.json",
     "topics_path": "data/topics.json",
@@ -181,15 +183,16 @@
     "radar_path": "data/radar.json",
     "predictions_path": "data/predictions_public.json",
     "connectors_path": "data/connectors_latest.json",
-    "entities_count": 24,
+    "entities_count": 28,
     "storylines_count": 75,
     "topics_count": 5,
     "ai_progress_count": 28,
-    "finance_impact_count": 0,
+    "finance_impact_count": 14,
+    "market_quotes_path": "data/market_quotes.json",
     "calendar_count": 10,
     "calendar_ics_path": "data/calendar.ics",
-    "calendar_ics_count": 8,
-    "calendar_tbd_skipped": 2,
+    "calendar_ics_count": 10,
+    "calendar_tbd_skipped": 0,
     "feed_path": "data/feed.xml",
     "feeds_by_category": {
       "finance": "data/feed_finance.xml",
@@ -197,8 +200,8 @@
       "tech": "data/feed_tech.xml",
       "general": "data/feed_general.xml"
     },
-    "tech_tools_count": 13,
-    "radar_count": 46
+    "tech_tools_count": 15,
+    "radar_count": 41
   },
   "degraded": false,
   "alerts": [],
@@ -207,9 +210,9 @@
     "healthy_keys": 12,
     "cooled_down_keys": 0,
     "exhausted_keys": 0,
-    "daily_calls_total": 0,
+    "daily_calls_total": 4,
     "date_utc": "2026-11-21",
-    "updated_at": "2026-11-21T17:22:31Z",
+    "updated_at": "2026-11-21T17:29:20Z",
     "keys": [
       {
         "slot": "KEY_TECH",
@@ -254,12 +257,12 @@
       {
         "slot": "KEY_1",
         "status": "healthy",
-        "daily_calls": 0,
+        "daily_calls": 1,
         "cooldown_until": null,
         "exhausted_until": null,
         "last_error_code": null,
         "last_error": null,
-        "last_success_at": null
+        "last_success_at": "2026-11-21T17:29:20Z"
       },
       {
         "slot": "KEY_2",
@@ -274,12 +277,12 @@
       {
         "slot": "KEY_3",
         "status": "healthy",
-        "daily_calls": 0,
+        "daily_calls": 1,
         "cooldown_until": null,
         "exhausted_until": null,
         "last_error_code": null,
         "last_error": null,
-        "last_success_at": null
+        "last_success_at": "2026-11-21T17:27:11Z"
       },
       {
         "slot": "KEY_4",
@@ -294,12 +297,12 @@
       {
         "slot": "KEY_5",
         "status": "healthy",
-        "daily_calls": 0,
+        "daily_calls": 1,
         "cooldown_until": null,
         "exhausted_until": null,
         "last_error_code": null,
         "last_error": null,
-        "last_success_at": null
+        "last_success_at": "2026-11-21T17:27:19Z"
       },
       {
         "slot": "KEY_6",
@@ -314,12 +317,12 @@
       {
         "slot": "KEY_7",
         "status": "healthy",
-        "daily_calls": 0,
+        "daily_calls": 1,
         "cooldown_until": null,
         "exhausted_until": null,
         "last_error_code": null,
         "last_error": null,
-        "last_success_at": null
+        "last_success_at": "2026-11-21T17:26:14Z"
       },
       {
         "slot": "KEY_8",
@@ -338,9 +341,9 @@
     "healthy_keys": 12,
     "cooled_down_keys": 0,
     "exhausted_keys": 0,
-    "daily_calls_total": 0,
+    "daily_calls_total": 4,
     "date_utc": "2026-11-21",
-    "updated_at": "2026-11-21T17:22:31Z",
+    "updated_at": "2026-11-21T17:29:20Z",
     "keys": [
       {
         "slot": "KEY_TECH",
@@ -385,12 +388,12 @@
       {
         "slot": "KEY_1",
         "status": "healthy",
-        "daily_calls": 0,
+        "daily_calls": 1,
         "cooldown_until": null,
         "exhausted_until": null,
         "last_error_code": null,
         "last_error": null,
-        "last_success_at": null
+        "last_success_at": "2026-11-21T17:29:20Z"
       },
       {
         "slot": "KEY_2",
@@ -405,12 +408,12 @@
       {
         "slot": "KEY_3",
         "status": "healthy",
-        "daily_calls": 0,
+        "daily_calls": 1,
         "cooldown_until": null,
         "exhausted_until": null,
         "last_error_code": null,
         "last_error": null,
-        "last_success_at": null
+        "last_success_at": "2026-11-21T17:27:11Z"
       },
       {
         "slot": "KEY_4",
@@ -425,12 +428,12 @@
       {
         "slot": "KEY_5",
         "status": "healthy",
-        "daily_calls": 0,
+        "daily_calls": 1,
         "cooldown_until": null,
         "exhausted_until": null,
         "last_error_code": null,
         "last_error": null,
-        "last_success_at": null
+        "last_success_at": "2026-11-21T17:27:19Z"
       },
       {
         "slot": "KEY_6",
@@ -445,12 +448,12 @@
       {
         "slot": "KEY_7",
         "status": "healthy",
-        "daily_calls": 0,
+        "daily_calls": 1,
         "cooldown_until": null,
         "exhausted_until": null,
         "last_error_code": null,
         "last_error": null,
-        "last_success_at": null
+        "last_success_at": "2026-11-21T17:26:14Z"
       },
       {
         "slot": "KEY_8",
