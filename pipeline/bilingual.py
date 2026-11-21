@@ -2,16 +2,19 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 import os
 from pathlib import Path
 import re
 import time
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Sequence, Tuple
 
 _CJK_RE = re.compile(r"[\u4e00-\u9fff]")
 _LATIN_RE = re.compile(r"[A-Za-z]")
 DEFAULT_OVERRIDES_PATH = Path(__file__).resolve().parent.parent / "data" / "translation_overrides.json"
+DEFAULT_TRANSLATION_CACHE_PATH = Path(__file__).resolve().parent.parent / "data" / "translation_cache.json"
+_TRANSLATION_CACHE_MAX_ENTRIES = 2500
 
 
 def is_mostly_english(text: str) -> bool:
@@ -85,7 +88,11 @@ def _translate_offline_fallback(text: str, *, is_summary: bool = False) -> str:
     return f"【{prefix}】{clean}"
 
 
-_LLM_ENV_KEYS = ("KEY_GLOBAL", "KEY_1", "KEY_2", "KEY_3", "KEY_4", "KEY_5", "KEY_6", "KEY_7", "KEY_8", "GEMINI_API_KEY")
+_LLM_ENV_KEYS = (
+    "KEY_TECH", "KEY_GLOBAL", "KEY_FINANCE", "KEY_GENERAL",
+    "GOOGLE_API_KEY", "GEMINI_API_KEY",
+    "KEY_1", "KEY_2", "KEY_3", "KEY_4", "KEY_5", "KEY_6", "KEY_7", "KEY_8",
+)
 _ZH_EN_PHRASE_PAIRS: List[tuple[str, str]] = [
     ("英伟达 (NVIDIA)", "NVIDIA"),
     ("英伟达", "NVIDIA"),
@@ -301,74 +308,117 @@ def _batch_translate_with_gemini(
     return translated
 
 
+def _translation_cache_key(text: str, target_lang: str) -> str:
+    digest = hashlib.sha256(f"{target_lang}\n{text.strip()}".encode("utf-8")).hexdigest()[:16]
+    return f"{target_lang}:{digest}"
+
+
+def _load_translation_cache(cache_path: Optional[Path] = None) -> Dict[str, str]:
+    path = cache_path or DEFAULT_TRANSLATION_CACHE_PATH
+    try:
+        if path.exists():
+            raw = json.loads(path.read_text(encoding="utf-8"))
+            if isinstance(raw, dict):
+                return {str(k): str(v) for k, v in raw.items() if isinstance(v, str) and v.strip()}
+    except Exception:
+        pass
+    return {}
+
+
+def _save_translation_cache(cache_map: Dict[str, str], cache_path: Optional[Path] = None) -> None:
+    path = cache_path or DEFAULT_TRANSLATION_CACHE_PATH
+    if len(cache_map) > _TRANSLATION_CACHE_MAX_ENTRIES:
+        # Keep the most recently inserted entries (insertion-ordered dict)
+        trimmed_keys = list(cache_map.keys())[-_TRANSLATION_CACHE_MAX_ENTRIES:]
+        cache_map = {k: cache_map[k] for k in trimmed_keys}
+    try:
+        from pipeline.manifest import atomic_write_json
+
+        atomic_write_json(path, cache_map, indent=2)
+    except Exception:
+        pass
+
+
 def _translate_texts_with_pipeline(
     texts: List[str],
     target_lang: str = "zh",
     *,
     max_retries: int = 2,
     backoff_base: float = 0.5,
-    chunk_size: int = 12,
+    chunk_size: int = 16,
+    base_dir: Path | str | None = None,
 ) -> Tuple[Optional[List[str]], int, Optional[str]]:
-    """Translate in bounded chunks with exponential backoff retries across Gemini keys/models."""
-    key_names = (
-        "KEY_GLOBAL", "KEY_1", "KEY_2", "KEY_3", "KEY_4", "KEY_5", "KEY_6", "KEY_7", "KEY_8",
-        "GOOGLE_API_KEY", "KEY_TECH", "KEY_FINANCE", "KEY_GENERAL",
-    )
-    keys: List[str] = []
-    for kn in key_names:
-        v = (os.environ.get(kn) or "").strip()
-        if v and v not in keys:
-            keys.append(v)
-    if not keys or not texts:
-        return None, 0, "no_api_key" if texts and not keys else None
-    try:
-        from google import genai
-        from google.genai import types
-    except Exception as exc:
-        return None, 0, type(exc).__name__
+    """Translate in bounded chunks with content-hash caching and full 13-key Gemini pool rotation."""
+    del max_retries, backoff_base
+    if not texts:
+        return None, 0, None
+
+    from pipeline.gemini_pool import call_gemini_json, collect_api_key_slots
+
+    slots = collect_api_key_slots()
+    if not slots:
+        return None, 0, "no_api_key"
+
+    root_dir = Path(base_dir) if base_dir is not None else DEFAULT_TRANSLATION_CACHE_PATH.parent.parent
+    cache_path = root_dir / "data" / "translation_cache.json"
+    cache_map = _load_translation_cache(cache_path)
+
+    out: List[Optional[str]] = [None] * len(texts)
+    missing_indices: List[int] = []
+    missing_texts: List[str] = []
+    for idx, txt in enumerate(texts):
+        clean = str(txt or "").strip()
+        if not clean:
+            out[idx] = ""
+            continue
+        ck = _translation_cache_key(clean, target_lang)
+        cached_val = cache_map.get(ck)
+        if cached_val:
+            out[idx] = cached_val
+        else:
+            missing_indices.append(idx)
+            missing_texts.append(clean)
+
+    if not missing_texts:
+        return [str(x or "") for x in out], 0, None
 
     lang_desc = "自然流畅、专业简洁的中文新闻表达" if target_lang == "zh" else "concise, journalistic English"
-    all_out: List[str] = []
     total_attempts = 0
     last_error: Optional[str] = None
+    cache_dirty = False
 
-    for start in range(0, len(texts), max(1, chunk_size)):
-        chunk = texts[start : start + max(1, chunk_size)]
+    for start in range(0, len(missing_texts), max(1, chunk_size)):
+        chunk = missing_texts[start : start + max(1, chunk_size)]
+        chunk_idx = missing_indices[start : start + max(1, chunk_size)]
         prompt = (
             f"将下面 JSON 数组中的每条新闻文本精准翻译为{lang_desc}，保留专有名词与数字，严禁增删条目。\n"
             f"只输出严格 JSON 字符串数组（长度必须与输入完全一致）：\n"
             + json.dumps(chunk, ensure_ascii=False)
         )
-        chunk_result: Optional[List[str]] = None
-        for attempt in range(max_retries + 1):
-            total_attempts += 1
-            for api_key in keys[:5]:
-                client = genai.Client(api_key=api_key)
-                for model_name in ("gemini-4-hydrogen", "gemini-2.5-flash"):
-                    try:
-                        resp = client.models.generate_content(
-                            model=model_name,
-                            contents=prompt,
-                            config=types.GenerateContentConfig(temperature=0.1, response_mime_type="application/json"),
-                        )
-                        parsed = json.loads(resp.text or "[]")
-                        if isinstance(parsed, list) and len(parsed) == len(chunk):
-                            chunk_result = [str(x).strip() for x in parsed]
-                            break
-                    except Exception as exc:
-                        last_error = f"{type(exc).__name__}: {str(exc)[:80]}"
-                        continue
-                if chunk_result is not None:
-                    break
-            if chunk_result is not None:
-                break
-            if attempt < max_retries and backoff_base > 0:
-                time.sleep(min(4.0, backoff_base * (2 ** attempt)))
-        if chunk_result is None:
-            return None, total_attempts, last_error or "chunk_translation_failed"
-        all_out.extend(chunk_result)
+        res = call_gemini_json(
+            scope="bilingual",
+            prompt=prompt,
+            models=("gemini-2.5-flash", "gemini-2.0-flash", "gemini-4-hydrogen"),
+            temperature=0.1,
+            base_dir=root_dir,
+        )
+        total_attempts += max(1, res.attempts)
+        parsed = res.data if res.ok else None
+        if not isinstance(parsed, list) or len(parsed) != len(chunk):
+            last_error = res.error_message or "chunk_translation_failed"
+            return None, total_attempts, last_error
+        for local_i, orig_pos in enumerate(chunk_idx):
+            val = str(parsed[local_i]).strip()
+            out[orig_pos] = val
+            if val:
+                ck = _translation_cache_key(chunk[local_i], target_lang)
+                cache_map[ck] = val
+                cache_dirty = True
 
-    return all_out, total_attempts, None
+    if cache_dirty:
+        _save_translation_cache(cache_map, cache_path)
+
+    return [str(x or "") for x in out], total_attempts, None
 
 
 def enrich_bilingual_events(
@@ -527,40 +577,33 @@ def enrich_bilingual_events(
             zh_ai_idx.append(idx)
             zh_ai_src.append(ai_val[:240])
 
-    use_llm_en = _has_llm_translation_key()
-    if zh_titles_src:
-        en_trans = (
-            _translate_texts_with_pipeline(zh_titles_src, "en", max_retries=max_retries, backoff_base=backoff_base)[0]
-            if use_llm_en
-            else None
+    from pipeline.gemini_pool import count_healthy_keys
+
+    use_llm_en = _has_llm_translation_key() and count_healthy_keys() >= 3
+    combined_zh_items: List[Tuple[int, str, str]] = []
+    for pos, ev_idx in enumerate(zh_titles_idx):
+        combined_zh_items.append((ev_idx, "title_en", zh_titles_src[pos]))
+    for pos, ev_idx in enumerate(zh_sums_idx):
+        combined_zh_items.append((ev_idx, "summary_en", zh_sums_src[pos]))
+    for pos, ev_idx in enumerate(zh_ai_idx):
+        combined_zh_items.append((ev_idx, "ai_analysis_en", zh_ai_src[pos]))
+
+    en_combined: Optional[List[str]] = None
+    if combined_zh_items and use_llm_en:
+        en_combined = _translate_texts_with_pipeline(
+            [txt for _, _, txt in combined_zh_items],
+            "en",
+            max_retries=max_retries,
+            backoff_base=backoff_base,
+            chunk_size=24,
+        )[0]
+
+    for pos, (ev_idx, field_name, zh_txt) in enumerate(combined_zh_items):
+        ev = events[ev_idx]
+        ev[field_name] = (
+            (en_combined[pos] if en_combined and pos < len(en_combined) and en_combined[pos] else None)
+            or _translate_zh_to_en_glossary(zh_txt, ev.get("entities"))
         )
-        for pos, ev_idx in enumerate(zh_titles_idx):
-            ev = events[ev_idx]
-            ev["title_en"] = (en_trans[pos] if en_trans and en_trans[pos] else None) or _translate_zh_to_en_glossary(
-                zh_titles_src[pos], ev.get("entities")
-            )
-    if zh_sums_src:
-        en_sum_trans = (
-            _translate_texts_with_pipeline(zh_sums_src, "en", max_retries=max_retries, backoff_base=backoff_base)[0]
-            if use_llm_en
-            else None
-        )
-        for pos, ev_idx in enumerate(zh_sums_idx):
-            ev = events[ev_idx]
-            ev["summary_en"] = (en_sum_trans[pos] if en_sum_trans and en_sum_trans[pos] else None) or _translate_zh_to_en_glossary(
-                zh_sums_src[pos], ev.get("entities")
-            )
-    if zh_ai_src:
-        en_ai_trans = (
-            _translate_texts_with_pipeline(zh_ai_src, "en", max_retries=max_retries, backoff_base=backoff_base)[0]
-            if use_llm_en
-            else None
-        )
-        for pos, ev_idx in enumerate(zh_ai_idx):
-            ev = events[ev_idx]
-            ev["ai_analysis_en"] = (en_ai_trans[pos] if en_ai_trans and en_ai_trans[pos] else None) or _translate_zh_to_en_glossary(
-                zh_ai_src[pos], ev.get("entities")
-            )
 
 
 def retry_pending_translations(
@@ -678,10 +721,13 @@ def enrich_bilingual_topics(
             if nt and not node.get("title_en") and _has_cjk_text(nt):
                 zh_node_idx.append((ti, ni))
                 zh_node_src.append(nt)
+    from pipeline.gemini_pool import count_healthy_keys
+
+    can_llm_en = _has_llm_translation_key() and count_healthy_keys() >= 3
     if zh_topic_src:
         tp_en = (
             _translate_texts_with_pipeline(zh_topic_src, "en", max_retries=max_retries, backoff_base=backoff_base)[0]
-            if _has_llm_translation_key()
+            if can_llm_en
             else None
         )
         for pos, ti in enumerate(zh_topic_idx):
@@ -691,7 +737,7 @@ def enrich_bilingual_topics(
     if zh_node_src:
         nd_en = (
             _translate_texts_with_pipeline(zh_node_src, "en", max_retries=max_retries, backoff_base=backoff_base)[0]
-            if _has_llm_translation_key()
+            if can_llm_en
             else None
         )
         for pos, (ti, ni) in enumerate(zh_node_idx):
@@ -730,8 +776,10 @@ def enrich_bilingual_v3_records(
     if not pending_refs:
         return changed
 
+    from pipeline.gemini_pool import count_healthy_keys
+
     llm_out: Optional[List[str]] = None
-    if _has_llm_translation_key():
+    if _has_llm_translation_key() and count_healthy_keys() >= 3:
         batch_texts = [t for _, _, t in pending_refs[:max_llm_items]]
         llm_out, _, _ = _translate_texts_with_pipeline(batch_texts, "en", max_retries=1, backoff_base=0.3)
 

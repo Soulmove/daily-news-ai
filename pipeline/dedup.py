@@ -11,7 +11,12 @@ from typing import Dict, List, Optional, Set, Tuple
 from pipeline.time_utils import now_shanghai, parse_iso_datetime
 
 _TABLOID_NOISE_RE = re.compile(r"(?:婚外情|间谍|丑闻|跳起|宝莱坞|大瓜|出轨|明星八卦|搞笑)")
-_COMMUNITY_GOSSIP_IDS = {"zhihu", "weibo", "tieba", "douyin", "hupu"}
+_MATERIAL_CORPORATE_OR_SECURITY_RE = re.compile(
+    r"(?:ceo|首席执行官|高管|董事会|辞任|辞职|复职|重返|sec|监管调查|听证会|国家安全|出口管制|股价|暴跌|重挫|财报|ipo|英伟达|nvidia)",
+    re.I,
+)
+_EXTRAORDINARY_CLAIM_RE = re.compile(r"(?:证明|猜想|裁定|和解|收购|并购|破产|ipo|违约|制裁)", re.I)
+_COMMUNITY_GOSSIP_IDS = {"zhihu", "weibo", "tieba", "douyin", "hupu", "coolapk", "v2ex-share"}
 
 _CLEAN_RE = re.compile(r"[\s\W_]+", re.UNICODE)
 _ASCII_WORD_RE = re.compile(r"[a-z0-9]{2,}")
@@ -216,7 +221,7 @@ def is_omnibus_digest_title(title: str) -> bool:
 def get_publisher_family(source_id: str, url: str = "") -> str:
     """Group multi-feed channels from the same outlet (e.g. cls-hot/cls-telegraph -> cls) into one family."""
     sid = (source_id or "unknown").lower().strip()
-    if sid.startswith("wallstreetcn"):
+    if sid.startswith("wallstreetcn") or sid.startswith("wscn"):
         return "wallstreetcn"
     if sid.startswith("cls"):
         return "cls"
@@ -226,17 +231,32 @@ def get_publisher_family(source_id: str, url: str = "") -> str:
         return "chongbuluo"
     if sid.startswith("36kr"):
         return "36kr"
-    return sid.split("-")[0] if "-" in sid and sid.split("-")[0] in {"tencent", "bilibili"} else sid
+    if sid.startswith("rss-gnews-") or "news.google.com" in (url or "").lower():
+        return "gnews-aggregator"
+    return sid.split("-")[0] if "-" in sid and sid.split("-")[0] in {"tencent", "bilibili", "rss"} and not sid.startswith("rss-gnews-") else sid
 
 
 def _source_rank_key(src: dict) -> tuple:
-    """Order citations so first-party official / excerpted primary reports appear before omnibus hotlists."""
+    """Order citations so first-party official & authoritative direct media outrank community discussions & omnibus hotlists."""
     tier = src.get("source_tier") or ""
-    tier_score = 0 if tier == "first_party" else (1 if tier == "tech_material" else 2)
-    is_omnibus = 1 if (src.get("source_id") == "aihot" or src.get("source_kind") == "discussion") else 0
+    kind = src.get("source_kind") or "news"
+    sid = (src.get("source_id") or "").lower()
+    if tier == "first_party":
+        tier_score = 0
+    elif tier == "direct_media":
+        tier_score = 1
+    elif tier == "tech_material":
+        tier_score = 2
+    elif kind == "news" and sid not in _COMMUNITY_GOSSIP_IDS:
+        tier_score = 3
+    elif kind == "repo":
+        tier_score = 4
+    else:
+        tier_score = 5
+    is_omnibus = 1 if (sid == "aihot" or sid in _COMMUNITY_GOSSIP_IDS or kind == "discussion" or src.get("is_reprint_copy")) else 0
     has_excerpt = 0 if src.get("excerpt") else 1
-    pub = src.get("published_at") or ""
-    return (tier_score, is_omnibus, has_excerpt, 0 if pub else 1)
+    has_thumb = 0 if src.get("thumbnail_url") else 1
+    return (tier_score, is_omnibus, has_excerpt, has_thumb)
 
 
 _MAJOR_BREAKING_RE = re.compile(
@@ -319,11 +339,11 @@ def score_cluster_for_briefing(cluster: dict, watched_match_count: int = 0) -> T
     if is_omnibus_digest_title(title_str):
         score -= 48.0
         reasons.append("拼盘早报/多事件合集降权")
-    if _TABLOID_NOISE_RE.search(title_str):
-        score -= 28.0
+    if _TABLOID_NOISE_RE.search(title_str) and not _MATERIAL_CORPORATE_OR_SECURITY_RE.search(title_str):
+        score -= 20.0
         reasons.append("含八卦/情绪化表述降权")
 
-    # Single community discussion post (e.g. standalone zhihu/weibo/tieba) without news corroboration OR breaking macro signal
+    # Single community discussion post (e.g. standalone zhihu/weibo/tieba/coolapk) without authoritative corroboration
     all_community = bool(related) and all(
         (s.get("source_id") in _COMMUNITY_GOSSIP_IDS or s.get("source_kind") == "discussion")
         for s in related
@@ -331,6 +351,9 @@ def score_cluster_for_briefing(cluster: dict, watched_match_count: int = 0) -> T
     if all_community and indep_cnt <= 1 and not _MAJOR_BREAKING_RE.search(text_blob):
         score -= 14.0
         reasons.append("单一社区热榜讨论降权")
+    if all_community and _EXTRAORDINARY_CLAIM_RE.search(title_str):
+        score -= 16.0
+        reasons.append("重大科学/司法/并购传闻仅见社区讨论（缺权威媒体交叉）")
 
     return round(score, 2), reasons
 
@@ -361,6 +384,7 @@ def deduplicate_raw_items(items: List[dict], similarity_threshold: float = 0.58)
             "published_at": item.get("published_at"),
             "fetched_at": item.get("fetched_at"),
             "excerpt": item.get("excerpt"),
+            "thumbnail_url": item.get("thumbnail_url"),
             "is_reprint_copy": False,
         }
         if canon and canon in by_url:
@@ -372,6 +396,8 @@ def deduplicate_raw_items(items: List[dict], similarity_threshold: float = 0.58)
                 existing["published_at"] = item.get("published_at")
             if not existing.get("excerpt") and item.get("excerpt"):
                 existing["excerpt"] = item.get("excerpt")
+            if not existing.get("thumbnail_url") and item.get("thumbnail_url"):
+                existing["thumbnail_url"] = item.get("thumbnail_url")
             continue
 
         cloned = dict(item)
@@ -434,6 +460,8 @@ def deduplicate_raw_items(items: List[dict], similarity_threshold: float = 0.58)
                 matched_cluster["published_at"] = candidate["published_at"]
             if not matched_cluster.get("excerpt") and candidate.get("excerpt"):
                 matched_cluster["excerpt"] = candidate["excerpt"]
+            if not matched_cluster.get("thumbnail_url") and candidate.get("thumbnail_url"):
+                matched_cluster["thumbnail_url"] = candidate["thumbnail_url"]
         else:
             clusters.append(candidate)
 
@@ -445,6 +473,8 @@ def deduplicate_raw_items(items: List[dict], similarity_threshold: float = 0.58)
         if rel:
             best = rel[0]
             c["primary_source_id"] = best.get("source_id")
+            if not c.get("thumbnail_url"):
+                c["thumbnail_url"] = next((s.get("thumbnail_url") for s in rel if s.get("thumbnail_url")), None)
         indep = {
             s.get("publisher_family") or get_publisher_family(s.get("source_id", ""))
             for s in rel

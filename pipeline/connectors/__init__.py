@@ -15,6 +15,7 @@ from pipeline.connectors.hkex_cninfo import fetch_cninfo_announcements, fetch_hk
 from pipeline.connectors.huggingface_hub import fetch_huggingface_models
 from pipeline.connectors.macro_fomc import fetch_macro_fomc
 from pipeline.connectors.sec_edgar import fetch_sec_edgar
+from pipeline.gemini_pool import get_quota_summary
 from pipeline.manifest import load_json_if_exists
 from pipeline.time_utils import now_shanghai, to_iso_shanghai
 
@@ -69,20 +70,22 @@ def run_all_first_party_connectors(base_dir: Path | str = ".") -> Dict[str, Any]
                 "items": [],
             }
 
-        reports.append(
-            {
-                "connector_id": res.get("connector_id", cid),
-                "connector_name": res.get("connector_name", cid),
-                "source_tier": res.get("source_tier", "first_party"),
-                "status": res.get("status", "error"),
-                "fetched_at": res.get("fetched_at", fetched_iso),
-                "latency_ms": res.get("latency_ms", 0),
-                "item_count": res.get("item_count", 0),
-                "calendar_count": res.get("calendar_count", 0),
-                "error_message": res.get("error_message"),
-                "tos_note": res.get("tos_note"),
-            }
-        )
+        rep_row = {
+            "connector_id": res.get("connector_id", cid),
+            "connector_name": res.get("connector_name", cid),
+            "source_tier": res.get("source_tier", "first_party"),
+            "status": res.get("status", "error"),
+            "fetched_at": res.get("fetched_at", fetched_iso),
+            "latency_ms": res.get("latency_ms", 0),
+            "item_count": res.get("item_count", 0),
+            "calendar_count": res.get("calendar_count", 0),
+            "error_message": res.get("error_message"),
+            "tos_note": res.get("tos_note"),
+        }
+        for extra_k in ("verification_stats", "per_key_errors", "quota_exhausted", "degraded", "quality_flags", "cache_reused"):
+            if res.get(extra_k) is not None:
+                rep_row[extra_k] = res[extra_k]
+        reports.append(rep_row)
         all_items.extend(res.get("items") or [])
         tech_tools.extend(res.get("tech_tools") or [])
         calendar_events.extend(res.get("calendar_events") or [])
@@ -101,10 +104,11 @@ def run_all_first_party_connectors(base_dir: Path | str = ".") -> Dict[str, Any]
     except Exception:
         pass
 
-    ok_connectors = sum(1 for r in reports if r["status"] in {"ok", "cached_304", "partial"})
+    ok_connectors = sum(1 for r in reports if r["status"] in {"ok", "cached_304", "partial", "degraded"})
     return {
-        "schema_version": "3.0",
+        "schema_version": "4.1",
         "fetched_at": fetched_iso,
+        "gemini_quota": get_quota_summary(root),
         "summary": {
             "total_connectors": len(reports),
             "healthy_connectors": ok_connectors,

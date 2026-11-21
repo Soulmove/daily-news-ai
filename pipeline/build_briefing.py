@@ -24,6 +24,12 @@ from pipeline.dedup import (
     title_similarity,
 )
 from pipeline.entities import ENTITY_REGISTRY, match_entities_with_reasons
+from pipeline.gemini_pool import (
+    call_gemini_json,
+    count_healthy_keys,
+    get_ordered_key_slots,
+    get_quota_summary,
+)
 from pipeline.id_utils import canonicalize_url, is_generic_quote_or_homepage_url, make_raw_item_id
 from pipeline.manifest import (
     atomic_write_json,
@@ -60,19 +66,8 @@ PERSPECTIVE_ROLES = [
 
 
 def _collect_api_keys(category: str) -> List[str]:
-    env_names = [
-        f"KEY_{category.upper()}",
-        "GOOGLE_API_KEY",
-        "KEY_1", "KEY_2", "KEY_3", "KEY_4", "KEY_5", "KEY_6", "KEY_7", "KEY_8",
-    ]
-    seen = set()
-    keys: List[str] = []
-    for name in env_names:
-        val = os.environ.get(name, "").strip()
-        if val and val not in seen:
-            seen.add(val)
-            keys.append(val)
-    return keys
+    slots = get_ordered_key_slots(f"briefing:{category}")
+    return [s.secret for s in slots]
 
 
 def _load_raw_batch(
@@ -140,6 +135,7 @@ def _load_raw_batch(
                         "published_at_source": it.get("published_at_source"),
                         "fetched_at": it.get("fetched_at") or input_cutoff_at,
                         "excerpt": it.get("excerpt"),
+                        "thumbnail_url": it.get("thumbnail_url"),
                         "deep_fetch_status": it.get("deep_fetch_status"),
                         "metric_label": it.get("metric_label"),
                         "rank": it.get("rank", idx),
@@ -204,6 +200,7 @@ def _prepare_prompt_catalog(
                 "published_at_source": s.get("published_at_source") or cluster.get("published_at_source"),
                 "fetched_at": s.get("fetched_at") or cluster.get("fetched_at"),
                 "excerpt": s.get("excerpt") or cluster.get("excerpt"),
+                "thumbnail_url": s.get("thumbnail_url") or cluster.get("thumbnail_url"),
                 "deep_fetch_status": s.get("deep_fetch_status"),
             }
             ref_lookup[ref_id] = raw_obj
@@ -243,10 +240,15 @@ def _build_ai_prompt(category: str, input_cutoff_at: str, catalog_text: str) -> 
    - `ai_analysis`：你的背景解释或影响分析（明确是解读而非事实）。
    - `unverified_claims`：数组，列出素材中带有传闻、匿名爆料或未获官方证实的说法；无则填 `[]`。
    - `speculation_or_outlook`：可选前瞻观察点；素材不足时填 `null`，不要硬凑预测。
-5. 如果有效素材较少，请宁缺毋滥（输出 8–14 条高质量事件即可），禁止为了凑数把无关条目拼在一起，也禁止把高优先级重大全球/国家大事（如元首访华行程、APEC/G20 重要双边与三边会晤、美联储/主要央行政策、头部企业重大 IPO、商业航天/AI 里程碑）漏选，而去选地方琐事或八卦。
-6. 对于跨多日、多场次的超级重磅事件（例如大国元首访问行程与重要峰会），**标题必须保留核心人物姓名、地点与具体日程节点**，按关键节点拆分清晰（例如「抵访接待/机场会面」「重要双边/三边会谈」「实质经贸协议」），切忌把 10 篇重磅报道压缩成 1 条连人物和日程都看不见的笼统概括！
-7. 若核心事件已被 ≥3 家权威媒体实况报道（如公开接待、演讲、已签协议），不要因为个别外媒附带了衍生猜测就把整条核心事实混进 `unverified_claims`；仅将真正未证实的猜测单独放入 `unverified_claims`。
-8. 提取 3 条最值得关注的关键变化 `key_changes`，每条也必须附带 `source_refs`。
+5. 事实精确度与限定词要求：
+   - **涨跌幅与交易时段**：股价或并购消息必须保留直接诱因（如监管调查、财报、并购报价）、交易时段限定（如盘后/盘前/收盘）及交易双方的涨跌影响，不可把并购方下跌或盘后波动概括为日内普涨。
+   - **发行/募资口径**：涉及 IPO 或融资，必须严格区分基础发行规模、绿鞋/超额配售选择权（未行使不得写为已募集）及私募配售；涉及法律和解需写明“原则性和解/尚待签署与批准”等生效前提；涉及呼吁或提议需写明核心结论（如董事会拒绝或接受）。
+   - **第三方评测与单方宣称**：厂商自报或缺乏独立出处的评测分数（如红队单项测试、未证实榜单名次）必须明确标注测试边界与单方归因，不得写成行业公认指标。
+   - **事件真实时间**：填写 `event_date`（`YYYY-MM-DD` 或 `null`）标明事件实际发生日期；若报道只是旧事件回顾/多周前决议重提，必须置 `"is_stale_rehash": true` 且不得将其写成今日突发冲击。
+6. 如果有效素材较少，请宁缺毋滥（输出 8–14 条高质量事件即可），禁止为了凑数把无关条目拼在一起，也禁止把高优先级重大全球/国家大事（如元首访华行程、APEC/G20 重要双边与三边会晤、美联储/主要央行政策、头部企业重大 IPO、商业航天/AI 里程碑）漏选，而去选地方琐事或八卦。
+7. 对于跨多日、多场次的超级重磅事件（例如大国元首访问行程与重要峰会），**标题必须保留核心人物姓名、地点与具体日程节点**，按关键节点拆分清晰（例如「抵访接待/机场会面」「重要双边/三边会谈」「实质经贸协议」），切忌把 10 篇重磅报道压缩成 1 条连人物和日程都看不见的笼统概括！
+8. 若核心事件已被 ≥3 家权威媒体实况报道（如公开接待、演讲、已签协议），不要因为个别外媒附带了衍生猜测就把整条核心事实混进 `unverified_claims`；仅将真正未证实的猜测单独放入 `unverified_claims`。
+9. 提取 3 条最值得关注的关键变化 `key_changes`，每条也必须附带 `source_refs`。
 
 输入素材列表：
 {catalog_text}
@@ -271,6 +273,8 @@ def _build_ai_prompt(category: str, input_cutoff_at: str, catalog_text: str) -> 
   "events": [
     {{
       "title": "清晰准确的中文事件标题",
+      "event_date": "YYYY-MM-DD",
+      "is_stale_rehash": false,
       "entities": ["实体1", "实体2"],
       "importance": "high",
       "sentiment": "Bullish/Bearish/Mixed/Neutral",
@@ -315,33 +319,33 @@ def _build_comments_prompt(category: str, events: List[dict]) -> str:
 ]"""
 
 
-def _call_gemini_json(api_keys: List[str], prompt: str, temperature: float = 0.25) -> Any:
+def _call_gemini_json_with_meta(
+    prompt: str,
+    *,
+    scope: str = "default",
+    temperature: float = 0.25,
+    base_dir: Path | str | None = ".",
+) -> Tuple[Any, Optional[str], List[Dict[str, str]], bool]:
     global _LAST_USED_MODEL
-    from google import genai
-    from google.genai import types
-
     models = list(dict.fromkeys([PRIMARY_MODEL, FALLBACK_MODEL, SECONDARY_FALLBACK_MODEL]))
-    last_err: Optional[Exception] = None
-    for model_name in models:
-        for key in api_keys:
-            for attempt in range(2):
-                try:
-                    client = genai.Client(api_key=key)
-                    resp = client.models.generate_content(
-                        model=model_name,
-                        contents=prompt,
-                        config=types.GenerateContentConfig(
-                            response_mime_type="application/json",
-                            temperature=temperature,
-                        ),
-                    )
-                    if resp.text:
-                        _LAST_USED_MODEL = model_name
-                        return json.loads(resp.text)
-                except Exception as exc:
-                    last_err = exc
-                    time.sleep(1.5 * (attempt + 1))
-    raise RuntimeError(f"All Gemini attempts failed: {last_err}")
+    res = call_gemini_json(
+        scope=scope,
+        prompt=prompt,
+        models=models,
+        temperature=temperature,
+        base_dir=base_dir,
+    )
+    if res.ok:
+        if res.model_used:
+            _LAST_USED_MODEL = res.model_used
+        return res.data, res.model_used, res.per_key_errors, res.quota_exhausted
+    raise RuntimeError(f"All Gemini attempts failed: {res.error_message}")
+
+
+def _call_gemini_json(api_keys: List[str], prompt: str, temperature: float = 0.25) -> Any:
+    del api_keys
+    data, _, _, _ = _call_gemini_json_with_meta(prompt, scope="default", temperature=temperature)
+    return data
 
 
 def _parse_legacy_summary_sections(raw_summary: str) -> List[dict]:
@@ -566,15 +570,25 @@ def _generate_ai_category(
     prev_batch_id: Optional[str],
     api_keys: List[str],
     sec_entity_status: Optional[Dict[str, dict]] = None,
+    base_dir: Path | str = ".",
 ) -> Tuple[dict, Dict[str, Any]]:
+    del api_keys
     catalog_text, ref_lookup, id_lookup, selection_audit = _prepare_prompt_catalog(raw_by_cat.get(cat, []))
     if not catalog_text:
         raise RuntimeError(f"No citable raw items available for {cat}")
 
     prompt = _build_ai_prompt(cat, input_cutoff_at, catalog_text)
-    ai_raw = _call_gemini_json(api_keys, prompt, temperature=0.2)
+    ai_raw, model_used, per_key_errs, _ = _call_gemini_json_with_meta(
+        prompt,
+        scope=f"briefing:{cat}",
+        temperature=0.2,
+        base_dir=base_dir,
+    )
     if not isinstance(ai_raw, dict):
         raise RuntimeError(f"Gemini returned non-object JSON for {cat}")
+    selection_audit["model_used"] = model_used
+    if per_key_errs:
+        selection_audit["gemini_key_errors"] = per_key_errs[:6]
 
     generated_iso = to_iso_shanghai(now_shanghai())
     used_event_ids: Set[str] = set()
@@ -632,7 +646,7 @@ def _generate_ai_category(
             overview_sections.append({"title": str(sec.get("title") or "要点").strip(), "points": pts})
 
     doc = {
-        "schema_version": "3.0",
+        "schema_version": "4.1",
         "batch_id": batch_id,
         "input_batch_id": input_batch_id,
         "input_cutoff_at": input_cutoff_at,
@@ -641,6 +655,8 @@ def _generate_ai_category(
         "category": cat,
         "category_label": CATEGORY_LABELS[cat],
         "generation_mode": "ai_v3_grounded",
+        "model_name": model_used or PRIMARY_MODEL,
+        "quality_flags": [],
         "key_changes": key_changes,
         "overview_sections": overview_sections,
         "events": events,
@@ -652,10 +668,21 @@ def _generate_comments_for_category(
     cat: str,
     briefing_doc: dict,
     api_keys: List[str],
+    base_dir: Path | str = ".",
 ) -> dict:
+    del api_keys
+    if count_healthy_keys(base_dir) < 4:
+        cdoc = _build_deterministic_dialectic_comments(cat, briefing_doc, None, {})
+        cdoc["status"] = "v3_dialectic_quota_saved"
+        return cdoc
     events = [ev for ev in briefing_doc.get("events", []) if ev.get("evidence_status") != "needs_verification"]
     prompt = _build_comments_prompt(cat, events)
-    raw_comments = _call_gemini_json(api_keys, prompt, temperature=0.7)
+    raw_comments, _, _, _ = _call_gemini_json_with_meta(
+        prompt,
+        scope=f"comments:{cat}",
+        temperature=0.7,
+        base_dir=base_dir,
+    )
     if not isinstance(raw_comments, list):
         raw_comments = []
 
@@ -967,6 +994,8 @@ def _ground_update_category(
             "importance": item.get("importance") or "normal",
             "sentiment": item.get("sentiment"),
             "special_note": item.get("special_note"),
+            "thumbnail_url": item.get("thumbnail_url"),
+            "event_date": item.get("event_date"),
             "source_refs": ref_ids,
             "sources": item.get("sources") or [],
         }
@@ -1136,7 +1165,7 @@ def _ground_update_category(
     overview_sections = existing_doc.get("overview_sections", []) if isinstance(existing_doc, dict) else []
 
     doc = {
-        "schema_version": "3.0",
+        "schema_version": "4.1",
         "batch_id": batch_id,
         "input_batch_id": input_batch_id,
         "input_cutoff_at": input_cutoff_at,
@@ -1145,6 +1174,8 @@ def _ground_update_category(
         "category": cat,
         "category_label": CATEGORY_LABELS[cat],
         "generation_mode": "v3_ground_update",
+        "model_name": "deterministic-v3-grounding",
+        "quality_flags": ["ground_update_mode"],
         "key_changes": key_changes,
         "overview_sections": overview_sections,
         "events": events,
@@ -1157,13 +1188,16 @@ _TRACKED_HKEX_CODES = {"00700", "09988", "00981", "03690"}
 _TOPIC_PAIRS = [
     ({"黄仁勋", "英伟达"}, {"卸任", "辞任", "辞职", "复职", "重返", "继任", "ceo"}),
     ({"英伟达", "nvda", "纳指", "ai板块", "美股ai"}, {"暴跌", "重挫", "抛售潮", "14%", "抹去", "蒸发", "破发"}),
+    ({"anthropic", "claude"}, {"ipo", "上市", "募资", "破发", "发行价", "935亿", "813亿"}),
+    ({"gemini 4", "gemini4", "neon", "diffusiongemma"}, {"发布", "上线", "推出", "智能", "google"}),
     ({"黄金", "金价", "白银", "现货黄金"}, {"暴跌", "跳水", "大跌", "3600", "风险", "14个月新低"}),
     ({"软银", "孙正义"}, {"sk海力士", "海力士", "1万亿美元"}),
-    ({"美伊", "伊朗", "霍尔木兹"}, {"柏林", "谈判", "僵局", "斡旋", "动武", "触雷"}),
+    ({"美伊", "伊朗", "霍尔木兹"}, {"柏林", "谈判", "僵局", "斡旋", "动武", "触雷", "油轮"}),
+    ({"俄乌", "乌克兰", "泽连斯基", "普京"}, {"和平协议", "停火", "战后", "空袭", "波兰", "导弹"}),
     ({"微软", "azure", "microsoft"}, {"宕机", "恢复", "故障"}),
     ({"微软", "win11", "windows"}, {"copilot", "强制", "默认", "争议"}),
     ({"特朗普", "trump", "白宫"}, {"巨税", "征重税", "数据中心", "发布会", "关税"}),
-    ({"apec", "深圳", "峰会"}, {"三方", "双边", "和平宣言", "元首", "会晤"}),
+    ({"apec", "深圳", "峰会"}, {"三方", "双边", "和平宣言", "元首", "会晤", "高市早苗", "落幕"}),
     ({"英国", "脱欧"}, {"欧盟", "峰会", "协议"}),
     ({"美联储", "fomc"}, {"加息", "放鹰", "分歧", "库克", "紧缩"}),
 ]
@@ -1363,6 +1397,8 @@ def _clean_single_event_sources_and_dates(ev: dict) -> dict:
         ev["evidence_status_reason"] = rs_s or "暂缺足够一手原文链接，已归入待核实区域"
 
     ev["sources"] = clean_srcs
+    if not ev.get("thumbnail_url"):
+        ev["thumbnail_url"] = next((s.get("thumbnail_url") for s in clean_srcs if s.get("thumbnail_url")), None)
     ev["source_count"] = len(clean_srcs)
     platforms = {s.get("source_id") for s in clean_srcs if s.get("source_id")}
     indep_fams = {
@@ -1403,6 +1439,22 @@ def _is_low_value_appendix_event(ev: dict) -> bool:
     if title.startswith("[巨潮 ") and any(k in title for k in ("翌日披露", "港股公告：中芯国际截至", "独立董事")):
         return True
     return False
+
+
+def _compute_event_radar_score(ev: dict) -> int:
+    """Compute unified transparent 0-100 radar score shared across events and radar.json."""
+    rel_pts = 30 if ev.get("entity_ids") else 0
+    upd_kind = ev.get("update_kind") or ""
+    nov_pts = 25 if ev.get("is_new_in_batch") else (18 if upd_kind == "new_fact_update" else 5)
+    indep = int(ev.get("independent_publisher_count") or 1)
+    indep_pts = min(indep, 5) * 6
+    official_pts = 20 if ev.get("evidence_status") == "official_confirmed" else 0
+    depth_pts = 15 if ev.get("material_depth") in {"first_party_and_body", "body_lead_extracted", "title_and_excerpt"} else 0
+    reprint_penalty = -8 if (int(ev.get("reprint_count") or 0) >= 2 and upd_kind == "continuing_coverage") else 0
+    rumor_penalty = -10 if ev.get("attribution_warning") else 0
+    title_only_penalty = -8 if ev.get("material_depth") == "title_only" else 0
+    stale_penalty = -12 if ev.get("is_stale_rehash") else 0
+    return max(0, min(100, rel_pts + nov_pts + indep_pts + official_pts + depth_pts + reprint_penalty + rumor_penalty + title_only_penalty + stale_penalty))
 
 
 def _postprocess_and_prune_cross_category(
@@ -1496,6 +1548,7 @@ def _postprocess_and_prune_cross_category(
                 ev["fact_summary"] = _PIPELINE_JARGON_RE.sub("", str(ev["fact_summary"])).strip()
             if ev.get("ai_analysis"):
                 ev["ai_analysis"] = _PIPELINE_JARGON_RE.sub("", str(ev["ai_analysis"])).strip() or None
+            ev["radar_score"] = _compute_event_radar_score(ev)
         doc["key_changes"] = _sync_key_changes_attribution(doc.get("key_changes") or [], doc["events"])
         if not doc["key_changes"]:
             doc["key_changes"] = _build_key_changes_from_events(doc["events"])
@@ -1629,6 +1682,7 @@ def build_briefing_batch(
                 prev_batch_id,
                 api_keys,
                 sec_entity_status=sec_entity_status,
+                base_dir=root,
             )
             ok, errs = validate_published_briefing(doc)
             if not ok:
@@ -1636,7 +1690,7 @@ def build_briefing_batch(
 
             if include_comments:
                 try:
-                    cdoc = _generate_comments_for_category(cat, doc, api_keys)
+                    cdoc = _generate_comments_for_category(cat, doc, api_keys, base_dir=root)
                 except Exception as c_exc:
                     print(f"⚠️ Simulated perspectives skipped for {cat}: {c_exc}")
                     cdoc = {
@@ -1749,8 +1803,17 @@ def build_briefing_batch(
     batch_status = "complete" if failed_cats == 0 else "partial"
     has_any_comments = any(bool(c.get("comments")) for c in comment_docs.values())
 
+    quota_summary = get_quota_summary(root)
+    quality_flags: List[str] = []
+    if failed_cats > 0:
+        quality_flags.append("partial_category_fallback")
+    if mode != "ai":
+        quality_flags.append(f"mode_{mode}")
+    if quota_summary.get("total_configured_keys", 0) > 0 and quota_summary.get("healthy_keys", 0) == 0:
+        quality_flags.append("gemini_quota_exhausted")
+
     batch_meta = {
-        "schema_version": "3.0",
+        "schema_version": "4.1",
         "batch_id": batch_id,
         "input_batch_id": input_batch_id,
         "input_raw_path": used_raw_rel,
@@ -1759,8 +1822,14 @@ def build_briefing_batch(
         "published_at": published_iso,
         "status": batch_status,
         "mode": mode,
-        "model_name": _LAST_USED_MODEL if mode == "ai" else "deterministic-v3-grounding",
+        "generation_mode": f"mode_{mode}",
+        "quality_flags": quality_flags,
+        "model_name": (
+            next((c.get("model_name") for c in cat_docs.values() if c.get("model_name")), None)
+            or (_LAST_USED_MODEL if mode == "ai" else "deterministic-v3-grounding")
+        ),
         "has_comments": has_any_comments,
+        "gemini_quota": quota_summary,
         "categories": cat_manifest,
     }
 
@@ -1802,12 +1871,19 @@ def build_briefing_batch(
         "has_comments": has_any_comments,
         "categories": list(cat_docs.keys()),
     }
-    upsert_history_index(root / "history/smart_index.json", index_entry, max_entries=365)
-    prune_old_archives(root, "history/smart_index.json", keep_latest=60)
+    upsert_history_index(root / "history/smart_index.json", index_entry, max_entries=180)
+    prune_old_archives(root, "history/smart_index.json", keep_latest=36)
 
     # 4. Atomically switch manifest.json smart + v3 pointers
-    manifest["schema_version"] = "3.0"
+    manifest["schema_version"] = "4.1"
     manifest["site_published_at"] = published_iso
+    manifest["gemini_quota"] = quota_summary
+    manifest["scheduler"] = {
+        "provider": "github_actions",
+        "raw_cron": "*/30 * * * *",
+        "smart_cron": "30 */2 * * *",
+        "note": "受 GitHub Actions 公共调度队列影响，实际执行可能存在延迟；支持通过 repository_dispatch 接入外部定时触发。",
+    }
     manifest["smart"] = {
         "latest_batch_id": batch_id,
         "latest_path": target_smart_rel,
@@ -1817,8 +1893,10 @@ def build_briefing_batch(
         "input_cutoff_at": input_cutoff_at,
         "generated_at": generated_at_iso,
         "published_at": published_iso,
-        "target_cadence_hours": 12,
+        "target_cadence_hours": 2,
         "status": batch_status,
+        "generation_mode": batch_meta["generation_mode"],
+        "quality_flags": quality_flags,
         "model_name": batch_meta["model_name"],
         "configured_primary_model": PRIMARY_MODEL,
         "has_comments": has_any_comments,

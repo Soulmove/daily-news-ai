@@ -8,6 +8,7 @@ import html
 import re
 import time
 from typing import Any, Dict, List, Optional, Tuple
+from urllib.parse import urljoin, urlparse
 from xml.etree import ElementTree as ET
 
 import requests
@@ -91,6 +92,111 @@ DIRECT_RSS_FEEDS: List[Dict[str, str]] = [
 _HTML_TAG_RE = re.compile(r"<[^>]+>")
 _WS_RE = re.compile(r"\s+")
 _ATOM_NS = "{http://www.w3.org/2005/Atom}"
+_MEDIA_NS = "{http://search.yahoo.com/mrss/}"
+_CONTENT_NS = "{http://purl.org/rss/1.0/modules/content/}"
+_IMG_SRC_RE = re.compile(r"""<img[^>]+src=["']([^"']+)["']""", re.I)
+_BAD_IMG_RE = re.compile(
+    r"(?:1x1|pixel|spacer|favicon|sprite|badge|logo|icon|avatar|\.svg(?:$|\?)|^data:|"
+    r"news\.google\.com/api/attachments|gstatic\.com/images|googleusercontent\.com/.*=s\d+-c)",
+    re.I,
+)
+
+
+def _is_valid_image_url(raw_url: Optional[str], base_url: str = "") -> Optional[str]:
+    if not raw_url or not isinstance(raw_url, str):
+        return None
+    u = html.unescape(raw_url.strip())
+    if not u or _BAD_IMG_RE.search(u):
+        return None
+    if u.startswith("//"):
+        u = "https:" + u
+    elif base_url and not u.startswith(("http://", "https://")):
+        u = urljoin(base_url, u)
+    if not u.startswith(("http://", "https://")) or len(u) > 600:
+        return None
+    return u
+
+
+def _extract_rss_image_url(node: ET.Element, desc_raw: Optional[str], content_raw: Optional[str], base_url: str) -> Optional[str]:
+    # Check MRSS media:content & media:thumbnail & RSS enclosure
+    for tag in (f"{_MEDIA_NS}content", f"{_MEDIA_NS}thumbnail", "enclosure"):
+        for el in node.findall(tag):
+            medium = (el.attrib.get("medium") or "").lower()
+            mtype = (el.attrib.get("type") or "").lower()
+            url_attr = el.attrib.get("url") or el.attrib.get("href")
+            if not url_attr:
+                continue
+            if tag == "enclosure" and mtype and not mtype.startswith("image/"):
+                continue
+            if medium and medium != "image" and not mtype.startswith("image/") and not re.search(r"\.(?:jpg|jpeg|png|webp)", url_attr, re.I):
+                continue
+            valid = _is_valid_image_url(url_attr, base_url)
+            if valid:
+                return valid
+    # Fallback: first <img> in HTML description / content:encoded
+    for html_blob in (content_raw, desc_raw):
+        if not html_blob:
+            continue
+        m = _IMG_SRC_RE.search(html_blob)
+        if m:
+            valid = _is_valid_image_url(m.group(1), base_url)
+            if valid:
+                return valid
+    return None
+
+
+def _resolve_rss_publisher(
+    node: ET.Element,
+    title: str,
+    feed_spec: Dict[str, str],
+    link_val: str,
+) -> Tuple[str, str, str]:
+    """
+    Extract real publisher name & family for Google News RSS aggregates (`<source>` tag or `Title - Outlet`).
+    Returns (clean_title, real_source_name, publisher_family).
+    """
+    fid = feed_spec["id"]
+    default_name = feed_spec["name"]
+    default_family = feed_spec.get("family") or fid
+    is_gnews = fid.startswith("rss-gnews-") or "news.google.com" in link_val
+
+    source_el = node.find("source")
+    if source_el is None:
+        for child in node:
+            if child.tag.lower().endswith("}source") or child.tag.lower() == "source":
+                source_el = child
+                break
+
+    src_text = _clean_xml_text(source_el.text if source_el is not None else None, max_len=60) if source_el is not None else None
+    src_href = (source_el.attrib.get("url") or "").strip() if source_el is not None else ""
+
+    clean_title = title
+    inferred_pub: Optional[str] = src_text
+    if is_gnews:
+        m = re.match(r"^(.{8,}?)\s+[-–—|｜]\s+([A-Za-z0-9\u4e00-\u9fff .&'()/-]{2,40})$", title)
+        if m:
+            head, tail = m.group(1).strip(), m.group(2).strip()
+            # Guard against clipping dates or model versions
+            if not re.match(r"^\d", tail) and (not inferred_pub or inferred_pub.lower() in tail.lower() or tail.lower() in inferred_pub.lower() or len(inferred_pub) < 2):
+                inferred_pub = inferred_pub or tail
+                clean_title = head
+            elif inferred_pub and tail.lower() == inferred_pub.lower():
+                clean_title = head
+
+    if inferred_pub:
+        fam = ""
+        if src_href:
+            try:
+                host = urlparse(src_href).netloc.lower().removeprefix("www.")
+                if host:
+                    fam = re.sub(r"[^a-z0-9]", "", host.split(".")[0])[:16]
+            except Exception:
+                fam = ""
+        if not fam:
+            fam = re.sub(r"[^a-z0-9\u4e00-\u9fff]", "", inferred_pub.lower())[:16] or default_family
+        return clean_title, inferred_pub, fam
+
+    return clean_title, default_name, default_family
 
 
 def _clean_xml_text(raw: Optional[str], max_len: int = 260) -> Optional[str]:
@@ -148,6 +254,7 @@ def parse_rss_or_atom_xml(
             desc_el = node.find(f"{_ATOM_NS}summary")
             if desc_el is None:
                 desc_el = node.find(f"{_ATOM_NS}content")
+            content_el = node.find(f"{_ATOM_NS}content")
         else:
             title_el = node.find("title")
             link_el = node.find("link")
@@ -156,13 +263,18 @@ def parse_rss_or_atom_xml(
             if pub_el is None:
                 pub_el = node.find("{http://purl.org/dc/elements/1.1/}date")
             desc_el = node.find("description")
+            content_el = node.find(f"{_CONTENT_NS}encoded")
 
-        title = _clean_xml_text(title_el.text if title_el is not None else None, max_len=200)
-        if not title or len(title) < 4:
+        raw_title = _clean_xml_text(title_el.text if title_el is not None else None, max_len=200)
+        if not raw_title or len(raw_title) < 4:
             continue
         canon_url = canonicalize_url(link_val)
         if not canon_url or canon_url in seen_urls:
             continue
+
+        title, real_source_name, real_family = _resolve_rss_publisher(node, raw_title, feed_spec, link_val)
+        if len(title) < 4:
+            title = raw_title
 
         pub_raw = pub_el.text.strip() if (pub_el is not None and pub_el.text) else None
         pub_iso, pub_src = parse_published_at(pub_raw, fid)
@@ -171,9 +283,12 @@ def parse_rss_or_atom_xml(
             if pdt and (ref_dt - pdt) > timedelta(hours=max_age_hours):
                 continue
 
-        excerpt = _clean_xml_text(desc_el.text if desc_el is not None else None, max_len=260)
+        raw_desc = desc_el.text if desc_el is not None else None
+        raw_content = content_el.text if content_el is not None else None
+        excerpt = _clean_xml_text(raw_desc, max_len=260)
         if excerpt and excerpt == title:
             excerpt = None
+        thumb_url = _extract_rss_image_url(node, raw_desc, raw_content, canon_url)
 
         seen_urls.add(canon_url)
         item_id = make_raw_item_id(fid, canon_url, title)
@@ -181,11 +296,11 @@ def parse_rss_or_atom_xml(
             {
                 "item_id": item_id,
                 "source_id": fid,
-                "source_name": fname,
+                "source_name": real_source_name,
                 "category": cat,
                 "source_kind": "news",
                 "source_tier": "direct_media",
-                "publisher_family": family,
+                "publisher_family": real_family,
                 "citable_as_news": True,
                 "title": title,
                 "url": canon_url,
@@ -194,6 +309,7 @@ def parse_rss_or_atom_xml(
                 "published_at_source": pub_src,
                 "fetched_at": fetched_iso,
                 "excerpt": excerpt,
+                "thumbnail_url": thumb_url,
                 "metric_label": None,
             }
         )

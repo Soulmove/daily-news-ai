@@ -769,6 +769,8 @@ def build_finance_impact_artifact(
     scored: List[Tuple[int, dict]] = []
     seen_titles: set[str] = set()
     for ev in all_events:
+        if ev.get("is_stale_rehash") is True:
+            continue
         if ev.get("evidence_status") == "needs_verification" and not ev.get("sources"):
             continue
         title = str(ev.get("title") or "").strip()
@@ -909,7 +911,9 @@ def build_finance_impact_artifact(
             break
 
     return {
-        "schema_version": "2.0",
+        "schema_version": "4.1",
+        "generation_mode": "deterministic_volatility_calibrated",
+        "quality_flags": [] if quotes_map else ["quotes_fallback"],
         "generated_at": generated_at_iso or to_iso_shanghai(now_shanghai()),
         "batch_id": batch_id,
         "disclaimer": "模型边界提示：以下板块敏感区间基于结构化事件极性与 20 日实现波动率校准推演，并附当前真实/延迟行情对照，仅为研究参考，不构成任何投资买卖建议。",

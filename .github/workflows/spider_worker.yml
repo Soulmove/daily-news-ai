@@ -2,8 +2,8 @@ name: 🕷️ Spider Worker (V3 Raw + Connectors Collector)
 
 on:
   schedule:
-    # Zero-lag 20-minute cadence across 30+ direct RSS feeds + 7x24 real-time wires + first-party connectors
-    - cron: '*/20 * * * *'
+    # Balanced 30-minute cadence across direct RSS feeds, 7x24 wires, first-party connectors & throttled Search Radar
+    - cron: '*/30 * * * *'
   workflow_dispatch:
     inputs:
       reason:
@@ -88,7 +88,8 @@ jobs:
         run: |
           git config user.name 'Spider Bot'
           git config user.email 'spider@bot.com'
-          git add data_*.json data/ archives/raw/ history/raw_index.json
+          git add -A archives/raw/
+          git add data_*.json data/ history/raw_index.json
           if git diff --cached --quiet; then
             echo "No data changes to commit."
             exit 0

@@ -106,6 +106,28 @@ def _epoch_to_shanghai_iso(ts_val: Any) -> Optional[str]:
         return None
 
 
+def _extract_wire_image(row: Dict[str, Any]) -> Optional[str]:
+    candidates: List[Any] = [
+        row.get("image_uri"),
+        row.get("image"),
+        row.get("img"),
+        row.get("shareimg"),
+    ]
+    for list_k in ("image_uris", "images"):
+        imgs = row.get(list_k)
+        if isinstance(imgs, list) and imgs:
+            first = imgs[0]
+            candidates.append(first.get("url") if isinstance(first, dict) else first)
+    for c in candidates:
+        if isinstance(c, str):
+            u = c.strip()
+            if u.startswith("//"):
+                u = "https:" + u
+            if u.startswith(("http://", "https://")) and not re.search(r"(?:1x1|pixel|favicon|logo|\.svg)", u, re.I):
+                return u
+    return None
+
+
 def _fetch_wallstreetcn_channel(channel: str, label: str, default_cat: str, fetched_iso: str) -> Dict[str, Any]:
     url = f"https://api-one.wallstcn.com/apiv1/content/lives?channel={channel}&limit=25"
     items: List[dict] = []
@@ -148,6 +170,7 @@ def _fetch_wallstreetcn_channel(channel: str, label: str, default_cat: str, fetc
                         "published_at_source": "upstream_api",
                         "fetched_at": fetched_iso,
                         "excerpt": content if content != title else None,
+                        "thumbnail_url": _extract_wire_image(row),
                         "metric_label": "重要快讯" if score >= 2 else None,
                         "importance": "high" if score >= 2 else "normal",
                     }
@@ -205,6 +228,7 @@ def _fetch_cls_telegraph(fetched_iso: str) -> Dict[str, Any]:
                         "published_at_source": "upstream_api",
                         "fetched_at": fetched_iso,
                         "excerpt": content if content != title else None,
+                        "thumbnail_url": _extract_wire_image(row),
                         "metric_label": "加红电报" if is_high else None,
                         "importance": "high" if is_high else "normal",
                     }
@@ -240,7 +264,16 @@ def _fetch_rss_flash(feed_id: str, label: str, default_cat: str, url: str, famil
                 if not title or not canon:
                     continue
                 pub_iso, pub_src = parse_published_at(p_el.text.strip() if (p_el is not None and p_el.text) else None, feed_id)
-                excerpt = _clean(d_el.text if d_el is not None else "", max_len=240)
+                raw_desc = d_el.text if d_el is not None else ""
+                excerpt = _clean(raw_desc, max_len=240)
+                thumb_url: Optional[str] = None
+                enc = node.find("enclosure")
+                if enc is not None and (enc.attrib.get("type") or "").startswith("image/") and enc.attrib.get("url"):
+                    thumb_url = enc.attrib["url"].strip()
+                if not thumb_url and raw_desc:
+                    img_m = re.search(r"""<img[^>]+src=["']([^"']+)["']""", raw_desc, re.I)
+                    if img_m and img_m.group(1).startswith(("http://", "https://")):
+                        thumb_url = img_m.group(1).strip()
                 cat = _classify_wire_item(title, excerpt, default_cat)
                 items.append(
                     {
@@ -259,6 +292,7 @@ def _fetch_rss_flash(feed_id: str, label: str, default_cat: str, url: str, famil
                         "published_at_source": pub_src,
                         "fetched_at": fetched_iso,
                         "excerpt": excerpt if excerpt and excerpt != title else None,
+                        "thumbnail_url": thumb_url,
                         "metric_label": None,
                         "importance": "high" if _AI_KW_RE.search(title) else "normal",
                     }
@@ -291,6 +325,7 @@ def fetch_china_realtime_wires(cache: Optional[HttpCacheStore] = None) -> Dict[s
     ]
 
     all_items: List[dict] = []
+    seen_channel_urls: set[str] = set()
     platforms_by_category: Dict[str, List[dict]] = {"finance": [], "global": [], "tech": [], "general": []}
     source_reports: List[dict] = []
     ok_cnt = 0
@@ -300,12 +335,20 @@ def fetch_china_realtime_wires(cache: Optional[HttpCacheStore] = None) -> Dict[s
         futs = [pool.submit(fn) for fn in tasks]
         for fut in as_completed(futs):
             res = fut.result()
-            its = res["items"]
+            raw_its = res["items"]
+            its: List[dict] = []
+            for it in raw_its:
+                cu = canonicalize_url(it.get("canonical_url") or it.get("url"))
+                if cu and cu in seen_channel_urls:
+                    continue
+                if cu:
+                    seen_channel_urls.add(cu)
+                its.append(it)
             err = res["error"]
             if err:
                 errors.append(f"{res['id']}: {err}")
                 st = "error"
-            elif not its:
+            elif not raw_its:
                 st = "empty"
             else:
                 ok_cnt += 1
@@ -371,6 +414,7 @@ def refresh_live_wire_file(base_dir: Path | str = ".", extra_items: Optional[Lis
 
     merged: List[dict] = []
     seen_keys: set[str] = set()
+    seen_urls: set[str] = set()
     seen_norms: List[str] = []
 
     def _wire_titles_similar(norm_a: str, norm_b: str) -> bool:
@@ -403,12 +447,17 @@ def refresh_live_wire_file(base_dir: Path | str = ".", extra_items: Optional[Lis
         title = str(it.get("title") or "").strip()
         if not title or len(title) < 4:
             return
+        canon_u = canonicalize_url(it.get("url") or it.get("canonical_url")) or ""
+        if canon_u and canon_u in seen_urls:
+            return
         norm_full = re.sub(r"[\s\-_·:：,，.。!！?？()（）\[\]【】'\"]+", "", title.lower())
         k = norm_full[:28]
         if not k or k in seen_keys:
             return
         if any(_wire_titles_similar(norm_full, prev) for prev in seen_norms):
             return
+        if canon_u:
+            seen_urls.add(canon_u)
         seen_keys.add(k)
         seen_norms.append(norm_full)
         pub = str(it.get("published_at") or it.get("fetched_at") or fetched_iso)
@@ -421,8 +470,9 @@ def refresh_live_wire_file(base_dir: Path | str = ".", extra_items: Optional[Lis
                 "excerpt": excerpt_clean,
                 "category": cat_norm,
                 "source_name": str(it.get("source_name") or "实时快讯"),
-                "url": str(it.get("url") or it.get("canonical_url") or ""),
+                "url": canon_u or str(it.get("url") or it.get("canonical_url") or ""),
                 "published_at": pub,
+                "thumbnail_url": it.get("thumbnail_url"),
                 "importance": str(it.get("importance") or ("high" if it.get("metric_label") else "normal")),
                 "tag": str(it.get("metric_label") or ""),
             }

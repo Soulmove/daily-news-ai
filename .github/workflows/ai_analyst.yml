@@ -2,8 +2,8 @@ name: 🧠 AI Briefing Pipeline (V3 Grounded + Research Memory)
 
 on:
   schedule:
-    # Hourly zero-lag AI briefing + Google Search Grounding AI model radar (24x/day across 13 rotating keys)
-    - cron: '30 * * * *'
+    # Bi-hourly AI briefing + research memory build (12x/day across 13 rotating keys, safely within free-tier quotas)
+    - cron: '30 */2 * * *'
   workflow_dispatch:
     inputs:
       include_comments:
@@ -107,7 +107,8 @@ jobs:
         run: |
           git config user.name 'AI Analyst'
           git config user.email 'ai@bot.com'
-          git add data_*.json analysis_*.json comments_*.json data/ archives/ history/
+          git add -A archives/
+          git add data_*.json analysis_*.json comments_*.json data/ history/ feed.xml
           if git diff --cached --quiet; then
             echo "No briefing changes to commit."
             exit 0

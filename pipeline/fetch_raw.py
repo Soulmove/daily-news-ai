@@ -163,6 +163,8 @@ def normalize_upstream_items(
                 continue
 
         excerpt = _clean_text(extra.get("hover"), max_len=420)
+        raw_thumb = extra.get("thumbnail") or extra.get("image") or item.get("thumbnail_url")
+        thumb_url = raw_thumb.strip() if isinstance(raw_thumb, str) and raw_thumb.strip().startswith(("http://", "https://")) else None
         metric_label = _format_metric(extra.get("info"))
         item_id = make_raw_item_id(source_def.id, canon_url, title)
         if item_id in seen_ids:
@@ -185,6 +187,7 @@ def normalize_upstream_items(
                 "published_at_source": published_source,
                 "fetched_at": fetched_at_iso,
                 "excerpt": excerpt,
+                "thumbnail_url": thumb_url,
                 "metric_label": metric_label,
                 "rank": idx,
             }
@@ -509,17 +512,17 @@ def fetch_raw_snapshot(
     combined_items = all_raw_items + connector_items
     deduped_clusters = deduplicate_raw_items(combined_items)
 
-    # Task 2: Selective deep-fetch for priority / watched / title-only articles
+    # Task 2: Selective deep-fetch for priority / watched / title-only / missing-thumbnail articles
     deep_fetch_summary: Dict[str, Any] = {"attempted": 0, "enriched": 0, "checked_at": fetched_at_iso, "logs": []}
     if not skip_deep_fetch and deduped_clusters:
         cache = HttpCacheStore(root)
-        deep_fetch_summary = deep_fetch_selected_items(deduped_clusters, cache, max_articles=10)
+        deep_fetch_summary = deep_fetch_selected_items(deduped_clusters, cache, max_articles=32)
         cache.save()
-        # Propagate extracted excerpts & pubDates back into per-platform items saved on disk
+        # Propagate extracted excerpts, thumbnails & pubDates back into per-platform items saved on disk
         enriched_by_id: Dict[str, dict] = {}
         for cl in deduped_clusters:
             for src in cl.get("related_sources") or []:
-                if src.get("deep_fetch_status") and src.get("item_id"):
+                if (src.get("deep_fetch_status") or src.get("thumbnail_url")) and src.get("item_id"):
                     enriched_by_id[src["item_id"]] = src
         for cat_list in categorized_platforms.values():
             for plat in cat_list:
@@ -528,10 +531,13 @@ def fetch_raw_snapshot(
                     if upd:
                         if upd.get("excerpt"):
                             it["excerpt"] = upd["excerpt"]
+                        if upd.get("thumbnail_url") and not it.get("thumbnail_url"):
+                            it["thumbnail_url"] = upd["thumbnail_url"]
                         if upd.get("published_at") and not it.get("published_at"):
                             it["published_at"] = upd["published_at"]
                             it["published_at_source"] = upd.get("published_at_source")
-                        it["deep_fetch_status"] = upd["deep_fetch_status"]
+                        if upd.get("deep_fetch_status"):
+                            it["deep_fetch_status"] = upd["deep_fetch_status"]
 
     category_summary: Dict[str, dict] = {}
     for cat in CATEGORIES:
@@ -610,11 +616,11 @@ def fetch_raw_snapshot(
         "total_items": len(all_raw_items),
         "first_party_items": len(connector_items),
     }
-    upsert_history_index(root / "history/raw_index.json", index_entry, max_entries=500)
-    prune_old_archives(root, "history/raw_index.json", keep_latest=48)
+    upsert_history_index(root / "history/raw_index.json", index_entry, max_entries=240)
+    prune_old_archives(root, "history/raw_index.json", keep_latest=24)
 
     # 4. Atomically switch data/manifest.json raw pointer
-    manifest["schema_version"] = "3.0"
+    manifest["schema_version"] = "4.1"
     manifest["site_published_at"] = published_iso
     manifest["raw"] = {
         "latest_batch_id": batch_id,
@@ -631,16 +637,17 @@ def fetch_raw_snapshot(
     }
     manifest["connectors"] = {
         "latest_path": "data/connectors_latest.json",
-        "fetched_at": fetched_iso if False else fetched_at_iso,
+        "fetched_at": fetched_at_iso,
         "summary": connectors_payload.get("summary", {}),
     }
-    if "scheduler" not in manifest:
-        manifest["scheduler"] = {
-            "provider": "github_actions",
-            "raw_cron": "13,43 * * * *",
-            "smart_cron": "5 23,4 * * *",
-            "note": "受 GitHub Actions 公共调度队列影响，实际执行可能存在延迟；支持通过 repository_dispatch 接入外部定时触发。",
-        }
+    if isinstance(connectors_payload.get("gemini_quota"), dict):
+        manifest["gemini_quota"] = connectors_payload["gemini_quota"]
+    manifest["scheduler"] = {
+        "provider": "github_actions",
+        "raw_cron": "*/30 * * * *",
+        "smart_cron": "30 */2 * * *",
+        "note": "受 GitHub Actions 公共调度队列影响，实际执行可能存在延迟；支持通过 repository_dispatch 接入外部定时触发。",
+    }
     save_manifest(manifest, root)
 
     print(

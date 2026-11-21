@@ -4,10 +4,16 @@ from __future__ import annotations
 
 import json
 import os
+from pathlib import Path
 import re
-from typing import Any, Dict, List
+import time
+from typing import Any, Dict, List, Optional
+from urllib.parse import urlparse
 
-from .time_utils import now_shanghai
+from .entities import ENTITY_BY_ID
+from .gemini_pool import call_gemini_raw
+from .manifest import atomic_write_json, load_json_if_exists
+from .time_utils import now_shanghai, to_iso_shanghai
 
 _LAB_CATALOG: List[Dict[str, Any]] = [
     {
@@ -119,6 +125,138 @@ _LAB_CATALOG: List[Dict[str, Any]] = [
         "open_source_line": "Nemotron 开放权重、Cosmos 世界模型与本地/集群推理加速工具",
         "access_limits": "部分企业微服务（NIM）与物理仿真栈需 NVIDIA GPU 环境支持",
         "access_limits_en": "NVIDIA GPU environment required for TensorRT-LLM / NIM / Omniverse stacks",
+    },
+    {
+        "company_id": "xai",
+        "company_name": "xAI / Grok",
+        "company_name_en": "xAI / Grok",
+        "region": "海外",
+        "region_en": "Global",
+        "flagship_model": "Grok 系列模型 / Colossus 集群",
+        "open_source_line": "早期 Grok-1 开放权重",
+        "access_limits": "旗舰版本通过 xAI API 与 X Premium+ 提供访问",
+        "access_limits_en": "Flagship models available via xAI API & X Premium+",
+    },
+    {
+        "company_id": "bytedance_doubao",
+        "company_name": "字节豆包 (Seed)",
+        "company_name_en": "ByteDance Seed / Doubao",
+        "region": "国内",
+        "region_en": "China",
+        "flagship_model": "豆包大模型 / Seedance 视频 / UI-TARS",
+        "open_source_line": "ByteDance Seed 开源多模态与 Agent 系列",
+        "access_limits": "主要通过火山引擎方舟与豆包端提供服务",
+        "access_limits_en": "Commercial API via Volcano Engine Ark & Doubao consumer app",
+    },
+    {
+        "company_id": "zhipu_glm",
+        "company_name": "智谱 AI (GLM)",
+        "company_name_en": "Zhipu AI (GLM)",
+        "region": "国内",
+        "region_en": "China",
+        "flagship_model": "GLM-4 / GLM-Z1 推理与编程系列",
+        "open_source_line": "THUDM / zai-org GitHub 与 Hugging Face 开源权重",
+        "access_limits": "旗舰 API 计费，开源小尺寸支持商用",
+        "access_limits_en": "Commercial API & open-weight GLM releases on Hugging Face",
+    },
+    {
+        "company_id": "minimax",
+        "company_name": "MiniMax / 海螺",
+        "company_name_en": "MiniMax",
+        "region": "国内",
+        "region_en": "China",
+        "flagship_model": "MiniMax 文本推理 / 海螺视频 / 语音大模型",
+        "open_source_line": "MiniMax 开放权重系列",
+        "access_limits": "API 按用量计费，部分权重在 Hugging Face 公开",
+        "access_limits_en": "Metered API access & selected open-weight checkpoints",
+    },
+    {
+        "company_id": "baidu_ernie",
+        "company_name": "百度文心 (ERNIE)",
+        "company_name_en": "Baidu ERNIE",
+        "region": "国内",
+        "region_en": "China",
+        "flagship_model": "文心大模型 ERNIE 系列 / X1 深度思考",
+        "open_source_line": "ERNIE 开源家族与飞桨部署生态",
+        "access_limits": "通过千帆大模型平台与文心一言提供调用",
+        "access_limits_en": "Available via Baidu Qianfan & ERNIE platform",
+    },
+    {
+        "company_id": "huawei_pangu",
+        "company_name": "华为盘古 / 昇腾",
+        "company_name_en": "Huawei Pangu / Ascend",
+        "region": "国内",
+        "region_en": "China",
+        "flagship_model": "盘古大模型 / openPangu 开源权重",
+        "open_source_line": "openPangu 开源权重与昇腾 CANN 算子库",
+        "access_limits": "面向昇腾 NPU 与华为云政企部署场景",
+        "access_limits_en": "Optimized for Huawei Ascend NPUs and Huawei Cloud",
+    },
+    {
+        "company_id": "mistral",
+        "company_name": "Mistral AI",
+        "company_name_en": "Mistral AI",
+        "region": "海外",
+        "region_en": "Global",
+        "flagship_model": "Mistral Large / Codestral / Pixtral",
+        "open_source_line": "Apache 2.0 开源中小尺寸权重",
+        "access_limits": "部分旗舰模型为商业闭源许可",
+        "access_limits_en": "Apache 2.0 open weights + commercial frontier endpoints",
+    },
+    {
+        "company_id": "apple_ai",
+        "company_name": "Apple Intelligence",
+        "company_name_en": "Apple Intelligence",
+        "region": "海外",
+        "region_en": "Global",
+        "flagship_model": "Apple Foundation Models / Private Cloud Compute",
+        "open_source_line": "OpenELM / MLX 端侧推理框架",
+        "access_limits": "深度绑定 Apple Silicon 硬件生态，部分地区受限",
+        "access_limits_en": "Deeply integrated with Apple Silicon devices; regional rollouts apply",
+    },
+    {
+        "company_id": "amazon_aws",
+        "company_name": "Amazon AI (Nova)",
+        "company_name_en": "Amazon AI / AWS Bedrock",
+        "region": "海外",
+        "region_en": "Global",
+        "flagship_model": "Amazon Nova 系列 / Bedrock",
+        "open_source_line": "AWS 推理生态与企业微调栈",
+        "access_limits": "依托 Amazon Bedrock 企业云服务调用",
+        "access_limits_en": "Served via Amazon Bedrock managed endpoints",
+    },
+    {
+        "company_id": "perplexity",
+        "company_name": "Perplexity AI",
+        "company_name_en": "Perplexity AI",
+        "region": "海外",
+        "region_en": "Global",
+        "flagship_model": "Sonar 搜索推理模型与 AI 浏览器生态",
+        "open_source_line": "R1-1776 等检索微调开源衍生权重",
+        "access_limits": "Pro 订阅与 Sonar API 计费",
+        "access_limits_en": "Consumer Pro tiers & Sonar search API",
+    },
+    {
+        "company_id": "cursor",
+        "company_name": "Cursor (Anysphere)",
+        "company_name_en": "Cursor / Anysphere",
+        "region": "海外",
+        "region_en": "Global",
+        "flagship_model": "Cursor Tab / Composer 编程 Agent",
+        "open_source_line": "闭源 IDE 与定制低延迟补全模型",
+        "access_limits": "订阅制 IDE 工具链，支持接入多家闭源/开源后端",
+        "access_limits_en": "Commercial AI code editor subscription",
+    },
+    {
+        "company_id": "stability",
+        "company_name": "Stability AI",
+        "company_name_en": "Stability AI",
+        "region": "海外",
+        "region_en": "Global",
+        "flagship_model": "Stable Diffusion / Stable Audio / Stable Video",
+        "open_source_line": "部分社区许可图像与音频生成权重",
+        "access_limits": "大型商用部署需遵循 Stability 社区/企业许可门槛",
+        "access_limits_en": "Community vs enterprise commercial license thresholds apply",
     },
     {
         "company_id": "indie_opensource",
@@ -427,42 +565,200 @@ def normalize_ai_timestamp(raw_ts: Any, fallback_iso: str) -> str:
 
 
 AI_NOISE_RE = re.compile(
-    r"(?:回购股份|减持股份|增持股份|质押股份|股份回购|分红派息|限售股解禁|股票交易异常波动|年度股东大会|董事会决议公告|可转债|中标公告|业绩快报|成份股|指数纳入|调入.*股|港股通|black friday|geforce now|win11.*copilot|windows\s*11.*copilot|强制集成.*copilot)",
+    r"(?:回购股份|减持股份|增持股份|质押股份|股份回购|分红派息|限售股解禁|股票交易异常波动|年度股东大会|董事会决议公告|可转债|中标公告|业绩快报|成份股|指数纳入|调入.*股|港股通|"
+    r"black friday|geforce now|win11.*copilot|windows\s*11.*copilot|强制集成.*copilot|"
+    r"蔚来|\bnio\b|小鹏|理想汽车|小米汽车|智驾|智能驾驶|世界模型\s*nwm|nwm\s*\d|车机|智能座舱|"
+    r"开源鸿蒙|openharmony|harmonyos|南水北调|水利|水文|天河.*(?:工程|调水|水文)|"
+    r"微信香港钱包|微信支付|支付宝|信用卡|消费券|手游|主机游戏|steam|帮信罪|刑事拘留)",
     re.I,
 )
 AI_KW_RE = re.compile(
-    r"(?:大模型|模型|开源|\bai\b|gemini|neon|carbon|hydrogen|claude|fable|mythos|gpt|astra|qwen|千问|kimi|混元|workbuddy|元宝|豆包|seedance|manus|minimax|智谱|glm|cursor|windsurf|antigravity|mcp|deepseek|深度求索|diffusion|llama|vllm|ollama|agent|智能体|电脑操控|计算机控制|computer use|openai|anthropic|huggingface|github|强化学习)",
+    r"(?:大模型|语言模型|多模态模型|推理模型|基础模型|世界模型.*(?:genie|cosmos)|生成式|开源模型|开源权重|"
+    r"\bai\b|\bllm\b|gemini|neon|carbon|hydrogen|claude|fable|mythos|gpt|astra|grok|xai|"
+    r"qwen|千问|通义|kimi|混元|hy4|workbuddy|元宝|豆包|seedance|manus|minimax|智谱|glm|文心|ernie|盘古|openpangu|"
+    r"mistral|llama|deepseek|深度求索|diffusion|vllm|sglang|llama\.cpp|ollama|hugging\s*face|\bmcp\b|"
+    r"coding\s*agent|ai\s*agent|智能体|电脑操控|计算机控制|computer use|openai|anthropic|deepmind|cursor|perplexity|强化学习)",
     re.I,
 )
 AI_RELEASE_RE = re.compile(
-    r"(?:release|launch|announc|introduc|open[- ]source|weights|rollout|available|发布|开源|上线|推出|升级|开放|融资|千亿|百亿|突破|操控|preview|neon|astra|fable|mythos|qwen4|deepseek|kimi|genie|gemma|workbuddy|hunyuan)",
+    r"(?:release|launch|announc|introduc|open[- ]source|weights|rollout|available|发布|开源|上线|推出|升级|开放|融资|千亿|百亿|突破|操控|preview|neon|astra|fable|mythos|qwen4|deepseek|kimi|genie|gemma|workbuddy|hunyuan|grok)",
     re.I,
 )
 
+_FIRST_PARTY_HOST_LAB: Tuple[Tuple[str, str], ...] = (
+    ("deepmind.google", "google"),
+    ("blog.google", "google"),
+    ("ai.google.dev", "google"),
+    ("ai.google", "google"),
+    ("anthropic.com", "anthropic"),
+    ("openai.com", "openai"),
+    ("x.ai", "xai"),
+    ("deepseek.com", "deepseek"),
+    ("hunyuan.tencent.com", "tencent_hunyuan"),
+    ("qwen.ai", "qwen"),
+    ("qwenlm.github.io", "qwen"),
+    ("moonshot.cn", "kimi"),
+    ("zhipuai.cn", "zhipu_glm"),
+    ("bigmodel.cn", "zhipu_glm"),
+    ("z.ai", "zhipu_glm"),
+    ("minimaxi.com", "minimax"),
+    ("mistral.ai", "mistral"),
+    ("perplexity.ai", "perplexity"),
+    ("cursor.com", "cursor"),
+    ("stability.ai", "stability"),
+    ("ai.meta.com", "meta"),
+    ("blogs.nvidia.com", "nvidia"),
+    ("nvidianews.nvidia.com", "nvidia"),
+    ("machinelearning.apple.com", "apple_ai"),
+)
 
-def _infer_company(title: str, url: str = "") -> tuple[str, str, str]:
-    t = f"{title} {url}".lower()
-    if any(k in t for k in ("google", "谷歌", "gemini", "gemma", "deepmind", "genie", "deepmind.google", "blog.google")):
-        return "google", "Google DeepMind", "海外"
+_CODE_ORG_LAB: Tuple[Tuple[str, str], ...] = (
+    ("qwen", "qwen"),
+    ("qwenlm", "qwen"),
+    ("deepseek-ai", "deepseek"),
+    ("moonshotai", "kimi"),
+    ("tencent", "tencent_hunyuan"),
+    ("xai-org", "xai"),
+    ("google-deepmind", "google"),
+    ("google", "google"),
+    ("anthropics", "anthropic"),
+    ("openai", "openai"),
+    ("meta-llama", "meta"),
+    ("facebookresearch", "meta"),
+    ("mistralai", "mistral"),
+    ("nvidia", "nvidia"),
+    ("bytedance-seed", "bytedance_doubao"),
+    ("bytedance", "bytedance_doubao"),
+    ("thudm", "zhipu_glm"),
+    ("zai-org", "zhipu_glm"),
+    ("minimax-ai", "minimax"),
+    ("paddlepaddle", "baidu_ernie"),
+    ("apple", "apple_ai"),
+    ("stability-ai", "stability"),
+    ("microsoft", "microsoft"),
+)
+
+_CONGLOMERATE_AI_CTX_RE = re.compile(
+    r"(?:模型|大模型|\bai\b|\bllm\b|智能体|agent|开源|权重|多模态|推理|编程|copilot|混元|hy4|workbuddy|"
+    r"元宝|千问|qwen|通义|万相|豆包|seed|盘古|openpangu|昇腾|文心|ernie|gemini|gemma|deepmind|genie|"
+    r"genie\s*\d|apple intelligence|coreml|mlx|bedrock|nova|nemotron|cosmos|phi-\d)",
+    re.I,
+)
+
+_LAB_META_BY_ID: Dict[str, Dict[str, Any]] = {spec["company_id"]: spec for spec in _LAB_CATALOG}
+
+
+def _match_url_first_party_lab(url: str) -> Optional[str]:
+    if not url:
+        return None
+    try:
+        parsed = urlparse(url.strip())
+        host = (parsed.netloc or "").lower().removeprefix("www.")
+        path = (parsed.path or "").lower()
+    except Exception:
+        return None
+    if not host or host in {"news.google.com", "google.com"}:
+        return None
+    for dom, cid in _FIRST_PARTY_HOST_LAB:
+        if host == dom or host.endswith("." + dom):
+            return cid
+    if host in {"huggingface.co", "github.com"}:
+        first_seg = next((seg for seg in path.split("/") if seg), "")
+        for org_prefix, cid in _CODE_ORG_LAB:
+            if first_seg == org_prefix:
+                return cid
+    return None
+
+
+def _lab_result(cid: str) -> tuple[str, str, str]:
+    spec = _LAB_META_BY_ID.get(cid) or _LAB_META_BY_ID["indie_opensource"]
+    return spec["company_id"], spec["company_name"], spec["region"]
+
+
+def _infer_company(title: str, url: str = "", source_name: str = "") -> tuple[str, str, str]:
+    # 1. Inspect title (and non-aggregator source_name); NEVER let aggregator URLs like news.google.com match!
+    clean_src = "" if "google news" in (source_name or "").lower() else (source_name or "")
+    t = f"{title} {clean_src}".lower()
+    has_ai_ctx = bool(_CONGLOMERATE_AI_CTX_RE.search(t))
+
+    # Specific non-ambiguous model/lab signatures first (reusing entities.py aliases cleanly)
+    xai_aliases = tuple(ENTITY_BY_ID["ent_xai"].aliases) if "ent_xai" in ENTITY_BY_ID else ("xai", "x.ai", "grok")
+    if any(re.search(rf"(?<![a-z0-9]){re.escape(al)}(?![a-z0-9])", t) for al in xai_aliases):
+        return _lab_result("xai")
     if any(k in t for k in ("anthropic", "claude")):
-        return "anthropic", "Anthropic", "海外"
+        return _lab_result("anthropic")
     if any(k in t for k in ("openai", "gpt-", "chatgpt", "sora", "codex")):
-        return "openai", "OpenAI", "海外"
-    if any(k in t for k in ("microsoft", "微软", "win11", "windows 11", "copilot", "phi-4", "phi4", "azure ai")):
-        return "microsoft", "微软 (Microsoft)", "海外"
-    if any(k in t for k in ("nvidia", "英伟达", "omniverse", "nemotron", "tensorrt", "blackwell", "rubin", "cuda")):
-        return "nvidia", "英伟达 (NVIDIA)", "海外"
-    if any(k in t for k in ("meta ", "metaai", "llama", "zuckerberg")):
-        return "meta", "Meta AI", "海外"
-    if any(k in t for k in ("qwen", "千问", "通义", "阿里", "huggingface.co/qwen")):
-        return "qwen", "阿里千问 (Qwen)", "国内"
-    if any(k in t for k in ("kimi", "moonshot", "月之暗面", "huggingface.co/moonshotai")):
-        return "kimi", "月之暗面 (Kimi)", "国内"
-    if any(k in t for k in ("混元", "hunyuan", "workbuddy", "元宝", "腾讯", "huggingface.co/tencent")):
-        return "tencent_hunyuan", "腾讯混元 (Hunyuan)", "国内"
-    if any(k in t for k in ("deepseek", "深度求索", "huggingface.co/deepseek-ai")):
-        return "deepseek", "DeepSeek", "国内"
-    return "indie_opensource", "独立实验室 & 开源黑马", "全球开源"
+        return _lab_result("openai")
+    if any(k in t for k in ("deepseek", "深度求索")):
+        return _lab_result("deepseek")
+    if any(k in t for k in ("kimi", "moonshot", "月之暗面")):
+        return _lab_result("kimi")
+    if any(k in t for k in ("qwen", "千问", "通义", "万相")):
+        return _lab_result("qwen")
+    if any(k in t for k in ("混元", "hunyuan", "workbuddy", "腾讯元宝", "hy4")):
+        return _lab_result("tencent_hunyuan")
+    if any(k in t for k in ("豆包", "doubao", "seedance", "bytedance seed", "ui-tars")):
+        return _lab_result("bytedance_doubao")
+    if any(k in t for k in ("智谱", "zhipu", "glm-4", "glm-z", "chatglm", "bigmodel")):
+        return _lab_result("zhipu_glm")
+    if any(k in t for k in ("minimax", "海螺ai", "海螺视频", "hailuo")):
+        return _lab_result("minimax")
+    if any(k in t for k in ("文心", "ernie")):
+        return _lab_result("baidu_ernie")
+    if any(k in t for k in ("openpangu", "盘古大模型", "华为盘古", "昇腾", "ascend")):
+        return _lab_result("huawei_pangu")
+    if any(k in t for k in ("mistral", "codestral", "pixtral", "mixtral")):
+        return _lab_result("mistral")
+    if "perplexity" in t:
+        return _lab_result("perplexity")
+    if re.search(r"(?<![a-z0-9])cursor(?![a-z0-9])|anysphere", t):
+        return _lab_result("cursor")
+    if any(k in t for k in ("stability ai", "stable diffusion", "stable video", "stable audio")):
+        return _lab_result("stability")
+    if any(k in t for k in ("gemini", "gemma", "deepmind", "project genie", "genie 4", "diffusiongemma")):
+        return _lab_result("google")
+    if any(k in t for k in ("nemotron", "cosmos", "omniverse", "tensorrt", "blackwell", "rubin")):
+        return _lab_result("nvidia")
+    if any(k in t for k in ("phi-4", "phi4", "copilot", "azure ai")):
+        return _lab_result("microsoft")
+    if any(k in t for k in ("llama", "meta ai", "metaai")):
+        return _lab_result("meta")
+    if any(k in t for k in ("apple intelligence", "openelm", "coreml", "ferret")):
+        return _lab_result("apple_ai")
+    if any(k in t for k in ("amazon nova", "aws bedrock", "bedrock")):
+        return _lab_result("amazon_aws")
+
+    # Conglomerate names matched ONLY when AI/model context is present
+    if has_ai_ctx:
+        if any(k in t for k in ("谷歌",)) or re.search(r"(?<![a-z0-9])google(?![a-z0-9])", t):
+            return _lab_result("google")
+        if any(k in t for k in ("微软", "microsoft")):
+            return _lab_result("microsoft")
+        if any(k in t for k in ("英伟达", "nvidia")):
+            return _lab_result("nvidia")
+        if re.search(r"(?<![a-z0-9])meta(?![a-z0-9])", t):
+            return _lab_result("meta")
+        if any(k in t for k in ("阿里", "alibaba")):
+            return _lab_result("qwen")
+        if any(k in t for k in ("腾讯", "tencent")):
+            return _lab_result("tencent_hunyuan")
+        if any(k in t for k in ("字节", "bytedance", "火山引擎")):
+            return _lab_result("bytedance_doubao")
+        if any(k in t for k in ("百度", "baidu")):
+            return _lab_result("baidu_ernie")
+        if any(k in t for k in ("华为", "huawei")):
+            return _lab_result("huawei_pangu")
+        if any(k in t for k in ("苹果", "apple")):
+            return _lab_result("apple_ai")
+        if any(k in t for k in ("亚马逊", "amazon", "aws")):
+            return _lab_result("amazon_aws")
+
+    # 2. First-party URL host/org fallback (safe: excludes news.google.com and aggregators)
+    url_lab = _match_url_first_party_lab(url)
+    if url_lab:
+        return _lab_result(url_lab)
+
+    return _lab_result("indie_opensource")
 
 
 def _infer_what_it_does_zh(title: str, summary: str) -> str:
@@ -470,18 +766,19 @@ def _infer_what_it_does_zh(title: str, summary: str) -> str:
     if any(k in t for k in ("隐私泄露", "隐私数据", "零数据保留", "诱饵请求", "反蒸馏", "distillation", "合规审计", "安全风控", "privacy", "security")):
         return "大模型安全、隐私合规与防泄漏动态：聚焦零数据保留机制校验、抗蒸馏防护与调用链审计。"
     if any(k in t for k in ("vllm", "llama.cpp", "ollama", "sglang", "推理引擎", "inference")):
-        return "开源本地/服务器推理加速工具：帮开发者和普通电脑更快、更省显存地运行各类开源大模型。"
+        return "开源本地/服务器推理加速工具：帮开发者更快、更省显存地部署和运行开源大模型。"
     if any(k in t for k in ("agent", "coding", "编程", "code", "sdk", "cli", "harness", "tool use", "workbuddy", "电脑操控", "计算机控制")):
-        return "AI 编程与智能体（Agent）工具：自动读写代码、调用外部工具/SDK 并执行多步骤复杂任务。"
+        return "AI 编程与智能体（Agent）工具：支持代码读写、外部工具/SDK 调用与多步骤任务执行。"
     if any(k in t for k in ("robot", "具身", "机器人", "world model", "世界模型", "omniverse")):
         return "具身智能/物理仿真模型工具：用于在虚拟或物理环境中训练机器人感知、规划与执行任务。"
     if re.search(r"(?:视频|音乐|图像|多模态|画图)|\b(?:3d|hair|video|music|image|ar|vr)\b", t):
-        return "多模态生成/创作模型：用于文字生成图像、视频、音乐或 3D 资产，降低设计与创作门槛。"
+        return "多模态生成/创作模型：用于文字生成图像、视频、音乐或 3D 资产。"
     if re.search(r"(?:端侧|个人电脑|轻量模型|小模型)|\b(?:small|mini|flash|nano|27b|7b|8b)\b", t):
-        return "轻量高效/端侧模型：主打低成本、高速度或支持个人电脑离线部署，适合日常高频使用。"
-    if summary and not re.search(r"^[A-Za-z0-9\s\W]+$", summary.strip()):
-        return (summary[:110] + "…") if len(summary) > 110 else summary
-    return "前沿 AI 模型研究与开发生态动态（点击下方「原文」查看实验细节、参数配额及官方技术文档）。"
+        return "轻量高效/端侧模型：主打低成本、高速度或支持个人电脑离线部署。"
+    clean_sum = re.sub(r"\s+", " ", str(summary or "").strip())
+    if clean_sum and not re.search(r"^[A-Za-z0-9\s\W]+$", clean_sum) and clean_sum != title.strip():
+        return (clean_sum[:110] + "…") if len(clean_sum) > 110 else clean_sum
+    return ""
 
 
 # Synonym-group clusters so ZH & EN variants of the exact same event collapse (e.g. "OpenAI 反蒸馏" == "Combatting adversarial distillation")
@@ -532,81 +829,89 @@ def is_similar_ai_release(
     return False
 
 
-def _query_gemini_google_search_ai_weekly() -> List[Dict[str, Any]]:
-    """Use Gemini + Google Search Grounding rotating across ALL configured keys to catch zero-lag global & China AI releases."""
-    key_names = (
-        "KEY_TECH", "KEY_1", "KEY_2", "KEY_3", "KEY_4", "KEY_5", "KEY_6", "KEY_7", "KEY_8",
-        "GOOGLE_API_KEY", "KEY_FINANCE", "KEY_GLOBAL", "KEY_GENERAL",
+_AI_SEARCH_CACHE_TTL_SEC = 4 * 3600  # Reuse weekly Gemini Search grounding across 4h window
+
+
+def _query_gemini_google_search_ai_weekly(base_dir: Path | str = ".") -> List[Dict[str, Any]]:
+    """Use Gemini + Google Search Grounding via unified 13-key pool + 4h persistent cache."""
+    root = Path(base_dir)
+    cache_path = root / "data" / "ai_radar_search_cache.json"
+    cached = load_json_if_exists(cache_path, default={}) or {}
+    if isinstance(cached, dict) and isinstance(cached.get("items"), list):
+        age_sec = time.time() - float(cached.get("ts") or 0)
+        if age_sec < _AI_SEARCH_CACHE_TTL_SEC and cached["items"]:
+            return cached["items"]
+
+    today = now_shanghai().strftime("%Y-%m-%d")
+    prompt = (
+        f"今天是 {today}。请通过 Google 搜索整理最近 7 天（尤其过去 24–72 小时内最新刚发布）全球与中国最重磅的 8–12 条 AI 模型与开源项目进展"
+        "（务必重点搜索并核查：Google Gemini、OpenAI GPT-6.2、Anthropic Claude、xAI Grok、阿里千问 Qwen、月之暗面 Kimi、DeepSeek、腾讯混元、字节豆包、智谱 GLM、Mistral、Meta Llama，以及 GitHub/Hugging Face 热门开源项目）。\n"
+        "每条仅写基于搜索结果的可核查事实；不知道的使用限制可留空 string，严禁编造基准分或占位套话。\n"
+        "仅输出严格 JSON 数组，每项包含字段：\n"
+        '{"date":"YYYY-MM-DD","company_name":"机构或研究员名","region":"海外|国内|全球开源","category":"旗舰模型|开源权重|多模态|Agent工具|推理引擎","title":"中文标题","title_en":"English title","what_it_does":"一句话中文说明它能干什么","what_it_does_en":"One-sentence English explanation","who_cares":"适用人群(没有可留空)","limitations":"限制/收费/硬件门槛(没有可留空)","limitations_en":"Limitations in English","source_name":"来源","source_url":"https://...","is_open_source":true}'
     )
-    keys: List[str] = []
-    for kn in key_names:
-        val = (os.environ.get(kn) or "").strip()
-        if val and val not in keys:
-            keys.append(val)
-    if not keys:
+    try:
+        from google.genai import types
+        search_tools = [types.Tool(google_search=types.GoogleSearch())]
+    except Exception:
+        search_tools = [{"google_search": {}}]
+
+    res = call_gemini_raw(
+        scope="ai_radar",
+        prompt=prompt,
+        models=("gemini-4-hydrogen", "gemini-2.5-flash"),
+        temperature=0.2,
+        tools=search_tools,
+        base_dir=root,
+    )
+    if not res.ok or not res.text:
+        return cached["items"] if isinstance(cached.get("items"), list) else []
+
+    m = re.search(r"\[[\s\S]*\]", res.text)
+    if not m:
         return []
     try:
-        from google import genai
-        from google.genai import types
-
-        today = now_shanghai().strftime("%Y-%m-%d")
-        prompt = (
-            f"今天是 {today}。请通过 Google 搜索整理最近 7 天（尤其过去 24–72 小时内最新刚发布）全球与中国最重磅的 8–12 条 AI 模型与开源项目进展"
-            "（务必重点搜索并核查：Google Gemini 4 Neon/Carbon/Hydrogen/Gemma、OpenAI GPT-6.2 Astra/Sol/Codex、Anthropic Claude Fable/Mythos 5.x、阿里 Qwen4、月之暗面 Kimi K3、DeepSeek V4、腾讯混元 Hy4、xAI Grok、Meta Llama，以及 GitHub/Hugging Face 爆火的独立开源模型/推理引擎/多模态/机器人项目）。\n"
-            "每条必须用小白能一眼看懂的中文说清「它具体能干什么」和「使用限制/门槛」。\n"
-            "仅输出严格 JSON 数组，每项包含字段：\n"
-            '{"date":"YYYY-MM-DD","company_name":"机构或研究员名","region":"海外|国内|全球开源","category":"旗舰模型|开源权重|多模态|Agent工具|推理引擎","title":"中文标题","title_en":"English title","what_it_does":"一句话小白说明它能干什么","what_it_does_en":"One-sentence English explanation","who_cares":"适用人群","limitations":"限制/收费/硬件门槛","limitations_en":"Limitations in English","source_name":"来源","source_url":"https://...","is_open_source":true}'
-        )
-        for api_key in keys[:6]:
-            client = genai.Client(api_key=api_key)
-            for model_name in ("gemini-4-hydrogen", "gemini-2.5-flash"):
-                try:
-                    resp = client.models.generate_content(
-                        model=model_name,
-                        contents=prompt,
-                        config=types.GenerateContentConfig(
-                            tools=[types.Tool(google_search=types.GoogleSearch())],
-                            temperature=0.2,
-                        ),
-                    )
-                    txt = (resp.text or "").strip()
-                    m = re.search(r"\[[\s\S]*\]", txt)
-                    if not m:
-                        continue
-                    arr = json.loads(m.group(0))
-                    if isinstance(arr, list) and arr:
-                        cleaned: List[Dict[str, Any]] = []
-                        for i, row in enumerate(arr[:14]):
-                            if not isinstance(row, dict) or not row.get("title"):
-                                continue
-                            cid, cname, reg = _infer_company(f"{row.get('company_name', '')} {row.get('title', '')}")
-                            cleaned.append(
-                                {
-                                    "id": f"ai_gsearch_{today}_{i}",
-                                    "date": str(row.get("date") or today)[:10],
-                                    "company_id": cid,
-                                    "company_name": str(row.get("company_name") or cname),
-                                    "region": str(row.get("region") or reg),
-                                    "category": str(row.get("category") or "AI 进展"),
-                                    "category_en": "AI Release",
-                                    "title": str(row.get("title")),
-                                    "title_en": str(row.get("title_en") or row.get("title")),
-                                    "what_it_does": str(row.get("what_it_does") or ""),
-                                    "what_it_does_en": str(row.get("what_it_does_en") or ""),
-                                    "who_cares": str(row.get("who_cares") or "AI 开发者与普通用户"),
-                                    "limitations": str(row.get("limitations") or "详见官方说明与许可证"),
-                                    "limitations_en": str(row.get("limitations_en") or "See official docs for limits"),
-                                    "source_name": str(row.get("source_name") or "Google Search Grounding"),
-                                    "source_url": str(row.get("source_url") or ""),
-                                    "is_open_source": bool(row.get("is_open_source")),
-                                }
-                            )
-                        return cleaned
-                except Exception:
-                    continue
+        arr = json.loads(m.group(0))
     except Exception:
         return []
-    return []
+    if not isinstance(arr, list) or not arr:
+        return []
+
+    cleaned: List[Dict[str, Any]] = []
+    for i, row in enumerate(arr[:14]):
+        if not isinstance(row, dict) or not row.get("title"):
+            continue
+        row_title = str(row["title"]).strip()
+        if AI_NOISE_RE.search(row_title):
+            continue
+        cid, cname, reg = _infer_company(f"{row.get('company_name', '')} {row_title}", str(row.get("source_url") or ""), str(row.get("source_name") or ""))
+        cleaned.append(
+            {
+                "id": f"ai_gsearch_{today}_{i}",
+                "date": str(row.get("date") or today)[:10],
+                "company_id": cid,
+                "company_name": str(row.get("company_name") or cname),
+                "region": str(row.get("region") or reg),
+                "category": str(row.get("category") or "AI 进展"),
+                "category_en": "AI Release",
+                "title": row_title,
+                "title_en": str(row.get("title_en") or row_title),
+                "what_it_does": str(row.get("what_it_does") or ""),
+                "what_it_does_en": str(row.get("what_it_does_en") or ""),
+                "who_cares": str(row.get("who_cares") or ""),
+                "limitations": str(row.get("limitations") or ""),
+                "limitations_en": str(row.get("limitations_en") or ""),
+                "source_name": str(row.get("source_name") or "Google Search Grounding"),
+                "source_url": str(row.get("source_url") or ""),
+                "is_open_source": bool(row.get("is_open_source")),
+            }
+        )
+    if cleaned:
+        try:
+            atomic_write_json(cache_path, {"schema_version": "4.1", "ts": time.time(), "updated_at": to_iso_shanghai(now_shanghai()), "items": cleaned})
+        except Exception:
+            pass
+    return cleaned
 
 
 def build_ai_progress_artifact(
@@ -615,6 +920,7 @@ def build_ai_progress_artifact(
     generated_at_iso: str,
     cat_docs: Dict[str, dict],
     tech_tools: List[dict],
+    base_dir: Path | str = ".",
 ) -> Dict[str, Any]:
     items: List[Dict[str, Any]] = []
     seen_titles: set[str] = set()
@@ -622,6 +928,8 @@ def build_ai_progress_artifact(
     def _add_item(it: Dict[str, Any]) -> None:
         title = str(it.get("title") or "").strip()
         url = str(it.get("source_url") or "").strip()
+        if not title or AI_NOISE_RE.search(title):
+            return
         key = re.sub(r"\W+", "", title.lower())[:26]
         if not key or key in seen_titles:
             return
@@ -630,7 +938,7 @@ def build_ai_progress_artifact(
         seen_titles.add(key)
         items.append(it)
 
-    grounded = _query_gemini_google_search_ai_weekly()
+    grounded = _query_gemini_google_search_ai_weekly(base_dir=base_dir)
     for g in grounded:
         _add_item(g)
 
@@ -639,12 +947,14 @@ def build_ai_progress_artifact(
     for cat in ("tech", "general", "finance", "global"):
         for ev in (cat_docs.get(cat) or {}).get("events") or []:
             title = str(ev.get("title") or "").strip()
-            if not title or not ai_kw_re.search(title):
+            if not title or not ai_kw_re.search(title) or AI_NOISE_RE.search(title):
                 continue
             if any(bad in title.lower() for bad in ("听证会", "诈骗", "fcc", "fda", "围巾", "座驾", "中期选举", "ipo", "募资", "发行价", "灰市", "selling pressure", "股票", "股价", "后悔当年")):
                 continue
-            cid, cname, reg = _infer_company(title)
             src0 = (ev.get("sources") or [{}])[0]
+            src_url = str(src0.get("url") or "")
+            src_name = str(src0.get("source_name") or "镜信科技快讯")
+            cid, cname, reg = _infer_company(title, src_url, src_name)
             pub_date = str(ev.get("first_reported_at") or ev.get("latest_reported_at") or generated_at_iso)[:10]
             summary = str(ev.get("fact_summary") or ev.get("summary") or "")
             is_os = any(k in title.lower() for k in ("开源", "open", "github", "hugging", "vllm", "llama.cpp", "gemma", "权重"))
@@ -661,11 +971,11 @@ def build_ai_progress_artifact(
                     "title_en": str(ev.get("title_en") or title),
                     "what_it_does": _infer_what_it_does_zh(title, summary),
                     "what_it_does_en": str(ev.get("summary_en") or summary[:160]),
-                    "who_cares": "AI 开发者、科技观察者与普通效率用户",
-                    "limitations": "详见原文披露的接口配额、开源协议或硬件运行要求。",
-                    "limitations_en": "Refer to official release notes for quotas, license, and hardware specs.",
-                    "source_name": str(src0.get("source_name") or "镜信科技快讯"),
-                    "source_url": str(src0.get("url") or ""),
+                    "who_cares": "",
+                    "limitations": "",
+                    "limitations_en": "",
+                    "source_name": src_name,
+                    "source_url": src_url,
                     "event_id": ev.get("event_id"),
                     "is_open_source": is_os,
                 }
@@ -673,15 +983,14 @@ def build_ai_progress_artifact(
 
     # Also ingest freshly crawled direct-RSS AI lab announcements & 7x24 flash wire AI drops (zero-lag)
     try:
-        from pathlib import Path
         from .bilingual import ensure_zh_headline
-        from .manifest import load_json_if_exists
 
+        root_p = Path(base_dir)
         raw_pool: List[dict] = []
-        conn_doc = load_json_if_exists(Path("data/connectors_latest.json"), default={})
+        conn_doc = load_json_if_exists(root_p / "data/connectors_latest.json", default={})
         if isinstance(conn_doc, dict):
             raw_pool.extend(conn_doc.get("items") or [])
-        lw_doc = load_json_if_exists(Path("data/live_wire.json"), default={})
+        lw_doc = load_json_if_exists(root_p / "data/live_wire.json", default={})
         if isinstance(lw_doc, dict):
             raw_pool.extend(lw_doc.get("items") or [])
 
@@ -689,16 +998,18 @@ def build_ai_progress_artifact(
             if not isinstance(raw_it, dict):
                 continue
             rtitle = str(raw_it.get("title") or "").strip()
-            if not rtitle or not ai_kw_re.search(rtitle) or not ai_release_re.search(rtitle):
+            if not rtitle or AI_NOISE_RE.search(rtitle) or not ai_kw_re.search(rtitle) or not ai_release_re.search(rtitle):
                 continue
             if any(bad in rtitle.lower() for bad in ("听证会", "诈骗", "fcc", "fda", "围巾", "座驾", "中期选举", "ipo", "募资", "发行价", "灰市", "selling pressure", "股票", "股价", "lawsuit", "sues")):
                 continue
-            cid, cname, reg = _infer_company(rtitle)
+            rurl = str(raw_it.get("url") or raw_it.get("canonical_url") or "")
+            rsrc = str(raw_it.get("source_name") or "直连 AI 雷达")
+            cid, cname, reg = _infer_company(rtitle, rurl, rsrc)
             pub_date = normalize_ai_timestamp(
-            raw_it.get("published_at") or raw_it.get("fetched_at") or generated_at_iso,
-            generated_at_iso,
-        )
-            excerpt = str(raw_it.get("excerpt") or "")
+                raw_it.get("published_at") or raw_it.get("fetched_at") or generated_at_iso,
+                generated_at_iso,
+            )
+            excerpt = str(raw_it.get("excerpt") or "").strip()
             zh_title = ensure_zh_headline(rtitle, "tech")
             is_os = any(k in rtitle.lower() for k in ("开源", "open", "github", "hugging", "vllm", "llama.cpp", "gemma", "权重"))
             _add_item(
@@ -713,12 +1024,12 @@ def build_ai_progress_artifact(
                     "title": zh_title,
                     "title_en": rtitle,
                     "what_it_does": _infer_what_it_does_zh(zh_title, excerpt),
-                    "what_it_does_en": excerpt[:160] or rtitle,
-                    "who_cares": "AI 开发者、科研人员与前沿用户",
-                    "limitations": "详见官方发布说明与接口配额。",
-                    "limitations_en": "See official release notes and API pricing.",
-                    "source_name": str(raw_it.get("source_name") or "直连 AI 雷达"),
-                    "source_url": str(raw_it.get("url") or raw_it.get("canonical_url") or ""),
+                    "what_it_does_en": excerpt[:160] if excerpt else "",
+                    "who_cares": "",
+                    "limitations": "",
+                    "limitations_en": "",
+                    "source_name": rsrc,
+                    "source_url": rurl,
                     "is_open_source": is_os,
                 }
             )
@@ -731,9 +1042,11 @@ def build_ai_progress_artifact(
         if not name:
             continue
         title = f"开源生态更新：{name} {ver}".strip()
-        cid, cname, reg = _infer_company(f"{name} {tool.get('summary') or ''}")
+        turl = str(tool.get("release_url") or tool.get("official_url") or "")
+        cid, cname, reg = _infer_company(f"{name} {tool.get('summary') or ''}", turl, str(tool.get("source_name") or ""))
         pub_date = str(tool.get("version_published_at") or generated_at_iso)[:10]
         summary = str(tool.get("summary") or "").strip()
+        lic = str(tool.get("license") or "").strip()
         _add_item(
             {
                 "id": f"ai_tool_{tool.get('tool_id') or name}",
@@ -746,12 +1059,12 @@ def build_ai_progress_artifact(
                 "title": title,
                 "title_en": f"Open-source release: {name} {ver}".strip(),
                 "what_it_does": _infer_what_it_does_zh(title, summary),
-                "what_it_does_en": summary[:160] or f"Latest open-source version of {name}.",
-                "who_cares": "开发者、开源爱好者与私有化部署团队",
-                "limitations": f"许可证：{tool.get('license') or '见仓库说明'}；部署需参考官方环境要求。",
-                "limitations_en": f"License: {tool.get('license') or 'See repo'}; check runtime specs.",
+                "what_it_does_en": summary[:160] if summary else "",
+                "who_cares": "",
+                "limitations": f"许可证：{lic}" if lic else "",
+                "limitations_en": f"License: {lic}" if lic else "",
                 "source_name": str(tool.get("source_name") or "GitHub / Hugging Face"),
-                "source_url": str(tool.get("release_url") or tool.get("official_url") or ""),
+                "source_url": turl,
                 "is_open_source": True,
             }
         )
@@ -775,7 +1088,6 @@ def build_ai_progress_artifact(
             }
         )
 
-    # Build Weekly AI Digest Summary: pick 6 diverse high-signal model/open-source releases across different labs!
     weekly_highlights: List[Dict[str, Any]] = []
     company_counts: Dict[str, int] = {}
     for it in items:
@@ -800,7 +1112,7 @@ def build_ai_progress_artifact(
     global_count = sum(1 for it in items if it.get("region") == "海外")
 
     return {
-        "schema_version": "4.0",
+        "schema_version": "4.1",
         "generated_at": generated_at_iso,
         "batch_id": batch_id,
         "search_grounded": bool(grounded),

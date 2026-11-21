@@ -82,34 +82,64 @@ def prune_old_archives(
     *,
     keep_latest: int = 48,
 ) -> int:
-    """Prune old archive snapshot directories beyond `keep_latest` to stop unbounded Git repo bloat."""
+    """Prune old archive snapshot directories beyond `keep_latest` AND clean any orphaned snapshot folders."""
     base = Path(root)
     idx_path = base / index_rel_path
     entries = load_json_if_exists(idx_path, default=[])
-    if not isinstance(entries, list) or len(entries) <= keep_latest:
+    if not isinstance(entries, list):
         return 0
 
     kept = entries[:keep_latest]
     dropped = entries[keep_latest:]
     removed = 0
-    for entry in dropped:
-        if not isinstance(entry, dict):
-            continue
-        rel = str(entry.get("path") or "").strip().strip("/")
+    archives_root = (base / "archives").resolve()
+
+    def _remove_snapshot_dir(rel_str: str) -> bool:
+        rel = str(rel_str or "").strip().strip("/")
         if not rel or not rel.startswith("archives/"):
-            continue
+            return False
         target_dir = (base / rel).resolve()
-        archives_root = (base / "archives").resolve()
         if str(target_dir).startswith(str(archives_root)) and target_dir.exists() and target_dir.is_dir():
             shutil.rmtree(target_dir, ignore_errors=True)
-            removed += 1
-            # Clean empty parent date directory (e.g. archives/raw/2026-11-10)
             parent = target_dir.parent
             if parent != archives_root and parent.exists() and not any(parent.iterdir()):
                 try:
                     parent.rmdir()
                 except OSError:
                     pass
+            return True
+        return False
 
-    atomic_write_json(idx_path, kept)
+    for entry in dropped:
+        if isinstance(entry, dict) and _remove_snapshot_dir(str(entry.get("path") or "")):
+            removed += 1
+
+    # Sweep orphaned YYYY-MM-DD/HH-MM archive folders on disk not referenced by `kept`
+    kept_rels = {
+        str(e.get("path") or "").strip().strip("/")
+        for e in kept
+        if isinstance(e, dict) and e.get("path")
+    }
+    kind_subdir = "raw" if "raw" in Path(index_rel_path).name else ("smart" if "smart" in Path(index_rel_path).name else None)
+    if kind_subdir:
+        kind_root = (archives_root / kind_subdir).resolve()
+        if kind_root.exists() and kind_root.is_dir():
+            for date_dir in list(kind_root.iterdir()):
+                if not date_dir.is_dir():
+                    continue
+                for snap_dir in list(date_dir.iterdir()):
+                    if not snap_dir.is_dir():
+                        continue
+                    rel_snap = f"archives/{kind_subdir}/{date_dir.name}/{snap_dir.name}"
+                    if rel_snap not in kept_rels:
+                        shutil.rmtree(snap_dir, ignore_errors=True)
+                        removed += 1
+                if date_dir.exists() and not any(date_dir.iterdir()):
+                    try:
+                        date_dir.rmdir()
+                    except OSError:
+                        pass
+
+    if len(entries) > keep_latest:
+        atomic_write_json(idx_path, kept)
     return removed

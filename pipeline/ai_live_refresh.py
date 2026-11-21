@@ -90,15 +90,13 @@ def _summarize_release(title: str, excerpt: str, source_name: str, *, is_open_so
     elif inferred:
         zh = inferred
     elif any(k in title.lower() for k in ("workbuddy", "computer use", "操控", "agent", "codex", "cursor", "cli", "sdk")):
-        zh = "AI 编程与智能体（Agent）工具：自动读写代码、调用外部工具/SDK 并执行多步骤复杂任务。"
+        zh = "AI 编程与智能体（Agent）工具：支持代码读写、外部工具/SDK 调用与多步骤复杂任务。"
     elif _FUNDING_RE.search(title):
         zh = f"资本战略与产业融资动态（来源：{source_name}）：涉及核心算力投资或股权估值进展。"
-    elif is_first_hand and is_open_source:
-        zh = f"官方一手开源权重/工具发布（来源：{source_name}），支持本地推理部署或代码集成。"
     else:
-        zh = f"实验室官方一线研究动态（来源：{source_name}），点击下方「原文」查看实验细节与官方技术文档。"
+        zh = ""
 
-    en = _smart_truncate(clean_excerpt, 180) if clean_excerpt else _smart_truncate(title, 180)
+    en = _smart_truncate(clean_excerpt, 180) if clean_excerpt else ""
     return zh, en
 
 
@@ -129,7 +127,7 @@ def extract_ai_release_item(raw_it: Dict[str, Any], generated_at_iso: str) -> Op
             if not any(k in source_id.lower() for k in ("openai", "deepmind", "google-ai", "hf-blog")):
                 return None
 
-    comp_id, comp_name, region = _infer_company(title, f"{url} {excerpt[:120]}")
+    comp_id, comp_name, region = _infer_company(title, url, source_name)
     pub_date = normalize_ai_timestamp(
         raw_it.get("published_at") or raw_it.get("date") or raw_it.get("fetched_at") or generated_at_iso,
         generated_at_iso,
@@ -158,7 +156,11 @@ def extract_ai_release_item(raw_it: Dict[str, Any], generated_at_iso: str) -> Op
     item_id = raw_id if raw_id.startswith("ai_") else f"ai_live_{raw_id}"
     title_en_raw = str(raw_it.get("title_en") or "").strip()
     title_en = title_en_raw if (title_en_raw and is_mostly_english(title_en_raw)) else _translate_zh_to_en_glossary(title, [comp_name])
-    what_en_clean = what_en if is_mostly_english(str(what_en or "")) else _translate_zh_to_en_glossary(str(what_zh or ""), [comp_name])
+    what_en_clean = (
+        what_en
+        if (what_en and is_mostly_english(str(what_en)))
+        else (_translate_zh_to_en_glossary(str(what_zh), [comp_name]) if what_zh else "")
+    )
 
     return {
         "id": item_id,
@@ -172,9 +174,9 @@ def extract_ai_release_item(raw_it: Dict[str, Any], generated_at_iso: str) -> Op
         "title_en": title_en,
         "what_it_does": what_zh,
         "what_it_does_en": what_en_clean,
-        "who_cares": "AI 开发者、科研人员与前沿关注者",
-        "limitations": "具体额度、开源协议与硬件门槛以官方发布说明为准。",
-        "limitations_en": "Refer to official release notes for license, quota, and hardware specs.",
+        "who_cares": "",
+        "limitations": "",
+        "limitations_en": "",
         "source_name": source_name,
         "source_url": url or None,
         "event_id": raw_it.get("event_id"),
@@ -379,37 +381,61 @@ def merge_live_ai_items_into_doc(
     new_ids: List[str] = []
     mutated = False
 
+    _CANNED_WHAT_RE = re.compile(r"前沿 AI 模型研究与开发生态动态|实验室官方一线研究动态（来源：")
+    _CANNED_WHO_RE = re.compile(r"^(?:AI 开发者、科研人员与前沿(?:关注者|用户)|AI 开发者、科技观察者与普通效率用户|AI 开发者与普通用户)$")
+    _CANNED_LIMIT_RE = re.compile(r"^(?:具体额度、开源协议与硬件门槛以官方发布说明为准|详见官方发布说明与接口配额|详见原文披露的接口配额)")
+
     rehomed_items: List[Dict[str, Any]] = []
     for comp in base["companies"]:
         cleaned_existing = []
         for it in comp.get("items") or []:
             it_title = str(it.get("title") or "")
+            it_src = str(it.get("source_name") or "")
+            it_url = str(it.get("source_url") or "")
+            is_curated = str(it.get("id") or "") in {
+                "ai_google_gemini4_neon", "ai_openai_gpt62_astra_sol", "ai_google_gemini4_hydrogen",
+                "ai_deepseek_v4_pro", "ai_google_diffusiongemma_genie4", "ai_anthropic_claude_fable",
+                "ai_tencent_hy4_flash", "ai_qwen4_max_preview", "ai_kimi_k31_pro",
+                "ai_radixark_daisyrose", "ai_vllm_llamacpp", "ai_openai_amd_chip_design",
+            }
             if AI_NOISE_RE.search(it_title):
                 mutated = True
                 continue
-            if "GitHub Changelog" in str(it.get("source_name") or "") and not re.search(r"(?:copilot|\bai\b|model|agent|mcp)", it_title, re.I):
+            if not is_curated and not str(it.get("id") or "").startswith("ai_tool_") and not it.get("is_first_hand"):
+                if not AI_KW_RE.search(it_title):
+                    mutated = True
+                    continue
+            if "GitHub Changelog" in it_src and not re.search(r"(?:copilot|\bai\b|model|agent|mcp)", it_title, re.I):
                 mutated = True
                 continue
-            # Repair mislabeled SDK/Agent or Privacy items and eliminate echoed raw titles
+            # Repair mislabeled SDK/Agent or Privacy items and scrub canned placeholder filler
             w_cur = str(it.get("what_it_does") or "")
             tl_low = it_title.lower()
             if (
                 (any(k in tl_low for k in ("sdk", "agent", "cli", "coding", "workbuddy")) and "多模态生成" in w_cur)
                 or (any(k in tl_low for k in ("隐私", "泄露", "诱饵", "反蒸馏", "distill", "privacy", "security")) and ("轻量" in w_cur or "端侧" in w_cur))
+                or _CANNED_WHAT_RE.search(w_cur)
                 or ("实验室官方一手发布（来源：" in w_cur and it_title[:16] in w_cur)
-                or not w_cur.strip()
             ):
                 it["what_it_does"] = _infer_what_it_does_zh(it_title, "")
                 mutated = True
-            # Move misrouted company items (e.g. Microsoft Copilot out of indie_opensource)
-            inf_cid, inf_cname, inf_reg = _infer_company(it_title, str(it.get("source_url") or ""))
-            if comp.get("company_id") == "indie_opensource" and inf_cid != "indie_opensource" and inf_cid in by_company:
-                it["company_id"] = inf_cid
-                it["company_name"] = inf_cname
-                it["region"] = inf_reg
-                rehomed_items.append(it)
+            if _CANNED_WHO_RE.search(str(it.get("who_cares") or "").strip()):
+                it["who_cares"] = ""
                 mutated = True
-                continue
+            if _CANNED_LIMIT_RE.search(str(it.get("limitations") or "").strip()):
+                it["limitations"] = ""
+                it["limitations_en"] = ""
+                mutated = True
+            # Re-evaluate company classification across ALL buckets so news.google.com/wallet/xAI misroutes self-heal
+            if not is_curated:
+                inf_cid, inf_cname, inf_reg = _infer_company(it_title, it_url, it_src)
+                if inf_cid != comp.get("company_id") and inf_cid in by_company:
+                    it["company_id"] = inf_cid
+                    it["company_name"] = inf_cname
+                    it["region"] = inf_reg
+                    rehomed_items.append(it)
+                    mutated = True
+                    continue
             cleaned_existing.append(it)
             _register(it)
         comp["items"] = cleaned_existing

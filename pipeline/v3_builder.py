@@ -99,7 +99,12 @@ _UNWATCHED_HKEX_CODES = {"00700", "09988", "00981", "03690"}
 _TOPIC_CANON_BUCKETS = [
     ("nvda_ceo_saga", ("黄仁勋", "英伟达", "nvidia"), ("卸任", "辞任", "辞职", "复职", "重返", "继任", "ceo", "换帅")),
     ("msft_outage", ("微软", "microsoft", "azure"), ("宕机", "瘫痪", "恢复服务", "故障")),
-    ("apec_shenzhen", ("深圳", "apec"), ("会晤", "元首", "峰会")),
+    ("apec_shenzhen", ("深圳", "apec"), ("会晤", "元首", "峰会", "高市早苗", "落幕", "和平宣言")),
+    ("iran_hormuz_crisis", ("美伊", "伊朗", "霍尔木兹", "iran", "hormuz"), ("柏林", "谈判", "斡旋", "停火", "油轮", "触雷", "海峡", "动武", "僵局")),
+    ("us_ai_selloff_ipo", ("anthropic", "英伟达", "nvda", "美股ai", "ai板块"), ("ipo", "破发", "抛售潮", "暴跌", "14%", "抹去", "募资")),
+    ("fed_rate_path", ("美联储", "fomc", "联储"), ("加息", "降息", "放鹰", "紧缩", "通胀", "利率")),
+    ("russia_ukraine_crisis", ("俄乌", "乌克兰", "泽连斯基", "普京"), ("和平协议", "停火", "空袭", "导弹", "波兰", "战后")),
+    ("gemini_4_launch", ("gemini 4", "gemini4", "neon", "diffusiongemma", "genie 4"), ("发布", "上线", "推出", "模型", "google", "开源")),
 ]
 
 
@@ -740,20 +745,35 @@ def build_v3_artifacts(
         if len(tok) >= 4
     }
 
-    seen_storyline_titles: List[tuple[str, str]] = []
+    seen_storyline_titles: List[tuple[str, str, set[str]]] = []
     seen_buckets: Dict[str, str] = {}
+
+    from pipeline.dedup import entities_conflict
 
     for ev in all_events:
         st_id = ev.get("storyline_id") or make_storyline_id(ev["category"], ev["title"], ev.get("entities"))
+        ev_eids = set(ev.get("entity_ids") or [])
         bucket = _storyline_semantic_bucket(ev["title"])
         if bucket and bucket in seen_buckets:
             st_id = seen_buckets[bucket]
         else:
-            dup_sid = next((sid for sid, stitle in seen_storyline_titles if title_similarity(ev["title"], stitle) >= 0.62), None)
+            dup_sid = next(
+                (
+                    sid
+                    for sid, stitle, seids in seen_storyline_titles
+                    if title_similarity(ev["title"], stitle) >= 0.62
+                    or (
+                        bool(ev_eids & seids)
+                        and not entities_conflict(ev["title"], stitle)
+                        and title_similarity(ev["title"], stitle) >= 0.40
+                    )
+                ),
+                None,
+            )
             if dup_sid:
                 st_id = dup_sid
             else:
-                seen_storyline_titles.append((st_id, ev["title"]))
+                seen_storyline_titles.append((st_id, ev["title"], ev_eids))
                 if bucket:
                     seen_buckets[bucket] = st_id
         prev_ev_id = (ev.get("followup") or {}).get("prev_event_id")
@@ -1005,7 +1025,10 @@ def build_v3_artifacts(
         depth_pts = 15 if ev.get("material_depth") in {"first_party_and_body", "body_lead_extracted", "title_and_excerpt"} else 0
         reprint_penalty = -8 if (ev.get("reprint_count", 0) >= 2 and diff["change_type"] == "reprint_expansion") else 0
 
-        radar_score = max(0, min(100, rel_pts + nov_pts + indep_pts + official_pts + depth_pts + reprint_penalty))
+        radar_score = ev.get("radar_score")
+        if not isinstance(radar_score, (int, float)):
+            radar_score = max(0, min(100, rel_pts + nov_pts + indep_pts + official_pts + depth_pts + reprint_penalty))
+        radar_score = int(radar_score)
         if ev["evidence_status"] == "official_confirmed":
             signal_type = "官方/监管一手披露"
         elif ev.get("contradictions"):
@@ -1068,7 +1091,7 @@ def build_v3_artifacts(
         old_bucket = _storyline_semantic_bucket(old_title)
         if old_bucket and old_bucket in seen_buckets:
             continue
-        if any(title_similarity(old_title, stitle) >= 0.50 for _, stitle in seen_storyline_titles):
+        if any(title_similarity(old_title, stitle) >= 0.50 for _, stitle, _ in seen_storyline_titles):
             continue
         clean_old = dict(old_st)
         def _scrub_old_ph(txt: str) -> str:
@@ -1095,7 +1118,7 @@ def build_v3_artifacts(
         if isinstance(clean_old.get("investment_card"), dict):
             clean_old["investment_card"] = _build_investment_card(clean_old, entities_map) or clean_old["investment_card"]
         storylines[st_id] = clean_old
-        seen_storyline_titles.append((st_id, old_title))
+        seen_storyline_titles.append((st_id, old_title, set(ent_ids_old)))
         if old_bucket:
             seen_buckets[old_bucket] = st_id
 
@@ -1365,9 +1388,10 @@ def build_v3_artifacts(
             },
         )
 
-    # Check if latest batch already reports a November/recent Fed rate hike so Dec FOMC question never contradicts current news
+    # Check if latest non-stale batch reports a recent Fed rate hike so Dec FOMC question never misdates an old event
     fed_hiked_recently = any(
-        ("美联储" in str(ev.get("title") or "") or "fomc" in str(ev.get("title") or "").lower())
+        not ev.get("is_stale_rehash")
+        and ("美联储" in str(ev.get("title") or "") or "fomc" in str(ev.get("title") or "").lower())
         and any(k in str(ev.get("title") or "") for k in ("重启加息", "加息25基点", "宣布加息"))
         for ev in all_events
     )
@@ -1375,17 +1399,17 @@ def build_v3_artifacts(
     if fomc_dec:
         fed_created, fed_due = _keep_fixed_dates("pred_live_fomc_2026_12", generated_at_iso, "2026-12-10T04:30:00+08:00")
         fed_title = (
-            "11月重启加息后，美联储 2026 年 12 月 FOMC 是否连续第二次加息或转入高位观望"
+            "重启加息 25bp 后，美联储 2026 年 12 月 FOMC 是否连续第二次加息或转入高位观望"
             if fed_hiked_recently
             else "美联储 2026 年 12 月 FOMC 议息会议是否维持鹰派按兵不动或加息 25bp"
         )
         fed_question = (
-            "在最新批次回顾到美联储已重启加息 25bp 后，北京时间 2026-12-10 03:00 公布的 FOMC 决议声明中，联邦基金利率区间是否进一步上调或释放 2027 年延续紧缩信号？"
+            "在美联储本轮重启加息周期并释放鹰派分歧信号的背景下，北京时间 2026-12-10 03:00 公布的 FOMC 决议声明中，联邦基金利率区间是否进一步上调或释放 2027 年延续紧缩信号？"
             if fed_hiked_recently
             else "北京时间 2026-12-10 03:00 公布的 FOMC 决议声明中，联邦基金利率区间是否上调或释放 2027 年进一步收紧信号？"
         )
         fed_support = (
-            ["美联储最新决议已重启加息 25 个基点，多名联储官员密集释放鹰派信号"]
+            ["美联储已重启加息周期（25bp），多名联储官员近期围绕通胀路径密集释放鹰派信号"]
             if fed_hiked_recently
             else ["10 月 FOMC 会议纪要偏鹰，官员讨论抗通胀与利率路径"]
         )
@@ -1411,7 +1435,7 @@ def build_v3_artifacts(
                 "invalidation_trigger": "12 月会前核心 CPI 或非农就业出现超预期走弱",
                 "probability_pct": 62 if fed_hiked_recently else 55,
                 "probability_note": "结合最新利率决议上下文生成，锚定 2026-12-10 官方声明自动到期结算",
-                "current_judgment": "11 月加息落地后鹰派惯性仍在，关注 12 月点阵图对明年终端利率的指引" if fed_hiked_recently else "显露鹰派分歧，关注 12 月 SEP 点阵图方向",
+                "current_judgment": "重启加息后鹰派惯性仍在，关注 12 月点阵图对明年终端利率的指引" if fed_hiked_recently else "显露鹰派分歧，关注 12 月 SEP 点阵图方向",
                 "current_judgment_en": "Post-hike hawkish bias persists; watching Dec 10 SEP dot-plot path.",
                 "versions": [
                     {
@@ -1440,6 +1464,7 @@ def build_v3_artifacts(
         generated_at_iso=generated_at_iso,
         cat_docs=cat_docs,
         tech_tools=tech_tools,
+        base_dir=root,
     )
     wire_json_path = root / "data/live_wire.json"
     if wire_json_path.exists():
@@ -1612,7 +1637,7 @@ def build_v3_artifacts(
     atomic_write_json(
         root / "data/topics.json",
         {
-            "schema_version": "4.0",
+            "schema_version": "4.1",
             "generated_at": generated_at_iso,
             "batch_id": batch_id,
             "topics": major_topics,
@@ -1624,7 +1649,7 @@ def build_v3_artifacts(
     atomic_write_json(
         root / "data/entities_index.json",
         {
-            "schema_version": "3.0",
+            "schema_version": "4.1",
             "generated_at": generated_at_iso,
             "batch_id": batch_id,
             "entities": list(entities_map.values()),
@@ -1633,7 +1658,7 @@ def build_v3_artifacts(
     atomic_write_json(
         root / "data/storylines_index.json",
         {
-            "schema_version": "3.0",
+            "schema_version": "4.1",
             "generated_at": generated_at_iso,
             "batch_id": batch_id,
             "storylines": storylines,
@@ -1642,7 +1667,7 @@ def build_v3_artifacts(
     atomic_write_json(
         root / "data/calendar.json",
         {
-            "schema_version": "3.0",
+            "schema_version": "4.1",
             "generated_at": generated_at_iso,
             "batch_id": batch_id,
             "events": calendar_items[:60],
@@ -1651,7 +1676,7 @@ def build_v3_artifacts(
     atomic_write_json(
         root / "data/tech_tools.json",
         {
-            "schema_version": "3.0",
+            "schema_version": "4.1",
             "generated_at": generated_at_iso,
             "batch_id": batch_id,
             "tools": tech_tools[:50],
@@ -1660,7 +1685,7 @@ def build_v3_artifacts(
     atomic_write_json(
         root / "data/radar.json",
         {
-            "schema_version": "3.0",
+            "schema_version": "4.1",
             "generated_at": generated_at_iso,
             "batch_id": batch_id,
             "baseline_window_note": "雷达得分基于关注命中(30)+官方一手(20)+事实新颖度(25)+独立信源(≤30)+素材深度(15)，并扣除纯转载膨胀；受掉线源影响的板块已标注覆盖率。",
@@ -1670,7 +1695,7 @@ def build_v3_artifacts(
     atomic_write_json(
         root / "data/predictions_public.json",
         {
-            "schema_version": "3.0",
+            "schema_version": "4.1",
             "generated_at": generated_at_iso,
             "batch_id": batch_id,
             "note": "系统预置基于公开一手催化剂建立的可验证观察题；个人自建与修订记录保存在本地浏览器，导入导出可用。",

@@ -258,6 +258,7 @@ def verify_and_enrich_event(
                 "published_at_source": raw_item.get("published_at_source"),
                 "fetched_at": raw_item.get("fetched_at") or fetched_at_iso,
                 "excerpt": raw_item.get("excerpt"),
+                "thumbnail_url": raw_item.get("thumbnail_url"),
                 "deep_fetch_status": raw_item.get("deep_fetch_status"),
             }
         )
@@ -291,16 +292,19 @@ def verify_and_enrich_event(
                     "published_at_source": s.get("published_at_source"),
                     "fetched_at": s.get("fetched_at") or fetched_at_iso,
                     "excerpt": repair_mojibake(str(s.get("excerpt") or "")) or None,
+                    "thumbnail_url": s.get("thumbnail_url"),
                     "deep_fetch_status": s.get("deep_fetch_status"),
                 }
             )
 
-    # Re-sort citations so primary / excerpted sources always outrank omnibus digests
+    # Re-sort citations so first-party / direct media always outrank community forums & omnibus hotlists
+    _COMMUNITY_IDS = {"coolapk", "tieba", "v2ex-share", "zhihu", "weibo", "douyin", "hupu"}
     valid_sources.sort(
         key=lambda s: (
-            0 if s.get("source_tier") in {"first_party", "tech_material"} else 1,
-            1 if (s.get("source_id") == "aihot" or s.get("is_reprint_copy")) else 0,
+            0 if s.get("source_tier") == "first_party" else (1 if s.get("source_tier") in {"direct_media", "tech_material"} else 2),
+            1 if (s.get("source_id") in _COMMUNITY_IDS or s.get("source_kind") == "discussion" or s.get("source_id") == "aihot" or s.get("is_reprint_copy")) else 0,
             0 if s.get("excerpt") else 1,
+            0 if s.get("thumbnail_url") else 1,
         )
     )
 
@@ -419,32 +423,43 @@ def verify_and_enrich_event(
     entities_list = cleaned_entities[:6]
     entity_ids = [m["entity_id"] for m in matched_entity_objs]
 
-    # SEC EDGAR cross-corroboration on extraordinary executive departure rumors
-    contradictions: List[str] = []
-    if sec_entity_status and any(k in title for k in ("辞任", "辞职", "卸任", "离职", "重返", "接替")):
-        for eid in entity_ids:
-            sec_st = sec_entity_status.get(eid)
-            if not sec_st:
-                continue
-            if not sec_st.get("has_recent_502_officer_change"):
-                latest_8k = sec_st.get("latest_8k_date") or "近期"
-                contradictions.append(
-                    f"截至 SEC EDGAR 抓取时刻（最新 8-K 日期：{latest_8k}），未检索到 Item 5.02 高管辞任正式监管披露；该消息目前仍属媒体/社区传闻阶段。"
-                )
-            elif any(g in f"{title} {fact_summary}" for g in ("婚外情", "间谍", "丑闻", "重返", "施压")):
-                contradictions.append(
-                    "SEC 8-K (Item 5.02) 已确认高管人事变动申报，但关于具体离任原因或重返职位的衍生传闻未见官方监管文件背书。"
-                )
-
-    # Claim-boundary consistency guard: only attach rumor prefixes to genuine rumors/contradictions,
-    # NEVER poison broadly confirmed multi-source live events (e.g. televised state visits / summits)
-    # solely because one minor speculative detail appeared in unverified_claims.
+    # Claim-boundary & SEC EDGAR cross-corroboration on executive turnover claims
     title = dedupe_attribution_prefixes(title)
     fact_summary = dedupe_attribution_prefixes(fact_summary) or title
     indep_news_count = len(independent_families)
     title_is_speculative = bool(
         re.search(r"(?:传闻|爆料|网传|知情人士|消息人士|考虑|拟于|或将|可能|据称|被指)", title)
     )
+
+    contradictions: List[str] = []
+    regulatory_note: Optional[str] = None
+    is_exec_turnover_claim = bool(
+        re.search(r"(?:辞任|辞职|卸任|离职|接替|任命.*ceo|换帅)", title, re.I)
+        and not re.search(r"(?:暴跌|重挫|抛售潮|拒绝复职|国会听证|会计做法)", title)
+    )
+    if sec_entity_status and is_exec_turnover_claim:
+        for eid in entity_ids:
+            sec_st = sec_entity_status.get(eid)
+            if not sec_st:
+                continue
+            if not sec_st.get("has_recent_502_officer_change"):
+                latest_8k = sec_st.get("latest_8k_date") or "近期"
+                if indep_news_count >= 3 and not title_is_speculative:
+                    regulatory_note = (
+                        f"已获 {indep_news_count} 家独立媒体报道；截至 SEC EDGAR 最新 8-K（{latest_8k}）暂未见 Item 5.02 新增披露，请以公司官方文件为准。"
+                    )
+                else:
+                    contradictions.append(
+                        f"截至 SEC EDGAR 抓取时刻（最新 8-K 日期：{latest_8k}），未检索到 Item 5.02 高管辞任正式监管披露；该消息目前仍属媒体/社区传闻阶段。"
+                    )
+            elif any(g in f"{title} {fact_summary}" for g in ("婚外情", "间谍", "丑闻", "重返", "施压")):
+                if indep_news_count >= 3 and not title_is_speculative:
+                    regulatory_note = "SEC 8-K (Item 5.02) 已记录高管变动，具体衍生原因或复职进展以董事会及官方公告为准。"
+                else:
+                    contradictions.append(
+                        "SEC 8-K (Item 5.02) 已确认高管人事变动申报，但关于具体离任原因或重返职位的衍生传闻未见官方监管文件背书。"
+                    )
+
     broadly_confirmed_event = (
         indep_news_count >= 3
         and not contradictions
@@ -570,8 +585,88 @@ def verify_and_enrich_event(
 
     stage_info = infer_material_stage(f"{title} {fact_summary}", category=category)
 
+    # Event occurrence date & stale-rehash detection (Issues #38, #39)
+    fetched_dt = parse_iso_datetime(fetched_at_iso)
+    raw_ev_date = str(raw_event.get("event_date") or "").strip()
+    event_date: Optional[str] = raw_ev_date[:10] if re.fullmatch(r"\d{4}-\d{2}-\d{2}.*", raw_ev_date) else None
+    event_date_source = "llm_extracted" if event_date else "reported_timestamp"
+    if not event_date:
+        dm_full = re.search(r"(\d{4})年(\d{1,2})月(\d{1,2})日", f"{title} {fact_summary}")
+        if dm_full:
+            try:
+                yr, mo, dy = int(dm_full.group(1)), int(dm_full.group(2)), int(dm_full.group(3))
+                if 2020 <= yr <= 2030 and 1 <= mo <= 12 and 1 <= dy <= 31:
+                    event_date = f"{yr:04d}-{mo:02d}-{dy:02d}"
+                    event_date_source = "text_explicit_date"
+            except Exception:
+                pass
+    if not event_date and first_reported_at:
+        event_date = first_reported_at[:10]
+        event_date_source = "first_reported_at"
+    elif not event_date:
+        event_date = next((str(s.get("event_date"))[:10] for s in valid_sources if s.get("event_date")), None)
+        if event_date:
+            event_date_source = "source_event_date"
+
+    is_stale_rehash = bool(raw_event.get("is_stale_rehash", False))
+    if not is_stale_rehash and event_date and fetched_dt:
+        ev_dt = parse_iso_datetime(f"{event_date}T00:00:00+08:00")
+        if ev_dt is not None and (fetched_dt - ev_dt).days > 14:
+            is_stale_rehash = True
+
+    if has_first_party:
+        time_trust_level = "verified_official"
+    elif any(s.get("published_at") and s.get("published_at_source") != "search_grounding" for s in valid_sources):
+        time_trust_level = "article_timestamp"
+    elif any(s.get("published_at") for s in valid_sources):
+        time_trust_level = "search_grounding"
+    else:
+        time_trust_level = "fetch_fallback"
+
+    # Sentiment consistency guard (#48)
+    raw_sentiment = raw_event.get("sentiment")
+    sentiment = raw_sentiment
+    bear_hits = bool(re.search(r"(?:暴跌|重挫|下挫|大跌|跳水|破发|抹去.*涨幅|调查|泄密|隐私泄露|空袭|触雷|违约|停飞)", title))
+    bull_hits = bool(re.search(r"(?:暴涨|飙升|大涨|创新高|创纪录.*募资|和平协议|停火协议|降息|正式开源)", title))
+    if bear_hits and not bull_hits and raw_sentiment == "Bullish":
+        sentiment = "Bearish"
+    elif bull_hits and not bear_hits and raw_sentiment == "Bearish":
+        sentiment = "Bullish"
+    elif bear_hits and bull_hits and raw_sentiment in {"Bullish", "Bearish"}:
+        sentiment = "Mixed"
+
+    # Quality & transparent downweight reasons (#27, #50)
+    downweight_reasons: List[str] = []
+    if attribution_warning:
+        downweight_reasons.append("含未证实归因限定 (-10)")
+    if material_depth == "title_only":
+        downweight_reasons.append("仅含标题素材 (-8)")
+    if is_stale_rehash:
+        downweight_reasons.append("旧事重提 (>14天)")
+    if honest_published_at and fetched_dt:
+        pub_dt_chk = parse_iso_datetime(honest_published_at)
+        if pub_dt_chk is not None:
+            age_h = (fetched_dt - pub_dt_chk).total_seconds() / 3600.0
+            if age_h > 168:
+                downweight_reasons.append("发布超过7天 (-36)")
+            elif age_h > 48:
+                downweight_reasons.append("发布超过48小时 (-18)")
+
+    quality_flags: List[str] = []
+    if is_stale_rehash:
+        quality_flags.append("stale_rehash")
+    if time_trust_level == "fetch_fallback":
+        quality_flags.append("missing_pub_time")
+    if any(s.get("degraded") for s in valid_sources):
+        quality_flags.append("degraded_source")
+
+    thumbnail_url = (
+        raw_event.get("thumbnail_url")
+        or next((s.get("thumbnail_url") for s in valid_sources if s.get("thumbnail_url")), None)
+    )
+
     return {
-        "schema_version": "3.0",
+        "schema_version": "4.1",
         "event_id": event_id,
         "storyline_id": storyline_id,
         "article_ids": [s["item_id"] for s in valid_sources],
@@ -587,22 +682,30 @@ def verify_and_enrich_event(
         },
         "matched_entities": matched_entity_objs,
         "importance": raw_event.get("importance", "normal") if raw_event.get("importance") in {"high", "medium", "normal"} else "normal",
-        "sentiment": raw_event.get("sentiment"),
+        "sentiment": sentiment,
         "special_note": raw_event.get("special_note"),
         "material_stage": stage_info["stage"] if stage_info else None,
         "material_stage_label": stage_info["label"] if stage_info else None,
         "material_stage_confidence": stage_info["confidence"] if stage_info else None,
+        "thumbnail_url": thumbnail_url,
         "evidence_status": evidence_status,
         "evidence_label": EVIDENCE_LABELS[evidence_status],
         "evidence_status_reason": evidence_reason,
         "attribution_warning": attribution_warning,
+        "regulatory_note": regulatory_note,
         "contradictions": contradictions,
+        "downweight_reasons": downweight_reasons,
+        "quality_flags": quality_flags,
         "material_depth": material_depth,
         "source_count": len(valid_sources),
         "platform_count": len(distinct_families),
         "independent_publisher_count": len(independent_families),
         "reprint_count": reprint_count,
         "published_at": honest_published_at,
+        "event_date": event_date,
+        "event_date_source": event_date_source,
+        "is_stale_rehash": is_stale_rehash,
+        "time_trust_level": time_trust_level,
         "first_discovered_at": first_discovered_at,
         "first_reported_at": first_reported_at,
         "latest_fact_update_at": latest_fact_update_at,

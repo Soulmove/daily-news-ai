@@ -53,43 +53,49 @@ class HttpCacheStore:
 
     def __init__(self, base_dir: Path | str = ".") -> None:
         self.path = Path(base_dir) / HTTP_CACHE_PATH
+        self._lock = threading.Lock()
         raw = load_json_if_exists(self.path, default={})
         self.entries: Dict[str, Dict[str, Any]] = raw if isinstance(raw, dict) else {}
 
     def get_conditional_headers(self, url: str) -> Dict[str, str]:
-        entry = self.entries.get(url)
-        if not isinstance(entry, dict):
-            return {}
-        hdrs: Dict[str, str] = {}
-        if entry.get("etag"):
-            hdrs["If-None-Match"] = str(entry["etag"])
-        if entry.get("last_modified"):
-            hdrs["If-Modified-Since"] = str(entry["last_modified"])
-        return hdrs
+        with self._lock:
+            entry = self.entries.get(url)
+            if not isinstance(entry, dict):
+                return {}
+            hdrs: Dict[str, str] = {}
+            if entry.get("etag"):
+                hdrs["If-None-Match"] = str(entry["etag"])
+            if entry.get("last_modified"):
+                hdrs["If-Modified-Since"] = str(entry["last_modified"])
+            return hdrs
 
     def get_cached_summary(self, url: str) -> Optional[Dict[str, Any]]:
-        entry = self.entries.get(url)
-        return entry if isinstance(entry, dict) else None
+        with self._lock:
+            entry = self.entries.get(url)
+            return dict(entry) if isinstance(entry, dict) else None
 
     def update(self, url: str, resp: requests.Response) -> None:
         etag = resp.headers.get("ETag")
         last_mod = resp.headers.get("Last-Modified")
-        self.entries[url] = {
+        rec = {
             "etag": etag,
             "last_modified": last_mod,
             "checked_at": to_iso_shanghai(now_shanghai()),
             "http_status": resp.status_code,
         }
+        with self._lock:
+            self.entries[url] = rec
 
     def save(self, max_entries: int = 400) -> None:
-        if len(self.entries) > max_entries:
-            keys = sorted(
-                self.entries.keys(),
-                key=lambda k: str(self.entries[k].get("checked_at") or ""),
-                reverse=True,
-            )[:max_entries]
-            self.entries = {k: self.entries[k] for k in keys}
-        atomic_write_json(self.path, self.entries)
+        with self._lock:
+            if len(self.entries) > max_entries:
+                keys = sorted(
+                    self.entries.keys(),
+                    key=lambda k: str(self.entries[k].get("checked_at") or ""),
+                    reverse=True,
+                )[:max_entries]
+                self.entries = {k: self.entries[k] for k in keys}
+            atomic_write_json(self.path, self.entries)
 
 
 def repair_mojibake(text: str) -> str:
