@@ -46,6 +46,69 @@ _PRODUCT_STAGE_PATTERNS = [
 ]
 
 
+_CROSS_LINGUAL_TOPIC_PAIRS: Tuple[Tuple[Tuple[str, ...], Tuple[str, ...]], ...] = (
+    (("缅甸", "罗兴亚"), ("myanmar", "burma", "rohingya")),
+    (("国际法院", "海牙"), ("icj", "world court", "international court", "hague", "genocide")),
+    (("和解", "赔偿", "诉讼", "成瘾"), ("settle", "settlement", "lawsuit", "addiction", "suit")),
+    (("霍尔木兹", "海峡"), ("hormuz", "strait")),
+    (("伊朗", "美伊"), ("iran", "tehran")),
+    (("油轮", "触雷", "航运"), ("tanker", "mine", "shipping", "vessel")),
+    (("美联储", "联储", "议息"), ("fed", "fomc", "federal reserve", "powell")),
+    (("加息", "降息", "利率"), ("rate hike", "rate cut", "interest rate", "bps")),
+    (("以色列", "加沙"), ("israel", "gaza", "idf")),
+    (("乌克兰", "俄乌", "泽连斯基", "普京"), ("ukraine", "russia", "kyiv", "moscow", "zelensky", "putin")),
+    (("芯片", "半导体", "出口限制"), ("chip", "semiconductor", "gpu", "export")),
+    (("并购", "收购", "洽购"), ("acquir", "buyout", "merger", "takeover")),
+    (("关税", "贸易战"), ("tariff", "trade")),
+)
+
+_GOOGLE_NEWS_PREFIX_RE = re.compile(r"google\s*news", re.I)
+
+
+def _clean_source_display_name(raw_name: Any, fallback_title: str = "") -> str:
+    s = str(raw_name or "").strip()
+    if s and not _GOOGLE_NEWS_PREFIX_RE.search(s):
+        return s
+    m = re.search(r"\s[-–—|｜]\s([^|\-–—｜]{2,36})$", str(fallback_title or "").strip())
+    if m:
+        cand = m.group(1).strip()
+        if cand and not _GOOGLE_NEWS_PREFIX_RE.search(cand) and not cand.isdigit():
+            return cand
+    return "综合资讯"
+
+
+def _has_cross_lingual_match(event_text: str, raw_text: str) -> bool:
+    ev_low = (event_text or "").lower()
+    raw_low = (raw_text or "").lower()
+    if not ev_low or not raw_low:
+        return False
+    # Only engage cross-lingual match when event contains CJK and source text is predominantly non-CJK
+    if len(re.findall(r"[\u4e00-\u9fff]", ev_low)) < 2:
+        return False
+    if len(re.findall(r"[\u4e00-\u9fff]", raw_low)) >= 4:
+        return False
+
+    raw_tokens = extract_tokens(raw_text)
+    ev_tokens = extract_tokens(event_text)
+    shared = ev_tokens & raw_tokens
+    if any(len(t) >= 3 and t.isascii() and t not in {"sec", "usd", "ipo", "ceo", "cfo", "gdp", "news"} for t in shared):
+        return True
+
+    # Topic / proper-noun glossary bridges (Myanmar/ICJ, YouTube settlement, Hormuz, Fed, etc.)
+    for zh_keys, en_keys in _CROSS_LINGUAL_TOPIC_PAIRS:
+        if any(zk in ev_low for zk in zh_keys) and any(ek in raw_low for ek in en_keys):
+            return True
+
+    # Shared numeric scale bridge (e.g. "30亿" <-> "3 billion" / "$3b", "14%" <-> "14%")
+    if ("30亿" in ev_low or "30 亿" in ev_low) and re.search(r"(?:\$?\s*3\s*(?:b\b|bn\b|billion)|3,000\s*m)", raw_low):
+        return True
+    ev_nums = {n for n in re.findall(r"\d+(?:\.\d+)?", ev_low) if len(n) >= 2}
+    raw_nums = {n for n in re.findall(r"\d+(?:\.\d+)?", raw_low) if len(n) >= 2}
+    if ev_nums and (ev_nums & raw_nums):
+        return True
+    return False
+
+
 def _has_semantic_correspondence(event_text: str, raw_item: dict) -> bool:
     """Verify cited item reasonably relates to the generated event without crossing entity boundaries."""
     raw_title = str(raw_item.get("title") or "")
@@ -62,6 +125,8 @@ def _has_semantic_correspondence(event_text: str, raw_item: dict) -> bool:
     shared = ev_tokens & raw_tokens
     non_generic_ascii = [t for t in shared if len(t) >= 4 and t.isascii() and t not in {"sec", "usd", "ai", "ipo", "ceo", "cfo", "gdp", "news"}]
     if non_generic_ascii and len(shared) >= 2:
+        return True
+    if _has_cross_lingual_match(event_text, raw_text):
         return True
     return len(shared) >= 3
 
@@ -212,9 +277,37 @@ def verify_and_enrich_event(
 
     valid_sources: List[dict] = []
     rejected_refs: List[dict] = []
+    cross_lingual_candidates: List[Tuple[str, dict, str]] = []
     seen_item_ids: Set[str] = set()
     seen_canon_urls: Set[str] = set()
     event_match_text = f"{title} {fact_summary[:120]}"
+
+    def _build_source_record(raw_item: dict, canon_url: str, *, recovered: bool = False) -> dict:
+        item_title = str(raw_item.get("title") or "")
+        pub_name = _clean_source_display_name(
+            raw_item.get("publisher_name") or raw_item.get("source_name") or raw_item.get("source_id"),
+            item_title or title,
+        )
+        return {
+            "item_id": raw_item["item_id"],
+            "article_id": raw_item["item_id"],
+            "source_id": raw_item.get("source_id"),
+            "source_name": pub_name,
+            "publisher_name": pub_name,
+            "source_status": "recovered_cross_lingual" if recovered else "ok",
+            "source_kind": raw_item.get("source_kind", "news"),
+            "source_tier": raw_item.get("source_tier") or "aggregator_lead",
+            "publisher_family": raw_item.get("publisher_family") or get_publisher_family(raw_item.get("source_id", ""), canon_url),
+            "is_reprint_copy": bool(raw_item.get("is_reprint_copy", False)),
+            "title": raw_item.get("title"),
+            "url": canon_url,
+            "published_at": raw_item.get("published_at"),
+            "published_at_source": raw_item.get("published_at_source"),
+            "fetched_at": raw_item.get("fetched_at") or fetched_at_iso,
+            "excerpt": raw_item.get("excerpt"),
+            "thumbnail_url": raw_item.get("thumbnail_url"),
+            "deep_fetch_status": raw_item.get("deep_fetch_status"),
+        }
 
     for ref in refs:
         ref_key = str(ref).strip()
@@ -235,6 +328,13 @@ def verify_and_enrich_event(
             rejected_refs.append({"ref": ref_key, "reason": "来源链接为空、占位符(#)或泛化首页"})
             continue
         if require_semantic_match and not _has_semantic_correspondence(event_match_text, raw_item):
+            raw_t = str(raw_item.get("title") or "")
+            if (
+                not is_omnibus_digest_title(raw_t)
+                and not entities_conflict(event_match_text, raw_t, item_b=raw_item)
+                and len(re.findall(r"[\u4e00-\u9fff]", raw_t)) < 4
+            ):
+                cross_lingual_candidates.append((ref_key, raw_item, canon_url))
             rejected_refs.append({"ref": ref_key, "reason": "引用条目与事件标题语义相关性不足"})
             continue
         if canon_url in seen_canon_urls:
@@ -242,26 +342,21 @@ def verify_and_enrich_event(
 
         seen_item_ids.add(item_id)
         seen_canon_urls.add(canon_url)
-        valid_sources.append(
-            {
-                "item_id": item_id,
-                "article_id": item_id,
-                "source_id": raw_item.get("source_id"),
-                "source_name": raw_item.get("source_name") or raw_item.get("source_id"),
-                "source_kind": raw_item.get("source_kind", "news"),
-                "source_tier": raw_item.get("source_tier") or "aggregator_lead",
-                "publisher_family": raw_item.get("publisher_family") or get_publisher_family(raw_item.get("source_id", ""), canon_url),
-                "is_reprint_copy": bool(raw_item.get("is_reprint_copy", False)),
-                "title": raw_item.get("title"),
-                "url": canon_url,
-                "published_at": raw_item.get("published_at"),
-                "published_at_source": raw_item.get("published_at_source"),
-                "fetched_at": raw_item.get("fetched_at") or fetched_at_iso,
-                "excerpt": raw_item.get("excerpt"),
-                "thumbnail_url": raw_item.get("thumbnail_url"),
-                "deep_fetch_status": raw_item.get("deep_fetch_status"),
-            }
-        )
+        valid_sources.append(_build_source_record(raw_item, canon_url))
+
+    # Recover valid cross-lingual cited refs when semantic matching dropped every ref on a real ZH/EN event
+    if not valid_sources and cross_lingual_candidates:
+        recovered_refs = set()
+        for ref_key, raw_item, canon_url in cross_lingual_candidates[:4]:
+            iid = raw_item["item_id"]
+            if iid in seen_item_ids or canon_url in seen_canon_urls:
+                continue
+            seen_item_ids.add(iid)
+            seen_canon_urls.add(canon_url)
+            valid_sources.append(_build_source_record(raw_item, canon_url, recovered=True))
+            recovered_refs.add(ref_key)
+        if recovered_refs:
+            rejected_refs = [r for r in rejected_refs if r.get("ref") not in recovered_refs]
 
     # Pre-resolved sources fallback (reconcile / unit tests)
     if not valid_sources and isinstance(raw_event.get("sources"), list):
@@ -276,17 +371,21 @@ def verify_and_enrich_event(
             if item_id in seen_item_ids:
                 continue
             seen_item_ids.add(item_id)
+            pre_title = repair_mojibake(str(s.get("title") or ""))
+            pub_name = _clean_source_display_name(s.get("publisher_name") or s.get("source_name") or sid, pre_title or title)
             valid_sources.append(
                 {
                     "item_id": item_id,
                     "article_id": item_id,
                     "source_id": sid,
-                    "source_name": s.get("source_name") or sid,
+                    "source_name": pub_name,
+                    "publisher_name": pub_name,
+                    "source_status": s.get("source_status") or "ok",
                     "source_kind": s.get("source_kind", "news"),
                     "source_tier": s.get("source_tier") or "aggregator_lead",
                     "publisher_family": s.get("publisher_family") or get_publisher_family(sid, canon_url),
                     "is_reprint_copy": bool(s.get("is_reprint_copy", False)),
-                    "title": repair_mojibake(str(s.get("title") or "")),
+                    "title": pre_title,
                     "url": canon_url,
                     "published_at": s.get("published_at"),
                     "published_at_source": s.get("published_at_source"),
@@ -461,7 +560,7 @@ def verify_and_enrich_event(
                     )
 
     broadly_confirmed_event = (
-        indep_news_count >= 3
+        indep_news_count >= 2
         and not contradictions
         and not title_is_speculative
     )
@@ -660,9 +759,16 @@ def verify_and_enrich_event(
     if any(s.get("degraded") for s in valid_sources):
         quality_flags.append("degraded_source")
 
-    thumbnail_url = (
-        raw_event.get("thumbnail_url")
-        or next((s.get("thumbnail_url") for s in valid_sources if s.get("thumbnail_url")), None)
+    primary_src = valid_sources[0] if valid_sources else None
+    primary_publisher = (
+        str(primary_src.get("publisher_name") or primary_src.get("source_name") or "").strip()
+        if primary_src
+        else None
+    )
+    source_status = (
+        "recovered_cross_lingual"
+        if valid_sources and all(s.get("source_status") == "recovered_cross_lingual" for s in valid_sources)
+        else ("ok" if valid_sources else "missing")
     )
 
     return {
@@ -687,7 +793,12 @@ def verify_and_enrich_event(
         "material_stage": stage_info["stage"] if stage_info else None,
         "material_stage_label": stage_info["label"] if stage_info else None,
         "material_stage_confidence": stage_info["confidence"] if stage_info else None,
-        "thumbnail_url": thumbnail_url,
+        "thumbnail_url": (
+            raw_event.get("thumbnail_url")
+            or next((s.get("thumbnail_url") for s in valid_sources if s.get("thumbnail_url")), None)
+        ),
+        "publisher_name": primary_publisher,
+        "source_status": source_status,
         "evidence_status": evidence_status,
         "evidence_label": EVIDENCE_LABELS[evidence_status],
         "evidence_status_reason": evidence_reason,
@@ -703,9 +814,12 @@ def verify_and_enrich_event(
         "reprint_count": reprint_count,
         "published_at": honest_published_at,
         "event_date": event_date,
+        "event_time": first_reported_at or honest_published_at or event_date,
+        "stale": is_stale_rehash,
         "event_date_source": event_date_source,
         "is_stale_rehash": is_stale_rehash,
         "time_trust_level": time_trust_level,
+        "time_confidence": time_trust_level,
         "first_discovered_at": first_discovered_at,
         "first_reported_at": first_reported_at,
         "latest_fact_update_at": latest_fact_update_at,

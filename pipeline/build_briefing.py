@@ -1871,18 +1871,30 @@ def build_briefing_batch(
         "has_comments": has_any_comments,
         "categories": list(cat_docs.keys()),
     }
-    upsert_history_index(root / "history/smart_index.json", index_entry, max_entries=180)
-    prune_old_archives(root, "history/smart_index.json", keep_latest=36)
+    upsert_history_index(root / "history/smart_index.json", index_entry, max_entries=96)
+    prune_old_archives(root, "history/smart_index.json", keep_latest=12)
 
     # 4. Atomically switch manifest.json smart + v3 pointers
+    smart_degraded = bool(failed_cats > 0 or mode != "ai" or (quota_summary.get("total_configured_keys", 0) > 0 and quota_summary.get("healthy_keys", 0) == 0))
+    alerts: List[Dict[str, Any]] = []
+    if failed_cats > 0:
+        alerts.append({"code": "partial_category_fallback", "severity": "warning", "message": f"本批次有 {failed_cats} 个板块使用上一批降级回退"})
+    if quota_summary.get("total_configured_keys", 0) > 0 and quota_summary.get("healthy_keys", 0) == 0:
+        alerts.append({"code": "gemini_quota_exhausted", "severity": "critical", "message": "全部 Gemini API Key 处于冷却或耗尽状态"})
+    elif quota_summary.get("total_configured_keys", 0) > 0 and quota_summary.get("healthy_keys", 0) <= 2:
+        alerts.append({"code": "gemini_quota_low", "severity": "warning", "message": f"可用 Gemini Key 仅剩 {quota_summary.get('healthy_keys')} 个"})
+
     manifest["schema_version"] = "4.1"
     manifest["site_published_at"] = published_iso
     manifest["gemini_quota"] = quota_summary
+    manifest["quota"] = quota_summary
+    manifest["degraded"] = smart_degraded or bool((manifest.get("raw") or {}).get("status") not in {None, "complete", "ok"})
+    manifest["alerts"] = alerts
     manifest["scheduler"] = {
         "provider": "github_actions",
-        "raw_cron": "*/30 * * * *",
-        "smart_cron": "30 */2 * * *",
-        "note": "受 GitHub Actions 公共调度队列影响，实际执行可能存在延迟；支持通过 repository_dispatch 接入外部定时触发。",
+        "raw_cron": "7 */1 * * *",
+        "smart_cron": "22 */3 * * *",
+        "note": "轻量化错峰调度（Raw 每小时 / Smart 每3小时）；腾讯云仅静默拉取与静态直出。",
     }
     manifest["smart"] = {
         "latest_batch_id": batch_id,
@@ -1893,7 +1905,7 @@ def build_briefing_batch(
         "input_cutoff_at": input_cutoff_at,
         "generated_at": generated_at_iso,
         "published_at": published_iso,
-        "target_cadence_hours": 2,
+        "target_cadence_hours": 3,
         "status": batch_status,
         "generation_mode": batch_meta["generation_mode"],
         "quality_flags": quality_flags,

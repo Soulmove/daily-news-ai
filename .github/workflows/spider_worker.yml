@@ -2,8 +2,8 @@ name: 🕷️ Spider Worker (V3 Raw + Connectors Collector)
 
 on:
   schedule:
-    # Balanced 30-minute cadence across direct RSS feeds, 7x24 wires, first-party connectors & throttled Search Radar
-    - cron: '*/30 * * * *'
+    # Hourly lightweight crawl off-peak (:07) across healthy RSS/wires & cadence-cached connectors
+    - cron: '7 */1 * * *'
   workflow_dispatch:
     inputs:
       reason:
@@ -55,7 +55,7 @@ jobs:
           KEY_7: ${{ secrets.KEY_7 }}
           KEY_8: ${{ secrets.KEY_8 }}
         run: |
-          python -m pipeline.fetch_raw --schedule-source "${{ github.event_name }}"
+          python -m pipeline.fetch_raw --respect-cadence --schedule-source "${{ github.event_name }}"
 
       - name: 📊 Write GitHub Step Summary
         if: always()

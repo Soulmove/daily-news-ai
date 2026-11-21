@@ -100,7 +100,7 @@ _TOPIC_CANON_BUCKETS = [
     ("nvda_ceo_saga", ("黄仁勋", "英伟达", "nvidia"), ("卸任", "辞任", "辞职", "复职", "重返", "继任", "ceo", "换帅")),
     ("msft_outage", ("微软", "microsoft", "azure"), ("宕机", "瘫痪", "恢复服务", "故障")),
     ("apec_shenzhen", ("深圳", "apec"), ("会晤", "元首", "峰会", "高市早苗", "落幕", "和平宣言")),
-    ("iran_hormuz_crisis", ("美伊", "伊朗", "霍尔木兹", "iran", "hormuz"), ("柏林", "谈判", "斡旋", "停火", "油轮", "触雷", "海峡", "动武", "僵局")),
+    ("iran_hormuz_crisis", ("美伊", "伊朗", "霍尔木兹", "iran", "hormuz"), ("柏林", "谈判", "斡旋", "停火", "油轮", "触雷", "海峡", "动武", "僵局", "制裁", "石油", "打击", "对抗", "协议", "核", "军事", "空袭", "导弹", "中东", "israel", "us", "iran", "hormuz")),
     ("us_ai_selloff_ipo", ("anthropic", "英伟达", "nvda", "美股ai", "ai板块"), ("ipo", "破发", "抛售潮", "暴跌", "14%", "抹去", "募资")),
     ("fed_rate_path", ("美联储", "fomc", "联储"), ("加息", "降息", "放鹰", "紧缩", "通胀", "利率")),
     ("russia_ukraine_crisis", ("俄乌", "乌克兰", "泽连斯基", "普京"), ("和平协议", "停火", "空袭", "导弹", "波兰", "战后")),
@@ -761,11 +761,11 @@ def build_v3_artifacts(
                 (
                     sid
                     for sid, stitle, seids in seen_storyline_titles
-                    if title_similarity(ev["title"], stitle) >= 0.62
+                    if title_similarity(ev["title"], stitle) >= 0.56
                     or (
                         bool(ev_eids & seids)
                         and not entities_conflict(ev["title"], stitle)
-                        and title_similarity(ev["title"], stitle) >= 0.40
+                        and title_similarity(ev["title"], stitle) >= 0.36
                     )
                 ),
                 None,
@@ -776,6 +776,7 @@ def build_v3_artifacts(
                 seen_storyline_titles.append((st_id, ev["title"], ev_eids))
                 if bucket:
                     seen_buckets[bucket] = st_id
+        ev["storyline_id"] = st_id
         prev_ev_id = (ev.get("followup") or {}).get("prev_event_id")
         prev_ev = prev_by_id.get(prev_ev_id) if prev_ev_id else None
         diff = _compute_fact_diff(ev, prev_ev)
@@ -804,18 +805,16 @@ def build_v3_artifacts(
                     default=None,
                 )
 
-        # Build / merge timeline for this storyline cleanly without burst-rebuild duplicates
-        existing_st = prev_storylines.get(st_id, {})
+        # Build / merge timeline for this storyline cleanly without burst-rebuild or same-bucket overwrites
+        existing_st = storylines.get(st_id) or prev_storylines.get(st_id, {})
         timeline = list(existing_st.get("timeline") or [])
         node_ts = ev.get("latest_fact_update_at") or ev.get("fetched_at") or generated_at_iso
         same_cutoff_or_unchanged = bool(
             timeline
-            and (
-                (timeline[0].get("batch_id") == batch_id and timeline[0].get("event_id") == ev["event_id"])
-                or (
-                    timeline[0].get("fetched_at") == ev.get("fetched_at")
-                    and timeline[0].get("fact_summary") == ev.get("fact_summary")
-                )
+            and any(
+                (tn.get("batch_id") == batch_id and tn.get("event_id") == ev["event_id"])
+                or (tn.get("title") == ev["title"] and tn.get("fact_summary") == ev.get("fact_summary"))
+                for tn in timeline[:5]
             )
         )
         if not same_cutoff_or_unchanged:
@@ -1090,8 +1089,21 @@ def build_v3_artifacts(
             continue
         old_bucket = _storyline_semantic_bucket(old_title)
         if old_bucket and old_bucket in seen_buckets:
+            target_st = storylines.get(seen_buckets[old_bucket])
+            if isinstance(target_st, dict):
+                known_titles = {str(n.get("title") or "") for n in (target_st.get("timeline") or [])}
+                for tn in (old_st.get("timeline") or [])[:4]:
+                    if isinstance(tn, dict) and str(tn.get("title") or "") not in known_titles:
+                        target_st.setdefault("timeline", []).append(tn)
+                        known_titles.add(str(tn.get("title") or ""))
+                target_st["timeline"] = (target_st.get("timeline") or [])[:15]
             continue
-        if any(title_similarity(old_title, stitle) >= 0.50 for _, stitle, _ in seen_storyline_titles):
+        old_eids_set = set(old_st.get("entity_ids") or [])
+        if any(
+            title_similarity(old_title, stitle) >= 0.48
+            or (bool(old_eids_set & seids) and not entities_conflict(old_title, stitle) and title_similarity(old_title, stitle) >= 0.36)
+            for _, stitle, seids in seen_storyline_titles
+        ):
             continue
         clean_old = dict(old_st)
         def _scrub_old_ph(txt: str) -> str:
@@ -1142,11 +1154,7 @@ def build_v3_artifacts(
                     if n.get("time")
                 ]
                 tp_valid_times = [dt for dt in tp_times if dt is not None]
-                known_fixed = {
-                    "topic_apec_trump_china": parse_iso_datetime("2026-11-19T22:00:00+08:00"),
-                    "topic_ai_ipo_models": parse_iso_datetime("2026-11-20T09:30:00+08:00"),
-                }.get(tp.get("topic_id") or "")
-                anchor_dt = known_fixed or (max(tp_valid_times) if tp_valid_times else generated_dt)
+                anchor_dt = max(tp_valid_times) if tp_valid_times else generated_dt
                 anchor_iso = to_iso_shanghai(anchor_dt)
                 is_topic_past = anchor_dt < generated_dt
                 first_url = next((n.get("url") for n in tp.get("timeline") or [] if n.get("url")), None)
@@ -1291,7 +1299,7 @@ def build_v3_artifacts(
             "core_assumption": "上市公司首席执行官变动及正式继任属美股重大法定披露事项，必受 SEC 8-K 4 个工作日强制披露约束",
             "invalidation_trigger": "若英伟达 IR 正式澄清拒绝变更或公布明确长期继任方案",
             "probability_pct": 60 if nvda_502 else 25,
-            "probability_note": "基准概率基于当前 SEC EDGAR 连接器实采状态动态校准，到期日固定不再顺延",
+            "probability_note": "基准概率基于当前 SEC EDGAR 官方披露实采状态动态校准，到期日固定不再顺延",
             "current_judgment": (
                 f"SEC 8-K Item 5.02 已披露于 {nvda_502.get('filing_date', '近期')}；正跟踪正式继任进展"
                 if nvda_502

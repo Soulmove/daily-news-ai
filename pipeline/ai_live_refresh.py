@@ -17,7 +17,6 @@ from pipeline.ai_radar_builder import (
     AI_KW_RE,
     AI_NOISE_RE,
     AI_RELEASE_RE,
-    _CURATED_AI_MILESTONES,
     _LAB_CATALOG,
     _infer_company,
     _infer_what_it_does_zh,
@@ -393,15 +392,25 @@ def merge_live_ai_items_into_doc(
     _CANNED_WHO_RE = re.compile(r"^(?:AI 开发者、科研人员与前沿(?:关注者|用户)|AI 开发者、科技观察者与普通效率用户|AI 开发者与普通用户)$")
     _CANNED_LIMIT_RE = re.compile(r"^(?:具体额度、开源协议与硬件门槛以官方发布说明为准|详见官方发布说明与接口配额|详见原文披露的接口配额)")
 
-    curated_ids = {str(m.get("id") or "") for m in _CURATED_AI_MILESTONES if m.get("id")}
+    placeholder_curated_prefixes = (
+        "ai_google_gemini4_", "ai_openai_gpt62_", "ai_deepseek_v4_", "ai_google_diffusiongemma_",
+        "ai_anthropic_claude_", "ai_tencent_hy4_", "ai_qwen4_", "ai_kimi_k31_", "ai_radixark_",
+        "ai_vllm_llamacpp", "ai_openai_amd_", "ai_xai_grok3_colossus", "ai_bytedance_seed_suite",
+        "ai_zhipu_glm_open", "ai_minimax_hailuo", "ai_baidu_ernie_open", "ai_huawei_openpangu",
+        "ai_mistral_codestral", "ai_apple_foundation_mlx", "ai_amazon_nova_bedrock",
+        "ai_perplexity_sonar", "ai_cursor_composer_ide", "ai_stability_open_media",
+    )
     rehomed_items: List[Dict[str, Any]] = []
     for comp in base["companies"]:
         cleaned_existing = []
         for it in comp.get("items") or []:
+            it_id = str(it.get("id") or "")
             it_title = str(it.get("title") or "")
             it_src = str(it.get("source_name") or "")
             it_url = str(it.get("source_url") or "")
-            is_curated = str(it.get("id") or "") in curated_ids
+            if it_id.startswith(placeholder_curated_prefixes) or it_src.strip().lower() == "batch_digest":
+                mutated = True
+                continue
             if AI_NOISE_RE.search(it_title):
                 mutated = True
                 continue
@@ -410,7 +419,7 @@ def merge_live_ai_items_into_doc(
                 if m_up and int(m_up.group(1)) < 12:
                     mutated = True
                     continue
-            if not is_curated and not str(it.get("id") or "").startswith("ai_tool_") and not it.get("is_first_hand"):
+            if not it_id.startswith("ai_tool_") and not it.get("is_first_hand"):
                 if not AI_KW_RE.search(it_title):
                     mutated = True
                     continue
@@ -436,7 +445,7 @@ def merge_live_ai_items_into_doc(
                 it["limitations_en"] = ""
                 mutated = True
             # Re-evaluate company classification across ALL buckets so news.google.com/wallet/xAI misroutes self-heal
-            if not is_curated:
+            if True:
                 inf_cid, inf_cname, inf_reg = _infer_company(it_title, it_url, it_src)
                 if inf_cid != comp.get("company_id") and inf_cid in by_company:
                     it["company_id"] = inf_cid
@@ -493,16 +502,6 @@ def merge_live_ai_items_into_doc(
         new_ids.append(candidate["id"])
         mutated = True
 
-    if len(seen_ids) >= 5:
-        for milestone in _CURATED_AI_MILESTONES:
-            cid = str(milestone.get("company_id") or "")
-            mid = str(milestone.get("id") or "")
-            target = by_company.get(cid)
-            if target is not None and not (target.get("items") or []) and mid not in seen_ids:
-                target.setdefault("items", []).append(deepcopy(milestone))
-                _register(milestone)
-                mutated = True
-
     all_items: List[Dict[str, Any]] = []
     unique_global: Dict[str, Dict[str, Any]] = {}
 
@@ -525,9 +524,9 @@ def merge_live_ai_items_into_doc(
                 continue
             seen_local.add(key)
             deduped_comp.append(it)
-        if len(deduped_comp) != len(comp.get("items") or []):
+        if len(deduped_comp) != len(comp.get("items") or []) or len(deduped_comp) > 8:
             mutated = True
-        comp["items"] = deduped_comp[:30]
+        comp["items"] = deduped_comp[:8]
         comp["recent_count"] = len(comp["items"])
         comp["latest_date"] = comp["items"][0]["date"] if comp["items"] else ""
         comp["latest_headline"] = comp["items"][0]["title"] if comp["items"] else ""

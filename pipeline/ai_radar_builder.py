@@ -774,6 +774,7 @@ AI_NOISE_RE = re.compile(
     r"蔚来|\bnio\b|小鹏|理想汽车|小米汽车|智驾|智能驾驶|世界模型\s*nwm|nwm\s*\d|车机|智能座舱|"
     r"开源鸿蒙|openharmony|harmonyos|南水北调|水利|水文|天河.*(?:工程|调水|水文)|"
     r"影石|insta360|大疆|麦克风|耳机|相机|固件升级|充电宝|路由器|显示器|键盘|鼠标|tech outages.*y2k|outages.*ai agent style|"
+    r"套餐|买赠|优惠券|代金券|促销|折扣|限免|会员价|小米\s*mimo.*套餐|mimo.*套餐|"
     r"微信香港钱包|微信支付|支付宝|信用卡|消费券|手游|主机游戏|steam|帮信罪|刑事拘留)",
     re.I,
 )
@@ -1038,7 +1039,9 @@ _AI_SEARCH_CACHE_TTL_SEC = 4 * 3600  # Reuse weekly Gemini Search grounding acro
 
 
 def _query_gemini_google_search_ai_weekly(base_dir: Path | str = ".") -> List[Dict[str, Any]]:
-    """Use Gemini + Google Search Grounding via unified 13-key pool + 4h persistent cache."""
+    """Opt-in Gemini + Google Search Grounding (disabled by default to preserve free API quotas)."""
+    if os.environ.get("ENABLE_GEMINI_AI_SEARCH", "0").strip() != "1":
+        return []
     root = Path(base_dir)
     cache_path = root / "data" / "ai_radar_search_cache.json"
     cached = load_json_if_exists(cache_path, default={}) or {}
@@ -1274,8 +1277,9 @@ def build_ai_progress_artifact(
             }
         )
 
-    for m in _CURATED_AI_MILESTONES:
-        _add_item(dict(m))
+    if os.environ.get("ENABLE_CURATED_AI_PLACEHOLDERS", "0").strip() == "1":
+        for m in _CURATED_AI_MILESTONES:
+            _add_item(dict(m))
 
     items.sort(key=lambda x: (str(x.get("date") or ""), 1 if not x["id"].startswith("ai_tool_") else 0), reverse=True)
 
@@ -1287,9 +1291,9 @@ def build_ai_progress_artifact(
             {
                 **lab,
                 "recent_count": len(lab_items),
-                "latest_date": lab_items[0]["date"] if lab_items else generated_at_iso[:10],
-                "latest_headline": lab_items[0]["title"] if lab_items else lab["flagship_model"],
-                "items": lab_items[:6],
+                "latest_date": lab_items[0]["date"] if lab_items else "",
+                "latest_headline": lab_items[0]["title"] if lab_items else "",
+                "items": lab_items[:8],
             }
         )
 

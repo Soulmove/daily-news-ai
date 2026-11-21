@@ -2,17 +2,17 @@ name: 🧠 AI Briefing Pipeline (V3 Grounded + Research Memory)
 
 on:
   schedule:
-    # Bi-hourly AI briefing + research memory build (12x/day across 13 rotating keys, safely within free-tier quotas)
-    - cron: '30 */2 * * *'
+    # Every 3 hours off-peak (:22) AI briefing + research memory build (~32 Gemini calls/day across 13 keys)
+    - cron: '22 */3 * * *'
   workflow_dispatch:
     inputs:
       include_comments:
         description: 'Generate same-batch AI simulated perspectives'
         type: boolean
-        default: true
+        default: false
       max_raw_age_minutes:
         description: 'Auto-crawl if latest raw batch is older than N minutes'
-        default: '45'
+        default: '75'
   repository_dispatch:
     types: [trigger-briefing]
 
@@ -26,7 +26,7 @@ concurrency:
 jobs:
   ai-briefing-job:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 12
     env:
       TZ: 'Asia/Shanghai'
     steps:
@@ -62,9 +62,9 @@ jobs:
           KEY_7: ${{ secrets.KEY_7 }}
           KEY_8: ${{ secrets.KEY_8 }}
         run: |
-          EXTRA_ARGS=""
-          if [ "${{ github.event.inputs.include_comments }}" = "false" ]; then
-            EXTRA_ARGS="--no-comments"
+          EXTRA_ARGS="--no-comments"
+          if [ "${{ github.event.inputs.include_comments }}" = "true" ]; then
+            EXTRA_ARGS=""
           fi
           python -m pipeline.build_briefing --mode ai $EXTRA_ARGS
 

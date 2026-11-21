@@ -616,12 +616,24 @@ def fetch_raw_snapshot(
         "total_items": len(all_raw_items),
         "first_party_items": len(connector_items),
     }
-    upsert_history_index(root / "history/raw_index.json", index_entry, max_entries=240)
-    prune_old_archives(root, "history/raw_index.json", keep_latest=24)
+    upsert_history_index(root / "history/raw_index.json", index_entry, max_entries=120)
+    prune_old_archives(root, "history/raw_index.json", keep_latest=6)
 
     # 4. Atomically switch data/manifest.json raw pointer
+    quota_info = connectors_payload.get("gemini_quota") if isinstance(connectors_payload.get("gemini_quota"), dict) else None
+    raw_degraded = crawl_status not in {"complete", "ok"}
+    alerts: List[Dict[str, Any]] = []
+    if raw_degraded:
+        alerts.append({"code": "raw_crawl_degraded", "severity": "warning", "message": f"原始抓取状态：{crawl_status}（错误源 {error_count} 个）"})
+    if quota_info and quota_info.get("total_configured_keys", 0) > 0 and quota_info.get("healthy_keys", 0) == 0:
+        alerts.append({"code": "gemini_quota_exhausted", "severity": "critical", "message": "全部已配置 Gemini API Key 当前处于冷却或耗尽状态"})
+
     manifest["schema_version"] = "4.1"
     manifest["site_published_at"] = published_iso
+    manifest["degraded"] = raw_degraded or bool(
+        (manifest.get("smart") or {}).get("status") not in {None, "complete", "ok"}
+    )
+    manifest["alerts"] = alerts
     manifest["raw"] = {
         "latest_batch_id": batch_id,
         "latest_path": rel_archive_dir,
@@ -629,7 +641,7 @@ def fetch_raw_snapshot(
         "connectors_path": f"{rel_archive_dir}connectors.json",
         "fetched_at": fetched_at_iso,
         "published_at": published_iso,
-        "target_cadence_minutes": 30,
+        "target_cadence_minutes": 60,
         "schedule_source": schedule_source,
         "status": crawl_status,
         "summary": batch_meta["summary"],
@@ -640,13 +652,14 @@ def fetch_raw_snapshot(
         "fetched_at": fetched_at_iso,
         "summary": connectors_payload.get("summary", {}),
     }
-    if isinstance(connectors_payload.get("gemini_quota"), dict):
-        manifest["gemini_quota"] = connectors_payload["gemini_quota"]
+    if quota_info is not None:
+        manifest["gemini_quota"] = quota_info
+        manifest["quota"] = quota_info
     manifest["scheduler"] = {
         "provider": "github_actions",
-        "raw_cron": "*/30 * * * *",
-        "smart_cron": "30 */2 * * *",
-        "note": "受 GitHub Actions 公共调度队列影响，实际执行可能存在延迟；支持通过 repository_dispatch 接入外部定时触发。",
+        "raw_cron": "7 */1 * * *",
+        "smart_cron": "22 */3 * * *",
+        "note": "轻量化错峰调度（Raw 每小时 / Smart 每3小时）；腾讯云仅静默拉取与静态直出。",
     }
     save_manifest(manifest, root)
 

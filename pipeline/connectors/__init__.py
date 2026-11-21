@@ -2,8 +2,9 @@
 
 from __future__ import annotations
 
+import os
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any, Callable, Dict, List, Optional
 
 from pipeline.connectors.arxiv_papers import fetch_arxiv_papers
 from pipeline.connectors.base import HttpCacheStore
@@ -17,11 +18,87 @@ from pipeline.connectors.macro_fomc import fetch_macro_fomc
 from pipeline.connectors.sec_edgar import fetch_sec_edgar
 from pipeline.gemini_pool import get_quota_summary
 from pipeline.manifest import load_json_if_exists
-from pipeline.time_utils import now_shanghai, to_iso_shanghai
+from pipeline.time_utils import now_shanghai, parse_iso_datetime, to_iso_shanghai
+
+# Lightweight cadence cache windows (seconds) to avoid redundant upstream hits in hourly crawls
+_CONNECTOR_CACHE_TTL_SEC: Dict[str, int] = {
+    "fed-fomc": 24 * 3600,
+    "sec-edgar": 4 * 3600,
+    "github-releases": 4 * 3600,
+    "huggingface-hub": 4 * 3600,
+    "arxiv-api": 12 * 3600,
+}
+
+
+def _try_reuse_cached_connector(
+    cid: str,
+    prev_conn: Any,
+    prev_tools: List[dict],
+    prev_items: List[dict],
+    fetched_iso: str,
+) -> Optional[Dict[str, Any]]:
+    ttl = _CONNECTOR_CACHE_TTL_SEC.get(cid)
+    if not ttl or not isinstance(prev_conn, dict):
+        return None
+    prev_rep = next(
+        (r for r in (prev_conn.get("connectors") or []) if isinstance(r, dict) and r.get("connector_id") == cid),
+        None,
+    )
+    if not prev_rep or prev_rep.get("status") not in {"ok", "cached_304", "cached_ttl"}:
+        return None
+    prev_dt = parse_iso_datetime(prev_rep.get("fetched_at"))
+    now_dt = parse_iso_datetime(fetched_iso) or now_shanghai()
+    if prev_dt is None or (now_dt - prev_dt).total_seconds() >= ttl:
+        return None
+
+    cached_items = [dict(it) for it in (prev_items or []) if isinstance(it, dict) and it.get("source_id") == cid]
+    cached_cal = (
+        [dict(c) for c in (prev_conn.get("calendar_events") or []) if isinstance(c, dict) and "fomc" in str(c.get("calendar_id") or "").lower()]
+        if cid == "fed-fomc"
+        else []
+    )
+    if cid in {"github-releases", "huggingface-hub"}:
+        cached_tools = [
+            dict(t)
+            for t in (prev_tools or [])
+            if isinstance(t, dict) and (
+                ("huggingface.co" in str(t.get("official_url") or ""))
+                if cid == "huggingface-hub"
+                else ("github.com" in str(t.get("official_url") or "") or t.get("repo"))
+            )
+        ]
+    else:
+        cached_tools = []
+    cached_ent_updates = (prev_conn.get("entity_updates") or {}) if cid == "sec-edgar" else {}
+
+    # Require actual payload before skipping a fetch
+    if cid == "fed-fomc" and not cached_cal:
+        return None
+    if cid in {"sec-edgar", "arxiv-api"} and not cached_items and not cached_ent_updates:
+        return None
+    if cid in {"github-releases", "huggingface-hub"} and not cached_items and not cached_tools:
+        return None
+
+    return {
+        "connector_id": cid,
+        "connector_name": prev_rep.get("connector_name", cid),
+        "source_tier": prev_rep.get("source_tier", "first_party"),
+        "status": "cached_ttl",
+        "fetched_at": str(prev_rep.get("fetched_at") or fetched_iso),
+        "latency_ms": 0,
+        "item_count": len(cached_items),
+        "calendar_count": len(cached_cal),
+        "cache_reused": True,
+        "tos_note": prev_rep.get("tos_note"),
+        "items": cached_items,
+        "tech_tools": cached_tools,
+        "calendar_events": cached_cal,
+        "entity_updates": cached_ent_updates,
+    }
 
 
 def run_all_first_party_connectors(base_dir: Path | str = ".") -> Dict[str, Any]:
-    """Run all fault-isolated independent official/tech connectors with shared HTTP cache."""
+    """Run fault-isolated healthy first-party connectors with shared HTTP & cadence cache."""
     root = Path(base_dir)
     cache = HttpCacheStore(root)
     fetched_iso = to_iso_shanghai(now_shanghai())
@@ -33,18 +110,17 @@ def run_all_first_party_connectors(base_dir: Path | str = ".") -> Dict[str, Any]
         prev_tt_doc = load_json_if_exists(root / "data/tech_tools.json", default={})
         prev_tools = prev_tt_doc.get("tools", []) if isinstance(prev_tt_doc, dict) else []
 
-    runners = [
+    runners: List[tuple[str, Callable[[], Dict[str, Any]]]] = [
         ("china-realtime-wires", lambda: fetch_china_realtime_wires(cache)),
-        ("gemini-search-hunter", lambda: fetch_gemini_search_breaking_news(cache, base_dir=root)),
         ("direct-rss-media", lambda: fetch_direct_rss_media(cache)),
         ("sec-edgar", lambda: fetch_sec_edgar(cache, base_dir=str(root))),
         ("github-releases", lambda: fetch_github_releases(cache, previous_tools=prev_tools, previous_items=prev_items)),
         ("huggingface-hub", lambda: fetch_huggingface_models(cache, previous_tools=prev_tools, previous_items=prev_items)),
         ("arxiv-api", lambda: fetch_arxiv_papers(cache)),
         ("fed-fomc", lambda: fetch_macro_fomc(cache)),
-        ("hkexnews", lambda: fetch_hkex_announcements(cache, previous_items=prev_items)),
-        ("cninfo", lambda: fetch_cninfo_announcements()),
     ]
+    if os.environ.get("ENABLE_GEMINI_SEARCH_HUNTER", "0").strip() == "1":
+        runners.insert(1, ("gemini-search-hunter", lambda: fetch_gemini_search_breaking_news(cache, base_dir=root)))
 
     reports: List[Dict[str, Any]] = []
     all_items: List[dict] = []
@@ -56,7 +132,7 @@ def run_all_first_party_connectors(base_dir: Path | str = ".") -> Dict[str, Any]
 
     for cid, fn in runners:
         try:
-            res = fn()
+            res = _try_reuse_cached_connector(cid, prev_conn, prev_tools, prev_items, fetched_iso) or fn()
         except Exception as exc:
             res = {
                 "connector_id": cid,
@@ -104,7 +180,7 @@ def run_all_first_party_connectors(base_dir: Path | str = ".") -> Dict[str, Any]
     except Exception:
         pass
 
-    ok_connectors = sum(1 for r in reports if r["status"] in {"ok", "cached_304", "partial", "degraded"})
+    ok_connectors = sum(1 for r in reports if r["status"] in {"ok", "cached_304", "cached_ttl", "partial", "degraded"})
     return {
         "schema_version": "4.1",
         "fetched_at": fetched_iso,

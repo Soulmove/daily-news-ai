@@ -323,10 +323,16 @@ def count_healthy_keys(base_dir: Path | str | None = ".") -> int:
 
 
 def get_quota_summary(base_dir: Path | str | None = ".") -> Dict[str, Any]:
-    """Build safe quota telemetry (zero secrets) for manifest.json & connectors diagnostics."""
+    """Build safe quota telemetry (zero secrets) for manifest.json & ensure ledger persists cleanly."""
     slots = collect_api_key_slots()
     with _POOL_LOCK:
         ledger = _load_quota_ledger(base_dir)
+        path = _state_file_path(base_dir)
+        if slots:
+            for slot in slots:
+                _ensure_slot_record(ledger, slot)
+            if path is not None and not path.exists():
+                _save_quota_ledger(ledger, base_dir)
         now = _utc_now()
         healthy = 0
         cooled = 0
@@ -407,13 +413,14 @@ def call_gemini_raw(
     failed_slots_this_call: set[str] = set()
     per_key_errors: List[Dict[str, str]] = []
     attempts = 0
+    max_attempts = max(14, len(slots) + 4)
     saw_quota_exhaustion = False
 
     for model_name in unique_models:
-        if model_name in unavailable_models:
+        if model_name in unavailable_models or attempts >= max_attempts:
             continue
         for slot in slots:
-            if slot.slot in failed_slots_this_call:
+            if slot.slot in failed_slots_this_call or attempts >= max_attempts:
                 continue
             with _POOL_LOCK:
                 ledger = _load_quota_ledger(base_dir)

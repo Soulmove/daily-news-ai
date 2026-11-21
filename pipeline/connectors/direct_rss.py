@@ -38,7 +38,6 @@ DIRECT_RSS_FEEDS: List[Dict[str, str]] = [
     {"id": "rss-techcrunch", "name": "TechCrunch AI & Tech", "category": "tech", "url": "https://techcrunch.com/feed/", "family": "techcrunch"},
     {"id": "rss-theverge", "name": "The Verge", "category": "tech", "url": "https://www.theverge.com/rss/index.xml", "family": "theverge"},
     {"id": "rss-arstechnica", "name": "Ars Technica", "category": "tech", "url": "https://feeds.arstechnica.com/arstechnica/index", "family": "arstechnica"},
-    {"id": "rss-hn-frontpage", "name": "Hacker News 热榜", "category": "tech", "url": "https://hnrss.org/frontpage?points=60", "family": "hackernews"},
     # --- Google News Zero-Lag Targeted Topic Search Radars (when:1d / when:2d) ---
     {
         "id": "rss-gnews-ai-models-en",
@@ -183,7 +182,7 @@ def _resolve_rss_publisher(
             elif inferred_pub and tail.lower() == inferred_pub.lower():
                 clean_title = head
 
-    if inferred_pub:
+    if inferred_pub and not re.search(r"google\s*news", inferred_pub, re.I):
         fam = ""
         if src_href:
             try:
@@ -195,6 +194,18 @@ def _resolve_rss_publisher(
         if not fam:
             fam = re.sub(r"[^a-z0-9\u4e00-\u9fff]", "", inferred_pub.lower())[:16] or default_family
         return clean_title, inferred_pub, fam
+
+    if is_gnews or re.search(r"google\s*news", default_name, re.I):
+        if src_href:
+            try:
+                host = urlparse(src_href).netloc.lower().removeprefix("www.")
+                if host and "google." not in host:
+                    fam = re.sub(r"[^a-z0-9]", "", host.split(".")[0])[:16] or default_family
+                    return clean_title, host, fam
+            except Exception:
+                pass
+        clean_default = "综合资讯" if fid.endswith("-zh") or "zh" in default_family else "Global Wire"
+        return clean_title, clean_default, default_family
 
     return clean_title, default_name, default_family
 

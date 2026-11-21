@@ -335,8 +335,6 @@ def fetch_china_realtime_wires(cache: Optional[HttpCacheStore] = None) -> Dict[s
         lambda: _fetch_wallstreetcn_channel("a-stock-channel", "华尔街见闻 A股快讯", "finance", fetched_iso),
         lambda: _fetch_wallstreetcn_channel("us-stock-channel", "华尔街见闻 美股快讯", "finance", fetched_iso),
         lambda: _fetch_wallstreetcn_channel("tech-channel", "华尔街见闻 科技/AI快讯", "tech", fetched_iso),
-        lambda: _fetch_cls_telegraph(fetched_iso),
-        lambda: _fetch_rss_flash("36kr-newsflash", "36氪 7×24 科技快讯", "tech", "https://36kr.com/feed-newsflash", "36kr", fetched_iso),
         lambda: _fetch_rss_flash("ithome-rss", "IT之家 实时快讯", "tech", "https://www.ithome.com/rss/", "ithome", fetched_iso),
     ]
 
@@ -347,7 +345,7 @@ def fetch_china_realtime_wires(cache: Optional[HttpCacheStore] = None) -> Dict[s
     ok_cnt = 0
     errors: List[str] = []
 
-    with ThreadPoolExecutor(max_workers=7) as pool:
+    with ThreadPoolExecutor(max_workers=5) as pool:
         futs = [pool.submit(fn) for fn in tasks]
         for fut in as_completed(futs):
             res = fut.result()
@@ -412,7 +410,7 @@ def fetch_china_realtime_wires(cache: Optional[HttpCacheStore] = None) -> Dict[s
         "item_count": len(all_items),
         "calendar_count": 0,
         "error_message": "; ".join(errors[:4]) if errors else None,
-        "tos_note": "聚合华尔街见闻、财联社、36氪、IT之家公开实时快讯接口，用于 7×24 零延迟消息流。",
+        "tos_note": "聚合华尔街见闻与 IT 之家稳定公开实时快讯接口，用于 7×24 零延迟消息流。",
         "items": all_items,
         "platforms_by_category": platforms_by_category,
         "source_reports": source_reports,

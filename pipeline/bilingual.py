@@ -567,7 +567,11 @@ def enrich_bilingual_events(
 
     from pipeline.gemini_pool import count_healthy_keys
 
-    use_llm_en = _has_llm_translation_key() and count_healthy_keys() >= 3
+    use_llm_en = (
+        os.environ.get("ENABLE_LLM_BILINGUAL", "0").strip() == "1"
+        and _has_llm_translation_key()
+        and count_healthy_keys() >= 3
+    )
     combined_zh_items: List[Tuple[int, str, str]] = []
     for pos, ev_idx in enumerate(zh_titles_idx):
         combined_zh_items.append((ev_idx, "title_en", zh_titles_src[pos]))
@@ -718,7 +722,11 @@ def enrich_bilingual_topics(
                 zh_node_src.append(nt)
     from pipeline.gemini_pool import count_healthy_keys
 
-    can_llm_en = _has_llm_translation_key() and count_healthy_keys() >= 3
+    can_llm_en = (
+        os.environ.get("ENABLE_LLM_BILINGUAL", "0").strip() == "1"
+        and _has_llm_translation_key()
+        and count_healthy_keys() >= 3
+    )
     if zh_topic_src:
         tp_en = (
             _translate_texts_with_pipeline(zh_topic_src, "en", max_retries=max_retries, backoff_base=backoff_base)[0]
@@ -774,7 +782,11 @@ def enrich_bilingual_v3_records(
     from pipeline.gemini_pool import count_healthy_keys
 
     llm_out: Optional[List[str]] = None
-    if _has_llm_translation_key() and count_healthy_keys() >= 3:
+    if (
+        os.environ.get("ENABLE_LLM_BILINGUAL", "0").strip() == "1"
+        and _has_llm_translation_key()
+        and count_healthy_keys() >= 3
+    ):
         batch_texts = [t for _, _, t in pending_refs[:max_llm_items]]
         llm_out, _, _ = _translate_texts_with_pipeline(batch_texts, "en", max_retries=1, backoff_base=0.3)
 
