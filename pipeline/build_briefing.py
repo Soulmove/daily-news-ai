@@ -1529,7 +1529,7 @@ _S_MAJOR_TECH_CORP_RE = re.compile(
     re.I,
 )
 _S_TECH_NOISE_GUARD_RE = re.compile(
-    r"(?:招聘|回答更简短|透明度|反蒸馏|渠道价|遭证监会立案|信息披露违法违规|专利侵权|控股股东)"
+    r"(?:招聘|回答更简短|透明度|反蒸馏|渠道价|遭证监会立案|信息披露违法违规|专利侵权|控股股东|台湾|台湾地区)"
 )
 _S_TIER_EVENT_RE = re.compile(f"(?:{_S_MACRO_POLICY_RE.pattern}|{_S_MAJOR_TECH_CORP_RE.pattern})", re.I)
 _A_TIER_EVENT_RE = re.compile(
