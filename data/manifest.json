@@ -1,15 +1,15 @@
 {
   "schema_version": "4.1",
-  "site_published_at": "2026-11-23T01:06:39+08:00",
+  "site_published_at": "2026-11-23T01:15:19+08:00",
   "smart": {
-    "latest_batch_id": "smart-20261123-002602",
-    "latest_path": "archives/smart/2026-11-23/00-26/",
-    "meta_path": "archives/smart/2026-11-23/00-26/batch_meta.json",
-    "input_batch_id": "raw-20261123-002357",
-    "input_raw_path": "archives/raw/2026-11-23/00-23/",
-    "input_cutoff_at": "2026-11-23T00:23:57+08:00",
-    "generated_at": "2026-11-23T00:26:02+08:00",
-    "published_at": "2026-11-23T00:32:11+08:00",
+    "latest_batch_id": "smart-20261123-010749",
+    "latest_path": "archives/smart/2026-11-23/01-07/",
+    "meta_path": "archives/smart/2026-11-23/01-07/batch_meta.json",
+    "input_batch_id": "raw-20261123-010616",
+    "input_raw_path": "archives/raw/2026-11-23/01-06/",
+    "input_cutoff_at": "2026-11-23T01:06:16+08:00",
+    "generated_at": "2026-11-23T01:07:49+08:00",
+    "published_at": "2026-11-23T01:15:19+08:00",
     "target_cadence_hours": 3,
     "status": "partial",
     "generation_mode": "mode_ai",
@@ -30,8 +30,8 @@
         "status": "fallback",
         "is_fallback": true,
         "fallback_reason": "本轮生成失败（All Gemini attempts failed: ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'The request timed out. Please try again.', 'status': 'DEADLIN），已保留该分类上次成功批次数据",
-        "item_count": 11,
-        "verified_count": 11,
+        "item_count": 10,
+        "verified_count": 10,
         "needs_verification_count": 0,
         "has_comments": false
       },
@@ -42,9 +42,9 @@
         "input_batch_id": "raw-20261123-002357",
         "input_cutoff_at": "2026-11-23T00:23:57+08:00",
         "generated_at": "2026-11-23T00:28:07+08:00",
-        "status": "ok",
-        "is_fallback": false,
-        "fallback_reason": null,
+        "status": "fallback",
+        "is_fallback": true,
+        "fallback_reason": "本轮生成失败（All Gemini attempts failed: ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'The request timed out. Please try again.', 'status': 'DEADLIN），已保留该分类上次成功批次数据",
         "item_count": 7,
         "verified_count": 7,
         "needs_verification_count": 0,
@@ -57,21 +57,21 @@
         "input_batch_id": "raw-20261123-002357",
         "input_cutoff_at": "2026-11-23T00:23:57+08:00",
         "generated_at": "2026-11-23T00:31:42+08:00",
-        "status": "ok",
-        "is_fallback": false,
-        "fallback_reason": null,
+        "status": "fallback",
+        "is_fallback": true,
+        "fallback_reason": "本轮生成失败（All Gemini attempts failed: ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'The request timed out. Please try again.', 'status': 'DEADLIN），已保留该分类上次成功批次数据",
         "item_count": 11,
         "verified_count": 11,
         "needs_verification_count": 0,
         "has_comments": false
       },
       "general": {
-        "batch_id": "smart-20261123-002602",
-        "path": "archives/smart/2026-11-23/00-26/analysis_general.json",
-        "comments_path": "archives/smart/2026-11-23/00-26/comments_general.json",
-        "input_batch_id": "raw-20261123-002357",
-        "input_cutoff_at": "2026-11-23T00:23:57+08:00",
-        "generated_at": "2026-11-23T00:32:04+08:00",
+        "batch_id": "smart-20261123-010749",
+        "path": "archives/smart/2026-11-23/01-07/analysis_general.json",
+        "comments_path": "archives/smart/2026-11-23/01-07/comments_general.json",
+        "input_batch_id": "raw-20261123-010616",
+        "input_cutoff_at": "2026-11-23T01:06:16+08:00",
+        "generated_at": "2026-11-23T01:15:12+08:00",
         "status": "ok",
         "is_fallback": false,
         "fallback_reason": null,
@@ -172,8 +172,8 @@
   },
   "v3": {
     "schema_version": "4.0",
-    "generated_at": "2026-11-23T00:32:11+08:00",
-    "batch_id": "smart-20261123-002602",
+    "generated_at": "2026-11-23T01:15:19+08:00",
+    "batch_id": "smart-20261123-010749",
     "entities_path": "data/entities_index.json",
     "storylines_path": "data/storylines_index.json",
     "topics_path": "data/topics.json",
@@ -188,12 +188,12 @@
     "entities_count": 28,
     "storylines_count": 75,
     "topics_count": 10,
-    "ai_progress_count": 68,
-    "finance_impact_count": 12,
+    "ai_progress_count": 67,
+    "finance_impact_count": 13,
     "market_quotes_path": "data/market_quotes.json",
-    "calendar_count": 49,
+    "calendar_count": 50,
     "calendar_ics_path": "data/calendar.ics",
-    "calendar_ics_count": 49,
+    "calendar_ics_count": 50,
     "calendar_tbd_skipped": 0,
     "feed_path": "data/feed.xml",
     "feeds_by_category": {
@@ -203,24 +203,24 @@
       "general": "data/feed_general.xml"
     },
     "tech_tools_count": 20,
-    "radar_count": 41
+    "radar_count": 40
   },
   "degraded": true,
   "alerts": [
     {
-      "code": "raw_crawl_degraded",
+      "code": "partial_category_fallback",
       "severity": "warning",
-      "message": "原始抓取状态：partial（错误源 1 个）"
+      "message": "本批次有 3 个板块使用上一批降级回退"
     }
   ],
   "gemini_quota": {
     "total_configured_keys": 12,
-    "healthy_keys": 12,
-    "cooled_down_keys": 0,
+    "healthy_keys": 11,
+    "cooled_down_keys": 1,
     "exhausted_keys": 0,
-    "daily_calls_total": 190,
+    "daily_calls_total": 202,
     "date_utc": "2026-11-22",
-    "updated_at": "2026-11-22T17:06:28Z",
+    "updated_at": "2026-11-22T17:15:19Z",
     "keys": [
       {
         "slot": "KEY_TECH",
@@ -234,22 +234,22 @@
       },
       {
         "slot": "KEY_GLOBAL",
-        "status": "healthy",
-        "daily_calls": 14,
+        "status": "cooldown",
+        "daily_calls": 18,
         "cooldown_until": null,
         "exhausted_until": null,
         "last_error_code": "TRANSIENT_ERROR",
-        "last_error": "ServerError: 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand ",
-        "last_success_at": "2026-11-22T15:11:13Z"
+        "last_error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'The request timed out. Please try again.', 'status': 'DEADLIN",
+        "last_success_at": "2026-11-22T17:15:12Z"
       },
       {
         "slot": "KEY_FINANCE",
         "status": "healthy",
-        "daily_calls": 14,
+        "daily_calls": 16,
         "cooldown_until": null,
         "exhausted_until": null,
-        "last_error_code": null,
-        "last_error": null,
+        "last_error_code": "TRANSIENT_ERROR",
+        "last_error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status':",
         "last_success_at": "2026-11-22T16:32:09Z"
       },
       {
@@ -275,11 +275,11 @@
       {
         "slot": "KEY_2",
         "status": "healthy",
-        "daily_calls": 14,
+        "daily_calls": 16,
         "cooldown_until": null,
         "exhausted_until": null,
-        "last_error_code": null,
-        "last_error": null,
+        "last_error_code": "TRANSIENT_ERROR",
+        "last_error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'The request timed out. Please try again.', 'status': 'DEADLIN",
         "last_success_at": "2026-11-22T15:08:16Z"
       },
       {
@@ -305,7 +305,7 @@
       {
         "slot": "KEY_5",
         "status": "healthy",
-        "daily_calls": 14,
+        "daily_calls": 16,
         "cooldown_until": null,
         "exhausted_until": null,
         "last_error_code": "TRANSIENT_ERROR",
@@ -345,7 +345,7 @@
       {
         "slot": "GOOGLE_API_KEY",
         "status": "unconfigured",
-        "daily_calls": 14,
+        "daily_calls": 16,
         "cooldown_until": null,
         "exhausted_until": null,
         "last_error_code": "TRANSIENT_ERROR",
@@ -356,12 +356,12 @@
   },
   "quota": {
     "total_configured_keys": 12,
-    "healthy_keys": 12,
-    "cooled_down_keys": 0,
+    "healthy_keys": 11,
+    "cooled_down_keys": 1,
     "exhausted_keys": 0,
-    "daily_calls_total": 190,
+    "daily_calls_total": 202,
     "date_utc": "2026-11-22",
-    "updated_at": "2026-11-22T17:06:28Z",
+    "updated_at": "2026-11-22T17:15:19Z",
     "keys": [
       {
         "slot": "KEY_TECH",
@@ -375,22 +375,22 @@
       },
       {
         "slot": "KEY_GLOBAL",
-        "status": "healthy",
-        "daily_calls": 14,
+        "status": "cooldown",
+        "daily_calls": 18,
         "cooldown_until": null,
         "exhausted_until": null,
         "last_error_code": "TRANSIENT_ERROR",
-        "last_error": "ServerError: 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand ",
-        "last_success_at": "2026-11-22T15:11:13Z"
+        "last_error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'The request timed out. Please try again.', 'status': 'DEADLIN",
+        "last_success_at": "2026-11-22T17:15:12Z"
       },
       {
         "slot": "KEY_FINANCE",
         "status": "healthy",
-        "daily_calls": 14,
+        "daily_calls": 16,
         "cooldown_until": null,
         "exhausted_until": null,
-        "last_error_code": null,
-        "last_error": null,
+        "last_error_code": "TRANSIENT_ERROR",
+        "last_error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status':",
         "last_success_at": "2026-11-22T16:32:09Z"
       },
       {
@@ -416,11 +416,11 @@
       {
         "slot": "KEY_2",
         "status": "healthy",
-        "daily_calls": 14,
+        "daily_calls": 16,
         "cooldown_until": null,
         "exhausted_until": null,
-        "last_error_code": null,
-        "last_error": null,
+        "last_error_code": "TRANSIENT_ERROR",
+        "last_error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'The request timed out. Please try again.', 'status': 'DEADLIN",
         "last_success_at": "2026-11-22T15:08:16Z"
       },
       {
@@ -446,7 +446,7 @@
       {
         "slot": "KEY_5",
         "status": "healthy",
-        "daily_calls": 14,
+        "daily_calls": 16,
         "cooldown_until": null,
         "exhausted_until": null,
         "last_error_code": "TRANSIENT_ERROR",
@@ -486,7 +486,7 @@
       {
         "slot": "GOOGLE_API_KEY",
         "status": "unconfigured",
-        "daily_calls": 14,
+        "daily_calls": 16,
         "cooldown_until": null,
         "exhausted_until": null,
         "last_error_code": "TRANSIENT_ERROR",

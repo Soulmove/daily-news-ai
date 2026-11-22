@@ -1,7 +1,7 @@
 {
   "schema_version": "4.1",
   "date_utc": "2026-11-22",
-  "updated_at": "2026-11-22T16:33:01Z",
+  "updated_at": "2026-11-22T17:16:14Z",
   "keys": {
     "KEY_TECH": {
       "slot": "KEY_TECH",
@@ -24,46 +24,47 @@
       "slot": "KEY_GLOBAL",
       "fingerprint": "99678299",
       "date_utc": "2026-11-22",
-      "daily_calls": 14,
+      "daily_calls": 18,
       "cooldown_until": null,
       "exhausted_until": null,
       "model_exhausted_until": {},
       "last_error_code": "TRANSIENT_ERROR",
-      "last_error": "ServerError: 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand ",
-      "last_success_at": "2026-11-22T15:11:13Z",
+      "last_error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'The request timed out. Please try again.', 'status': 'DEADLIN",
+      "last_success_at": "2026-11-22T17:15:12Z",
       "consecutive_errors": 1,
       "model_cooldown_until": {
-        "gemini-4-hydrogen": "2026-11-22T16:31:26Z"
+        "gemini-4-hydrogen": "2026-11-22T17:13:11Z",
+        "gemini-2.5-flash": "2026-11-22T17:15:39Z"
       }
     },
     "KEY_FINANCE": {
       "slot": "KEY_FINANCE",
       "fingerprint": "08e82e75",
       "date_utc": "2026-11-22",
-      "daily_calls": 14,
+      "daily_calls": 16,
       "cooldown_until": null,
       "exhausted_until": null,
       "model_exhausted_until": {},
-      "last_error_code": null,
-      "last_error": null,
+      "last_error_code": "TRANSIENT_ERROR",
+      "last_error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status':",
       "last_success_at": "2026-11-22T16:32:09Z",
-      "consecutive_errors": 0,
+      "consecutive_errors": 2,
       "model_cooldown_until": {
-        "gemini-4-hydrogen": "2026-11-22T13:42:14Z"
+        "gemini-4-hydrogen": "2026-11-22T17:14:25Z"
       }
     },
     "KEY_GENERAL": {
       "slot": "KEY_GENERAL",
       "fingerprint": "f9d158c9",
       "date_utc": "2026-11-22",
-      "daily_calls": 14,
+      "daily_calls": 15,
       "cooldown_until": null,
       "exhausted_until": null,
       "model_exhausted_until": {},
-      "last_error_code": "TRANSIENT_ERROR",
-      "last_error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'The request timed out. Please try again.', 'status': 'DEADLIN",
-      "last_success_at": "2026-11-22T13:43:57Z",
-      "consecutive_errors": 3,
+      "last_error_code": null,
+      "last_error": null,
+      "last_success_at": "2026-11-22T17:16:14Z",
+      "consecutive_errors": 0,
       "model_cooldown_until": {
         "gemini-4-hydrogen": "2026-11-22T15:07:51Z",
         "gemini-2.5-flash": "2026-11-22T15:07:54Z"
@@ -90,16 +91,17 @@
       "slot": "KEY_2",
       "fingerprint": "d6427670",
       "date_utc": "2026-11-22",
-      "daily_calls": 14,
+      "daily_calls": 16,
       "cooldown_until": null,
       "exhausted_until": null,
       "model_exhausted_until": {},
-      "last_error_code": null,
-      "last_error": null,
+      "last_error_code": "TRANSIENT_ERROR",
+      "last_error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'The request timed out. Please try again.', 'status': 'DEADLIN",
       "last_success_at": "2026-11-22T15:08:16Z",
-      "consecutive_errors": 0,
+      "consecutive_errors": 2,
       "model_cooldown_until": {
-        "gemini-4-hydrogen": "2026-11-22T15:07:56Z"
+        "gemini-4-hydrogen": "2026-11-22T17:09:25Z",
+        "gemini-2.5-flash": "2026-11-22T17:11:53Z"
       }
     },
     "KEY_3": {
@@ -139,17 +141,17 @@
       "slot": "KEY_5",
       "fingerprint": "5b1c687f",
       "date_utc": "2026-11-22",
-      "daily_calls": 14,
+      "daily_calls": 16,
       "cooldown_until": null,
       "exhausted_until": null,
       "model_exhausted_until": {},
       "last_error_code": "TRANSIENT_ERROR",
       "last_error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'The request timed out. Please try again.', 'status': 'DEADLIN",
       "last_success_at": "2026-11-22T13:38:06Z",
-      "consecutive_errors": 3,
+      "consecutive_errors": 5,
       "model_cooldown_until": {
-        "gemini-4-hydrogen": "2026-11-22T15:09:01Z",
-        "gemini-2.5-flash": "2026-11-22T15:11:29Z"
+        "gemini-4-hydrogen": "2026-11-22T17:09:25Z",
+        "gemini-2.5-flash": "2026-11-22T17:11:53Z"
       }
     },
     "KEY_6": {
@@ -205,16 +207,16 @@
       "slot": "GOOGLE_API_KEY",
       "fingerprint": "09c80db8",
       "date_utc": "2026-11-22",
-      "daily_calls": 14,
+      "daily_calls": 16,
       "cooldown_until": null,
       "exhausted_until": null,
       "model_exhausted_until": {},
       "last_error_code": "TRANSIENT_ERROR",
       "last_error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status':",
       "last_success_at": "2026-11-22T13:39:24Z",
-      "consecutive_errors": 2,
+      "consecutive_errors": 4,
       "model_cooldown_until": {
-        "gemini-4-hydrogen": "2026-11-22T16:27:43Z",
+        "gemini-4-hydrogen": "2026-11-22T17:10:39Z",
         "gemini-2.5-flash": "2026-11-22T05:54:04Z"
       }
     }
