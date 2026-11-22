@@ -76,7 +76,7 @@ def extract_effective_date_label(title: str, summary: str = "") -> Optional[str]
 def extract_qualifier_badge(title: str, summary: str = "") -> Optional[str]:
     """Promote key hedging qualifiers ('up to X%', 'talks', 'unconfirmed') next to the headline."""
     blob = f"{title} {summary}"
-    m_up = re.search(r"最高(?:提价|涨价|涨幅|调价|上调)\s*(\d+(?:\.\d+)?)\s*%", blob)
+    m_up = re.search(r"(?:最高(?:提价|涨价|涨幅|调价|上调)|(?:涨幅|提价|涨价|报价|调价)最高(?:达|至|为)?)\s*(\d+(?:\.\d+)?)\s*%", blob)
     if m_up:
         return f"⚠️ 要价上限 {m_up.group(1)}% · 关注客户实际接受率"
     if re.search(r"(?:削减|减少).*?(?:100万|20%).*?(?:联发科|TPU\s*8t)", blob, re.I):
@@ -353,7 +353,7 @@ def _build_domain_scenario(
         }
 
     # 0g. Corporate Share Buyback & Dividend Floor
-    if re.search(r"回购股份|拟以.*亿元.*回购|增持.*亿元|特别分红", text, re.I):
+    if re.search(r"回购股份|拟以.*亿元.*回购|拟回购.*(?:亿元|万股|A股)|增持.*亿元|特别分红", text, re.I):
         return {
             "rule_id": "corporate_buyback_dividend",
             "tag": "龙头真金白银大额回购与市值托底",
@@ -463,9 +463,10 @@ def _build_domain_scenario(
             "if_then": [],
             "milestones": [{"date": "7 日内", "status": "current", "label": "观察商务部是否公布对等美企合规核查清单"}],
         }
-    if any(k in t for k in ("暴跌", "重挫", "下挫", "抛售潮", "抹去年内涨幅", "逼近破发", "破发")) and any(
-        k in t for k in ("英伟达", "nvda", "纳指", "anthropic", "ai板块", "算力", "芯片")
-    ):
+    if (
+        any(k in t for k in ("暴跌", "重挫", "下挫", "抛售潮", "抹去年内涨幅", "逼近破发", "破发", "动荡"))
+        and any(k in t for k in ("英伟达", "nvda", "纳指", "anthropic", "ai板块", "算力", "芯片"))
+    ) or ("anthropic" in tl and "ipo" in tl and any(k in t for k in ("动荡", "担忧", "承压", "波动"))):
         is_ipo = "anthropic" in tl or "破发" in tl or "发行价" in tl or "上市" in tl
         if is_ipo:
             qqq_f, atr_v, _ = _volatility_scale("QQQ", quotes_map, intensity)
@@ -1203,7 +1204,7 @@ def _build_domain_scenario(
 
     # 8a. NVIDIA CEO Senate Hearing / SEC Investigation / Leadership Governance Shock
     if ("黄仁勋" in t or "英伟达" in t or "nvidia" in t) and re.search(
-        r"参议院|听证|作证|sec\s*调查|辞任|辞职", t
+        r"参议院|听证|作证|sec\s*调查|展开调查|检察长.*调查|财长.*调查|辞任|辞职", t
     ):
         nvda_f, atr_v, _ = _volatility_scale("NVDA", quotes_map, 4)
         return {
@@ -1237,8 +1238,8 @@ def _build_domain_scenario(
         }
 
     # 8b. Cross-Border AI Chip Smuggling & BIS Export-Control Compliance Crackdown
-    if re.search(r"走私|绕道|出口合规|megaspeed|alice\s*huang|查获.*芯片|违规.*出口", t) and any(
-        k in t for k in ("芯片", "英伟达", "nvidia", "gpu", "对华")
+    if re.search(r"走私|绕道|出口合规|megaspeed|alice\s*huang|查获.*芯片|违规.*出口|收紧芯片管制|暂停对.*出货", t) and any(
+        k in t for k in ("芯片", "英伟达", "nvidia", "gpu", "对华", "东南亚")
     ):
         nvda_f, atr_v, _ = _volatility_scale("NVDA", quotes_map, 4)
         return {
@@ -1336,11 +1337,11 @@ def _build_domain_scenario(
             "milestones": [{"date": "两周内", "status": "current", "label": "英伟达治理公告与美国商务部出口税则细则"}],
         }
 
-    # 9. Genuine US-China Summit / Bilateral Diplomacy Peace Declaration (ONLY bilateral US-China / APEC; never tariff threats!)
+    # 9. Genuine US-China Summit / Bilateral Diplomacy Peace Declaration (ONLY bilateral US-China / APEC; never third-party gossip or tariff threats!)
     if (
-        ("中美" in t or "apec" in t)
+        ("中美" in t or "美中" in t or "对华" in t or ("apec" in t and ("中美" in t or "特朗普" in t or "中美元首" in t)))
         and any(k in t for k in ("三方和平", "一致同意", "对话", "关税调整", "峰会", "会晤"))
-        and not re.search(r"巨额关税|征重税|巨税|加征关税|威胁征税|关税威胁", t)
+        and not re.search(r"巨额关税|征重税|巨税|加征关税|威胁征税|关税威胁|行为不当|网友批评|高市早苗", t)
     ):
         is_truce = any(k in t for k in ("和平宣言", "一致同意", "不陷入", "合作", "建设性"))
         kweb_f, atr_v, _ = _volatility_scale("KWEB", quotes_map, 3)

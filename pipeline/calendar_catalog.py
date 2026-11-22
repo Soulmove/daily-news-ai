@@ -1302,7 +1302,7 @@ def _infer_event_type(item: Dict[str, Any], blob_low: str) -> str:
         return cur
     if any(k in blob_low for k in ("fomc", "美联储", "欧洲央行", "ecb", "boe", "英国央行", "boj", "日本央行", "cpi", "非农", "pce", "opec+", "议息", "利率")):
         return "central_bank"
-    if any(k in blob_low for k in ("人代会", "政协", "两会", "中央经济", "统计局", "pmi", "gdp", "lpr", "外交部", "预算", "政府工作", "神舟", "载人飞船", "空间站", "航天工程", "卫星发射", "探月", "火箭发射")):
+    if any(k in blob_low for k in ("证监会", "沪深北交易所", "沪深交易所", "融资保证金", "稳股市", "减免费用", "人代会", "政协", "两会", "中央经济", "统计局", "pmi", "gdp", "lpr", "外交部", "预算", "政府工作", "神舟", "载人飞船", "空间站", "航天工程", "卫星发射", "探月", "火箭发射")):
         return "politics_macro"
     if any(k in blob_low for k in ("apec", "g20", "cop31", "气候大会", "广交会", "高交会", "进博会", "消博会", "文博会", "航展", "达沃斯", "waic", "ces", "mwc", "峰会", "会晤", "博览会")):
         return "expo_summit"
