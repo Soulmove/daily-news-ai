@@ -17,11 +17,17 @@ DEFAULT_TRANSLATION_CACHE_PATH = Path(__file__).resolve().parent.parent / "data"
 _TRANSLATION_CACHE_MAX_ENTRIES = 2500
 
 
+_STRIP_TAG_PREFIX_RE = re.compile(r"^(?:\s*(?:【[^】]{1,24}】|\[[^\]]{1,24}\]))+\s*")
+
+
 def is_mostly_english(text: str) -> bool:
     if not text:
         return False
-    cjk = len(_CJK_RE.findall(text))
-    lat = len(_LATIN_RE.findall(text))
+    stripped = _STRIP_TAG_PREFIX_RE.sub("", str(text).strip())
+    if not stripped:
+        return False
+    cjk = len(_CJK_RE.findall(stripped))
+    lat = len(_LATIN_RE.findall(stripped))
     return lat >= 12 and cjk <= max(2, int(lat * 0.08))
 
 
@@ -386,7 +392,7 @@ def _translate_texts_with_pipeline(
         res = call_gemini_json(
             scope="bilingual",
             prompt=prompt,
-            models=("gemini-2.5-flash", "gemini-2.0-flash", "gemini-4-hydrogen"),
+            models=("gemini-2.5-flash", "gemini-2.5-flash-lite", "gemini-2.0-flash", "gemini-4-hydrogen"),
             temperature=0.1,
             base_dir=root_dir,
         )
@@ -394,7 +400,7 @@ def _translate_texts_with_pipeline(
         parsed = res.data if res.ok else None
         if not isinstance(parsed, list) or len(parsed) != len(chunk):
             last_error = res.error_message or "chunk_translation_failed"
-            return None, total_attempts, last_error
+            continue
         for local_i, orig_pos in enumerate(chunk_idx):
             val = str(parsed[local_i]).strip()
             out[orig_pos] = val
@@ -406,7 +412,10 @@ def _translate_texts_with_pipeline(
     if cache_dirty:
         _save_translation_cache(cache_map, cache_path)
 
-    return [str(x or "") for x in out], total_attempts, None
+    has_any = any(bool(x) for x in out)
+    if not has_any and last_error:
+        return None, total_attempts, last_error
+    return [str(x or "") for x in out], total_attempts, last_error
 
 
 def enrich_bilingual_events(
@@ -604,6 +613,32 @@ def enrich_bilingual_events(
                 cleaned = sanitize_en_output(val)
                 ev[field_name] = "" if len(_CJK_RE.findall(cleaned)) >= 2 else cleaned
 
+    # Translate English source headlines -> sources[*].title_zh for Desktop Context Rail citations
+    src_title_refs: List[Tuple[dict, str]] = []
+    for ev in events:
+        for src in ev.get("sources") or []:
+            if not isinstance(src, dict):
+                continue
+            st = str(src.get("title") or "").strip()
+            if st and is_mostly_english(st) and not src.get("title_zh"):
+                ov_zh = _resolve_override(st, "title_zh", manual_dict) or _lookup_offline_phrase(st)
+                if ov_zh:
+                    src["title_zh"] = ov_zh
+                else:
+                    src_title_refs.append((src, st))
+    if src_title_refs:
+        tr_src_titles, _, _ = _translate_texts_with_pipeline(
+            [st for _, st in src_title_refs[:48]],
+            "zh",
+            max_retries=1,
+            backoff_base=backoff_base,
+            chunk_size=20,
+        )
+        if tr_src_titles:
+            for pos, (src, _st) in enumerate(src_title_refs[:48]):
+                if pos < len(tr_src_titles) and tr_src_titles[pos]:
+                    src["title_zh"] = tr_src_titles[pos]
+
 
 def retry_pending_translations(
     events: List[Dict[str, Any]],
@@ -650,9 +685,16 @@ def enrich_bilingual_topics(
     if not topic_list:
         return
     manual_dict = overrides if overrides is not None else load_translation_overrides()
-    en_idx: List[tuple[int, int]] = []
+    en_idx: List[tuple[int, int, str]] = []
     en_src: List[str] = []
     for ti, tp in enumerate(topic_list):
+        tp_title = str(tp.get("title") or "").strip()
+        if is_mostly_english(tp_title):
+            tp["title_en"] = tp_title
+            manual_tp = _resolve_override(tp_title, "title_zh", manual_dict) or _lookup_offline_phrase(tp_title)
+            if manual_tp:
+                tp["title"] = manual_tp
+                tp["title_zh"] = manual_tp
         for ni, node in enumerate(tp.get("timeline") or []):
             t = str(node.get("title") or "").strip()
             if is_mostly_english(t):
@@ -663,46 +705,60 @@ def enrich_bilingual_topics(
                     node["title"] = manual_zh
                     node["translation_status"] = "manual"
                 else:
-                    en_idx.append((ti, ni))
+                    en_idx.append((ti, ni, "title"))
                     en_src.append(t)
             else:
                 node["title_zh"] = t
                 node.setdefault("translation_status", "native_zh")
             s = str(node.get("summary") or "").strip()
             if _LEGACY_PLACEHOLDER_SUMMARY_RE.search(s):
-                s = str(node.get("summary_en") or node.get("title_en") or node.get("title") or "")[:120]
+                s = str(node.get("summary_en") or node.get("title_en") or node.get("title") or "")[:140]
                 node["summary"] = s
-                node["summary_zh"] = s
-            elif s and is_mostly_english(s):
+                node["summary_zh"] = ""
+            if s and is_mostly_english(s):
                 node["summary_en"] = s
-                manual_s = _resolve_override(s, "summary_zh", manual_dict)
-                node["summary"] = manual_s or _translate_offline_fallback(s, is_summary=True)
-                node["summary_zh"] = node["summary"]
+                manual_s = _resolve_override(s, "summary_zh", manual_dict) or _lookup_offline_phrase(s)
+                if manual_s:
+                    node["summary"] = manual_s
+                    node["summary_zh"] = manual_s
+                else:
+                    en_idx.append((ti, ni, "summary"))
+                    en_src.append(s[:220])
+            elif s:
+                node["summary_zh"] = s
 
     if en_src:
         translated, attempts, err = _translate_texts_with_pipeline(
             en_src, "zh", max_retries=max_retries, backoff_base=backoff_base
         )
-        for pos, (ti, ni) in enumerate(en_idx):
+        for pos, (ti, ni, kind) in enumerate(en_idx):
             src_t = en_src[pos]
             node = topic_list[ti]["timeline"][ni]
             node["translation_attempts"] = max(attempts, 1)
-            if translated and translated[pos]:
-                zh_t = translated[pos]
-                node["translation_status"] = "translated"
-                node["translation_error"] = None
+            val = translated[pos] if (translated and pos < len(translated) and translated[pos]) else ""
+            if val:
+                zh_t = val
+                if kind == "title":
+                    node["translation_status"] = "translated"
+                    node["translation_error"] = None
             else:
                 exact_t = _lookup_offline_phrase(src_t)
                 if exact_t:
                     zh_t = exact_t
-                    node["translation_status"] = "translated"
-                    node["translation_error"] = None
+                    if kind == "title":
+                        node["translation_status"] = "translated"
+                        node["translation_error"] = None
                 else:
-                    zh_t = _translate_offline_fallback(src_t)
-                    node["translation_status"] = "retry_fallback"
-                    node["translation_error"] = err or "llm_unavailable_fallback"
-            node["title_zh"] = zh_t
-            node["title"] = zh_t
+                    zh_t = _translate_offline_fallback(src_t, is_summary=(kind == "summary"))
+                    if kind == "title":
+                        node["translation_status"] = "retry_fallback"
+                        node["translation_error"] = err or "llm_unavailable_fallback"
+            if kind == "title":
+                node["title_zh"] = zh_t
+                node["title"] = zh_t
+            else:
+                node["summary_zh"] = zh_t
+                node["summary"] = zh_t
 
     zh_topic_idx: List[int] = []
     zh_topic_src: List[str] = []
@@ -799,3 +855,126 @@ def enrich_bilingual_v3_records(
             rec[dst_k] = cand
             changed = True
     return changed
+
+
+def enrich_zh_ai_progress(doc: Dict[str, Any], *, base_dir: Path | str = ".") -> None:
+    """Translate English titles/summaries on ai_progress.json items into concise Chinese using persistent cache."""
+    if not isinstance(doc, dict):
+        return
+    refs: List[Tuple[Dict[str, Any], str, str]] = []
+    seen_obj_fields: set[tuple[int, str]] = set()
+
+    def _collect(item_list: Any) -> None:
+        if not isinstance(item_list, list):
+            return
+        for it in item_list:
+            if not isinstance(it, dict):
+                continue
+            for src_field in ("title", "what_it_does", "what_it_does_en", "limitations"):
+                raw = str(it.get(src_field) or "").strip()
+                if not raw:
+                    continue
+                if src_field == "what_it_does_en":
+                    # Only translate what_it_does_en if Chinese what_it_does is missing or English
+                    cur_zh = str(it.get("what_it_does") or "").strip()
+                    if cur_zh and not is_mostly_english(cur_zh):
+                        continue
+                    target_field = "what_it_does"
+                    raw_clean = _STRIP_TAG_PREFIX_RE.sub("", raw).strip()
+                    if not is_mostly_english(raw_clean):
+                        continue
+                else:
+                    target_field = src_field
+                    raw_clean = _STRIP_TAG_PREFIX_RE.sub("", raw).strip()
+                    if not is_mostly_english(raw_clean):
+                        continue
+                    en_k = "title_en" if target_field == "title" else f"{target_field}_en"
+                    it.setdefault(en_k, raw_clean)
+                sig = (id(it), target_field)
+                if sig not in seen_obj_fields:
+                    seen_obj_fields.add(sig)
+                    refs.append((it, target_field, raw_clean[:220]))
+
+    _collect(doc.get("timeline"))
+    for comp in doc.get("companies") or []:
+        if isinstance(comp, dict):
+            _collect(comp.get("items"))
+
+    if not refs:
+        return
+    translated, _, _ = _translate_texts_with_pipeline(
+        [txt for _, _, txt in refs[:80]],
+        "zh",
+        max_retries=1,
+        backoff_base=0.3,
+        chunk_size=24,
+        base_dir=base_dir,
+    )
+    if not translated:
+        return
+    for pos, (it, field_name, _orig) in enumerate(refs[:80]):
+        if pos < len(translated) and translated[pos]:
+            it[field_name] = translated[pos]
+
+
+def enrich_zh_tech_tools(tools: List[Dict[str, Any]], *, base_dir: Path | str = ".") -> None:
+    """Summarize raw English GitHub release notes into concise Chinese bullet points (cached by tool+version)."""
+    if not isinstance(tools, list) or not tools:
+        return
+    root_dir = Path(base_dir)
+    cache_path = root_dir / "data" / "translation_cache.json"
+    cache_map = _load_translation_cache(cache_path)
+    cache_dirty = False
+
+    pending: List[Tuple[Dict[str, Any], str, str]] = []
+    for t in tools:
+        if not isinstance(t, dict):
+            continue
+        summary = str(t.get("summary") or "").strip()
+        if not summary or not is_mostly_english(summary):
+            continue
+        t.setdefault("summary_en", summary)
+        tid = str(t.get("tool_id") or t.get("name") or "")
+        ver = str(t.get("latest_version") or "")
+        ck = _translation_cache_key(f"tool:{tid}:{ver}:{summary[:180]}", "zh")
+        cached_val = cache_map.get(ck)
+        if cached_val:
+            t["summary"] = cached_val
+        else:
+            pending.append((t, ck, summary[:260]))
+
+    if not pending:
+        return
+
+    from pipeline.gemini_pool import call_gemini_json, collect_api_key_slots
+
+    if not collect_api_key_slots():
+        return
+
+    prompt_items = [
+        {"name": str(t.get("name") or ""), "version": str(t.get("latest_version") or ""), "notes": s}
+        for t, _, s in pending[:16]
+    ]
+    prompt = (
+        "请将以下开源 AI 工具的英文 Release 说明提炼为面向中文开发者的精炼要点（严禁照搬 commit 前缀或 PR 编号）。\n"
+        "每条输出 1~2 句核心更新亮点，用中文全角分号“；”分隔，长度控制在 90 字以内。\n"
+        "只输出严格 JSON 字符串数组（长度必须与输入完全一致）：\n"
+        + json.dumps(prompt_items, ensure_ascii=False)
+    )
+    res = call_gemini_json(
+        scope="bilingual",
+        prompt=prompt,
+        models=("gemini-2.5-flash", "gemini-2.5-flash-lite", "gemini-2.0-flash"),
+        temperature=0.15,
+        base_dir=root_dir,
+    )
+    parsed = res.data if res.ok else None
+    if isinstance(parsed, list) and len(parsed) == len(prompt_items):
+        for pos, (t, ck, _s) in enumerate(pending[:16]):
+            val = str(parsed[pos] or "").strip()
+            if val:
+                t["summary"] = val
+                cache_map[ck] = val
+                cache_dirty = True
+    if cache_dirty:
+        _save_translation_cache(cache_map, cache_path)

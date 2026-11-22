@@ -275,7 +275,7 @@ def _build_ai_prompt(category: str, input_cutoff_at: str, catalog_text: str) -> 
       "title": "清晰准确的中文事件标题",
       "event_date": "YYYY-MM-DD",
       "is_stale_rehash": false,
-      "entities": ["实体1", "实体2"],
+      "entities": ["具体公司/机构/人物/国家专有名词（禁写国内商业银行、黄金品牌等泛行业词）"],
       "importance": "high",
       "sentiment": "Bullish/Bearish/Mixed/Neutral",
       "fact_summary": "客观事实摘要（严格不超出素材）",
@@ -327,7 +327,7 @@ def _call_gemini_json_with_meta(
     base_dir: Path | str | None = ".",
 ) -> Tuple[Any, Optional[str], List[Dict[str, str]], bool]:
     global _LAST_USED_MODEL
-    models = list(dict.fromkeys([PRIMARY_MODEL, FALLBACK_MODEL, SECONDARY_FALLBACK_MODEL]))
+    models = list(dict.fromkeys([PRIMARY_MODEL, FALLBACK_MODEL, "gemini-2.5-flash-lite", SECONDARY_FALLBACK_MODEL]))
     res = call_gemini_json(
         scope=scope,
         prompt=prompt,
@@ -749,10 +749,16 @@ def _infer_event_dialectic_slots(ev: dict) -> Tuple[str, str, str]:
     else:
         con_arg = f"当前公开报道偏重表层进展，围绕「{subj}」的实质执行细节与持续约束条件仍待落地。"
 
-    # Key unknown & catalyst strictly matched to domain (never blanket SEC boilerplate onto non-SEC events!)
-    if any(k in combined for k in ("漏洞", "攻击", "cve", "零日", "注入", "安全")):
+    # Key unknown & catalyst strictly matched to domain (never blanket SEC or CVE boilerplate!)
+    if any(k in combined for k in ("漏洞", "cve", "零日", "0day", "rce", "sql注入", "代码执行", "勒索软件", "数据泄露", "黑客攻击", "安全补丁")):
         unknown = "完整 CVE 评分、受影响版本清单及官方补丁可用时间表。"
         catalyst = "等待厂商安全响应中心公布补丁编号与受影响范围清单。"
+    elif any(k in combined for k in ("fsd", "自动驾驶", "智驾", "ota", "无人驾驶")):
+        unknown = "功能实际开放地域、城市道路接管率表现及监管部门路测合规口径。"
+        catalyst = "关注车企后续软件推送说明、监管合规通报及第三方实测表现。"
+    elif any(k in combined for k in ("signal", "截屏", "加密通讯", "端到端加密", "隐私保护")):
+        unknown = "系统权限限制的实际生效范围及跨平台客户端同步节奏。"
+        catalyst = "关注应用后续版本更新日志及跨平台安全特性适配进展。"
     elif any(k in combined for k in ("宕机", "故障", "瘫痪", "停飞", "恢复")):
         unknown = "事故根本原因 (Root Cause)、SLA 赔付规模与冗余架构整改期限。"
         catalyst = "关注官方状态页 Postmortem 复盘报告及恢复运营通告。"
@@ -1054,7 +1060,7 @@ def _ground_update_category(
         candidate_ev = {
             "title": cit["title"],
             "fact_summary": cit.get("excerpt") or cit["title"],
-            "ai_analysis": "【直连一手官方/开发者数据源】由确定性连接器直采原文链接与披露字段，未叠加外部延伸猜测。",
+            "ai_analysis": "源自官方公开文档及一手披露记录，保持客观事实陈述。",
             "unverified_claims": [],
             "speculation_or_outlook": None,
             "entities": [],
@@ -1252,6 +1258,11 @@ _TECH_AI_RE = re.compile(
 )
 
 
+_GENERIC_ENTITY_NOISE_RE = re.compile(
+    r"^(?:国内|海外|全球|国际|部分|多家|相关|主要|权威|一线|头部)?(?:黄金珠宝品牌|商业银行|金融科技公司|金融机构|科技公司|互联网大厂|车企|制造商|供应链|相关企业|市场分析师|行业人士|地方政府|监管机构)$"
+)
+
+
 def _normalize_event_entities(entities: Any) -> List[str]:
     if not isinstance(entities, list):
         return []
@@ -1259,7 +1270,9 @@ def _normalize_event_entities(entities: Any) -> List[str]:
     seen: Set[str] = set()
     for raw_e in entities:
         s = str(raw_e or "").strip()
-        if not s:
+        if not s or len(s) > 22:
+            continue
+        if _GENERIC_ENTITY_NOISE_RE.match(s) or s.startswith(("国内", "多家", "部分", "相关")) and len(s) >= 6:
             continue
         canon = _ENTITY_ALIAS_CANON.get(s.lower(), s)
         k = canon.lower()
@@ -1720,11 +1733,17 @@ def build_briefing_batch(
         except Exception as exc:
             return cat, None, None, None, exc, prev_cat_meta
 
-    # Run 4 categories concurrently in AI mode (each has its own dedicated API key pool) to cut pipeline runtime ~3x
+    # Run 2 categories concurrently with slight stagger to avoid 4x simultaneous Gemini burst 503s
+    def _process_staggered(cat_idx_and_name: Tuple[int, str]) -> Tuple[str, Optional[dict], Optional[dict], Optional[dict], Optional[Exception], dict]:
+        idx, cat = cat_idx_and_name
+        if mode == "ai" and idx > 0:
+            time.sleep(min(idx * 1.0, 2.0))
+        return _process_category(cat)
+
     if mode == "ai":
         results_map: Dict[str, tuple] = {}
-        with ThreadPoolExecutor(max_workers=4) as pool:
-            futs = [pool.submit(_process_category, cat) for cat in CATEGORIES]
+        with ThreadPoolExecutor(max_workers=2) as pool:
+            futs = [pool.submit(_process_staggered, (idx, cat)) for idx, cat in enumerate(CATEGORIES)]
             for fut in as_completed(futs):
                 res_tuple = fut.result()
                 results_map[res_tuple[0]] = res_tuple
@@ -1732,6 +1751,7 @@ def build_briefing_batch(
     else:
         ordered_results = [_process_category(cat) for cat in CATEGORIES]
 
+    fallback_v3_docs: Dict[str, dict] = {}
     for cat, doc, cdoc, sel_audit, err, prev_cat_meta in ordered_results:
         if err is None and doc is not None and cdoc is not None:
             cat_docs[cat] = doc
@@ -1765,7 +1785,24 @@ def build_briefing_batch(
                 fallback_meta["status"] = "fallback"
                 fallback_meta["fallback_reason"] = f"本轮生成失败（{err}），已保留该分类上次成功批次数据"
                 cat_manifest[cat] = fallback_meta
+                loaded_prev = load_json_if_exists(root / prev_cat_meta["path"], default={})
+                if isinstance(loaded_prev, dict) and loaded_prev.get("events"):
+                    fallback_v3_docs[cat] = loaded_prev
             else:
+                try:
+                    g_doc, _ = _ground_update_category(
+                        cat,
+                        raw_by_cat,
+                        input_batch_id,
+                        input_cutoff_at,
+                        batch_id,
+                        [],
+                        prev_batch_id,
+                        sec_entity_status=sec_entity_status,
+                    )
+                    fallback_v3_docs[cat] = g_doc
+                except Exception:
+                    pass
                 cat_manifest[cat] = {
                     "batch_id": None,
                     "path": None,
@@ -1846,12 +1883,14 @@ def build_briefing_batch(
     if selection_audits:
         atomic_write_json(abs_smart_dir / "selection_audit.json", selection_audits)
 
-    # 2. Build V3 research intelligence memory before atomic manifest pointer switch
+    # 2. Build V3 research intelligence memory using complete 4-category view (including fallback docs if any category failed)
+    v3_cat_docs = dict(fallback_v3_docs)
+    v3_cat_docs.update(cat_docs)
     v3_summary = build_v3_artifacts(
         root,
         batch_id=batch_id,
         generated_at_iso=generated_at_iso,
-        cat_docs=cat_docs,
+        cat_docs=v3_cat_docs,
         prev_cat_events=prev_cat_events,
         prev_batch_id=prev_batch_id,
         connectors_payload=connectors_payload,

@@ -4,13 +4,14 @@ from __future__ import annotations
 
 from datetime import datetime, timedelta, timezone
 from email.utils import format_datetime
+import json
 import os
 from pathlib import Path
 import re
 from typing import Any, Dict, List, Optional
 from xml.sax.saxutils import escape as xml_escape
 
-from pipeline.dedup import is_omnibus_digest_title, smart_truncate, title_similarity
+from pipeline.dedup import is_omnibus_digest_title, smart_truncate, strip_raw_urls_and_domain_tails, title_similarity
 from pipeline.entities import ENTITY_BY_ID, _match_alias, build_entities_index_base
 from pipeline.id_utils import make_storyline_id
 from pipeline.manifest import atomic_write_json, load_json_if_exists
@@ -132,8 +133,12 @@ def _infer_domain_next_catalyst(event: dict, matched_primary_ent: Optional[dict]
     combined = f"{event.get('title', '')} {event.get('fact_summary', '')}".lower()
     if any(k in combined for k in ("霍尔木兹", "油轮", "触雷", "海峡", "航运", "导弹", "空袭", "无人机", "停火", "和平协议", "北约", "美伊", "伊朗", "俄乌", "波兰", "红海")):
         return "关注国际海事与军政安全通报、各方外交斡旋进展及航运/油价波动"
-    if any(k in combined for k in ("漏洞", "攻击", "cve", "零日", "注入", "泄露", "安全", "隐私")):
+    if any(k in combined for k in ("漏洞", "cve", "零日", "0day", "rce", "sql注入", "代码执行", "勒索软件", "数据泄露", "黑客攻击", "安全补丁")):
         return "等待官方安全响应中心发布补丁编号、受影响版本清单与安全整改指南"
+    if any(k in combined for k in ("fsd", "自动驾驶", "智驾", "ota", "无人驾驶")):
+        return "关注车企后续软件推送说明、实际开放范围与监管合规反馈"
+    if any(k in combined for k in ("signal", "截屏", "端到端加密", "隐私保护")):
+        return "关注应用后续版本更新日志及跨平台安全特性适配进展"
     if any(k in combined for k in ("宕机", "故障", "瘫痪", "恢复", "停飞")):
         return "等待官方服务状态页发布事故根因复盘 (Postmortem) 与全面恢复确认"
     if any(k in combined for k in ("开源", "github", "hugging face", "模型", "论文", "framework", "bttf", "longcat", "openpangu", "llama.cpp")):
@@ -411,217 +416,6 @@ def _export_rss_xml(
     )
 
 
-_MAJOR_TOPIC_SPECS: List[Dict[str, Any]] = [
-    {
-        "topic_id": "topic_apec_trump_china",
-        "title": "特朗普访华与 2026 深圳 APEC 峰会实时行程专题",
-        "subtitle": "追踪中美元首接机、欢迎晚宴、APEC 全体会、双边/中美俄三边互动及多边关税协议进展",
-        "badge": "超级时政专题 · 实时行程",
-        "category": "global",
-        "pattern": re.compile(
-            r"(?:(?:特朗普|川普|trump).{0,32}(?:访华|来华|中国|深圳|北京|apec|会晤|普京|xi\b|china|putin|summit|trilateral|visit|tariff|trade)|"
-            r"(?:xi\b|putin|china).{0,32}trump|"
-            r"apec|深圳峰会|中美元首|中美俄|亚太经合组织|习特会|欢迎晚宴|三边会晤|高市早苗.{0,12}(?:中国|访华|apec)|takaichi.{0,20}china)",
-            re.I,
-        ),
-        "exclude": re.compile(r"(?:围巾|座驾|同框|开了个玩笑|人字拖|戒了|全妆|三角梅|打卡|midterm|fcc|fda|nsf)", re.I),
-        "calendar_title": "2026 深圳 APEC 峰会与中美元首双边/三边会谈行程",
-        "calendar_watch": "官方联合公报、中美经贸关税与 AI 治理共识、中美俄三边互动细节",
-    },
-    {
-        "topic_id": "topic_spacex_musk",
-        "title": "SpaceX 星舰回收、xAI 与马斯克商业生态",
-        "subtitle": "追踪星舰上级回收（筷子夹飞船）、Grok 模型、Optimus 机器人与算力租赁动向",
-        "badge": "前沿科技 · 商业航天",
-        "category": "tech",
-        "pattern": re.compile(r"(?:spacex|星舰|starship|筷子夹|马斯克|musk|grok\s*4|optimus|特斯拉|tesla)", re.I),
-        "exclude": None,
-        "calendar_title": None,
-        "calendar_watch": None,
-    },
-    {
-        "topic_id": "topic_ai_ipo_models",
-        "title": "Anthropic 超级 IPO 与中美前沿大模型竞速",
-        "subtitle": "追踪 Anthropic 募资定价、Qwen / 腾讯混元 / DeepSeek / Google 新模型发布与定价冲击",
-        "badge": "AI 产业 · 资本主线",
-        "category": "tech",
-        "pattern": re.compile(r"(?:anthropic|qwen|混元|hy4|deepseek|diffusiongemma|openai|claude|算力限制)", re.I),
-        "exclude": None,
-        "calendar_title": "Anthropic IPO 定价与上市首日表现窗口",
-        "calendar_watch": "最终发行价、募资规模（800–950 亿美元区间）与上市后估值锚定",
-    },
-    {
-        "topic_id": "topic_nvidia_governance",
-        "title": "英伟达业绩、出口管制与管理层过渡追踪",
-        "subtitle": "追踪英伟达季度业绩、SEC 8-K 继任安排、出口审查与芯片供应链竞争格局",
-        "badge": "半导体核心主线",
-        "category": "finance",
-        "pattern": re.compile(r"(?:英伟达|nvidia|nvda|黄仁勋|blackwell)", re.I),
-        "exclude": re.compile(r"(?:诈骗集团|冒名)", re.I),
-        "calendar_title": None,
-        "calendar_watch": None,
-    },
-    {
-        "topic_id": "topic_macro_fed_commodities",
-        "title": "美联储利率路径、美元走强与黄金大宗异动",
-        "subtitle": "追踪 FOMC 会议纪要、12 月议息预期分化、美元指数与黄金/原油跳水走势",
-        "badge": "全球宏观与流动性",
-        "category": "finance",
-        "pattern": re.compile(r"(?:美联储|fomc|加息|降息|现货黄金|金价|美元指数|油价|国际资本净流入)", re.I),
-        "exclude": None,
-        "calendar_title": None,
-        "calendar_watch": None,
-    },
-]
-
-
-def _classify_itinerary_tag(title: str) -> str:
-    t = title.lower()
-    if any(k in t for k in ("机场", "抵深", "抵达", "迎接", "下榻", "arrives", "tarmac")):
-        return "抵访接待"
-    if any(k in t for k in ("晚宴", "招待会", "同框", "握手", "banquet", "dinner")):
-        return "晚宴互动"
-    if any(k in t for k in ("三边", "三国", "trilateral", "双边", "会晤", "会谈", "talks", "bilateral")):
-        return "高层会谈"
-    if any(k in t for k in ("协议", "关税", "自贸", "合作", "演讲", "speech", "deal", "tariff", "trade")):
-        return "经贸与声明"
-    if any(k in t for k in ("回收", "星舰", "筷子", "发布", "上线", "推出", "ipo", "定价", "募资")):
-        return "重大里程碑"
-    return "关键进展"
-
-
-def _build_major_topics(
-    cat_docs: Dict[str, dict],
-    raw_items_by_cat: Optional[Dict[str, List[dict]]],
-    generated_at_iso: str,
-) -> List[Dict[str, Any]]:
-    """Cluster high-resonance live stories across smart events + direct/raw feeds into structured topic timelines."""
-    all_smart_events: List[dict] = []
-    for doc in cat_docs.values():
-        if isinstance(doc, dict):
-            all_smart_events.extend(doc.get("events") or [])
-
-    all_raw_items: List[dict] = []
-    for lst in (raw_items_by_cat or {}).values():
-        if isinstance(lst, list):
-            all_raw_items.extend(lst)
-
-    topics: List[Dict[str, Any]] = []
-    for spec in _MAJOR_TOPIC_SPECS:
-        pat = spec["pattern"]
-        excl = spec["exclude"]
-        matched_events: List[dict] = []
-        matched_raw: List[dict] = []
-
-        for ev in all_smart_events:
-            ev_t = str(ev.get("title") or "")
-            if pat.search(ev_t) and not (excl and excl.search(ev_t)):
-                matched_events.append(ev)
-
-        for it in all_raw_items:
-            if it.get("source_kind") == "market_ticker" or not it.get("url"):
-                continue
-            title = str(it.get("title") or "").strip()
-            if not title or is_omnibus_digest_title(title):
-                continue
-            if pat.search(title) and not (excl and excl.search(title)):
-                matched_raw.append(it)
-
-        total_mentions = len(matched_events) + len(matched_raw)
-        if total_mentions < 2:
-            continue
-
-        # Build deduplicated chronological timeline nodes combining smart events + richest raw/direct reports
-        nodes: List[Dict[str, Any]] = []
-        seen_titles: List[str] = []
-        seen_urls: set[str] = set()
-
-        # Prefer direct news/curated items with explicit timestamps
-        candidates: List[Dict[str, Any]] = []
-        for ev in matched_events:
-            src0 = (ev.get("sources") or [{}])[0]
-            candidates.append(
-                {
-                    "time": ev.get("first_reported_at") or ev.get("latest_reported_at") or ev.get("fetched_at"),
-                    "title": str(ev.get("title") or "").strip(),
-                    "summary": smart_truncate(str(ev.get("fact_summary") or ""), 160),
-                    "source_name": src0.get("source_name") or "简报汇总",
-                    "url": src0.get("url"),
-                    "event_id": ev.get("event_id"),
-                    "priority": 0,
-                }
-            )
-        # Prioritize non-discussion news outlets for raw itinerary nodes
-        for it in sorted(
-            matched_raw,
-            key=lambda x: (
-                0 if x.get("source_tier") == "direct_media" else (1 if x.get("source_kind") == "news" else 2),
-                0 if x.get("published_at") else 1,
-                str(x.get("published_at") or ""),
-            ),
-        ):
-            candidates.append(
-                {
-                    "time": it.get("published_at") or it.get("fetched_at"),
-                    "title": str(it.get("title") or "").strip(),
-                    "summary": smart_truncate(str(it.get("excerpt") or ""), 140),
-                    "source_name": it.get("source_name") or it.get("source_id") or "信源",
-                    "url": it.get("url"),
-                    "event_id": None,
-                    "priority": 1 if it.get("source_kind") == "news" else 2,
-                }
-            )
-
-        for cand in candidates:
-            t = cand["title"]
-            u = cand["url"] or ""
-            if not t or (u and u in seen_urls):
-                continue
-            if any(title_similarity(t, st) >= 0.52 for st in seen_titles):
-                continue
-            seen_titles.append(t)
-            if u:
-                seen_urls.add(u)
-            nodes.append(
-                {
-                    "time": cand["time"],
-                    "stage_tag": _classify_itinerary_tag(t),
-                    "title": t,
-                    "summary": cand["summary"] if cand["summary"] and cand["summary"] != t else "",
-                    "source_name": cand["source_name"],
-                    "url": cand["url"],
-                    "event_id": cand["event_id"],
-                }
-            )
-            if len(nodes) >= 12:
-                break
-
-        # Sort timeline chronologically (newest first or chronological? Chronological ascending for itinerary, latest_updated tracked!)
-        nodes.sort(key=lambda n: str(n.get("time") or "9999"))
-        latest_ts = max((str(n.get("time")) for n in nodes if n.get("time")), default=generated_at_iso)
-        source_families = {n["source_name"] for n in nodes if n.get("source_name")}
-
-        topics.append(
-            {
-                "topic_id": spec["topic_id"],
-                "title": spec["title"],
-                "subtitle": spec["subtitle"],
-                "badge": spec["badge"],
-                "category": spec["category"],
-                "updated_at": latest_ts,
-                "total_mentions": total_mentions,
-                "source_count": len(source_families),
-                "event_ids": [ev["event_id"] for ev in matched_events if ev.get("event_id")],
-                "timeline": nodes,
-                "_calendar_title": spec["calendar_title"],
-                "_calendar_watch": spec["calendar_watch"],
-            }
-        )
-
-    topics.sort(key=lambda tp: (1 if tp["topic_id"] == "topic_apec_trump_china" else 0, tp["total_mentions"]), reverse=True)
-    return topics[:5]
-
-
 def build_v3_artifacts(
     root: Path,
     *,
@@ -710,13 +504,18 @@ def build_v3_artifacts(
         t = dict(raw_tool)
         if t.get("summary"):
             raw_sum = str(t["summary"])
-            # Clean GFM pipe tables (e.g. SGLang | Model | Type | Cookbook |) & separator lines
+            # Clean GFM pipe tables, nested badges, orphan Website:/Attestations: labels, commit prefixes & trailing brackets
+            raw_sum = re.sub(r"\[\s*!\[[^\]]*\]\([^)]*\)\s*\]\([^)]*\)", " ", raw_sum)
+            raw_sum = re.sub(r"!\[[^\]]*\]\([^)]*\)", " ", raw_sum)
             lines_clean: List[str] = []
             for seg in re.split(r"[\r\n；]+", raw_sum):
-                seg_s = seg.strip()
-                if not seg_s:
+                seg_s = strip_raw_urls_and_domain_tails(seg.strip())
+                seg_s = re.sub(r"\s*\(#?\d{3,6}\)\s*$", "", seg_s).strip()
+                if not seg_s or re.match(r"^\|?[\s:\-|]+\|?$", seg_s):
                     continue
-                if re.match(r"^\|?[\s:\-|]+\|?$", seg_s):
+                if re.match(r"^(?:Website|Attestations|Full Changelog|Checksums)\s*[:：]?\s*$", seg_s, re.I):
+                    continue
+                if re.match(r"^(?:sycl|cuda|metal|vulkan|rpc|ggml|model|feat|fix|chore|api|eval|llm|cmd)\b[^:：]{0,20}[:：]", seg_s, re.I):
                     continue
                 if "|" in seg_s:
                     cells = [c.strip() for c in seg_s.strip("|").split("|") if c.strip() and not re.match(r"^[-:]+$", c.strip())]
@@ -728,10 +527,12 @@ def build_v3_artifacts(
                 lines_clean.append(seg_s)
             clean_sum = "；".join(lines_clean) if lines_clean else raw_sum
             clean_sum = re.sub(r"<[^>]+>", " ", clean_sum)
-            clean_sum = re.sub(r"!\[[^\]]*\]\([^)]+\)", "", clean_sum)
+            clean_sum = re.sub(r"!\[[^\]]*\]\([^)]*\)", "", clean_sum)
             clean_sum = re.sub(r"\[([^\]]+)\]\([^)]+\)", r"\1", clean_sum)
             clean_sum = re.sub(r"[#*`|]+", " ", clean_sum)
             clean_sum = re.sub(r"\s+", " ", clean_sum).strip().lstrip("；;:：•- ")
+            if clean_sum.count("）") > clean_sum.count("（") and clean_sum.endswith(("）", "）。")):
+                clean_sum = clean_sum.rstrip("。").rstrip("）").strip()
             clean_sum = smart_truncate(clean_sum, 360)
             t["summary"] = clean_sum or "详见官方 Release 说明。"
         if str(t.get("license") or "").upper() == "NOASSERTION":
@@ -943,9 +744,16 @@ def build_v3_artifacts(
             or (bool(ev.get("attribution_warning")) and indep_c < 3)
             or (ev_title.startswith(("报道称", "消息称", "传闻")) and indep_c < 3)
         )
-        if not is_rumor_or_gossip and any(k in ev_title for k in ("下周", "本周重磅", "日程", "财报", "听证会", "峰会", "会晤", "元首", "议息", "APEC", "发布会", "IPO")):
+        is_retrospective_recap = bool(
+            re.search(
+                r"(?:IPO后|上市后|挂牌后|股价表现不佳|收跌|收涨|跌停|涨停|大跌|大涨|引发.*担忧|回顾|复盘|盘点|闭幕|落幕|已于|此前|上周|昨日|昨天|after\s+ipo|post-?ipo|slump)",
+                f"{ev_title} {ev.get('fact_summary') or ''}",
+                re.I,
+            )
+        )
+        if not is_rumor_or_gossip and not is_retrospective_recap and any(k in ev_title for k in ("下周", "本周重磅", "日程", "财报", "听证会", "峰会", "会晤", "元首", "议息", "APEC", "发布会", "IPO")):
             if not any(c.get("storyline_id") == st_id for c in calendar_items):
-                # Parse explicit dates (e.g. "11月19日") or relative weekday ("星期四") rather than stamping fetched_at
+                # Parse explicit dates (e.g. "11月19日") or explicit future-cued weekday ("下周四" / "定于周四")
                 combined_sched_txt = f"{ev_title} {ev.get('fact_summary') or ''}"
                 sched_iso: Optional[str] = None
                 orig_note = "具体时刻待官方正式公布 (TBD)"
@@ -963,12 +771,11 @@ def build_v3_artifacts(
                         cert_label = "官方/多源已定日程" if cert_code == "confirmed_official" else "报道明确日期（待具体时刻表）"
                     except ValueError:
                         sched_iso = None
-                elif "星期四" in combined_sched_txt or "周四" in combined_sched_txt:
-                    # Resolve Thursday relative to article report date
+                elif re.search(r"(?:下周四|将于周四|定于周四|拟于周四|预计周四|本周四将)", combined_sched_txt):
                     anchor_dt = parse_iso_datetime(ev.get("first_reported_at")) or generated_dt
                     days_ahead = (3 - anchor_dt.weekday()) % 7
-                    if days_ahead == 0 and anchor_dt.hour >= 18:
-                        days_ahead = 7
+                    if "下周四" in combined_sched_txt or (days_ahead == 0 and anchor_dt.hour >= 18):
+                        days_ahead = 7 if days_ahead == 0 else days_ahead
                     target_th = (anchor_dt + timedelta(days=days_ahead)).replace(hour=10, minute=0, second=0)
                     sched_iso = to_iso_shanghai(target_th)
                     orig_note = f"{target_th.strftime('%Y-%m-%d')} 周四日程窗口 (来源报道推算)"
@@ -1020,7 +827,7 @@ def build_v3_artifacts(
         nov_pts = 25 if ev.get("is_new_in_batch") else (18 if diff["change_type"] == "substantive_update" else 5)
         indep = ev.get("independent_publisher_count") or 1
         indep_pts = min(indep, 5) * 6
-        official_pts = 20 if ev["evidence_status"] == "official_confirmed" else 0
+        official_pts = 20 if ev.get("evidence_status") == "official_confirmed" else 0
         depth_pts = 15 if ev.get("material_depth") in {"first_party_and_body", "body_lead_extracted", "title_and_excerpt"} else 0
         reprint_penalty = -8 if (ev.get("reprint_count", 0) >= 2 and diff["change_type"] == "reprint_expansion") else 0
 
@@ -1028,7 +835,7 @@ def build_v3_artifacts(
         if not isinstance(radar_score, (int, float)):
             radar_score = max(0, min(100, rel_pts + nov_pts + indep_pts + official_pts + depth_pts + reprint_penalty))
         radar_score = int(radar_score)
-        if ev["evidence_status"] == "official_confirmed":
+        if ev.get("evidence_status") == "official_confirmed":
             signal_type = "官方/监管一手披露"
         elif ev.get("contradictions"):
             signal_type = "传闻与一手披露分歧"
@@ -1136,80 +943,67 @@ def build_v3_artifacts(
 
     radar_items.sort(key=lambda r: r["radar_score"], reverse=True)
 
-    # Build Major Event Spotlights & Chronological Timelines (data/topics.json)
-    major_topics_raw = _build_major_topics(cat_docs, raw_items_by_cat, generated_at_iso)
-    major_topics: List[Dict[str, Any]] = []
-    for tp in major_topics_raw:
-        cal_t = tp.pop("_calendar_title", None)
-        cal_w = tp.pop("_calendar_watch", None)
-        major_topics.append(tp)
-        # Ensure active multi-report summit / IPO spotlights are surfaced cleanly in Calendar too
+    # Build Algorithmic Dynamic Event Topics, 4-Stage Lifecycle & Historical Archive (data/topics.json + topics_history.json)
+    from .topics_builder import build_dynamic_topics
+
+    topics_payload = build_dynamic_topics(
+        root,
+        batch_id=batch_id,
+        generated_at_iso=generated_at_iso,
+        cat_docs=cat_docs,
+        storylines=storylines,
+        raw_items_by_cat=raw_items_by_cat,
+        calendar_events=calendar_items,
+    )
+    major_topics: List[Dict[str, Any]] = list(topics_payload.get("topics") or [])
+    archived_topics: List[Dict[str, Any]] = list(topics_payload.get("archived_topics") or [])
+
+    # Sync key summit / IPO calendar windows cleanly if active topics warrant a calendar card
+    for tp in major_topics:
+        tid = str(tp.get("topic_id") or "")
+        cal_t = None
+        cal_w = None
+        if tid == "topic_apec_trump_china":
+            cal_t = "2026 深圳 APEC 峰会与中美元首双边/三边会谈行程"
+            cal_w = "官方联合公报、中美经贸关税与 AI 治理共识、中美俄三边互动细节"
         if cal_t and tp.get("total_mentions", 0) >= 3:
-            cal_id = f"cal_{tp['topic_id']}"
+            cal_id = f"cal_{tid}"
             if not any(c.get("calendar_id") == cal_id for c in calendar_items):
-                # Anchor dynamically to actual topic timeline dates instead of perpetually stamping today 14:00
-                tp_times = [
-                    parse_iso_datetime(str(n.get("time") or ""))
-                    for n in (tp.get("timeline") or [])
-                    if n.get("time")
+                tp_valid_times = [
+                    dt for dt in (parse_iso_datetime(str(n.get("time") or "")) for n in (tp.get("timeline") or []) if n.get("time")) if dt is not None
                 ]
-                tp_valid_times = [dt for dt in tp_times if dt is not None]
                 anchor_dt = max(tp_valid_times) if tp_valid_times else generated_dt
                 anchor_iso = to_iso_shanghai(anchor_dt)
-                is_topic_past = anchor_dt < generated_dt
+                is_topic_past = tp.get("lifecycle_status") in {"ending_soon", "ended"} or anchor_dt < generated_dt
                 first_url = next((n.get("url") for n in tp.get("timeline") or [] if n.get("url")), None)
                 actual_title = None
                 if is_topic_past and tp.get("timeline"):
-                    # Match actual_result strictly against catalyst-specific outcome keywords (prevents Oracle/math/gossip mismatch)
-                    tid = str(tp.get("topic_id") or "")
-                    for node in reversed(tp["timeline"]):
+                    for node in tp["timeline"]:
                         nt = str(node.get("title") or "").strip()
-                        ntl = nt.lower()
-                        if "ai_ipo" in tid or "anthropic" in cal_t.lower():
-                            if "anthropic" in ntl and any(k in ntl for k in ("ipo", "上市", "破发", "募资")):
-                                actual_title = nt
-                                break
-                        elif "apec" in tid or "apec" in cal_t.lower():
-                            if any(bad in nt for bad in ("高市", "后背", "无视", "合影")):
-                                continue
-                            if any(k in ntl for k in ("apec第", "和平宣言", "中美元首", "联合声明", "公报", "闭幕", "落幕")):
-                                actual_title = nt
-                                break
-                        else:
-                            anchor_terms = tuple(tok for tok in re.findall(r"[a-z0-9]{3,}|[\u4e00-\u9fff]{2,4}", cal_t.lower()) if tok not in {"焦点", "窗口", "公布", "事件"})[:4]
-                            if anchor_terms and sum(1 for term in anchor_terms if term in ntl) >= 2:
-                                actual_title = nt
-                                break
-                cal_en_map = {
-                    "cal_topic_apec_trump_china": (
-                        "2026 Shenzhen APEC Summit & US-China/Trilateral Leader Meetings",
-                        "Official joint statements, tariff announcements & AI governance readout",
-                    ),
-                    "cal_topic_ai_ipo_models": (
-                        "Anthropic Mega-IPO Pricing & Secondary Debut Window",
-                        "Issue pricing, first-day trading volume & secondary valuation anchor",
-                    ),
-                }
-                cal_title_en, cal_watch_en = cal_en_map.get(cal_id, (cal_t, cal_w or "Official announcements and disclosures"))
+                        if any(bad in nt for bad in ("高市", "后背", "无视", "合影")):
+                            continue
+                        if any(k in nt.lower() for k in ("apec", "和平宣言", "中美元首", "联合声明", "公报", "闭幕", "落幕")):
+                            actual_title = nt
+                            break
                 calendar_items.append(
                     {
                         "calendar_id": cal_id,
                         "title": cal_t,
-                        "title_en": cal_title_en,
+                        "title_en": "2026 Shenzhen APEC Summit & US-China/Trilateral Leader Meetings",
                         "scheduled_at": anchor_iso,
-                        "original_time_note": f"{anchor_dt.strftime('%Y-%m-%d')} {'已结束窗口（请录入/核对实际结果）' if is_topic_past else '核心催化窗口'} (基于 {tp['source_count']} 家信源)",
+                        "original_time_note": f"{anchor_dt.strftime('%Y-%m-%d')} {'已结束窗口（请核对实际结果）' if is_topic_past else '核心催化窗口'} (基于 {tp.get('source_count', 1)} 家信源)",
                         "timezone": "Asia/Shanghai",
                         "certainty": "confirmed_official",
-                        "certainty_label": "已结束（请核对实际结果）" if is_topic_past else "进行中 · 超级焦点日程",
+                        "certainty_label": "已结束（请核对实际结果）" if is_topic_past else "进行中 · 重点日程",
                         "is_past": is_topic_past,
-                        "category": tp["category"],
-                        "entity_ids": [],
+                        "category": tp.get("category", "global"),
+                        "entity_ids": tp.get("entity_ids") or [],
                         "storyline_id": None,
-                        "watch_variable": cal_w or "官方联合声明与核心数据披露",
-                        "watch_variable_en": cal_watch_en,
+                        "watch_variable": cal_w,
+                        "watch_variable_en": "Official joint statements, tariff announcements & AI governance readout",
                         "pre_expectation": "请结合顶部专题时间轴跟踪实时进展；不编造一致预期",
                         "actual_result": actual_title,
-                        "source_name": f"专题聚合 ({tp['source_count']} 源)",
+                        "source_name": f"专题聚合 ({tp.get('source_count', 1)} 源)",
                         "source_url": first_url,
                     }
                 )
@@ -1299,11 +1093,11 @@ def build_v3_artifacts(
             "core_assumption": "上市公司首席执行官变动及正式继任属美股重大法定披露事项，必受 SEC 8-K 4 个工作日强制披露约束",
             "invalidation_trigger": "若英伟达 IR 正式澄清拒绝变更或公布明确长期继任方案",
             "probability_pct": 60 if nvda_502 else 25,
-            "probability_note": "基准概率基于当前 SEC EDGAR 官方披露实采状态动态校准，到期日固定不再顺延",
+            "probability_note": "基准概率基于当前官方监管披露状态校准，到期日固定不再顺延",
             "current_judgment": (
                 f"SEC 8-K Item 5.02 已披露于 {nvda_502.get('filing_date', '近期')}；正跟踪正式继任进展"
                 if nvda_502
-                else "待官方披露核实，暂不将其作为既定事实纳入基本面判断"
+                else "待官方公告与权威财经披露核实，暂不纳入既定基本面判断"
             ),
             "versions": [
                 {
@@ -1312,10 +1106,10 @@ def build_v3_artifacts(
                     "judgment": (
                         f"已追踪到 SEC {nvda_502.get('filing_date', '')} 8-K Item 5.02，等待后续正式继任公告"
                         if nvda_502
-                        else "等待 SEC 8-K 核查（当前无官方披露）"
+                        else "等待官方披露文件中（当前无正式高管变动文件）"
                     ),
                     "probability_pct": 60 if nvda_502 else 25,
-                    "reason": "由 SEC EDGAR 官方披露核查生成初始观察记录",
+                    "reason": "基于公开监管文件与权威媒体报道核对建立",
                 }
             ],
             "settlement": None,
@@ -1340,15 +1134,15 @@ def build_v3_artifacts(
             "core_assumption": "通义千问重大版本均会通过 HF 或阿里云官方渠道同步文档与许可",
             "invalidation_trigger": "官方辟谣非官方版本或延后发布",
             "probability_pct": 55,
-            "probability_note": "主观基准判断，最终以 Hugging Face 官方模型卡核查结果结算",
-            "current_judgment": "保持追踪，等待 Hugging Face 或阿里云官方文档公布正式上架记录",
+            "probability_note": "主观基准判断，最终以官方模型卡及发布文档核实结算",
+            "current_judgment": "保持追踪，等待 Hugging Face 官方主页或阿里云百炼文档公布上架记录",
             "versions": [
                 {
                     "version": 1,
                     "updated_at": qwen_created,
-                    "judgment": "待 Hugging Face 官方权重与阿里云文档验证",
+                    "judgment": "待官方权重页与云服务计费文档确认",
                     "probability_pct": 55,
-                    "reason": "基于科技新闻线索与 Hugging Face 官方仓库比对建立",
+                    "reason": "基于科技新闻报道与官方模型库公开动态比对建立",
                 }
             ],
             "settlement": None,
@@ -1389,7 +1183,7 @@ def build_v3_artifacts(
                         "updated_at": apec_created,
                         "judgment": "等待 11 月 19 日深圳会晤官方正式通稿披露",
                         "probability_pct": 45,
-                        "reason": "由深圳 APEC 超级热点专题动态立项",
+                        "reason": "基于深圳 APEC 峰会多方报道建立前瞻观察",
                     }
                 ],
                 "settlement": None,
@@ -1451,7 +1245,7 @@ def build_v3_artifacts(
                         "updated_at": fed_created,
                         "judgment": "等待 12 月 10 日 FOMC 正式声明与点阵图核验",
                         "probability_pct": 62 if fed_hiked_recently else 55,
-                        "reason": "由 FOMC 最新政策动向与 12 月议息日程动态立项",
+                        "reason": "基于 FOMC 最新政策动向与 12 月议息日程建立观察",
                     }
                 ],
                 "settlement": None,
@@ -1463,10 +1257,14 @@ def build_v3_artifacts(
 
     from .ai_radar_builder import build_ai_progress_artifact
     from .ai_live_refresh import merge_live_ai_items_into_doc
-    from .bilingual import enrich_bilingual_topics
+    from .bilingual import enrich_bilingual_topics, enrich_zh_ai_progress, enrich_zh_tech_tools
     from .finance_impact_builder import build_finance_impact_artifact
 
-    enrich_bilingual_topics(major_topics)
+    enrich_bilingual_topics(major_topics + archived_topics)
+    try:
+        enrich_zh_tech_tools(tech_tools, base_dir=root)
+    except Exception:
+        pass
     ai_progress_doc = build_ai_progress_artifact(
         batch_id=batch_id,
         generated_at_iso=generated_at_iso,
@@ -1485,6 +1283,10 @@ def build_v3_artifacts(
             )
         except Exception:
             pass
+    try:
+        enrich_zh_ai_progress(ai_progress_doc, base_dir=root)
+    except Exception:
+        pass
     # Build/refresh live delayed quotes before computing volatility-calibrated market impacts
     quotes_doc: Dict[str, Any] = {}
     try:
@@ -1642,6 +1444,33 @@ def build_v3_artifacts(
         if rc["prediction_id"] not in existing_pids:
             seed_predictions.append(rc)
 
+    # Scrub any legacy internal pipeline jargon from all prediction records before publishing
+    _PRED_INTERNAL_JARGON_RULES = (
+        (re.compile(r"由深圳 APEC 超级热点专题动态立项"), "基于深圳 APEC 峰会多方报道建立前瞻观察"),
+        (re.compile(r"由\s*V3\s*SEC EDGAR\s*连接器交叉核查生成初始观察记录"), "基于公开监管文件与权威媒体报道建立观察"),
+        (re.compile(r"SEC EDGAR 连接器实采状态(?:动态校准)?"), "官方监管披露公开状态"),
+        (re.compile(r"等待\s*Hugging Face\s*/\s*官方文档连接器捕获"), "待官方发布页面与模型仓库披露确认"),
+        (re.compile(r"(?:HF|V3)\s*连接器"), "官方仓库与公开报道"),
+        (re.compile(r"连接器"), "官方公开渠道"),
+    )
+    for pred in seed_predictions:
+        if not isinstance(pred, dict):
+            continue
+        for fld in ("probability_note", "current_judgment", "question"):
+            if isinstance(pred.get(fld), str):
+                txt = pred[fld]
+                for pat, rep in _PRED_INTERNAL_JARGON_RULES:
+                    txt = pat.sub(rep, txt)
+                pred[fld] = txt
+        for ver in pred.get("versions") or []:
+            if isinstance(ver, dict):
+                for vf in ("judgment", "reason"):
+                    if isinstance(ver.get(vf), str):
+                        txt = ver[vf]
+                        for pat, rep in _PRED_INTERNAL_JARGON_RULES:
+                            txt = pat.sub(rep, txt)
+                        ver[vf] = txt
+
     atomic_write_json(
         root / "data/topics.json",
         {
@@ -1649,6 +1478,16 @@ def build_v3_artifacts(
             "generated_at": generated_at_iso,
             "batch_id": batch_id,
             "topics": major_topics,
+            "archived_topics": archived_topics,
+        },
+    )
+    atomic_write_json(
+        root / "data/topics_history.json",
+        {
+            "schema_version": "4.1",
+            "generated_at": generated_at_iso,
+            "batch_id": batch_id,
+            "archived_topics": archived_topics,
         },
     )
     atomic_write_json(root / "data/ai_progress.json", ai_progress_doc)
@@ -1706,7 +1545,7 @@ def build_v3_artifacts(
             "schema_version": "4.1",
             "generated_at": generated_at_iso,
             "batch_id": batch_id,
-            "note": "系统预置基于公开一手催化剂建立的可验证观察题；个人自建与修订记录保存在本地浏览器，导入导出可用。",
+            "note": "基于公开官方催化剂与权威报道建立的客观验证观察题；个人自建与修订记录保存在本地浏览器，支持导入导出。",
             "predictions": seed_predictions,
         },
     )

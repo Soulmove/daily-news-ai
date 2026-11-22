@@ -14,7 +14,7 @@ import requests
 from pipeline.connectors import run_all_first_party_connectors
 from pipeline.connectors.article_enricher import deep_fetch_selected_items
 from pipeline.connectors.base import HttpCacheStore, repair_mojibake
-from pipeline.dedup import deduplicate_raw_items
+from pipeline.dedup import deduplicate_raw_items, strip_raw_urls_and_domain_tails
 from pipeline.id_utils import canonicalize_url, make_raw_item_id
 from pipeline.manifest import (
     atomic_write_json,
@@ -59,6 +59,7 @@ def _clean_text(value: Any, max_len: int = 500) -> Optional[str]:
         return None
     stripped = html_lib.unescape(re.sub(r"<[^>]+>", " ", value))
     cleaned = repair_mojibake(" ".join(stripped.strip().split()))
+    cleaned = strip_raw_urls_and_domain_tails(cleaned)
     if not cleaned:
         return None
     if len(cleaned) > max_len:
@@ -567,7 +568,7 @@ def fetch_raw_snapshot(
         "batch_id": batch_id,
         "fetched_at": fetched_at_iso,
         "published_at": published_iso,
-        "target_cadence_minutes": 30,
+        "target_cadence_minutes": 60,
         "schedule_source": schedule_source,
         "crawl_status": crawl_status,
         "summary": {
@@ -592,16 +593,22 @@ def fetch_raw_snapshot(
     }
 
     # 1. Write immutable archive snapshot first
+    # Persist a slimmed copy of connectors payload on disk (avoid duplicating direct_platforms_by_category 2x)
+    connectors_disk_payload = {
+        k: v
+        for k, v in connectors_payload.items()
+        if k not in {"direct_platforms_by_category", "direct_source_reports"}
+    }
     abs_archive_dir.mkdir(parents=True, exist_ok=True)
     for cat in CATEGORIES:
         atomic_write_json(abs_archive_dir / CATEGORY_FILES[cat], categorized_platforms[cat])
-    atomic_write_json(abs_archive_dir / "connectors.json", connectors_payload)
+    atomic_write_json(abs_archive_dir / "connectors.json", connectors_disk_payload)
     atomic_write_json(abs_archive_dir / "meta.json", batch_meta)
 
     # 2. Write root legacy-compatible latest files & V3 connectors latest file
     for cat in CATEGORIES:
         atomic_write_json(root / CATEGORY_FILES[cat], categorized_platforms[cat])
-    atomic_write_json(root / "data/connectors_latest.json", connectors_payload)
+    atomic_write_json(root / "data/connectors_latest.json", connectors_disk_payload)
 
     # 3. Update raw history index
     index_entry = {

@@ -717,6 +717,7 @@ FIRST_HAND_SOURCE_IDS = {
     "rss-hf-blog",
     "rss-nvidia-blog",
     "rss-github-changelog",
+    "arxiv-api",
 }
 
 FIRST_HAND_URL_HOSTS = (
@@ -734,6 +735,13 @@ FIRST_HAND_URL_HOSTS = (
     "zhipuai.cn",
     "bigmodel.cn",
     "nvidianews.nvidia.com",
+    "blogs.nvidia.com",
+    "ai.meta.com",
+    "mistral.ai",
+    "x.ai",
+    "seed.bytedance.com",
+    "github.blog",
+    "microsoft.com/en-us/research",
 )
 
 
@@ -742,7 +750,7 @@ def is_first_hand_ai_source(source_id: str = "", source_name: str = "", url: str
     if sid in FIRST_HAND_SOURCE_IDS:
         return True
     sname = str(source_name or "").lower()
-    if any(k in sname for k in ("huggingface", "github releases", "openai news", "deepmind", "google ai", "一手")):
+    if any(k in sname for k in ("huggingface", "github releases", "openai", "anthropic", "deepmind", "google ai", "nvidia 官方", "一手", "官方博客", "官方模型")):
         return True
     lower_url = str(url or "").lower()
     return any(host in lower_url for host in FIRST_HAND_URL_HOSTS)
@@ -772,9 +780,9 @@ AI_NOISE_RE = re.compile(
     r"(?:回购股份|减持股份|增持股份|质押股份|股份回购|分红派息|限售股解禁|股票交易异常波动|年度股东大会|董事会决议公告|可转债|中标公告|业绩快报|成份股|指数纳入|调入.*股|港股通|"
     r"black friday|geforce now|win11.*copilot|windows\s*11.*copilot|强制集成.*copilot|"
     r"蔚来|\bnio\b|小鹏|理想汽车|小米汽车|智驾|智能驾驶|世界模型\s*nwm|nwm\s*\d|车机|智能座舱|"
-    r"开源鸿蒙|openharmony|harmonyos|南水北调|水利|水文|天河.*(?:工程|调水|水文)|"
+    r"开源鸿蒙|openharmony|harmonyos|南水北调|水利|水文|国家水网|调水工程|天河.*(?:工程|调水|水文|水网)|"
     r"影石|insta360|大疆|麦克风|耳机|相机|固件升级|充电宝|路由器|显示器|键盘|鼠标|tech outages.*y2k|outages.*ai agent style|"
-    r"套餐|买赠|优惠券|代金券|促销|折扣|限免|会员价|小米\s*mimo.*套餐|mimo.*套餐|"
+    r"套餐|买赠|优惠券|代金券|促销|折扣|限免|会员价|小米\s*mimo.*套餐|mimo.*套餐|演唱会|剧场版|小雪节气|长城坦克|坦克\d+|"
     r"微信香港钱包|微信支付|支付宝|信用卡|消费券|手游|主机游戏|steam|帮信罪|刑事拘留)",
     re.I,
 )
@@ -925,6 +933,8 @@ def _infer_company(title: str, url: str = "", source_name: str = "") -> tuple[st
         return _lab_result("google")
     if any(k in t for k in ("nemotron", "cosmos", "omniverse", "tensorrt", "blackwell", "rubin")):
         return _lab_result("nvidia")
+    if any(k in t for k in ("llama.cpp", "ggml", "ollama", "vllm", "sglang", "comfyui", "open-webui", "dify", "langchain")):
+        return _lab_result("indie_opensource")
     if any(k in t for k in ("phi-4", "phi4", "copilot", "azure ai")):
         return _lab_result("microsoft")
     if any(k in t for k in ("llama", "meta ai", "metaai")):
@@ -967,23 +977,21 @@ def _infer_company(title: str, url: str = "", source_name: str = "") -> tuple[st
     return _lab_result("indie_opensource")
 
 
-def _infer_what_it_does_zh(title: str, summary: str) -> str:
-    t = f"{title} {summary}".lower()
-    if any(k in t for k in ("隐私泄露", "隐私数据", "零数据保留", "诱饵请求", "反蒸馏", "distillation", "合规审计", "安全风控", "privacy", "security")):
+def _infer_what_it_does_zh(title: str, summary: str, *, is_tool_release: bool = False) -> str:
+    from .dedup import strip_raw_urls_and_domain_tails
+
+    clean_sum = strip_raw_urls_and_domain_tails(re.sub(r"\s+", " ", str(summary or "").strip()))
+    clean_title = strip_raw_urls_and_domain_tails(title)
+    cjk_count = sum(1 for ch in clean_sum if "\u4e00" <= ch <= "\u9fff")
+    if clean_sum and cjk_count >= 6 and clean_sum != clean_title:
+        return (clean_sum[:118] + "…") if len(clean_sum) > 118 else clean_sum
+    t = f"{clean_title} {clean_sum}".lower()
+    if any(k in t for k in ("隐私泄露", "隐私数据", "零数据保留", "诱饵请求", "反蒸馏", "抗蒸馏", "distillation")):
         return "大模型安全、隐私合规与防泄漏动态：聚焦零数据保留机制校验、抗蒸馏防护与调用链审计。"
-    if any(k in t for k in ("vllm", "llama.cpp", "ollama", "sglang", "推理引擎", "inference")):
+    if any(k in t for k in ("vllm", "llama.cpp", "ollama", "sglang", "推理引擎", "inference engine")):
         return "开源本地/服务器推理加速工具：帮开发者更快、更省显存地部署和运行开源大模型。"
-    if any(k in t for k in ("agent", "coding", "编程", "code", "sdk", "cli", "harness", "tool use", "workbuddy", "电脑操控", "计算机控制")):
-        return "AI 编程与智能体（Agent）工具：支持代码读写、外部工具/SDK 调用与多步骤任务执行。"
-    if any(k in t for k in ("robot", "具身", "机器人", "world model", "世界模型", "omniverse")):
-        return "具身智能/物理仿真模型工具：用于在虚拟或物理环境中训练机器人感知、规划与执行任务。"
-    if re.search(r"(?:视频|音乐|图像|多模态|画图)|\b(?:3d|hair|video|music|image|ar|vr)\b", t):
-        return "多模态生成/创作模型：用于文字生成图像、视频、音乐或 3D 资产。"
-    if re.search(r"(?:端侧|个人电脑|轻量模型|小模型)|\b(?:small|mini|flash|nano|27b|7b|8b)\b", t):
-        return "轻量高效/端侧模型：主打低成本、高速度或支持个人电脑离线部署。"
-    clean_sum = re.sub(r"\s+", " ", str(summary or "").strip())
-    if clean_sum and not re.search(r"^[A-Za-z0-9\s\W]+$", clean_sum) and clean_sum != title.strip():
-        return (clean_sum[:110] + "…") if len(clean_sum) > 110 else clean_sum
+    if is_tool_release or any(k in t for k in ("agent sdk", "sdk", "工具套件", "workbuddy", "cli tool")):
+        return "AI 编程与智能体（Agent）工具：支持代码读写、外部工具与 SDK 调用及多步骤任务执行。"
     return ""
 
 
@@ -1130,14 +1138,28 @@ def build_ai_progress_artifact(
     tech_tools: List[dict],
     base_dir: Path | str = ".",
 ) -> Dict[str, Any]:
+    from .dedup import is_omnibus_digest_title, strip_raw_urls_and_domain_tails
+
     items: List[Dict[str, Any]] = []
     seen_titles: set[str] = set()
 
     def _add_item(it: Dict[str, Any]) -> None:
-        title = str(it.get("title") or "").strip()
+        title = strip_raw_urls_and_domain_tails(str(it.get("title") or "").strip())
         url = str(it.get("source_url") or "").strip()
-        if not title or AI_NOISE_RE.search(title):
+        what = strip_raw_urls_and_domain_tails(str(it.get("what_it_does") or ""))
+        if not title or AI_NOISE_RE.search(f"{title} {what}") or is_omnibus_digest_title(title):
             return
+        it = dict(it)
+        it["title"] = title
+        it["what_it_does"] = what
+        if it.get("what_it_does_en"):
+            it["what_it_does_en"] = strip_raw_urls_and_domain_tails(str(it["what_it_does_en"]))
+        first_hand = bool(
+            it.get("is_first_hand")
+            or is_first_hand_ai_source(str(it.get("source_id") or ""), str(it.get("source_name") or ""), url)
+        )
+        it["is_first_hand"] = first_hand
+        it["source_tier"] = str(it.get("source_tier") or ("first_party" if first_hand else "wire_media"))
         key = re.sub(r"\W+", "", title.lower())[:26]
         if not key or key in seen_titles:
             return
@@ -1160,8 +1182,10 @@ def build_ai_progress_artifact(
             if any(bad in title.lower() for bad in ("听证会", "诈骗", "fcc", "fda", "围巾", "座驾", "中期选举", "ipo", "募资", "发行价", "灰市", "selling pressure", "股票", "股价", "后悔当年")):
                 continue
             src0 = (ev.get("sources") or [{}])[0]
+            src_id = str(src0.get("source_id") or "")
             src_url = str(src0.get("url") or "")
-            src_name = str(src0.get("source_name") or "镜信科技快讯")
+            src_name = str(src0.get("publisher_name") or src0.get("source_name") or "镜信科技快讯")
+            first_hand = is_first_hand_ai_source(src_id, src_name, src_url)
             cid, cname, reg = _infer_company(title, src_url, src_name)
             pub_date = str(ev.get("first_reported_at") or ev.get("latest_reported_at") or generated_at_iso)[:10]
             summary = str(ev.get("fact_summary") or ev.get("summary") or "")
@@ -1182,8 +1206,11 @@ def build_ai_progress_artifact(
                     "who_cares": "",
                     "limitations": "",
                     "limitations_en": "",
+                    "source_id": src_id,
                     "source_name": src_name,
                     "source_url": src_url,
+                    "is_first_hand": first_hand,
+                    "source_tier": "first_party" if first_hand else "wire_media",
                     "event_id": ev.get("event_id"),
                     "is_open_source": is_os,
                 }
@@ -1205,21 +1232,25 @@ def build_ai_progress_artifact(
         for raw_it in raw_pool:
             if not isinstance(raw_it, dict):
                 continue
-            rtitle = str(raw_it.get("title") or "").strip()
-            if not rtitle or AI_NOISE_RE.search(rtitle) or not ai_kw_re.search(rtitle) or not ai_release_re.search(rtitle):
+            rtitle = strip_raw_urls_and_domain_tails(str(raw_it.get("title") or "").strip())
+            excerpt = strip_raw_urls_and_domain_tails(str(raw_it.get("excerpt") or "").strip())
+            if not rtitle or is_omnibus_digest_title(rtitle) or AI_NOISE_RE.search(f"{rtitle} {excerpt}") or not ai_kw_re.search(rtitle):
+                continue
+            rsid = str(raw_it.get("source_id") or "")
+            rurl = str(raw_it.get("url") or raw_it.get("canonical_url") or "")
+            rsrc = str(raw_it.get("publisher_name") or raw_it.get("source_name") or "直连 AI 雷达")
+            first_hand = is_first_hand_ai_source(rsid, rsrc, rurl)
+            if not first_hand and not ai_release_re.search(rtitle):
                 continue
             if any(bad in rtitle.lower() for bad in ("听证会", "诈骗", "fcc", "fda", "围巾", "座驾", "中期选举", "ipo", "募资", "发行价", "灰市", "selling pressure", "股票", "股价", "lawsuit", "sues")):
                 continue
-            rurl = str(raw_it.get("url") or raw_it.get("canonical_url") or "")
-            rsrc = str(raw_it.get("source_name") or "直连 AI 雷达")
             cid, cname, reg = _infer_company(rtitle, rurl, rsrc)
             pub_date = normalize_ai_timestamp(
                 raw_it.get("published_at") or raw_it.get("fetched_at") or generated_at_iso,
                 generated_at_iso,
             )
-            excerpt = str(raw_it.get("excerpt") or "").strip()
             zh_title = ensure_zh_headline(rtitle, "tech")
-            is_os = any(k in rtitle.lower() for k in ("开源", "open", "github", "hugging", "vllm", "llama.cpp", "gemma", "权重"))
+            is_os = any(k in rtitle.lower() for k in ("开源", "open", "github", "hugging", "vllm", "llama.cpp", "gemma", "权重", "model card", "hf 模型卡"))
             _add_item(
                 {
                     "id": f"ai_raw_{raw_it.get('item_id') or raw_it.get('id') or len(items)}",
@@ -1236,24 +1267,28 @@ def build_ai_progress_artifact(
                     "who_cares": "",
                     "limitations": "",
                     "limitations_en": "",
+                    "source_id": rsid,
                     "source_name": rsrc,
                     "source_url": rurl,
+                    "is_first_hand": first_hand,
+                    "source_tier": "first_party" if first_hand else "wire_media",
                     "is_open_source": is_os,
                 }
             )
     except Exception:
         pass
 
-    for tool in tech_tools[:12]:
+    for tool in tech_tools[:20]:
         name = str(tool.get("name") or "").strip()
-        ver = str(tool.get("version") or "").strip()
+        ver = str(tool.get("latest_version") or tool.get("version") or "").strip()
         if not name:
             continue
         title = f"开源生态更新：{name} {ver}".strip()
         turl = str(tool.get("release_url") or tool.get("official_url") or "")
-        cid, cname, reg = _infer_company(f"{name} {tool.get('summary') or ''}", turl, str(tool.get("source_name") or ""))
+        tsrc = str(tool.get("source_name") or "GitHub / Hugging Face")
+        cid, cname, reg = _infer_company(f"{name} {tool.get('repo') or ''}", turl, tsrc)
         pub_date = str(tool.get("version_published_at") or generated_at_iso)[:10]
-        summary = str(tool.get("summary") or "").strip()
+        summary = strip_raw_urls_and_domain_tails(str(tool.get("summary") or "").strip())
         lic = str(tool.get("license") or "").strip()
         _add_item(
             {
@@ -1266,16 +1301,41 @@ def build_ai_progress_artifact(
                 "category_en": "Open-Source Repo",
                 "title": title,
                 "title_en": f"Open-source release: {name} {ver}".strip(),
-                "what_it_does": _infer_what_it_does_zh(title, summary),
+                "what_it_does": _infer_what_it_does_zh(title, summary, is_tool_release=True),
                 "what_it_does_en": summary[:160] if summary else "",
                 "who_cares": "",
                 "limitations": f"许可证：{lic}" if lic else "",
                 "limitations_en": f"License: {lic}" if lic else "",
-                "source_name": str(tool.get("source_name") or "GitHub / Hugging Face"),
+                "source_id": "github-releases" if "github" in turl.lower() else ("huggingface-hub" if "huggingface" in turl.lower() else ""),
+                "source_name": tsrc,
                 "source_url": turl,
+                "is_first_hand": True,
+                "source_tier": "first_party",
                 "is_open_source": True,
             }
         )
+
+    # Carry forward valid recent items from previous data/ai_progress.json (scrubbed via _add_item)
+    try:
+        prev_ai = load_json_if_exists(Path(base_dir) / "data/ai_progress.json", default={})
+        for prev_it in (prev_ai.get("timeline") or []) if isinstance(prev_ai, dict) else []:
+            if not isinstance(prev_it, dict):
+                continue
+            cleaned_prev = dict(prev_it)
+            prev_t = strip_raw_urls_and_domain_tails(str(cleaned_prev.get("title") or ""))
+            prev_sum = strip_raw_urls_and_domain_tails(str(cleaned_prev.get("what_it_does") or ""))
+            pcid, pcname, preg = _infer_company(prev_t, str(cleaned_prev.get("source_url") or ""), str(cleaned_prev.get("source_name") or ""))
+            cleaned_prev["company_id"] = pcid
+            cleaned_prev["company_name"] = pcname
+            cleaned_prev["region"] = preg
+            # Scrub bogus robot/distill boilerplate injected on non-tool news
+            if "具身智能/物理仿真模型工具" in prev_sum and "robot" not in prev_t.lower() and not str(cleaned_prev.get("id") or "").startswith("ai_tool_"):
+                prev_sum = ""
+            cleaned_prev["title"] = prev_t
+            cleaned_prev["what_it_does"] = prev_sum
+            _add_item(cleaned_prev)
+    except Exception:
+        pass
 
     if os.environ.get("ENABLE_CURATED_AI_PLACEHOLDERS", "0").strip() == "1":
         for m in _CURATED_AI_MILESTONES:
@@ -1341,5 +1401,5 @@ def build_ai_progress_artifact(
             "highlights": weekly_highlights,
         },
         "companies": companies,
-        "timeline": items[:28],
+        "timeline": items[:60],
     }

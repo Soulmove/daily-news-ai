@@ -13,12 +13,18 @@ from pipeline.time_utils import now_shanghai, parse_iso_datetime, parse_publishe
 DEFAULT_HF_ORGS = [
     {"org": "Qwen", "name": "Qwen (通义千问)", "entity_id": "ent_qwen_alibaba"},
     {"org": "deepseek-ai", "name": "DeepSeek", "entity_id": "ent_deepseek"},
-    {"org": "tencent", "name": "Tencent Hunyuan", "entity_id": "ent_ai_infra_tools"},
+    {"org": "tencent", "name": "Tencent Hunyuan", "entity_id": "ent_tencent_hunyuan"},
     {"org": "moonshotai", "name": "Moonshot (Kimi)", "entity_id": "ent_kimi_moonshot"},
-    {"org": "zai-org", "name": "Zhipu AI (GLM)", "entity_id": "ent_ai_infra_tools"},
+    {"org": "zai-org", "name": "Zhipu AI (GLM)", "entity_id": "ent_zhipu_glm"},
     {"org": "baichuan-inc", "name": "Baichuan", "entity_id": "ent_ai_infra_tools"},
+    {"org": "ByteDance-Seed", "name": "ByteDance Seed", "entity_id": "ent_bytedance_doubao"},
+    {"org": "MiniMaxAI", "name": "MiniMax", "entity_id": "ent_minimax"},
+    {"org": "mistralai", "name": "Mistral AI", "entity_id": "ent_mistral"},
+    {"org": "nvidia", "name": "NVIDIA", "entity_id": "ent_nvidia"},
+    {"org": "microsoft", "name": "Microsoft", "entity_id": "ent_microsoft"},
+    {"org": "stabilityai", "name": "Stability AI", "entity_id": "ent_ai_infra_tools"},
     {"org": "google", "name": "Google / Gemma", "entity_id": "ent_google"},
-    {"org": "meta-llama", "name": "Meta Llama", "entity_id": "ent_ai_infra_tools"},
+    {"org": "meta-llama", "name": "Meta Llama", "entity_id": "ent_meta"},
 ]
 
 
@@ -118,7 +124,7 @@ def fetch_huggingface_models(
                         "official_url": card_url,
                         "release_url": card_url,
                         "docs_url": card_url,
-                        "summary": f"Hugging Face 官方模型卡（任务类型：{pipeline_tag}，近期下载量：{downloads if downloads is not None else '未知'}）。",
+                        "summary": f"模型任务：{pipeline_tag}；近期下载：{downloads if downloads is not None else '未知'} 次",
                         "deployment_requirements": "需依据模型卡参数规模配置对应 GPU 显存及推理后端（vLLM / Transformers / llama.cpp）",
                         "pricing_or_cost": f"开源权重自部署（许可证：{license_id or '详见模型卡'}）",
                         "checked_at": fetched_iso,

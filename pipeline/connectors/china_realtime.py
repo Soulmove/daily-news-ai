@@ -18,7 +18,7 @@ from xml.etree import ElementTree as ET
 import requests
 
 from pipeline.connectors.base import HttpCacheStore
-from pipeline.dedup import smart_truncate
+from pipeline.dedup import smart_truncate, strip_raw_urls_and_domain_tails
 from pipeline.id_utils import canonicalize_url, make_raw_item_id
 from pipeline.manifest import atomic_write_json, load_json_if_exists
 from pipeline.time_utils import SHANGHAI_TZ, now_shanghai, parse_published_at, to_iso_shanghai
@@ -35,11 +35,11 @@ _HTML_RE = re.compile(r"<[^>]+>")
 _WS_RE = re.compile(r"\s+")
 
 _AI_KW_RE = re.compile(
-    r"(?:ai|大模型|gemini|neon|carbon|hydrogen|openai|gpt|claude|anthropic|qwen|千问|kimi|混元|workbuddy|电脑操控|计算机控制|元宝|豆包|seedance|manus|minimax|智谱|glm|cursor|windsurf|antigravity|mcp|千亿.*大模型|腾讯.*ai|deepseek|算力|英伟达|nvidia|芯片|gpu|开源|agent|智能体|机器人)",
+    r"(?:(?<![A-Za-z])ai(?![A-Za-z])|大模型|gemini|openai|gpt-\d|chatgpt|claude|anthropic|qwen|千问|kimi|混元|workbuddy|电脑操控|计算机控制|元宝|豆包|seedance|manus|minimax|智谱|glm-?\d|cursor|windsurf|antigravity|千亿.*大模型|腾讯.*ai|deepseek|算力|英伟达|nvidia|芯片|gpu|开源模型|agent|智能体|具身智能|人形机器人)",
     re.I,
 )
 _GEO_PRIORITY_RE = re.compile(
-    r"(?:导弹|空袭|无人机|击落|战机|航母|油轮|触雷|海峡|霍尔木兹|红海|"
+    r"(?:导弹|空袭|无人机|击落|战机|航母|油轮|触雷|海峡|霍尔木兹|红海|联合巡逻|海警|海军|国防部?|南海|北部湾|中越|联演|军演|边防|领海|"
     r"停火|和平协议|俄乌|美伊|以色列|加沙|波兰|北约|外交|元首|白宫|峰会|联合国)",
     re.I,
 )
@@ -49,11 +49,11 @@ _FIN_KW_RE = re.compile(
 )
 _CRYPTO_KW_RE = re.compile(r"(?:比特币|以太坊|\bBTC\b|\bETH\b|加密货币|虚拟货币|币安)", re.I)
 _DOMESTIC_RE = re.compile(
-    r"(?:a股|沪指|深成指|创业板|上期所|深交所|上交所|北交所|国务院|发改委|工信部|央行|证监会|人民币|沪深|中芯|比亚迪|宁德时代|华为|腾讯|阿里|回购股份|股份有限公司|人民日报|新华社|央视新闻|商务部)",
+    r"(?:a股|沪指|深成指|创业板|上期所|深交所|上交所|北交所|国务院|发改委|工信部|央行|证监会|人民币|沪深|中芯|比亚迪|宁德时代|华为|腾讯|阿里|回购股份|股份有限公司|商务部)",
     re.I,
 )
 _GLOBAL_KW_RE = re.compile(
-    r"(?:特朗普|拜登|白宫|欧盟|联合国|apec|峰会|外交|中东|俄乌|停火|制裁|总统|首相|外交部|美商务部|美国商务部|访华|日央行|欧洲央行)",
+    r"(?:特朗普|拜登|白宫|欧盟|联合国|apec|峰会|外交|中东|俄乌|停火|制裁|总统|首相|外交部|美商务部|美国商务部|访华|日央行|欧洲央行|联合巡逻|北部湾|中越|中俄|中美|防长|国防)",
     re.I,
 )
 
@@ -62,11 +62,14 @@ def _clean(raw: Any, max_len: int = 240) -> str:
     if not raw:
         return ""
     s = html.unescape(_HTML_RE.sub(" ", str(raw)))
+    s = strip_raw_urls_and_domain_tails(s)
     return smart_truncate(s, max_len=max_len)
 
 
 _NON_TECH_CONSUMER_OR_CRIME_RE = re.compile(
-    r"(?:帮信罪|刑拘|逮捕|派出所|警方|涉案|诈骗案|Steam|黑五.*游戏|游戏新史低|重制版|导剪版|折扣促销)",
+    r"(?:帮信罪|刑拘|逮捕|派出所|警方|涉案|诈骗案|Steam|黑五.*游戏|游戏新史低|重制版|导剪版|折扣促销|"
+    r"剧场版|动画电影|动漫|斗破苍穹|演唱会|首支单曲|主题曲|音乐节|票房|"
+    r"长城坦克|坦克\d{2,3}|越野车|节气|小雪|大雪|立冬|冬至|天气预报)",
     re.I,
 )
 _DISASTER_SOCIETY_RE = re.compile(
@@ -97,8 +100,8 @@ def _classify_wire_item(title: str, content: str, default_cat: str) -> str:
         return "finance"
     if _GEO_PRIORITY_RE.search(text):
         return "global"
-    is_domestic_ministry = bool(re.search(r"(?:发改委|工信部|商务部|人民日报|新华社)", title) and not re.search(r"(?:美国商务部|美商务部)", title))
-    if is_domestic_ministry:
+    is_domestic_ministry = bool(re.search(r"(?:发改委|工信部|商务部)", title) and not re.search(r"(?:美国商务部|美商务部)", title))
+    if is_domestic_ministry and not _GEO_PRIORITY_RE.search(text) and not _GLOBAL_KW_RE.search(text):
         return "finance" if _FIN_KW_RE.search(text) else "general"
     if _FIN_KW_RE.search(text):
         return "finance"

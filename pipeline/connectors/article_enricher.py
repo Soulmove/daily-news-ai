@@ -264,6 +264,11 @@ def deep_fetch_selected_items(
                 except Exception:
                     continue
                 target_url = chosen_src["url"]
+                resolved_final = str(getattr(res, "final_url", "") or "").strip()
+                if resolved_final.startswith(("http://", "https://")) and "news.google.com" not in resolved_final:
+                    chosen_src["url"] = resolved_final
+                    chosen_src["canonical_url"] = resolved_final
+                    target_url = resolved_final
                 if res.ok and res.text:
                     parsed = parse_article_html(res.text, base_url=target_url)
                     excerpt = parsed.get("lead_excerpt") or parsed.get("meta_description")

@@ -26,6 +26,7 @@ from pipeline.ai_radar_builder import (
 )
 from pipeline.build_briefing import _smart_truncate
 from pipeline.connectors.base import HttpCacheStore
+from pipeline.dedup import is_omnibus_digest_title, strip_raw_urls_and_domain_tails
 from pipeline.connectors.direct_rss import DIRECT_RSS_FEEDS, fetch_direct_rss_media
 from pipeline.connectors.github_releases import fetch_github_releases
 from pipeline.connectors.huggingface_hub import fetch_huggingface_models
@@ -83,14 +84,12 @@ def _sort_key_iso_desc(date_str: Any) -> Tuple[int, str]:
 
 
 def _summarize_release(title: str, excerpt: str, source_name: str, *, is_open_source: bool, is_first_hand: bool) -> Tuple[str, str]:
-    clean_excerpt = re.sub(r"\s+", " ", str(excerpt or "").strip())
-    inferred = _infer_what_it_does_zh(title, clean_excerpt)
-    if _has_zh(clean_excerpt) and len(clean_excerpt) >= 16 and not any(k in title.lower() for k in ("sdk", "agent", "cli", "coding", "workbuddy", "vllm", "sglang", "隐私", "泄露")):
+    clean_excerpt = strip_raw_urls_and_domain_tails(re.sub(r"\s+", " ", str(excerpt or "").strip()))
+    inferred = _infer_what_it_does_zh(title, clean_excerpt, is_tool_release=False)
+    if _has_zh(clean_excerpt) and len(clean_excerpt) >= 12:
         zh = _smart_truncate(clean_excerpt, 180)
     elif inferred:
         zh = inferred
-    elif any(k in title.lower() for k in ("workbuddy", "computer use", "操控", "agent", "codex", "cursor", "cli", "sdk")):
-        zh = "AI 编程与智能体（Agent）工具：支持代码读写、外部工具/SDK 调用与多步骤复杂任务。"
     elif _FUNDING_RE.search(title):
         zh = f"资本战略与产业融资动态（来源：{source_name}）：涉及核心算力投资或股权估值进展。"
     else:
@@ -102,16 +101,16 @@ def _summarize_release(title: str, excerpt: str, source_name: str, *, is_open_so
 
 def extract_ai_release_item(raw_it: Dict[str, Any], generated_at_iso: str) -> Optional[Dict[str, Any]]:
     """Convert a raw news/connector/wire item into an AiProgressItem if relevant."""
-    title = str(raw_it.get("title") or "").strip()
-    if len(title) < 4 or AI_NOISE_RE.search(title):
+    title = strip_raw_urls_and_domain_tails(str(raw_it.get("title") or "").strip())
+    if len(title) < 4 or is_omnibus_digest_title(title) or AI_NOISE_RE.search(title):
         return None
 
-    excerpt = str(raw_it.get("excerpt") or raw_it.get("summary") or "").strip()
-    if excerpt and AI_NOISE_RE.search(excerpt) and not AI_KW_RE.search(title):
+    excerpt = strip_raw_urls_and_domain_tails(str(raw_it.get("excerpt") or raw_it.get("summary") or "").strip())
+    if excerpt and AI_NOISE_RE.search(excerpt):
         return None
 
     source_id = str(raw_it.get("source_id") or "").strip()
-    source_name = str(raw_it.get("source_name") or source_id or "AI Radar").strip()
+    source_name = str(raw_it.get("publisher_name") or raw_it.get("source_name") or source_id or "AI Radar").strip()
     url = str(raw_it.get("canonical_url") or raw_it.get("url") or raw_it.get("source_url") or "").strip()
     is_first_hand = bool(raw_it.get("is_first_hand")) or is_first_hand_ai_source(source_id, source_name, url)
 
@@ -247,11 +246,11 @@ def fetch_first_hand_ai_drops(cache_dir: Optional[Path] = None) -> List[dict]:
     collected: List[dict] = []
 
     def _run_hf() -> List[dict]:
-        res = fetch_huggingface_models(cache=cache, per_org_limit=4, recent_days=7)
+        res = fetch_huggingface_models(cache=cache)
         return list(res.get("items") or [])
 
     def _run_gh() -> List[dict]:
-        res = fetch_github_releases(cache=cache, per_repo_limit=2)
+        res = fetch_github_releases(cache=cache)
         return list(res.get("items") or [])
 
     def _run_rss() -> List[dict]:
@@ -405,13 +404,16 @@ def merge_live_ai_items_into_doc(
         cleaned_existing = []
         for it in comp.get("items") or []:
             it_id = str(it.get("id") or "")
-            it_title = str(it.get("title") or "")
+            it_title = strip_raw_urls_and_domain_tails(str(it.get("title") or ""))
+            if it_title != it.get("title"):
+                it["title"] = it_title
+                mutated = True
             it_src = str(it.get("source_name") or "")
             it_url = str(it.get("source_url") or "")
             if it_id.startswith(placeholder_curated_prefixes) or it_src.strip().lower() == "batch_digest":
                 mutated = True
                 continue
-            if AI_NOISE_RE.search(it_title):
+            if is_omnibus_digest_title(it_title) or AI_NOISE_RE.search(f"{it_title} {it.get('what_it_does') or ''}"):
                 mutated = True
                 continue
             if it_title.startswith("[HF Paper]"):
@@ -432,10 +434,11 @@ def merge_live_ai_items_into_doc(
             if (
                 (any(k in tl_low for k in ("sdk", "agent", "cli", "coding", "workbuddy")) and "多模态生成" in w_cur)
                 or (any(k in tl_low for k in ("隐私", "泄露", "诱饵", "反蒸馏", "distill", "privacy", "security")) and ("轻量" in w_cur or "端侧" in w_cur))
+                or ("具身智能/物理仿真模型工具" in w_cur and not it_id.startswith("ai_tool_") and "world model" not in tl_low)
                 or _CANNED_WHAT_RE.search(w_cur)
                 or ("实验室官方一手发布（来源：" in w_cur and it_title[:16] in w_cur)
             ):
-                it["what_it_does"] = _infer_what_it_does_zh(it_title, "")
+                it["what_it_does"] = _infer_what_it_does_zh(it_title, "", is_tool_release=it_id.startswith("ai_tool_"))
                 mutated = True
             if _CANNED_WHO_RE.search(str(it.get("who_cares") or "").strip()):
                 it["who_cares"] = ""

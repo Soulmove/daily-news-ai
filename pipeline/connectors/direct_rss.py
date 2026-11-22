@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from concurrent.futures import ThreadPoolExecutor, as_completed
+import base64
 from datetime import timedelta
 import html
 import re
@@ -14,6 +15,7 @@ from xml.etree import ElementTree as ET
 import requests
 
 from pipeline.connectors.base import HttpCacheStore
+from pipeline.dedup import strip_raw_urls_and_domain_tails
 from pipeline.id_utils import canonicalize_url, make_raw_item_id
 from pipeline.time_utils import now_shanghai, parse_iso_datetime, parse_published_at, to_iso_shanghai
 
@@ -43,14 +45,14 @@ DIRECT_RSS_FEEDS: List[Dict[str, str]] = [
         "id": "rss-gnews-ai-models-en",
         "name": "Google News 全球 AI 模型雷达",
         "category": "tech",
-        "url": "https://news.google.com/rss/search?q=(Gemini+OR+OpenAI+OR+GPT+OR+Claude+OR+Anthropic+OR+Qwen+OR+DeepSeek+OR+Kimi+OR+Grok)+model+release+when:2d&hl=en-US&gl=US&ceid=US:en",
+        "url": "https://news.google.com/rss/search?q=(Gemini+OR+OpenAI+OR+GPT+OR+Claude+OR+Anthropic+OR+Qwen+OR+DeepSeek+OR+Kimi+OR+Grok+OR+Mistral+OR+Llama+OR+%22Microsoft+AI%22+OR+MiniMax)+model+OR+AI+release+when:2d&hl=en-US&gl=US&ceid=US:en",
         "family": "gnews-ai-en",
     },
     {
         "id": "rss-gnews-ai-models-zh",
         "name": "Google News 中文大模型雷达",
         "category": "tech",
-        "url": "https://news.google.com/rss/search?q=(大模型+OR+Gemini+OR+OpenAI+OR+Claude+OR+千问+OR+DeepSeek+OR+Kimi+OR+混元)+发布+when:2d&hl=zh-CN&gl=CN&ceid=CN:zh-Hans",
+        "url": "https://news.google.com/rss/search?q=(大模型+OR+Gemini+OR+OpenAI+OR+Claude+OR+千问+OR+DeepSeek+OR+Kimi+OR+混元+OR+豆包+OR+智谱+OR+GLM+OR+MiniMax+OR+文心一言+OR+盘古大模型)+发布+when:2d&hl=zh-CN&gl=CN&ceid=CN:zh-Hans",
         "family": "gnews-ai-zh",
     },
     {
@@ -144,6 +146,45 @@ def _extract_rss_image_url(node: ET.Element, desc_raw: Optional[str], content_ra
     return None
 
 
+_GNEWS_HOST_PUBLISHER_MAP = {
+    "reuters.com": "路透社",
+    "bloomberg.com": "彭博社",
+    "wsj.com": "华尔街日报",
+    "ft.com": "金融时报",
+    "cnbc.com": "CNBC",
+    "bbc.com": "BBC",
+    "bbc.co.uk": "BBC",
+    "scmp.com": "南华早报",
+    "theverge.com": "The Verge",
+    "techcrunch.com": "TechCrunch",
+    "arstechnica.com": "Ars Technica",
+    "wired.com": "WIRED",
+    "apnews.com": "美联社",
+    "nytimes.com": "纽约时报",
+}
+
+
+def _decode_google_news_article_url(url_str: str) -> str:
+    """Pure-local decode of legacy base64 protobuf Google News RSS URLs (zero network cost)."""
+    s = str(url_str or "").strip()
+    if "news.google.com" not in s or "/articles/" not in s:
+        return s
+    try:
+        token = s.split("/articles/", 1)[1].split("?", 1)[0].strip("/")
+        if not token or not token.startswith(("CBMi", "CAIi")):
+            return s
+        padded = token + ("=" * ((4 - len(token) % 4) % 4))
+        raw = base64.urlsafe_b64decode(padded.encode("ascii"))
+        m = re.search(rb"https?://[A-Za-z0-9._~:/?#\[\]@!$&'()*+,;=%-]+", raw)
+        if m:
+            decoded = m.group(0).decode("utf-8", errors="ignore").strip()
+            if decoded.startswith(("http://", "https://")) and "news.google.com" not in decoded:
+                return decoded
+    except Exception:
+        pass
+    return s
+
+
 def _resolve_rss_publisher(
     node: ET.Element,
     title: str,
@@ -201,10 +242,11 @@ def _resolve_rss_publisher(
                 host = urlparse(src_href).netloc.lower().removeprefix("www.")
                 if host and "google." not in host:
                     fam = re.sub(r"[^a-z0-9]", "", host.split(".")[0])[:16] or default_family
-                    return clean_title, host, fam
+                    mapped = next((lbl for dom, lbl in _GNEWS_HOST_PUBLISHER_MAP.items() if host == dom or host.endswith(f".{dom}")), host)
+                    return clean_title, mapped, fam
             except Exception:
                 pass
-        clean_default = "综合资讯" if fid.endswith("-zh") or "zh" in default_family else "Global Wire"
+        clean_default = "权威报道" if fid.endswith("-zh") or "zh" in default_family else "Global Wire"
         return clean_title, clean_default, default_family
 
     return clean_title, default_name, default_family
@@ -215,6 +257,7 @@ def _clean_xml_text(raw: Optional[str], max_len: int = 260) -> Optional[str]:
         return None
     text = html.unescape(_HTML_TAG_RE.sub(" ", str(raw)))
     text = _WS_RE.sub(" ", text).strip()
+    text = strip_raw_urls_and_domain_tails(text)
     if not text:
         return None
     if len(text) > max_len:
@@ -279,11 +322,12 @@ def parse_rss_or_atom_xml(
         raw_title = _clean_xml_text(title_el.text if title_el is not None else None, max_len=200)
         if not raw_title or len(raw_title) < 4:
             continue
-        canon_url = canonicalize_url(link_val)
+        decoded_link = _decode_google_news_article_url(link_val)
+        canon_url = canonicalize_url(decoded_link)
         if not canon_url or canon_url in seen_urls:
             continue
 
-        title, real_source_name, real_family = _resolve_rss_publisher(node, raw_title, feed_spec, link_val)
+        title, real_source_name, real_family = _resolve_rss_publisher(node, raw_title, feed_spec, decoded_link)
         if len(title) < 4:
             title = raw_title
 
@@ -308,6 +352,7 @@ def parse_rss_or_atom_xml(
                 "item_id": item_id,
                 "source_id": fid,
                 "source_name": real_source_name,
+                "publisher_name": real_source_name,
                 "category": cat,
                 "source_kind": "news",
                 "source_tier": "direct_media",

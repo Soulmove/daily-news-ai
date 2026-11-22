@@ -243,25 +243,30 @@ def _classify_gemini_error(exc: Exception) -> Tuple[str, str, int, bool, bool]:
     if "429" in low or "resource_exhausted" in low or "quota" in low or "rate limit" in low:
         is_daily = any(
             k in low
-            for k in ("perday", "per_day", "daily", "rpd", "limit: 0", "free_tier", "exceeded your current quota")
+            for k in ("perday", "per_day", "per day", "daily", "rpd", "requestsperday", "limit: 0")
         )
         if is_daily:
             return "QUOTA_EXHAUSTED", short_msg, 6 * 3600, True, False
-        return "RATE_LIMIT_429", short_msg, 5 * 60, False, False
+        return "RATE_LIMIT_429", short_msg, 60, False, False
 
     if any(k in low for k in ("500", "502", "503", "504", "unavailable", "deadline", "timeout", "timed out", "connection")):
-        return "TRANSIENT_ERROR", short_msg, 30, False, False
+        return "TRANSIENT_ERROR", short_msg, 20, False, False
 
-    return "API_ERROR", short_msg, 60, False, False
+    return "API_ERROR", short_msg, 45, False, False
 
 
 def _is_slot_available_for_model(rec: Dict[str, Any], model_name: str, now: datetime) -> bool:
     ex_dt = _parse_utc(rec.get("exhausted_until"))
     if ex_dt and ex_dt > now:
         return False
-    cd_dt = _parse_utc(rec.get("cooldown_until"))
-    if cd_dt and cd_dt > now:
+    mod_cd = rec.get("model_cooldown_until") or {}
+    mc_dt = _parse_utc(mod_cd.get(model_name))
+    if mc_dt and mc_dt > now:
         return False
+    if not mod_cd:
+        cd_dt = _parse_utc(rec.get("cooldown_until"))
+        if cd_dt and cd_dt > now:
+            return False
     mod_ex = rec.get("model_exhausted_until") or {}
     m_dt = _parse_utc(mod_ex.get(model_name))
     if m_dt and m_dt > now:
@@ -346,12 +351,20 @@ def get_quota_summary(base_dir: Path | str | None = ".") -> Dict[str, Any]:
             rec = (ledger.get("keys") or {}).get(name) or {}
             ex_dt = _parse_utc(rec.get("exhausted_until"))
             cd_dt = _parse_utc(rec.get("cooldown_until"))
+            has_mod_ex = any(
+                (dt is not None and dt > now)
+                for dt in (_parse_utc(v) for v in (rec.get("model_exhausted_until") or {}).values())
+            )
+            has_mod_cd = any(
+                (dt is not None and dt > now)
+                for dt in (_parse_utc(v) for v in (rec.get("model_cooldown_until") or {}).values())
+            )
             calls = int(rec.get("daily_calls") or 0)
             total_calls += calls
-            if ex_dt and ex_dt > now:
+            if (ex_dt and ex_dt > now) or has_mod_ex:
                 status = "exhausted"
                 exhausted += 1
-            elif cd_dt and cd_dt > now:
+            elif (cd_dt and cd_dt > now) or has_mod_cd:
                 status = "cooldown"
                 cooled += 1
             elif name in slot_map:
@@ -388,7 +401,7 @@ def call_gemini_raw(
     *,
     scope: str,
     prompt: str,
-    models: Sequence[str] = ("gemini-4-hydrogen", "gemini-2.5-flash", "gemini-2.0-flash"),
+    models: Sequence[str] = ("gemini-2.5-flash", "gemini-2.5-flash-lite", "gemini-2.0-flash"),
     temperature: float = 0.2,
     response_mime_type: Optional[str] = None,
     tools: Optional[List[Any]] = None,
@@ -396,7 +409,7 @@ def call_gemini_raw(
 ) -> GeminiCallResult:
     """
     Execute a quota-aware Gemini generate_content call across all 13 keys.
-    Exhausted or rate-limited keys are cooled down immediately and never retried on model fallbacks.
+    Per-model isolation: rate-limits or 503s on one model never block fallback models on the same key.
     """
     slots = get_ordered_key_slots(scope, base_dir=base_dir)
     if not slots:
@@ -410,17 +423,18 @@ def call_gemini_raw(
 
     unique_models = list(dict.fromkeys([m for m in models if m]))
     unavailable_models: set[str] = set()
-    failed_slots_this_call: set[str] = set()
+    failed_slots_by_model: Dict[str, set[str]] = {}
     per_key_errors: List[Dict[str, str]] = []
     attempts = 0
-    max_attempts = max(14, len(slots) + 4)
+    max_attempts = max(24, len(slots) * 2)
     saw_quota_exhaustion = False
 
     for model_name in unique_models:
         if model_name in unavailable_models or attempts >= max_attempts:
             continue
+        failed_for_model = failed_slots_by_model.setdefault(model_name, set())
         for slot in slots:
-            if slot.slot in failed_slots_this_call or attempts >= max_attempts:
+            if slot.slot in failed_for_model or attempts >= max_attempts:
                 continue
             with _POOL_LOCK:
                 ledger = _load_quota_ledger(base_dir)
@@ -428,8 +442,8 @@ def call_gemini_raw(
                 if not _is_slot_available_for_model(rec, model_name, _utc_now()):
                     continue
 
-            max_transient_tries = 2
-            for try_idx in range(max_transient_tries):
+            max_transient_tries = 1
+            for _try_idx in range(max_transient_tries):
                 attempts += 1
                 try:
                     client = genai.Client(api_key=slot.secret)
@@ -479,16 +493,15 @@ def call_gemini_raw(
                         )
                         break
 
-                    if err_code == "TRANSIENT_ERROR" and try_idx == 0:
-                        time.sleep(0.5)
-                        continue
-
                     now = _utc_now()
-                    if is_daily or err_code in {"QUOTA_EXHAUSTED", "RATE_LIMIT_429", "AUTH_INVALID"}:
-                        saw_quota_exhaustion = saw_quota_exhaustion or is_daily or err_code == "RATE_LIMIT_429"
-                        failed_slots_this_call.add(slot.slot)
+                    if err_code == "AUTH_INVALID":
+                        # Key itself is invalid across all models
+                        for m in unique_models:
+                            failed_slots_by_model.setdefault(m, set()).add(slot.slot)
                     else:
-                        failed_slots_this_call.add(slot.slot)
+                        if is_daily or err_code == "RATE_LIMIT_429":
+                            saw_quota_exhaustion = saw_quota_exhaustion or is_daily
+                        failed_for_model.add(slot.slot)
 
                     with _POOL_LOCK:
                         ledger = _load_quota_ledger(base_dir)
@@ -498,11 +511,12 @@ def call_gemini_raw(
                         rec["last_error"] = short_msg
                         rec["consecutive_errors"] = int(rec.get("consecutive_errors") or 0) + 1
                         until_iso = _iso_utc(now + timedelta(seconds=cd_secs))
-                        if is_daily:
-                            rec.setdefault("model_exhausted_until", {})[model_name] = until_iso
+                        if err_code == "AUTH_INVALID":
                             rec["exhausted_until"] = until_iso
+                        elif is_daily:
+                            rec.setdefault("model_exhausted_until", {})[model_name] = until_iso
                         else:
-                            rec["cooldown_until"] = until_iso
+                            rec.setdefault("model_cooldown_until", {})[model_name] = until_iso
                         _save_quota_ledger(ledger, base_dir)
 
                     per_key_errors.append(
@@ -543,7 +557,7 @@ def call_gemini_json(
     *,
     scope: str,
     prompt: str,
-    models: Sequence[str] = ("gemini-4-hydrogen", "gemini-2.5-flash", "gemini-2.0-flash"),
+    models: Sequence[str] = ("gemini-2.5-flash", "gemini-2.5-flash-lite", "gemini-2.0-flash"),
     temperature: float = 0.25,
     tools: Optional[List[Any]] = None,
     base_dir: Path | str | None = ".",

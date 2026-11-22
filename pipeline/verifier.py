@@ -62,19 +62,62 @@ _CROSS_LINGUAL_TOPIC_PAIRS: Tuple[Tuple[Tuple[str, ...], Tuple[str, ...]], ...] 
     (("关税", "贸易战"), ("tariff", "trade")),
 )
 
-_GOOGLE_NEWS_PREFIX_RE = re.compile(r"google\s*news", re.I)
+_GOOGLE_NEWS_PREFIX_RE = re.compile(r"(?:google\s*news|综合资讯|news\s*wire)", re.I)
+_HOST_PUBLISHER_MAP = {
+    "reuters.com": "路透社",
+    "bloomberg.com": "彭博社",
+    "wsj.com": "华尔街日报",
+    "ft.com": "金融时报",
+    "cnbc.com": "CNBC",
+    "bbc.com": "BBC",
+    "bbc.co.uk": "BBC",
+    "scmp.com": "南华早报",
+    "theverge.com": "The Verge",
+    "techcrunch.com": "TechCrunch",
+    "arstechnica.com": "Ars Technica",
+    "wired.com": "WIRED",
+    "apnews.com": "美联社",
+    "nytimes.com": "纽约时报",
+    "cls.cn": "财联社",
+    "wallstreetcn.com": "华尔街见闻",
+    "ithome.com": "IT之家",
+    "36kr.com": "36氪",
+    "yicai.com": "第一财经",
+    "caixin.com": "财新",
+    "stcn.com": "证券时报",
+    "openai.com": "OpenAI 官方",
+    "anthropic.com": "Anthropic 官方",
+    "deepmind.google": "Google DeepMind",
+    "blog.google": "Google 官方博客",
+    "huggingface.co": "Hugging Face 官方",
+    "github.com": "GitHub 官方",
+    "blogs.nvidia.com": "NVIDIA 官方",
+    "sec.gov": "SEC 官方披露",
+}
 
 
-def _clean_source_display_name(raw_name: Any, fallback_title: str = "") -> str:
+def _clean_source_display_name(raw_name: Any, fallback_title: str = "", url: str = "") -> str:
     s = str(raw_name or "").strip()
     if s and not _GOOGLE_NEWS_PREFIX_RE.search(s):
         return s
-    m = re.search(r"\s[-–—|｜]\s([^|\-–—｜]{2,36})$", str(fallback_title or "").strip())
+    m = re.search(r"\s[-–—|｜丨]\s([^|\-–—｜丨]{2,36})$", str(fallback_title or "").strip())
     if m:
         cand = m.group(1).strip()
         if cand and not _GOOGLE_NEWS_PREFIX_RE.search(cand) and not cand.isdigit():
             return cand
-    return "综合资讯"
+    if url:
+        try:
+            from urllib.parse import urlparse
+
+            host = (urlparse(str(url)).hostname or "").lower().removeprefix("www.")
+            if host and "google.com" not in host:
+                for dom, label in _HOST_PUBLISHER_MAP.items():
+                    if host == dom or host.endswith(f".{dom}"):
+                        return label
+                return host
+        except Exception:
+            pass
+    return "权威报道"
 
 
 def _has_cross_lingual_match(event_text: str, raw_text: str) -> bool:
@@ -287,6 +330,7 @@ def verify_and_enrich_event(
         pub_name = _clean_source_display_name(
             raw_item.get("publisher_name") or raw_item.get("source_name") or raw_item.get("source_id"),
             item_title or title,
+            canon_url,
         )
         return {
             "item_id": raw_item["item_id"],
@@ -372,7 +416,11 @@ def verify_and_enrich_event(
                 continue
             seen_item_ids.add(item_id)
             pre_title = repair_mojibake(str(s.get("title") or ""))
-            pub_name = _clean_source_display_name(s.get("publisher_name") or s.get("source_name") or sid, pre_title or title)
+            pub_name = _clean_source_display_name(
+                s.get("publisher_name") or s.get("source_name") or sid,
+                pre_title or title,
+                canon_url,
+            )
             valid_sources.append(
                 {
                     "item_id": item_id,
@@ -490,9 +538,14 @@ def verify_and_enrich_event(
     matched_canonicals = {m["canonical_name"] for m in matched_entity_objs}
     cleaned_entities: List[str] = []
     seen_ent_norm: set[str] = set()
+    _NOISY_ENTITY_RE = re.compile(
+        r"^(?:国内|海外|全球|国际|部分|多家|相关|主要|权威|一线|头部)?(?:黄金珠宝品牌|商业银行|金融科技公司|金融机构|科技公司|互联网大厂|车企|制造商|供应链|相关企业|市场分析师|行业人士|地方政府|监管机构)$"
+    )
     for raw_e in entities_list:
         es = str(raw_e or "").strip()
-        if not es:
+        if not es or len(es) > 22:
+            continue
+        if _NOISY_ENTITY_RE.match(es) or (es.startswith(("国内", "多家", "部分", "相关")) and len(es) >= 6):
             continue
         if es in canonical_name_set and es not in matched_canonicals:
             continue

@@ -638,17 +638,70 @@ def _build_domain_scenario(
             }
         if any(k in t for k in ("反蒸馏", "蒸馏", "思考链提取", "黎曼")):
             return None
-        if any(k in t for k in ("甲骨文", "openai", "gemini", "混元", "千问", "deepseek", "llm")):
+        if any(k in t for k in ("甲骨文", "openai", "gpt", "gemini", "anthropic", "claude", "混元", "千问", "qwen", "deepseek", "llm")):
             is_infra = "甲骨文" in t or "筹足" in t or "合同" in t or "自由现金流" in t
             if not is_infra:
+                title_short = str(title or "").strip()[:32]
+                if "openai" in t or "gpt" in t:
+                    eco_tag = "OpenAI 新模型发布与推理生态催化"
+                    eco_tag_en = "OpenAI Model Launch & Inference Ecosystem"
+                    tickers = {"MSFT": 0.48, "NVDA": 0.42, "QQQ": 0.28}
+                    quotes_list = ["MSFT", "NVDA", "QQQ"]
+                    us_sector = "Azure 与 AI 算力核心生态 (MSFT / NVDA)"
+                    us_sector_en = "Azure & AI Compute Ecosystem (MSFT/NVDA)"
+                    us_logic = f"围绕「{title_short}」的模型调用需求，直接强化微软云企业 Copilot 商业化与 Nvidia GPU 推理算力消耗。"
+                    hk_sector = "AI 应用入口与云计算映射 (HSTECH / 00700)"
+                    hk_logic = f"参考 OpenAI 最新模型定价与推理形态，映射港股互联网平台端侧 AI 与 API 工具链重估。"
+                    a_sector = "A股端侧 Agent 与语音/多模态软件"
+                    a_logic = f"对标「{title_short}」聚焦实时交互与编码自动化，催化国内 SaaS 与多模态应用厂商跟进升级。"
+                    one_liner = f"围绕「{title_short}」，OpenAI 新代际能力迭代推动实时 Agent 与编程工具 API 消耗扩张，直接映射微软云生态及 GPU 推理算力链。"
+                elif "gemini" in t or "google" in t or "谷歌" in t or "deepmind" in t:
+                    eco_tag = "Google Gemini 架构迭代与自研 TPU 生态"
+                    eco_tag_en = "Google Gemini Iteration & TPU Compute Stack"
+                    tickers = {"GOOGL": 0.55, "AVGO": 0.38, "QQQ": 0.28}
+                    quotes_list = ["GOOGL", "AVGO", "QQQ"]
+                    us_sector = "Google 与定制 ASIC/TPU 算力链 (GOOGL / AVGO)"
+                    us_sector_en = "Google & Custom TPU Stack (GOOGL/AVGO)"
+                    us_logic = f"事件「{title_short}」验证谷歌全栈模型效率，边际利好搜索广告变现防线及博通 (AVGO) 定制 TPU 订单预期。"
+                    hk_sector = "多模态消费应用与移动生态 (HSTECH)"
+                    hk_logic = f"谷歌模型轻量化与原生多模态升级，提振港股互联网端侧分发与海外流量变现估值。"
+                    a_sector = "A股高密度光模块 / ASIC 测试与端侧软件"
+                    a_logic = f"跟随「{title_short}」高带宽低延迟推理方向，映射光通信与端侧硬件供应链需求。"
+                    one_liner = f"基于「{title_short}」，谷歌深耕端云协同推理效率与原生 TPU 栈，对 GOOGL 搜索/云业务及定制芯片供应链形成直接结构性支撑。"
+                elif "anthropic" in t or "claude" in t:
+                    eco_tag = "Anthropic 企业级 Agent 与云托管竞合"
+                    eco_tag_en = "Anthropic Enterprise Agent & Cloud Hosting"
+                    tickers = {"AMZN": 0.45, "GOOGL": 0.35, "QQQ": 0.28}
+                    quotes_list = ["AMZN", "GOOGL", "QQQ"]
+                    us_sector = "AWS / 云代码 Agent 托管生态 (AMZN / GOOGL)"
+                    us_sector_en = "AWS & Enterprise Coding AI Stack (AMZN/GOOGL)"
+                    us_logic = f"「{title_short}」反映企业级代码工作流与安全托管渗透提升，直接带动主要股东及云宿主 AWS 调用量。"
+                    hk_sector = "企业软件与港股云计算龙头 (HSTECH)"
+                    hk_logic = f"企业级模型定价锚上移，缓解市场对国内云厂商企业订阅客单价受压的担忧。"
+                    a_sector = "A股代码辅助 / 企业知识库与国产大模型"
+                    a_logic = f"企业级复杂编码与合规托管需求升温，利好国内垂直行业 Agent 服务商。"
+                    one_liner = f"针对「{title_short}」，企业级 AI 工作流渗透深化推动云托管刚性支出增长，映射到 AWS/GCP 企业订阅与垂类 Agent 软件。"
+                else:
+                    eco_tag = "国产与开源大模型性能追赶催化"
+                    eco_tag_en = "China & Open-Weight Model Catch-Up"
+                    tickers = {"09988.HK": 0.45, "00700.HK": 0.42, "HSTECH.HK": 0.4}
+                    quotes_list = ["09988.HK", "00700.HK", "HSTECH.HK"]
+                    us_sector = "全球推理芯片与云基准估值 (NVDA / QQQ)"
+                    us_sector_en = "Global Inference Compute & Cloud Benchmarks"
+                    us_logic = f"开源与低成本模型在「{title_short}」展现更高性价比，促使海外云厂商加快高阶模型差异化投入。"
+                    hk_sector = "国内开源模型底座与云平台 (09988 / 00700)"
+                    hk_logic = f"「{title_short}」降低开发者企业级微调门槛，直接强化港股云厂商 MaaS 平台调用粘性。"
+                    a_sector = "A股国产算力卡 / 推理服务器与本地部署软件"
+                    a_logic = f"开源权重轻量化加速政企与金融机构私有化部署落地，提振国产推理一体机与算力需求。"
+                    one_liner = f"受「{title_short}」催化，高性价比模型迭代持续拉低私有化部署与 API 推理成本，重点利好国内云平台与本地算力部署链。"
                 return {
                     "rule_id": "ai_model_launch_catalyst",
-                    "tag": "旗舰大模型迭代与生态扩展",
-                    "tag_en": "Flagship AI Model Release & Ecosystem",
+                    "tag": eco_tag,
+                    "tag_en": eco_tag_en,
                     "polarity": "bullish",
                     "intensity": 3,
-                    "one_liner": "新一代旗舰推理/代码模型正式落地，加速端侧智能体与企业级开发工具调用需求，边际利好大模型平台与应用生态。",
-                    "one_liner_en": "New flagship reasoning & coding models accelerate agent workflows and AI software monetization.",
+                    "one_liner": one_liner,
+                    "one_liner_en": f"Key AI capability catalyst around '{title_short}' expands enterprise API & inference monetization.",
                     "sample_basis": {
                         "sample_n": 15,
                         "volatility_pct": 2.9,
@@ -657,14 +710,14 @@ def _build_domain_scenario(
                         "confidence_label": "中高置信（生态应用催化）",
                         "confidence_label_en": "Moderate-High (Model Ecosystem Catalyst)",
                     },
-                    "affected_tickers": {"GOOGL": 0.45, "QQQ": 0.3, "00700.HK": 0.4, "HSTECH.HK": 0.35},
-                    "realized_quotes": _quote_snapshot(["QQQ", "00700.HK", "HSTECH.HK"]),
+                    "affected_tickers": tickers,
+                    "realized_quotes": _quote_snapshot(quotes_list),
                     "bars": [
-                        _bar("美股", "AI 应用开发与云平台生态 (GOOGL / MSFT)", "US AI Platforms & Dev Ecosystem", 0.9, 2.7, "旗舰模型能力升级带动开发者 API 与 Agent 订阅增长预期。", "Model upgrades expand developer API consumption and Agent adoption.", 1.0, "QQQ"),
-                        _bar("港股", "大模型入口与云软件生态 (00700 / HSTECH)", "HKEX AI Ecosystem & Platforms", 0.8, 2.5, "开源/商用模型性能跃迁提升国内平台端侧融合预期。", "Stronger foundation models lift platform ecosystem monetization odds.", 1.0, "HSTECH.HK"),
-                        _bar("A股", "AI 应用 / Agent 工作流软件", "A-Share AI Apps & Agent Workflows", 1.1, 3.1, "模型能力下放拓宽企业自动化场景落地节奏。", "Expanded model capabilities speed enterprise workflow automation.", 1.0),
+                        _bar("美股", us_sector, us_sector_en, 0.9, 2.7, us_logic, "Model ecosystem upgrades expand enterprise cloud consumption.", 1.0, quotes_list[0]),
+                        _bar("港股", hk_sector, "HKEX AI Ecosystem & Cloud Platforms", 0.8, 2.5, hk_logic, "Model performance progress supports platform ecosystem monetization.", 1.0, "HSTECH.HK"),
+                        _bar("A股", a_sector, "A-Share AI Apps & Local Compute", 1.1, 3.1, a_logic, "Expanded capabilities accelerate domestic enterprise adoption.", 1.0),
                     ],
-                    "if_then": [{"cond": "若第三方基准测试与企业付费转化数据超预期", "result": "AI 应用与平台生态保持结构性活跃", "tone": "bullish"}],
+                    "if_then": [{"cond": "若第三方基准测试与企业付费转化数据超预期", "result": "对应云平台与推理应用链保持结构性活跃", "tone": "bullish"}],
                     "milestones": [{"date": "未来 2~4 周", "status": "upcoming", "label": "观察开发者 API 活跃度与企业接入量反馈"}],
                 }
             return {

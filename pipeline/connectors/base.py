@@ -144,6 +144,7 @@ class FetchResult:
     from_cache: bool = False
     error_message: Optional[str] = None
     json_data: Any = None
+    final_url: Optional[str] = None
 
 
 def polite_get(
@@ -208,6 +209,7 @@ def polite_get(
                     text=decoded_text,
                     latency_ms=latency_ms,
                     json_data=parsed_json,
+                    final_url=str(getattr(resp, "url", "") or "").strip() or None,
                 )
 
             if resp.status_code == 429:

@@ -26,9 +26,10 @@ _PRERELEASE_TAG_RE = re.compile(r"(?:rc\d*|alpha|beta|preview|dev\d*)\b", re.I)
 
 
 _RAW_NOISE_LINE_RE = re.compile(
-    r"^(?:What's Changed|Highlights|TL;DR|Full Changelog(?:\s*:.*)?|Backwards Incompatible Changes|Deprecations|Features|New models|"
+    r"^(?:What's Changed|Highlights|TL;DR|Bug Fixes|Release Notes|New Features|Full Changelog(?:\s*:.*)?|Website(?:\s*:.*)?|Attestations(?:\s*:.*)?|Checksums(?:\s*:.*)?|Backwards Incompatible Changes|Deprecations|Features|New models|"
     r"\|.*\|.*|.*\b\d[\d,]*\s+(?:commits?|PRs?|contributors?)\b.*|.*\bby\s+@\S+.*|.*@(?:dependabot|github-actions)\[bot\].*|"
-    r"(?:model|feat|fix|chore|refactor|ci|docs|test|build)\s*:\s*.*|\S+\s+https?:\/\/github\.com\/.*)$",
+    r"(?:model|feat|fix|chore|refactor|ci|docs|test|build|perf|style|sycl|cuda|metal|vulkan|rpc|ggml|api|llm|cmd(?:/[a-z]+)?)\s*[:：].*|\S+\s+https?:\/\/github\.com\/.*|"
+    r"[A-Za-z][A-Za-z0-9 _/-]{1,28}\s*:\s*)$",
     re.I,
 )
 
@@ -37,17 +38,31 @@ def _clean_notes(body: Optional[str], max_len: int = 320) -> str:
     if not body:
         return ""
     stripped = re.sub(r"<[^>]+>", " ", body)
+    # Strip linked markdown badges first: [![alt](img)](url)
+    stripped = re.sub(r"\[\s*!\[[^\]]*\]\([^)]*\)\s*\]\([^)]*\)", " ", stripped)
+    stripped = re.sub(r"!\[[^\]]*\]\([^)]*\)", " ", stripped)
     stripped = re.sub(r"\[([^\]]+)\]\([^)]+\)", r"\1", stripped)
     stripped = re.sub(r"[*`]+", "", stripped)
     lines = []
     for ln in stripped.splitlines():
         clean_ln = re.sub(r"\s+", " ", ln).strip().lstrip("#*-：:;； ").strip()
+        clean_ln = re.sub(r"\s*\(#?\d{3,6}\)\s*$", "", clean_ln).strip()
         if len(clean_ln) <= 5 or _RAW_NOISE_LINE_RE.match(clean_ln):
             continue
-        if re.search(r"\(\d{4,6}\)\s*$", clean_ln) and re.match(r"^(?:model|feat|fix|chore|api|eval|ggml|cuda|metal)\b", clean_ln, re.I):
+        if re.match(r"^[A-Za-z][A-Za-z0-9 _/-]{1,24}\s*[:：]\s*$", clean_ln):
             continue
-        lines.append(clean_ln)
+        if re.match(r"^(?:sycl|cuda|metal|vulkan|rpc|ggml|model|feat|fix|chore|api|eval|llm|cmd)\b[^:：]{0,20}[:：]", clean_ln, re.I):
+            continue
+        # Clean stray unmatched closing brackets at line boundaries
+        if clean_ln.count("）") > clean_ln.count("（") and clean_ln.endswith(("）", "）。")):
+            clean_ln = clean_ln.rstrip("。").rstrip("）").strip()
+        if clean_ln.count(")") > clean_ln.count("(") and clean_ln.endswith((")", ").")):
+            clean_ln = clean_ln.rstrip(".").rstrip(")").strip()
+        if len(clean_ln) > 5:
+            lines.append(clean_ln)
     joined = "；".join(lines[:4]).lstrip("；;:： ")
+    if joined.count("）") > joined.count("（") and joined.endswith(("）", "）。")):
+        joined = joined.rstrip("。").rstrip("）").strip()
     if len(joined) > max_len:
         return joined[: max_len - 1].rstrip() + "…"
     return joined
@@ -96,7 +111,10 @@ def fetch_github_releases(
         if res.status == "not_modified_304":
             not_modified_hits += 1
             if repo in prev_tool_by_repo:
-                tools.append(prev_tool_by_repo[repo])
+                prev_t = dict(prev_tool_by_repo[repo])
+                if prev_t.get("summary"):
+                    prev_t["summary"] = _clean_notes(str(prev_t["summary"])) or "详见官方 Release 说明。"
+                tools.append(prev_t)
             for pit in prev_items_by_repo.get(repo, []):
                 pub_dt = parse_iso_datetime(pit.get("published_at")) if pit.get("published_at") else None
                 if pub_dt and (now_dt - pub_dt) <= timedelta(days=10):

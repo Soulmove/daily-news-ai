@@ -22,7 +22,18 @@ _CLEAN_RE = re.compile(r"[\s\W_]+", re.UNICODE)
 _ASCII_WORD_RE = re.compile(r"[a-z0-9]{2,}")
 _NUMBER_RE = re.compile(r"\d+(?:\.\d+)?%?")
 _FILING_PREFIX_RE = re.compile(r"^\[(SEC|HKEX|巨潮)\s+([^\]]+)\]", re.I)
-_DIGEST_LABEL_RE = re.compile(r"(?:早报|晚报|日报|午报|周报|一周要闻|热点速递|每日资讯)\s*[|｜:：]")
+_DIGEST_LABEL_RE = re.compile(r"(?:早报|晚报|日报|午报|周报|一周要闻|热点速递|每日资讯|晨报|夜报)\s*[|｜丨:：/]")
+_RAW_URL_TAIL_RE = re.compile(r"\s*[-–—|｜]?\s*https?://\S+|\s*[-–—|｜]?\s*\bwww\.[A-Za-z0-9.-]+\.[a-z]{2,}\S*", re.I)
+
+
+def strip_raw_urls_and_domain_tails(text: Optional[str]) -> str:
+    """Strip inline/trailing raw http URLs and bare www.domain tokens without mangling normal prose."""
+    s = str(text or "").strip()
+    if not s:
+        return ""
+    s = _RAW_URL_TAIL_RE.sub("", s)
+    s = re.sub(r"\s+[-–—|｜]+\s*$", "", s)
+    return re.sub(r"\s{2,}", " ", s).strip()
 _CORPORATE_ACTION_RE = re.compile(r"(?:大行评级|目标价|下调|上调|首予|买入评级|财报|营收|净利润|ipo|赴港|上市|提交.*文件|裁员|收购|退市)", re.I)
 _RATING_SUBJECT_RE = re.compile(r"(?:下调|上调|维持|首予|给予|重申)\s*([A-Za-z0-9\u4e00-\u9fff·]{2,14}?)(?:目标价|评级|买入|增持|减持)")
 _MULTI_EVENT_VERBS_RE = re.compile(
@@ -194,7 +205,9 @@ def is_omnibus_digest_title(title: str) -> bool:
         return False
     if _DIGEST_LABEL_RE.search(t):
         return True
-    segments = [seg.strip() for seg in re.split(r"[、；;|｜]+", t) if len(seg.strip()) >= 4]
+    if t.count("/") >= 2 and len(t) > 36:
+        return True
+    segments = [seg.strip() for seg in re.split(r"[、；;|｜丨/]+", t) if len(seg.strip()) >= 4]
     if len(segments) >= 2:
         from pipeline.entities import match_entities_with_reasons
 
@@ -503,6 +516,11 @@ def smart_truncate(text: str, max_len: int = 180) -> str:
     close_idx = max(cut.rfind("）"), cut.rfind(")"))
     if open_idx > close_idx and open_idx >= min(3, min_pos):
         cut = cut[:open_idx].rstrip()
+    # Avoid orphan closing parenthesis when truncating or stripping prefixes
+    if cut.count("）") > cut.count("（") and cut.endswith("）"):
+        cut = cut[:-1].rstrip("。，；： ")
+    if cut.count(")") > cut.count("(") and cut.endswith(")"):
+        cut = cut[:-1].rstrip(".,;: ")
     # Avoid breaking inside a numeric decimal like "19.2%" at the very edge
     cut = re.sub(r"\d+\.$", lambda m: cut[m.start() : m.end() - 1] if m.start() > 0 else "", cut).rstrip()
     clause_m = re.match(r"^(.+[，,;；：:\s])[^，,;；：:\s]{1,12}$", cut)
