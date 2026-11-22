@@ -78,7 +78,11 @@ _GENERIC_NEWS_TOKS = {
 }
 
 _WIRE_DATELINE_RE = re.compile(
-    r"^(?:【[^】]{1,20}】\s*|(?:财联社|新华网|新华社|央视新闻|人民网|金十数据|法布财经|格隆汇)\s*(?:\d{1,2}月\d{1,2}日)?电[，,：:\s]*(?:据[^，,：:]{2,22}(?:消息|报道|称)[，,：:\s]*)?|(?:外电|快讯|报道称|独家|最新|消息称|外媒称|官方|欧洲地中海地震中心|美国地质调查局(?:（USGS）)?)\s*[:：]\s*)"
+    r"^(?:【[^】]{1,20}】\s*|"
+    r"(?:财联社|新华网|新华社|央视新闻|人民网|金十数据|法布财经|格隆汇)\s*(?:\d{1,2}月\d{1,2}日)?电[，,：:\s]*(?:据[^，,：:]{2,22}(?:消息|报道|称)[，,：:\s]*)?|"
+    r"(?:据)?(?:俄罗斯卫星网|卫星通讯社|伊朗塔斯尼姆通讯社|中国地震台网(?:正式测定)?)(?:报道)?\s*[：:，,\s]*|"
+    r"\d{1,2}月\d{1,2}日\d{1,2}时(?:\d{1,2}分)?[，,\s]*(?:在)?|"
+    r"(?:外电|快讯|报道称|独家|最新|消息称|外媒称|官方|欧洲地中海地震中心|美国地质调查局(?:（USGS）)?)\s*[:：]\s*)"
 )
 
 _CATEGORY_BADGE_MAP = {
@@ -318,15 +322,20 @@ def _dedupe_timeline_nodes(nodes: List[dict], *, max_nodes: int = 60) -> List[di
 
 def _safe_clip_headline(text: str, max_len: int = 36) -> str:
     txt = str(text or "").strip().rstrip("。！？!?，；;：:…‘“(")
-    if len(txt) <= max_len:
-        return txt
-    # Prefer clean boundary for English vs Chinese so we never chop mid-word or leave dangling quotes
-    sub = txt[:max_len]
-    if sum(1 for c in sub if "\u4e00" <= c <= "\u9fff") < 4:
-        ws = sub.rfind(" ")
-        if ws >= 12:
-            sub = sub[:ws]
-    return sub.rstrip("，；：、‘“(- ").rstrip("。！？!?….")
+    if len(txt) > max_len:
+        # Prefer clean boundary for English vs Chinese so we never chop mid-word or leave dangling quotes
+        sub = txt[:max_len]
+        if sum(1 for c in sub if "\u4e00" <= c <= "\u9fff") < 4:
+            ws = sub.rfind(" ")
+            if ws >= 12:
+                sub = sub[:ws]
+        txt = sub
+    # Strip any unclosed opening paren left behind by clipping (e.g. "石棉县（北纬")
+    if txt.count("（") > txt.count("）"):
+        txt = re.sub(r"（[^）]*$", "", txt)
+    if txt.count("(") > txt.count(")"):
+        txt = re.sub(r"\([^)]*$", "", txt)
+    return txt.rstrip("，；：、‘“(- ").rstrip("。！？!?….")
 
 
 def _clean_headline_phrase(raw_title: str) -> str:

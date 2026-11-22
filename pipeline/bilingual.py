@@ -868,6 +868,15 @@ def enrich_bilingual_v3_records(
     return changed
 
 
+def _is_title_echo_summary(title: str, summary: str) -> bool:
+    clean_s = re.sub(r"\s*[A-Za-z0-9-]+\.(?:ai|com|org|io|net|cn|co|dev|app)\s*$", "", str(summary or "").strip(), flags=re.I)
+    nt = re.sub(r"[\W_]+", "", str(title or "").strip()).lower()
+    ns = re.sub(r"[\W_]+", "", clean_s).lower()
+    if not ns:
+        return True
+    return ns == nt or (len(nt) >= 8 and ns.startswith(nt[:12]))
+
+
 def enrich_zh_ai_progress(doc: Dict[str, Any], *, base_dir: Path | str = ".") -> None:
     """Translate English titles/summaries on ai_progress.json items into concise Chinese using persistent cache."""
     if not isinstance(doc, dict):
@@ -886,6 +895,9 @@ def enrich_zh_ai_progress(doc: Dict[str, Any], *, base_dir: Path | str = ".") ->
                 if not raw:
                     continue
                 if src_field == "what_it_does_en":
+                    if _is_title_echo_summary(str(it.get("title_en") or it.get("title") or ""), raw):
+                        it["what_it_does_en"] = ""
+                        continue
                     # Only translate what_it_does_en if Chinese what_it_does is missing or English
                     cur_zh = str(it.get("what_it_does") or "").strip()
                     if cur_zh and not is_mostly_english(cur_zh):
@@ -897,6 +909,9 @@ def enrich_zh_ai_progress(doc: Dict[str, Any], *, base_dir: Path | str = ".") ->
                 else:
                     target_field = src_field
                     raw_clean = _STRIP_TAG_PREFIX_RE.sub("", raw).strip()
+                    if target_field == "what_it_does" and _is_title_echo_summary(str(it.get("title") or ""), raw_clean):
+                        it["what_it_does"] = ""
+                        continue
                     if not is_mostly_english(raw_clean):
                         continue
                     en_k = "title_en" if target_field == "title" else f"{target_field}_en"
@@ -911,21 +926,38 @@ def enrich_zh_ai_progress(doc: Dict[str, Any], *, base_dir: Path | str = ".") ->
         if isinstance(comp, dict):
             _collect(comp.get("items"))
 
-    if not refs:
-        return
-    translated, _, _ = _translate_texts_with_pipeline(
-        [txt for _, _, txt in refs[:80]],
-        "zh",
-        max_retries=1,
-        backoff_base=0.3,
-        chunk_size=24,
-        base_dir=base_dir,
-    )
-    if not translated:
-        return
-    for pos, (it, field_name, _orig) in enumerate(refs[:80]):
-        if pos < len(translated) and translated[pos]:
-            it[field_name] = translated[pos]
+    if refs:
+        translated, _, _ = _translate_texts_with_pipeline(
+            [txt for _, _, txt in refs[:80]],
+            "zh",
+            max_retries=1,
+            backoff_base=0.3,
+            chunk_size=24,
+            base_dir=base_dir,
+        )
+        if translated:
+            for pos, (it, field_name, _orig) in enumerate(refs[:80]):
+                if pos < len(translated) and translated[pos]:
+                    val_zh = translated[pos]
+                    if field_name == "what_it_does" and _is_title_echo_summary(str(it.get("title") or ""), val_zh):
+                        it[field_name] = ""
+                    else:
+                        it[field_name] = val_zh
+
+    def _scrub_echo(item_list: Any) -> None:
+        if not isinstance(item_list, list):
+            return
+        for it in item_list:
+            if not isinstance(it, dict):
+                continue
+            w = str(it.get("what_it_does") or "").strip()
+            if w and _is_title_echo_summary(str(it.get("title") or ""), w):
+                it["what_it_does"] = ""
+
+    _scrub_echo(doc.get("timeline"))
+    for comp in doc.get("companies") or []:
+        if isinstance(comp, dict):
+            _scrub_echo(comp.get("items"))
 
 
 def enrich_zh_tech_tools(tools: List[Dict[str, Any]], *, base_dir: Path | str = ".") -> None:
