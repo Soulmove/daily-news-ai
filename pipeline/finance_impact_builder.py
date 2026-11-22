@@ -14,6 +14,7 @@ from __future__ import annotations
 import re
 from typing import Any, Dict, List, Optional, Tuple
 
+from .finance_deep_research import customize_event_copy_and_basis, enrich_card_deep_research
 from .time_utils import now_shanghai, to_iso_shanghai
 
 _NEGATIVE_SHOCK_RE = re.compile(
@@ -27,7 +28,16 @@ _NEGATIVE_SHOCK_RE = re.compile(
 _POSITIVE_SHOCK_RE = re.compile(
     r"(?:大涨|飙升|暴涨|涨超|创纪录IPO|筹足.*资金|自由现金流超|"
     r"降息|鸽派|达成.*和平|停火协议|和平协议|和平宣言|安全保障|"
-    r"批准.*出口|缓和|突破|正式开源|全面开放|洽购)",
+    r"批准.*出口|缓和|突破|正式开源|全面开放|洽购|"
+    r"融资保证金.*降至|下调.*保证金|增量资金|稳市组合拳|免收.*费用|做市商|"
+    r"趋近历史底部|历史底部|回购股份|拟以.*亿元.*回购|再次点火|产能被锁定|供货保障)",
+    re.IGNORECASE,
+)
+
+_LOW_IMPACT_TECH_CHATTER_RE = re.compile(
+    r"(?:artificial\s*analysis|回答更简短|透明度低于|提示词技巧|prompt\s*技巧|使用技巧|"
+    r"测评对比|评测.*简短|盲测|网友实测|解散机器人团队|调查问卷|优惠上线|9\.9元|"
+    r"输入法.*内测|屏蔽截图|阻止.*读取)",
     re.IGNORECASE,
 )
 
@@ -69,6 +79,14 @@ def _bar(
     s_lo, s_hi = _scale_band(lo, hi, factor)
     mid = (s_lo + s_hi) / 2.0
     direction = "positive" if s_lo >= -0.2 and mid > 0 else ("negative" if s_hi <= 0.2 and mid < 0 else "mixed")
+    default_proxy_by_market = {
+        "A股": "510300.SH",
+        "美股": "QQQ",
+        "港股": "HSTECH.HK",
+        "亚太": "000660.KS",
+        "台股": "TSM",
+    }
+    resolved_proxy = str(proxy_ticker or "").strip() or default_proxy_by_market.get(market, "510300.SH")
     return {
         "market": market,
         "sector": sector,
@@ -76,7 +94,7 @@ def _bar(
         "pct_low": s_lo,
         "pct_high": s_hi,
         "direction": direction,
-        "proxy_ticker": proxy_ticker,
+        "proxy_ticker": resolved_proxy,
         "logic": logic,
         "logic_en": logic_en,
     }
@@ -114,7 +132,254 @@ def _build_domain_scenario(
                 )
         return out
 
-    # 1. Separate primary/IPO AI valuation pullback (Anthropic -8.5% / IPO slide) vs flagship chip equity crash
+    # 0a. Early materiality gate: block 3rd-party AI chatter/surveys/benchmarks that have zero capital-market weight
+    if _LOW_IMPACT_TECH_CHATTER_RE.search(tl):
+        return None
+
+    # 0b. A-Share Mainland Capital-Market Reform (Margin ratio cut / 做市商 / 降费 / 降准降息 / 印花税)
+    if (
+        re.search(
+            r"沪深北交易所|沪深交易所|融资保证金比例|下调.*保证金|两融.*保证金|做市商规则|免收.*上市.*费|减免费用|印花税|平准基金|稳市组合拳",
+            text,
+            re.I,
+        )
+        and "台湾" not in tl
+        and "台湾地区" not in tl
+    ):
+        is_margin_4000 = "保证金" in text or "4000亿" in text or "80%" in text
+        return {
+            "rule_id": "a_share_capital_market_reform",
+            "tag": "A股两融松绑与资本市场稳市组合拳" if is_margin_4000 else "双创做市商机制优化与市场流动性改革",
+            "tag_en": "A-Share Margin Ratio Cut & Market Stabilization" if is_margin_4000 else "STAR/ChiNext Market-Maker Liquidity Reform",
+            "polarity": "bullish",
+            "intensity": 5 if is_margin_4000 else 4,
+            "one_liner": (
+                "沪深北交易所将融资保证金比例下限降至 80%（测算释放近 4000 亿潜在增量杠杆资金），叠加做市商扩容与减免费用组合拳，直接利好两融高占比券商及金融 IT。"
+                if is_margin_4000
+                else "沪深交易所推动修订科创板/创业板做市商规则，改善双创科技成长股盘口流动性与估值溢价，直接催化做市业务头部券商。"
+            ),
+            "one_liner_en": "Mainland exchanges lower margin collateral floors and ease market-maker rules, directly lifting brokers, fintech, and STAR/ChiNext liquidity.",
+            "sample_basis": {
+                "sample_n": 18,
+                "volatility_pct": 3.4,
+                "volatility_source": "A股券商/两融制度红利历史样本",
+                "horizon": "1~5 个交易日",
+                "confidence_label": "高置信（直接作用于场内两融与交易量）",
+                "confidence_label_en": "High (Direct Margin & Turnover Catalyst)",
+            },
+            "affected_tickers": {"600030.SH": 0.95, "601688.SH": 0.85, "300059.SZ": 0.95, "300033.SZ": 0.9, "510300.SH": 0.65, "HSTECH.HK": 0.4},
+            "realized_quotes": _quote_snapshot(["000001.SH", "HSTECH.HK", "HSI.HK"]),
+            "bars": [
+                _bar("A股", "头部两融券商与金融 IT (中信 / 东财 / 同花顺)", "A-Share Brokers & Fintech (600030/300059)", 2.8, 6.4, "融资保证金下调直接扩大存量保证金可买融资额度 25%，交投放大最利好券商与互联网交易端。", "Lower margin collateral requirements expand leverage capacity by 25%, boosting brokers & fintech.", 1.0, "600030.SH"),
+                _bar("A股", "科创板 / 创业板高弹性核心成长", "A-Share STAR & ChiNext Growth", 1.5, 4.2, "两融活跃度提升与做市商门槛放宽优先改善双创科技板块成交深度。", "Margin expansion & relaxed market-maker thresholds support STAR/ChiNext liquidity.", 1.0, "300059.SZ"),
+                _bar("港股", "港股中资券商与离岸中国宽基 (HSTECH)", "HKEX China Brokers & HSTECH", 1.1, 3.1, "境内资本市场稳市政策组合拳同步提振离岸人民币风险偏好与中资券商比价。", "Mainland market-stabilization policy improves offshore China equity risk appetite.", 1.0, "HSTECH.HK"),
+                _bar("A股", "宽基权重沪深300与非银保险 (510300)", "A-Share Broad Index & Insurers (510300)", 1.0, 2.8, "权益市场成交中枢抬升直接增厚保险投资端弹性与宽基被动流入。", "Higher turnover supports broad-index heavyweights and insurer equity books.", 1.0, "510300.SH"),
+            ],
+            "if_then": [],
+            "milestones": [{"date": "下周一起", "status": "current", "label": "盯紧两市首小时成交额与中信/东财两融净增量"}],
+        }
+
+    # 0c. Regional Taiwan Margin Ratio Stabilization (distinct from Mainland A-Share 4000亿)
+    if ("台湾" in tl or "台湾地区" in tl) and any(k in tl for k in ("保证金", "限空", "稳市", "股市")):
+        return {
+            "rule_id": "taiwan_market_stabilization",
+            "tag": "台湾市场保证金调整与区域稳市",
+            "tag_en": "Taiwan Equity Margin & Stabilization Policy",
+            "polarity": "bullish",
+            "intensity": 3,
+            "one_liner": "台湾地区拟下调融资保证金比例以抑制杠杆断头踩踏、稳定当地权重股交易筹码，对台积电等晶圆权重大厂情绪构成温和支撑。",
+            "one_liner_en": "Taiwan's proposed margin collateral easing aims to cushion forced liquidations and steady local tech weights.",
+            "sample_basis": {"sample_n": 10, "volatility_pct": 2.5, "volatility_source": "台股监管限空/两融调整样本", "horizon": "1~5 个交易日", "confidence_label": "中高置信（区域筹码维稳）", "confidence_label_en": "Moderate-High (Regional Positioning Cushion)"},
+            "affected_tickers": {"TSM": 0.45, "QQQ": 0.15},
+            "realized_quotes": _quote_snapshot(["TSM", "QQQ"]),
+            "bars": [
+                _bar("台股", "台股半导体与晶圆代工权重 (TSM ADR)", "Taiwan Semi & Foundry Weights (TSM)", 0.9, 2.8, "放宽本地融资追缴压力有助于减少被动斩仓盘对台积电及电子权重的踩踏。", "Easing local margin call thresholds reduces forced selling pressure in Taiwan semis.", 1.0, "TSM"),
+                _bar("美股", "费半与海外代工映射 (QQQ / TSM)", "US Semi Foundry Proxies (TSM/QQQ)", 0.3, 1.4, "亚洲芯片代工市场情绪企稳温和缓和美股半导体的隔夜尾盘担忧。", "Calmer Asian foundry flows mildly cushion US semiconductor sentiment.", 0.9, "QQQ"),
+                _bar("A股", "海峡两岸电子制造情绪映射", "A-Share Cross-Strait Electronics", 0.2, 1.1, "属区域市场监管微调，对 A 股实质资金面外溢相对温和。", "Regional policy tweak with modest spillover to Mainland electronics.", 0.85, "512480.SH"),
+            ],
+            "if_then": [],
+            "milestones": [{"date": "1 周内", "status": "current", "label": "关注台股外资净买超与融券余额变化"}],
+        }
+
+    # 0d. Domestic A-Share Brokerage Bottoming / Valuation Signal (NEVER misroute to Fed hawkish!)
+    if re.search(r"招商证券|中信证券|华泰证券|国泰海通|申万宏源|研报|策略报告", tl) and re.search(
+        r"历史底部|趋近.*底部|估值底部|磨底|底部水平|底部区间|多项指标", tl
+    ):
+        return {
+            "rule_id": "a_share_bottom_valuation_signal",
+            "tag": "A股历史底部指标共识与估值修复",
+            "tag_en": "A-Share Valuation Bottom Signal",
+            "polarity": "bullish",
+            "intensity": 3,
+            "one_liner": "头部券商量化指标提示 A 股破净率与股债性价比逼近历史极值底部，叠加稳市政策预期构成中线左侧赔率窗口。",
+            "one_liner_en": "Major domestic brokerages flag equity risk-premium and breadth indicators nearing historical troughs, creating asymmetric upside.",
+            "sample_basis": {"sample_n": 14, "volatility_pct": 2.3, "volatility_source": "A股历史估值极值底区间统计", "horizon": "3~10 个交易日", "confidence_label": "中高置信（赔率占优需量能印证）", "confidence_label_en": "Moderate-High (Valuation Mean-Reversion)"},
+            "affected_tickers": {"510300.SH": 0.65, "300059.SZ": 0.7, "HSTECH.HK": 0.45},
+            "realized_quotes": _quote_snapshot(["000001.SH", "HSTECH.HK"]),
+            "bars": [
+                _bar("A股", "沪深300与核心宽基权重 (510300)", "A-Share Broad Blue-Chips (510300)", 1.0, 3.0, "多项拥挤度与估值分位落入历史低区，宽基配置胜率明显高于恐慌杀跌期。", "Broad indices offer favorable risk-reward as crowding & PE metrics hit historical lows.", 1.0, "510300.SH"),
+                _bar("A股", "非银券商与高弹性创成长 (300059)", "A-Share Brokers & Growth Beta (300059)", 1.2, 3.6, "市场悲观共识边际见底后，券商与超跌成长通常是估值弹性最先修复方向。", "Brokers and beaten-down growth leaders respond fastest once sentiment troughs turn.", 1.0, "300059.SZ"),
+                _bar("港股", "港股低估值核心互联网 (HSTECH)", "HKEX Deep-Value Tech (HSTECH)", 0.8, 2.5, "境内股票风险溢价触底常带动南向资金加仓低估值港股科技权重。", "Domestic sentiment bottoming supports Southbound inflows into undervalued HK tech.", 1.0, "HSTECH.HK"),
+            ],
+            "if_then": [],
+            "milestones": [{"date": "5 个交易日内", "status": "current", "label": "观察两市成交额是否放量站稳 1.3 万亿上方"}],
+        }
+
+    # 0e. AI Server Price Hike (+45% hardware squeeze)
+    if re.search(r"ai\s*服务器|算力服务器|服务器厂商", text, re.I) and re.search(r"涨价|提价|上调价格", text, re.I):
+        return {
+            "rule_id": "ai_server_price_hike",
+            "tag": "AI 服务器硬件涨价与算力基建景气",
+            "tag_en": "AI Server Price Hike & Supply Tightness",
+            "polarity": "bullish",
+            "intensity": 4,
+            "one_liner": "AI 服务器因算力模组与散热供电紧张大幅提价，印证下游智算需求刚性且直接增厚头部整机及液冷光模块产业链收入。",
+            "one_liner_en": "Sharp AI server price hikes signal tight supply and expand revenue elasticity for OEMs, liquid cooling, and optical links.",
+            "sample_basis": {"sample_n": 11, "volatility_pct": 3.7, "volatility_source": "算力硬件提价与机柜订单样本", "horizon": "2~7 个交易日", "confidence_label": "高置信（直指硬件景气定价权）", "confidence_label_en": "High (Direct Hardware Pricing Power)"},
+            "affected_tickers": {"601138.SH": 0.85, "000977.SZ": 0.8, "300308.SZ": 0.75, "SMCI": 0.65},
+            "realized_quotes": _quote_snapshot(["QQQ", "515880.SH"]),
+            "bars": [
+                _bar("A股", "AI 服务器整机与代工龙头 (工业富联/浪潮)", "A-Share AI Server Leaders (601138/000977)", 1.8, 4.6, "整机供给紧缺带来最高 45% 涨价，具备配额与规模优势的整机龙头直接受益单机价值量提升。", "Acute GPU-rack shortages drive higher ASP and revenue leverage for leading server OEMs.", 1.0, "601138.SH"),
+                _bar("A股", "液冷散热 / 800G 光模块与高速连接", "A-Share Liquid Cooling & Optical Links", 1.4, 3.8, "高功耗 AI 机柜成本上升同步拉高液冷、电源及光互连组件配置单价。", "Higher rack power density accelerates adoption of liquid cooling and high-speed optics.", 1.0, "300308.SZ"),
+                _bar("美股", "北美算力机柜与 GPU 基建链 (SMCI / DELL)", "US AI Rack Builders (SMCI / DELL)", 1.0, 3.2, "整机报价上行凸显基础设施产能紧俏，但需观察上游器件转嫁后实际毛利率。", "Tight rack pricing supports top-line demand while highlighting component-cost pass-through.", 1.0, "SMCI"),
+            ],
+            "if_then": [],
+            "milestones": [{"date": "2 周内", "status": "current", "label": "核查云厂季度 Capex 指引及整机厂商毛利率反馈"}],
+        }
+
+    # 0f. ASIC / TPU Order Cut (Google / Broadcom vs NVIDIA)
+    if re.search(r"tpu|asic|博通", text, re.I) and re.search(r"削减|砍单|下调.*出货|减少.*颗", text, re.I):
+        return {
+            "rule_id": "asic_tpu_order_cut",
+            "tag": "云巨头定制 ASIC / TPU 砍单冲击与 GPU 回摆",
+            "tag_en": "Custom ASIC / TPU Shipment Cut & GPU Rotation",
+            "polarity": "divergent",
+            "intensity": 4,
+            "one_liner": "知名分析师披露谷歌大幅削减 2027 年定制 TPU 出货，直接压制博通 (AVGO) 与单一大厂 ASIC 配套链估值，反利好通用 GPU (NVDA) 份额稳固。",
+            "one_liner_en": "Projected cuts in Google TPU shipments pressure Broadcom and custom-ASIC suppliers while easing competitive overhang on Nvidia GPUs.",
+            "sample_basis": {"sample_n": 12, "volatility_pct": 4.1, "volatility_source": "北美云厂芯片链砍单修正样本", "horizon": "1~5 个交易日", "confidence_label": "高置信（直接改写 ASIC 盈利指引）", "confidence_label_en": "High (Direct ASIC Guidance Revision)"},
+            "affected_tickers": {"AVGO": -0.9, "300308.SZ": -0.65, "NVDA": 0.45, "QQQ": -0.25},
+            "realized_quotes": _quote_snapshot(["AVGO", "NVDA", "QQQ"]),
+            "bars": [
+                _bar("美股", "定制 AI ASIC 设计与云链 (AVGO)", "US Custom AI ASIC Leaders (AVGO)", -5.2, -2.0, "百万颗级别 TPU 8i 出货预期下修直接打击博通定制芯片增长故事核心溢价。", "Million-unit TPU shipment cuts directly hit Broadcom's custom AI silicon growth thesis.", 1.0, "AVGO"),
+                _bar("A股", "北美单一 ASIC 客户配套 PCB / 光模块", "A-Share North American ASIC PCB/Optics", -3.8, -1.2, "深度绑定单一云巨头自研芯片集群的高频 PCB 与光模块面临排产预期修正。", "Suppliers tied closely to hyperscaler custom-ASIC ramps face near-term order repricing.", 1.0, "300308.SZ"),
+                _bar("美股", "通用 AI GPU 核心生态 (NVDA)", "Merchant AI GPU Ecosystem (NVDA)", 0.8, 2.9, "自研 ASIC 商业推进受阻缓解了“定制芯片替代英伟达”的估值折价压力。", "Slower custom ASIC scaling eases competitive substitution risk for merchant Nvidia GPUs.", 1.0, "NVDA"),
+            ],
+            "if_then": [],
+            "milestones": [{"date": "7 日内", "status": "current", "label": "观察博通 / 谷歌官方回应与台积电 CoWoS 产能分配调整"}],
+        }
+
+    # 0g. Corporate Share Buyback & Dividend Floor
+    if re.search(r"回购股份|拟以.*亿元.*回购|增持.*亿元|特别分红", text, re.I):
+        return {
+            "rule_id": "corporate_buyback_dividend",
+            "tag": "龙头真金白银大额回购与市值托底",
+            "tag_en": "Large-Scale Corporate Buyback Floor",
+            "polarity": "bullish",
+            "intensity": 3,
+            "one_liner": "产业龙头抛出超 10 亿元股份回购方案向市场传递现金流底气与底部信号，重点支撑个股及所属周期资源板块风险偏好。",
+            "one_liner_en": "Billion-RMB share buyback plans signal balance-sheet confidence and establish valuation support for cyclical sector peers.",
+            "sample_basis": {"sample_n": 15, "volatility_pct": 2.8, "volatility_source": "A股大额股份回购预案事件统计", "horizon": "2~7 个交易日", "confidence_label": "中高置信（直接增厚每股权益）", "confidence_label_en": "Moderate-High (Direct EPS & Valuation Floor)"},
+            "affected_tickers": {"603799.SH": 0.85, "002460.SZ": 0.55, "510300.SH": 0.3},
+            "realized_quotes": _quote_snapshot(["000001.SH"]),
+            "bars": [
+                _bar("A股", "回购主体及新能源资源龙头 (华友/赣锋)", "A-Share Buyback Issuer & Energy-Metals Peers", 1.5, 4.4, "10~15 亿元大规模回购真金白银承接场内抛压，对底部估值起到实质性锚定。", "Substantial buyback commitments absorb float pressure and anchor cyclical trough multiples.", 1.0, "603799.SH"),
+                _bar("A股", "电池正极与上游资源顺周期板块", "A-Share Cathode & Battery Metals Chain", 0.7, 2.4, "行业龙头财务稳健主动护盘有助于修复悲观盈利预期，但持续性需盯金属现货价格。", "Peer sentiment stabilizes alongside upstream buybacks, subject to spot metal pricing.", 0.95, "002460.SZ"),
+                _bar("港股", "港股有色资源与股东回报概念", "HKEX Materials & Capital-Return Leaders", 0.4, 1.8, "大额回购示范效应温和改善市场对资源类蓝筹自由现金流分配的信心。", "Buyback discipline reinforces shareholder-return rerating across HK resources.", 0.9, "02899.HK"),
+            ],
+            "if_then": [],
+            "milestones": [{"date": "30 日内", "status": "current", "label": "核查首次实施回购比例进度与碳酸锂/钴价趋势"}],
+        }
+
+    # 0h. US Congressional Tariff / Tax Policy Reversal Fight
+    if re.search(r"推翻.*税收.*关税|废除.*关税|民主党.*关税|关税政策|跨境关税", text, re.I) and not re.search(
+        r"巨额关税|征重税|巨税", text, re.I
+    ):
+        return {
+            "rule_id": "us_tariff_tax_policy_shift",
+            "tag": "美方税收与关税博弈预期差（出口链修复）",
+            "tag_en": "US Tax & Tariff Policy Shift",
+            "polarity": "divergent",
+            "intensity": 3,
+            "one_liner": "美方政局寻求推翻激进关税与税收安排的动向边际压缩最悲观贸易脱钩尾部溢价，利好中概互联、出海制造与集运板块。",
+            "one_liner_en": "Moves to overturn sweeping US tariff and tax policies ease extreme trade-war risk premia for China ADRs, exporters, and shipping.",
+            "sample_basis": {"sample_n": 13, "volatility_pct": 3.2, "volatility_source": "美中关税博弈预期反转样本", "horizon": "2~5 个交易日", "confidence_label": "中高置信（立法博弈仍存反复）", "confidence_label_en": "Moderate-High (Subject to Legislative Path)"},
+            "affected_tickers": {"KWEB": 0.7, "HSTECH.HK": 0.65, "002475.SZ": 0.6, "601919.SH": 0.55},
+            "realized_quotes": _quote_snapshot(["KWEB", "HSTECH.HK"]),
+            "bars": [
+                _bar("美股", "中概互联与跨境资产 (KWEB)", "US-Listed China Tech & ADRs (KWEB)", 1.3, 3.8, "极端关税风险贴现折价随国会博弈动向边际收敛，触发部分外资空头回补。", "Tariff-roll-back efforts compress China ADR geopolitical risk discount.", 1.0, "KWEB"),
+                _bar("A股", "对美消费电子代工与远洋集运 (立讯/中远海控)", "A-Share US Exporters & Container Shipping", 1.1, 3.3, "出口毛利率与跨洋航线货量稳态预期得到阶段性修正支撑。", "Exporters and ocean liners reprice lower terminal tariff risk.", 1.0, "002475.SZ"),
+                _bar("港股", "港股外资重仓互联网与消费出口 (HSTECH)", "HKEX Tech & Export Champions (HSTECH)", 1.0, 3.0, "港股率先计价离岸美元流动性对关税分歧的正面风险偏好回温。", "Offshore HK equities respond early to narrowing US tariff escalation risk.", 1.0, "HSTECH.HK"),
+            ],
+            "if_then": [],
+            "milestones": [{"date": "两周内", "status": "current", "label": "追踪国会参众两院实质立法草案及白宫否决表态"}],
+        }
+
+    # 0i. UN COP Climate Talks Collapse (Traditional Energy vs Renewables)
+    if re.search(r"cop\d+|气候谈判|气候大会", text, re.I) and re.search(r"破裂|未能.*协议|化石燃料|僵局|延期", text, re.I):
+        return {
+            "rule_id": "cop_climate_energy_stalemate",
+            "tag": "COP31 气候谈判破裂与传统能源重估",
+            "tag_en": "COP Climate Stalemate: Fossil Fuel Resilience vs Clean Tech",
+            "polarity": "divergent",
+            "intensity": 3,
+            "one_liner": "联合国气候峰会未能就限制化石燃料达成妥协，延长全球油气煤炭高现金流久期预期，传统能源红利跑赢海外碳中和主题。",
+            "one_liner_en": "Deadlocked UN climate talks over fossil-fuel phaseouts extend cash-flow duration for oil, gas, and coal while cooling clean-tech sentiment.",
+            "sample_basis": {"sample_n": 10, "volatility_pct": 2.4, "volatility_source": "全球气候峰会决议期能源对比样本", "horizon": "2~5 个交易日", "confidence_label": "中高置信（结构性分化显著）", "confidence_label_en": "Moderate-High (Energy Sector Divergence)"},
+            "affected_tickers": {"600938.SH": 0.65, "601088.SH": 0.6, "601012.SH": -0.45, "XLE": 0.55},
+            "realized_quotes": _quote_snapshot(["USO", "00883.HK"]),
+            "bars": [
+                _bar("A股", "高股息上游油气与动力煤 (海油/神华)", "A-Share Upstream Oil & Coal (600938/601088)", 1.0, 2.9, "缺乏具有约束力的全球退煤退油时间表，夯实传统能源企业长期分红确定性。", "No binding global fossil phase-out pact reinforces long-duration dividend visibility for oil & coal.", 1.0, "600938.SH"),
+                _bar("美股", "传统能源综合油气巨头 (USO / XLE)", "US Integrated Oil & Gas (XLE/USO)", 0.8, 2.4, "减碳资本约束压力阶段性放松，支撑传统能源回购与分红估值倍", "Eased global regulatory phaseout pressure supports US oil majors' cash returns.", 1.0, "USO"),
+                _bar("A股", "海外出口型光伏组件与风电整机", "A-Share Clean Energy Exporters (601012)", -2.4, -0.5, "全球政策减碳推力短期弱于预期，新能源情绪短期承压、仍待组件价格触底。", "Softer multilateral decarbonization commitments weigh on short-term solar/wind sentiment.", 1.0, "601012.SH"),
+            ],
+            "if_then": [],
+            "milestones": [{"date": "7 日内", "status": "current", "label": "观察欧盟碳关税边境调节执行细则及光伏组件月度排产"}],
+        }
+
+    # 0j. Commercial Space / Reusable Rocket Breakthrough
+    if re.search(r"可回收.*火箭|回收发动机|朱雀三号|点火试车|商业航天|商业火箭", text, re.I):
+        return {
+            "rule_id": "commercial_space_breakthrough",
+            "tag": "可回收火箭关键试车与商业航天主题催化",
+            "tag_en": "Reusable Rocket & Commercial Space Catalyst",
+            "polarity": "bullish",
+            "intensity": 3,
+            "one_liner": "可回收液体火箭发动机完成二次点火试车标志国内商业发射迈向可复用低成本阶段，直接催化箭体配套、航天测控及低轨卫星链。",
+            "one_liner_en": "Successful reusable engine hot-fire milestones cut future launch economics and catalyze aerospace parts and LEO satellite constellations.",
+            "sample_basis": {"sample_n": 11, "volatility_pct": 4.0, "volatility_source": "商业航天重大试车与发射催化样本", "horizon": "1~5 个交易日", "confidence_label": "中高置信（硬科技主题活跃度高）", "confidence_label_en": "Moderate-High (High-Beta Theme Catalyst)"},
+            "affected_tickers": {"600118.SH": 0.8, "600879.SH": 0.75, "301005.SZ": 0.75},
+            "realized_quotes": _quote_snapshot(["000001.SH"]),
+            "bars": [
+                _bar("A股", "民营商业火箭精密配套与发动机材料", "A-Share Rocket Structures & Alloys (301005)", 2.0, 5.2, "可复用发动机过关直通入轨回收，最直接催化已进入火箭壳段/铜合金推力室核心供应链标的。", "Engine restart readiness directly catalyzes precision airframe and propellant suppliers.", 1.0, "301005.SZ"),
+                _bar("A股", "低轨卫星整星与星载相控阵载荷 (中国卫星)", "A-Share LEO Satellites & Payloads (600118)", 1.5, 4.0, "单公斤发射成本下移预期打开千帆/GW 星座组网密集发射想象空间。", "Lower launch cost visibility accelerates LEO satellite manufacturing cadence.", 1.0, "600118.SH"),
+                _bar("A股", "航天测控通信与防务电子 (航天电子)", "A-Share Aerospace Telemetry & Control (600879)", 1.2, 3.4, "发射架次与回收测控需求扩容带动测控惯导电子确定性增量。", "Higher launch frequency expands demand for guidance and telemetry electronics.", 1.0, "600879.SH"),
+            ],
+            "if_then": [],
+            "milestones": [{"date": "未来 1 个月", "status": "current", "label": "盯紧正式首飞入轨及一子级海上/陆地回收窗口公告"}],
+        }
+
+    # 0k. Telecom / Digital Sanctions (Material impact calibrated: minimal revenue hit, domestic security boost)
+    if re.search(r"电信运营商|禁止中国电信|互联网电话号码|商务部坚决反对", text, re.I):
+        return {
+            "rule_id": "telecom_digital_sanction",
+            "tag": "美方通信接入限制与国产安全应对",
+            "tag_en": "Telecom Cross-Border Restrictions & Cyber Localization",
+            "polarity": "divergent",
+            "intensity": 3,
+            "one_liner": "美方限制国内电信运营商获取美国互联网电话资源对其主业国内营收影响极微（<1%），更多引发涉外云网安全合规与高股息运营商韧性重申。",
+            "one_liner_en": "US restrictions on Chinese carrier number access have negligible domestic revenue impact while lifting local cyber-compliance themes.",
+            "sample_basis": {"sample_n": 9, "volatility_pct": 1.8, "volatility_source": "涉电信合规禁令市场反应样本", "horizon": "1~5 个交易日", "confidence_label": "高置信（基本面实质免疫）", "confidence_label_en": "High (Operationally Insulated Core Cashflows)"},
+            "affected_tickers": {"601728.SH": 0.15, "600941.SH": 0.3, "000063.SZ": 0.55},
+            "realized_quotes": _quote_snapshot(["000001.SH"]),
+            "bars": [
+                _bar("A股", "自主通信设备与涉外加密网安 (中兴/深信服)", "A-Share Telecom Gear & Cyber Compliance (000063)", 0.8, 2.5, "外部通信节点限制强化政企跨境专线加密替代与核心设备自主可控优先级。", "Cross-border telecom restrictions reinforce domestic network-gear & security demand.", 1.0, "000063.SZ"),
+                _bar("A股", "三大高股息运营商核心现金流 (移动/电信)", "A-Share Dividend Telecom Carriers (600941/601728)", -0.5, 0.9, "北美涉外号段占比不足百分之一，高股息红利与智算网盈利锚几无受损。", "Negligible US revenue exposure leaves high-dividend domestic cashflows unscathed.", 0.9, "600941.SH"),
+                _bar("港股", "中资电信与国产云计算基建 (HSTECH)", "HKEX Telecom & Cloud Infra (HSTECH)", -0.6, 0.7, "短线地缘消息干扰下港股电信权重多于数日内被低估值红利买盘消化。", "Dividend buyers historically absorb short-lived geopolitical headlines in HK carriers.", 0.9, "HSTECH.HK"),
+            ],
+            "if_then": [],
+            "milestones": [{"date": "7 日内", "status": "current", "label": "观察商务部是否公布对等美企合规核查清单"}],
+        }
     if any(k in t for k in ("暴跌", "重挫", "下挫", "抛售潮", "抹去年内涨幅", "逼近破发", "破发")) and any(
         k in t for k in ("英伟达", "nvda", "纳指", "anthropic", "ai板块", "算力", "芯片")
     ):
@@ -330,18 +595,19 @@ def _build_domain_scenario(
             ],
         }
 
-    # 1c. 存储芯片与 HBM 并购/产能扩张 (SK 海力士 / 美光 / 三星)
-    if re.search(r"海力士|SK\s*Hynix|美光|Micron|HBM|高带宽内存|DRAM|NAND.*收购|NAND.*扩产", text, re.I) and re.search(
-        r"收购|洽购|入股|并购|扩张|扩产|短缺|涨价|合同价|资本|投资|AI\s*芯片|供货|软银", text, re.I
+    # 1c. 存储芯片与 HBM 并购/产能扩张/长协锁单 (SK 海力士 / 美光 / 三星)
+    if re.search(r"海力士|SK\s*Hynix|美光|Micron|HBM|高带宽内存|DRAM|存储芯片|NAND", text, re.I) and re.search(
+        r"收购|洽购|入股|并购|扩张|扩产|短缺|涨价|合同价|资本|投资|AI\s*芯片|供货|软银|产能.*锁定|供货保障", text, re.I
     ):
+        is_samsung_lock = bool(re.search(r"三星|产能.*锁定|供货保障|2031", text, re.I))
         return {
-            "rule_id": "memory_hbm_ma_supply",
-            "tag": "HBM / 存储资本整合与周期重估",
-            "tag_en": "AI Memory & HBM Deal Flow",
-            "polarity": "divergent",
+            "rule_id": "memory_hbm_supercycle" if is_samsung_lock else "memory_hbm_ma_supply",
+            "tag": "AI 存储芯片多年长协锁单与景气超周期" if is_samsung_lock else "HBM / 存储资本整合与周期重估",
+            "tag_en": "AI Memory Long-Term Capacity Lockup" if is_samsung_lock else "AI Memory & HBM Deal Flow",
+            "polarity": "bullish" if is_samsung_lock else "divergent",
             "intensity": 4,
-            "one_liner": "AI 存储/HBM 资本运作升温强化高带宽内存稀缺性定价，利好核心存储原厂与先进封测，PC 等整机 BOM 成本短期承压。",
-            "one_liner_en": "Strategic M&A and capacity focus in HBM reinforce memory pricing while lifting downstream hardware BOM costs.",
+            "one_liner": "AI 存储/HBM 多年锁单与资本运作升温强化高带宽及企业级存储卖方定价权，利好原厂及国产存储/内存接口芯片。",
+            "one_liner_en": "Multi-year memory lockups & HBM deal flow reinforce memory pricing and lift domestic memory/interface suppliers.",
             "sample_basis": {
                 "sample_n": 15,
                 "volatility_pct": 3.9,
@@ -350,13 +616,13 @@ def _build_domain_scenario(
                 "confidence_label": "高置信（直击存储器估值与产能格局）",
                 "confidence_label_en": "High (Direct Memory Cycle Catalyst)",
             },
-            "affected_tickers": {"MU": 0.85, "NVDA": 0.35, "603986.SH": 0.65, "HPQ": -0.45},
+            "affected_tickers": {"MU": 0.85, "603986.SH": 0.7, "688008.SH": 0.65, "NVDA": 0.35, "HPQ": -0.35},
             "realized_quotes": _quote_snapshot(["QQQ", "512480.SH"]),
             "bars": [
-                _bar("美股", "HBM 与企业级存储龙头 (MU)", "US HBM & Enterprise Memory (MU)", 1.8, 4.5, "产业资本竞逐 HBM 产能与稀缺技术资产，强化高阶存储合约价预期。", "Strategic capital chasing HBM scarcity reinforces high-bandwidth memory pricing.", 1.0, "MU"),
-                _bar("亚太", "韩国头部 HBM 晶圆与软银概念", "Korea HBM Foundry & Strategic Suitors", 1.5, 4.2, "战略并购或入股预期提升目标资产估值中枢，并加深与 AI 算力生态绑定。", "Strategic M&A talks lift asset valuation and deepen AI compute ecosystem ties.", 1.0, "000660.KS"),
-                _bar("A股", "国产存储芯片与先进封装测试", "A-Share Memory & Advanced Packaging", 1.2, 3.4, "国际大厂资源向 HBM 倾斜加速常规 DRAM 产能出清，封测与模组同步受益。", "Global HBM reallocation tightens conventional DRAM supply and lifts packaging.", 1.0, "603986.SH"),
-                _bar("美股", "传统消费级 PC OEM 组装厂 (HPQ)", "Commodity PC OEMs (HPQ)", -1.4, -0.3, "DRAM/NAND 合约价回升抬高整机 BOM 成本，若终端换机需求偏弱将挤压毛利。", "Rising DRAM/NAND contract prices squeeze hardware OEM margins if demand lags.", 0.9, "HPQ"),
+                _bar("美股", "HBM 与企业级存储龙头 (MU)", "US HBM & Enterprise Memory (MU)", 1.8, 4.5, "长协锁单与产业资本竞逐 HBM 产能，强化高阶存储合约价与毛利弹性。", "Long-term capacity lockups reinforce high-bandwidth & enterprise DRAM pricing.", 1.0, "MU"),
+                _bar("亚太", "韩国头部存储晶圆原厂 (海力士/三星)", "Korea HBM & DRAM Leaders (000660.KS)", 1.5, 4.2, "锁定未来多年核心产能验证需求极端旺盛，显著平滑传统存储周期波动。", "Multi-year capacity lockups confirm seller's market pricing visibility.", 1.0, "000660.KS"),
+                _bar("A股", "国产存储芯片与内存接口链 (兆易/澜起)", "A-Share Memory & Interface Chips", 1.4, 3.6, "国际大厂资源向高阶长协倾斜加速利基与国产企业级模组/RCD 份额提升。", "Global capacity reallocation accelerates domestic specialty DRAM & interface adoption.", 1.0, "603986.SH"),
+                _bar("美股", "传统消费级 PC OEM 组装厂 (HPQ)", "Commodity PC OEMs (HPQ)", -1.2, -0.2, "DRAM/NAND 长期紧缺抬高整机 BOM 成本，若消费换机偏弱或挤压毛利。", "Rising memory contract costs pressure commodity hardware margins.", 0.85, "HPQ"),
             ],
             "if_then": [
                 {"cond": "若交易估值溢价落地或下季度 HBM/DRAM 合约价环比涨幅超 10%", "result": "存储原厂与先进封测主升浪扩散", "tone": "bullish"},
@@ -529,7 +795,40 @@ def _build_domain_scenario(
                 "milestones": [{"date": "7 日内", "status": "current", "label": "各家模型服务商发布链路安全整改公告"}],
             }
 
-    # 3. Precious Metals / Gold & Silver Plunge (distinct from FOMC rate hike!)
+    # 3a. Precious Metals Futures Drop + Physical Retail Gold-Bar Rush Divergence (e.g. 菜百金条抢购一空)
+    if any(k in t for k in ("金价", "黄金", "金条", "贵金属")) and re.search(
+        r"菜百|抢购一空|投资金条|抢空|断货|实物金|买爆", text, re.I
+    ):
+        gld_f, atr_v, _ = _volatility_scale("518880.SH", quotes_map, 4)
+        return {
+            "rule_id": "precious_metals_physical_divergence",
+            "tag": "金价期现背离（上游矿金承压 vs 下游金条抢购爆单）",
+            "tag_en": "Bullion Spot Drop vs Physical Bar Retail Rush",
+            "polarity": "divergent",
+            "intensity": 4,
+            "one_liner": "国际期货金价跳水压制上游矿企利润预期，但北京菜百投资金条抢购断货折射下游渠道高周转爆单弹性，黄金板块呈上下游显著分化。",
+            "one_liner_en": "Sliding futures prices weigh on upstream gold miners while physical bar buying rushes boost high-turnover jewelry retailers.",
+            "sample_basis": {
+                "sample_n": 14,
+                "volatility_pct": atr_v or 3.4,
+                "volatility_source": "黄金期货 vs 黄金珠宝渠道分化样本",
+                "horizon": "1~5 个交易日",
+                "confidence_label": "高置信（上下游期现逻辑拆分）",
+                "confidence_label_en": "High (Miner vs Retailer Divergence)",
+            },
+            "affected_tickers": {"605599.SH": 0.85, "600612.SH": 0.55, "GLD": -0.75, "518880.SH": -0.75, "02899.HK": -0.7},
+            "realized_quotes": _quote_snapshot(["GLD", "518880.SH", "02899.HK"]),
+            "bars": [
+                _bar("A股", "高周转金条与品牌零售 (菜百股份 / 老凤祥)", "A-Share Physical Gold Retailers (605599/600612)", 1.3, 3.8, "黄金租赁套保+低金价刺激投资金条抢购断货，直接放量同店销量与加工费收入。", "Hedging insulates inventory while bargain hunting drives surge in physical bar turnover.", 1.0, "605599.SH"),
+                _bar("A股", "上游自产黄金采掘 (紫金 / 山东黄金)", "A-Share Upstream Gold Miners (601899/518880)", -3.8, -1.5, "上游矿金利润高度线性挂钩现货金价回撤与期货多头去杠杆抛压。", "Upstream miners carry direct negative beta to falling spot gold prices.", min(1.2, gld_f), "518880.SH"),
+                _bar("美股", "离岸现货黄金与矿商 ETF (GLD / GDX)", "US Spot Gold & Miners ETFs (GLD)", -3.5, -1.4, "国际现货金价连续跳水继续消化前期过度拥挤的多头杠杆。", "Offshore bullion ETFs absorb continued leveraged long liquidation.", min(1.2, gld_f), "GLD"),
+                _bar("港股", "港股有色黄金资源股 (02899 / 01818)", "HKEX Gold Miners (02899.HK)", -3.7, -1.5, "离岸市场对金价破位更为敏感，关注 3450~3500 美元整数关口支撑。", "HK gold miners react swiftly to offshore futures volatility.", min(1.2, gld_f), "02899.HK"),
+            ],
+            "if_then": [],
+            "milestones": [{"date": "未来 3 个交易日", "status": "current", "label": "对比 COMEX 金价止跌位与品牌金店周末流水增速"}],
+        }
+
+    # 3b. Precious Metals / Gold & Silver Plunge (distinct from FOMC rate hike!)
     if any(k in t for k in ("金价", "黄金", "白银", "贵金属")) and any(k in t for k in ("暴跌", "大跌", "跳水", "跌破", "新低", "风险")):
         gld_f, atr_v, _ = _volatility_scale("518880.SH", quotes_map, intensity)
         return {
@@ -560,6 +859,74 @@ def _build_domain_scenario(
                 {"cond": "若实际利率转降且央行买金数据恢复净增", "result": "急跌消化杠杆后逐步企稳", "tone": "neutral"},
             ],
             "milestones": [{"date": "下周美联储/CPI数据", "status": "upcoming", "label": "实际利率变动决定金价能否止跌"}],
+        }
+
+    # 3c. Macro Fiscal / Consumption / Property Stimulus
+    if re.search(r"特别国债|专项债|以旧换新|消费券|降低首付|放松限购|稳增长.*财政|扩大内需", text, re.I):
+        return {
+            "rule_id": "macro_fiscal_property_stimulus",
+            "tag": "财政内需 / 消费与地产稳增长刺激",
+            "tag_en": "Fiscal Consumption & Property Stimulus",
+            "polarity": "bullish",
+            "intensity": 4,
+            "one_liner": "超常规财政增量、以旧换新扩围或地产松绑直接托底顺周期需求，利好家电汽车消费、建材家居与顺周期金融权重。",
+            "one_liner_en": "Fiscal expansion, trade-in subsidies, and housing easing lift domestic cyclicals, appliances, and China equities.",
+            "sample_basis": {"sample_n": 16, "volatility_pct": 2.9, "volatility_source": "国内财政内需刺激窗口统计", "horizon": "2~7 个交易日", "confidence_label": "高置信（直接内需弹性）", "confidence_label_en": "High (Direct Domestic Demand)"},
+            "affected_tickers": {"510300.SH": 0.7, "000333.SZ": 0.75, "002916.SZ": 0.4, "HSI.HK": 0.6},
+            "realized_quotes": _quote_snapshot(["000001.SH", "HSI.HK"]),
+            "bars": [
+                _bar("A股", "以旧换新消费家电与汽车 (美的/海尔)", "A-Share Trade-In Appliances & Auto (000333)", 1.5, 4.2, "财政补贴直达终端换新消费，家电与乘用车业绩确定性最强。", "Direct fiscal subsidies expand appliance and auto replacement demand.", 1.0, "510300.SH"),
+                _bar("港股", "顺周期消费与内房物管龙头 (HSI)", "HKEX China Consumer & Property (HSI)", 1.2, 3.6, "政策发力扭转通缩预期带动离岸顺周期板块估值修复。", "Stimulus easing deflation concerns lifts offshore China cyclicals.", 1.0, "HSI.HK"),
+                _bar("A股", "基建材料 / 工程机械与银行", "A-Share Infrastructure & Financials (510300)", 0.9, 2.8, "地方化债与专项债加速落地改善工程与城投资产质量预期。", "Local debt relief and special bonds improve asset-quality visibility.", 1.0, "601398.SH"),
+            ],
+            "if_then": [],
+            "milestones": [{"date": "2 周内", "status": "current", "label": "核查部委配套资金额度及一线城市周度网签数据"}],
+        }
+
+    # 3d. Key Industrial Policy Catalysts (Low-Altitude Economy / Humanoid Robots / Biotech Procurement)
+    if re.search(r"低空经济|eVTOL|人形机器人|具身智能|创新药.*(?:目录|扶持)|商业医保|自动驾驶牌照", text, re.I):
+        return {
+            "rule_id": "industrial_policy_catalyst",
+            "tag": "新质生产力产业政策催化（低空 / 机器人 / 创新药）",
+            "tag_en": "Strategic Industrial Policy Catalyst",
+            "polarity": "bullish",
+            "intensity": 3,
+            "one_liner": "国家及地方针对前沿新兴赛道的准入与医保/空域支持落地，催化商业化订单预期从概念走向放量。",
+            "one_liner_en": "Regulatory greenlights for emerging industries accelerate commercialization visibility across robotics, eVTOL, and biotech.",
+            "sample_basis": {"sample_n": 14, "volatility_pct": 3.5, "volatility_source": "新兴产业政策准入事件样本", "horizon": "2~5 个交易日", "confidence_label": "中高置信（主题弹性高）", "confidence_label_en": "Moderate-High (High-Beta Thematic)"},
+            "affected_tickers": {"300750.SZ": 0.45, "512480.SH": 0.55, "HSTECH.HK": 0.4},
+            "realized_quotes": _quote_snapshot(["000001.SH", "HSTECH.HK"]),
+            "bars": [
+                _bar("A股", "核心零部件与传感器执行器供应链", "A-Share Core Actuators & Avionics", 1.5, 4.4, "商业牌照或行业标准明确直接打开上游丝杠/电机/飞控系统批产预期。", "Licensing clarity pulls forward order visibility for actuators and sensors.", 1.0, "512480.SH"),
+                _bar("港股", "港股新质制造与医药生态 (HSTECH)", "HKEX Smart Hardware & Biotech", 0.9, 2.9, "研发估值与商业化支付端改善共同提升港股创新龙头估值中枢。", "Improved commercialization outlook supports HK innovation multiples.", 1.0, "HSTECH.HK"),
+                _bar("美股", "全球前沿自动化与芯片映射 (QQQ)", "US Automation & Compute Proxies (QQQ)", 0.4, 1.8, "中国高性价比供应链量产共振强化全球具身智能硬件化进度。", "High-efficiency domestic supply scaling reinforces global automation momentum.", 0.9, "QQQ"),
+            ],
+            "if_then": [],
+            "milestones": [{"date": "1 个月内", "status": "current", "label": "观察首批商业试飞/量产交付或医保支付细则落地"}],
+        }
+
+    # 3e. Major Earnings Surprise or Miss
+    if re.search(r"净利(?:暴增|大增|翻倍|预增)|营收超预期|财报超预期|净利(?:大降|暴跌|预亏)|业绩暴雷|下调.*指引", text, re.I):
+        is_miss = bool(re.search(r"大降|暴跌|预亏|暴雷|下调.*指引", text, re.I))
+        c_s = -1.0 if is_miss else 1.0
+        return {
+            "rule_id": "earnings_surprise_or_miss",
+            "tag": "龙头财报业绩冲击与同业盈利重估" if is_miss else "重磅业绩超预期与景气印证",
+            "tag_en": "Major Earnings Guidance Shock" if is_miss else "Major Earnings Beat & Re-rating",
+            "polarity": "bearish" if is_miss else "bullish",
+            "intensity": 4,
+            "one_liner": "核心产业龙头业绩指引显著偏离一致预期，引发本市场及跨市场可比同业估值中枢同步重估。",
+            "one_liner_en": "Material earnings deviation triggers peer-group multiple repricing across comparable supply chains.",
+            "sample_basis": {"sample_n": 18, "volatility_pct": 3.8, "volatility_source": "财报季业绩跳空样本", "horizon": "1~5 个交易日", "confidence_label": "高置信（直击 EPS 盈利锚）", "confidence_label_en": "High (Direct EPS Anchor)"},
+            "affected_tickers": {"QQQ": round(0.45 * c_s, 2), "HSTECH.HK": round(0.45 * c_s, 2), "510300.SH": round(0.4 * c_s, 2)},
+            "realized_quotes": _quote_snapshot(["QQQ", "HSTECH.HK", "000001.SH"]),
+            "bars": [
+                _bar("美股", "跨市场同业成长基准 (QQQ)", "US Comparable Growth Leaders (QQQ)", 1.4 * c_s, 4.0 * c_s, "超预期/暴雷指引直接修正行业下一季度盈利一致性预期。", "Earnings deviation prompts analysts to reset peer consensus estimates.", 1.0, "QQQ"),
+                _bar("港股", "港股关联龙头与云平台 (HSTECH)", "HKEX Sector Comparables (HSTECH)", 1.1 * c_s, 3.4 * c_s, "离岸资金迅速参照头部财报成色重排同类标的持仓权重。", "Institutional funds rebalance peer exposure across offshore benchmarks.", 1.0, "HSTECH.HK"),
+                _bar("A股", "A股同产业链上游与设备伙伴 (510300)", "A-Share Supply Chain Comparables", 1.0 * c_s, 3.0 * c_s, "下游资本开支与出货节奏直接映射上游订单能见度。", "Upstream order visibility shifts alongside flagship earnings guidance.", 1.0, "510300.SH"),
+            ],
+            "if_then": [],
+            "milestones": [{"date": "下 2 个交易日", "status": "current", "label": "盯紧券商研报盈利预测上修/下修家数变动"}],
         }
 
     # 4. Russia-Ukraine Peace / Ceasefire Progress (bearish oil & defense, bullish aviation/risk)
@@ -677,9 +1044,13 @@ def _build_domain_scenario(
             "milestones": [{"date": "1 周内", "status": "current", "label": "PHMSA 与运营方公布恢复通流时间表"}],
         }
 
-    # 7. FOMC Hawkish Rate Hike (distinct from selloffs!)
-    if any(k in t for k in ("美联储", "fomc", "鲍威尔")) and any(k in t for k in ("加息", "放鹰", "利率")):
-        is_hike = any(k in t for k in ("重启加息", "加息", "放鹰"))
+    # 7. FOMC Hawkish Rate Hike (TITLE-anchored so domestic A-share bottoming reports mentioning overseas rates never misfire!)
+    if (
+        any(k in tl for k in ("美联储", "fomc", "鲍威尔"))
+        and any(k in tl for k in ("加息", "放鹰", "利率"))
+        and not re.search(r"招商证券|中信证券|华泰证券|券商研报|历史底部|多项指标.*底部", tl)
+    ):
+        is_hike = any(k in tl for k in ("重启加息", "加息", "放鹰"))
         qqq_f, atr_v, _ = _volatility_scale("QQQ", quotes_map, 4)
         return {
             "rule_id": "central_bank_hawkish",
@@ -1100,6 +1471,7 @@ def build_finance_impact_artifact(
     generated_at_iso: str = "",
     quotes_doc: Optional[Dict[str, Any]] = None,
     cat_docs: Optional[Dict[str, dict]] = None,
+    breaking_highlights: Optional[List[dict]] = None,
 ) -> Dict[str, Any]:
     """Generate structurally validated Event -> Direction -> Sector -> Stock impact maps."""
     if all_events is None and isinstance(cat_docs, dict):
@@ -1110,7 +1482,7 @@ def build_finance_impact_artifact(
             for ev in (cdoc.get("events") or [])
             if isinstance(ev, dict)
         ]
-    all_events = all_events or []
+    all_events = list(all_events or [])
     quotes_map = (quotes_doc or {}).get("quotes") or {}
     if not quotes_map:
         try:
@@ -1121,6 +1493,32 @@ def build_finance_impact_artifact(
             quotes_doc = fetched
         except Exception:
             quotes_map = {}
+
+    # Inject breaking S/A-tier highlights from 7x24 live wire so major after-hours market policies never miss out
+    existing_keys = {re.sub(r"[\s\W]+", "", str(e.get("title") or "").lower())[:16] for e in all_events}
+    for idx_bh, bh in enumerate(breaking_highlights or []):
+        if not isinstance(bh, dict):
+            continue
+        bh_title = str(bh.get("title") or "").strip()
+        if not bh_title or bh.get("severity_tier") not in {"S", "A"}:
+            continue
+        bkey = re.sub(r"[\s\W]+", "", bh_title.lower())[:16]
+        if not bkey or bkey in existing_keys:
+            continue
+        existing_keys.add(bkey)
+        all_events.insert(
+            0,
+            {
+                "event_id": str(bh.get("id") or f"bw_hi_{idx_bh}"),
+                "title": bh_title,
+                "fact_summary": str(bh.get("excerpt") or bh_title),
+                "category": str(bh.get("category") or "finance"),
+                "importance": "high",
+                "severity_tier": bh.get("severity_tier") or "S",
+                "latest_reported_at": bh.get("published_at") or generated_at_iso,
+                "sources": [{"source_name": bh.get("source_name") or "7x24 快讯", "url": bh.get("url")}],
+            },
+        )
 
     # Rank candidate events with economic/market relevance
     scored: List[Tuple[int, dict]] = []
@@ -1138,10 +1536,22 @@ def build_finance_impact_artifact(
             continue
         seen_titles.add(tkey)
         cat = str(ev.get("category") or "")
-        imp = 3 if ev.get("importance") == "high" else 1
-        base = 6 if cat == "finance" else (4 if cat in ("tech", "global") else 1)
-        kw_bonus = 2 if re.search(r"股|市场|芯片|英伟达|美联储|利率|金价|油|关税|协议|IPO|融资|市值|美伊|俄乌|微软|OpenAI|Anthropic|FSD|海力士|HBM|比特币|BTC|ETH|稀土|资金短缺", title, re.I) else 0
-        scored.append((base + imp + kw_bonus, ev))
+        imp = 4 if (ev.get("severity_tier") == "S" or ev.get("importance") == "high") else 1
+        base = 7 if cat == "finance" else (4 if cat in ("tech", "global") else 2)
+        policy_bonus = (
+            12
+            if (
+                re.search(r"融资保证金|4000亿|沪深北交易所|做市商|降准|降息|印花税|平准基金|稳市组合拳", title, re.I)
+                and "台湾" not in title
+            )
+            else 0
+        )
+        kw_bonus = 3 if re.search(
+            r"股|市场|芯片|英伟达|美联储|利率|金价|金条|油|关税|协议|IPO|融资|市值|美伊|俄乌|微软|FSD|海力士|HBM|比特币|BTC|ETH|稀土|资金短缺|TPU|博通|服务器.*涨价|回购|存储芯片|COP31|火箭|电信",
+            title,
+            re.I,
+        ) else 0
+        scored.append((base + imp + kw_bonus + policy_bonus, ev))
 
     scored.sort(key=lambda x: x[0], reverse=True)
 
@@ -1150,7 +1560,7 @@ def build_finance_impact_artifact(
     used_rule_counts: Dict[str, int] = {}
     used_one_liners: set[str] = set()
 
-    for _, ev in scored[:28]:
+    for _, ev in scored[:48]:
         title = str(ev.get("title") or "")
         summary = str(ev.get("fact_summary") or "")
         blob = f"{title} {summary}"
@@ -1166,13 +1576,14 @@ def build_finance_impact_artifact(
         if not valid or scenario is None:
             continue
 
-        ol_key = str(scenario.get("one_liner") or "").strip()
+        custom_one_liner, custom_sample_basis = customize_event_copy_and_basis(scenario, ev, title, quotes_map)
+        ol_key = custom_one_liner.strip()
         if ol_key and ol_key in used_one_liners:
             continue
 
         rid = scenario["rule_id"]
         occ_idx = used_rule_counts.get(rid, 0)
-        if occ_idx >= 3:
+        if occ_idx >= 2:
             continue
         if ol_key:
             used_one_liners.add(ol_key)
@@ -1181,7 +1592,7 @@ def build_finance_impact_artifact(
         # Differentiate secondary/indirect occurrences sharing the same macro rule so cards never clone identical % ranges
         bars = scenario["bars"]
         if occ_idx > 0:
-            atten = max(0.68, 1.0 - 0.13 * occ_idx)
+            atten = max(0.70, 1.0 - 0.14 * occ_idx)
             adj_bars = []
             for b in bars:
                 nb = dict(b)
@@ -1207,15 +1618,16 @@ def build_finance_impact_artifact(
             "tag_en": scenario["tag_en"],
             "polarity": scenario["polarity"],
             "intensity": scenario["intensity"],
-            "one_liner": scenario["one_liner"],
+            "one_liner": custom_one_liner,
             "one_liner_en": scenario["one_liner_en"],
-            "sample_basis": scenario["sample_basis"],
+            "sample_basis": custom_sample_basis,
             "affected_tickers": scenario.get("affected_tickers") or {},
             "realized_quotes": scenario.get("realized_quotes") or [],
             "bars": bars,
             "if_then": scenario["if_then"],
             "milestones": scenario["milestones"],
         }
+        enrich_card_deep_research(card, ev, scenario, quotes_map)
         impacts.append(card)
 
         top_a = next((b for b in bars if b["market"] == "A股"), bars[0])
@@ -1228,28 +1640,32 @@ def build_finance_impact_artifact(
             "polarity": scenario["polarity"],
             "intensity": scenario["intensity"],
             "validation_status": "verified",
-            "one_liner": scenario["one_liner"],
+            "one_liner": card["one_liner"],
             "top_a": top_a,
             "top_us": top_us,
             "top_hk": top_hk,
             "bars": bars,
-            "if_then": scenario["if_then"],
+            "if_then": card["if_then"],
             "milestones": scenario["milestones"],
-            "sample_basis": scenario["sample_basis"],
+            "sample_basis": card["sample_basis"],
             "realized_quotes": scenario.get("realized_quotes") or [],
+            "priced_in_analysis": card.get("priced_in_analysis"),
+            "transmission_layers": card.get("transmission_layers"),
+            "historical_precedents": card.get("historical_precedents"),
+            "quant_if_then": card.get("quant_if_then"),
         }
 
-        if len(impacts) >= 16:
+        if len(impacts) >= 15:
             break
 
     return {
-        "schema_version": "4.1",
-        "generation_mode": "deterministic_volatility_calibrated",
+        "schema_version": "4.2",
+        "generation_mode": "deterministic_deep_research_v9",
         "quality_flags": [] if quotes_map else ["quotes_fallback"],
         "generated_at": generated_at_iso or to_iso_shanghai(now_shanghai()),
         "batch_id": batch_id,
-        "disclaimer": "模型边界提示：以下板块敏感区间基于结构化事件极性与 20 日实现波动率校准推演，并附当前真实/延迟行情对照，仅为研究参考，不构成任何投资买卖建议。",
-        "disclaimer_en": "Model Notice: Sensitivity intervals use structured event polarity & realized volatility calibration alongside delayed market quotes for research only — not investment advice.",
+        "disclaimer": "模型边界提示：以下板块敏感区间基于结构化事件极性与 20 日实现波动率校准推演，并附跨市场计价状态、三阶个股暴露与历史同类回放，仅为研究参考，不构成任何投资买卖建议。",
+        "disclaimer_en": "Model Notice: Sensitivity intervals combine structured event polarity, realized volatility calibration, priced-in session checks, and historical replays for research only — not investment advice.",
         "quotes_updated_at": (quotes_doc or {}).get("updated_at"),
         "index_quotes": (quotes_doc or {}).get("indices") or [],
         "total_mapped_events": len(impacts),

@@ -21,7 +21,10 @@ from pipeline.ai_radar_builder import (
     _LAB_CATALOG,
     _infer_company,
     _infer_what_it_does_zh,
+    classify_ai_milestone_dim,
+    detect_is_open_source,
     is_first_hand_ai_source,
+    is_foreign_subject_blocked,
     is_similar_ai_release,
     normalize_ai_timestamp,
 )
@@ -45,10 +48,6 @@ FIRST_HAND_RSS_IDS = {
 }
 
 _ZH_CHAR_RE = re.compile(r"[\u4e00-\u9fff]")
-_OPEN_SOURCE_RE = re.compile(
-    r"(?:open[- ]?source|open[- ]?weights|github|huggingface|hugging face|apache[- ]?2\.0|mit\s*license|开源|权重|ollama|vllm|llama\.cpp|sglang|diffusers|transformers|gemma|qwen|hy\d)",
-    re.I,
-)
 _FUNDING_RE = re.compile(r"(?:融资|估值|领投|IPO|千亿|百亿|funding|valuation|series\s+[a-d])", re.I)
 
 
@@ -97,11 +96,11 @@ def _summarize_release(title: str, excerpt: str, source_name: str, *, is_open_so
 def extract_ai_release_item(raw_it: Dict[str, Any], generated_at_iso: str) -> Optional[Dict[str, Any]]:
     """Convert a raw news/connector/wire item into an AiProgressItem if relevant."""
     title = strip_raw_urls_and_domain_tails(str(raw_it.get("title") or "").strip())
-    if len(title) < 4 or is_omnibus_digest_title(title) or AI_NOISE_RE.search(title):
+    if len(title) < 4 or is_omnibus_digest_title(title) or AI_NOISE_RE.search(title) or is_foreign_subject_blocked(title):
         return None
 
     excerpt = strip_raw_urls_and_domain_tails(str(raw_it.get("excerpt") or raw_it.get("summary") or "").strip())
-    if excerpt and AI_NOISE_RE.search(excerpt):
+    if excerpt and (AI_NOISE_RE.search(excerpt) or is_foreign_subject_blocked(title, excerpt)):
         return None
 
     source_id = str(raw_it.get("source_id") or "").strip()
@@ -126,7 +125,7 @@ def extract_ai_release_item(raw_it: Dict[str, Any], generated_at_iso: str) -> Op
         raw_it.get("published_at") or raw_it.get("date") or raw_it.get("fetched_at") or generated_at_iso,
         generated_at_iso,
     )
-    is_open_source = bool(raw_it.get("is_open_source")) or bool(_OPEN_SOURCE_RE.search(f"{title} {excerpt} {url}"))
+    is_open_source = detect_is_open_source(title, excerpt, url=url, company_id=comp_id, source_id=source_id)
 
     if _FUNDING_RE.search(title):
         category, category_en = "资本与商业", "Funding & Strategy"
@@ -136,6 +135,8 @@ def extract_ai_release_item(raw_it: Dict[str, Any], generated_at_iso: str) -> Op
         category, category_en = "官方一手发布", "First-Hand Official"
     else:
         category, category_en = "模型与产品", "Model & Product"
+
+    dim_id, dim_zh, dim_en = classify_ai_milestone_dim(title, excerpt, is_open_source=is_open_source, category=category)
 
     what_zh, what_en = _summarize_release(
         title,
@@ -177,6 +178,10 @@ def extract_ai_release_item(raw_it: Dict[str, Any], generated_at_iso: str) -> Op
         "is_open_source": is_open_source,
         "is_first_hand": is_first_hand,
         "source_tier": "first_party" if is_first_hand else "realtime_wire",
+        "milestone_dim": dim_id,
+        "milestone_dim_label": dim_zh,
+        "milestone_dim_label_en": dim_en,
+        "related_sources": ([{"source_name": source_name, "url": url, "is_first_hand": is_first_hand}] if source_name else []),
     }
 
 
@@ -336,6 +341,7 @@ def merge_live_ai_items_into_doc(
                 "open_source_line": spec["open_source_line"],
                 "access_limits": spec["access_limits"],
                 "access_limits_en": spec.get("access_limits_en") or spec["access_limits"],
+                "model_lineage": list(spec.get("model_lineage") or []),
                 "recent_count": 0,
                 "latest_date": "",
                 "latest_headline": "",
@@ -343,6 +349,13 @@ def merge_live_ai_items_into_doc(
             }
             by_company[cid] = comp
             base["companies"].append(comp)
+        else:
+            comp = by_company[cid]
+            comp["flagship_model"] = spec["flagship_model"]
+            comp["open_source_line"] = spec["open_source_line"]
+            comp["access_limits"] = spec["access_limits"]
+            comp["access_limits_en"] = spec.get("access_limits_en") or spec["access_limits"]
+            comp["model_lineage"] = list(spec.get("model_lineage") or [])
 
     seen_urls: Dict[str, Dict[str, Any]] = {}
     seen_titles: Dict[str, Dict[str, Any]] = {}
@@ -408,7 +421,7 @@ def merge_live_ai_items_into_doc(
             if it_id.startswith(placeholder_curated_prefixes) or it_src.strip().lower() == "batch_digest":
                 mutated = True
                 continue
-            if is_omnibus_digest_title(it_title) or AI_NOISE_RE.search(f"{it_title} {it.get('what_it_does') or ''}"):
+            if is_omnibus_digest_title(it_title) or AI_NOISE_RE.search(f"{it_title} {it.get('what_it_does') or ''}") or is_foreign_subject_blocked(it_title, str(it.get("what_it_does") or "")):
                 mutated = True
                 continue
             if it_title.startswith("[HF Paper]"):
@@ -435,16 +448,25 @@ def merge_live_ai_items_into_doc(
                 it["limitations"] = ""
                 it["limitations_en"] = ""
                 mutated = True
-            # Re-evaluate company classification across ALL buckets so news.google.com/wallet/xAI misroutes self-heal
-            if True:
-                inf_cid, inf_cname, inf_reg = _infer_company(it_title, it_url, it_src)
-                if inf_cid != comp.get("company_id") and inf_cid in by_company:
-                    it["company_id"] = inf_cid
-                    it["company_name"] = inf_cname
-                    it["region"] = inf_reg
-                    rehomed_items.append(it)
-                    mutated = True
-                    continue
+            # Re-evaluate company, open-source accuracy & 5-dim classification so polluted items self-heal
+            inf_cid, inf_cname, inf_reg = _infer_company(it_title, it_url, it_src)
+            cur_os = detect_is_open_source(it_title, str(it.get("what_it_does") or ""), url=it_url, company_id=inf_cid)
+            if bool(it.get("is_open_source")) != cur_os:
+                it["is_open_source"] = cur_os
+                mutated = True
+            if not it.get("milestone_dim"):
+                dim_id, dim_zh, dim_en = classify_ai_milestone_dim(it_title, str(it.get("what_it_does") or ""), is_open_source=cur_os, category=str(it.get("category") or ""))
+                it["milestone_dim"] = dim_id
+                it["milestone_dim_label"] = dim_zh
+                it["milestone_dim_label_en"] = dim_en
+                mutated = True
+            if inf_cid != comp.get("company_id") and inf_cid in by_company:
+                it["company_id"] = inf_cid
+                it["company_name"] = inf_cname
+                it["region"] = inf_reg
+                rehomed_items.append(it)
+                mutated = True
+                continue
             cleaned_existing.append(it)
             _register(it)
         comp["items"] = cleaned_existing
@@ -475,7 +497,14 @@ def merge_live_ai_items_into_doc(
         )
 
         if existing is not None:
-            # Upgrade existing record with finer timestamp, richer title, or first-hand attribution
+            # Upgrade existing record with finer timestamp, richer title, or first-hand attribution, preserving related_sources
+            rel = list(existing.get("related_sources") or [])
+            if candidate.get("source_name"):
+                norm_cu = _norm_url_key(candidate.get("source_url"))
+                if not any(_norm_url_key(r.get("url")) == norm_cu and norm_cu for r in rel):
+                    rel.append({"source_name": candidate["source_name"], "url": candidate.get("source_url") or "", "is_first_hand": bool(candidate["is_first_hand"])})
+                    existing["related_sources"] = rel[:8]
+                    mutated = True
             if len(str(candidate["date"])) > len(str(existing.get("date") or "")):
                 existing["date"] = candidate["date"]
                 mutated = True
@@ -485,6 +514,10 @@ def merge_live_ai_items_into_doc(
             if candidate["is_first_hand"] and not existing.get("is_first_hand"):
                 existing["is_first_hand"] = True
                 existing["source_tier"] = "first_party"
+                if candidate.get("source_url"):
+                    existing["source_url"] = candidate["source_url"]
+                if candidate.get("source_name"):
+                    existing["source_name"] = candidate["source_name"]
                 mutated = True
             continue
 
@@ -506,13 +539,39 @@ def merge_live_ai_items_into_doc(
             key = _norm_url_key(it.get("source_url")) or _norm_title_key(it.get("title")) or str(it.get("id"))
             it_title = str(it.get("title") or "")
             it_url = str(it.get("source_url") or "")
+            dup_prev = None
             if key in seen_local:
-                mutated = True
-                continue
-            if any(
-                is_similar_ai_release(it_title, it_url, str(prev.get("title") or ""), str(prev.get("source_url") or ""))
-                for prev in deduped_comp
-            ):
+                dup_prev = next((p for p in deduped_comp if (_norm_url_key(p.get("source_url")) or _norm_title_key(p.get("title")) or str(p.get("id"))) == key), None)
+            if dup_prev is None:
+                dup_prev = next(
+                    (
+                        prev
+                        for prev in deduped_comp
+                        if is_similar_ai_release(
+                            it_title,
+                            it_url,
+                            str(prev.get("title") or ""),
+                            str(prev.get("source_url") or ""),
+                            company_id_a=str(comp.get("company_id") or ""),
+                            company_id_b=str(comp.get("company_id") or ""),
+                        )
+                    ),
+                    None,
+                )
+            if dup_prev is not None:
+                rel = list(dup_prev.get("related_sources") or [])
+                if it.get("source_name"):
+                    norm_iu = _norm_url_key(it_url)
+                    if not any(_norm_url_key(r.get("url")) == norm_iu and norm_iu for r in rel):
+                        rel.append({"source_name": it.get("source_name"), "url": it_url, "is_first_hand": bool(it.get("is_first_hand"))})
+                        dup_prev["related_sources"] = rel[:8]
+                if it.get("is_first_hand") and not dup_prev.get("is_first_hand"):
+                    dup_prev["is_first_hand"] = True
+                    dup_prev["source_tier"] = "first_party"
+                    if it_url:
+                        dup_prev["source_url"] = it_url
+                    if it.get("source_name"):
+                        dup_prev["source_name"] = it.get("source_name")
                 mutated = True
                 continue
             seen_local.add(key)
@@ -531,13 +590,15 @@ def merge_live_ai_items_into_doc(
                     str(it.get("source_url") or ""),
                     str(prev.get("title") or ""),
                     str(prev.get("source_url") or ""),
+                    company_id_a=str(it.get("company_id") or ""),
+                    company_id_b=str(prev.get("company_id") or ""),
                 )
                 for prev in unique_global.values()
             ):
                 unique_global[uk] = it
 
     all_items = sorted(unique_global.values(), key=lambda x: _sort_key_iso_desc(x.get("date")), reverse=True)
-    base["timeline"] = all_items[:80]
+    base["timeline"] = all_items[:120]
 
     # Top highlights: prioritize newest day-bucket, then first-hand / full-timestamp items
     highlights = sorted(

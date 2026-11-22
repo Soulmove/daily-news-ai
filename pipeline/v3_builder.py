@@ -1401,6 +1401,7 @@ def build_v3_artifacts(
         base_dir=root,
     )
     wire_json_path = root / "data/live_wire.json"
+    wire_disk: Dict[str, Any] = {}
     if wire_json_path.exists():
         try:
             wire_disk = json.loads(wire_json_path.read_text(encoding="utf-8"))
@@ -1429,6 +1430,7 @@ def build_v3_artifacts(
         generated_at_iso=generated_at_iso,
         cat_docs=cat_docs,
         quotes_doc=quotes_doc,
+        breaking_highlights=list(wire_disk.get("breaking_highlights") or []) if isinstance(wire_disk, dict) else None,
     )
 
     # Enrich entities_map (TSMC/Intel/SMIC etc.) with word-boundary matched storylines; keep change_count_30d aligned with actual events

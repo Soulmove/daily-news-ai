@@ -2,18 +2,20 @@
 
 from __future__ import annotations
 
+from datetime import timedelta
 import json
 import os
 from pathlib import Path
 import re
 import time
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Tuple
 from urllib.parse import urlparse
 
+from .ai_lineage_catalog import HISTORICAL_BASELINE_MILESTONES, LAB_V9_METADATA
 from .entities import ENTITY_BY_ID
 from .gemini_pool import call_gemini_raw
 from .manifest import atomic_write_json, load_json_if_exists
-from .time_utils import now_shanghai, to_iso_shanghai
+from .time_utils import now_shanghai, parse_iso_datetime, to_iso_shanghai
 
 _LAB_CATALOG: List[Dict[str, Any]] = [
     {
@@ -742,6 +744,16 @@ FIRST_HAND_URL_HOSTS = (
     "seed.bytedance.com",
     "github.blog",
     "microsoft.com/en-us/research",
+    "cursor.com",
+    "perplexity.ai",
+    "stability.ai",
+    "machinelearning.apple.com",
+    "security.apple.com",
+    "aws.amazon.com",
+    "huaweicloud.com",
+    "yiyan.baidu.com",
+    "cloud.baidu.com",
+    "nio.com",
 )
 
 
@@ -750,7 +762,25 @@ def is_first_hand_ai_source(source_id: str = "", source_name: str = "", url: str
     if sid in FIRST_HAND_SOURCE_IDS:
         return True
     sname = str(source_name or "").lower()
-    if any(k in sname for k in ("huggingface", "github releases", "openai", "anthropic", "deepmind", "google ai", "nvidia 官方", "一手", "官方博客", "官方模型")):
+    if any(
+        k in sname
+        for k in (
+            "huggingface",
+            "github releases",
+            "openai",
+            "anthropic",
+            "deepmind",
+            "google ai",
+            "nvidia 官方",
+            "一手",
+            "官方博客",
+            "官方模型",
+            "蔚来官方",
+            "腾讯混元官方",
+            "zhipu ai 官方",
+            "qwen 官方",
+        )
+    ):
         return True
     lower_url = str(url or "").lower()
     return any(host in lower_url for host in FIRST_HAND_URL_HOSTS)
@@ -779,15 +809,108 @@ def normalize_ai_timestamp(raw_ts: Any, fallback_iso: str) -> str:
 AI_NOISE_RE = re.compile(
     r"(?:回购股份|减持股份|增持股份|质押股份|股份回购|分红派息|限售股解禁|股票交易异常波动|年度股东大会|董事会决议公告|可转债|中标公告|业绩快报|成份股|指数纳入|调入.*股|港股通|"
     r"black friday|geforce now|win11.*copilot|windows\s*11.*copilot|强制集成.*copilot|"
-    r"蔚来|\bnio\b|小鹏|理想汽车|小米汽车|智驾|智能驾驶|世界模型\s*nwm|nwm\s*\d|车机|智能座舱|"
+    r"小鹏|理想汽车|小米汽车|车机|智能座舱|购车金融|"
     r"开源鸿蒙|openharmony|harmonyos|南水北调|水利|水文|国家水网|调水工程|天河.*(?:工程|调水|水文|水网)|"
     r"影石|insta360|大疆|麦克风|耳机|相机|固件升级|充电宝|路由器|显示器|键盘|鼠标|tech outages.*y2k|outages.*ai agent style|"
-    r"套餐|买赠|优惠券|代金券|促销|折扣|限免|会员价|小米\s*mimo.*套餐|mimo.*套餐|演唱会|剧场版|小雪节气|长城坦克|坦克\d+|"
+    r"套餐|买赠|优惠券|代金券|促销|折扣|限免|会员价|小米\s*mimo.*套餐|mimo.*套餐|学生教师优惠|9\.9元|元/月|优惠上线|"
+    r"调查问卷|大肥鱼|chatterfly|输入法.*内测|艺术中心.*抗议|抗议.*ai|提示词技巧|回答更简短|透明度低于|"
+    r"演唱会|剧场版|小雪节气|长城坦克|坦克\d+|"
     r"国家中医药管理局|中医药|认证中心|未与任何.{0,6}合作|亦未开展测评|辟谣通告|严正声明|"
     r"投资者是否应|是否值得购买|值得买入吗|\bspcx\b|目标价|股价表现|空头机构|估值泡沫|"
     r"微信香港钱包|微信支付|支付宝|信用卡|消费券|手游|主机游戏|steam|帮信罪|刑事拘留)",
     re.I,
 )
+
+_FOREIGN_SUBJECT_BLOCK_RE = re.compile(
+    r"(?:signal|telegram|whatsapp|firefox|safari|微信|浏览器).{0,26}(?:屏蔽|阻止|阻断|禁用|拦截|限制|拒绝)"
+    r".{0,26}(?:截图|截屏|读取|读屏|siri|gemini|claude|gpt|copilot|ai)",
+    re.I,
+)
+
+_EXPLICIT_OPEN_SOURCE_RE = re.compile(
+    r"(?:开源|开放权重|开放完整权重|\bopen[- ]?source\b|\bopen[- ]?weights?\b|"
+    r"apache[- ]?2\.0|apache\s+license|\bmit\s*(?:license|协议)\b|\bbsd[- ]?3\b|"
+    r"\bllama\.cpp\b|\bvllm\b|\bsglang\b|\bollama\b|comfyui|diffusers|"
+    r"openpangu|diffusiongemma|openelm|r1-1776|开源生态|开源模型权重)",
+    re.I,
+)
+
+_CLOSED_ONLY_SIGNAL_RE = re.compile(
+    r"(?:gpt-6|gpt-5|claude\s*fable|claude\s*mythos|claude\s*4|gemini\s*4|genie\s*4|sora\b|"
+    r"copilot\s*集成|反蒸馏|封禁账户|解散.*团队|网络安全诉讼|诉讼|提示词|评测.*简短|pcc\s*隐私云)",
+    re.I,
+)
+
+
+def is_foreign_subject_blocked(title: str, summary: str = "") -> bool:
+    """Block 3rd-party software stories (e.g. Signal blocking Gemini screen capture) from posing as lab R&D."""
+    return bool(_FOREIGN_SUBJECT_BLOCK_RE.search(f"{title} {summary}"))
+
+
+def detect_is_open_source(
+    title: str,
+    summary: str = "",
+    url: str = "",
+    company_id: str = "",
+    source_id: str = "",
+) -> bool:
+    """Accurate open-source detector: NEVER matches 'open' inside 'OpenAI'."""
+    t_no_openai = re.sub(r"open\s*ai", " ", f"{title} {summary}", flags=re.I)
+    lower_url = str(url or "").strip().lower()
+    sid = str(source_id or "").strip().lower()
+
+    has_explicit_open = bool(_EXPLICIT_OPEN_SOURCE_RE.search(t_no_openai))
+    is_open_repo_url = bool(
+        re.search(r"github\.com/[^/\s]+/[^/\s]+|huggingface\.co/[^/\s]+/[^/\s]+", lower_url)
+    )
+    if company_id in {"openai", "anthropic"}:
+        if _CLOSED_ONLY_SIGNAL_RE.search(t_no_openai) and not has_explicit_open:
+            return False
+        return bool(
+            has_explicit_open
+            or re.search(r"github\.com/(?:openai|anthropics)/[^/\s]+", lower_url)
+        )
+
+    if _CLOSED_ONLY_SIGNAL_RE.search(t_no_openai) and not has_explicit_open:
+        return False
+
+    if sid in {"github-releases", "huggingface-hub"}:
+        return True
+    if is_open_repo_url and any(k in t_no_openai.lower() for k in ("权重", "weights", "model", "cli", "sdk", "inference", "repo", "release")):
+        return True
+    return has_explicit_open
+
+
+_DIM_LABELS: Dict[str, Tuple[str, str]] = {
+    "flagship_release": ("🚀 旗舰模型发布", "Flagship Model"),
+    "research_breakthrough": ("🧠 算法与科研突破", "Research & Math"),
+    "api_agent_eng": ("🛠️ API 与 Agent 工程", "API & Agent Eng"),
+    "open_source_eco": ("🔓 开源权重与生态", "Open Source"),
+    "commercial_governance": ("⚖️ 商业化与安全治理", "Governance & Commercial"),
+}
+
+
+def classify_ai_milestone_dim(
+    title: str,
+    summary: str = "",
+    *,
+    is_open_source: bool = False,
+    category: str = "",
+) -> Tuple[str, str, str]:
+    """Classify any AI milestone into the 5 canonical evolution dimensions."""
+    blob = f"{title} {summary} {category}".lower()
+    if any(k in blob for k in ("反蒸馏", "隐私", "安全治理", "pcc", "诉讼", "融资", "ipo", "商业化", "商用", "hebbia", "定价", "封禁")):
+        dim = "commercial_governance"
+    elif any(k in blob for k in ("黎曼", "形式化", "lean", "密码分析", "nist", "medchembench", "基准", "benchmark", "论文", "arxiv", "世界模型", "genie 4", "nwm 3.0", "科研", "算法")):
+        dim = "research_breakthrough"
+    elif any(k in blob for k in ("tool retrieval", "工具检索", "agent", "智能体", "sdk", "api", "copilot", "ide", "composer", "claude code", "mcp", "rag", "bedrock", "sonar", "工作流", "ui-tars")):
+        dim = "api_agent_eng"
+    elif is_open_source or any(k in blob for k in ("开源", "open-source", "open weights", "apache", "mit", "vllm", "llama.cpp", "sglang", "ollama", "hugging face", "github", "权重")):
+        dim = "open_source_eco"
+    else:
+        dim = "flagship_release"
+    zh, en = _DIM_LABELS[dim]
+    return dim, zh, en
 AI_KW_RE = re.compile(
     r"(?:大模型|语言模型|多模态模型|推理模型|基础模型|世界模型.*(?:genie|cosmos)|生成式|开源模型|开源权重|"
     r"\bai\b|\bllm\b|gemini|neon|carbon|hydrogen|claude|fable|mythos|gpt|astra|grok|xai|"
@@ -861,6 +984,13 @@ _CONGLOMERATE_AI_CTX_RE = re.compile(
     re.I,
 )
 
+for _lab_entry in _LAB_CATALOG:
+    _v9_meta = LAB_V9_METADATA.get(_lab_entry["company_id"]) or {}
+    if _v9_meta.get("flagship_model"):
+        _lab_entry["flagship_model"] = _v9_meta["flagship_model"]
+    if _v9_meta.get("model_lineage"):
+        _lab_entry["model_lineage"] = list(_v9_meta["model_lineage"])
+
 _LAB_META_BY_ID: Dict[str, Dict[str, Any]] = {spec["company_id"]: spec for spec in _LAB_CATALOG}
 
 
@@ -915,7 +1045,7 @@ def _infer_company(title: str, url: str = "", source_name: str = "") -> tuple[st
         return _lab_result("tencent_hunyuan")
     if any(k in t for k in ("豆包", "doubao", "seedance", "bytedance seed", "ui-tars")):
         return _lab_result("bytedance_doubao")
-    if any(k in t for k in ("智谱", "zhipu", "glm-4", "glm-z", "chatglm", "bigmodel")):
+    if any(k in t for k in ("智谱", "zhipu", "glm-4", "glm-5", "glm-z", "chatglm", "bigmodel")):
         return _lab_result("zhipu_glm")
     if any(k in t for k in ("minimax", "海螺ai", "海螺视频", "hailuo")):
         return _lab_result("minimax")
@@ -1028,8 +1158,16 @@ def _infer_what_it_does_zh(title: str, summary: str, *, is_tool_release: bool = 
 # Synonym-group clusters so ZH & EN variants of the exact same event collapse (e.g. "OpenAI 反蒸馏" == "Combatting adversarial distillation")
 _AI_TOPIC_CONCEPT_CLUSTERS = (
     (("openai",), ("蒸馏", "distill")),
-    (("workbuddy",), ("电脑操控", "桌面", "computeruse")),
+    (("openai",), ("medchembench", "化学基准")),
+    (("anthropic", "claude"), ("黎曼", "riemann")),
     (("anthropic",), ("sdk",)),
+    (("gemini", "google", "谷歌"), ("工具检索", "tool retrieval", "tool search")),
+    (("gemini 4 neon", "gemini4 neon", "gemini 4「neon"), ("neon", "氖")),
+    (("genie 4", "project genie"), ("世界模型", "world model")),
+    (("minimax",), ("密码分析", "nist", "cryptanalysis")),
+    (("混元", "hunyuan", "tencent"), ("hy4", "混元4")),
+    (("智谱", "zhipu", "glm"), ("glm-5.3", "glm-5.4", "glm-5.5")),
+    (("workbuddy",), ("电脑操控", "桌面", "computeruse")),
     (("win11", "windows11"), ("copilot",)),
     (("deepseek",), ("千亿",)),
     (("零数据保留", "诱饵请求", "隐私泄露", "隐私漏洞"), ("隐私", "zero", "诱饵")),
@@ -1041,12 +1179,20 @@ def is_similar_ai_release(
     url_a: str,
     title_b: str,
     url_b: str,
+    company_id_a: str = "",
+    company_id_b: str = "",
 ) -> bool:
     """Detect duplicate AI milestones across different publishers/languages/phrasings."""
     ua = str(url_a or "").strip().lower().rstrip("/")
     ub = str(url_b or "").strip().lower().rstrip("/")
     if ua and ub and ua == ub:
-        return True
+        try:
+            pa = urlparse(ua)
+            # Only treat identical URL as same article when it points to a specific article path (not bare root/index URLs like /news or /)
+            if len([seg for seg in (pa.path or "").split("/") if seg]) >= 2 or pa.fragment or pa.query:
+                return True
+        except Exception:
+            pass
     raw_a = str(title_a or "").lower()
     raw_b = str(title_b or "").lower()
     for grp1, grp2 in _AI_TOPIC_CONCEPT_CLUSTERS:
@@ -1064,11 +1210,13 @@ def is_similar_ai_release(
         return True
     if len(na) >= 12 and len(nb) >= 12 and (na.startswith(nb[:16]) or nb.startswith(na[:16])):
         return True
+    same_org = bool(company_id_a and company_id_b and company_id_a == company_id_b)
+    thresh = 0.36 if same_org else 0.44
     if len(na) >= 10 and len(nb) >= 10:
         bga = {na[i : i + 2] for i in range(len(na) - 1)}
         bgb = {nb[i : i + 2] for i in range(len(nb) - 1)}
         union = bga | bgb
-        if union and (len(bga & bgb) / len(union)) >= 0.44:
+        if union and (len(bga & bgb) / len(union)) >= thresh:
             return True
     return False
 
@@ -1160,6 +1308,83 @@ def _query_gemini_google_search_ai_weekly(base_dir: Path | str = ".") -> List[Di
     return cleaned
 
 
+def _clean_hf_and_tool_record(tool: Dict[str, Any], generated_at_iso: str) -> Optional[Dict[str, Any]]:
+    """Convert a tech_tool record into a clean AI milestone, stripping noisy HF commit timestamps."""
+    name = str(tool.get("name") or "").strip()
+    if not name:
+        return None
+    ver_raw = str(tool.get("latest_version") or tool.get("version") or "").strip()
+    turl = str(tool.get("release_url") or tool.get("official_url") or "").strip()
+    tsrc = str(tool.get("source_name") or "GitHub / Hugging Face").strip()
+    is_hf = "hugging face" in tsrc.lower() or "huggingface.co" in turl.lower()
+    raw_summary = str(tool.get("summary") or "").strip()
+    lic = str(tool.get("license") or "").strip()
+    downloads = int(tool.get("downloads") or 0)
+
+    # Filter routine HF daily sync noise (`更新于 ...`) unless it is a major popular release
+    clean_ver = re.sub(r"更新于\s*\d{4}-\d{2}-\d{2}(?:[T\s]\S*)?", "", ver_raw).strip()
+    if is_hf and ver_raw.startswith("更新于") and downloads < 100000:
+        return None
+
+    short_name = name.split("/")[-1].strip() if "/" in name else name
+    if is_hf:
+        lic_hint = f" ({lic.upper()})" if lic and lic.upper() not in ("NOASSERTION", "OTHER") else ""
+        dl_hint = f" · 近期下载 {round(downloads / 10000, 1)} 万" if downloads >= 10000 else ""
+        title = f"开源模型权重：{short_name}{lic_hint}".strip()
+        summary = re.sub(r"^Hugging\s*Face\s*官方模型卡[^：:]*[：:]\s*", "", raw_summary).strip()
+        if dl_hint and dl_hint.strip(" ·") not in summary:
+            summary = f"{summary.rstrip('。')}（{dl_hint.strip(' ·')}）。" if summary else f"{short_name} 开源模型权重发布{dl_hint}。"
+    else:
+        title = f"开源工具更新：{short_name} {clean_ver}".strip()
+        summary = raw_summary
+
+    cid, cname, reg = _infer_company(f"{name} {tool.get('repo') or ''}", turl, tsrc)
+    pub_date = normalize_ai_timestamp(tool.get("version_published_at") or generated_at_iso, generated_at_iso)
+    return {
+        "id": f"ai_tool_{tool.get('tool_id') or short_name}",
+        "date": pub_date,
+        "company_id": cid,
+        "company_name": cname,
+        "region": reg,
+        "category": "开源权重" if is_hf else "开源工具/仓库",
+        "category_en": "Open Weights" if is_hf else "Open-Source Repo",
+        "title": title,
+        "title_en": f"Open-source release: {short_name} {clean_ver}".strip(),
+        "what_it_does": _infer_what_it_does_zh(title, summary, is_tool_release=not is_hf),
+        "what_it_does_en": summary[:160] if summary else "",
+        "who_cares": "",
+        "limitations": f"许可证：{lic}" if lic and lic.upper() != "NOASSERTION" else "",
+        "limitations_en": f"License: {lic}" if lic and lic.upper() != "NOASSERTION" else "",
+        "source_id": "huggingface-hub" if is_hf else ("github-releases" if "github" in turl.lower() else ""),
+        "source_name": tsrc,
+        "source_url": turl,
+        "is_first_hand": True,
+        "source_tier": "first_party",
+        "is_open_source": True,
+    }
+
+
+def _norm_ai_source_url(url: str) -> str:
+    raw = str(url or "").strip().lower()
+    if not raw:
+        return ""
+    try:
+        parsed = urlparse(raw)
+        return f"{parsed.netloc.removeprefix('www.')}{parsed.path.rstrip('/')}"
+    except Exception:
+        return raw
+
+
+def _is_within_recent_hours(date_str: str, gen_dt: Any, hours: int = 72) -> bool:
+    dt = parse_iso_datetime(date_str)
+    if dt is None and re.fullmatch(r"\d{4}-\d{2}-\d{2}", str(date_str or "").strip()):
+        dt = parse_iso_datetime(f"{date_str}T12:00:00+08:00")
+    if dt is None or gen_dt is None:
+        return False
+    delta_h = (gen_dt - dt).total_seconds() / 3600.0
+    return -24.0 <= delta_h <= float(hours)
+
+
 def build_ai_progress_artifact(
     *,
     batch_id: str,
@@ -1171,114 +1396,213 @@ def build_ai_progress_artifact(
     from .dedup import is_omnibus_digest_title, strip_raw_urls_and_domain_tails
 
     items: List[Dict[str, Any]] = []
-    seen_titles: set[str] = set()
+    seen_title_map: Dict[str, Dict[str, Any]] = {}
+    gen_dt = parse_iso_datetime(generated_at_iso) or now_shanghai()
+    cutoff_180d_iso = (gen_dt - timedelta(days=180)).strftime("%Y-%m-%d")
 
-    def _add_item(it: Dict[str, Any]) -> None:
-        src_id = str(it.get("source_id") or "")
-        src_name = re.sub(r"\s*[财新财联华尔街见闻第一财经每日经济新闻证券时报人民网新华网中新社]+$", "", str(it.get("source_name") or "").strip()) or str(it.get("source_name") or "")
-        title = strip_raw_urls_and_domain_tails(str(it.get("title") or "").strip())
-        title = re.sub(r"\s+(?:财联社|华尔街见闻|第一财经|证券时报|澎湃新闻|界面新闻|凤凰网|央视网|新浪财经|东方财富)$", "", title).strip()
-        url = str(it.get("source_url") or "").strip()
-        what = strip_raw_urls_and_domain_tails(str(it.get("what_it_does") or ""))
-        what = re.sub(r"(?:^(?:财联社|凤凰网|央视网|新浪财经)\s*[丨|：:]?\s*|\s*(?:财联社|华尔街见闻|第一财经|证券时报|澎湃新闻|界面新闻|凤凰网|央视网)$)", "", what).strip()
-        if not title or AI_NOISE_RE.search(f"{title} {what}") or is_omnibus_digest_title(title):
+    _LEGACY_BAD_PREFIXES = (
+        "ai_google_gemini4_", "ai_openai_gpt62_", "ai_deepseek_v4_", "ai_google_diffusiongemma_",
+        "ai_anthropic_claude_", "ai_tencent_hy4_", "ai_qwen4_", "ai_kimi_k31_", "ai_radixark_",
+        "ai_vllm_llamacpp", "ai_openai_amd_", "ai_xai_grok3_colossus", "ai_bytedance_seed_suite",
+        "ai_zhipu_glm_open", "ai_minimax_hailuo", "ai_baidu_ernie_open", "ai_huawei_openpangu",
+        "ai_mistral_codestral", "ai_apple_foundation_mlx", "ai_amazon_nova_bedrock",
+        "ai_perplexity_sonar", "ai_cursor_composer_ide", "ai_stability_open_media",
+    )
+
+    def _ai_item_sort_key(it: Dict[str, Any]) -> Tuple[str, int, str, int]:
+        d_raw = str(it.get("date") or "").strip()
+        day = d_raw[:10]
+        has_time = 0 if (not d_raw or len(d_raw) <= 10) else 1
+        non_tool = 1 if not str(it.get("id") or "").startswith("ai_tool_") else 0
+        return (day, has_time, d_raw, non_tool)
+
+    def _append_related_source(target: Dict[str, Any], src_name: str, src_url: str, is_fh: bool) -> None:
+        rel = list(target.get("related_sources") or [])
+        norm_u = _norm_ai_source_url(src_url)
+        existing_urls = {_norm_ai_source_url(str(r.get("url") or "")) for r in rel}
+        existing_names = {str(r.get("source_name") or "").strip() for r in rel}
+        if src_name and (norm_u and norm_u not in existing_urls or (not norm_u and src_name not in existing_names)):
+            rel.append({"source_name": src_name, "url": src_url, "is_first_hand": bool(is_fh)})
+        target["related_sources"] = rel[:8]
+
+    def _add_or_merge_item(raw_it: Dict[str, Any], *, drop_noisy_hf: bool = True) -> None:
+        it_id = str(raw_it.get("id") or "")
+        src_name = re.sub(
+            r"\s*[财新财联华尔街见闻第一财经每日经济新闻证券时报人民网新华网中新社]+$",
+            "",
+            str(raw_it.get("source_name") or "").strip(),
+        ) or str(raw_it.get("source_name") or "")
+        if it_id.startswith(_LEGACY_BAD_PREFIXES) or src_name.strip().lower() == "batch_digest":
             return
-        it = dict(it)
-        it["source_name"] = src_name
-        it["title"] = title
-        it["what_it_does"] = what
-        if it.get("what_it_does_en"):
-            it["what_it_does_en"] = strip_raw_urls_and_domain_tails(str(it["what_it_does_en"]))
+
+        title = strip_raw_urls_and_domain_tails(str(raw_it.get("title") or "").strip())
+        title = re.sub(
+            r"\s+(?:财联社|华尔街见闻|第一财经|证券时报|澎湃新闻|界面新闻|凤凰网|央视网|新浪财经|东方财富)$",
+            "",
+            title,
+        ).strip()
+        # Strip legacy noisy HF sync suffixes from carried-forward records
+        if drop_noisy_hf and re.search(r"更新于\s*\d{4}-\d{2}-\d{2}", title):
+            return
+        url = str(raw_it.get("source_url") or "").strip()
+        what = strip_raw_urls_and_domain_tails(str(raw_it.get("what_it_does") or ""))
+        what = re.sub(
+            r"(?:^(?:财联社|凤凰网|央视网|新浪财经)\s*[丨|：:]?\s*|\s*(?:财联社|华尔街见闻|第一财经|证券时报|澎湃新闻|界面新闻|凤凰网|央视网)$)",
+            "",
+            what,
+        ).strip()
+        is_base = bool(raw_it.get("is_baseline_milestone"))
+        if not title or AI_NOISE_RE.search(f"{title} {what}") or (not is_base and is_omnibus_digest_title(title)) or is_foreign_subject_blocked(title, what):
+            return
+
+        cid = str(raw_it.get("company_id") or "")
+        if not cid or cid not in _LAB_META_BY_ID:
+            cid, cname, reg = _infer_company(title, url, src_name)
+        else:
+            # Always re-verify company attribution so misroutes never survive
+            inf_cid, inf_cname, inf_reg = _infer_company(title, url, src_name)
+            cid, cname, reg = inf_cid, inf_cname, inf_reg
+
+        is_tool = it_id.startswith("ai_tool_")
+        what = _infer_what_it_does_zh(title, what, is_tool_release=is_tool)
         first_hand = bool(
-            it.get("is_first_hand")
-            or is_first_hand_ai_source(str(it.get("source_id") or ""), str(it.get("source_name") or ""), url)
+            raw_it.get("is_first_hand")
+            or is_first_hand_ai_source(str(raw_it.get("source_id") or ""), src_name, url)
         )
-        it["is_first_hand"] = first_hand
-        it["source_tier"] = str(it.get("source_tier") or ("first_party" if first_hand else "wire_media"))
+        is_os = detect_is_open_source(title, what, url=url, company_id=cid, source_id=str(raw_it.get("source_id") or ""))
+        dim_id, dim_zh, dim_en = classify_ai_milestone_dim(title, what, is_open_source=is_os, category=str(raw_it.get("category") or ""))
+        pub_date = normalize_ai_timestamp(raw_it.get("date") or generated_at_iso, generated_at_iso)
+
+        # Keep archive bounded cleanly (baselines always kept; news items kept for 180d)
+        if not is_base and pub_date[:10] and pub_date[:10] < cutoff_180d_iso:
+            return
+
+        cand = dict(raw_it)
+        cand.update(
+            {
+                "company_id": cid,
+                "company_name": cname,
+                "region": reg,
+                "date": pub_date,
+                "source_name": src_name,
+                "source_url": url,
+                "title": title,
+                "what_it_does": what,
+                "is_first_hand": first_hand,
+                "source_tier": "first_party" if first_hand else "wire_media",
+                "is_open_source": is_os,
+                "milestone_dim": dim_id,
+                "milestone_dim_label": dim_zh,
+                "milestone_dim_label_en": dim_en,
+                "is_recent_72h": _is_within_recent_hours(pub_date, gen_dt, 72),
+            }
+        )
+        if cand.get("what_it_does_en"):
+            cand["what_it_does_en"] = strip_raw_urls_and_domain_tails(str(cand["what_it_does_en"]))
+        _append_related_source(cand, src_name, url, first_hand)
+        for rs in raw_it.get("related_sources") or []:
+            if isinstance(rs, dict):
+                _append_related_source(cand, str(rs.get("source_name") or ""), str(rs.get("url") or ""), bool(rs.get("is_first_hand")))
+
         key = re.sub(r"\W+", "", title.lower())[:26]
-        if not key or key in seen_titles:
+        if not key:
             return
-        if any(is_similar_ai_release(title, url, str(prev.get("title") or ""), str(prev.get("source_url") or "")) for prev in items):
+
+        # Match existing duplicate for smart merge (never overwrite first_hand with wire!)
+        match = seen_title_map.get(key)
+        if match is None:
+            for prev in items:
+                if is_similar_ai_release(
+                    title,
+                    url,
+                    str(prev.get("title") or ""),
+                    str(prev.get("source_url") or ""),
+                    company_id_a=cid,
+                    company_id_b=str(prev.get("company_id") or ""),
+                ):
+                    match = prev
+                    break
+
+        if match is not None:
+            _append_related_source(match, src_name, url, first_hand)
+            for rs in cand.get("related_sources") or []:
+                _append_related_source(match, str(rs.get("source_name") or ""), str(rs.get("url") or ""), bool(rs.get("is_first_hand")))
+
+            # Promote first-hand official source if the existing entry came from secondary wire media
+            if first_hand and not match.get("is_first_hand"):
+                match["is_first_hand"] = True
+                match["source_tier"] = "first_party"
+                if url:
+                    match["source_url"] = url
+                if src_name:
+                    match["source_name"] = src_name
+                if len(title) >= 8 and not title.lower().startswith("[hf paper]"):
+                    match["title"] = title
+            elif first_hand and is_first_hand_ai_source("", "", url) and not is_first_hand_ai_source("", "", str(match.get("source_url") or "")):
+                match["source_url"] = url
+                if src_name:
+                    match["source_name"] = src_name
+
+            # Keep finer timestamp on same day & richer non-echo summary
+            if _ai_item_sort_key(cand) > _ai_item_sort_key(match):
+                match["date"] = pub_date
+                match["is_recent_72h"] = cand["is_recent_72h"]
+            if what and (not match.get("what_it_does") or len(what) > len(str(match.get("what_it_does") or "")) + 8):
+                match["what_it_does"] = what
+            # Prefer a non-baseline event_id when an actual live/cat item merges with a baseline milestone
+            if match.get("is_baseline_milestone") and not is_base and not match.get("event_id") and cand.get("event_id"):
+                match["event_id"] = cand["event_id"]
+            # Re-verify open-source & dimension after merge
+            match["is_open_source"] = bool(match.get("is_open_source") or is_os) if match.get("company_id") not in {"openai", "anthropic"} else detect_is_open_source(
+                str(match.get("title") or ""), str(match.get("what_it_does") or ""), url=str(match.get("source_url") or ""), company_id=str(match.get("company_id") or "")
+            )
             return
-        seen_titles.add(key)
-        items.append(it)
 
-    grounded = _query_gemini_google_search_ai_weekly(base_dir=base_dir)
-    for g in grounded:
-        _add_item(g)
+        seen_title_map[key] = cand
+        items.append(cand)
 
+    root_p = Path(base_dir)
     ai_kw_re = AI_KW_RE
     ai_release_re = AI_RELEASE_RE
-    for cat in ("tech", "general", "finance", "global"):
-        for ev in (cat_docs.get(cat) or {}).get("events") or []:
-            title = str(ev.get("title") or "").strip()
-            if not title or not ai_kw_re.search(title) or AI_NOISE_RE.search(title):
-                continue
-            if any(bad in title.lower() for bad in ("听证会", "诈骗", "fcc", "fda", "围巾", "座驾", "中期选举", "ipo", "募资", "发行价", "灰市", "selling pressure", "股票", "股价", "后悔当年")):
-                continue
-            src0 = (ev.get("sources") or [{}])[0]
-            src_id = str(src0.get("source_id") or "")
-            src_url = str(src0.get("url") or "")
-            src_name = str(src0.get("publisher_name") or src0.get("source_name") or "镜信科技快讯")
-            first_hand = is_first_hand_ai_source(src_id, src_name, src_url)
-            cid, cname, reg = _infer_company(title, src_url, src_name)
-            pub_date = normalize_ai_timestamp(
-                ev.get("latest_reported_at") or ev.get("first_reported_at") or generated_at_iso,
-                generated_at_iso,
-            )
-            summary = str(ev.get("fact_summary") or ev.get("summary") or "")
-            is_os = any(k in title.lower() for k in ("开源", "open", "github", "hugging", "vllm", "llama.cpp", "gemma", "权重"))
-            _add_item(
-                {
-                    "id": f"ai_ev_{ev.get('event_id')}",
-                    "date": pub_date,
-                    "company_id": cid,
-                    "company_name": cname,
-                    "region": reg,
-                    "category": "开源突破" if is_os else "模型与产品",
-                    "category_en": "Open Source" if is_os else "Model & Product",
-                    "title": title,
-                    "title_en": str(ev.get("title_en") or title),
-                    "what_it_does": _infer_what_it_does_zh(title, summary),
-                    "what_it_does_en": str(ev.get("summary_en") or summary[:160]),
-                    "who_cares": "",
-                    "limitations": "",
-                    "limitations_en": "",
-                    "source_id": src_id,
-                    "source_name": src_name,
-                    "source_url": src_url,
-                    "is_first_hand": first_hand,
-                    "source_tier": "first_party" if first_hand else "wire_media",
-                    "event_id": ev.get("event_id"),
-                    "is_open_source": is_os,
-                }
-            )
 
-    # Also ingest freshly crawled direct-RSS AI lab announcements & 7x24 flash wire AI drops (zero-lag)
+    # Stage 1: Prepare & prioritize fresh direct RSS / live wire first-hand announcements BEFORE wire media
+    raw_pool: List[dict] = []
     try:
-        from .bilingual import ensure_zh_headline
-
-        root_p = Path(base_dir)
-        raw_pool: List[dict] = []
         conn_doc = load_json_if_exists(root_p / "data/connectors_latest.json", default={})
         if isinstance(conn_doc, dict):
             raw_pool.extend(conn_doc.get("items") or [])
         lw_doc = load_json_if_exists(root_p / "data/live_wire.json", default={})
         if isinstance(lw_doc, dict):
             raw_pool.extend(lw_doc.get("items") or [])
+    except Exception:
+        raw_pool = []
 
-        for raw_it in raw_pool:
-            if not isinstance(raw_it, dict):
-                continue
+    raw_first_hand: List[dict] = []
+    raw_wire: List[dict] = []
+    for raw_it in raw_pool:
+        if not isinstance(raw_it, dict):
+            continue
+        rsid = str(raw_it.get("source_id") or "")
+        rurl = str(raw_it.get("url") or raw_it.get("canonical_url") or "")
+        rsrc = str(raw_it.get("publisher_name") or raw_it.get("source_name") or "直连 AI 雷达")
+        if is_first_hand_ai_source(rsid, rsrc, rurl) or raw_it.get("is_first_hand"):
+            raw_first_hand.append(raw_it)
+        else:
+            raw_wire.append(raw_it)
+
+    def _ingest_raw_entries(entries: List[dict], require_release_kw: bool) -> None:
+        from .bilingual import ensure_zh_headline
+
+        for raw_it in entries:
             rtitle = strip_raw_urls_and_domain_tails(str(raw_it.get("title") or "").strip())
             excerpt = strip_raw_urls_and_domain_tails(str(raw_it.get("excerpt") or "").strip())
-            if not rtitle or is_omnibus_digest_title(rtitle) or AI_NOISE_RE.search(f"{rtitle} {excerpt}") or not ai_kw_re.search(rtitle):
+            if not rtitle or is_omnibus_digest_title(rtitle) or AI_NOISE_RE.search(f"{rtitle} {excerpt}") or is_foreign_subject_blocked(rtitle, excerpt) or not ai_kw_re.search(rtitle):
                 continue
             rsid = str(raw_it.get("source_id") or "")
             rurl = str(raw_it.get("url") or raw_it.get("canonical_url") or "")
             rsrc = str(raw_it.get("publisher_name") or raw_it.get("source_name") or "直连 AI 雷达")
-            first_hand = is_first_hand_ai_source(rsid, rsrc, rurl)
-            if not first_hand and not ai_release_re.search(rtitle):
+            first_hand = bool(raw_it.get("is_first_hand")) or is_first_hand_ai_source(rsid, rsrc, rurl)
+            if require_release_kw and not first_hand and not ai_release_re.search(rtitle):
                 continue
             if any(bad in rtitle.lower() for bad in ("听证会", "诈骗", "fcc", "fda", "围巾", "座驾", "中期选举", "ipo", "募资", "发行价", "灰市", "selling pressure", "股票", "股价", "lawsuit", "sues")):
                 continue
@@ -1288,16 +1612,16 @@ def build_ai_progress_artifact(
                 generated_at_iso,
             )
             zh_title = ensure_zh_headline(rtitle, "tech")
-            is_os = any(k in rtitle.lower() for k in ("开源", "open", "github", "hugging", "vllm", "llama.cpp", "gemma", "权重", "model card", "hf 模型卡"))
-            _add_item(
+            is_os = detect_is_open_source(zh_title, excerpt, url=rurl, company_id=cid, source_id=rsid)
+            _add_or_merge_item(
                 {
                     "id": f"ai_raw_{raw_it.get('item_id') or raw_it.get('id') or len(items)}",
                     "date": pub_date,
                     "company_id": cid,
                     "company_name": cname,
                     "region": reg,
-                    "category": "开源突破" if is_os else "最新动态",
-                    "category_en": "Open Source" if is_os else "Latest Release",
+                    "category": "开源突破" if is_os else ("官方一手" if first_hand else "最新动态"),
+                    "category_en": "Open Source" if is_os else ("First-Hand Official" if first_hand else "Latest Release"),
                     "title": zh_title,
                     "title_en": rtitle,
                     "what_it_does": _infer_what_it_does_zh(zh_title, excerpt),
@@ -1313,101 +1637,179 @@ def build_ai_progress_artifact(
                     "is_open_source": is_os,
                 }
             )
+
+    try:
+        _ingest_raw_entries(raw_first_hand, require_release_kw=False)
     except Exception:
         pass
 
-    for tool in tech_tools[:20]:
-        name = str(tool.get("name") or "").strip()
-        ver = str(tool.get("latest_version") or tool.get("version") or "").strip()
-        if not name:
-            continue
-        title = f"开源生态更新：{name} {ver}".strip()
-        turl = str(tool.get("release_url") or tool.get("official_url") or "")
-        tsrc = str(tool.get("source_name") or "GitHub / Hugging Face")
-        cid, cname, reg = _infer_company(f"{name} {tool.get('repo') or ''}", turl, tsrc)
-        pub_date = normalize_ai_timestamp(tool.get("version_published_at") or generated_at_iso, generated_at_iso)
-        summary = strip_raw_urls_and_domain_tails(str(tool.get("summary") or "").strip())
-        lic = str(tool.get("license") or "").strip()
-        _add_item(
-            {
-                "id": f"ai_tool_{tool.get('tool_id') or name}",
+    grounded = _query_gemini_google_search_ai_weekly(base_dir=base_dir)
+    for g in grounded:
+        _add_or_merge_item(g)
+
+    # Stage 2: Ingest structured smart briefing events (inspect ALL sources so first-hand blog refs are never lost!)
+    for cat in ("tech", "general", "finance", "global"):
+        for ev in (cat_docs.get(cat) or {}).get("events") or []:
+            title = str(ev.get("title") or "").strip()
+            if not title or not ai_kw_re.search(title) or AI_NOISE_RE.search(title) or is_foreign_subject_blocked(title):
+                continue
+            if any(bad in title.lower() for bad in ("听证会", "诈骗", "fcc", "fda", "围巾", "座驾", "中期选举", "ipo", "募资", "发行价", "灰市", "selling pressure", "股票", "股价", "后悔当年")):
+                continue
+            srcs = [s for s in (ev.get("sources") or []) if isinstance(s, dict)]
+            best_src = srcs[0] if srcs else {}
+            first_hand = False
+            for cand_s in srcs:
+                c_sid = str(cand_s.get("source_id") or "")
+                c_url = str(cand_s.get("url") or "")
+                c_name = str(cand_s.get("publisher_name") or cand_s.get("source_name") or "")
+                if is_first_hand_ai_source(c_sid, c_name, c_url):
+                    best_src = cand_s
+                    first_hand = True
+                    break
+            src_id = str(best_src.get("source_id") or "")
+            src_url = str(best_src.get("url") or "")
+            src_name = str(best_src.get("publisher_name") or best_src.get("source_name") or "镜信科技快讯")
+            if not first_hand:
+                first_hand = is_first_hand_ai_source(src_id, src_name, src_url)
+            cid, cname, reg = _infer_company(title, src_url, src_name)
+            pub_date = normalize_ai_timestamp(
+                ev.get("latest_reported_at") or ev.get("first_reported_at") or generated_at_iso,
+                generated_at_iso,
+            )
+            summary = str(ev.get("fact_summary") or ev.get("summary") or "")
+            is_os = detect_is_open_source(title, summary, url=src_url, company_id=cid, source_id=src_id)
+            ev_item: Dict[str, Any] = {
+                "id": f"ai_ev_{ev.get('event_id')}",
                 "date": pub_date,
                 "company_id": cid,
                 "company_name": cname,
                 "region": reg,
-                "category": "开源工具/仓库",
-                "category_en": "Open-Source Repo",
+                "category": "开源突破" if is_os else "模型与产品",
+                "category_en": "Open Source" if is_os else "Model & Product",
                 "title": title,
-                "title_en": f"Open-source release: {name} {ver}".strip(),
-                "what_it_does": _infer_what_it_does_zh(title, summary, is_tool_release=True),
-                "what_it_does_en": summary[:160] if summary else "",
+                "title_en": str(ev.get("title_en") or title),
+                "what_it_does": _infer_what_it_does_zh(title, summary),
+                "what_it_does_en": str(ev.get("summary_en") or summary[:160]),
                 "who_cares": "",
-                "limitations": f"许可证：{lic}" if lic else "",
-                "limitations_en": f"License: {lic}" if lic else "",
-                "source_id": "github-releases" if "github" in turl.lower() else ("huggingface-hub" if "huggingface" in turl.lower() else ""),
-                "source_name": tsrc,
-                "source_url": turl,
-                "is_first_hand": True,
-                "source_tier": "first_party",
-                "is_open_source": True,
+                "limitations": "",
+                "limitations_en": "",
+                "source_id": src_id,
+                "source_name": src_name,
+                "source_url": src_url,
+                "is_first_hand": first_hand,
+                "source_tier": "first_party" if first_hand else "wire_media",
+                "event_id": ev.get("event_id"),
+                "is_open_source": is_os,
+                "related_sources": [
+                    {
+                        "source_name": str(s.get("publisher_name") or s.get("source_name") or ""),
+                        "url": str(s.get("url") or ""),
+                        "is_first_hand": is_first_hand_ai_source(str(s.get("source_id") or ""), str(s.get("source_name") or ""), str(s.get("url") or "")),
+                    }
+                    for s in srcs[:5]
+                    if s.get("url")
+                ],
             }
-        )
+            _add_or_merge_item(ev_item)
 
-    # Carry forward valid recent items from previous data/ai_progress.json (scrubbed via _add_item)
     try:
-        prev_ai = load_json_if_exists(Path(base_dir) / "data/ai_progress.json", default={})
-        for prev_it in (prev_ai.get("timeline") or []) if isinstance(prev_ai, dict) else []:
-            if not isinstance(prev_it, dict):
-                continue
-            cleaned_prev = dict(prev_it)
-            prev_t = strip_raw_urls_and_domain_tails(str(cleaned_prev.get("title") or ""))
-            prev_sum = strip_raw_urls_and_domain_tails(str(cleaned_prev.get("what_it_does") or ""))
-            pcid, pcname, preg = _infer_company(prev_t, str(cleaned_prev.get("source_url") or ""), str(cleaned_prev.get("source_name") or ""))
-            cleaned_prev["company_id"] = pcid
-            cleaned_prev["company_name"] = pcname
-            cleaned_prev["region"] = preg
-            # Scrub bogus robot/distill boilerplate or empty/title-echo descriptions on carried-forward items
-            if "具身智能/物理仿真模型工具" in prev_sum and "robot" not in prev_t.lower() and not str(cleaned_prev.get("id") or "").startswith("ai_tool_"):
-                prev_sum = ""
-            is_prev_tool = str(cleaned_prev.get("id") or "").startswith("ai_tool_")
-            prev_sum = _infer_what_it_does_zh(prev_t, prev_sum, is_tool_release=is_prev_tool)
-            cleaned_prev["title"] = prev_t
-            cleaned_prev["what_it_does"] = prev_sum
-            _add_item(cleaned_prev)
+        _ingest_raw_entries(raw_wire, require_release_kw=True)
     except Exception:
         pass
 
-    if os.environ.get("ENABLE_CURATED_AI_PLACEHOLDERS", "0").strip() == "1":
-        for m in _CURATED_AI_MILESTONES:
-            _add_item(dict(m))
+    for tool in tech_tools[:24]:
+        if not isinstance(tool, dict):
+            continue
+        cleaned_tool = _clean_hf_and_tool_record(tool, generated_at_iso)
+        if cleaned_tool is not None:
+            _add_or_merge_item(cleaned_tool, drop_noisy_hf=False)
 
-    def _ai_item_sort_key(it: Dict[str, Any]) -> Tuple[str, int, str, int]:
-        d_raw = str(it.get("date") or "").strip()
-        day = d_raw[:10]
-        has_time = 0 if (not d_raw or len(d_raw) <= 10) else 1
-        non_tool = 1 if not str(it.get("id") or "").startswith("ai_tool_") else 0
-        return (day, has_time, d_raw, non_tool)
+    # Stage 3: Merge curated historical baselines & recovered recent flagship releases (never overwrites newer live items)
+    for base_m in HISTORICAL_BASELINE_MILESTONES:
+        _add_or_merge_item(dict(base_m), drop_noisy_hf=False)
+
+    # Stage 4: Incremental merge with persistent archive (data/ai_progress_archive.json) & prior data/ai_progress.json
+    for prev_rel in ("data/ai_progress_archive.json", "data/ai_progress.json"):
+        try:
+            prev_doc = load_json_if_exists(root_p / prev_rel, default={})
+            prev_pool: List[dict] = []
+            if isinstance(prev_doc, dict):
+                prev_pool.extend(prev_doc.get("timeline") or [])
+                for comp in prev_doc.get("companies") or []:
+                    if isinstance(comp, dict):
+                        prev_pool.extend(comp.get("items") or [])
+            for prev_it in prev_pool:
+                if not isinstance(prev_it, dict):
+                    continue
+                cleaned_prev = dict(prev_it)
+                prev_t = strip_raw_urls_and_domain_tails(str(cleaned_prev.get("title") or ""))
+                prev_sum = strip_raw_urls_and_domain_tails(str(cleaned_prev.get("what_it_does") or ""))
+                if "具身智能/物理仿真模型工具" in prev_sum and "robot" not in prev_t.lower() and not str(cleaned_prev.get("id") or "").startswith("ai_tool_"):
+                    prev_sum = ""
+                cleaned_prev["title"] = prev_t
+                cleaned_prev["what_it_does"] = prev_sum
+                _add_or_merge_item(cleaned_prev)
+        except Exception:
+            pass
 
     items.sort(key=_ai_item_sort_key, reverse=True)
 
-    companies: List[Dict[str, Any]] = []
+    # Build Archive view (up to 24 milestones per lab, up to 240 in archive timeline)
+    archive_companies: List[Dict[str, Any]] = []
+    archive_union: List[Dict[str, Any]] = []
+    seen_arch_ids: set[str] = set()
+
+    # Build Active view (up to 8 deduplicated items per lab, recent-first with baseline coverage -> 0 empty labs!)
+    active_companies: List[Dict[str, Any]] = []
+    active_union: List[Dict[str, Any]] = []
+    seen_active_ids: set[str] = set()
+
     for lab in _LAB_CATALOG:
         cid = lab["company_id"]
-        lab_items = [it for it in items if it.get("company_id") == cid]
-        companies.append(
+        lab_all = sorted([it for it in items if it.get("company_id") == cid], key=_ai_item_sort_key, reverse=True)
+
+        lab_arch = lab_all[:24]
+        lab_active = lab_all[:8]
+
+        archive_companies.append(
             {
                 **lab,
-                "recent_count": len(lab_items),
-                "latest_date": lab_items[0]["date"] if lab_items else "",
-                "latest_headline": lab_items[0]["title"] if lab_items else "",
-                "items": lab_items[:8],
+                "recent_count": len(lab_arch),
+                "archive_count": len(lab_all),
+                "latest_date": lab_arch[0]["date"] if lab_arch else "",
+                "latest_headline": lab_arch[0]["title"] if lab_arch else "",
+                "items": lab_arch,
             }
         )
+        for it in lab_arch:
+            iid = str(it.get("id") or "")
+            if iid and iid not in seen_arch_ids:
+                seen_arch_ids.add(iid)
+                archive_union.append(it)
+
+        active_companies.append(
+            {
+                **lab,
+                "recent_count": len(lab_active),
+                "archive_count": len(lab_all),
+                "latest_date": lab_active[0]["date"] if lab_active else "",
+                "latest_headline": lab_active[0]["title"] if lab_active else "",
+                "items": lab_active,
+            }
+        )
+        for it in lab_active:
+            iid = str(it.get("id") or "")
+            if iid and iid not in seen_active_ids:
+                seen_active_ids.add(iid)
+                active_union.append(it)
+
+    archive_union.sort(key=_ai_item_sort_key, reverse=True)
+    active_union.sort(key=_ai_item_sort_key, reverse=True)
 
     weekly_highlights: List[Dict[str, Any]] = []
     company_counts: Dict[str, int] = {}
-    for it in items:
-        if it["id"].startswith("ai_tool_"):
+    for it in active_union:
+        if str(it.get("id") or "").startswith("ai_tool_"):
             continue
         cid = str(it.get("company_id") or "")
         if company_counts.get(cid, 0) >= 1 and len(weekly_highlights) < 6:
@@ -1418,35 +1820,53 @@ def build_ai_progress_artifact(
             break
     if len(weekly_highlights) < 6:
         used_ids = {x["id"] for x in weekly_highlights}
-        for it in items:
-            if it["id"] not in used_ids and not it["id"].startswith("ai_tool_"):
+        for it in active_union:
+            if it["id"] not in used_ids and not str(it.get("id") or "").startswith("ai_tool_"):
                 weekly_highlights.append(it)
                 if len(weekly_highlights) >= 6:
                     break
-    open_source_count = sum(1 for it in items if it.get("is_open_source"))
-    china_count = sum(1 for it in items if it.get("region") == "国内")
-    global_count = sum(1 for it in items if it.get("region") == "海外")
+
+    def _build_digest_block(pool: List[Dict[str, Any]], label_prefix: str) -> Dict[str, Any]:
+        os_c = sum(1 for it in pool if it.get("is_open_source"))
+        cn_c = sum(1 for it in pool if it.get("region") == "国内")
+        gl_c = sum(1 for it in pool if it.get("region") == "海外")
+        fh_c = sum(1 for it in pool if it.get("is_first_hand"))
+        return {
+            "period_label": f"{label_prefix}（截至 {generated_at_iso[:10]}）",
+            "period_label_en": f"Global AI Digest (as of {generated_at_iso[:10]})",
+            "summary": (
+                f"追踪 23 家前沿实验室共 {len(pool)} 项独立 AI 进展（海外 {gl_c} · 国内 {cn_c} · 开源生态 {os_c} · 一手官方 {fh_c}）。"
+                "支持按代际演进谱系、5 大技术维度及 180 天完整历史归档库切换检索。"
+            ),
+            "summary_en": (
+                f"Tracking {len(pool)} deduplicated AI milestones across 23 frontier labs ({gl_c} global, {cn_c} China, {os_c} open-source, {fh_c} first-hand official)."
+            ),
+            "highlights": weekly_highlights,
+        }
+
+    archive_doc = {
+        "schema_version": "4.2",
+        "generated_at": generated_at_iso,
+        "batch_id": batch_id,
+        "mode": "archive_180d",
+        "weekly_digest": _build_digest_block(archive_union, "全球 AI 机构 180 天完整历史演进库"),
+        "companies": archive_companies,
+        "timeline": archive_union[:240],
+    }
+    try:
+        if str(base_dir):
+            atomic_write_json(root_p / "data/ai_progress_archive.json", archive_doc)
+    except Exception:
+        pass
 
     return {
-        "schema_version": "4.1",
+        "schema_version": "4.2",
         "generated_at": generated_at_iso,
         "batch_id": batch_id,
         "search_grounded": bool(grounded),
-        "weekly_digest": {
-            "period_label": f"近 7 日全球 AI 大事周报（截至 {generated_at_iso[:10]}）",
-            "period_label_en": f"Weekly Global AI Digest (as of {generated_at_iso[:10]})",
-            "summary": (
-                f"本周共收录 {len(items)} 项国内外 AI 关键进展（海外 {global_count} · 国内 {china_count} · 开源生态 {open_source_count}）。"
-                "主线聚焦三大方向：1）中美头部旗舰模型进入新一轮迭代与商业化验证；"
-                "2）端侧中小参数与开源推理引擎持续拉低个人电脑本地运行门槛；"
-                "3）多模态世界模型与编程 Agent 加速落地真实开发工作流。"
-            ),
-            "summary_en": (
-                f"Tracked {len(items)} AI milestones this week ({global_count} global, {china_count} China, {open_source_count} open-source). "
-                "Key themes: flagship model competition, local/edge open-weight breakthroughs, and multimodal & coding agents entering production."
-            ),
-            "highlights": weekly_highlights,
-        },
-        "companies": companies,
-        "timeline": items[:60],
+        "archive_path": "data/ai_progress_archive.json",
+        "archive_total": len(archive_union),
+        "weekly_digest": _build_digest_block(active_union, "近 7 日全球 AI 大事与机构演进榜"),
+        "companies": active_companies,
+        "timeline": active_union,
     }
