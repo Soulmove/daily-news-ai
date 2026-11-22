@@ -1,6 +1,6 @@
 {
   "schema_version": "4.1",
-  "site_published_at": "2026-11-22T14:41:44+08:00",
+  "site_published_at": "2026-11-22T14:59:10+08:00",
   "smart": {
     "latest_batch_id": "smart-20261122-143735",
     "latest_path": "archives/smart/2026-11-22/14-37/",
@@ -81,12 +81,12 @@
     }
   },
   "raw": {
-    "latest_batch_id": "raw-20261122-143645",
-    "latest_path": "archives/raw/2026-11-22/14-36/",
-    "meta_path": "archives/raw/2026-11-22/14-36/meta.json",
-    "connectors_path": "archives/raw/2026-11-22/14-36/connectors.json",
-    "fetched_at": "2026-11-22T14:36:45+08:00",
-    "published_at": "2026-11-22T14:37:09+08:00",
+    "latest_batch_id": "raw-20261122-145849",
+    "latest_path": "archives/raw/2026-11-22/14-58/",
+    "meta_path": "archives/raw/2026-11-22/14-58/meta.json",
+    "connectors_path": "archives/raw/2026-11-22/14-58/connectors.json",
+    "fetched_at": "2026-11-22T14:58:49+08:00",
+    "published_at": "2026-11-22T14:59:10+08:00",
     "target_cadence_minutes": 60,
     "schedule_source": "workflow_dispatch",
     "status": "partial",
@@ -97,57 +97,57 @@
       "error_sources": 0,
       "stale_sources": 0,
       "retired_sources": 5,
-      "total_raw_items": 1452,
+      "total_raw_items": 1443,
       "first_party_items": 22,
       "healthy_connectors": 7,
       "total_connectors": 7,
-      "deep_fetched_enriched": 13,
-      "deduped_events": 1200
+      "deep_fetched_enriched": 14,
+      "deduped_events": 1210
     },
     "categories": {
       "finance": {
         "file": "data_finance.json",
-        "path": "archives/raw/2026-11-22/14-36/data_finance.json",
+        "path": "archives/raw/2026-11-22/14-58/data_finance.json",
         "status": "ok",
         "source_count": 18,
         "ok_sources": 18,
         "error_sources": 0,
         "empty_sources": 0,
         "stale_sources": 0,
-        "item_count": 347
+        "item_count": 355
       },
       "global": {
         "file": "data_global.json",
-        "path": "archives/raw/2026-11-22/14-36/data_global.json",
+        "path": "archives/raw/2026-11-22/14-58/data_global.json",
         "status": "ok",
         "source_count": 13,
         "ok_sources": 13,
         "error_sources": 0,
         "empty_sources": 0,
         "stale_sources": 0,
-        "item_count": 265
+        "item_count": 256
       },
       "tech": {
         "file": "data_tech.json",
-        "path": "archives/raw/2026-11-22/14-36/data_tech.json",
+        "path": "archives/raw/2026-11-22/14-58/data_tech.json",
         "status": "partial",
         "source_count": 30,
         "ok_sources": 29,
         "error_sources": 0,
         "empty_sources": 1,
         "stale_sources": 0,
-        "item_count": 496
+        "item_count": 498
       },
       "general": {
         "file": "data_general.json",
-        "path": "archives/raw/2026-11-22/14-36/data_general.json",
+        "path": "archives/raw/2026-11-22/14-58/data_general.json",
         "status": "ok",
         "source_count": 15,
         "ok_sources": 15,
         "error_sources": 0,
         "empty_sources": 0,
         "stale_sources": 0,
-        "item_count": 344
+        "item_count": 334
       }
     }
   },
@@ -159,12 +159,12 @@
   },
   "connectors": {
     "latest_path": "data/connectors_latest.json",
-    "fetched_at": "2026-11-22T14:36:45+08:00",
+    "fetched_at": "2026-11-22T14:58:49+08:00",
     "summary": {
       "total_connectors": 7,
       "healthy_connectors": 7,
-      "total_first_party_items": 480,
-      "tech_tools_count": 32,
+      "total_first_party_items": 481,
+      "tech_tools_count": 20,
       "calendar_events_count": 5
     }
   },
@@ -204,15 +204,21 @@
     "radar_count": 42
   },
   "degraded": true,
-  "alerts": [],
+  "alerts": [
+    {
+      "code": "raw_crawl_degraded",
+      "severity": "warning",
+      "message": "原始抓取状态：partial（错误源 0 个）"
+    }
+  ],
   "gemini_quota": {
     "total_configured_keys": 12,
     "healthy_keys": 12,
     "cooled_down_keys": 0,
     "exhausted_keys": 0,
-    "daily_calls_total": 36,
+    "daily_calls_total": 47,
     "date_utc": "2026-11-22",
-    "updated_at": "2026-11-22T06:41:44Z",
+    "updated_at": "2026-11-22T06:58:57Z",
     "keys": [
       {
         "slot": "KEY_TECH",
@@ -227,82 +233,82 @@
       {
         "slot": "KEY_GLOBAL",
         "status": "healthy",
-        "daily_calls": 3,
+        "daily_calls": 4,
         "cooldown_until": null,
         "exhausted_until": null,
         "last_error_code": null,
         "last_error": null,
-        "last_success_at": "2026-11-22T05:54:42Z"
+        "last_success_at": "2026-11-22T06:42:22Z"
       },
       {
         "slot": "KEY_FINANCE",
         "status": "healthy",
-        "daily_calls": 3,
+        "daily_calls": 4,
         "cooldown_until": null,
         "exhausted_until": null,
         "last_error_code": null,
         "last_error": null,
-        "last_success_at": "2026-11-22T05:55:53Z"
+        "last_success_at": "2026-11-22T06:42:36Z"
       },
       {
         "slot": "KEY_GENERAL",
         "status": "healthy",
-        "daily_calls": 2,
+        "daily_calls": 4,
         "cooldown_until": null,
         "exhausted_until": null,
         "last_error_code": null,
         "last_error": null,
-        "last_success_at": "2026-11-22T05:54:27Z"
+        "last_success_at": "2026-11-22T06:42:45Z"
       },
       {
         "slot": "KEY_1",
         "status": "healthy",
-        "daily_calls": 3,
+        "daily_calls": 4,
         "cooldown_until": null,
         "exhausted_until": null,
         "last_error_code": null,
         "last_error": null,
-        "last_success_at": "2026-11-22T06:40:07Z"
+        "last_success_at": "2026-11-22T06:42:55Z"
       },
       {
         "slot": "KEY_2",
         "status": "healthy",
-        "daily_calls": 3,
+        "daily_calls": 4,
         "cooldown_until": null,
         "exhausted_until": null,
         "last_error_code": null,
         "last_error": null,
-        "last_success_at": "2026-11-22T06:41:33Z"
+        "last_success_at": "2026-11-22T06:43:29Z"
       },
       {
         "slot": "KEY_3",
         "status": "healthy",
-        "daily_calls": 3,
+        "daily_calls": 4,
         "cooldown_until": null,
         "exhausted_until": null,
         "last_error_code": null,
         "last_error": null,
-        "last_success_at": "2026-11-22T06:39:58Z"
+        "last_success_at": "2026-11-22T06:43:08Z"
       },
       {
         "slot": "KEY_4",
         "status": "healthy",
-        "daily_calls": 3,
+        "daily_calls": 4,
         "cooldown_until": null,
         "exhausted_until": null,
         "last_error_code": null,
         "last_error": null,
-        "last_success_at": "2026-11-22T06:41:36Z"
+        "last_success_at": "2026-11-22T06:43:33Z"
       },
       {
         "slot": "KEY_5",
         "status": "healthy",
-        "daily_calls": 3,
+        "daily_calls": 4,
         "cooldown_until": null,
         "exhausted_until": null,
         "last_error_code": null,
         "last_error": null,
-        "last_success_at": "2026-11-22T05:53:23Z"
+        "last_success_at": "2026-11-22T06:43:17Z"
       },
       {
         "slot": "KEY_6",
@@ -317,12 +323,12 @@
       {
         "slot": "KEY_7",
         "status": "healthy",
-        "daily_calls": 3,
+        "daily_calls": 4,
         "cooldown_until": null,
         "exhausted_until": null,
         "last_error_code": null,
         "last_error": null,
-        "last_success_at": "2026-11-22T05:53:16Z"
+        "last_success_at": "2026-11-22T06:43:25Z"
       },
       {
         "slot": "KEY_8",
@@ -337,12 +343,12 @@
       {
         "slot": "GOOGLE_API_KEY",
         "status": "unconfigured",
-        "daily_calls": 2,
+        "daily_calls": 3,
         "cooldown_until": null,
         "exhausted_until": null,
-        "last_error_code": "TRANSIENT_ERROR",
-        "last_error": "ServerError: 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand ",
-        "last_success_at": "2026-11-21T23:31:17Z"
+        "last_error_code": null,
+        "last_error": null,
+        "last_success_at": "2026-11-22T06:42:04Z"
       }
     ]
   },
@@ -351,9 +357,9 @@
     "healthy_keys": 12,
     "cooled_down_keys": 0,
     "exhausted_keys": 0,
-    "daily_calls_total": 36,
+    "daily_calls_total": 47,
     "date_utc": "2026-11-22",
-    "updated_at": "2026-11-22T06:41:44Z",
+    "updated_at": "2026-11-22T06:58:57Z",
     "keys": [
       {
         "slot": "KEY_TECH",
@@ -368,82 +374,82 @@
       {
         "slot": "KEY_GLOBAL",
         "status": "healthy",
-        "daily_calls": 3,
+        "daily_calls": 4,
         "cooldown_until": null,
         "exhausted_until": null,
         "last_error_code": null,
         "last_error": null,
-        "last_success_at": "2026-11-22T05:54:42Z"
+        "last_success_at": "2026-11-22T06:42:22Z"
       },
       {
         "slot": "KEY_FINANCE",
         "status": "healthy",
-        "daily_calls": 3,
+        "daily_calls": 4,
         "cooldown_until": null,
         "exhausted_until": null,
         "last_error_code": null,
         "last_error": null,
-        "last_success_at": "2026-11-22T05:55:53Z"
+        "last_success_at": "2026-11-22T06:42:36Z"
       },
       {
         "slot": "KEY_GENERAL",
         "status": "healthy",
-        "daily_calls": 2,
+        "daily_calls": 4,
         "cooldown_until": null,
         "exhausted_until": null,
         "last_error_code": null,
         "last_error": null,
-        "last_success_at": "2026-11-22T05:54:27Z"
+        "last_success_at": "2026-11-22T06:42:45Z"
       },
       {
         "slot": "KEY_1",
         "status": "healthy",
-        "daily_calls": 3,
+        "daily_calls": 4,
         "cooldown_until": null,
         "exhausted_until": null,
         "last_error_code": null,
         "last_error": null,
-        "last_success_at": "2026-11-22T06:40:07Z"
+        "last_success_at": "2026-11-22T06:42:55Z"
       },
       {
         "slot": "KEY_2",
         "status": "healthy",
-        "daily_calls": 3,
+        "daily_calls": 4,
         "cooldown_until": null,
         "exhausted_until": null,
         "last_error_code": null,
         "last_error": null,
-        "last_success_at": "2026-11-22T06:41:33Z"
+        "last_success_at": "2026-11-22T06:43:29Z"
       },
       {
         "slot": "KEY_3",
         "status": "healthy",
-        "daily_calls": 3,
+        "daily_calls": 4,
         "cooldown_until": null,
         "exhausted_until": null,
         "last_error_code": null,
         "last_error": null,
-        "last_success_at": "2026-11-22T06:39:58Z"
+        "last_success_at": "2026-11-22T06:43:08Z"
       },
       {
         "slot": "KEY_4",
         "status": "healthy",
-        "daily_calls": 3,
+        "daily_calls": 4,
         "cooldown_until": null,
         "exhausted_until": null,
         "last_error_code": null,
         "last_error": null,
-        "last_success_at": "2026-11-22T06:41:36Z"
+        "last_success_at": "2026-11-22T06:43:33Z"
       },
       {
         "slot": "KEY_5",
         "status": "healthy",
-        "daily_calls": 3,
+        "daily_calls": 4,
         "cooldown_until": null,
         "exhausted_until": null,
         "last_error_code": null,
         "last_error": null,
-        "last_success_at": "2026-11-22T05:53:23Z"
+        "last_success_at": "2026-11-22T06:43:17Z"
       },
       {
         "slot": "KEY_6",
@@ -458,12 +464,12 @@
       {
         "slot": "KEY_7",
         "status": "healthy",
-        "daily_calls": 3,
+        "daily_calls": 4,
         "cooldown_until": null,
         "exhausted_until": null,
         "last_error_code": null,
         "last_error": null,
-        "last_success_at": "2026-11-22T05:53:16Z"
+        "last_success_at": "2026-11-22T06:43:25Z"
       },
       {
         "slot": "KEY_8",
@@ -478,12 +484,12 @@
       {
         "slot": "GOOGLE_API_KEY",
         "status": "unconfigured",
-        "daily_calls": 2,
+        "daily_calls": 3,
         "cooldown_until": null,
         "exhausted_until": null,
-        "last_error_code": "TRANSIENT_ERROR",
-        "last_error": "ServerError: 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand ",
-        "last_success_at": "2026-11-21T23:31:17Z"
+        "last_error_code": null,
+        "last_error": null,
+        "last_success_at": "2026-11-22T06:42:04Z"
       }
     ]
   }
