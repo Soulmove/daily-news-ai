@@ -91,17 +91,24 @@ def has_authoritative_primary_source(sources: List[dict]) -> bool:
 
 
 def is_consumer_promo_or_fluff(title: str, excerpt: str = "") -> bool:
-    """Reject C-tier retail hardware promos, game discounts/FPS/distant releases, photo-ops, venue protests, and minor quakes."""
+    """Reject C-tier retail hardware promos, phone retail discounts, game discounts/FPS/distant releases, photo-ops, venue protests, and minor quakes."""
     t = str(title or "").strip()
     if not t:
         return False
     blob = f"{t} {str(excerpt or '')[:160]}"
     if _PHOTO_OR_VENUE_FLUFF_RE.search(t):
         return True
-    if _MINOR_QUAKE_NOISE_RE.search(t) and not _SEVERE_DISASTER_GUARD_RE.search(blob):
+    blob_disaster_clean = re.sub(r"(?:暂无|无|未造成|没有)(?:任何)?(?:人员)?伤亡(?:报告)?", "", blob)
+    if _MINOR_QUAKE_NOISE_RE.search(t) and not _SEVERE_DISASTER_GUARD_RE.search(blob_disaster_clean):
         return True
     if _CORP_FINANCE_GUARD_RE.search(t):
         return False
+    if re.search(
+        r"(?:iPhone|华为\s*Mate|小米\s*\d+|OPPO|vivo|荣耀|三星\s*Galaxy).*(?:行情大跳水|第三方渠道价|低于官方\s*\d+\s*元|破发\s*\d+\s*元|直降\s*\d+\s*元|百亿补贴)",
+        t,
+        re.I,
+    ):
+        return True
     if _CONSUMER_DEVICE_RE.search(t) and _CONSUMER_PROMO_PRICE_RE.search(blob):
         return True
     if re.search(r"\b(?:TCL|飞利浦|Philips|AOC|蚂蚁电竞|HKC|KOORUI|泰坦军团|创维|Redmi|小米|三星|LG)\b.*\d{2,5}\s*元", t, re.I):

@@ -766,9 +766,9 @@ def _compute_lifecycle(
 
     if idle_hours >= 36.0 or (has_concluded and idle_hours >= 6.0 and not has_upcoming_catalyst) or (has_concluded and idle_hours >= 12.0):
         return "ended", LIFECYCLE_LABELS["ended"], to_iso_shanghai(last_dt)
-    if has_winding_down or idle_hours >= 10.0 or (has_concluded and idle_hours >= 1.5):
+    if has_winding_down or idle_hours >= 6.5 or (has_concluded and idle_hours >= 1.5):
         return "ending_soon", LIFECYCLE_LABELS["ending_soon"], None
-    if age_hours <= 24.0 and span_hours <= 14.0 and len(nodes) <= 8:
+    if len(nodes) <= 6 and age_hours <= 30.0 and span_hours <= 24.0:
         return "starting", LIFECYCLE_LABELS["starting"], None
     return "ongoing", LIFECYCLE_LABELS["ongoing"], None
 
@@ -919,13 +919,13 @@ def build_dynamic_topics(
                 clean_arch_tl = _dedupe_timeline_nodes(raw_old_tl, max_nodes=60)
                 if len(clean_arch_tl) < 3 or _is_minor_quake(arch_old_title):
                     continue
-                arch_pubs = {str(n.get("publisher_name") or n.get("source_name") or "") for n in clean_arch_tl if n.get("source_name") or n.get("publisher_name")}
-                if not is_cur_arch and len(arch_pubs) < 2:
-                    continue
                 canon_arch = _match_canonical_topic_theme(" ".join(str(n.get("title") or "") for n in clean_arch_tl[:8]))
                 re_t, re_s, _ = _build_cluster_headline(clean_arch_tl, set(tp_copy.get("entity_ids") or []))
                 final_arch_title = re_t if not is_cur_arch else (canon_arch[1] if canon_arch else arch_old_title)
                 key_tid = canon_arch[0] if (canon_arch and not is_cur_arch) else tp["topic_id"]
+                arch_pubs = {str(n.get("publisher_name") or n.get("source_name") or "") for n in clean_arch_tl if n.get("source_name") or n.get("publisher_name")}
+                if not is_cur_arch and len(arch_pubs) < 2 and key_tid not in {"topic_gta6_launch", "topic_eu_indonesia_fta"}:
+                    continue
                 if key_tid in archived_by_id:
                     merged_tl = _dedupe_timeline_nodes(list(archived_by_id[key_tid].get("timeline") or []) + clean_arch_tl, max_nodes=60)
                     clean_arch_tl = merged_tl
@@ -1020,7 +1020,9 @@ def build_dynamic_topics(
                 unmatched.extend(clean_old_nodes)
                 continue
         canon_active = _match_canonical_topic_theme(" ".join(str(n.get("title") or "") for n in clean_old_nodes[:8]))
-        if canon_active and not is_curated:
+        if tid == "topic_ai_ipo_models":
+            tid = "topic_anthropic_ipo"
+        elif canon_active and not is_curated:
             tid = canon_active[0]
         tp_eids = _derive_topic_entity_ids(clean_old_nodes, canon_active[1] if canon_active else tp_title_raw, is_curated=is_curated)
         if tid in topic_buckets:

@@ -532,20 +532,23 @@ def fetch_china_realtime_wires(cache: Optional[HttpCacheStore] = None) -> Dict[s
 
 
 _WIRE_S_TIER_RE = re.compile(
-    r"(?:融资保证金比例|下调.*保证金|释放\s*\d+(?:,\d+)?亿|沪深北交易所|三大交易所|"
-    r"上交所.*(?:做市|降费)|深交所.*(?:做市|征求意见)|中国结算.*暂免|证监会.*(?:重大|修订|调整|推出)|"
-    r"央行.*(?:降准|降息|LPR)|美联储.*(?:利率|加息|降息|FOMC)|"
-    r"美伊.*(?:冲突|遇袭|霍尔木兹|航母|击落)|俄乌.*(?:停火|和平协议)|中美元首.*(?:协议|联合声明|关税)|"
-    r"菲尔兹奖.*黎曼|梅纳德.*黎曼|BepiColombo|进入水星轨道|神舟.*(?:发射|升空)|星舰.*回收)",
+    r"(?:(?:沪深北|三大|沪深)交易所.{0,18}(?:融资保证金|降费|让利|做市|稳市)|"
+    r"上交所.{0,12}(?:做市|降费)|深交所.{0,12}(?:做市|征求意见)|中国结算.{0,10}暂免|"
+    r"证监会.{0,12}(?:重大政策|修订|调整融资|组合政策)|"
+    r"(?:人民银行|中国人民银行|中国央行|美联储).{0,12}(?:降准|降息|LPR|利率决议|加息|FOMC)|"
+    r"(?:美伊|以伊|中东|俄乌).{0,16}(?:遇袭|袭击|击落|正式封锁|达成停火|签署和平协议)|"
+    r"中美元首.{0,16}(?:协议|联合声明|关税)|"
+    r"菲尔兹奖.{0,12}黎曼|梅纳德.{0,12}黎曼|BepiColombo|进入水星轨道|神舟.{0,8}(?:发射|升空)|星舰.{0,8}回收)",
     re.I,
 )
+_WIRE_S_EXCLUDE_RE = re.compile(r"(?:台湾|台湾地区|只要.*诉求|立场明确|呼吁对话|传递想法|保持密切对话)")
 _WIRE_A_TIER_RE = re.compile(
     r"(?:自贸协定|百亿美元并购|法院禁售|出口管制|实体清单|重大漏洞|CVE|IPO.*(?:首日|募资)|"
-    r"GPT-?\d|Claude|Gemini\s*\d|DeepSeek|Qwen|大模型.*发布|央行.*纪要|国务院.*印发)",
+    r"(?:发布|上线|推出|开源).{0,14}(?:GPT-?\d|Claude|Gemini\s*\d|DeepSeek|Qwen)|央行.*纪要|国务院.*印发)",
     re.I,
 )
 _EXCHANGE_REFORM_CLUSTER_RE = re.compile(
-    r"(?:融资保证金|沪深北交易所|上交所.*做市|深交所.*做市|中国结算.*债券|增量资金|做市商规则|组合降费)",
+    r"(?:沪深北交易所|沪深交易所|上交所.{0,10}(?:做市|降费)|深交所.{0,10}(?:做市|征求意见)|中国结算.{0,10}债券)",
     re.I,
 )
 
@@ -559,8 +562,10 @@ def _classify_wire_severity(
     """Classify wire item severity into S / A / B using authoritative sources + substantive impact."""
     if is_hotlist_aggregator_source(source_id, source_name) or is_consumer_promo_or_fluff(title, excerpt):
         return "B", "常规动态"
+    if _WIRE_S_EXCLUDE_RE.search(title):
+        return "A" if _WIRE_A_TIER_RE.search(title) else "B", "常规动态"
     blob = f"{title} {excerpt}"
-    if _WIRE_S_TIER_RE.search(blob):
+    if _WIRE_S_TIER_RE.search(title) or (_EXCHANGE_REFORM_CLUSTER_RE.search(title) and not _WIRE_S_EXCLUDE_RE.search(blob)):
         return "S", "S级突发重磅"
     if _WIRE_A_TIER_RE.search(blob):
         return "A", "A级要闻"
@@ -677,7 +682,7 @@ def refresh_live_wire_file(base_dir: Path | str = ".", extra_items: Optional[Lis
         if pub_dt is not None and (now_dt - pub_dt).total_seconds() > 12 * 3600:
             continue
         blob = f"{item.get('title') or ''} {item.get('excerpt') or ''}"
-        if _EXCHANGE_REFORM_CLUSTER_RE.search(blob):
+        if _EXCHANGE_REFORM_CLUSTER_RE.search(blob) and "台湾" not in blob:
             policy_cluster_items.append(item)
         else:
             other_s_items.append(item)

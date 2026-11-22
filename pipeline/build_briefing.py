@@ -1513,17 +1513,28 @@ def _compute_event_radar_score(ev: dict) -> int:
     return max(0, min(100, rel_pts + nov_pts + indep_pts + official_pts + depth_pts + reprint_penalty + rumor_penalty + title_only_penalty + stale_penalty))
 
 
-_S_TIER_EVENT_RE = re.compile(
-    r"(?:降准|降息|LPR|美联储.*(?:利率|加息|降息|FOMC)|FOMC|融资保证金比例|释放\s*\d+(?:,\d+)?亿|沪深北交易所|三大交易所|"
-    r"证监会.*(?:重大|修订|调整)|上交所.*(?:做市|降费)|深交所.*(?:做市|征求意见)|"
-    r"中美元首.*(?:协议|联合声明|公报|关税)|美伊.*(?:冲突|遇袭|霍尔木兹|停火|航母)|俄乌.*(?:停火|和平协议|袭击)|"
-    r"IPO.*(?:首日|创纪录|935亿|813亿)|万亿.*危机|英伟达.*(?:暴跌|换帅|调查|禁止)|"
-    r"通用大模型.*代际|GPT-\d|Gemini\s*\d|Claude\s*\d|黎曼猜想.*证明|星舰.*回收)",
+_S_MACRO_POLICY_RE = re.compile(
+    r"(?:三大交易所|沪深北交易所|融资保证金比例|释放\s*\d+(?:,\d+)?亿|降准|降息|LPR|"
+    r"美联储.{0,12}(?:利率决议|加息|降息|FOMC)|"
+    r"中美元首.{0,16}(?:协议|联合声明|公报|关税)|"
+    r"美伊.{0,14}(?:冲突|遇袭|霍尔木兹海峡封锁|停火)|"
+    r"俄乌.{0,14}(?:停火|和平协议|大规模袭击)|"
+    r"黎曼猜想.{0,10}证明|菲尔兹奖|BepiColombo|水星轨道|神舟.{0,8}发射)",
     re.I,
 )
+_S_MAJOR_TECH_CORP_RE = re.compile(
+    r"(?:(?:发布|上线|推出|开源).{0,16}(?:GPT-?\d|Gemini\s*\d|Claude\s*\d|DeepSeek)|"
+    r"IPO.{0,12}(?:首日|创纪录|935亿|813亿)|万亿.{0,8}危机|"
+    r"英伟达.{0,12}(?:暴跌|换帅|出口管制|禁售)|星舰.{0,8}回收)",
+    re.I,
+)
+_S_TECH_NOISE_GUARD_RE = re.compile(
+    r"(?:招聘|回答更简短|透明度|反蒸馏|渠道价|遭证监会立案|信息披露违法违规|专利侵权|控股股东)"
+)
+_S_TIER_EVENT_RE = re.compile(f"(?:{_S_MACRO_POLICY_RE.pattern}|{_S_MAJOR_TECH_CORP_RE.pattern})", re.I)
 _A_TIER_EVENT_RE = re.compile(
-    r"(?:自贸协定|自由贸易协定|百亿美元并购|欧盟.*禁售|法院禁令|出口管制|实体清单|菲尔兹奖|梅纳德|BepiColombo|水星轨道|"
-    r"神舟.*(?:发射|合练)|COP31|气候大会|关税|黄金.*暴跌|比特币.*(?:跌破|突破)|并购|收购.*亿美元|"
+    r"(?:自贸协定|自由贸易协定|百亿美元并购|欧盟.{0,10}禁售|法院禁令|出口管制|实体清单|菲尔兹奖|梅纳德|BepiColombo|水星轨道|"
+    r"神舟.{0,8}(?:发射|合练)|COP31|气候大会|气候变化大会|关税|黄金.{0,8}暴跌|比特币.{0,8}(?:跌破|突破)|并购|收购.{0,8}亿美元|"
     r"OpenAI|Anthropic|Google|DeepSeek|Qwen|英伟达|NVIDIA|特斯拉|FSD|SpaceX)",
     re.I,
 )
@@ -1540,6 +1551,21 @@ def _event_age_hours(ev: dict, now_dt: Any) -> Tuple[float, float]:
     return age_h, upd_h
 
 
+def _s_tier_priority(title: str, ev: dict) -> int:
+    """Return 2 for macro/policy/geopolitical/science S-tier, 1 for major tech/corp S-tier, 0 otherwise."""
+    if _S_TECH_NOISE_GUARD_RE.search(title):
+        return 0
+    if _S_MACRO_POLICY_RE.search(title):
+        return 2
+    # Check Riemann/Fields formal verification proof in lead sentence as well
+    lead_fact = str(ev.get("fact_summary") or "")[:90]
+    if re.search(r"黎曼猜想.{0,10}证明", lead_fact):
+        return 2
+    if _S_MAJOR_TECH_CORP_RE.search(title):
+        return 1
+    return 0
+
+
 def classify_event_severity(ev: dict, now_dt: Any = None) -> Tuple[str, str]:
     """
     Classify raw candidate severity BEFORE site-wide budget calibration:
@@ -1547,8 +1573,6 @@ def classify_event_severity(ev: dict, now_dt: Any = None) -> Tuple[str, str]:
     """
     now_ref = now_dt or now_shanghai()
     title = str(ev.get("title") or "")
-    summary = str(ev.get("fact_summary") or "")
-    blob = f"{title} {summary[:160]}"
     sources = ev.get("sources") or []
     if not has_authoritative_primary_source(sources):
         return "B", "社媒热榜聚合（不进 S/A 重磅）"
@@ -1563,9 +1587,10 @@ def classify_event_severity(ev: dict, now_dt: Any = None) -> Tuple[str, str]:
     is_fresh_24h = age_h <= 24.0 or upd_h <= 6.0
     is_recent_48h = age_h <= 48.0 or upd_h <= 12.0
 
-    if is_fresh_24h and _S_TIER_EVENT_RE.search(blob):
+    s_prio = _s_tier_priority(title, ev)
+    if is_fresh_24h and s_prio > 0:
         return "S", "S级核心重磅"
-    if is_recent_48h and (_S_TIER_EVENT_RE.search(blob) or _A_TIER_EVENT_RE.search(blob)):
+    if is_recent_48h and not _S_TECH_NOISE_GUARD_RE.search(title) and (s_prio > 0 or _A_TIER_EVENT_RE.search(title)):
         return "A", "A级重要要闻"
     return "B", "B级常规要闻"
 
@@ -1607,7 +1632,9 @@ def calibrate_sitewide_severity_tiers(cat_docs: Dict[str, dict], now_dt: Any = N
         indep = int(ev.get("independent_publisher_count") or 1)
         is_off = 1 if ev.get("evidence_status") == "official_confirmed" else 0
         radar = int(ev.get("radar_score") or 0)
+        s_prio = _s_tier_priority(str(ev.get("title") or ""), ev) if cand_tier == "S" else 0
         key_tuple = (
+            s_prio,
             1 if ev.get("is_new_in_batch") else 0,
             is_off,
             min(indep, 6),
@@ -2037,7 +2064,9 @@ def build_briefing_batch(
     if success_cats == 0:
         raise RuntimeError("All categories failed; aborting atomic publish so latest manifest remains intact.")
 
-    _postprocess_and_prune_cross_category(cat_docs, cat_manifest, max_per_category=12)
+    all_v3_docs = dict(fallback_v3_docs)
+    all_v3_docs.update(cat_docs)
+    _postprocess_and_prune_cross_category(all_v3_docs, cat_manifest, max_per_category=12)
 
     from .bilingual import enrich_bilingual_events
 
@@ -2088,11 +2117,12 @@ def build_briefing_batch(
         "categories": cat_manifest,
     }
 
-    # 1. Write complete immutable smart batch archive
+    # 1. Write complete immutable smart batch archive (including calibrated fallback root docs so zero uncalibrated events leak)
     abs_smart_dir.mkdir(parents=True, exist_ok=True)
-    for cat, doc in cat_docs.items():
-        doc["published_at"] = published_iso
-        atomic_write_json(abs_smart_dir / f"analysis_{cat}.json", doc)
+    for cat, doc in all_v3_docs.items():
+        if cat in cat_docs:
+            doc["published_at"] = published_iso
+            atomic_write_json(abs_smart_dir / f"analysis_{cat}.json", doc)
         atomic_write_json(root / f"analysis_{cat}.json", doc)
     for cat, cdoc in comment_docs.items():
         atomic_write_json(abs_smart_dir / f"comments_{cat}.json", cdoc)
@@ -2102,8 +2132,7 @@ def build_briefing_batch(
         atomic_write_json(abs_smart_dir / "selection_audit.json", selection_audits)
 
     # 2. Build V3 research intelligence memory using complete 4-category view (including fallback docs if any category failed)
-    v3_cat_docs = dict(fallback_v3_docs)
-    v3_cat_docs.update(cat_docs)
+    v3_cat_docs = all_v3_docs
     v3_t0 = time.monotonic()
     print("🧠 Building V3 research memory artifacts...", flush=True)
     v3_summary = build_v3_artifacts(
