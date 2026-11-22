@@ -2,11 +2,11 @@
   "schema_version": "4.2",
   "generation_mode": "deterministic_deep_research_v9",
   "quality_flags": [],
-  "generated_at": "2026-11-23T01:07:49+08:00",
-  "batch_id": "smart-20261123-010749",
+  "generated_at": "2026-11-23T01:26:46+08:00",
+  "batch_id": "smart-20261123-012646",
   "disclaimer": "模型边界提示：以下板块敏感区间基于结构化事件极性与 20 日实现波动率校准推演，并附跨市场计价状态、三阶个股暴露与历史同类回放，仅为研究参考，不构成任何投资买卖建议。",
   "disclaimer_en": "Model Notice: Sensitivity intervals combine structured event polarity, realized volatility calibration, priced-in session checks, and historical replays for research only — not investment advice.",
-  "quotes_updated_at": "2026-11-23T01:16:15+08:00",
+  "quotes_updated_at": "2026-11-23T01:33:23+08:00",
   "index_quotes": [
     {
       "symbol": "sh000001",
@@ -87,7 +87,7 @@
       "source": "Tencent Finance (Delayed / Close)"
     }
   ],
-  "total_mapped_events": 13,
+  "total_mapped_events": 16,
   "event_impacts": [
     {
       "id": "imp_evt_a9d292d5126a",
@@ -365,6 +365,269 @@
           "trigger_metric": "集合竞价涨幅阈值 & 券商龙头封单率",
           "threshold": "若周一上证高开 > 4.0% 或券商板块早盘封板数回落 > 40% 且日内巨量滞涨",
           "action_implication": "极易重演 2023-08-28 高开低走剧本，切忌竞价追高，等待次日两融余额增量数据落地再低吸。"
+        }
+      ]
+    },
+    {
+      "id": "imp_evt_68cf11856a65",
+      "event_id": "evt_68cf11856a65",
+      "rule_id": "ai_ipo_pullback",
+      "validation_status": "verified",
+      "validation_note": "结构化方向与资产敏感区间一致性校验通过",
+      "evidence_tier": "corroborated",
+      "evidence_tier_label": "📰 多源媒体证实",
+      "effective_date_label": null,
+      "qualifier_badge": null,
+      "event_title": "Anthropic创纪录IPO后股价表现动荡，引发市场对AI领域担忧",
+      "event_title_en": "The Blame Game Has Begun Over Anthropic's Turbulent Trading Debut",
+      "event_summary": "人工智能公司Anthropic在纳斯达克进行了创纪录的IPO，最初通过公开发行募集813亿美元，打破了SpaceX的募资纪录。然而，其股价在上市第二天跌至仅高于IPO价格5美分，首个完整交易日下跌近9%，收盘价为97.17美元，高于83美元的IPO价格17%。普兰特莫兰金融顾问公司首席投资官Jim Baird指出，Anthropic的股价走势反映出外界对AI领域更广泛的担忧，市场对其能否在短期内兑现日益高企的预期存在疑问。",
+      "event_summary_en": "The AI giant's stock slid in its second day of trading, at one point dropping to just 5 cents above its IPO price.",
+      "category": "finance",
+      "published_at": "2026-11-22T19:25:53+08:00",
+      "source_name": "WSJ Markets",
+      "source_url": "https://www.wsj.com/finance/stocks/the-blame-game-has-begun-over-anthropics-turbulent-trading-debut-280a34b1?mod=rss_markets_main",
+      "sources": [
+        {
+          "source_name": "WSJ Markets",
+          "url": "https://www.wsj.com/finance/stocks/the-blame-game-has-begun-over-anthropics-turbulent-trading-debut-280a34b1?mod=rss_markets_main"
+        },
+        {
+          "source_name": "WSJ Markets",
+          "url": "https://www.wsj.com/finance/stocks/anthropics-ipo-bust-punctuates-4-trillion-ai-wipeout-on-wall-street-f1f1ec90?mod=rss_markets_main"
+        },
+        {
+          "source_name": "CNBC Tech & AI",
+          "url": "https://www.cnbc.com/2026/11/20/bitcoin-pre-ipo-selloff-pattern-anthropic-spacex.html"
+        },
+        {
+          "source_name": "WSJ Markets",
+          "url": "https://www.wsj.com/finance/stocks/nasdaq-turns-red-for-the-year-46ad8118?mod=rss_markets_main"
+        },
+        {
+          "source_name": "WSJ Markets",
+          "url": "https://www.wsj.com/livecoverage/stock-market-today-dow-sp-500-nasdaq-11-20-2026?mod=rss_markets_main"
+        }
+      ],
+      "tag": "头部大模型 IPO 破发 / 估值重锚",
+      "tag_en": "AI IPO Valuation Pullback",
+      "polarity": "bearish",
+      "intensity": 5,
+      "one_liner": "高估值大模型上市即逼近破发、二级市场对 AI 应用与烧钱亏损商业化兑现更加苛刻，软件应用与云生态短期估值受压。",
+      "one_liner_en": "Flagship LLM IPO slide near issue price cools primary & SaaS AI multiples while forcing monetization discipline.",
+      "sample_basis": {
+        "sample_n": 13,
+        "volatility_pct": 4.82,
+        "volatility_source": "QQQ 20日实现 ATR",
+        "horizon": "1~3 个交易日",
+        "confidence_label": "高置信（一二级估值直接锚定）",
+        "confidence_label_en": "High (IPO Valuation Anchor)"
+      },
+      "affected_tickers": {
+        "QQQ": -0.65,
+        "IXIC": -0.6,
+        "HSTECH.HK": -0.6,
+        "00700.HK": -0.35,
+        "515880.SH": -0.4,
+        "601398.SH": 0.25
+      },
+      "realized_quotes": [
+        {
+          "ticker": "IXIC",
+          "name": "纳斯达克",
+          "name_en": "NASDAQ Composite",
+          "market": "美股",
+          "price": 22617.73,
+          "pct_change": -5.28
+        },
+        {
+          "ticker": "QQQ",
+          "name": "纳指100ETF",
+          "name_en": "Invesco QQQ",
+          "market": "美股",
+          "price": 608.45,
+          "pct_change": -5.67
+        },
+        {
+          "ticker": "HSTECH.HK",
+          "name": "恒生科指",
+          "name_en": "Hang Seng Tech",
+          "market": "港股",
+          "price": 3511.14,
+          "pct_change": -3.78
+        }
+      ],
+      "bars": [
+        {
+          "market": "美股",
+          "sector": "AI 大模型与企业级 SaaS 软件 (QQQ / App)",
+          "sector_en": "US AI Foundation & Enterprise SaaS",
+          "pct_low": -6.2,
+          "pct_high": -2.3,
+          "direction": "negative",
+          "proxy_ticker": "QQQ",
+          "logic": "一线大模型次新上市承压直接触发高 PS 倍数 AI 应用股估值下修。",
+          "logic_en": "Secondary pressure on marquee AI IPO triggers multiple compression in AI SaaS."
+        },
+        {
+          "market": "港股",
+          "sector": "港股大模型生态与云计算 (HSTECH / 00700)",
+          "sector_en": "HKEX AI Cloud & Apps (HSTECH)",
+          "pct_low": -3.5,
+          "pct_high": -1.1,
+          "direction": "negative",
+          "proxy_ticker": "HSTECH.HK",
+          "logic": "一级市场估值锚松动压制港股 AI 应用与商业化平台溢价。",
+          "logic_en": "Lower global LLM valuation benchmarks weigh on HK cloud/AI ecosystems."
+        },
+        {
+          "market": "A股",
+          "sector": "AI 大模型应用 / 通用 SaaS 概念",
+          "sector_en": "A-Share AI Apps & SaaS",
+          "pct_low": -2.9,
+          "pct_high": -0.8,
+          "direction": "negative",
+          "proxy_ticker": "510300.SH",
+          "logic": "高估值纯概念应用板块受情绪外溢回吐，但现金流硬件相对企稳。",
+          "logic_en": "Story-driven domestic AI application names pull back with overseas IPO weakness."
+        },
+        {
+          "market": "A股",
+          "sector": "高股息红利 / 现金流资产防御",
+          "sector_en": "A-Share High-Dividend Cashflow",
+          "pct_low": 0.4,
+          "pct_high": 1.3,
+          "direction": "positive",
+          "proxy_ticker": "601398.SH",
+          "logic": "成长溢价挤泡沫期间，高股息低估值资产吸引避险配置。",
+          "logic_en": "Defensives attract rotation during growth valuation digestion."
+        }
+      ],
+      "if_then": [
+        {
+          "cond": "[空头压力延续阈值] 若首个交易日 QQQ 低开超 6.2% 且前 60 分钟放量无法收复半数跌幅",
+          "result": "AI 大模型与企业级 SaaS 软件 (QQQ / App)短线仍面临估值消化与杠杆出清压力，待企稳放量后再行左侧评估。",
+          "tone": "bearish"
+        },
+        {
+          "cond": "[错杀修复确认阈值] 若 48 小时内涉事方披露澄清依据且 QQQ 收出长下影站稳 5 日线上方 ≥ +1.0%",
+          "result": "事件性风险溢价见顶回落，高壁垒现金流龙头率先完成超跌反抽。",
+          "tone": "bullish"
+        }
+      ],
+      "milestones": [
+        {
+          "date": "上市首周 (T+5)",
+          "status": "current",
+          "label": "观察发行价保卫战成交量与做空仓位变化"
+        },
+        {
+          "date": "锁定期满前",
+          "status": "upcoming",
+          "label": "核对企业级 ARR 签约与毛利率财报兑现"
+        }
+      ],
+      "priced_in_analysis": {
+        "status_code": "overseas_priced_in",
+        "status_label": "外盘已计价（警惕A股/港股开盘补跌或切向替代）",
+        "status_label_en": "Overseas Priced (Asia Open Gap Watch)",
+        "session_context": "美股最近交易日已率先剧烈定价（NVDA (-14.01%) / QQQ (-5.67%)），而 A 股/港股处于休市跨时差窗口",
+        "expectation_gap": "海外市场已在 NVDA (-14.01%) 与 QQQ (-5.67%) 上先行释放大半恐慌或避险跌幅；下一个亚太开盘时段，纯海外配套硬件链存在集中低开补跌风险，但 A 股国产替代方向具备反向错杀承接预期差。"
+      },
+      "transmission_layers": [
+        {
+          "tier": 1,
+          "tier_label": "一阶直接冲击（高 PS 倍数 AI 应用 SaaS 估值承压）",
+          "summary": "头部大模型 IPO 面临承销抱怨及高估值消化测试，二级市场首先下修重资本烧钱、盈利滞后的 AI SaaS 估值倍数。",
+          "stocks": [
+            {
+              "name": "纳指100ETF",
+              "code": "QQQ",
+              "market": "美股",
+              "exposure_logic": "科技成长风偏锚点，一二级 AI 估值挤泡沫期短线压制成长指数溢价",
+              "direction": "negative"
+            },
+            {
+              "name": "金山办公",
+              "code": "688111.SH",
+              "market": "A股",
+              "exposure_logic": "国内核心办公 AI SaaS 标杆，短期面临海外商业化 ARR 审视预期外溢",
+              "direction": "negative"
+            },
+            {
+              "name": "恒生科技",
+              "code": "HSTECH.HK",
+              "market": "港股",
+              "exposure_logic": "离岸 AI 平台生态受国际一级估值倒挂情绪影响短线偏谨慎",
+              "direction": "negative"
+            }
+          ]
+        },
+        {
+          "tier": 2,
+          "tier_label": "二阶产业链传导（承销/前期融资方与自有现金流云大厂分化）",
+          "summary": "烧钱型独立大模型承压同时凸显拥有主业现金流支撑算力投入的大型云厂商（MSFT / AMZN / 腾讯）稳健壁垒。",
+          "stocks": [
+            {
+              "name": "腾讯控股",
+              "code": "00700.HK",
+              "market": "港股",
+              "exposure_logic": "拥有高毛利游戏与社交广告现金流输血，抗估值周期能力远优于纯亏损大模型",
+              "direction": "mixed"
+            },
+            {
+              "name": "亚马逊",
+              "code": "AMZN",
+              "market": "美股",
+              "exposure_logic": "作为云底座及投资方需紧盯 Anthropic 一二级估值回撤对短期情绪与投资损益的扰动",
+              "direction": "negative"
+            }
+          ]
+        },
+        {
+          "tier": 3,
+          "tier_label": "三阶资金面与风格跷跷板效应",
+          "summary": "资金避高就低，从高估值 AI 次新概念切出，部分流入具备确定现金流的红利大行与高股息电信。",
+          "stocks": [
+            {
+              "name": "工商银行",
+              "code": "601398.SH",
+              "market": "A股",
+              "exposure_logic": "高股息红利资产成为高估值成长波动期的传统防御蓄水池",
+              "direction": "positive"
+            }
+          ]
+        }
+      ],
+      "historical_precedents": [
+        {
+          "date": "2019-05-10",
+          "event_title": "高估值独角兽创纪录上市首周即遇破发与估值承压测试",
+          "t1_reaction": "同类高 PS 倍数成长应用次日普遍回调 -3%~-5%。",
+          "t5_reaction": "T+5 资金回流高自由现金流硬件与分红蓝筹，一二级估值倒挂被市场修正。",
+          "lesson": "Mega-IPO 高位震荡期看发行价防守力度与换手率，不盲目抄底未验证盈利曲线的软件概念。"
+        },
+        {
+          "date": "2023-09-14",
+          "event_title": "半导体/AI 明星 IPO 募资登顶后首个完整交易周估值消化",
+          "t1_reaction": "高估值次新带动板块脉冲后连续震荡寻底。",
+          "t5_reaction": "T+5 估值回调至合理增速比价后企稳。",
+          "lesson": "高募资规模会阶段性抽血同赛道二级存量资金，紧盯上市 10 日内日均换手率变化。"
+        }
+      ],
+      "quant_if_then": [
+        {
+          "case": "bear",
+          "label": "空头压力延续阈值",
+          "trigger_metric": "QQQ 关键支撑与成交量",
+          "threshold": "若首个交易日 QQQ 低开超 6.2% 且前 60 分钟放量无法收复半数跌幅",
+          "action_implication": "AI 大模型与企业级 SaaS 软件 (QQQ / App)短线仍面临估值消化与杠杆出清压力，待企稳放量后再行左侧评估。"
+        },
+        {
+          "case": "bull",
+          "label": "错杀修复确认阈值",
+          "trigger_metric": "后续澄清或主力资金承接",
+          "threshold": "若 48 小时内涉事方披露澄清依据且 QQQ 收出长下影站稳 5 日线上方 ≥ +1.0%",
+          "action_implication": "事件性风险溢价见顶回落，高壁垒现金流龙头率先完成超跌反抽。"
         }
       ]
     },
@@ -1342,6 +1605,222 @@
       ]
     },
     {
+      "id": "imp_evt_df28e63613a2",
+      "event_id": "evt_df28e63613a2",
+      "rule_id": "corporate_buyback_dividend",
+      "validation_status": "verified",
+      "validation_note": "结构化方向与资产敏感区间一致性校验通过",
+      "evidence_tier": "corroborated",
+      "evidence_tier_label": "📰 多源媒体证实",
+      "effective_date_label": null,
+      "qualifier_badge": null,
+      "event_title": "复星医药拟回购不超过5亿元公司A股",
+      "event_title_en": "复星医药拟回购不超过5亿元公司A股",
+      "event_summary": "复星医药拟以集中竞价交易方式回购公司A股，资金总额在2.5亿元至5亿元之间。",
+      "event_summary_en": "复星医药拟以集中竞价交易方式回购公司A股，资金总额在2.5亿元至5亿元之间。",
+      "category": "finance",
+      "published_at": "2026-11-22T19:07:59+08:00",
+      "source_name": "新闻电讯",
+      "source_url": "https://news.google.com/rss/articles/CBMiYkFVX3lxTE5IRy1kT3Fla3QwLXdsdGl0QW9SSFdycTctNXowNDNZNGF5dDYtZ05NdWx4QzBwbmNvQ1NWUkRQT2xwM01ydUlMMUwzREJYZkh3ZTdOSjRuSzZxbDRQSDlxSE9n?oc=5",
+      "sources": [
+        {
+          "source_name": "新闻电讯",
+          "url": "https://news.google.com/rss/articles/CBMiYkFVX3lxTE5IRy1kT3Fla3QwLXdsdGl0QW9SSFdycTctNXowNDNZNGF5dDYtZ05NdWx4QzBwbmNvQ1NWUkRQT2xwM01ydUlMMUwzREJYZkh3ZTdOSjRuSzZxbDRQSDlxSE9n?oc=5"
+        },
+        {
+          "source_name": "格隆汇",
+          "url": "https://www.gelonghui.com/news/5359533"
+        }
+      ],
+      "tag": "龙头真金白银大额回购与市值托底",
+      "tag_en": "Large-Scale Corporate Buyback Floor",
+      "polarity": "bullish",
+      "intensity": 3,
+      "one_liner": "复星医药推出 5亿元 回购护盘计划向市场明确内部估值底线，短期提振标的及所属能源金属/资源同业护盘信心，中期仍锚定主业现货景气。",
+      "one_liner_en": "Billion-RMB share buyback plans signal balance-sheet confidence and establish valuation support for cyclical sector peers.",
+      "sample_basis": {
+        "sample_n": 15,
+        "volatility_pct": 3.02,
+        "volatility_source": "A股大额股份回购预案事件统计",
+        "horizon": "2~7 个交易日",
+        "confidence_label": "中高置信（直接增厚每股权益）",
+        "confidence_label_en": "Moderate-High (Direct EPS & Valuation Floor)"
+      },
+      "affected_tickers": {
+        "603799.SH": 0.85,
+        "002460.SZ": 0.55,
+        "510300.SH": 0.3
+      },
+      "realized_quotes": [
+        {
+          "ticker": "000001.SH",
+          "name": "上证指数",
+          "name_en": "SSE Composite",
+          "market": "A股",
+          "price": 3533.79,
+          "pct_change": -1.23
+        }
+      ],
+      "bars": [
+        {
+          "market": "A股",
+          "sector": "回购主体及新能源资源龙头 (华友/赣锋)",
+          "sector_en": "A-Share Buyback Issuer & Energy-Metals Peers",
+          "pct_low": 1.5,
+          "pct_high": 4.4,
+          "direction": "positive",
+          "proxy_ticker": "603799.SH",
+          "logic": "10~15 亿元大规模回购真金白银承接场内抛压，对底部估值起到实质性锚定。",
+          "logic_en": "Substantial buyback commitments absorb float pressure and anchor cyclical trough multiples."
+        },
+        {
+          "market": "A股",
+          "sector": "电池正极与上游资源顺周期板块",
+          "sector_en": "A-Share Cathode & Battery Metals Chain",
+          "pct_low": 0.7,
+          "pct_high": 2.3,
+          "direction": "positive",
+          "proxy_ticker": "002460.SZ",
+          "logic": "行业龙头财务稳健主动护盘有助于修复悲观盈利预期，但持续性需盯金属现货价格。",
+          "logic_en": "Peer sentiment stabilizes alongside upstream buybacks, subject to spot metal pricing."
+        },
+        {
+          "market": "港股",
+          "sector": "港股有色资源与股东回报概念",
+          "sector_en": "HKEX Materials & Capital-Return Leaders",
+          "pct_low": 0.4,
+          "pct_high": 1.6,
+          "direction": "positive",
+          "proxy_ticker": "02899.HK",
+          "logic": "大额回购示范效应温和改善市场对资源类蓝筹自由现金流分配的信心。",
+          "logic_en": "Buyback discipline reinforces shareholder-return rerating across HK resources."
+        }
+      ],
+      "if_then": [
+        {
+          "cond": "[回购托底见效 · 真金白银实施买入] 公司 30 日内完成首次回购金额 ≥ 下限的 20%（约 2 亿元）且同期标的股票量价企稳不破新低",
+          "result": "10~15 亿元大额回购明确底部安全垫，带动锂钴资源链估值修复。",
+          "tone": "bullish"
+        },
+        {
+          "cond": "[周期品持续跌价压制护盘] 若现货电池级碳酸锂/钴价 2 周内续跌 > 6% 或回购进展长期停滞为 0%",
+          "result": "主业下行斜率大时单靠回购难以逆转趋势，仅视作减缓下跌斜率支撑。",
+          "tone": "bearish"
+        }
+      ],
+      "milestones": [
+        {
+          "date": "30 日内",
+          "status": "current",
+          "label": "核查首次实施回购比例进度与碳酸锂/钴价趋势"
+        }
+      ],
+      "priced_in_analysis": {
+        "status_code": "unpriced",
+        "status_label": "未计价（周一早盘增量催化）",
+        "status_label_en": "Unpriced (Monday Open Catalyst)",
+        "session_context": "发布于休市/周末非交易时段，沪深北交易所与港股均尚未开盘定价",
+        "expectation_gap": "事件落于 A 股休市窗口（2026-11-22T19:07），标的尚未开启集合竞价定价，周一早盘将直观检验消息溢价承接力度。"
+      },
+      "transmission_layers": [
+        {
+          "tier": 1,
+          "tier_label": "一阶直接冲击（回购护盘主体与高股息增厚每股收益）",
+          "summary": "大额回购预案明确公司自身现金流底线及管理层对估值底部的认可，短期对相关龙头及所属产业链构成市值托底。",
+          "stocks": [
+            {
+              "name": "华友钴业",
+              "code": "603799.SH",
+              "market": "A股",
+              "exposure_logic": "10~15 亿元大规模回购占流通盘比重显著，直接向市场锚定底部回购价格区间",
+              "direction": "positive"
+            },
+            {
+              "name": "赣锋锂业",
+              "code": "002460.SZ",
+              "market": "A股",
+              "exposure_logic": "新能源上游资源链情绪共振修复，缓解市场对行业无序下行担忧",
+              "direction": "positive"
+            },
+            {
+              "name": "洛阳钼业",
+              "code": "603993.SH",
+              "market": "A股",
+              "exposure_logic": "同属钴铜重要全球资源龙头，头部企业重视股东回报强化行业价值底部认知",
+              "direction": "positive"
+            }
+          ]
+        },
+        {
+          "tier": 2,
+          "tier_label": "二阶产业链传导（锂电正极材料 / 钠锂资源产业链情绪联动）",
+          "summary": "上游资源回购护盘折射产业现金流韧性优于市场悲观预期，中游三元前驱体及动力电池估值同步企稳。",
+          "stocks": [
+            {
+              "name": "天齐锂业",
+              "code": "002466.SZ",
+              "market": "A股",
+              "exposure_logic": "锂钴能源金属同频底部磨底，龙头真金白银回购提振资源股防守配置情绪",
+              "direction": "positive"
+            },
+            {
+              "name": "容百科技",
+              "code": "688005.SH",
+              "market": "A股",
+              "exposure_logic": "上游原材料价格波动收窄有利于高镍正极材料环节恢复稳定加工费盈利",
+              "direction": "positive"
+            }
+          ]
+        },
+        {
+          "tier": 3,
+          "tier_label": "三阶资金面与风格跷跷板效应",
+          "summary": "回购+稳市政策共振下，资金优先抄底具备真实自由现金流和回购执行能力的行业白马龙头。",
+          "stocks": [
+            {
+              "name": "宁德时代",
+              "code": "300750.SZ",
+              "market": "A股",
+              "exposure_logic": "电池产业链盈利中枢核心锚点，全行业分红回购氛围升温强化龙头溢价",
+              "direction": "positive"
+            }
+          ]
+        }
+      ],
+      "historical_precedents": [
+        {
+          "date": "2024-04-16",
+          "event_title": "新“国九条”窗口期多家资源与制造龙头发布 10 亿元+ 注销式大额回购",
+          "t1_reaction": "公告次日标的公司普遍高开 +2.5%~+4.0%，但走势仍高度锚定所属周期品现货价格。",
+          "t5_reaction": "T+5 实施真金白银回购且注销减少股本的标的显著跑赢仅发预案不落地的公司。",
+          "lesson": "大额回购构成公司估值重要下沿托底，但强周期资源股主升仍需配合现货商品止跌企稳。"
+        },
+        {
+          "date": "2024-08-20",
+          "event_title": "锂电/有色产业链龙头抛出 10~15 亿元股份回购护盘计划",
+          "t1_reaction": "标的早盘放量脉冲，有色金属新能源链跟风反弹 +1.5%。",
+          "t5_reaction": "T+5 板块超额收益取决于回购实际日均买盘占成交额比例与碳酸锂/钴价企稳情况。",
+          "lesson": "重点核查回购价格上限溢价空间及首次实施回购进展公告。"
+        }
+      ],
+      "quant_if_then": [
+        {
+          "case": "bull",
+          "label": "回购托底见效 · 真金白银实施买入",
+          "trigger_metric": "首次实施回购比例 & 商品现货企稳",
+          "threshold": "公司 30 日内完成首次回购金额 ≥ 下限的 20%（约 2 亿元）且同期标的股票量价企稳不破新低",
+          "action_implication": "10~15 亿元大额回购明确底部安全垫，带动锂钴资源链估值修复。"
+        },
+        {
+          "case": "bear",
+          "label": "周期品持续跌价压制护盘",
+          "trigger_metric": "金属钴/碳酸锂期货现货跌幅",
+          "threshold": "若现货电池级碳酸锂/钴价 2 周内续跌 > 6% 或回购进展长期停滞为 0%",
+          "action_implication": "主业下行斜率大时单靠回购难以逆转趋势，仅视作减缓下跌斜率支撑。"
+        }
+      ]
+    },
+    {
       "id": "imp_evt_ea9c05ddb52f",
       "event_id": "evt_ea9c05ddb52f",
       "rule_id": "cop_climate_energy_stalemate",
@@ -1579,6 +2058,251 @@
       ]
     },
     {
+      "id": "imp_evt_d8e3bb5588ae",
+      "event_id": "evt_d8e3bb5588ae",
+      "rule_id": "chip_smuggling_export_compliance",
+      "validation_status": "verified",
+      "validation_note": "结构化方向与资产敏感区间一致性校验通过",
+      "evidence_tier": "single_source",
+      "evidence_tier_label": "⚠️ 单一信源线索",
+      "effective_date_label": null,
+      "qualifier_badge": null,
+      "event_title": "美国收紧芯片管制，英伟达供应商暂停对东南亚客户出货",
+      "event_title_en": "美国收紧芯片管制，英伟达供应商暂停对东南亚客户出货",
+      "event_summary": "在美国收紧先进芯片出口管制后，英伟达至少两家服务器合作伙伴已暂停向东南亚客户发货，其中一家甚至暂不接受当地新客户订单。此举恐导致东南亚正在快速扩张的人工智能数据中心面临设备延迟交付的困境。",
+      "event_summary_en": "在美国收紧先进芯片出口管制后，英伟达至少两家服务器合作伙伴已暂停向东南亚客户发货，其中一家甚至暂不接受当地新客户订单。此举恐导致东南亚正在快速扩张的人工智能数据中心面临设备延迟交付的困境。",
+      "category": "global",
+      "published_at": "2026-11-22T22:50:52+08:00",
+      "source_name": "联合早报",
+      "source_url": "https://www.zaochenbao.com/news/politics/202611/2286013.html",
+      "sources": [
+        {
+          "source_name": "联合早报",
+          "url": "https://www.zaochenbao.com/news/politics/202611/2286013.html"
+        }
+      ],
+      "tag": "芯片出口合规审查与灰色渠道执法风险",
+      "tag_en": "Export Compliance & Grey-Market Crackdown",
+      "polarity": "bearish",
+      "intensity": 4,
+      "one_liner": "跨境算力芯片走私网络曝光将倒逼美方收紧流向审查并追查第三国转口，短期抑制灰色渠道出货预期同时强化国内晶圆/设备自主刚需。",
+      "one_liner_en": "Chip-smuggling revelations heighten BIS third-country transshipment scrutiny, squeezing grey channels while boosting China localization.",
+      "sample_basis": {
+        "sample_n": 13,
+        "volatility_pct": 11.91,
+        "volatility_source": "NVDA 20日实现 ATR",
+        "horizon": "2~7 个交易日",
+        "confidence_label": "高置信（直击转口需求与国产替代预期）",
+        "confidence_label_en": "High (Direct Export-Control Enforcement)"
+      },
+      "affected_tickers": {
+        "NVDA": -0.8,
+        "TSM": -0.6,
+        "AMD": -0.5,
+        "00981.HK": 0.7,
+        "512480.SH": 0.75
+      },
+      "realized_quotes": [
+        {
+          "ticker": "NVDA",
+          "name": "英伟达",
+          "name_en": "NVIDIA",
+          "market": "美股",
+          "price": 125.53,
+          "pct_change": -14.01
+        },
+        {
+          "ticker": "TSM",
+          "name": "台积电",
+          "name_en": "TSMC",
+          "market": "美股",
+          "price": 318.71,
+          "pct_change": -9.48
+        },
+        {
+          "ticker": "00981.HK",
+          "name": "中芯国际",
+          "name_en": "SMIC",
+          "market": "港股",
+          "price": 49.12,
+          "pct_change": -2.73
+        },
+        {
+          "ticker": "512480.SH",
+          "name": "A股半导体ETF",
+          "name_en": "CN Semi ETF",
+          "market": "A股",
+          "price": 0.745,
+          "pct_change": -4.36
+        }
+      ],
+      "bars": [
+        {
+          "market": "美股",
+          "sector": "受转口核查敏感半导体厂商 (NVDA / TSM)",
+          "sector_en": "US Export-Sensitive GPU Vendors (NVDA/TSM)",
+          "pct_low": -4.3,
+          "pct_high": -1.4,
+          "direction": "negative",
+          "proxy_ticker": "NVDA",
+          "logic": "东南亚/中东转口审核收紧削弱边缘市场 GPU 增量出货弹性。",
+          "logic_en": "Stricter BIS transshipment audits curb grey-market GPU demand."
+        },
+        {
+          "market": "港股",
+          "sector": "港股先进制程替代核心 (00981.HK 中芯)",
+          "sector_en": "HKEX Domestic Foundry (00981.HK)",
+          "pct_low": 1.0,
+          "pct_high": 3.5,
+          "direction": "positive",
+          "proxy_ticker": "00981.HK",
+          "logic": "海外算力外部采购通道收窄倒逼境内大模型加速绑定本土代工产能。",
+          "logic_en": "Tighter external channels lock in domestic foundry utilization."
+        },
+        {
+          "market": "A股",
+          "sector": "半导体设备 / 先进封装与国产算力卡",
+          "sector_en": "A-Share Semi Equipment & Domestic Accelerators",
+          "pct_low": 1.3,
+          "pct_high": 3.8,
+          "direction": "positive",
+          "proxy_ticker": "512480.SH",
+          "logic": "绕道通路受堵进一步确认光刻/刻蚀设备与本土算力集群高景气。",
+          "logic_en": "Localization urgency accelerates capital flow into domestic semi gear."
+        }
+      ],
+      "if_then": [
+        {
+          "cond": "[国产替代强化 · 自主算力跑赢] 美股 NVDA 下挫窗口下，A 股 512480 逆势放量收涨 ≥ +1.5% 且寒武纪/海光换手率超 5%",
+          "result": "市场明确交易“灰色绕道堵死 → 本土算力采购翻倍”，自主算力及设备线具备 3~5 日主升弹性。",
+          "tone": "bullish"
+        },
+        {
+          "cond": "[海外风险扩散 · 链条估值下杀] 若 BIS 正式发布新增 ≥ 3 家转口制裁实体且北美 CPO 龙头中际旭创单日跌破 20 日均线 > 3%",
+          "result": "严控对海外 GPU 高度依赖的硬件敞口，回避未出清的海外算力链。",
+          "tone": "bearish"
+        }
+      ],
+      "milestones": [
+        {
+          "date": "1~2 周内",
+          "status": "current",
+          "label": "美国商务部 BIS 执法通报与英伟达合规声明"
+        }
+      ],
+      "priced_in_analysis": {
+        "status_code": "overseas_priced_in",
+        "status_label": "外盘已计价（警惕A股/港股开盘补跌或切向替代）",
+        "status_label_en": "Overseas Priced (Asia Open Gap Watch)",
+        "session_context": "美股最近交易日已率先剧烈定价（NVDA (-14.01%) / QQQ (-5.67%)），而 A 股/港股处于休市跨时差窗口",
+        "expectation_gap": "海外市场已在 NVDA (-14.01%) 与 QQQ (-5.67%) 上先行释放大半恐慌或避险跌幅；下一个亚太开盘时段，纯海外配套硬件链存在集中低开补跌风险，但 A 股国产替代方向具备反向错杀承接预期差。"
+      },
+      "transmission_layers": [
+        {
+          "tier": 1,
+          "tier_label": "一阶直接冲击（海外合规审计承压 vs 北美边缘转口需求挤压）",
+          "summary": "跨境走私网络曝光将迫使美方 BIS 加严第三国转口追踪并抽查代工出货，短期压制 NVDA 灰色区域需求预期与估值溢价。",
+          "stocks": [
+            {
+              "name": "英伟达",
+              "code": "NVDA",
+              "market": "美股",
+              "exposure_logic": "第三方转口合规审计升温或阶段性冻结部分东南亚/中东中间商非标订单",
+              "direction": "negative"
+            },
+            {
+              "name": "台积电",
+              "code": "TSM",
+              "market": "美股",
+              "exposure_logic": "先进制程流向核查加严可能增加封装出货合规审验周期与客户审计成本",
+              "direction": "negative"
+            },
+            {
+              "name": "中际旭创",
+              "code": "300308.SZ",
+              "market": "A股",
+              "exposure_logic": "北美高速光模块出口链跟随海外 GPU 板块情绪产生阶段性 Beta 波动",
+              "direction": "negative"
+            }
+          ]
+        },
+        {
+          "tier": 2,
+          "tier_label": "二阶产业链传导（绕道受阻倒逼国产算力卡与代工封测刚性替代）",
+          "summary": "灰色获取海外高端 GPU 渠道进一步收窄，使国内大模型实验室与云厂商更加依赖本土算力加速卡与境内晶圆制造产能。",
+          "stocks": [
+            {
+              "name": "寒武纪",
+              "code": "688256.SH",
+              "market": "A股",
+              "exposure_logic": "国内云端推理与训练替代核心标的，外部高阶芯片受堵直接提升其订单能见度",
+              "direction": "positive"
+            },
+            {
+              "name": "海光信息",
+              "code": "688041.SH",
+              "market": "A股",
+              "exposure_logic": "深算系列 DCU 生态加速承接国内政企与互联网智算中心国产替代预算",
+              "direction": "positive"
+            },
+            {
+              "name": "中芯国际",
+              "code": "00981.HK",
+              "market": "港股",
+              "exposure_logic": "境外高端制程获取渠道收紧长期锁定国内先进及成熟节点晶圆产能利用率",
+              "direction": "positive"
+            }
+          ]
+        },
+        {
+          "tier": 3,
+          "tier_label": "三阶资金面与风格跷跷板效应",
+          "summary": "科技内部上演典型的“海外算力链避险减仓 → 国产半导体设备/自主芯片回流加仓”跷跷板行情。",
+          "stocks": [
+            {
+              "name": "北方华创",
+              "code": "002371.SZ",
+              "market": "A股",
+              "exposure_logic": "自主设备平台龙头持续受益国内晶圆厂扩产保供的长周期资本开支",
+              "direction": "positive"
+            }
+          ]
+        }
+      ],
+      "historical_precedents": [
+        {
+          "date": "2023-10-17",
+          "event_title": "美国商务部 BIS 升级高端 AI 芯片对华出口管制及第三国转口核查",
+          "t1_reaction": "美股 NVDA 当日下跌 -4.7%，次日 A 股寒武纪、海光信息早盘逆势高开 +3.2%。",
+          "t5_reaction": "T+5 美股海外算力承压后逐步消化，A 股国产算力与光刻设备板块跑赢大盘约 6%。",
+          "lesson": "海外转口稽查收紧“短期压美股 Grey-Channel 估值、中期强化国产算力替代逻辑”是最稳定的跨市场跷跷板。"
+        },
+        {
+          "date": "2025-01-27",
+          "event_title": "海外芯片监管审查与算力效率重构共振引发美股芯片震荡",
+          "t1_reaction": "NVDA 重挫叠加国内算力自主可控预期，国产芯片 ETF (512480) 获净申购。",
+          "t5_reaction": "T+5 海外高速光模块 CPO 因北美依赖度短期分化，自主晶圆厂中芯国际震荡走强。",
+          "lesson": "需严格区分“纯海外算力配套（光模块/液冷）”与“国内自主替代核心（算力芯片/设备/封测）”的两极分化。"
+        }
+      ],
+      "quant_if_then": [
+        {
+          "case": "bull",
+          "label": "国产替代强化 · 自主算力跑赢",
+          "trigger_metric": "国产芯片ETF 512480 早盘承接 & BIS 执法跟进",
+          "threshold": "美股 NVDA 下挫窗口下，A 股 512480 逆势放量收涨 ≥ +1.5% 且寒武纪/海光换手率超 5%",
+          "action_implication": "市场明确交易“灰色绕道堵死 → 本土算力采购翻倍”，自主算力及设备线具备 3~5 日主升弹性。"
+        },
+        {
+          "case": "bear",
+          "label": "海外风险扩散 · 链条估值下杀",
+          "trigger_metric": "BIS 新增实体清单 & 北美光模块联动",
+          "threshold": "若 BIS 正式发布新增 ≥ 3 家转口制裁实体且北美 CPO 龙头中际旭创单日跌破 20 日均线 > 3%",
+          "action_implication": "严控对海外 GPU 高度依赖的硬件敞口，回避未出清的海外算力链。"
+        }
+      ]
+    },
+    {
       "id": "imp_evt_6fabe31e5c0d",
       "event_id": "evt_6fabe31e5c0d",
       "rule_id": "autonomous_driving_fsd",
@@ -1806,8 +2530,242 @@
       ]
     },
     {
-      "id": "imp_evt_6b1166bbad07",
-      "event_id": "evt_6b1166bbad07",
+      "id": "imp_evt_12ac8fe29725",
+      "event_id": "evt_12ac8fe29725",
+      "rule_id": "ai_funding_capex_squeeze",
+      "validation_status": "verified",
+      "validation_note": "结构化方向与资产敏感区间一致性校验通过",
+      "evidence_tier": "corroborated",
+      "evidence_tier_label": "📰 多源媒体证实",
+      "effective_date_label": null,
+      "qualifier_badge": null,
+      "event_title": "马斯克预警AI行业明年或面临数千亿美元资金短缺",
+      "event_title_en": "马斯克预警AI行业明年或面临数千亿美元资金短缺",
+      "event_summary": "马斯克回应Keras创始人弗朗索瓦·肖莱时表示，让如此大规模的算力设备通电、冷却并实现稳定运行极其困难。他预警AI行业明年可能面临严重的资金短缺，如果全行业从支付算力成本到设备能够稳定创收的时间累计推迟数月，仅营运资金就可能需要额外投入数千亿美元。",
+      "event_summary_en": "马斯克回应Keras创始人弗朗索瓦·肖莱时表示，让如此大规模的算力设备通电、冷却并实现稳定运行极其困难。他预警AI行业明年可能面临严重的资金短缺，如果全行业从支付算力成本到设备能够稳定创收的时间累计推迟数月，仅营运资金就可能需要额外投入数千亿美元。",
+      "category": "tech",
+      "published_at": "2026-11-22T22:38:23+08:00",
+      "source_name": "华尔街见闻 7×24 全球",
+      "source_url": "https://wallstreetcn.com/livenews/3203764",
+      "sources": [
+        {
+          "source_name": "华尔街见闻 7×24 全球",
+          "url": "https://wallstreetcn.com/livenews/3203764"
+        },
+        {
+          "source_name": "AIHOT 前沿",
+          "url": "https://aihot.news/items/tyl31ot7i2wrsne9mmvu9pkfd"
+        }
+      ],
+      "tag": "AI 烧钱节奏与算力融资约束",
+      "tag_en": "AI Funding Crunch & Capex Caution",
+      "polarity": "divergent",
+      "intensity": 4,
+      "one_liner": "行业领军者警示 AI 融资缺口将加剧市场对高杠杆独立算力股估值折价，自由现金流充沛的云巨头防御护城河反而走阔。",
+      "one_liner_en": "Warnings over AI funding shortfalls pressure cash-burning compute plays while widening the moat for cash-rich hyperscalers.",
+      "sample_basis": {
+        "sample_n": 13,
+        "volatility_pct": 1.6,
+        "volatility_source": "纳指 AI Capex 预期修正样本",
+        "horizon": "1~5 个交易日",
+        "confidence_label": "中高置信（直击一级到二级算力融资链）",
+        "confidence_label_en": "Moderate-High (AI Capex Financing Sensitivity)"
+      },
+      "affected_tickers": {
+        "MSFT": 0.4,
+        "QQQ": -0.35,
+        "600941.SH": 0.45
+      },
+      "realized_quotes": [
+        {
+          "ticker": "QQQ",
+          "name": "纳指100ETF",
+          "name_en": "Invesco QQQ",
+          "market": "美股",
+          "price": 608.45,
+          "pct_change": -5.67
+        },
+        {
+          "ticker": "HSTECH.HK",
+          "name": "恒生科指",
+          "name_en": "Hang Seng Tech",
+          "market": "港股",
+          "price": 3511.14,
+          "pct_change": -3.78
+        },
+        {
+          "ticker": "000001.SH",
+          "name": "上证指数",
+          "name_en": "SSE Composite",
+          "market": "A股",
+          "price": 3533.79,
+          "pct_change": -1.23
+        }
+      ],
+      "bars": [
+        {
+          "market": "美股",
+          "sector": "高现金流云巨头与资产负债表龙头 (MSFT)",
+          "sector_en": "Cash-Rich Cloud Hyperscalers (MSFT)",
+          "pct_low": 0.4,
+          "pct_high": 1.6,
+          "direction": "positive",
+          "proxy_ticker": "MSFT",
+          "logic": "外部股权与债权融资收紧时，自带充沛自由现金流的超级平台护城河扩大。",
+          "logic_en": "Tighter external AI financing widens the moat for self-funded hyperscalers."
+        },
+        {
+          "market": "美股",
+          "sector": "高杠杆独立算力租赁 / 高估 AI 应用",
+          "sector_en": "Leveraged Neocloud & Unprofitable AI",
+          "pct_low": -4.2,
+          "pct_high": -1.5,
+          "direction": "negative",
+          "proxy_ticker": "QQQ",
+          "logic": "依赖举债扩张机柜的二三线算力股对信用利差走阔及 Capex 放缓最为敏感。",
+          "logic_en": "Debt-dependent compute renters face acute valuation compression."
+        },
+        {
+          "market": "美股",
+          "sector": "科技高收益债 / 私募信贷 (HYG)",
+          "sector_en": "Tech High-Yield Credit (HYG)",
+          "pct_low": -1.6,
+          "pct_high": -0.4,
+          "direction": "negative",
+          "proxy_ticker": "HYG",
+          "logic": "算力基建回报期拉长引发市场重估非投资级科技债再融资风险。",
+          "logic_en": "Extended AI payback horizons pressure high-yield tech credit spreads."
+        },
+        {
+          "market": "A股",
+          "sector": "高股息电信运营商与红利资产",
+          "sector_en": "A-Share Telecom & High-Dividend Value",
+          "pct_low": 0.4,
+          "pct_high": 1.3,
+          "direction": "positive",
+          "proxy_ticker": "600941.SH",
+          "logic": "全球 AI ROI 分歧放大阶段，资金偏好现金流确定性高的高股息防御板块。",
+          "logic_en": "Domestic flows tilt toward dividend-paying telecoms amid AI ROI debates."
+        }
+      ],
+      "if_then": [
+        {
+          "cond": "[顺向催化兑现阈值] 若相关催化在 3 个交易日内落地具体数据/公告，带动 MSFT 放量上行 1.2%~2.5%",
+          "result": "高现金流云巨头与资产负债表龙头 (MSFT)核心受益标的获增量机构资金加仓，可沿一阶直接标的顺势跟踪。",
+          "tone": "bullish"
+        },
+        {
+          "cond": "[预期差证伪回吐阈值] 若首个交易日冲高后无法维持换手，次日回撤幅度 ≥ 1.5% 且未见实质订单/政策跟进",
+          "result": "属于一次性主题情绪脉冲，避免在二阶段接盘弱势滞涨概念股。",
+          "tone": "bearish"
+        }
+      ],
+      "milestones": [
+        {
+          "date": "未来 2 周",
+          "status": "current",
+          "label": "观察美股科技高收益债利差与头部 AI 独角兽融资进展"
+        },
+        {
+          "date": "下季财报季",
+          "status": "upcoming",
+          "label": "核对 MSFT / AMZN / GOOG 资本开支自由现金流占比"
+        }
+      ],
+      "priced_in_analysis": {
+        "status_code": "unpriced",
+        "status_label": "未计价（开盘增量催化）",
+        "status_label_en": "Unpriced (Open Catalyst)",
+        "session_context": "休市/跨时区窗口发布，开盘将集中兑现首次定价比差",
+        "expectation_gap": "表层消息面快速反应后，超额收益取决于一阶直驱标的首小时放量成色与二阶产业链跟涨意愿。"
+      },
+      "transmission_layers": [
+        {
+          "tier": 1,
+          "tier_label": "一阶直接冲击（直接定价核心标的）",
+          "summary": "紧扣「马斯克预警AI行业明年或面临数千亿美元资金短缺」最直接的营收与估值敞口：微软 / 纳指100ETF 等首当其冲。",
+          "stocks": [
+            {
+              "name": "微软",
+              "code": "MSFT",
+              "market": "美股",
+              "exposure_logic": "外部股权与债权融资收紧时，自带充沛自由现金流的超级平台护城河扩大。",
+              "direction": "positive"
+            },
+            {
+              "name": "纳指100ETF",
+              "code": "QQQ",
+              "market": "美股",
+              "exposure_logic": "依赖举债扩张机柜的二三线算力股对信用利差走阔及 Capex 放缓最为敏感。",
+              "direction": "negative"
+            }
+          ]
+        },
+        {
+          "tier": 2,
+          "tier_label": "二阶产业链传导 / 替代对冲",
+          "summary": "向产业链上下游、跨市场同业映射或自主替代环节进行二阶定价传导。",
+          "stocks": [
+            {
+              "name": "科技高收益债 / 私募信贷",
+              "code": "HYG",
+              "market": "美股",
+              "exposure_logic": "算力基建回报期拉长引发市场重估非投资级科技债再融资风险。",
+              "direction": "negative"
+            }
+          ]
+        },
+        {
+          "tier": 3,
+          "tier_label": "三阶资金面与风格跷跷板效应",
+          "summary": "风险偏好变化驱动机构仓位在高弹性成长与低波高股息防御资产间再平衡。",
+          "stocks": [
+            {
+              "name": "中国移动",
+              "code": "600941.SH",
+              "market": "A股",
+              "exposure_logic": "全球 AI ROI 分歧放大阶段，资金偏好现金流确定性高的高股息防御板块。",
+              "direction": "positive"
+            }
+          ]
+        }
+      ],
+      "historical_precedents": [
+        {
+          "date": "2024-09-24",
+          "event_title": "国内跨市场重大催化发布于闭市窗口并伴随跨资产联动",
+          "t1_reaction": "首个开盘日竞价集中释放预期差，前 60 分钟成交额放大验证资金承接度。",
+          "t5_reaction": "T+5 主线标的围绕产业链业绩兑现与后续政策细则完成筹码分化。",
+          "lesson": "重点核对事件是否发生在交易所休市后（未计价窗口）及首小时量能持续性。"
+        },
+        {
+          "date": "2023-10-18",
+          "event_title": "跨境政策/产业催化剂落地后中美港三地市场分时异步重估",
+          "t1_reaction": "率先开盘的市场计价 60%~75% 首波弹性，后开盘市场易现高开/低开缺口收敛。",
+          "t5_reaction": "T+5 脱离纯情绪扰动后，基本面直接受益龙头跑赢二三线跟风概念。",
+          "lesson": "避免在外盘已充分交易 5%+ 涨幅后再追高滞后映射股。"
+        }
+      ],
+      "quant_if_then": [
+        {
+          "case": "bull",
+          "label": "顺向催化兑现阈值",
+          "trigger_metric": "MSFT 量价突破强度",
+          "threshold": "若相关催化在 3 个交易日内落地具体数据/公告，带动 MSFT 放量上行 1.2%~2.5%",
+          "action_implication": "高现金流云巨头与资产负债表龙头 (MSFT)核心受益标的获增量机构资金加仓，可沿一阶直接标的顺势跟踪。"
+        },
+        {
+          "case": "bear",
+          "label": "预期差证伪回吐阈值",
+          "trigger_metric": "冲高回落幅度 & 量能衰减",
+          "threshold": "若首个交易日冲高后无法维持换手，次日回撤幅度 ≥ 1.5% 且未见实质订单/政策跟进",
+          "action_implication": "属于一次性主题情绪脉冲，避免在二阶段接盘弱势滞涨概念股。"
+        }
+      ]
+    },
+    {
+      "id": "imp_evt_6bb16b859969",
+      "event_id": "evt_6bb16b859969",
       "rule_id": "ai_model_launch_catalyst",
       "validation_status": "verified",
       "validation_note": "结构化方向与资产敏感区间一致性校验通过",
@@ -1815,26 +2773,220 @@
       "evidence_tier_label": "📰 多源媒体证实",
       "effective_date_label": null,
       "qualifier_badge": null,
-      "event_title": "谷歌发布Gemini API工具检索预览版并推出Gemini 4 Neon AI模型",
-      "event_title_en": "Google AI Previews Tool Retrieval in the Gemini API for Large Tool Libraries",
-      "event_summary": "谷歌发布了Gemini API工具检索的预览版，允许智能体在需要时才加载大型工具库的参数schema。同时，谷歌还发布了Gemini 4 Neon AI模型，旨在与Claude Opus 5.5和GPT-6.2 Sol竞争。",
-      "event_summary_en": "Google launched Gemini API Tool Retrieval in preview. Agents keep a large tool library on standby and load each parameter schema only when needed, inside one Interactions API request. The post Google AI Previews Tool Retrieval in the Gemini API for Large Tool…",
+      "event_title": "加州州长提议AI“终止开关”，特朗普命令政府切断与Anthropic的联系",
+      "event_title_en": "Newsom Proposes AI ‘Kill Switch’ to Block Dangerous OpenAI, Anthropic Releases",
+      "event_summary": "加州州长纽森提议设立AI“终止开关”以阻止危险的OpenAI和Anthropic模型发布。特朗普总统命令美国政府切断与Anthropic的联系，Hegseth宣称其供应链存在“风险”。",
+      "event_summary_en": "Newsom Proposes AI ‘Kill Switch’ to Block Dangerous OpenAI, Anthropic Releases San Jose Inside",
       "category": "tech",
-      "published_at": "2026-11-22T18:03:54+08:00",
-      "source_name": "MarkTechPost (AI论文/模型)",
-      "source_url": "https://www.marktechpost.com/2026/11/22/google-gemini-api-tool-retrieval",
+      "published_at": "2026-11-21T21:33:11+08:00",
+      "source_name": "国际媒体",
+      "source_url": "https://news.google.com/rss/articles/CBMisAFBVV95cUxNV2hVQTRrcFpkMklhZ29yaFlHYkwwRllnNnMyZDN6cWtIOHZZOEZadUdKOXJZSjNHd2M1OXJPT3ZvbWJMQVViTVpaVnBseXN0M2tNRnJld2haSTQzWTROZXhRazJKSExGbmU3WkhnUzRXakx5VmlsQkhYTDFrV1g2YTJWaV8zQURaNUFzQVBQU2x3WlROdjVFb0R0djdLTDdSV0RSblY5S3Z2M1BYeUJoZA?oc=5",
       "sources": [
         {
-          "source_name": "MarkTechPost (AI论文/模型)",
-          "url": "https://www.marktechpost.com/2026/11/22/google-gemini-api-tool-retrieval"
+          "source_name": "国际媒体",
+          "url": "https://news.google.com/rss/articles/CBMisAFBVV95cUxNV2hVQTRrcFpkMklhZ29yaFlHYkwwRllnNnMyZDN6cWtIOHZZOEZadUdKOXJZSjNHd2M1OXJPT3ZvbWJMQVViTVpaVnBseXN0M2tNRnJld2haSTQzWTROZXhRazJKSExGbmU3WkhnUzRXakx5VmlsQkhYTDFrV1g2YTJWaV8zQURaNUFzQVBQU2x3WlROdjVFb0R0djdLTDdSV0RSblY5S3Z2M1BYeUJoZA?oc=5"
         },
         {
           "source_name": "国际媒体",
-          "url": "https://news.google.com/rss/articles/CBMijwFBVV95cUxOSWVfSWVYY1k5TWw3TWJ5WGYyWExnNDM2Wmp4eWs1LXk4S2IwYkt2NVBYeXpRZEM3Q2NERHd0RllEcU0wV2t2M3BPNG5Xbm9xbU5MMEtIVnFEZFA2ZWtiQjg3VFFMRmc5OXZiRnUzYVkzUkhidmFRM24wZ01INno2ek9TTEZOT25QQ2x4azZodw?oc=5"
+          "url": "https://news.google.com/rss/articles/CBMirAFBVV95cUxPazMyTEtZY2RWSjJJaC05T0Y2NDE4bG9NeF9od29uVmtubVYxQnVNOGFuY0hrNjM1bW0xRFVGUkJHbEJNSjJWVGc0YzA0TFZKcl9fRlM0YnVjcU55aXhDcTk1Nl9PYkhXWWZYUnVpMUx5XzNIVTBwR0VPUkxfMnltUEExbGE0alRYZXQtUzhJWDZrTTFqbm1EMW5LbTd1UGx0Z1JCejgxVU1BOWs30gGyAUFVX3lxTE45MVA4TGJmSW1LU1BrdW5MOFhVb1UwU0FDdTZwcnhiNUN5NlhHaW4wTjc5ZDFya2NRUEE0TjEtU21INHhORE5LRUxoeEhNYmo5YXBVcEtjWm1JOGdUaFVYMHV4RndneXVIZ2EwWEN0QjVzOHBRVFVJODR3MzJGSVlPM0RfZTJQWENuaGZHck1zMmZUd0tsOFc0bUpRRmdjUzFTYUFtZHJGUmoxel9oV2t2MXc?oc=5"
+        }
+      ],
+      "tag": "Anthropic 企业级 Agent 与云托管竞合",
+      "tag_en": "Anthropic Enterprise Agent & Cloud Hosting",
+      "polarity": "bullish",
+      "intensity": 3,
+      "one_liner": "Anthropic 企业编码与 Agent 工作流加速商用，直接推高 AWS Bedrock/GCP 云托管调用量并支撑 B 端 SaaS 估值。",
+      "one_liner_en": "Anthropic Enterprise Agent & Cloud Hosting expands enterprise cloud consumption and AI developer monetization.",
+      "sample_basis": {
+        "sample_n": 15,
+        "volatility_pct": 2.01,
+        "volatility_source": "主流大模型与软件应用催化样本",
+        "horizon": "2~5 个交易日",
+        "confidence_label": "中高置信（生态应用催化）",
+        "confidence_label_en": "Moderate-High (Model Ecosystem Catalyst)"
+      },
+      "affected_tickers": {
+        "AMZN": 0.45,
+        "GOOGL": 0.35,
+        "QQQ": 0.28
+      },
+      "realized_quotes": [
+        {
+          "ticker": "QQQ",
+          "name": "纳指100ETF",
+          "name_en": "Invesco QQQ",
+          "market": "美股",
+          "price": 608.45,
+          "pct_change": -5.67
+        }
+      ],
+      "bars": [
+        {
+          "market": "美股",
+          "sector": "AWS / 云代码 Agent 托管生态 (AMZN / GOOGL)",
+          "sector_en": "AWS & Enterprise Coding AI Stack (AMZN/GOOGL)",
+          "pct_low": 0.9,
+          "pct_high": 2.7,
+          "direction": "positive",
+          "proxy_ticker": "AMZN",
+          "logic": "企业级长上下文与安全编码 Agent 渗透深化，直接放量 AWS Bedrock 与 GCP 的高毛利调用营收。",
+          "logic_en": "Model ecosystem upgrades expand enterprise cloud consumption."
         },
         {
-          "source_name": "AIHOT 前沿",
-          "url": "https://aihot.news/items/wgzy1mbctlp5z5p5ttc47as2a"
+          "market": "港股",
+          "sector": "企业软件与港股云计算龙头 (HSTECH)",
+          "sector_en": "HKEX AI Ecosystem & Cloud Platforms",
+          "pct_low": 0.8,
+          "pct_high": 2.5,
+          "direction": "positive",
+          "proxy_ticker": "HSTECH.HK",
+          "logic": "海外企业级订阅与 Agent 客单价抬升，改善市场对港股云计算平台 B 端变现的预期。",
+          "logic_en": "Model performance progress supports platform ecosystem monetization."
+        },
+        {
+          "market": "A股",
+          "sector": "A股代码辅助 / 企业知识库与国产大模型",
+          "sector_en": "A-Share AI Apps & Local Compute",
+          "pct_low": 1.1,
+          "pct_high": 3.1,
+          "direction": "positive",
+          "proxy_ticker": "510300.SH",
+          "logic": "复杂代码重构与企业知识库合规托管需求升温，利好国内垂直行业 Agent 服务商。",
+          "logic_en": "Expanded capabilities accelerate domestic enterprise adoption."
+        }
+      ],
+      "if_then": [
+        {
+          "cond": "[顺向催化兑现阈值] 若相关催化在 3 个交易日内落地具体数据/公告，带动 AMZN 放量上行 1.6%~2.7%",
+          "result": "AWS / 云代码 Agent 托管生态 (AMZN / GOOGL)核心受益标的获增量机构资金加仓，可沿一阶直接标的顺势跟踪。",
+          "tone": "bullish"
+        },
+        {
+          "cond": "[预期差证伪回吐阈值] 若首个交易日冲高后无法维持换手，次日回撤幅度 ≥ 1.5% 且未见实质订单/政策跟进",
+          "result": "属于一次性主题情绪脉冲，避免在二阶段接盘弱势滞涨概念股。",
+          "tone": "bearish"
+        }
+      ],
+      "milestones": [
+        {
+          "date": "未来 2~4 周",
+          "status": "upcoming",
+          "label": "跟踪 AWS Bedrock 模型调用占比与企业客户 ARR 披露"
+        }
+      ],
+      "priced_in_analysis": {
+        "status_code": "unpriced",
+        "status_label": "未计价（开盘增量催化）",
+        "status_label_en": "Unpriced (Open Catalyst)",
+        "session_context": "休市/跨时区窗口发布，开盘将集中兑现首次定价比差",
+        "expectation_gap": "表层消息面快速反应后，超额收益取决于一阶直驱标的首小时放量成色与二阶产业链跟涨意愿。"
+      },
+      "transmission_layers": [
+        {
+          "tier": 1,
+          "tier_label": "一阶直接冲击（直接定价核心标的）",
+          "summary": "紧扣「加州州长提议AI“终止开关”，特朗普命令政府切断与A」最直接的营收与估值敞口：亚马逊 / 恒生科技指数 等首当其冲。",
+          "stocks": [
+            {
+              "name": "亚马逊",
+              "code": "AMZN",
+              "market": "美股",
+              "exposure_logic": "企业级长上下文与安全编码 Agent 渗透深化，直接放量 AWS Bedrock 与 GCP 的高毛利调用营收。",
+              "direction": "positive"
+            },
+            {
+              "name": "恒生科技指数",
+              "code": "HSTECH.HK",
+              "market": "港股",
+              "exposure_logic": "海外企业级订阅与 Agent 客单价抬升，改善市场对港股云计算平台 B 端变现的预期。",
+              "direction": "positive"
+            }
+          ]
+        },
+        {
+          "tier": 2,
+          "tier_label": "二阶产业链传导 / 替代对冲",
+          "summary": "向产业链上下游、跨市场同业映射或自主替代环节进行二阶定价传导。",
+          "stocks": [
+            {
+              "name": "A股代码辅助 / 企业知识库",
+              "code": "510300.SH",
+              "market": "A股",
+              "exposure_logic": "复杂代码重构与企业知识库合规托管需求升温，利好国内垂直行业 Agent 服务商。",
+              "direction": "positive"
+            }
+          ]
+        },
+        {
+          "tier": 3,
+          "tier_label": "三阶资金面与风格跷跷板效应",
+          "summary": "风险偏好变化驱动机构仓位在高弹性成长与低波高股息防御资产间再平衡。",
+          "stocks": [
+            {
+              "name": "红利低波ETF",
+              "code": "512890.SH",
+              "market": "A股",
+              "exposure_logic": "当主线高波动分化时承接防御与避险资金切换",
+              "direction": "positive"
+            }
+          ]
+        }
+      ],
+      "historical_precedents": [
+        {
+          "date": "2025-01-20",
+          "event_title": "头部模型发布高性价比旗舰推理架构引发推理成本与云生态重估",
+          "t1_reaction": "端侧 AI 应用与高速云计算平台活跃，海外高功耗硬件短期分歧后重回吞吐扩张。",
+          "t5_reaction": "T+5 推理调用量飙升利好头部云厂商及具备工作流落地的软件平台。",
+          "lesson": "区分“旗舰模型直接大幅拉动云消费”与“成本骤降冲击封闭溢价”；真发布看 API 定价与首周调用量。"
+        },
+        {
+          "date": "2024-05-13",
+          "event_title": "头部实验室推出原生多模态低延迟旗舰模型及开发者 API",
+          "t1_reaction": "相关云托管龙头与 A 股端侧多模态软件高开 +2.4%。",
+          "t5_reaction": "T+5 商业化 ARR 转化与月活提升决定二阶段反弹高度。",
+          "lesson": "技术发布若无明确 API 定价优势或杀手级场景落地，容易在 48 小时内获利回吐。"
+        }
+      ],
+      "quant_if_then": [
+        {
+          "case": "bull",
+          "label": "顺向催化兑现阈值",
+          "trigger_metric": "AMZN 量价突破强度",
+          "threshold": "若相关催化在 3 个交易日内落地具体数据/公告，带动 AMZN 放量上行 1.6%~2.7%",
+          "action_implication": "AWS / 云代码 Agent 托管生态 (AMZN / GOOGL)核心受益标的获增量机构资金加仓，可沿一阶直接标的顺势跟踪。"
+        },
+        {
+          "case": "bear",
+          "label": "预期差证伪回吐阈值",
+          "trigger_metric": "冲高回落幅度 & 量能衰减",
+          "threshold": "若首个交易日冲高后无法维持换手，次日回撤幅度 ≥ 1.5% 且未见实质订单/政策跟进",
+          "action_implication": "属于一次性主题情绪脉冲，避免在二阶段接盘弱势滞涨概念股。"
+        }
+      ]
+    },
+    {
+      "id": "imp_evt_b7428748ad78",
+      "event_id": "evt_b7428748ad78",
+      "rule_id": "ai_model_launch_catalyst",
+      "validation_status": "verified",
+      "validation_note": "结构化方向与资产敏感区间一致性校验通过",
+      "evidence_tier": "single_source",
+      "evidence_tier_label": "⚠️ 单一信源线索",
+      "effective_date_label": null,
+      "qualifier_badge": null,
+      "event_title": "Google发布Gemini 4 Neon AI模型，对标Claude Opus 5.5和GPT-6.2 Sol",
+      "event_title_en": "Google releases Gemini 4 Neon AI model, rivals Claude Opus 5.5 and GPT-6.2 Sol",
+      "event_summary": "Google发布了Gemini 4 Neon AI模型，该模型旨在与Anthropic的Claude Opus 5.5和OpenAI的GPT-6.2 Sol竞争。",
+      "event_summary_en": "Google releases Gemini 4 Neon AI model, rivals Claude Opus 5.5 and GPT-6.2 Sol Yahoo Tech",
+      "category": "tech",
+      "published_at": "2026-11-22T13:16:43+08:00",
+      "source_name": "国际媒体",
+      "source_url": "https://news.google.com/rss/articles/CBMijwFBVV95cUxOSWVfSWVYY1k5TWw3TWJ5WGYyWExnNDM2Wmp4eWs1LXk4S2IwYkt2NVBYeXpRZEM3Q2NERHd0RllEcU0wV2t2M3BPNG5Xbm9xbU5MMEtIVnFEZFA2ZWtiQjg3VFFMRmc5OXZiRnUzYVkzUkhidmFRM24wZ01INno2ek9TTEZOT25QQ2x4azZodw?oc=5",
+      "sources": [
+        {
+          "source_name": "国际媒体",
+          "url": "https://news.google.com/rss/articles/CBMijwFBVV95cUxOSWVfSWVYY1k5TWw3TWJ5WGYyWExnNDM2Wmp4eWs1LXk4S2IwYkt2NVBYeXpRZEM3Q2NERHd0RllEcU0wV2t2M3BPNG5Xbm9xbU5MMEtIVnFEZFA2ZWtiQjg3VFFMRmc5OXZiRnUzYVkzUkhidmFRM24wZ01INno2ek9TTEZOT25QQ2x4azZodw?oc=5"
         }
       ],
       "tag": "Google Gemini 架构迭代与自研 TPU 生态",
@@ -1871,8 +3023,8 @@
           "market": "美股",
           "sector": "Google 与定制 ASIC/TPU 算力链 (GOOGL / AVGO)",
           "sector_en": "Google & Custom TPU Stack (GOOGL/AVGO)",
-          "pct_low": 0.9,
-          "pct_high": 2.7,
+          "pct_low": 0.8,
+          "pct_high": 2.3,
           "direction": "positive",
           "proxy_ticker": "GOOGL",
           "logic": "谷歌全栈多模态与端云推理效率升级，加固搜索广告防线并利好博通 (AVGO) 定制 TPU ASIC 出货。",
@@ -1882,8 +3034,8 @@
           "market": "港股",
           "sector": "多模态消费应用与移动生态 (HSTECH)",
           "sector_en": "HKEX AI Ecosystem & Cloud Platforms",
-          "pct_low": 0.8,
-          "pct_high": 2.5,
+          "pct_low": 0.7,
+          "pct_high": 2.1,
           "direction": "positive",
           "proxy_ticker": "HSTECH.HK",
           "logic": "端云协同轻量化模型能力提升，改善港股互联网端侧分发与海外广告变现效率。",
@@ -1893,8 +3045,8 @@
           "market": "A股",
           "sector": "A股高密度光模块 / ASIC 测试与端侧软件",
           "sector_en": "A-Share AI Apps & Local Compute",
-          "pct_low": 1.1,
-          "pct_high": 3.1,
+          "pct_low": 0.9,
+          "pct_high": 2.7,
           "direction": "positive",
           "proxy_ticker": "510300.SH",
           "logic": "高吞吐 TPU 集群与端云推理带旺光通信模块与 ASIC 封装测试链。",
@@ -1931,7 +3083,7 @@
         {
           "tier": 1,
           "tier_label": "一阶直接冲击（直接定价核心标的）",
-          "summary": "紧扣「谷歌发布Gemini API工具检索预览版并推出Ge」最直接的营收与估值敞口：谷歌 / 恒生科技指数 等首当其冲。",
+          "summary": "紧扣「Google发布Gemini 4 Neon AI模型」最直接的营收与估值敞口：谷歌 / 恒生科技指数 等首当其冲。",
           "stocks": [
             {
               "name": "谷歌",
@@ -2008,239 +3160,6 @@
           "trigger_metric": "冲高回落幅度 & 量能衰减",
           "threshold": "若首个交易日冲高后无法维持换手，次日回撤幅度 ≥ 1.5% 且未见实质订单/政策跟进",
           "action_implication": "属于一次性主题情绪脉冲，避免在二阶段接盘弱势滞涨概念股。"
-        }
-      ]
-    },
-    {
-      "id": "imp_evt_6a9a0488c431",
-      "event_id": "evt_6a9a0488c431",
-      "rule_id": "asic_tpu_order_cut",
-      "validation_status": "verified",
-      "validation_note": "结构化方向与资产敏感区间一致性校验通过",
-      "evidence_tier": "research",
-      "evidence_tier_label": "📊 机构研报 / 渠道调研",
-      "effective_date_label": null,
-      "qualifier_badge": null,
-      "event_title": "郭明錤：谷歌削减2027年博通设计的TPU 8i系列出货量约100万颗",
-      "event_title_en": "郭明錤：谷歌削减2027年博通设计的TPU 8i系列出货量约100万颗",
-      "event_summary": "郭明錤（Ming-Chi Kuo）报告称，谷歌削减了2027年博通设计的TPU 8i系列出货量约100万颗。",
-      "event_summary_en": "郭明錤（Ming-Chi Kuo）报告称，谷歌削减了2027年博通设计的TPU 8i系列出货量约100万颗。",
-      "category": "tech",
-      "published_at": "2026-11-22T19:20:07+08:00",
-      "source_name": "IT之家",
-      "source_url": "https://www.ithome.com/1/030/698.htm",
-      "sources": [
-        {
-          "source_name": "IT之家",
-          "url": "https://www.ithome.com/1/030/698.htm"
-        }
-      ],
-      "tag": "谷歌 TPU 供应链切换：博通 8i 承压 vs 联发科 8t 受益",
-      "tag_en": "Google TPU Supplier Shift (Broadcom 8i Cut vs MediaTek 8t Gain)",
-      "polarity": "divergent",
-      "intensity": 4,
-      "one_liner": "谷歌虽拟削减博通设计的 TPU 8i 出货约 100 万颗（占 20%），但预计同步增加联发科设计的 TPU 8t 出货——本质属于 ASIC 供应商结构切换而非谷歌总算力需求下调，呈现“博通承压 vs 联发科 (2454.TW) 受益”。",
-      "one_liner_en": "Google cutting ~1M Broadcom-designed TPU 8i (~20%) while ramping MediaTek TPU 8t is a supplier-share shift rather than an overall AI compute cut.",
-      "sample_basis": {
-        "sample_n": 12,
-        "volatility_pct": 3.11,
-        "volatility_source": "北美云厂芯片链切换与砍单样本",
-        "horizon": "1~5 个交易日",
-        "confidence_label": "高置信（直接改写 ASIC 供应商份额）",
-        "confidence_label_en": "High (Direct ASIC Share Reallocation)"
-      },
-      "affected_tickers": {
-        "AVGO": -0.85,
-        "2454.TW": 0.72,
-        "300308.SZ": -0.35,
-        "NVDA": 0.3,
-        "QQQ": -0.1
-      },
-      "realized_quotes": [
-        {
-          "ticker": "NVDA",
-          "name": "英伟达",
-          "name_en": "NVIDIA",
-          "market": "美股",
-          "price": 125.53,
-          "pct_change": -14.01
-        },
-        {
-          "ticker": "QQQ",
-          "name": "纳指100ETF",
-          "name_en": "Invesco QQQ",
-          "market": "美股",
-          "price": 608.45,
-          "pct_change": -5.67
-        }
-      ],
-      "bars": [
-        {
-          "market": "美股",
-          "sector": "定制 ASIC 原主力设计伙伴 (AVGO 博通)",
-          "sector_en": "US Custom ASIC Incumbent (AVGO)",
-          "pct_low": -4.8,
-          "pct_high": -1.8,
-          "direction": "negative",
-          "proxy_ticker": "AVGO",
-          "logic": "百万颗级 TPU 8i 削减（约 20%）直接挤压博通该代际定制芯片增长预期与溢价。",
-          "logic_en": "Cutting ~1M TPU 8i units (~20%) directly squeezes Broadcom's custom-silicon upside."
-        },
-        {
-          "market": "台股",
-          "sector": "联发科 TPU 8t 定制二供替代链 (2454.TW)",
-          "sector_en": "Taiwan Custom ASIC Beneficiary MediaTek (2454.TW)",
-          "pct_low": 1.6,
-          "pct_high": 4.5,
-          "direction": "positive",
-          "proxy_ticker": "2454.TW",
-          "logic": "谷歌预计增加联发科设计的 TPU 8t 出货以承接部分算力需求，二供份额放量成为事件核心正向对冲腿。",
-          "logic_en": "Expected ramp of MediaTek-designed TPU 8t captures shifted Google ASIC volume."
-        },
-        {
-          "market": "A股",
-          "sector": "北美多云光模块/PCB 结构性再平衡 (300308)",
-          "sector_en": "A-Share Optical & PCB Capex Balance (300308)",
-          "pct_low": -2.4,
-          "pct_high": 0.8,
-          "direction": "mixed",
-          "proxy_ticker": "300308.SZ",
-          "logic": "谷歌总 AI 算力 Capex 并未下修，仅在 8i/8t 料号与客户间调配，多云客户光模块龙头韧性强于单料号厂。",
-          "logic_en": "Google's total AI Capex stays intact; multi-cloud optics vendors face modest timing noise."
-        },
-        {
-          "market": "美股",
-          "sector": "通用 AI GPU 核心生态 (NVDA)",
-          "sector_en": "Merchant AI GPU Ecosystem (NVDA)",
-          "pct_low": 0.4,
-          "pct_high": 2.2,
-          "direction": "positive",
-          "proxy_ticker": "NVDA",
-          "logic": "定制 ASIC 双供切换磨合期客观稳固通用 GPU 在大模型主集群中的交付确定性。",
-          "logic_en": "Vendor transition friction in custom ASICs modestly steadies merchant GPU demand."
-        }
-      ],
-      "if_then": [
-        {
-          "cond": "[负面验证 · 砍单获多渠道印证] 若 AVGO 周内有效跌破前低 ≥ 3.5% 且供应链未出面辟谣 2027 年 100 万颗下调预期",
-          "result": "单一绑定的谷歌 TPU 链 PCB 与光模块估值需下修约 10%~15%，果断换仓多客户平台或通用 GPU 生态。",
-          "tone": "bearish"
-        },
-        {
-          "cond": "[证伪反转 · 官方澄清或转向下一代放量] 若谷歌或博通回应仅系 TPU 8i 向下一代节点平滑切换且 2027 总算力采购规模不变（偏差 ≤ 5%）",
-          "result": "砍单错杀缺口提供高赔率低吸点。",
-          "tone": "bullish"
-        }
-      ],
-      "milestones": [
-        {
-          "date": "7 日内",
-          "status": "current",
-          "label": "观察博通 / 联发科对 TPU 8i/8t 订单配比与 CoWoS 分配最新回应"
-        }
-      ],
-      "priced_in_analysis": {
-        "status_code": "overseas_priced_in",
-        "status_label": "外盘已计价（警惕A股/港股开盘补跌或切向替代）",
-        "status_label_en": "Overseas Priced (Asia Open Gap Watch)",
-        "session_context": "美股最近交易日已率先剧烈定价（NVDA (-14.01%) / QQQ (-5.67%)），而 A 股/港股处于休市跨时差窗口",
-        "expectation_gap": "海外市场已在 NVDA (-14.01%) 与 QQQ (-5.67%) 上先行释放大半恐慌或避险跌幅；下一个亚太开盘时段，纯海外配套硬件链存在集中低开补跌风险，但 A 股国产替代方向具备反向错杀承接预期差。"
-      },
-      "transmission_layers": [
-        {
-          "tier": 1,
-          "tier_label": "一阶直接冲击（TPU 供应商切换：博通 8i 承压 vs 联发科 8t 受益）",
-          "summary": "谷歌削减博通设计的 TPU 8i 约 100 万颗（占约 20%），但预计增加联发科设计的 TPU 8t 出货，本质为谷歌在 ASIC 伙伴间的结构切换而非总算力需求下调。",
-          "stocks": [
-            {
-              "name": "博通",
-              "code": "AVGO",
-              "market": "美股",
-              "exposure_logic": "原 TPU 8i 主力设计伙伴，份额向 TPU 8t 切换直接挤压该代际 ASIC 预期差",
-              "direction": "negative"
-            },
-            {
-              "name": "联发科",
-              "code": "2454.TW",
-              "market": "台股",
-              "exposure_logic": "TPU 8t 预计出货上修直接兑现谷歌二供切入份额红利，承接谷歌定制 ASIC 结构性增量",
-              "direction": "positive"
-            },
-            {
-              "name": "英伟达",
-              "code": "NVDA",
-              "market": "美股",
-              "exposure_logic": "谷歌定制 ASIC 双供切换摩擦期，反而稳固通用 GPU 在主力云厂商中的交付确定性",
-              "direction": "positive"
-            }
-          ]
-        },
-        {
-          "tier": 2,
-          "tier_label": "二阶产业链传导（高速光模块 / CoWoS 封测按产品线重分配）",
-          "summary": "谷歌总 AI 算力 Capex 并未下修，台积电 CoWoS 与光模块需求仅在 8i/8t 与通用集群间结构再平衡，多元客户龙头具备对冲韧性。",
-          "stocks": [
-            {
-              "name": "中际旭创",
-              "code": "300308.SZ",
-              "market": "A股",
-              "exposure_logic": "短期需消化 TPU 8i 切单情绪扰动，但作为多云厂 800G/1.6T 龙头仍可承接总算力与联发科/NVDA 增量",
-              "direction": "mixed"
-            },
-            {
-              "name": "沪电股份",
-              "code": "002463.SZ",
-              "market": "A股",
-              "exposure_logic": "北美云厂高速 PCB 料号跟随 8i→8t 切换节奏微调排产，需盯紧总 Capex 验证",
-              "direction": "mixed"
-            }
-          ]
-        },
-        {
-          "tier": 3,
-          "tier_label": "三阶资金面与风格跷跷板效应",
-          "summary": "机构从单一定制芯片供应商估值溢价转向多云互连基建、台股二供替代及通用 GPU 均衡配置。",
-          "stocks": [
-            {
-              "name": "寒武纪",
-              "code": "688256.SH",
-              "market": "A股",
-              "exposure_logic": "海外云厂 ASIC 份额内部分流期间，境内自主推理芯片仍锚定国内互联网资本开支",
-              "direction": "mixed"
-            }
-          ]
-        }
-      ],
-      "historical_precedents": [
-        {
-          "date": "2024-11-14",
-          "event_title": "供应链分析师下调特定云厂商定制 ASIC 年度出货指引引发硬件链剧震",
-          "t1_reaction": "博通 (AVGO) 盘后一度承压，A 股绑定单一北美 ASIC 客户的光模块与 PCB 低开 -3.5%。",
-          "t5_reaction": "T+5 资金从高单一客户依赖链分流向通用 GPU 集群（NVDA）与多元客户龙头。",
-          "lesson": "一线知名分析师砍单传闻若未获博通/云厂澄清，单一 ASIC 配套厂商短期估值折价通常持续 3~5 天。"
-        },
-        {
-          "date": "2023-08-29",
-          "event_title": "谷歌/大厂切换下一代 TPU 架构引发过渡期出货节奏调整讨论",
-          "t1_reaction": "定制芯片封装与测试环节短期波动放大。",
-          "t5_reaction": "T+5 市场甄别过渡期砍单与架构换代时间差后，多客户平台型龙头率先修复。",
-          "lesson": "核查下一代芯片流片（Tape-out）延迟是暂时的工艺切换还是算力预算转向。"
-        }
-      ],
-      "quant_if_then": [
-        {
-          "case": "bear",
-          "label": "负面验证 · 砍单获多渠道印证",
-          "trigger_metric": "博通 AVGO / A股相关供应链股价表态",
-          "threshold": "若 AVGO 周内有效跌破前低 ≥ 3.5% 且供应链未出面辟谣 2027 年 100 万颗下调预期",
-          "action_implication": "单一绑定的谷歌 TPU 链 PCB 与光模块估值需下修约 10%~15%，果断换仓多客户平台或通用 GPU 生态。"
-        },
-        {
-          "case": "bull",
-          "label": "证伪反转 · 官方澄清或转向下一代放量",
-          "trigger_metric": "官方/供应链澄清 & 订单缺口补足",
-          "threshold": "若谷歌或博通回应仅系 TPU 8i 向下一代节点平滑切换且 2027 总算力采购规模不变（偏差 ≤ 5%）",
-          "action_implication": "砍单错杀缺口提供高赔率低吸点。"
         }
       ]
     },
@@ -2725,26 +3644,26 @@
       ]
     },
     {
-      "id": "imp_evt_80350a5d59f4",
-      "event_id": "evt_80350a5d59f4",
+      "id": "imp_evt_6c3428db5046",
+      "event_id": "evt_6c3428db5046",
       "rule_id": "ai_server_price_hike",
       "validation_status": "verified",
       "validation_note": "结构化方向与资产敏感区间一致性校验通过",
       "evidence_tier": "corroborated",
       "evidence_tier_label": "📰 多源媒体证实",
       "effective_date_label": null,
-      "qualifier_badge": null,
-      "event_title": "戴尔、HPE等AI服务器厂商交付前提价，涨幅最高达45%",
-      "event_title_en": "戴尔、HPE等AI服务器厂商交付前提价，涨幅最高达45%",
-      "event_summary": "据媒体报道，戴尔、慧与科技（HPE）、联想和超微电脑等AI服务器厂商正在要求提高AI服务器的价格，涨幅最高达45%，即使是几个月前已签署的协议也不例外。这些更高的成本正在影响交易公司及其他客户。",
-      "event_summary_en": "据媒体报道，戴尔、慧与科技（HPE）、联想和超微电脑等AI服务器厂商正在要求提高AI服务器的价格，涨幅最高达45%，即使是几个月前已签署的协议也不例外。这些更高的成本正在影响交易公司及其他客户。",
+      "qualifier_badge": "⚠️ 要价上限 45% · 关注客户实际接受率",
+      "event_title": "AI服务器厂商戴尔、HPE等提价最高达45%",
+      "event_title_en": "AI服务器厂商戴尔、HPE等提价最高达45%",
+      "event_summary": "据《金融时报》报道，戴尔、慧与科技（HPE）、联想和超微电脑等AI服务器厂商正在要求提高AI服务器的价格，涨幅最高达45%，即使是几个月前已签署的协议也不例外。这些更高的成本正在影响交易公司及其他客户。",
+      "event_summary_en": "据《金融时报》报道，戴尔、慧与科技（HPE）、联想和超微电脑等AI服务器厂商正在要求提高AI服务器的价格，涨幅最高达45%，即使是几个月前已签署的协议也不例外。这些更高的成本正在影响交易公司及其他客户。",
       "category": "tech",
       "published_at": "2026-11-22T22:00:48+08:00",
-      "source_name": "华尔街见闻 美股快讯",
+      "source_name": "华尔街见闻 7×24 全球",
       "source_url": "https://wallstreetcn.com/livenews/3203759",
       "sources": [
         {
-          "source_name": "华尔街见闻 美股快讯",
+          "source_name": "华尔街见闻 7×24 全球",
           "url": "https://wallstreetcn.com/livenews/3203759"
         },
         {
@@ -2853,7 +3772,7 @@
         "status_label": "部分计价（博弈二次预期差）",
         "status_label_en": "Partially Priced (2nd-Order Gap)",
         "session_context": "事件伴随跨市场供应链/大宗商品先行异动，但产业链二阶渗透与实质订单落地仍存预期差",
-        "expectation_gap": "市场仅在情绪面与一线权重上做了初步定价；决定后续超额收益的是二阶传导环节（如即期运价能否站稳、涨价函落地率或国产替代订单转化）能否超预期。"
+        "expectation_gap": "【⚠️ 要价上限 45% · 关注客户实际接受率】市场仅在情绪面与一线权重上做了初步定价；决定后续超额收益的是二阶传导环节（如即期运价能否站稳、涨价函落地率或国产替代订单转化）能否超预期。"
       },
       "transmission_layers": [
         {
@@ -2950,236 +3869,6 @@
           "trigger_metric": "提价后月度出货增速 & 组装净利率",
           "threshold": "若提价超 30% 后出现云厂推迟 Q1 机柜验收超 4 周或零部件成本完全吞噬组装利润",
           "action_implication": "纯代工组装厂有脉冲后回落风险，仅保留高壁垒液冷与光互连标的。"
-        }
-      ]
-    },
-    {
-      "id": "imp_evt_a0e32edc46f7",
-      "event_id": "evt_a0e32edc46f7",
-      "rule_id": "us_china_diplomacy_friction",
-      "validation_status": "verified",
-      "validation_note": "结构化方向与资产敏感区间一致性校验通过",
-      "evidence_tier": "corroborated",
-      "evidence_tier_label": "📰 多源媒体证实",
-      "effective_date_label": null,
-      "qualifier_badge": null,
-      "event_title": "日本首相高市早苗在APEC会议上被指行为不当并遭日本网友批评",
-      "event_title_en": "日本首相高市早苗在APEC会议上被指行为不当并遭日本网友批评",
-      "event_summary": "11月19日，日本记者尾形聪彦点评日本首相高市早苗在APEC领导人非正式会议上被特朗普无视，称其“非常屈辱”。11月21日，中国新闻社报道称高市早苗在东盟峰会和APEC会场挤眉弄眼吐舌头，被日本网友痛批为“日本之耻”，并有网友建议外务省重新教其外交礼仪。此外，11月16日，高市早苗在菲律宾马尼拉出席东盟峰会晚宴时曾差点被绊倒。",
-      "event_summary_en": "11月19日，日本记者尾形聪彦点评日本首相高市早苗在APEC领导人非正式会议上被特朗普无视，称其“非常屈辱”。11月21日，中国新闻社报道称高市早苗在东盟峰会和APEC会场挤眉弄眼吐舌头，被日本网友痛批为“日本之耻”，并有网友建议外务省重新教其外交礼仪。此外，11月16日，高市早苗在菲律宾马尼拉出席东盟峰会晚宴时曾差点被绊倒。",
-      "category": "general",
-      "published_at": "2026-11-22T18:26:12+08:00",
-      "source_name": "凤凰网热点",
-      "source_url": "https://news.ifeng.com/c/8yGRie2tTlj",
-      "sources": [
-        {
-          "source_name": "凤凰网热点",
-          "url": "https://news.ifeng.com/c/8yGRie2tTlj"
-        },
-        {
-          "source_name": "今日头条",
-          "url": "https://www.toutiao.com/trending/7709848449667661843"
-        },
-        {
-          "source_name": "知乎热榜",
-          "url": "https://www.zhihu.com/question/2107806853543322888"
-        }
-      ],
-      "tag": "中美关税贸易博弈",
-      "tag_en": "US-China Diplomacy & Trade Tone",
-      "polarity": "divergent",
-      "intensity": 3,
-      "one_liner": "中美元首深圳会晤释放对话稳定信号，有助缓和地缘风险溢价，短期利好中概互联、港股权重及出口链估值修复。",
-      "one_liner_en": "Constructive US-China APEC summit tone compresses risk premia across China ADRs, HKEX tech, and exporters.",
-      "sample_basis": {
-        "sample_n": 19,
-        "volatility_pct": 2.35,
-        "volatility_source": "KWEB 20日实现 ATR",
-        "horizon": "2~7 个交易日",
-        "confidence_label": "高置信（直接风偏锚定）",
-        "confidence_label_en": "High (Direct Risk-Premium Anchor)"
-      },
-      "affected_tickers": {
-        "KWEB": 0.9,
-        "HSTECH.HK": 0.85,
-        "00700.HK": 0.75
-      },
-      "realized_quotes": [
-        {
-          "ticker": "KWEB",
-          "name": "中概互联ETF",
-          "name_en": "KraneShares KWEB",
-          "market": "美股",
-          "price": 20.72,
-          "pct_change": -2.77
-        },
-        {
-          "ticker": "HSTECH.HK",
-          "name": "恒生科指",
-          "name_en": "Hang Seng Tech",
-          "market": "港股",
-          "price": 3511.14,
-          "pct_change": -3.78
-        },
-        {
-          "ticker": "00700.HK",
-          "name": "腾讯控股",
-          "name_en": "Tencent",
-          "market": "港股",
-          "price": 344.0,
-          "pct_change": -1.26
-        },
-        {
-          "ticker": "000001.SH",
-          "name": "上证指数",
-          "name_en": "SSE Composite",
-          "market": "A股",
-          "price": 3533.79,
-          "pct_change": -1.23
-        }
-      ],
-      "bars": [
-        {
-          "market": "美股",
-          "sector": "中概互联资产 (KWEB)",
-          "sector_en": "US-Listed China Tech (KWEB)",
-          "pct_low": 1.5,
-          "pct_high": 3.9,
-          "direction": "positive",
-          "proxy_ticker": "KWEB",
-          "logic": "中美关系底部托底预期带动外资空头回补与估值折价收敛。",
-          "logic_en": "Stabilizing diplomatic floor triggers ADR short-covering and multiple expansion."
-        },
-        {
-          "market": "港股",
-          "sector": "恒生科指与外资权重 (00700 / HSTECH)",
-          "sector_en": "HKEX Tech Leaders (HSTECH / 00700)",
-          "pct_low": 1.5,
-          "pct_high": 3.8,
-          "direction": "positive",
-          "proxy_ticker": "HSTECH.HK",
-          "logic": "离岸中国资产对中美风险溢价改善弹性最高。",
-          "logic_en": "Offshore HK tech leaders capture strongest risk-premium compression."
-        },
-        {
-          "market": "A股",
-          "sector": "出口链 / 消费电子与航运",
-          "sector_en": "A-Share Exporters & Consumer Electronics",
-          "pct_low": 1.2,
-          "pct_high": 3.2,
-          "direction": "positive",
-          "proxy_ticker": "510300.SH",
-          "logic": "贸易关税担忧边际降温提升对美敞口制造业估值。",
-          "logic_en": "Tariff-deescalation expectations support export manufacturing."
-        }
-      ],
-      "if_then": [
-        {
-          "cond": "[顺向催化兑现阈值] 若相关催化在 3 个交易日内落地具体数据/公告，带动 KWEB 放量上行 2.3%~3.9%",
-          "result": "中概互联资产 (KWEB)核心受益标的获增量机构资金加仓，可沿一阶直接标的顺势跟踪。",
-          "tone": "bullish"
-        },
-        {
-          "cond": "[预期差证伪回吐阈值] 若首个交易日冲高后无法维持换手，次日回撤幅度 ≥ 1.5% 且未见实质订单/政策跟进",
-          "result": "属于一次性主题情绪脉冲，避免在二阶段接盘弱势滞涨概念股。",
-          "tone": "bearish"
-        }
-      ],
-      "milestones": [
-        {
-          "date": "会晤后 72 小时",
-          "status": "current",
-          "label": "双方外交与财政部门跟进文本公布"
-        }
-      ],
-      "priced_in_analysis": {
-        "status_code": "unpriced",
-        "status_label": "未计价（开盘增量催化）",
-        "status_label_en": "Unpriced (Open Catalyst)",
-        "session_context": "休市/跨时区窗口发布，开盘将集中兑现首次定价比差",
-        "expectation_gap": "表层消息面快速反应后，超额收益取决于一阶直驱标的首小时放量成色与二阶产业链跟涨意愿。"
-      },
-      "transmission_layers": [
-        {
-          "tier": 1,
-          "tier_label": "一阶直接冲击（直接定价核心标的）",
-          "summary": "紧扣「日本首相高市早苗在APEC会议上被指行为不当并遭日本」最直接的营收与估值敞口：中概互联ETF / 恒生科技指数 等首当其冲。",
-          "stocks": [
-            {
-              "name": "中概互联ETF",
-              "code": "KWEB",
-              "market": "美股",
-              "exposure_logic": "中美关系底部托底预期带动外资空头回补与估值折价收敛。",
-              "direction": "positive"
-            },
-            {
-              "name": "恒生科技指数",
-              "code": "HSTECH.HK",
-              "market": "港股",
-              "exposure_logic": "离岸中国资产对中美风险溢价改善弹性最高。",
-              "direction": "positive"
-            }
-          ]
-        },
-        {
-          "tier": 2,
-          "tier_label": "二阶产业链传导 / 替代对冲",
-          "summary": "向产业链上下游、跨市场同业映射或自主替代环节进行二阶定价传导。",
-          "stocks": [
-            {
-              "name": "出口链 / 消费电子与航运",
-              "code": "510300.SH",
-              "market": "A股",
-              "exposure_logic": "贸易关税担忧边际降温提升对美敞口制造业估值。",
-              "direction": "positive"
-            }
-          ]
-        },
-        {
-          "tier": 3,
-          "tier_label": "三阶资金面与风格跷跷板效应",
-          "summary": "风险偏好变化驱动机构仓位在高弹性成长与低波高股息防御资产间再平衡。",
-          "stocks": [
-            {
-              "name": "红利低波ETF",
-              "code": "512890.SH",
-              "market": "A股",
-              "exposure_logic": "当主线高波动分化时承接防御与避险资金切换",
-              "direction": "positive"
-            }
-          ]
-        }
-      ],
-      "historical_precedents": [
-        {
-          "date": "2024-09-24",
-          "event_title": "国内跨市场重大催化发布于闭市窗口并伴随跨资产联动",
-          "t1_reaction": "首个开盘日竞价集中释放预期差，前 60 分钟成交额放大验证资金承接度。",
-          "t5_reaction": "T+5 主线标的围绕产业链业绩兑现与后续政策细则完成筹码分化。",
-          "lesson": "重点核对事件是否发生在交易所休市后（未计价窗口）及首小时量能持续性。"
-        },
-        {
-          "date": "2023-10-18",
-          "event_title": "跨境政策/产业催化剂落地后中美港三地市场分时异步重估",
-          "t1_reaction": "率先开盘的市场计价 60%~75% 首波弹性，后开盘市场易现高开/低开缺口收敛。",
-          "t5_reaction": "T+5 脱离纯情绪扰动后，基本面直接受益龙头跑赢二三线跟风概念。",
-          "lesson": "避免在外盘已充分交易 5%+ 涨幅后再追高滞后映射股。"
-        }
-      ],
-      "quant_if_then": [
-        {
-          "case": "bull",
-          "label": "顺向催化兑现阈值",
-          "trigger_metric": "KWEB 量价突破强度",
-          "threshold": "若相关催化在 3 个交易日内落地具体数据/公告，带动 KWEB 放量上行 2.3%~3.9%",
-          "action_implication": "中概互联资产 (KWEB)核心受益标的获增量机构资金加仓，可沿一阶直接标的顺势跟踪。"
-        },
-        {
-          "case": "bear",
-          "label": "预期差证伪回吐阈值",
-          "trigger_metric": "冲高回落幅度 & 量能衰减",
-          "threshold": "若首个交易日冲高后无法维持换手，次日回撤幅度 ≥ 1.5% 且未见实质订单/政策跟进",
-          "action_implication": "属于一次性主题情绪脉冲，避免在二阶段接盘弱势滞涨概念股。"
         }
       ]
     }
@@ -3452,6 +4141,260 @@
           "trigger_metric": "集合竞价涨幅阈值 & 券商龙头封单率",
           "threshold": "若周一上证高开 > 4.0% 或券商板块早盘封板数回落 > 40% 且日内巨量滞涨",
           "action_implication": "极易重演 2023-08-28 高开低走剧本，切忌竞价追高，等待次日两融余额增量数据落地再低吸。"
+        }
+      ]
+    },
+    "evt_68cf11856a65": {
+      "event_id": "evt_68cf11856a65",
+      "tag": "头部大模型 IPO 破发 / 估值重锚",
+      "tag_en": "AI IPO Valuation Pullback",
+      "polarity": "bearish",
+      "intensity": 5,
+      "validation_status": "verified",
+      "evidence_tier": "corroborated",
+      "evidence_tier_label": "📰 多源媒体证实",
+      "effective_date_label": null,
+      "qualifier_badge": null,
+      "one_liner": "高估值大模型上市即逼近破发、二级市场对 AI 应用与烧钱亏损商业化兑现更加苛刻，软件应用与云生态短期估值受压。",
+      "top_a": {
+        "market": "A股",
+        "sector": "AI 大模型应用 / 通用 SaaS 概念",
+        "sector_en": "A-Share AI Apps & SaaS",
+        "pct_low": -2.9,
+        "pct_high": -0.8,
+        "direction": "negative",
+        "proxy_ticker": "510300.SH",
+        "logic": "高估值纯概念应用板块受情绪外溢回吐，但现金流硬件相对企稳。",
+        "logic_en": "Story-driven domestic AI application names pull back with overseas IPO weakness."
+      },
+      "top_us": {
+        "market": "美股",
+        "sector": "AI 大模型与企业级 SaaS 软件 (QQQ / App)",
+        "sector_en": "US AI Foundation & Enterprise SaaS",
+        "pct_low": -6.2,
+        "pct_high": -2.3,
+        "direction": "negative",
+        "proxy_ticker": "QQQ",
+        "logic": "一线大模型次新上市承压直接触发高 PS 倍数 AI 应用股估值下修。",
+        "logic_en": "Secondary pressure on marquee AI IPO triggers multiple compression in AI SaaS."
+      },
+      "top_hk": {
+        "market": "港股",
+        "sector": "港股大模型生态与云计算 (HSTECH / 00700)",
+        "sector_en": "HKEX AI Cloud & Apps (HSTECH)",
+        "pct_low": -3.5,
+        "pct_high": -1.1,
+        "direction": "negative",
+        "proxy_ticker": "HSTECH.HK",
+        "logic": "一级市场估值锚松动压制港股 AI 应用与商业化平台溢价。",
+        "logic_en": "Lower global LLM valuation benchmarks weigh on HK cloud/AI ecosystems."
+      },
+      "bars": [
+        {
+          "market": "美股",
+          "sector": "AI 大模型与企业级 SaaS 软件 (QQQ / App)",
+          "sector_en": "US AI Foundation & Enterprise SaaS",
+          "pct_low": -6.2,
+          "pct_high": -2.3,
+          "direction": "negative",
+          "proxy_ticker": "QQQ",
+          "logic": "一线大模型次新上市承压直接触发高 PS 倍数 AI 应用股估值下修。",
+          "logic_en": "Secondary pressure on marquee AI IPO triggers multiple compression in AI SaaS."
+        },
+        {
+          "market": "港股",
+          "sector": "港股大模型生态与云计算 (HSTECH / 00700)",
+          "sector_en": "HKEX AI Cloud & Apps (HSTECH)",
+          "pct_low": -3.5,
+          "pct_high": -1.1,
+          "direction": "negative",
+          "proxy_ticker": "HSTECH.HK",
+          "logic": "一级市场估值锚松动压制港股 AI 应用与商业化平台溢价。",
+          "logic_en": "Lower global LLM valuation benchmarks weigh on HK cloud/AI ecosystems."
+        },
+        {
+          "market": "A股",
+          "sector": "AI 大模型应用 / 通用 SaaS 概念",
+          "sector_en": "A-Share AI Apps & SaaS",
+          "pct_low": -2.9,
+          "pct_high": -0.8,
+          "direction": "negative",
+          "proxy_ticker": "510300.SH",
+          "logic": "高估值纯概念应用板块受情绪外溢回吐，但现金流硬件相对企稳。",
+          "logic_en": "Story-driven domestic AI application names pull back with overseas IPO weakness."
+        },
+        {
+          "market": "A股",
+          "sector": "高股息红利 / 现金流资产防御",
+          "sector_en": "A-Share High-Dividend Cashflow",
+          "pct_low": 0.4,
+          "pct_high": 1.3,
+          "direction": "positive",
+          "proxy_ticker": "601398.SH",
+          "logic": "成长溢价挤泡沫期间，高股息低估值资产吸引避险配置。",
+          "logic_en": "Defensives attract rotation during growth valuation digestion."
+        }
+      ],
+      "if_then": [
+        {
+          "cond": "[空头压力延续阈值] 若首个交易日 QQQ 低开超 6.2% 且前 60 分钟放量无法收复半数跌幅",
+          "result": "AI 大模型与企业级 SaaS 软件 (QQQ / App)短线仍面临估值消化与杠杆出清压力，待企稳放量后再行左侧评估。",
+          "tone": "bearish"
+        },
+        {
+          "cond": "[错杀修复确认阈值] 若 48 小时内涉事方披露澄清依据且 QQQ 收出长下影站稳 5 日线上方 ≥ +1.0%",
+          "result": "事件性风险溢价见顶回落，高壁垒现金流龙头率先完成超跌反抽。",
+          "tone": "bullish"
+        }
+      ],
+      "milestones": [
+        {
+          "date": "上市首周 (T+5)",
+          "status": "current",
+          "label": "观察发行价保卫战成交量与做空仓位变化"
+        },
+        {
+          "date": "锁定期满前",
+          "status": "upcoming",
+          "label": "核对企业级 ARR 签约与毛利率财报兑现"
+        }
+      ],
+      "sample_basis": {
+        "sample_n": 13,
+        "volatility_pct": 4.82,
+        "volatility_source": "QQQ 20日实现 ATR",
+        "horizon": "1~3 个交易日",
+        "confidence_label": "高置信（一二级估值直接锚定）",
+        "confidence_label_en": "High (IPO Valuation Anchor)"
+      },
+      "realized_quotes": [
+        {
+          "ticker": "IXIC",
+          "name": "纳斯达克",
+          "name_en": "NASDAQ Composite",
+          "market": "美股",
+          "price": 22617.73,
+          "pct_change": -5.28
+        },
+        {
+          "ticker": "QQQ",
+          "name": "纳指100ETF",
+          "name_en": "Invesco QQQ",
+          "market": "美股",
+          "price": 608.45,
+          "pct_change": -5.67
+        },
+        {
+          "ticker": "HSTECH.HK",
+          "name": "恒生科指",
+          "name_en": "Hang Seng Tech",
+          "market": "港股",
+          "price": 3511.14,
+          "pct_change": -3.78
+        }
+      ],
+      "priced_in_analysis": {
+        "status_code": "overseas_priced_in",
+        "status_label": "外盘已计价（警惕A股/港股开盘补跌或切向替代）",
+        "status_label_en": "Overseas Priced (Asia Open Gap Watch)",
+        "session_context": "美股最近交易日已率先剧烈定价（NVDA (-14.01%) / QQQ (-5.67%)），而 A 股/港股处于休市跨时差窗口",
+        "expectation_gap": "海外市场已在 NVDA (-14.01%) 与 QQQ (-5.67%) 上先行释放大半恐慌或避险跌幅；下一个亚太开盘时段，纯海外配套硬件链存在集中低开补跌风险，但 A 股国产替代方向具备反向错杀承接预期差。"
+      },
+      "transmission_layers": [
+        {
+          "tier": 1,
+          "tier_label": "一阶直接冲击（高 PS 倍数 AI 应用 SaaS 估值承压）",
+          "summary": "头部大模型 IPO 面临承销抱怨及高估值消化测试，二级市场首先下修重资本烧钱、盈利滞后的 AI SaaS 估值倍数。",
+          "stocks": [
+            {
+              "name": "纳指100ETF",
+              "code": "QQQ",
+              "market": "美股",
+              "exposure_logic": "科技成长风偏锚点，一二级 AI 估值挤泡沫期短线压制成长指数溢价",
+              "direction": "negative"
+            },
+            {
+              "name": "金山办公",
+              "code": "688111.SH",
+              "market": "A股",
+              "exposure_logic": "国内核心办公 AI SaaS 标杆，短期面临海外商业化 ARR 审视预期外溢",
+              "direction": "negative"
+            },
+            {
+              "name": "恒生科技",
+              "code": "HSTECH.HK",
+              "market": "港股",
+              "exposure_logic": "离岸 AI 平台生态受国际一级估值倒挂情绪影响短线偏谨慎",
+              "direction": "negative"
+            }
+          ]
+        },
+        {
+          "tier": 2,
+          "tier_label": "二阶产业链传导（承销/前期融资方与自有现金流云大厂分化）",
+          "summary": "烧钱型独立大模型承压同时凸显拥有主业现金流支撑算力投入的大型云厂商（MSFT / AMZN / 腾讯）稳健壁垒。",
+          "stocks": [
+            {
+              "name": "腾讯控股",
+              "code": "00700.HK",
+              "market": "港股",
+              "exposure_logic": "拥有高毛利游戏与社交广告现金流输血，抗估值周期能力远优于纯亏损大模型",
+              "direction": "mixed"
+            },
+            {
+              "name": "亚马逊",
+              "code": "AMZN",
+              "market": "美股",
+              "exposure_logic": "作为云底座及投资方需紧盯 Anthropic 一二级估值回撤对短期情绪与投资损益的扰动",
+              "direction": "negative"
+            }
+          ]
+        },
+        {
+          "tier": 3,
+          "tier_label": "三阶资金面与风格跷跷板效应",
+          "summary": "资金避高就低，从高估值 AI 次新概念切出，部分流入具备确定现金流的红利大行与高股息电信。",
+          "stocks": [
+            {
+              "name": "工商银行",
+              "code": "601398.SH",
+              "market": "A股",
+              "exposure_logic": "高股息红利资产成为高估值成长波动期的传统防御蓄水池",
+              "direction": "positive"
+            }
+          ]
+        }
+      ],
+      "historical_precedents": [
+        {
+          "date": "2019-05-10",
+          "event_title": "高估值独角兽创纪录上市首周即遇破发与估值承压测试",
+          "t1_reaction": "同类高 PS 倍数成长应用次日普遍回调 -3%~-5%。",
+          "t5_reaction": "T+5 资金回流高自由现金流硬件与分红蓝筹，一二级估值倒挂被市场修正。",
+          "lesson": "Mega-IPO 高位震荡期看发行价防守力度与换手率，不盲目抄底未验证盈利曲线的软件概念。"
+        },
+        {
+          "date": "2023-09-14",
+          "event_title": "半导体/AI 明星 IPO 募资登顶后首个完整交易周估值消化",
+          "t1_reaction": "高估值次新带动板块脉冲后连续震荡寻底。",
+          "t5_reaction": "T+5 估值回调至合理增速比价后企稳。",
+          "lesson": "高募资规模会阶段性抽血同赛道二级存量资金，紧盯上市 10 日内日均换手率变化。"
+        }
+      ],
+      "quant_if_then": [
+        {
+          "case": "bear",
+          "label": "空头压力延续阈值",
+          "trigger_metric": "QQQ 关键支撑与成交量",
+          "threshold": "若首个交易日 QQQ 低开超 6.2% 且前 60 分钟放量无法收复半数跌幅",
+          "action_implication": "AI 大模型与企业级 SaaS 软件 (QQQ / App)短线仍面临估值消化与杠杆出清压力，待企稳放量后再行左侧评估。"
+        },
+        {
+          "case": "bull",
+          "label": "错杀修复确认阈值",
+          "trigger_metric": "后续澄清或主力资金承接",
+          "threshold": "若 48 小时内涉事方披露澄清依据且 QQQ 收出长下影站稳 5 日线上方 ≥ +1.0%",
+          "action_implication": "事件性风险溢价见顶回落，高壁垒现金流龙头率先完成超跌反抽。"
         }
       ]
     },
@@ -4434,6 +5377,228 @@
         }
       ]
     },
+    "evt_df28e63613a2": {
+      "event_id": "evt_df28e63613a2",
+      "tag": "龙头真金白银大额回购与市值托底",
+      "tag_en": "Large-Scale Corporate Buyback Floor",
+      "polarity": "bullish",
+      "intensity": 3,
+      "validation_status": "verified",
+      "evidence_tier": "corroborated",
+      "evidence_tier_label": "📰 多源媒体证实",
+      "effective_date_label": null,
+      "qualifier_badge": null,
+      "one_liner": "复星医药推出 5亿元 回购护盘计划向市场明确内部估值底线，短期提振标的及所属能源金属/资源同业护盘信心，中期仍锚定主业现货景气。",
+      "top_a": {
+        "market": "A股",
+        "sector": "回购主体及新能源资源龙头 (华友/赣锋)",
+        "sector_en": "A-Share Buyback Issuer & Energy-Metals Peers",
+        "pct_low": 1.5,
+        "pct_high": 4.4,
+        "direction": "positive",
+        "proxy_ticker": "603799.SH",
+        "logic": "10~15 亿元大规模回购真金白银承接场内抛压，对底部估值起到实质性锚定。",
+        "logic_en": "Substantial buyback commitments absorb float pressure and anchor cyclical trough multiples."
+      },
+      "top_us": {
+        "market": "港股",
+        "sector": "港股有色资源与股东回报概念",
+        "sector_en": "HKEX Materials & Capital-Return Leaders",
+        "pct_low": 0.4,
+        "pct_high": 1.6,
+        "direction": "positive",
+        "proxy_ticker": "02899.HK",
+        "logic": "大额回购示范效应温和改善市场对资源类蓝筹自由现金流分配的信心。",
+        "logic_en": "Buyback discipline reinforces shareholder-return rerating across HK resources."
+      },
+      "top_hk": {
+        "market": "港股",
+        "sector": "港股有色资源与股东回报概念",
+        "sector_en": "HKEX Materials & Capital-Return Leaders",
+        "pct_low": 0.4,
+        "pct_high": 1.6,
+        "direction": "positive",
+        "proxy_ticker": "02899.HK",
+        "logic": "大额回购示范效应温和改善市场对资源类蓝筹自由现金流分配的信心。",
+        "logic_en": "Buyback discipline reinforces shareholder-return rerating across HK resources."
+      },
+      "bars": [
+        {
+          "market": "A股",
+          "sector": "回购主体及新能源资源龙头 (华友/赣锋)",
+          "sector_en": "A-Share Buyback Issuer & Energy-Metals Peers",
+          "pct_low": 1.5,
+          "pct_high": 4.4,
+          "direction": "positive",
+          "proxy_ticker": "603799.SH",
+          "logic": "10~15 亿元大规模回购真金白银承接场内抛压，对底部估值起到实质性锚定。",
+          "logic_en": "Substantial buyback commitments absorb float pressure and anchor cyclical trough multiples."
+        },
+        {
+          "market": "A股",
+          "sector": "电池正极与上游资源顺周期板块",
+          "sector_en": "A-Share Cathode & Battery Metals Chain",
+          "pct_low": 0.7,
+          "pct_high": 2.3,
+          "direction": "positive",
+          "proxy_ticker": "002460.SZ",
+          "logic": "行业龙头财务稳健主动护盘有助于修复悲观盈利预期，但持续性需盯金属现货价格。",
+          "logic_en": "Peer sentiment stabilizes alongside upstream buybacks, subject to spot metal pricing."
+        },
+        {
+          "market": "港股",
+          "sector": "港股有色资源与股东回报概念",
+          "sector_en": "HKEX Materials & Capital-Return Leaders",
+          "pct_low": 0.4,
+          "pct_high": 1.6,
+          "direction": "positive",
+          "proxy_ticker": "02899.HK",
+          "logic": "大额回购示范效应温和改善市场对资源类蓝筹自由现金流分配的信心。",
+          "logic_en": "Buyback discipline reinforces shareholder-return rerating across HK resources."
+        }
+      ],
+      "if_then": [
+        {
+          "cond": "[回购托底见效 · 真金白银实施买入] 公司 30 日内完成首次回购金额 ≥ 下限的 20%（约 2 亿元）且同期标的股票量价企稳不破新低",
+          "result": "10~15 亿元大额回购明确底部安全垫，带动锂钴资源链估值修复。",
+          "tone": "bullish"
+        },
+        {
+          "cond": "[周期品持续跌价压制护盘] 若现货电池级碳酸锂/钴价 2 周内续跌 > 6% 或回购进展长期停滞为 0%",
+          "result": "主业下行斜率大时单靠回购难以逆转趋势，仅视作减缓下跌斜率支撑。",
+          "tone": "bearish"
+        }
+      ],
+      "milestones": [
+        {
+          "date": "30 日内",
+          "status": "current",
+          "label": "核查首次实施回购比例进度与碳酸锂/钴价趋势"
+        }
+      ],
+      "sample_basis": {
+        "sample_n": 15,
+        "volatility_pct": 3.02,
+        "volatility_source": "A股大额股份回购预案事件统计",
+        "horizon": "2~7 个交易日",
+        "confidence_label": "中高置信（直接增厚每股权益）",
+        "confidence_label_en": "Moderate-High (Direct EPS & Valuation Floor)"
+      },
+      "realized_quotes": [
+        {
+          "ticker": "000001.SH",
+          "name": "上证指数",
+          "name_en": "SSE Composite",
+          "market": "A股",
+          "price": 3533.79,
+          "pct_change": -1.23
+        }
+      ],
+      "priced_in_analysis": {
+        "status_code": "unpriced",
+        "status_label": "未计价（周一早盘增量催化）",
+        "status_label_en": "Unpriced (Monday Open Catalyst)",
+        "session_context": "发布于休市/周末非交易时段，沪深北交易所与港股均尚未开盘定价",
+        "expectation_gap": "事件落于 A 股休市窗口（2026-11-22T19:07），标的尚未开启集合竞价定价，周一早盘将直观检验消息溢价承接力度。"
+      },
+      "transmission_layers": [
+        {
+          "tier": 1,
+          "tier_label": "一阶直接冲击（回购护盘主体与高股息增厚每股收益）",
+          "summary": "大额回购预案明确公司自身现金流底线及管理层对估值底部的认可，短期对相关龙头及所属产业链构成市值托底。",
+          "stocks": [
+            {
+              "name": "华友钴业",
+              "code": "603799.SH",
+              "market": "A股",
+              "exposure_logic": "10~15 亿元大规模回购占流通盘比重显著，直接向市场锚定底部回购价格区间",
+              "direction": "positive"
+            },
+            {
+              "name": "赣锋锂业",
+              "code": "002460.SZ",
+              "market": "A股",
+              "exposure_logic": "新能源上游资源链情绪共振修复，缓解市场对行业无序下行担忧",
+              "direction": "positive"
+            },
+            {
+              "name": "洛阳钼业",
+              "code": "603993.SH",
+              "market": "A股",
+              "exposure_logic": "同属钴铜重要全球资源龙头，头部企业重视股东回报强化行业价值底部认知",
+              "direction": "positive"
+            }
+          ]
+        },
+        {
+          "tier": 2,
+          "tier_label": "二阶产业链传导（锂电正极材料 / 钠锂资源产业链情绪联动）",
+          "summary": "上游资源回购护盘折射产业现金流韧性优于市场悲观预期，中游三元前驱体及动力电池估值同步企稳。",
+          "stocks": [
+            {
+              "name": "天齐锂业",
+              "code": "002466.SZ",
+              "market": "A股",
+              "exposure_logic": "锂钴能源金属同频底部磨底，龙头真金白银回购提振资源股防守配置情绪",
+              "direction": "positive"
+            },
+            {
+              "name": "容百科技",
+              "code": "688005.SH",
+              "market": "A股",
+              "exposure_logic": "上游原材料价格波动收窄有利于高镍正极材料环节恢复稳定加工费盈利",
+              "direction": "positive"
+            }
+          ]
+        },
+        {
+          "tier": 3,
+          "tier_label": "三阶资金面与风格跷跷板效应",
+          "summary": "回购+稳市政策共振下，资金优先抄底具备真实自由现金流和回购执行能力的行业白马龙头。",
+          "stocks": [
+            {
+              "name": "宁德时代",
+              "code": "300750.SZ",
+              "market": "A股",
+              "exposure_logic": "电池产业链盈利中枢核心锚点，全行业分红回购氛围升温强化龙头溢价",
+              "direction": "positive"
+            }
+          ]
+        }
+      ],
+      "historical_precedents": [
+        {
+          "date": "2024-04-16",
+          "event_title": "新“国九条”窗口期多家资源与制造龙头发布 10 亿元+ 注销式大额回购",
+          "t1_reaction": "公告次日标的公司普遍高开 +2.5%~+4.0%，但走势仍高度锚定所属周期品现货价格。",
+          "t5_reaction": "T+5 实施真金白银回购且注销减少股本的标的显著跑赢仅发预案不落地的公司。",
+          "lesson": "大额回购构成公司估值重要下沿托底，但强周期资源股主升仍需配合现货商品止跌企稳。"
+        },
+        {
+          "date": "2024-08-20",
+          "event_title": "锂电/有色产业链龙头抛出 10~15 亿元股份回购护盘计划",
+          "t1_reaction": "标的早盘放量脉冲，有色金属新能源链跟风反弹 +1.5%。",
+          "t5_reaction": "T+5 板块超额收益取决于回购实际日均买盘占成交额比例与碳酸锂/钴价企稳情况。",
+          "lesson": "重点核查回购价格上限溢价空间及首次实施回购进展公告。"
+        }
+      ],
+      "quant_if_then": [
+        {
+          "case": "bull",
+          "label": "回购托底见效 · 真金白银实施买入",
+          "trigger_metric": "首次实施回购比例 & 商品现货企稳",
+          "threshold": "公司 30 日内完成首次回购金额 ≥ 下限的 20%（约 2 亿元）且同期标的股票量价企稳不破新低",
+          "action_implication": "10~15 亿元大额回购明确底部安全垫，带动锂钴资源链估值修复。"
+        },
+        {
+          "case": "bear",
+          "label": "周期品持续跌价压制护盘",
+          "trigger_metric": "金属钴/碳酸锂期货现货跌幅",
+          "threshold": "若现货电池级碳酸锂/钴价 2 周内续跌 > 6% 或回购进展长期停滞为 0%",
+          "action_implication": "主业下行斜率大时单靠回购难以逆转趋势，仅视作减缓下跌斜率支撑。"
+        }
+      ]
+    },
     "evt_ea9c05ddb52f": {
       "event_id": "evt_ea9c05ddb52f",
       "tag": "COP31 气候谈判破裂与传统能源重估",
@@ -4651,6 +5816,259 @@
           "trigger_metric": "冲高回落幅度 & 量能衰减",
           "threshold": "若首个交易日冲高后无法维持换手，次日回撤幅度 ≥ 1.5% 且未见实质订单/政策跟进",
           "action_implication": "属于一次性主题情绪脉冲，避免在二阶段接盘弱势滞涨概念股。"
+        }
+      ]
+    },
+    "evt_d8e3bb5588ae": {
+      "event_id": "evt_d8e3bb5588ae",
+      "tag": "芯片出口合规审查与灰色渠道执法风险",
+      "tag_en": "Export Compliance & Grey-Market Crackdown",
+      "polarity": "bearish",
+      "intensity": 4,
+      "validation_status": "verified",
+      "evidence_tier": "single_source",
+      "evidence_tier_label": "⚠️ 单一信源线索",
+      "effective_date_label": null,
+      "qualifier_badge": null,
+      "one_liner": "跨境算力芯片走私网络曝光将倒逼美方收紧流向审查并追查第三国转口，短期抑制灰色渠道出货预期同时强化国内晶圆/设备自主刚需。",
+      "top_a": {
+        "market": "A股",
+        "sector": "半导体设备 / 先进封装与国产算力卡",
+        "sector_en": "A-Share Semi Equipment & Domestic Accelerators",
+        "pct_low": 1.3,
+        "pct_high": 3.8,
+        "direction": "positive",
+        "proxy_ticker": "512480.SH",
+        "logic": "绕道通路受堵进一步确认光刻/刻蚀设备与本土算力集群高景气。",
+        "logic_en": "Localization urgency accelerates capital flow into domestic semi gear."
+      },
+      "top_us": {
+        "market": "美股",
+        "sector": "受转口核查敏感半导体厂商 (NVDA / TSM)",
+        "sector_en": "US Export-Sensitive GPU Vendors (NVDA/TSM)",
+        "pct_low": -4.3,
+        "pct_high": -1.4,
+        "direction": "negative",
+        "proxy_ticker": "NVDA",
+        "logic": "东南亚/中东转口审核收紧削弱边缘市场 GPU 增量出货弹性。",
+        "logic_en": "Stricter BIS transshipment audits curb grey-market GPU demand."
+      },
+      "top_hk": {
+        "market": "港股",
+        "sector": "港股先进制程替代核心 (00981.HK 中芯)",
+        "sector_en": "HKEX Domestic Foundry (00981.HK)",
+        "pct_low": 1.0,
+        "pct_high": 3.5,
+        "direction": "positive",
+        "proxy_ticker": "00981.HK",
+        "logic": "海外算力外部采购通道收窄倒逼境内大模型加速绑定本土代工产能。",
+        "logic_en": "Tighter external channels lock in domestic foundry utilization."
+      },
+      "bars": [
+        {
+          "market": "美股",
+          "sector": "受转口核查敏感半导体厂商 (NVDA / TSM)",
+          "sector_en": "US Export-Sensitive GPU Vendors (NVDA/TSM)",
+          "pct_low": -4.3,
+          "pct_high": -1.4,
+          "direction": "negative",
+          "proxy_ticker": "NVDA",
+          "logic": "东南亚/中东转口审核收紧削弱边缘市场 GPU 增量出货弹性。",
+          "logic_en": "Stricter BIS transshipment audits curb grey-market GPU demand."
+        },
+        {
+          "market": "港股",
+          "sector": "港股先进制程替代核心 (00981.HK 中芯)",
+          "sector_en": "HKEX Domestic Foundry (00981.HK)",
+          "pct_low": 1.0,
+          "pct_high": 3.5,
+          "direction": "positive",
+          "proxy_ticker": "00981.HK",
+          "logic": "海外算力外部采购通道收窄倒逼境内大模型加速绑定本土代工产能。",
+          "logic_en": "Tighter external channels lock in domestic foundry utilization."
+        },
+        {
+          "market": "A股",
+          "sector": "半导体设备 / 先进封装与国产算力卡",
+          "sector_en": "A-Share Semi Equipment & Domestic Accelerators",
+          "pct_low": 1.3,
+          "pct_high": 3.8,
+          "direction": "positive",
+          "proxy_ticker": "512480.SH",
+          "logic": "绕道通路受堵进一步确认光刻/刻蚀设备与本土算力集群高景气。",
+          "logic_en": "Localization urgency accelerates capital flow into domestic semi gear."
+        }
+      ],
+      "if_then": [
+        {
+          "cond": "[国产替代强化 · 自主算力跑赢] 美股 NVDA 下挫窗口下，A 股 512480 逆势放量收涨 ≥ +1.5% 且寒武纪/海光换手率超 5%",
+          "result": "市场明确交易“灰色绕道堵死 → 本土算力采购翻倍”，自主算力及设备线具备 3~5 日主升弹性。",
+          "tone": "bullish"
+        },
+        {
+          "cond": "[海外风险扩散 · 链条估值下杀] 若 BIS 正式发布新增 ≥ 3 家转口制裁实体且北美 CPO 龙头中际旭创单日跌破 20 日均线 > 3%",
+          "result": "严控对海外 GPU 高度依赖的硬件敞口，回避未出清的海外算力链。",
+          "tone": "bearish"
+        }
+      ],
+      "milestones": [
+        {
+          "date": "1~2 周内",
+          "status": "current",
+          "label": "美国商务部 BIS 执法通报与英伟达合规声明"
+        }
+      ],
+      "sample_basis": {
+        "sample_n": 13,
+        "volatility_pct": 11.91,
+        "volatility_source": "NVDA 20日实现 ATR",
+        "horizon": "2~7 个交易日",
+        "confidence_label": "高置信（直击转口需求与国产替代预期）",
+        "confidence_label_en": "High (Direct Export-Control Enforcement)"
+      },
+      "realized_quotes": [
+        {
+          "ticker": "NVDA",
+          "name": "英伟达",
+          "name_en": "NVIDIA",
+          "market": "美股",
+          "price": 125.53,
+          "pct_change": -14.01
+        },
+        {
+          "ticker": "TSM",
+          "name": "台积电",
+          "name_en": "TSMC",
+          "market": "美股",
+          "price": 318.71,
+          "pct_change": -9.48
+        },
+        {
+          "ticker": "00981.HK",
+          "name": "中芯国际",
+          "name_en": "SMIC",
+          "market": "港股",
+          "price": 49.12,
+          "pct_change": -2.73
+        },
+        {
+          "ticker": "512480.SH",
+          "name": "A股半导体ETF",
+          "name_en": "CN Semi ETF",
+          "market": "A股",
+          "price": 0.745,
+          "pct_change": -4.36
+        }
+      ],
+      "priced_in_analysis": {
+        "status_code": "overseas_priced_in",
+        "status_label": "外盘已计价（警惕A股/港股开盘补跌或切向替代）",
+        "status_label_en": "Overseas Priced (Asia Open Gap Watch)",
+        "session_context": "美股最近交易日已率先剧烈定价（NVDA (-14.01%) / QQQ (-5.67%)），而 A 股/港股处于休市跨时差窗口",
+        "expectation_gap": "海外市场已在 NVDA (-14.01%) 与 QQQ (-5.67%) 上先行释放大半恐慌或避险跌幅；下一个亚太开盘时段，纯海外配套硬件链存在集中低开补跌风险，但 A 股国产替代方向具备反向错杀承接预期差。"
+      },
+      "transmission_layers": [
+        {
+          "tier": 1,
+          "tier_label": "一阶直接冲击（海外合规审计承压 vs 北美边缘转口需求挤压）",
+          "summary": "跨境走私网络曝光将迫使美方 BIS 加严第三国转口追踪并抽查代工出货，短期压制 NVDA 灰色区域需求预期与估值溢价。",
+          "stocks": [
+            {
+              "name": "英伟达",
+              "code": "NVDA",
+              "market": "美股",
+              "exposure_logic": "第三方转口合规审计升温或阶段性冻结部分东南亚/中东中间商非标订单",
+              "direction": "negative"
+            },
+            {
+              "name": "台积电",
+              "code": "TSM",
+              "market": "美股",
+              "exposure_logic": "先进制程流向核查加严可能增加封装出货合规审验周期与客户审计成本",
+              "direction": "negative"
+            },
+            {
+              "name": "中际旭创",
+              "code": "300308.SZ",
+              "market": "A股",
+              "exposure_logic": "北美高速光模块出口链跟随海外 GPU 板块情绪产生阶段性 Beta 波动",
+              "direction": "negative"
+            }
+          ]
+        },
+        {
+          "tier": 2,
+          "tier_label": "二阶产业链传导（绕道受阻倒逼国产算力卡与代工封测刚性替代）",
+          "summary": "灰色获取海外高端 GPU 渠道进一步收窄，使国内大模型实验室与云厂商更加依赖本土算力加速卡与境内晶圆制造产能。",
+          "stocks": [
+            {
+              "name": "寒武纪",
+              "code": "688256.SH",
+              "market": "A股",
+              "exposure_logic": "国内云端推理与训练替代核心标的，外部高阶芯片受堵直接提升其订单能见度",
+              "direction": "positive"
+            },
+            {
+              "name": "海光信息",
+              "code": "688041.SH",
+              "market": "A股",
+              "exposure_logic": "深算系列 DCU 生态加速承接国内政企与互联网智算中心国产替代预算",
+              "direction": "positive"
+            },
+            {
+              "name": "中芯国际",
+              "code": "00981.HK",
+              "market": "港股",
+              "exposure_logic": "境外高端制程获取渠道收紧长期锁定国内先进及成熟节点晶圆产能利用率",
+              "direction": "positive"
+            }
+          ]
+        },
+        {
+          "tier": 3,
+          "tier_label": "三阶资金面与风格跷跷板效应",
+          "summary": "科技内部上演典型的“海外算力链避险减仓 → 国产半导体设备/自主芯片回流加仓”跷跷板行情。",
+          "stocks": [
+            {
+              "name": "北方华创",
+              "code": "002371.SZ",
+              "market": "A股",
+              "exposure_logic": "自主设备平台龙头持续受益国内晶圆厂扩产保供的长周期资本开支",
+              "direction": "positive"
+            }
+          ]
+        }
+      ],
+      "historical_precedents": [
+        {
+          "date": "2023-10-17",
+          "event_title": "美国商务部 BIS 升级高端 AI 芯片对华出口管制及第三国转口核查",
+          "t1_reaction": "美股 NVDA 当日下跌 -4.7%，次日 A 股寒武纪、海光信息早盘逆势高开 +3.2%。",
+          "t5_reaction": "T+5 美股海外算力承压后逐步消化，A 股国产算力与光刻设备板块跑赢大盘约 6%。",
+          "lesson": "海外转口稽查收紧“短期压美股 Grey-Channel 估值、中期强化国产算力替代逻辑”是最稳定的跨市场跷跷板。"
+        },
+        {
+          "date": "2025-01-27",
+          "event_title": "海外芯片监管审查与算力效率重构共振引发美股芯片震荡",
+          "t1_reaction": "NVDA 重挫叠加国内算力自主可控预期，国产芯片 ETF (512480) 获净申购。",
+          "t5_reaction": "T+5 海外高速光模块 CPO 因北美依赖度短期分化，自主晶圆厂中芯国际震荡走强。",
+          "lesson": "需严格区分“纯海外算力配套（光模块/液冷）”与“国内自主替代核心（算力芯片/设备/封测）”的两极分化。"
+        }
+      ],
+      "quant_if_then": [
+        {
+          "case": "bull",
+          "label": "国产替代强化 · 自主算力跑赢",
+          "trigger_metric": "国产芯片ETF 512480 早盘承接 & BIS 执法跟进",
+          "threshold": "美股 NVDA 下挫窗口下，A 股 512480 逆势放量收涨 ≥ +1.5% 且寒武纪/海光换手率超 5%",
+          "action_implication": "市场明确交易“灰色绕道堵死 → 本土算力采购翻倍”，自主算力及设备线具备 3~5 日主升弹性。"
+        },
+        {
+          "case": "bear",
+          "label": "海外风险扩散 · 链条估值下杀",
+          "trigger_metric": "BIS 新增实体清单 & 北美光模块联动",
+          "threshold": "若 BIS 正式发布新增 ≥ 3 家转口制裁实体且北美 CPO 龙头中际旭创单日跌破 20 日均线 > 3%",
+          "action_implication": "严控对海外 GPU 高度依赖的硬件敞口，回避未出清的海外算力链。"
         }
       ]
     },
@@ -4886,10 +6304,240 @@
         }
       ]
     },
-    "evt_6b1166bbad07": {
-      "event_id": "evt_6b1166bbad07",
-      "tag": "Google Gemini 架构迭代与自研 TPU 生态",
-      "tag_en": "Google Gemini Iteration & TPU Compute Stack",
+    "evt_12ac8fe29725": {
+      "event_id": "evt_12ac8fe29725",
+      "tag": "AI 烧钱节奏与算力融资约束",
+      "tag_en": "AI Funding Crunch & Capex Caution",
+      "polarity": "divergent",
+      "intensity": 4,
+      "validation_status": "verified",
+      "evidence_tier": "corroborated",
+      "evidence_tier_label": "📰 多源媒体证实",
+      "effective_date_label": null,
+      "qualifier_badge": null,
+      "one_liner": "行业领军者警示 AI 融资缺口将加剧市场对高杠杆独立算力股估值折价，自由现金流充沛的云巨头防御护城河反而走阔。",
+      "top_a": {
+        "market": "A股",
+        "sector": "高股息电信运营商与红利资产",
+        "sector_en": "A-Share Telecom & High-Dividend Value",
+        "pct_low": 0.4,
+        "pct_high": 1.3,
+        "direction": "positive",
+        "proxy_ticker": "600941.SH",
+        "logic": "全球 AI ROI 分歧放大阶段，资金偏好现金流确定性高的高股息防御板块。",
+        "logic_en": "Domestic flows tilt toward dividend-paying telecoms amid AI ROI debates."
+      },
+      "top_us": {
+        "market": "美股",
+        "sector": "高现金流云巨头与资产负债表龙头 (MSFT)",
+        "sector_en": "Cash-Rich Cloud Hyperscalers (MSFT)",
+        "pct_low": 0.4,
+        "pct_high": 1.6,
+        "direction": "positive",
+        "proxy_ticker": "MSFT",
+        "logic": "外部股权与债权融资收紧时，自带充沛自由现金流的超级平台护城河扩大。",
+        "logic_en": "Tighter external AI financing widens the moat for self-funded hyperscalers."
+      },
+      "top_hk": null,
+      "bars": [
+        {
+          "market": "美股",
+          "sector": "高现金流云巨头与资产负债表龙头 (MSFT)",
+          "sector_en": "Cash-Rich Cloud Hyperscalers (MSFT)",
+          "pct_low": 0.4,
+          "pct_high": 1.6,
+          "direction": "positive",
+          "proxy_ticker": "MSFT",
+          "logic": "外部股权与债权融资收紧时，自带充沛自由现金流的超级平台护城河扩大。",
+          "logic_en": "Tighter external AI financing widens the moat for self-funded hyperscalers."
+        },
+        {
+          "market": "美股",
+          "sector": "高杠杆独立算力租赁 / 高估 AI 应用",
+          "sector_en": "Leveraged Neocloud & Unprofitable AI",
+          "pct_low": -4.2,
+          "pct_high": -1.5,
+          "direction": "negative",
+          "proxy_ticker": "QQQ",
+          "logic": "依赖举债扩张机柜的二三线算力股对信用利差走阔及 Capex 放缓最为敏感。",
+          "logic_en": "Debt-dependent compute renters face acute valuation compression."
+        },
+        {
+          "market": "美股",
+          "sector": "科技高收益债 / 私募信贷 (HYG)",
+          "sector_en": "Tech High-Yield Credit (HYG)",
+          "pct_low": -1.6,
+          "pct_high": -0.4,
+          "direction": "negative",
+          "proxy_ticker": "HYG",
+          "logic": "算力基建回报期拉长引发市场重估非投资级科技债再融资风险。",
+          "logic_en": "Extended AI payback horizons pressure high-yield tech credit spreads."
+        },
+        {
+          "market": "A股",
+          "sector": "高股息电信运营商与红利资产",
+          "sector_en": "A-Share Telecom & High-Dividend Value",
+          "pct_low": 0.4,
+          "pct_high": 1.3,
+          "direction": "positive",
+          "proxy_ticker": "600941.SH",
+          "logic": "全球 AI ROI 分歧放大阶段，资金偏好现金流确定性高的高股息防御板块。",
+          "logic_en": "Domestic flows tilt toward dividend-paying telecoms amid AI ROI debates."
+        }
+      ],
+      "if_then": [
+        {
+          "cond": "[顺向催化兑现阈值] 若相关催化在 3 个交易日内落地具体数据/公告，带动 MSFT 放量上行 1.2%~2.5%",
+          "result": "高现金流云巨头与资产负债表龙头 (MSFT)核心受益标的获增量机构资金加仓，可沿一阶直接标的顺势跟踪。",
+          "tone": "bullish"
+        },
+        {
+          "cond": "[预期差证伪回吐阈值] 若首个交易日冲高后无法维持换手，次日回撤幅度 ≥ 1.5% 且未见实质订单/政策跟进",
+          "result": "属于一次性主题情绪脉冲，避免在二阶段接盘弱势滞涨概念股。",
+          "tone": "bearish"
+        }
+      ],
+      "milestones": [
+        {
+          "date": "未来 2 周",
+          "status": "current",
+          "label": "观察美股科技高收益债利差与头部 AI 独角兽融资进展"
+        },
+        {
+          "date": "下季财报季",
+          "status": "upcoming",
+          "label": "核对 MSFT / AMZN / GOOG 资本开支自由现金流占比"
+        }
+      ],
+      "sample_basis": {
+        "sample_n": 13,
+        "volatility_pct": 1.6,
+        "volatility_source": "纳指 AI Capex 预期修正样本",
+        "horizon": "1~5 个交易日",
+        "confidence_label": "中高置信（直击一级到二级算力融资链）",
+        "confidence_label_en": "Moderate-High (AI Capex Financing Sensitivity)"
+      },
+      "realized_quotes": [
+        {
+          "ticker": "QQQ",
+          "name": "纳指100ETF",
+          "name_en": "Invesco QQQ",
+          "market": "美股",
+          "price": 608.45,
+          "pct_change": -5.67
+        },
+        {
+          "ticker": "HSTECH.HK",
+          "name": "恒生科指",
+          "name_en": "Hang Seng Tech",
+          "market": "港股",
+          "price": 3511.14,
+          "pct_change": -3.78
+        },
+        {
+          "ticker": "000001.SH",
+          "name": "上证指数",
+          "name_en": "SSE Composite",
+          "market": "A股",
+          "price": 3533.79,
+          "pct_change": -1.23
+        }
+      ],
+      "priced_in_analysis": {
+        "status_code": "unpriced",
+        "status_label": "未计价（开盘增量催化）",
+        "status_label_en": "Unpriced (Open Catalyst)",
+        "session_context": "休市/跨时区窗口发布，开盘将集中兑现首次定价比差",
+        "expectation_gap": "表层消息面快速反应后，超额收益取决于一阶直驱标的首小时放量成色与二阶产业链跟涨意愿。"
+      },
+      "transmission_layers": [
+        {
+          "tier": 1,
+          "tier_label": "一阶直接冲击（直接定价核心标的）",
+          "summary": "紧扣「马斯克预警AI行业明年或面临数千亿美元资金短缺」最直接的营收与估值敞口：微软 / 纳指100ETF 等首当其冲。",
+          "stocks": [
+            {
+              "name": "微软",
+              "code": "MSFT",
+              "market": "美股",
+              "exposure_logic": "外部股权与债权融资收紧时，自带充沛自由现金流的超级平台护城河扩大。",
+              "direction": "positive"
+            },
+            {
+              "name": "纳指100ETF",
+              "code": "QQQ",
+              "market": "美股",
+              "exposure_logic": "依赖举债扩张机柜的二三线算力股对信用利差走阔及 Capex 放缓最为敏感。",
+              "direction": "negative"
+            }
+          ]
+        },
+        {
+          "tier": 2,
+          "tier_label": "二阶产业链传导 / 替代对冲",
+          "summary": "向产业链上下游、跨市场同业映射或自主替代环节进行二阶定价传导。",
+          "stocks": [
+            {
+              "name": "科技高收益债 / 私募信贷",
+              "code": "HYG",
+              "market": "美股",
+              "exposure_logic": "算力基建回报期拉长引发市场重估非投资级科技债再融资风险。",
+              "direction": "negative"
+            }
+          ]
+        },
+        {
+          "tier": 3,
+          "tier_label": "三阶资金面与风格跷跷板效应",
+          "summary": "风险偏好变化驱动机构仓位在高弹性成长与低波高股息防御资产间再平衡。",
+          "stocks": [
+            {
+              "name": "中国移动",
+              "code": "600941.SH",
+              "market": "A股",
+              "exposure_logic": "全球 AI ROI 分歧放大阶段，资金偏好现金流确定性高的高股息防御板块。",
+              "direction": "positive"
+            }
+          ]
+        }
+      ],
+      "historical_precedents": [
+        {
+          "date": "2024-09-24",
+          "event_title": "国内跨市场重大催化发布于闭市窗口并伴随跨资产联动",
+          "t1_reaction": "首个开盘日竞价集中释放预期差，前 60 分钟成交额放大验证资金承接度。",
+          "t5_reaction": "T+5 主线标的围绕产业链业绩兑现与后续政策细则完成筹码分化。",
+          "lesson": "重点核对事件是否发生在交易所休市后（未计价窗口）及首小时量能持续性。"
+        },
+        {
+          "date": "2023-10-18",
+          "event_title": "跨境政策/产业催化剂落地后中美港三地市场分时异步重估",
+          "t1_reaction": "率先开盘的市场计价 60%~75% 首波弹性，后开盘市场易现高开/低开缺口收敛。",
+          "t5_reaction": "T+5 脱离纯情绪扰动后，基本面直接受益龙头跑赢二三线跟风概念。",
+          "lesson": "避免在外盘已充分交易 5%+ 涨幅后再追高滞后映射股。"
+        }
+      ],
+      "quant_if_then": [
+        {
+          "case": "bull",
+          "label": "顺向催化兑现阈值",
+          "trigger_metric": "MSFT 量价突破强度",
+          "threshold": "若相关催化在 3 个交易日内落地具体数据/公告，带动 MSFT 放量上行 1.2%~2.5%",
+          "action_implication": "高现金流云巨头与资产负债表龙头 (MSFT)核心受益标的获增量机构资金加仓，可沿一阶直接标的顺势跟踪。"
+        },
+        {
+          "case": "bear",
+          "label": "预期差证伪回吐阈值",
+          "trigger_metric": "冲高回落幅度 & 量能衰减",
+          "threshold": "若首个交易日冲高后无法维持换手，次日回撤幅度 ≥ 1.5% 且未见实质订单/政策跟进",
+          "action_implication": "属于一次性主题情绪脉冲，避免在二阶段接盘弱势滞涨概念股。"
+        }
+      ]
+    },
+    "evt_6bb16b859969": {
+      "event_id": "evt_6bb16b859969",
+      "tag": "Anthropic 企业级 Agent 与云托管竞合",
+      "tag_en": "Anthropic Enterprise Agent & Cloud Hosting",
       "polarity": "bullish",
       "intensity": 3,
       "validation_status": "verified",
@@ -4897,13 +6545,221 @@
       "evidence_tier_label": "📰 多源媒体证实",
       "effective_date_label": null,
       "qualifier_badge": null,
+      "one_liner": "Anthropic 企业编码与 Agent 工作流加速商用，直接推高 AWS Bedrock/GCP 云托管调用量并支撑 B 端 SaaS 估值。",
+      "top_a": {
+        "market": "A股",
+        "sector": "A股代码辅助 / 企业知识库与国产大模型",
+        "sector_en": "A-Share AI Apps & Local Compute",
+        "pct_low": 1.1,
+        "pct_high": 3.1,
+        "direction": "positive",
+        "proxy_ticker": "510300.SH",
+        "logic": "复杂代码重构与企业知识库合规托管需求升温，利好国内垂直行业 Agent 服务商。",
+        "logic_en": "Expanded capabilities accelerate domestic enterprise adoption."
+      },
+      "top_us": {
+        "market": "美股",
+        "sector": "AWS / 云代码 Agent 托管生态 (AMZN / GOOGL)",
+        "sector_en": "AWS & Enterprise Coding AI Stack (AMZN/GOOGL)",
+        "pct_low": 0.9,
+        "pct_high": 2.7,
+        "direction": "positive",
+        "proxy_ticker": "AMZN",
+        "logic": "企业级长上下文与安全编码 Agent 渗透深化，直接放量 AWS Bedrock 与 GCP 的高毛利调用营收。",
+        "logic_en": "Model ecosystem upgrades expand enterprise cloud consumption."
+      },
+      "top_hk": {
+        "market": "港股",
+        "sector": "企业软件与港股云计算龙头 (HSTECH)",
+        "sector_en": "HKEX AI Ecosystem & Cloud Platforms",
+        "pct_low": 0.8,
+        "pct_high": 2.5,
+        "direction": "positive",
+        "proxy_ticker": "HSTECH.HK",
+        "logic": "海外企业级订阅与 Agent 客单价抬升，改善市场对港股云计算平台 B 端变现的预期。",
+        "logic_en": "Model performance progress supports platform ecosystem monetization."
+      },
+      "bars": [
+        {
+          "market": "美股",
+          "sector": "AWS / 云代码 Agent 托管生态 (AMZN / GOOGL)",
+          "sector_en": "AWS & Enterprise Coding AI Stack (AMZN/GOOGL)",
+          "pct_low": 0.9,
+          "pct_high": 2.7,
+          "direction": "positive",
+          "proxy_ticker": "AMZN",
+          "logic": "企业级长上下文与安全编码 Agent 渗透深化，直接放量 AWS Bedrock 与 GCP 的高毛利调用营收。",
+          "logic_en": "Model ecosystem upgrades expand enterprise cloud consumption."
+        },
+        {
+          "market": "港股",
+          "sector": "企业软件与港股云计算龙头 (HSTECH)",
+          "sector_en": "HKEX AI Ecosystem & Cloud Platforms",
+          "pct_low": 0.8,
+          "pct_high": 2.5,
+          "direction": "positive",
+          "proxy_ticker": "HSTECH.HK",
+          "logic": "海外企业级订阅与 Agent 客单价抬升，改善市场对港股云计算平台 B 端变现的预期。",
+          "logic_en": "Model performance progress supports platform ecosystem monetization."
+        },
+        {
+          "market": "A股",
+          "sector": "A股代码辅助 / 企业知识库与国产大模型",
+          "sector_en": "A-Share AI Apps & Local Compute",
+          "pct_low": 1.1,
+          "pct_high": 3.1,
+          "direction": "positive",
+          "proxy_ticker": "510300.SH",
+          "logic": "复杂代码重构与企业知识库合规托管需求升温，利好国内垂直行业 Agent 服务商。",
+          "logic_en": "Expanded capabilities accelerate domestic enterprise adoption."
+        }
+      ],
+      "if_then": [
+        {
+          "cond": "[顺向催化兑现阈值] 若相关催化在 3 个交易日内落地具体数据/公告，带动 AMZN 放量上行 1.6%~2.7%",
+          "result": "AWS / 云代码 Agent 托管生态 (AMZN / GOOGL)核心受益标的获增量机构资金加仓，可沿一阶直接标的顺势跟踪。",
+          "tone": "bullish"
+        },
+        {
+          "cond": "[预期差证伪回吐阈值] 若首个交易日冲高后无法维持换手，次日回撤幅度 ≥ 1.5% 且未见实质订单/政策跟进",
+          "result": "属于一次性主题情绪脉冲，避免在二阶段接盘弱势滞涨概念股。",
+          "tone": "bearish"
+        }
+      ],
+      "milestones": [
+        {
+          "date": "未来 2~4 周",
+          "status": "upcoming",
+          "label": "跟踪 AWS Bedrock 模型调用占比与企业客户 ARR 披露"
+        }
+      ],
+      "sample_basis": {
+        "sample_n": 15,
+        "volatility_pct": 2.01,
+        "volatility_source": "主流大模型与软件应用催化样本",
+        "horizon": "2~5 个交易日",
+        "confidence_label": "中高置信（生态应用催化）",
+        "confidence_label_en": "Moderate-High (Model Ecosystem Catalyst)"
+      },
+      "realized_quotes": [
+        {
+          "ticker": "QQQ",
+          "name": "纳指100ETF",
+          "name_en": "Invesco QQQ",
+          "market": "美股",
+          "price": 608.45,
+          "pct_change": -5.67
+        }
+      ],
+      "priced_in_analysis": {
+        "status_code": "unpriced",
+        "status_label": "未计价（开盘增量催化）",
+        "status_label_en": "Unpriced (Open Catalyst)",
+        "session_context": "休市/跨时区窗口发布，开盘将集中兑现首次定价比差",
+        "expectation_gap": "表层消息面快速反应后，超额收益取决于一阶直驱标的首小时放量成色与二阶产业链跟涨意愿。"
+      },
+      "transmission_layers": [
+        {
+          "tier": 1,
+          "tier_label": "一阶直接冲击（直接定价核心标的）",
+          "summary": "紧扣「加州州长提议AI“终止开关”，特朗普命令政府切断与A」最直接的营收与估值敞口：亚马逊 / 恒生科技指数 等首当其冲。",
+          "stocks": [
+            {
+              "name": "亚马逊",
+              "code": "AMZN",
+              "market": "美股",
+              "exposure_logic": "企业级长上下文与安全编码 Agent 渗透深化，直接放量 AWS Bedrock 与 GCP 的高毛利调用营收。",
+              "direction": "positive"
+            },
+            {
+              "name": "恒生科技指数",
+              "code": "HSTECH.HK",
+              "market": "港股",
+              "exposure_logic": "海外企业级订阅与 Agent 客单价抬升，改善市场对港股云计算平台 B 端变现的预期。",
+              "direction": "positive"
+            }
+          ]
+        },
+        {
+          "tier": 2,
+          "tier_label": "二阶产业链传导 / 替代对冲",
+          "summary": "向产业链上下游、跨市场同业映射或自主替代环节进行二阶定价传导。",
+          "stocks": [
+            {
+              "name": "A股代码辅助 / 企业知识库",
+              "code": "510300.SH",
+              "market": "A股",
+              "exposure_logic": "复杂代码重构与企业知识库合规托管需求升温，利好国内垂直行业 Agent 服务商。",
+              "direction": "positive"
+            }
+          ]
+        },
+        {
+          "tier": 3,
+          "tier_label": "三阶资金面与风格跷跷板效应",
+          "summary": "风险偏好变化驱动机构仓位在高弹性成长与低波高股息防御资产间再平衡。",
+          "stocks": [
+            {
+              "name": "红利低波ETF",
+              "code": "512890.SH",
+              "market": "A股",
+              "exposure_logic": "当主线高波动分化时承接防御与避险资金切换",
+              "direction": "positive"
+            }
+          ]
+        }
+      ],
+      "historical_precedents": [
+        {
+          "date": "2025-01-20",
+          "event_title": "头部模型发布高性价比旗舰推理架构引发推理成本与云生态重估",
+          "t1_reaction": "端侧 AI 应用与高速云计算平台活跃，海外高功耗硬件短期分歧后重回吞吐扩张。",
+          "t5_reaction": "T+5 推理调用量飙升利好头部云厂商及具备工作流落地的软件平台。",
+          "lesson": "区分“旗舰模型直接大幅拉动云消费”与“成本骤降冲击封闭溢价”；真发布看 API 定价与首周调用量。"
+        },
+        {
+          "date": "2024-05-13",
+          "event_title": "头部实验室推出原生多模态低延迟旗舰模型及开发者 API",
+          "t1_reaction": "相关云托管龙头与 A 股端侧多模态软件高开 +2.4%。",
+          "t5_reaction": "T+5 商业化 ARR 转化与月活提升决定二阶段反弹高度。",
+          "lesson": "技术发布若无明确 API 定价优势或杀手级场景落地，容易在 48 小时内获利回吐。"
+        }
+      ],
+      "quant_if_then": [
+        {
+          "case": "bull",
+          "label": "顺向催化兑现阈值",
+          "trigger_metric": "AMZN 量价突破强度",
+          "threshold": "若相关催化在 3 个交易日内落地具体数据/公告，带动 AMZN 放量上行 1.6%~2.7%",
+          "action_implication": "AWS / 云代码 Agent 托管生态 (AMZN / GOOGL)核心受益标的获增量机构资金加仓，可沿一阶直接标的顺势跟踪。"
+        },
+        {
+          "case": "bear",
+          "label": "预期差证伪回吐阈值",
+          "trigger_metric": "冲高回落幅度 & 量能衰减",
+          "threshold": "若首个交易日冲高后无法维持换手，次日回撤幅度 ≥ 1.5% 且未见实质订单/政策跟进",
+          "action_implication": "属于一次性主题情绪脉冲，避免在二阶段接盘弱势滞涨概念股。"
+        }
+      ]
+    },
+    "evt_b7428748ad78": {
+      "event_id": "evt_b7428748ad78",
+      "tag": "Google Gemini 架构迭代与自研 TPU 生态",
+      "tag_en": "Google Gemini Iteration & TPU Compute Stack",
+      "polarity": "bullish",
+      "intensity": 3,
+      "validation_status": "verified",
+      "evidence_tier": "single_source",
+      "evidence_tier_label": "⚠️ 单一信源线索",
+      "effective_date_label": null,
+      "qualifier_badge": null,
       "one_liner": "谷歌全栈 Gemini 推理与自研 TPU 降本增效直接强化 GOOGL 云与搜索护城河，利好博通 (AVGO) ASIC 供应链。",
       "top_a": {
         "market": "A股",
         "sector": "A股高密度光模块 / ASIC 测试与端侧软件",
         "sector_en": "A-Share AI Apps & Local Compute",
-        "pct_low": 1.1,
-        "pct_high": 3.1,
+        "pct_low": 0.9,
+        "pct_high": 2.7,
         "direction": "positive",
         "proxy_ticker": "510300.SH",
         "logic": "高吞吐 TPU 集群与端云推理带旺光通信模块与 ASIC 封装测试链。",
@@ -4913,8 +6769,8 @@
         "market": "美股",
         "sector": "Google 与定制 ASIC/TPU 算力链 (GOOGL / AVGO)",
         "sector_en": "Google & Custom TPU Stack (GOOGL/AVGO)",
-        "pct_low": 0.9,
-        "pct_high": 2.7,
+        "pct_low": 0.8,
+        "pct_high": 2.3,
         "direction": "positive",
         "proxy_ticker": "GOOGL",
         "logic": "谷歌全栈多模态与端云推理效率升级，加固搜索广告防线并利好博通 (AVGO) 定制 TPU ASIC 出货。",
@@ -4924,8 +6780,8 @@
         "market": "港股",
         "sector": "多模态消费应用与移动生态 (HSTECH)",
         "sector_en": "HKEX AI Ecosystem & Cloud Platforms",
-        "pct_low": 0.8,
-        "pct_high": 2.5,
+        "pct_low": 0.7,
+        "pct_high": 2.1,
         "direction": "positive",
         "proxy_ticker": "HSTECH.HK",
         "logic": "端云协同轻量化模型能力提升，改善港股互联网端侧分发与海外广告变现效率。",
@@ -4936,8 +6792,8 @@
           "market": "美股",
           "sector": "Google 与定制 ASIC/TPU 算力链 (GOOGL / AVGO)",
           "sector_en": "Google & Custom TPU Stack (GOOGL/AVGO)",
-          "pct_low": 0.9,
-          "pct_high": 2.7,
+          "pct_low": 0.8,
+          "pct_high": 2.3,
           "direction": "positive",
           "proxy_ticker": "GOOGL",
           "logic": "谷歌全栈多模态与端云推理效率升级，加固搜索广告防线并利好博通 (AVGO) 定制 TPU ASIC 出货。",
@@ -4947,8 +6803,8 @@
           "market": "港股",
           "sector": "多模态消费应用与移动生态 (HSTECH)",
           "sector_en": "HKEX AI Ecosystem & Cloud Platforms",
-          "pct_low": 0.8,
-          "pct_high": 2.5,
+          "pct_low": 0.7,
+          "pct_high": 2.1,
           "direction": "positive",
           "proxy_ticker": "HSTECH.HK",
           "logic": "端云协同轻量化模型能力提升，改善港股互联网端侧分发与海外广告变现效率。",
@@ -4958,8 +6814,8 @@
           "market": "A股",
           "sector": "A股高密度光模块 / ASIC 测试与端侧软件",
           "sector_en": "A-Share AI Apps & Local Compute",
-          "pct_low": 1.1,
-          "pct_high": 3.1,
+          "pct_low": 0.9,
+          "pct_high": 2.7,
           "direction": "positive",
           "proxy_ticker": "510300.SH",
           "logic": "高吞吐 TPU 集群与端云推理带旺光通信模块与 ASIC 封装测试链。",
@@ -5014,7 +6870,7 @@
         {
           "tier": 1,
           "tier_label": "一阶直接冲击（直接定价核心标的）",
-          "summary": "紧扣「谷歌发布Gemini API工具检索预览版并推出Ge」最直接的营收与估值敞口：谷歌 / 恒生科技指数 等首当其冲。",
+          "summary": "紧扣「Google发布Gemini 4 Neon AI模型」最直接的营收与估值敞口：谷歌 / 恒生科技指数 等首当其冲。",
           "stocks": [
             {
               "name": "谷歌",
@@ -5091,237 +6947,6 @@
           "trigger_metric": "冲高回落幅度 & 量能衰减",
           "threshold": "若首个交易日冲高后无法维持换手，次日回撤幅度 ≥ 1.5% 且未见实质订单/政策跟进",
           "action_implication": "属于一次性主题情绪脉冲，避免在二阶段接盘弱势滞涨概念股。"
-        }
-      ]
-    },
-    "evt_6a9a0488c431": {
-      "event_id": "evt_6a9a0488c431",
-      "tag": "谷歌 TPU 供应链切换：博通 8i 承压 vs 联发科 8t 受益",
-      "tag_en": "Google TPU Supplier Shift (Broadcom 8i Cut vs MediaTek 8t Gain)",
-      "polarity": "divergent",
-      "intensity": 4,
-      "validation_status": "verified",
-      "evidence_tier": "research",
-      "evidence_tier_label": "📊 机构研报 / 渠道调研",
-      "effective_date_label": null,
-      "qualifier_badge": null,
-      "one_liner": "谷歌虽拟削减博通设计的 TPU 8i 出货约 100 万颗（占 20%），但预计同步增加联发科设计的 TPU 8t 出货——本质属于 ASIC 供应商结构切换而非谷歌总算力需求下调，呈现“博通承压 vs 联发科 (2454.TW) 受益”。",
-      "top_a": {
-        "market": "A股",
-        "sector": "北美多云光模块/PCB 结构性再平衡 (300308)",
-        "sector_en": "A-Share Optical & PCB Capex Balance (300308)",
-        "pct_low": -2.4,
-        "pct_high": 0.8,
-        "direction": "mixed",
-        "proxy_ticker": "300308.SZ",
-        "logic": "谷歌总 AI 算力 Capex 并未下修，仅在 8i/8t 料号与客户间调配，多云客户光模块龙头韧性强于单料号厂。",
-        "logic_en": "Google's total AI Capex stays intact; multi-cloud optics vendors face modest timing noise."
-      },
-      "top_us": {
-        "market": "美股",
-        "sector": "定制 ASIC 原主力设计伙伴 (AVGO 博通)",
-        "sector_en": "US Custom ASIC Incumbent (AVGO)",
-        "pct_low": -4.8,
-        "pct_high": -1.8,
-        "direction": "negative",
-        "proxy_ticker": "AVGO",
-        "logic": "百万颗级 TPU 8i 削减（约 20%）直接挤压博通该代际定制芯片增长预期与溢价。",
-        "logic_en": "Cutting ~1M TPU 8i units (~20%) directly squeezes Broadcom's custom-silicon upside."
-      },
-      "top_hk": null,
-      "bars": [
-        {
-          "market": "美股",
-          "sector": "定制 ASIC 原主力设计伙伴 (AVGO 博通)",
-          "sector_en": "US Custom ASIC Incumbent (AVGO)",
-          "pct_low": -4.8,
-          "pct_high": -1.8,
-          "direction": "negative",
-          "proxy_ticker": "AVGO",
-          "logic": "百万颗级 TPU 8i 削减（约 20%）直接挤压博通该代际定制芯片增长预期与溢价。",
-          "logic_en": "Cutting ~1M TPU 8i units (~20%) directly squeezes Broadcom's custom-silicon upside."
-        },
-        {
-          "market": "台股",
-          "sector": "联发科 TPU 8t 定制二供替代链 (2454.TW)",
-          "sector_en": "Taiwan Custom ASIC Beneficiary MediaTek (2454.TW)",
-          "pct_low": 1.6,
-          "pct_high": 4.5,
-          "direction": "positive",
-          "proxy_ticker": "2454.TW",
-          "logic": "谷歌预计增加联发科设计的 TPU 8t 出货以承接部分算力需求，二供份额放量成为事件核心正向对冲腿。",
-          "logic_en": "Expected ramp of MediaTek-designed TPU 8t captures shifted Google ASIC volume."
-        },
-        {
-          "market": "A股",
-          "sector": "北美多云光模块/PCB 结构性再平衡 (300308)",
-          "sector_en": "A-Share Optical & PCB Capex Balance (300308)",
-          "pct_low": -2.4,
-          "pct_high": 0.8,
-          "direction": "mixed",
-          "proxy_ticker": "300308.SZ",
-          "logic": "谷歌总 AI 算力 Capex 并未下修，仅在 8i/8t 料号与客户间调配，多云客户光模块龙头韧性强于单料号厂。",
-          "logic_en": "Google's total AI Capex stays intact; multi-cloud optics vendors face modest timing noise."
-        },
-        {
-          "market": "美股",
-          "sector": "通用 AI GPU 核心生态 (NVDA)",
-          "sector_en": "Merchant AI GPU Ecosystem (NVDA)",
-          "pct_low": 0.4,
-          "pct_high": 2.2,
-          "direction": "positive",
-          "proxy_ticker": "NVDA",
-          "logic": "定制 ASIC 双供切换磨合期客观稳固通用 GPU 在大模型主集群中的交付确定性。",
-          "logic_en": "Vendor transition friction in custom ASICs modestly steadies merchant GPU demand."
-        }
-      ],
-      "if_then": [
-        {
-          "cond": "[负面验证 · 砍单获多渠道印证] 若 AVGO 周内有效跌破前低 ≥ 3.5% 且供应链未出面辟谣 2027 年 100 万颗下调预期",
-          "result": "单一绑定的谷歌 TPU 链 PCB 与光模块估值需下修约 10%~15%，果断换仓多客户平台或通用 GPU 生态。",
-          "tone": "bearish"
-        },
-        {
-          "cond": "[证伪反转 · 官方澄清或转向下一代放量] 若谷歌或博通回应仅系 TPU 8i 向下一代节点平滑切换且 2027 总算力采购规模不变（偏差 ≤ 5%）",
-          "result": "砍单错杀缺口提供高赔率低吸点。",
-          "tone": "bullish"
-        }
-      ],
-      "milestones": [
-        {
-          "date": "7 日内",
-          "status": "current",
-          "label": "观察博通 / 联发科对 TPU 8i/8t 订单配比与 CoWoS 分配最新回应"
-        }
-      ],
-      "sample_basis": {
-        "sample_n": 12,
-        "volatility_pct": 3.11,
-        "volatility_source": "北美云厂芯片链切换与砍单样本",
-        "horizon": "1~5 个交易日",
-        "confidence_label": "高置信（直接改写 ASIC 供应商份额）",
-        "confidence_label_en": "High (Direct ASIC Share Reallocation)"
-      },
-      "realized_quotes": [
-        {
-          "ticker": "NVDA",
-          "name": "英伟达",
-          "name_en": "NVIDIA",
-          "market": "美股",
-          "price": 125.53,
-          "pct_change": -14.01
-        },
-        {
-          "ticker": "QQQ",
-          "name": "纳指100ETF",
-          "name_en": "Invesco QQQ",
-          "market": "美股",
-          "price": 608.45,
-          "pct_change": -5.67
-        }
-      ],
-      "priced_in_analysis": {
-        "status_code": "overseas_priced_in",
-        "status_label": "外盘已计价（警惕A股/港股开盘补跌或切向替代）",
-        "status_label_en": "Overseas Priced (Asia Open Gap Watch)",
-        "session_context": "美股最近交易日已率先剧烈定价（NVDA (-14.01%) / QQQ (-5.67%)），而 A 股/港股处于休市跨时差窗口",
-        "expectation_gap": "海外市场已在 NVDA (-14.01%) 与 QQQ (-5.67%) 上先行释放大半恐慌或避险跌幅；下一个亚太开盘时段，纯海外配套硬件链存在集中低开补跌风险，但 A 股国产替代方向具备反向错杀承接预期差。"
-      },
-      "transmission_layers": [
-        {
-          "tier": 1,
-          "tier_label": "一阶直接冲击（TPU 供应商切换：博通 8i 承压 vs 联发科 8t 受益）",
-          "summary": "谷歌削减博通设计的 TPU 8i 约 100 万颗（占约 20%），但预计增加联发科设计的 TPU 8t 出货，本质为谷歌在 ASIC 伙伴间的结构切换而非总算力需求下调。",
-          "stocks": [
-            {
-              "name": "博通",
-              "code": "AVGO",
-              "market": "美股",
-              "exposure_logic": "原 TPU 8i 主力设计伙伴，份额向 TPU 8t 切换直接挤压该代际 ASIC 预期差",
-              "direction": "negative"
-            },
-            {
-              "name": "联发科",
-              "code": "2454.TW",
-              "market": "台股",
-              "exposure_logic": "TPU 8t 预计出货上修直接兑现谷歌二供切入份额红利，承接谷歌定制 ASIC 结构性增量",
-              "direction": "positive"
-            },
-            {
-              "name": "英伟达",
-              "code": "NVDA",
-              "market": "美股",
-              "exposure_logic": "谷歌定制 ASIC 双供切换摩擦期，反而稳固通用 GPU 在主力云厂商中的交付确定性",
-              "direction": "positive"
-            }
-          ]
-        },
-        {
-          "tier": 2,
-          "tier_label": "二阶产业链传导（高速光模块 / CoWoS 封测按产品线重分配）",
-          "summary": "谷歌总 AI 算力 Capex 并未下修，台积电 CoWoS 与光模块需求仅在 8i/8t 与通用集群间结构再平衡，多元客户龙头具备对冲韧性。",
-          "stocks": [
-            {
-              "name": "中际旭创",
-              "code": "300308.SZ",
-              "market": "A股",
-              "exposure_logic": "短期需消化 TPU 8i 切单情绪扰动，但作为多云厂 800G/1.6T 龙头仍可承接总算力与联发科/NVDA 增量",
-              "direction": "mixed"
-            },
-            {
-              "name": "沪电股份",
-              "code": "002463.SZ",
-              "market": "A股",
-              "exposure_logic": "北美云厂高速 PCB 料号跟随 8i→8t 切换节奏微调排产，需盯紧总 Capex 验证",
-              "direction": "mixed"
-            }
-          ]
-        },
-        {
-          "tier": 3,
-          "tier_label": "三阶资金面与风格跷跷板效应",
-          "summary": "机构从单一定制芯片供应商估值溢价转向多云互连基建、台股二供替代及通用 GPU 均衡配置。",
-          "stocks": [
-            {
-              "name": "寒武纪",
-              "code": "688256.SH",
-              "market": "A股",
-              "exposure_logic": "海外云厂 ASIC 份额内部分流期间，境内自主推理芯片仍锚定国内互联网资本开支",
-              "direction": "mixed"
-            }
-          ]
-        }
-      ],
-      "historical_precedents": [
-        {
-          "date": "2024-11-14",
-          "event_title": "供应链分析师下调特定云厂商定制 ASIC 年度出货指引引发硬件链剧震",
-          "t1_reaction": "博通 (AVGO) 盘后一度承压，A 股绑定单一北美 ASIC 客户的光模块与 PCB 低开 -3.5%。",
-          "t5_reaction": "T+5 资金从高单一客户依赖链分流向通用 GPU 集群（NVDA）与多元客户龙头。",
-          "lesson": "一线知名分析师砍单传闻若未获博通/云厂澄清，单一 ASIC 配套厂商短期估值折价通常持续 3~5 天。"
-        },
-        {
-          "date": "2023-08-29",
-          "event_title": "谷歌/大厂切换下一代 TPU 架构引发过渡期出货节奏调整讨论",
-          "t1_reaction": "定制芯片封装与测试环节短期波动放大。",
-          "t5_reaction": "T+5 市场甄别过渡期砍单与架构换代时间差后，多客户平台型龙头率先修复。",
-          "lesson": "核查下一代芯片流片（Tape-out）延迟是暂时的工艺切换还是算力预算转向。"
-        }
-      ],
-      "quant_if_then": [
-        {
-          "case": "bear",
-          "label": "负面验证 · 砍单获多渠道印证",
-          "trigger_metric": "博通 AVGO / A股相关供应链股价表态",
-          "threshold": "若 AVGO 周内有效跌破前低 ≥ 3.5% 且供应链未出面辟谣 2027 年 100 万颗下调预期",
-          "action_implication": "单一绑定的谷歌 TPU 链 PCB 与光模块估值需下修约 10%~15%，果断换仓多客户平台或通用 GPU 生态。"
-        },
-        {
-          "case": "bull",
-          "label": "证伪反转 · 官方澄清或转向下一代放量",
-          "trigger_metric": "官方/供应链澄清 & 订单缺口补足",
-          "threshold": "若谷歌或博通回应仅系 TPU 8i 向下一代节点平滑切换且 2027 总算力采购规模不变（偏差 ≤ 5%）",
-          "action_implication": "砍单错杀缺口提供高赔率低吸点。"
         }
       ]
     },
@@ -5804,8 +7429,8 @@
         }
       ]
     },
-    "evt_80350a5d59f4": {
-      "event_id": "evt_80350a5d59f4",
+    "evt_6c3428db5046": {
+      "event_id": "evt_6c3428db5046",
       "tag": "AI 服务器硬件涨价与算力基建景气",
       "tag_en": "AI Server Price Hike & Supply Tightness",
       "polarity": "bullish",
@@ -5814,7 +7439,7 @@
       "evidence_tier": "corroborated",
       "evidence_tier_label": "📰 多源媒体证实",
       "effective_date_label": null,
-      "qualifier_badge": null,
+      "qualifier_badge": "⚠️ 要价上限 45% · 关注客户实际接受率",
       "one_liner": "AI 服务器因 GPU 供应与散热供电紧张提价 (45%)，拥有核心产能的头部整机代工及液冷光互连环节盈利弹性直接扩张。",
       "top_a": {
         "market": "A股",
@@ -5924,7 +7549,7 @@
         "status_label": "部分计价（博弈二次预期差）",
         "status_label_en": "Partially Priced (2nd-Order Gap)",
         "session_context": "事件伴随跨市场供应链/大宗商品先行异动，但产业链二阶渗透与实质订单落地仍存预期差",
-        "expectation_gap": "市场仅在情绪面与一线权重上做了初步定价；决定后续超额收益的是二阶传导环节（如即期运价能否站稳、涨价函落地率或国产替代订单转化）能否超预期。"
+        "expectation_gap": "【⚠️ 要价上限 45% · 关注客户实际接受率】市场仅在情绪面与一线权重上做了初步定价；决定后续超额收益的是二阶传导环节（如即期运价能否站稳、涨价函落地率或国产替代订单转化）能否超预期。"
       },
       "transmission_layers": [
         {
@@ -6021,238 +7646,6 @@
           "trigger_metric": "提价后月度出货增速 & 组装净利率",
           "threshold": "若提价超 30% 后出现云厂推迟 Q1 机柜验收超 4 周或零部件成本完全吞噬组装利润",
           "action_implication": "纯代工组装厂有脉冲后回落风险，仅保留高壁垒液冷与光互连标的。"
-        }
-      ]
-    },
-    "evt_a0e32edc46f7": {
-      "event_id": "evt_a0e32edc46f7",
-      "tag": "中美关税贸易博弈",
-      "tag_en": "US-China Diplomacy & Trade Tone",
-      "polarity": "divergent",
-      "intensity": 3,
-      "validation_status": "verified",
-      "evidence_tier": "corroborated",
-      "evidence_tier_label": "📰 多源媒体证实",
-      "effective_date_label": null,
-      "qualifier_badge": null,
-      "one_liner": "中美元首深圳会晤释放对话稳定信号，有助缓和地缘风险溢价，短期利好中概互联、港股权重及出口链估值修复。",
-      "top_a": {
-        "market": "A股",
-        "sector": "出口链 / 消费电子与航运",
-        "sector_en": "A-Share Exporters & Consumer Electronics",
-        "pct_low": 1.2,
-        "pct_high": 3.2,
-        "direction": "positive",
-        "proxy_ticker": "510300.SH",
-        "logic": "贸易关税担忧边际降温提升对美敞口制造业估值。",
-        "logic_en": "Tariff-deescalation expectations support export manufacturing."
-      },
-      "top_us": {
-        "market": "美股",
-        "sector": "中概互联资产 (KWEB)",
-        "sector_en": "US-Listed China Tech (KWEB)",
-        "pct_low": 1.5,
-        "pct_high": 3.9,
-        "direction": "positive",
-        "proxy_ticker": "KWEB",
-        "logic": "中美关系底部托底预期带动外资空头回补与估值折价收敛。",
-        "logic_en": "Stabilizing diplomatic floor triggers ADR short-covering and multiple expansion."
-      },
-      "top_hk": {
-        "market": "港股",
-        "sector": "恒生科指与外资权重 (00700 / HSTECH)",
-        "sector_en": "HKEX Tech Leaders (HSTECH / 00700)",
-        "pct_low": 1.5,
-        "pct_high": 3.8,
-        "direction": "positive",
-        "proxy_ticker": "HSTECH.HK",
-        "logic": "离岸中国资产对中美风险溢价改善弹性最高。",
-        "logic_en": "Offshore HK tech leaders capture strongest risk-premium compression."
-      },
-      "bars": [
-        {
-          "market": "美股",
-          "sector": "中概互联资产 (KWEB)",
-          "sector_en": "US-Listed China Tech (KWEB)",
-          "pct_low": 1.5,
-          "pct_high": 3.9,
-          "direction": "positive",
-          "proxy_ticker": "KWEB",
-          "logic": "中美关系底部托底预期带动外资空头回补与估值折价收敛。",
-          "logic_en": "Stabilizing diplomatic floor triggers ADR short-covering and multiple expansion."
-        },
-        {
-          "market": "港股",
-          "sector": "恒生科指与外资权重 (00700 / HSTECH)",
-          "sector_en": "HKEX Tech Leaders (HSTECH / 00700)",
-          "pct_low": 1.5,
-          "pct_high": 3.8,
-          "direction": "positive",
-          "proxy_ticker": "HSTECH.HK",
-          "logic": "离岸中国资产对中美风险溢价改善弹性最高。",
-          "logic_en": "Offshore HK tech leaders capture strongest risk-premium compression."
-        },
-        {
-          "market": "A股",
-          "sector": "出口链 / 消费电子与航运",
-          "sector_en": "A-Share Exporters & Consumer Electronics",
-          "pct_low": 1.2,
-          "pct_high": 3.2,
-          "direction": "positive",
-          "proxy_ticker": "510300.SH",
-          "logic": "贸易关税担忧边际降温提升对美敞口制造业估值。",
-          "logic_en": "Tariff-deescalation expectations support export manufacturing."
-        }
-      ],
-      "if_then": [
-        {
-          "cond": "[顺向催化兑现阈值] 若相关催化在 3 个交易日内落地具体数据/公告，带动 KWEB 放量上行 2.3%~3.9%",
-          "result": "中概互联资产 (KWEB)核心受益标的获增量机构资金加仓，可沿一阶直接标的顺势跟踪。",
-          "tone": "bullish"
-        },
-        {
-          "cond": "[预期差证伪回吐阈值] 若首个交易日冲高后无法维持换手，次日回撤幅度 ≥ 1.5% 且未见实质订单/政策跟进",
-          "result": "属于一次性主题情绪脉冲，避免在二阶段接盘弱势滞涨概念股。",
-          "tone": "bearish"
-        }
-      ],
-      "milestones": [
-        {
-          "date": "会晤后 72 小时",
-          "status": "current",
-          "label": "双方外交与财政部门跟进文本公布"
-        }
-      ],
-      "sample_basis": {
-        "sample_n": 19,
-        "volatility_pct": 2.35,
-        "volatility_source": "KWEB 20日实现 ATR",
-        "horizon": "2~7 个交易日",
-        "confidence_label": "高置信（直接风偏锚定）",
-        "confidence_label_en": "High (Direct Risk-Premium Anchor)"
-      },
-      "realized_quotes": [
-        {
-          "ticker": "KWEB",
-          "name": "中概互联ETF",
-          "name_en": "KraneShares KWEB",
-          "market": "美股",
-          "price": 20.72,
-          "pct_change": -2.77
-        },
-        {
-          "ticker": "HSTECH.HK",
-          "name": "恒生科指",
-          "name_en": "Hang Seng Tech",
-          "market": "港股",
-          "price": 3511.14,
-          "pct_change": -3.78
-        },
-        {
-          "ticker": "00700.HK",
-          "name": "腾讯控股",
-          "name_en": "Tencent",
-          "market": "港股",
-          "price": 344.0,
-          "pct_change": -1.26
-        },
-        {
-          "ticker": "000001.SH",
-          "name": "上证指数",
-          "name_en": "SSE Composite",
-          "market": "A股",
-          "price": 3533.79,
-          "pct_change": -1.23
-        }
-      ],
-      "priced_in_analysis": {
-        "status_code": "unpriced",
-        "status_label": "未计价（开盘增量催化）",
-        "status_label_en": "Unpriced (Open Catalyst)",
-        "session_context": "休市/跨时区窗口发布，开盘将集中兑现首次定价比差",
-        "expectation_gap": "表层消息面快速反应后，超额收益取决于一阶直驱标的首小时放量成色与二阶产业链跟涨意愿。"
-      },
-      "transmission_layers": [
-        {
-          "tier": 1,
-          "tier_label": "一阶直接冲击（直接定价核心标的）",
-          "summary": "紧扣「日本首相高市早苗在APEC会议上被指行为不当并遭日本」最直接的营收与估值敞口：中概互联ETF / 恒生科技指数 等首当其冲。",
-          "stocks": [
-            {
-              "name": "中概互联ETF",
-              "code": "KWEB",
-              "market": "美股",
-              "exposure_logic": "中美关系底部托底预期带动外资空头回补与估值折价收敛。",
-              "direction": "positive"
-            },
-            {
-              "name": "恒生科技指数",
-              "code": "HSTECH.HK",
-              "market": "港股",
-              "exposure_logic": "离岸中国资产对中美风险溢价改善弹性最高。",
-              "direction": "positive"
-            }
-          ]
-        },
-        {
-          "tier": 2,
-          "tier_label": "二阶产业链传导 / 替代对冲",
-          "summary": "向产业链上下游、跨市场同业映射或自主替代环节进行二阶定价传导。",
-          "stocks": [
-            {
-              "name": "出口链 / 消费电子与航运",
-              "code": "510300.SH",
-              "market": "A股",
-              "exposure_logic": "贸易关税担忧边际降温提升对美敞口制造业估值。",
-              "direction": "positive"
-            }
-          ]
-        },
-        {
-          "tier": 3,
-          "tier_label": "三阶资金面与风格跷跷板效应",
-          "summary": "风险偏好变化驱动机构仓位在高弹性成长与低波高股息防御资产间再平衡。",
-          "stocks": [
-            {
-              "name": "红利低波ETF",
-              "code": "512890.SH",
-              "market": "A股",
-              "exposure_logic": "当主线高波动分化时承接防御与避险资金切换",
-              "direction": "positive"
-            }
-          ]
-        }
-      ],
-      "historical_precedents": [
-        {
-          "date": "2024-09-24",
-          "event_title": "国内跨市场重大催化发布于闭市窗口并伴随跨资产联动",
-          "t1_reaction": "首个开盘日竞价集中释放预期差，前 60 分钟成交额放大验证资金承接度。",
-          "t5_reaction": "T+5 主线标的围绕产业链业绩兑现与后续政策细则完成筹码分化。",
-          "lesson": "重点核对事件是否发生在交易所休市后（未计价窗口）及首小时量能持续性。"
-        },
-        {
-          "date": "2023-10-18",
-          "event_title": "跨境政策/产业催化剂落地后中美港三地市场分时异步重估",
-          "t1_reaction": "率先开盘的市场计价 60%~75% 首波弹性，后开盘市场易现高开/低开缺口收敛。",
-          "t5_reaction": "T+5 脱离纯情绪扰动后，基本面直接受益龙头跑赢二三线跟风概念。",
-          "lesson": "避免在外盘已充分交易 5%+ 涨幅后再追高滞后映射股。"
-        }
-      ],
-      "quant_if_then": [
-        {
-          "case": "bull",
-          "label": "顺向催化兑现阈值",
-          "trigger_metric": "KWEB 量价突破强度",
-          "threshold": "若相关催化在 3 个交易日内落地具体数据/公告，带动 KWEB 放量上行 2.3%~3.9%",
-          "action_implication": "中概互联资产 (KWEB)核心受益标的获增量机构资金加仓，可沿一阶直接标的顺势跟踪。"
-        },
-        {
-          "case": "bear",
-          "label": "预期差证伪回吐阈值",
-          "trigger_metric": "冲高回落幅度 & 量能衰减",
-          "threshold": "若首个交易日冲高后无法维持换手，次日回撤幅度 ≥ 1.5% 且未见实质订单/政策跟进",
-          "action_implication": "属于一次性主题情绪脉冲，避免在二阶段接盘弱势滞涨概念股。"
         }
       ]
     }
