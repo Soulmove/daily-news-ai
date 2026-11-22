@@ -1,6 +1,6 @@
 {
   "schema_version": "4.1",
-  "site_published_at": "2026-11-22T22:37:57+08:00",
+  "site_published_at": "2026-11-22T23:04:38+08:00",
   "smart": {
     "latest_batch_id": "smart-20261122-223252",
     "latest_path": "archives/smart/2026-11-22/22-32/",
@@ -83,12 +83,12 @@
     }
   },
   "raw": {
-    "latest_batch_id": "raw-20261122-213401",
-    "latest_path": "archives/raw/2026-11-22/21-34/",
-    "meta_path": "archives/raw/2026-11-22/21-34/meta.json",
-    "connectors_path": "archives/raw/2026-11-22/21-34/connectors.json",
-    "fetched_at": "2026-11-22T21:34:01+08:00",
-    "published_at": "2026-11-22T21:34:25+08:00",
+    "latest_batch_id": "raw-20261122-230420",
+    "latest_path": "archives/raw/2026-11-22/23-04/",
+    "meta_path": "archives/raw/2026-11-22/23-04/meta.json",
+    "connectors_path": "archives/raw/2026-11-22/23-04/connectors.json",
+    "fetched_at": "2026-11-22T23:04:20+08:00",
+    "published_at": "2026-11-22T23:04:38+08:00",
     "target_cadence_minutes": 60,
     "schedule_source": "workflow_dispatch",
     "status": "partial",
@@ -99,39 +99,39 @@
       "error_sources": 1,
       "stale_sources": 0,
       "retired_sources": 5,
-      "total_raw_items": 1439,
+      "total_raw_items": 1440,
       "first_party_items": 22,
       "healthy_connectors": 7,
       "total_connectors": 7,
-      "deep_fetched_enriched": 14,
-      "deduped_events": 1233
+      "deep_fetched_enriched": 16,
+      "deduped_events": 1236
     },
     "categories": {
       "finance": {
         "file": "data_finance.json",
-        "path": "archives/raw/2026-11-22/21-34/data_finance.json",
+        "path": "archives/raw/2026-11-22/23-04/data_finance.json",
         "status": "ok",
         "source_count": 19,
         "ok_sources": 19,
         "error_sources": 0,
         "empty_sources": 0,
         "stale_sources": 0,
-        "item_count": 379
+        "item_count": 369
       },
       "global": {
         "file": "data_global.json",
-        "path": "archives/raw/2026-11-22/21-34/data_global.json",
+        "path": "archives/raw/2026-11-22/23-04/data_global.json",
         "status": "ok",
         "source_count": 13,
         "ok_sources": 13,
         "error_sources": 0,
         "empty_sources": 0,
         "stale_sources": 0,
-        "item_count": 252
+        "item_count": 264
       },
       "tech": {
         "file": "data_tech.json",
-        "path": "archives/raw/2026-11-22/21-34/data_tech.json",
+        "path": "archives/raw/2026-11-22/23-04/data_tech.json",
         "status": "partial",
         "source_count": 30,
         "ok_sources": 28,
@@ -142,14 +142,14 @@
       },
       "general": {
         "file": "data_general.json",
-        "path": "archives/raw/2026-11-22/21-34/data_general.json",
+        "path": "archives/raw/2026-11-22/23-04/data_general.json",
         "status": "ok",
         "source_count": 15,
         "ok_sources": 15,
         "error_sources": 0,
         "empty_sources": 0,
         "stale_sources": 0,
-        "item_count": 340
+        "item_count": 339
       }
     }
   },
@@ -161,11 +161,11 @@
   },
   "connectors": {
     "latest_path": "data/connectors_latest.json",
-    "fetched_at": "2026-11-22T21:34:01+08:00",
+    "fetched_at": "2026-11-22T23:04:20+08:00",
     "summary": {
       "total_connectors": 7,
       "healthy_connectors": 7,
-      "total_first_party_items": 485,
+      "total_first_party_items": 484,
       "tech_tools_count": 20,
       "calendar_events_count": 5
     }
@@ -208,23 +208,23 @@
   "degraded": true,
   "alerts": [
     {
-      "code": "partial_category_fallback",
+      "code": "raw_crawl_degraded",
       "severity": "warning",
-      "message": "本批次有 3 个板块使用上一批降级回退"
+      "message": "原始抓取状态：partial（错误源 1 个）"
     }
   ],
   "gemini_quota": {
     "total_configured_keys": 12,
-    "healthy_keys": 10,
-    "cooled_down_keys": 2,
+    "healthy_keys": 12,
+    "cooled_down_keys": 0,
     "exhausted_keys": 0,
     "daily_calls_total": 158,
     "date_utc": "2026-11-22",
-    "updated_at": "2026-11-22T14:37:57Z",
+    "updated_at": "2026-11-22T15:04:28Z",
     "keys": [
       {
         "slot": "KEY_TECH",
-        "status": "cooldown",
+        "status": "healthy",
         "daily_calls": 12,
         "cooldown_until": null,
         "exhausted_until": null,
@@ -324,7 +324,7 @@
       },
       {
         "slot": "KEY_7",
-        "status": "cooldown",
+        "status": "healthy",
         "daily_calls": 13,
         "cooldown_until": null,
         "exhausted_until": null,
@@ -356,16 +356,16 @@
   },
   "quota": {
     "total_configured_keys": 12,
-    "healthy_keys": 10,
-    "cooled_down_keys": 2,
+    "healthy_keys": 12,
+    "cooled_down_keys": 0,
     "exhausted_keys": 0,
     "daily_calls_total": 158,
     "date_utc": "2026-11-22",
-    "updated_at": "2026-11-22T14:37:57Z",
+    "updated_at": "2026-11-22T15:04:28Z",
     "keys": [
       {
         "slot": "KEY_TECH",
-        "status": "cooldown",
+        "status": "healthy",
         "daily_calls": 12,
         "cooldown_until": null,
         "exhausted_until": null,
@@ -465,7 +465,7 @@
       },
       {
         "slot": "KEY_7",
-        "status": "cooldown",
+        "status": "healthy",
         "daily_calls": 13,
         "cooldown_until": null,
         "exhausted_until": null,
