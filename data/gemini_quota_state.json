@@ -1,7 +1,7 @@
 {
   "schema_version": "4.1",
   "date_utc": "2026-11-22",
-  "updated_at": "2026-11-22T14:37:57Z",
+  "updated_at": "2026-11-22T15:12:02Z",
   "keys": {
     "KEY_TECH": {
       "slot": "KEY_TECH",
@@ -24,13 +24,13 @@
       "slot": "KEY_GLOBAL",
       "fingerprint": "99678299",
       "date_utc": "2026-11-22",
-      "daily_calls": 12,
+      "daily_calls": 13,
       "cooldown_until": null,
       "exhausted_until": null,
       "model_exhausted_until": {},
       "last_error_code": null,
       "last_error": null,
-      "last_success_at": "2026-11-22T13:42:45Z",
+      "last_success_at": "2026-11-22T15:11:13Z",
       "consecutive_errors": 0,
       "model_cooldown_until": {
         "gemini-4-hydrogen": "2026-11-22T13:41:00Z"
@@ -40,13 +40,13 @@
       "slot": "KEY_FINANCE",
       "fingerprint": "08e82e75",
       "date_utc": "2026-11-22",
-      "daily_calls": 12,
+      "daily_calls": 13,
       "cooldown_until": null,
       "exhausted_until": null,
       "model_exhausted_until": {},
       "last_error_code": null,
       "last_error": null,
-      "last_success_at": "2026-11-22T13:44:01Z",
+      "last_success_at": "2026-11-22T15:11:57Z",
       "consecutive_errors": 0,
       "model_cooldown_until": {
         "gemini-4-hydrogen": "2026-11-22T13:42:14Z"
@@ -56,17 +56,17 @@
       "slot": "KEY_GENERAL",
       "fingerprint": "f9d158c9",
       "date_utc": "2026-11-22",
-      "daily_calls": 11,
+      "daily_calls": 14,
       "cooldown_until": null,
       "exhausted_until": null,
       "model_exhausted_until": {},
-      "last_error_code": null,
-      "last_error": null,
+      "last_error_code": "TRANSIENT_ERROR",
+      "last_error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'The request timed out. Please try again.', 'status': 'DEADLIN",
       "last_success_at": "2026-11-22T13:43:57Z",
-      "consecutive_errors": 0,
+      "consecutive_errors": 3,
       "model_cooldown_until": {
-        "gemini-4-hydrogen": "2026-11-22T12:30:33Z",
-        "gemini-2.5-flash": "2026-11-22T12:32:13Z"
+        "gemini-4-hydrogen": "2026-11-22T15:07:51Z",
+        "gemini-2.5-flash": "2026-11-22T15:07:54Z"
       }
     },
     "KEY_1": {
@@ -90,16 +90,16 @@
       "slot": "KEY_2",
       "fingerprint": "d6427670",
       "date_utc": "2026-11-22",
-      "daily_calls": 12,
+      "daily_calls": 14,
       "cooldown_until": null,
       "exhausted_until": null,
       "model_exhausted_until": {},
-      "last_error_code": "TRANSIENT_ERROR",
-      "last_error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status':",
-      "last_success_at": "2026-11-22T13:42:51Z",
-      "consecutive_errors": 1,
+      "last_error_code": null,
+      "last_error": null,
+      "last_success_at": "2026-11-22T15:08:16Z",
+      "consecutive_errors": 0,
       "model_cooldown_until": {
-        "gemini-4-hydrogen": "2026-11-22T14:34:30Z"
+        "gemini-4-hydrogen": "2026-11-22T15:07:56Z"
       }
     },
     "KEY_3": {
@@ -123,48 +123,49 @@
       "slot": "KEY_4",
       "fingerprint": "27eb07c4",
       "date_utc": "2026-11-22",
-      "daily_calls": 12,
+      "daily_calls": 14,
       "cooldown_until": null,
       "exhausted_until": null,
       "model_exhausted_until": {},
-      "last_error_code": "TRANSIENT_ERROR",
-      "last_error": "ServerError: 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand ",
-      "last_success_at": "2026-11-22T13:42:55Z",
-      "consecutive_errors": 1,
+      "last_error_code": null,
+      "last_error": null,
+      "last_success_at": "2026-11-22T15:08:35Z",
+      "consecutive_errors": 0,
       "model_cooldown_until": {
-        "gemini-4-hydrogen": "2026-11-22T14:33:19Z"
+        "gemini-4-hydrogen": "2026-11-22T15:06:40Z"
       }
     },
     "KEY_5": {
       "slot": "KEY_5",
       "fingerprint": "5b1c687f",
       "date_utc": "2026-11-22",
-      "daily_calls": 12,
+      "daily_calls": 14,
       "cooldown_until": null,
       "exhausted_until": null,
       "model_exhausted_until": {},
       "last_error_code": "TRANSIENT_ERROR",
-      "last_error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status':",
+      "last_error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'The request timed out. Please try again.', 'status': 'DEADLIN",
       "last_success_at": "2026-11-22T13:38:06Z",
-      "consecutive_errors": 1,
+      "consecutive_errors": 3,
       "model_cooldown_until": {
-        "gemini-4-hydrogen": "2026-11-22T13:38:49Z"
+        "gemini-4-hydrogen": "2026-11-22T15:09:01Z",
+        "gemini-2.5-flash": "2026-11-22T15:11:29Z"
       }
     },
     "KEY_6": {
       "slot": "KEY_6",
       "fingerprint": "3ccfa6cf",
       "date_utc": "2026-11-22",
-      "daily_calls": 12,
+      "daily_calls": 14,
       "cooldown_until": null,
       "exhausted_until": null,
       "model_exhausted_until": {},
-      "last_error_code": "TRANSIENT_ERROR",
-      "last_error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status':",
-      "last_success_at": "2026-11-22T13:42:58Z",
-      "consecutive_errors": 1,
+      "last_error_code": null,
+      "last_error": null,
+      "last_success_at": "2026-11-22T15:12:02Z",
+      "consecutive_errors": 0,
       "model_cooldown_until": {
-        "gemini-4-hydrogen": "2026-11-22T14:36:53Z"
+        "gemini-4-hydrogen": "2026-11-22T15:10:15Z"
       }
     },
     "KEY_7": {
@@ -188,32 +189,32 @@
       "slot": "KEY_8",
       "fingerprint": "700d209b",
       "date_utc": "2026-11-22",
-      "daily_calls": 12,
+      "daily_calls": 14,
       "cooldown_until": null,
       "exhausted_until": null,
       "model_exhausted_until": {},
-      "last_error_code": "TRANSIENT_ERROR",
-      "last_error": "ServerError: 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand ",
-      "last_success_at": "2026-11-22T13:17:56Z",
-      "consecutive_errors": 1,
+      "last_error_code": null,
+      "last_error": null,
+      "last_success_at": "2026-11-22T15:10:54Z",
+      "consecutive_errors": 0,
       "model_cooldown_until": {
-        "gemini-4-hydrogen": "2026-11-22T14:37:03Z"
+        "gemini-4-hydrogen": "2026-11-22T15:08:58Z"
       }
     },
     "GOOGLE_API_KEY": {
       "slot": "GOOGLE_API_KEY",
       "fingerprint": "09c80db8",
       "date_utc": "2026-11-22",
-      "daily_calls": 12,
+      "daily_calls": 13,
       "cooldown_until": null,
       "exhausted_until": null,
       "model_exhausted_until": {},
-      "last_error_code": null,
-      "last_error": null,
+      "last_error_code": "TRANSIENT_ERROR",
+      "last_error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status':",
       "last_success_at": "2026-11-22T13:39:24Z",
-      "consecutive_errors": 0,
+      "consecutive_errors": 1,
       "model_cooldown_until": {
-        "gemini-4-hydrogen": "2026-11-22T13:37:41Z",
+        "gemini-4-hydrogen": "2026-11-22T15:10:13Z",
         "gemini-2.5-flash": "2026-11-22T05:54:04Z"
       }
     }
