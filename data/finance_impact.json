@@ -2,11 +2,11 @@
   "schema_version": "4.1",
   "generation_mode": "deterministic_volatility_calibrated",
   "quality_flags": [],
-  "generated_at": "2026-11-22T15:21:52+08:00",
-  "batch_id": "smart-20261122-152152",
+  "generated_at": "2026-11-22T16:26:00+08:00",
+  "batch_id": "smart-20261122-162600",
   "disclaimer": "模型边界提示：以下板块敏感区间基于结构化事件极性与 20 日实现波动率校准推演，并附当前真实/延迟行情对照，仅为研究参考，不构成任何投资买卖建议。",
   "disclaimer_en": "Model Notice: Sensitivity intervals use structured event polarity & realized volatility calibration alongside delayed market quotes for research only — not investment advice.",
-  "quotes_updated_at": "2026-11-22T15:26:49+08:00",
+  "quotes_updated_at": "2026-11-22T16:32:55+08:00",
   "index_quotes": [
     {
       "symbol": "sh000001",
@@ -87,308 +87,172 @@
       "source": "Tencent Finance (Delayed / Close)"
     }
   ],
-  "total_mapped_events": 16,
+  "total_mapped_events": 9,
   "event_impacts": [
     {
-      "id": "imp_evt_f29078944056",
-      "event_id": "evt_f29078944056",
-      "rule_id": "ai_ipo_pullback",
+      "id": "imp_evt_eb01979e75af",
+      "event_id": "evt_eb01979e75af",
+      "rule_id": "us_datacenter_tax_and_chip_curb",
       "validation_status": "verified",
       "validation_note": "结构化方向与资产敏感区间一致性校验通过",
-      "event_title": "Anthropic创纪录IPO后次日险些破发，纳指全周重挫10.02%且英伟达暴跌",
-      "event_title_en": "The Blame Game Has Begun Over Anthropic's Turbulent Trading Debut",
-      "event_summary": "人工智能公司Anthropic于美东时间周四在纳斯达克挂牌上市，发行价为每股83美元。公司最初通过公开发行募集813亿美元（打破SpaceX今年夏季750亿美元的IPO纪录），在承销商行使“绿鞋”超额配售选择权后，累计以每股83美元发行11.27亿股，总募资额达935亿美元。按11月20日收盘价计算，机构投资者亚马逊和谷歌所持股份合计价值约3300亿美元。",
-      "event_summary_en": "The AI giant's stock slid in its second day of trading, at one point dropping to just 5 cents above its IPO price.",
+      "event_title": "英伟达前 CEO 黄仁勋将赴美国参议院银行委员会公开作证，公司据悉被 SEC 调查",
+      "event_title_en": "Jensen Huang to testify publicly before Senate banking panel, Chairman Scott says",
+      "event_summary": "美国参议院银行委员会主席 Scott 表示，英伟达前首席执行官黄仁勋将出席该委员会听证会公开作证；此前黄仁勋因涉及一名疑似中国间谍的事件而在国会山受到广泛批评。另据财经媒体早报报道，英伟达据悉正遭美国证券交易委员会（SEC）调查。",
+      "event_summary_en": "Former Nvidia CEO Jensen Huang has faced a flurry of criticism on Capitol Hill in the wake of his involvement with a suspected Chinese spy.",
       "category": "finance",
-      "published_at": "2026-11-22T09:25:46+08:00",
-      "source_name": "WSJ Markets",
-      "source_url": "https://www.wsj.com/finance/stocks/the-blame-game-has-begun-over-anthropics-turbulent-trading-debut-280a34b1?mod=rss_markets_main",
+      "published_at": "2026-11-22T07:00:00+08:00",
+      "source_name": "CNBC Tech & AI",
+      "source_url": "https://www.cnbc.com/2026/11/20/jensen-huang-nvidia-senate-testimony.html",
       "sources": [
         {
-          "source_name": "WSJ Markets",
-          "url": "https://www.wsj.com/finance/stocks/the-blame-game-has-begun-over-anthropics-turbulent-trading-debut-280a34b1?mod=rss_markets_main"
+          "source_name": "CNBC Tech & AI",
+          "url": "https://www.cnbc.com/2026/11/20/jensen-huang-nvidia-senate-testimony.html"
         },
         {
-          "source_name": "WSJ Markets",
-          "url": "https://www.wsj.com/finance/stocks/anthropics-ipo-bust-punctuates-4-trillion-ai-wipeout-on-wall-street-f1f1ec90?mod=rss_markets_main"
+          "source_name": "CNBC Tech & AI",
+          "url": "https://www.cnbc.com/2026/11/20/treasury-secretary-scott-bessent.html"
         },
         {
-          "source_name": "WSJ Markets",
-          "url": "https://www.wsj.com/livecoverage/stock-market-today-dow-sp-500-nasdaq-11-20-2026?mod=rss_markets_main"
+          "source_name": "财联社 · 热门",
+          "url": "https://www.cls.cn/detail/2540862"
         }
       ],
-      "tag": "头部大模型 IPO 破发 / 估值重锚",
-      "tag_en": "AI IPO Valuation Pullback",
+      "tag": "海外数据中心重税 / 芯片限制与治理震荡",
+      "tag_en": "Data Center Tax, Export Curbs & Governance",
       "polarity": "bearish",
-      "intensity": 5,
-      "one_liner": "高估值大模型上市即逼近破发、二级市场对 AI 应用与烧钱亏损商业化兑现更加苛刻，软件应用与云生态短期估值受压。",
-      "one_liner_en": "Flagship LLM IPO slide near issue price cools primary & SaaS AI multiples while forcing monetization discipline.",
+      "intensity": 4,
+      "one_liner": "威胁对海外新建数据中心美企征重税、收紧芯片出口叠加龙头管理层震荡，直接冲击全球 AI 基建资本开支，倒逼国产替代加速。",
+      "one_liner_en": "Proposed overseas datacenter tax & tighter chip curbs hit global AI capex while supporting domestic foundry proxies.",
       "sample_basis": {
-        "sample_n": 13,
-        "volatility_pct": 4.82,
-        "volatility_source": "美股科技次新股与 QQQ 波动校准",
-        "horizon": "1~3 个交易日",
-        "confidence_label": "高置信（一二级估值直接锚定）",
-        "confidence_label_en": "High (IPO Valuation Anchor)"
+        "sample_n": 15,
+        "volatility_pct": 11.91,
+        "volatility_source": "美股算力制裁与关税冲击样本",
+        "horizon": "1~5 个交易日",
+        "confidence_label": "高置信（直击核心估值与供给端）",
+        "confidence_label_en": "High (Direct Capex & Export Shock)"
       },
       "affected_tickers": {
-        "QQQ": -0.65,
-        "IXIC": -0.6,
-        "HSTECH.HK": -0.6,
-        "00700.HK": -0.35,
-        "515880.SH": -0.4,
-        "601398.SH": 0.25
+        "NVDA": -0.9,
+        "TSM": -0.7,
+        "AMD": -0.65,
+        "00981.HK": 0.65,
+        "512480.SH": 0.7
       },
       "realized_quotes": [
         {
-          "ticker": "IXIC",
-          "name": "纳斯达克",
-          "name_en": "NASDAQ Composite",
+          "ticker": "NVDA",
+          "name": "英伟达",
+          "name_en": "NVIDIA",
           "market": "美股",
-          "price": 22617.73,
-          "pct_change": -5.28
+          "price": 125.53,
+          "pct_change": -14.01
         },
         {
-          "ticker": "QQQ",
-          "name": "纳指100ETF",
-          "name_en": "Invesco QQQ",
+          "ticker": "TSM",
+          "name": "台积电",
+          "name_en": "TSMC",
           "market": "美股",
-          "price": 608.45,
-          "pct_change": -5.67
+          "price": 318.71,
+          "pct_change": -9.48
         },
         {
-          "ticker": "HSTECH.HK",
-          "name": "恒生科指",
-          "name_en": "Hang Seng Tech",
+          "ticker": "00981.HK",
+          "name": "中芯国际",
+          "name_en": "SMIC",
           "market": "港股",
-          "price": 3511.14,
-          "pct_change": -3.78
+          "price": 49.12,
+          "pct_change": -2.73
+        },
+        {
+          "ticker": "512480.SH",
+          "name": "A股半导体ETF",
+          "name_en": "CN Semi ETF",
+          "market": "A股",
+          "price": 0.745,
+          "pct_change": -4.36
         }
       ],
       "bars": [
         {
           "market": "美股",
-          "sector": "AI 大模型与企业级 SaaS 软件 (QQQ / App)",
-          "sector_en": "US AI Foundation & Enterprise SaaS",
-          "pct_low": -6.2,
-          "pct_high": -2.3,
+          "sector": "美股 GPU 与海外建厂链 (NVDA / TSM)",
+          "sector_en": "US AI Hardware & Foundries (NVDA/TSM)",
+          "pct_low": -5.1,
+          "pct_high": -1.8,
           "direction": "negative",
-          "proxy_ticker": "QQQ",
-          "logic": "一线大模型次新上市承压直接触发高 PS 倍数 AI 应用股估值下修。",
-          "logic_en": "Secondary pressure on marquee AI IPO triggers multiple compression in AI SaaS."
+          "proxy_ticker": "NVDA",
+          "logic": "治理变动与出口及海外数据中心税收威胁叠加压制估值。",
+          "logic_en": "Export limits, overseas capex tax threats & leadership risk weigh on semis."
         },
         {
           "market": "港股",
-          "sector": "港股大模型生态与云计算 (HSTECH / 00700)",
-          "sector_en": "HKEX AI Cloud & Apps (HSTECH)",
-          "pct_low": -3.5,
-          "pct_high": -1.1,
-          "direction": "negative",
-          "proxy_ticker": "HSTECH.HK",
-          "logic": "一级市场估值锚松动压制港股 AI 应用与商业化平台溢价。",
-          "logic_en": "Lower global LLM valuation benchmarks weigh on HK cloud/AI ecosystems."
-        },
-        {
-          "market": "A股",
-          "sector": "AI 大模型应用 / 通用 SaaS 概念",
-          "sector_en": "A-Share AI Apps & SaaS",
-          "pct_low": -2.9,
-          "pct_high": -0.8,
-          "direction": "negative",
-          "proxy_ticker": null,
-          "logic": "高估值纯概念应用板块受情绪外溢回吐，但现金流硬件相对企稳。",
-          "logic_en": "Story-driven domestic AI application names pull back with overseas IPO weakness."
-        },
-        {
-          "market": "A股",
-          "sector": "高股息红利 / 现金流资产防御",
-          "sector_en": "A-Share High-Dividend Cashflow",
-          "pct_low": 0.4,
-          "pct_high": 1.3,
+          "sector": "港股芯片自主制造 (00981.HK 中芯)",
+          "sector_en": "HKEX Domestic Foundry (00981.HK)",
+          "pct_low": 0.9,
+          "pct_high": 3.3,
           "direction": "positive",
-          "proxy_ticker": "601398.SH",
-          "logic": "成长溢价挤泡沫期间，高股息低估值资产吸引避险配置。",
-          "logic_en": "Defensives attract rotation during growth valuation digestion."
+          "proxy_ticker": "00981.HK",
+          "logic": "高端进口限制收紧进一步锁定境内晶圆制造份额。",
+          "logic_en": "Tighter US curbs solidify domestic wafer fab utilization expectations."
+        },
+        {
+          "market": "A股",
+          "sector": "国产半导体设备 / 算力自主可控",
+          "sector_en": "A-Share Domestic Semi Equipment",
+          "pct_low": 1.1,
+          "pct_high": 3.6,
+          "direction": "positive",
+          "proxy_ticker": "512480.SH",
+          "logic": "进口替代刚性提升，光刻/刻蚀设备与本土算力获事件催化。",
+          "logic_en": "Localization urgency lifts domestic semiconductor equipment names."
         }
       ],
       "if_then": [
         {
-          "cond": "若上市首周跌破发行价引发承销护盘失效",
-          "result": "一二级 AI 融资估值折价传导至港股/美股软件应用",
+          "cond": "若白宫正式签发海外数据中心关税行政令",
+          "result": "跨国云厂基建节奏放缓，美股算力硬件承压加深",
           "tone": "bearish"
         },
         {
-          "cond": "若企业级 ARR 签约增速公告超预期带动止跌企稳",
-          "result": "头部 AI 平台估值中枢重新锚定",
+          "cond": "若英伟达董事会明确过渡安排并澄清核心技术研发不受影响",
+          "result": "治理恐慌折价逐步修复",
           "tone": "neutral"
         }
       ],
       "milestones": [
         {
-          "date": "未来 3 个交易日",
+          "date": "两周内",
           "status": "current",
-          "label": "观察发行价保卫战成交量与做空仓位变化"
+          "label": "英伟达治理公告与美国商务部出口税则细则"
         }
       ]
     },
     {
-      "id": "imp_evt_e5db2f590686",
-      "event_id": "evt_e5db2f590686",
-      "rule_id": "us_china_diplomacy_friction",
-      "validation_status": "verified",
-      "validation_note": "结构化方向与资产敏感区间一致性校验通过",
-      "event_title": "特朗普结束中美俄三方会晤返美后，威胁对海外建数据中心美企征收“巨额关税”",
-      "event_title_en": "APEC final day in photos: Trump, Xi and Putin shake hands; Takaichi kept at a distance",
-      "event_summary": "美国总统特朗普在APEC峰会期间于中国与国家主席习近平、俄罗斯总统普京举行历史性三方会晤后返回华盛顿。他在白宫发表讲话时誓言将阻止美国企业在海外建设数据中心，并威胁对相关海外建设项目征收“巨额关税”（tremendous tax）。",
-      "event_summary_en": "Leaders gathered Thursday for the second day of the economic summit, ahead of a historic trilateral meeting between the U.S., Russia and China.",
-      "category": "finance",
-      "published_at": "2026-11-21T04:47:58+08:00",
-      "source_name": "CNBC Top News",
-      "source_url": "https://www.cnbc.com/2026/11/19/trump-xi-putin-photos-us-china-russia-trilateral-.html",
-      "sources": [
-        {
-          "source_name": "CNBC Top News",
-          "url": "https://www.cnbc.com/2026/11/19/trump-xi-putin-photos-us-china-russia-trilateral-.html"
-        },
-        {
-          "source_name": "CNBC Top News",
-          "url": "https://www.cnbc.com/2026/11/20/trump-data-centers-ai-companies-tax.html"
-        }
-      ],
-      "tag": "中美关税贸易博弈",
-      "tag_en": "US-China Diplomacy & Trade Tone",
-      "polarity": "divergent",
-      "intensity": 3,
-      "one_liner": "中美元首深圳会晤释放对话稳定信号，有助缓和地缘风险溢价，短期利好中概互联、港股权重及出口链估值修复。",
-      "one_liner_en": "Constructive US-China APEC summit tone compresses risk premia across China ADRs, HKEX tech, and exporters.",
-      "sample_basis": {
-        "sample_n": 19,
-        "volatility_pct": 2.35,
-        "volatility_source": "中概 KWEB 外交缓和窗口统计",
-        "horizon": "2~7 个交易日",
-        "confidence_label": "高置信（直接风偏锚定）",
-        "confidence_label_en": "High (Direct Risk-Premium Anchor)"
-      },
-      "affected_tickers": {
-        "KWEB": 0.9,
-        "HSTECH.HK": 0.85,
-        "00700.HK": 0.75
-      },
-      "realized_quotes": [
-        {
-          "ticker": "KWEB",
-          "name": "中概互联ETF",
-          "name_en": "KraneShares KWEB",
-          "market": "美股",
-          "price": 20.72,
-          "pct_change": -2.77
-        },
-        {
-          "ticker": "HSTECH.HK",
-          "name": "恒生科指",
-          "name_en": "Hang Seng Tech",
-          "market": "港股",
-          "price": 3511.14,
-          "pct_change": -3.78
-        },
-        {
-          "ticker": "00700.HK",
-          "name": "腾讯控股",
-          "name_en": "Tencent",
-          "market": "港股",
-          "price": 344.0,
-          "pct_change": -1.26
-        },
-        {
-          "ticker": "000001.SH",
-          "name": "上证指数",
-          "name_en": "SSE Composite",
-          "market": "A股",
-          "price": 3533.79,
-          "pct_change": -1.23
-        }
-      ],
-      "bars": [
-        {
-          "market": "美股",
-          "sector": "中概互联资产 (KWEB)",
-          "sector_en": "US-Listed China Tech (KWEB)",
-          "pct_low": 1.5,
-          "pct_high": 3.9,
-          "direction": "positive",
-          "proxy_ticker": "KWEB",
-          "logic": "中美关系底部托底预期带动外资空头回补与估值折价收敛。",
-          "logic_en": "Stabilizing diplomatic floor triggers ADR short-covering and multiple expansion."
-        },
-        {
-          "market": "港股",
-          "sector": "恒生科指与外资权重 (00700 / HSTECH)",
-          "sector_en": "HKEX Tech Leaders (HSTECH / 00700)",
-          "pct_low": 1.5,
-          "pct_high": 3.8,
-          "direction": "positive",
-          "proxy_ticker": "HSTECH.HK",
-          "logic": "离岸中国资产对中美风险溢价改善弹性最高。",
-          "logic_en": "Offshore HK tech leaders capture strongest risk-premium compression."
-        },
-        {
-          "market": "A股",
-          "sector": "出口链 / 消费电子与航运",
-          "sector_en": "A-Share Exporters & Consumer Electronics",
-          "pct_low": 1.2,
-          "pct_high": 3.2,
-          "direction": "positive",
-          "proxy_ticker": null,
-          "logic": "贸易关税担忧边际降温提升对美敞口制造业估值。",
-          "logic_en": "Tariff-deescalation expectations support export manufacturing."
-        }
-      ],
-      "if_then": [
-        {
-          "cond": "若后续正式联合公报确认推进关税豁免或常态化经贸对话",
-          "result": "外资持续回流港股与中概核心权重",
-          "tone": "bullish"
-        },
-        {
-          "cond": "若会晤后实质科技及资本限制未见松动",
-          "result": "风偏修复仅限短线情绪行情",
-          "tone": "neutral"
-        }
-      ],
-      "milestones": [
-        {
-          "date": "会晤后 72 小时",
-          "status": "current",
-          "label": "双方外交与财政部门跟进文本公布"
-        }
-      ]
-    },
-    {
-      "id": "imp_evt_12d950b54437",
-      "event_id": "evt_12d950b54437",
+      "id": "imp_evt_d1d094a6f014",
+      "event_id": "evt_d1d094a6f014",
       "rule_id": "central_bank_hawkish",
       "validation_status": "verified",
       "validation_note": "结构化方向与资产敏感区间一致性校验通过",
-      "event_title": "美国10月PCE通胀预期升至3.8%叠加美联储理事库克鹰派发声，加息预期升温",
+      "event_title": "美联储加息预期升温：理事库克呼吁立即加息，美国 10 月 PCE 通胀料升至 3.8%",
       "event_title_en": "U.S. October PCE inf seen rising to 3.8%, lifting December Fed hike bets",
-      "event_summary": "彭博社调查显示，经济学家预计下周三公布的美国10月经通胀调整后个人消费支出环比增长0.1%，10月PCE物价指数同比涨幅预计升至3.8%，接近美联储2%目标的两倍；另有机构预期核心PCE同比增速将由3.1%升至3.2%以上，该数据将与美国三季度GDP修正值同日公布。此前，美联储理事库克在公开讲话中释放鹰派信号，表示需要立即进一步加息，并称滞后行动的代价更大。",
+      "event_summary": "美联储理事库克表态需立即进一步加息，指出滞后行动代价更大；同期市场调查显示逾八成经济学家预计美联储将再次加息，并在明年 3 月底前有望继续出手。下周公布的美国 10 月个人消费支出（PCE）物价指数接受彭博调查的预期为同比上涨 3.8%，且假期消费前美国消费者支出仍保持强劲（经通胀调整的 10 月 PCE 预计环比增长 0.1%），推升了对美联储 12 月加息的押注。",
       "event_summary_en": "【U.S. October PCE inf seen rising to 3.8%, lifting December Fed hike bets】U.S. consumers are expected to maintain strong spending ahead of the holiday shopping season, with inflation pressure yet to curb outlays. Economists surveyed by Bloomberg see inflation-",
       "category": "finance",
-      "published_at": "2026-11-22T14:01:09+08:00",
-      "source_name": "华尔街见闻 · 资讯",
-      "source_url": "https://wallstreetcn.com/articles/3786441",
+      "published_at": "2026-11-22T14:55:41+08:00",
+      "source_name": "新闻电讯",
+      "source_url": "https://news.google.com/rss/articles/CBMiSEFVX3lxTE5nSzhUejBMbnZicU90UGsydDd3T1QwUGdCZGZnMWI3bG1hOVNCNmlzWC03d3pKSWtLWjd6R3R6MXlxeHI4MWZMLQ?oc=5",
       "sources": [
         {
-          "source_name": "华尔街见闻 · 资讯",
-          "url": "https://wallstreetcn.com/articles/3786441"
+          "source_name": "新闻电讯",
+          "url": "https://news.google.com/rss/articles/CBMiSEFVX3lxTE5nSzhUejBMbnZicU90UGsydDd3T1QwUGdCZGZnMWI3bG1hOVNCNmlzWC03d3pKSWtLWjd6R3R6MXlxeHI4MWZMLQ?oc=5"
         },
         {
-          "source_name": "金十数据",
-          "url": "https://flash.jin10.com/detail/20261122140104042800"
+          "source_name": "新闻电讯",
+          "url": "https://news.google.com/rss/articles/CBMiSEFVX3lxTE9PRXFTMjJMVXpldlgzeFVJNXdiMVlrdGJENjdxXzhwQm1HdHFVd2poeEIyekN5a1NpQy1Xb0dFZnRDRjc3MWRrQQ?oc=5"
         },
         {
-          "source_name": "MKTNews 快讯",
-          "url": "https://mktnews.net/flashDetail.html?id=01a201d8-1be1-7bbc-aca3-4a55006fc0ae"
+          "source_name": "新闻电讯",
+          "url": "https://news.google.com/rss/articles/CBMickFVX3lxTE8yeE9Ldlk1SVNGd0NTVVV6LWJYX2NiTzkzZm5JU3VMSE05YzFkZ1kyZllJQ3FBcDViem9jRGZNVmxYRmNWT3g2ZmctYV9ONEt6SUdzX01DbU42OFQwbm1ycGpwRXFPSHpxOHd0V3A3WmFDZw?oc=5"
         }
       ],
       "tag": "美联储鹰派加息 / 流动性收紧",
@@ -514,160 +378,59 @@
       ]
     },
     {
-      "id": "imp_evt_ea9e3d2885ce",
-      "event_id": "evt_ea9e3d2885ce",
-      "rule_id": "insufficient_evidence",
-      "validation_status": "insufficient_evidence",
-      "validation_note": "该事件缺少可验证的历史股票传导渠道，暂不强行套用模板。",
-      "event_title": "战事损及基础设施致能源供应承压，伊朗22日起实施轮流限电并拟通过证交所售油",
-      "event_title_en": "War disrupts energy supply; Iran to impose power cuts",
-      "event_summary": "据伊朗官方媒体报道，由于中东地区战事导致关键基础设施受损并加剧能源危机，伊朗国家电力公司负责人穆罕默德·拉达德表示，该国自11月22日起实施配电限制措施，方案为每两天停电约两小时或每日最长停电两小时（视地区而异）。同时，伊朗国家审计法院强调有必要加强燃料储备管理以保障寒冷季节发电厂燃料供应。另据伊朗劳工新闻通讯社报道，伊朗石油部代理部长哈米德·博尔德表示，伊朗已做好准备，未来几天将利用证券交易所平台出售石油。",
-      "event_summary_en": "【War disrupts energy supply; Iran to impose power cuts】Iran will begin rolling power cuts on the 22nd as regional conflict damages critical infrastructure and worsens the energy crisis, state media reported. The head of the National Iranian Power Company, Moha",
-      "category": "finance",
-      "published_at": "2026-11-22T14:34:08+08:00",
-      "source_name": "华尔街见闻 · 快讯",
-      "source_url": "https://wallstreetcn.com/livenews/3203716",
-      "sources": [
-        {
-          "source_name": "华尔街见闻 · 快讯",
-          "url": "https://wallstreetcn.com/livenews/3203716"
-        },
-        {
-          "source_name": "MKTNews 快讯",
-          "url": "https://mktnews.net/flashDetail.html?id=01a201a4-1a94-7bbc-aca3-1ae4b69692dc"
-        },
-        {
-          "source_name": "金十数据",
-          "url": "https://flash.jin10.com/detail/20261122143408964800"
-        }
-      ],
-      "tag": "暂无可靠量化推演",
-      "tag_en": "No Reliable Quantitative Model",
-      "polarity": "divergent",
-      "intensity": 1,
-      "one_liner": "该事件缺少可验证的历史股票传导渠道，暂不强行套用模板。",
-      "one_liner_en": "Insufficient historical transmission confidence; numeric forecasts withheld to avoid misleading estimates.",
-      "sample_basis": null,
-      "affected_tickers": {},
-      "realized_quotes": [],
-      "bars": [],
-      "if_then": [],
-      "milestones": []
-    },
-    {
-      "id": "imp_evt_f5f2d157a956",
-      "event_id": "evt_f5f2d157a956",
-      "rule_id": "insufficient_evidence",
-      "validation_status": "insufficient_evidence",
-      "validation_note": "该事件缺少可验证的历史股票传导渠道，暂不强行套用模板。",
-      "event_title": "马斯克警告AI行业明年恐因算力变现滞后遭遇数千亿美元资金缺口",
-      "event_title_en": "Musk warns AI industry may face severe funding shortfall next year, need hundreds of billions in additional capital",
-      "event_summary": "11月22日，针对深度学习开源项目Keras创始人弗朗索瓦·肖莱在社交平台上提出的“AI算力需求见顶或为买入机会”的观点，马斯克回应称，大规模算力设备的通电、冷却和稳定运行极其困难，人工智能行业明年可能面临严重的资金短缺。马斯克指出，如果全行业从支付算力成本到设备稳定创收的时间累计推迟数月，仅营运资金就可能需要额外投入数千亿美元。",
-      "event_summary_en": "【Musk warns AI industry may face severe funding shortfall next year, need hundreds of billions in additional capital】On Nov. 22, Keras founder François Chollet said investors must either believe the AI infrastructure buildout is over, the boom is a short-lived",
-      "category": "finance",
-      "published_at": "2026-11-22T13:03:09+08:00",
-      "source_name": "金十数据",
-      "source_url": "https://flash.jin10.com/detail/20261122130305122800",
-      "sources": [
-        {
-          "source_name": "金十数据",
-          "url": "https://flash.jin10.com/detail/20261122130305122800"
-        },
-        {
-          "source_name": "MKTNews 快讯",
-          "url": "https://mktnews.net/flashDetail.html?id=01a201a2-ffaa-7bbc-aca3-10653d758d13"
-        }
-      ],
-      "tag": "暂无可靠量化推演",
-      "tag_en": "No Reliable Quantitative Model",
-      "polarity": "divergent",
-      "intensity": 1,
-      "one_liner": "该事件缺少可验证的历史股票传导渠道，暂不强行套用模板。",
-      "one_liner_en": "Insufficient historical transmission confidence; numeric forecasts withheld to avoid misleading estimates.",
-      "sample_basis": null,
-      "affected_tickers": {},
-      "realized_quotes": [],
-      "bars": [],
-      "if_then": [],
-      "milestones": []
-    },
-    {
-      "id": "imp_evt_109add674d7d",
-      "event_id": "evt_109add674d7d",
-      "rule_id": "insufficient_evidence",
-      "validation_status": "insufficient_evidence",
-      "validation_note": "该事件缺少可验证的历史股票传导渠道，暂不强行套用模板。",
-      "event_title": "美国洛杉矶及长滩港劳资达成临时协议，码头安保人员罢工威胁暂缓",
-      "event_title_en": "美国洛杉矶及长滩港劳资达成临时协议，码头安保人员罢工威胁暂缓",
-      "event_summary": "太平洋海事协会（PMA）与国际码头和仓库工会（ILWU）第26分会就洛杉矶港和长滩港约250名安保人员的新劳资合同条款达成临时协议，暂时解除了可能导致重大运营中断的罢工威胁。该临时协议尚需获得第26分会成员投票批准，在等待批准期间现行合同将予以延长。PMA此前估算，受影响码头的运营中断将波及长滩港约85%的货物吞吐量及洛杉矶港三分之一的货物。",
-      "event_summary_en": "太平洋海事协会（PMA）与国际码头和仓库工会（ILWU）第26分会就洛杉矶港和长滩港约250名安保人员的新劳资合同条款达成临时协议，暂时解除了可能导致重大运营中断的罢工威胁。该临时协议尚需获得第26分会成员投票批准，在等待批准期间现行合同将予以延长。PMA此前估算，受影响码头的运营中断将波及长滩港约85%的货物吞吐量及洛杉矶港三分之一的货物。",
-      "category": "finance",
-      "published_at": "2026-11-21T19:56:14+08:00",
-      "source_name": "华尔街见闻 美股快讯",
-      "source_url": "https://wallstreetcn.com/livenews/3203671",
-      "sources": [
-        {
-          "source_name": "华尔街见闻 美股快讯",
-          "url": "https://wallstreetcn.com/livenews/3203671"
-        }
-      ],
-      "tag": "暂无可靠量化推演",
-      "tag_en": "No Reliable Quantitative Model",
-      "polarity": "divergent",
-      "intensity": 1,
-      "one_liner": "该事件缺少可验证的历史股票传导渠道，暂不强行套用模板。",
-      "one_liner_en": "Insufficient historical transmission confidence; numeric forecasts withheld to avoid misleading estimates.",
-      "sample_basis": null,
-      "affected_tickers": {},
-      "realized_quotes": [],
-      "bars": [],
-      "if_then": [],
-      "milestones": []
-    },
-    {
-      "id": "imp_evt_74124d519983",
-      "event_id": "evt_74124d519983",
-      "rule_id": "us_datacenter_tax_and_chip_curb",
+      "id": "imp_evt_d3636c15c6ad",
+      "event_id": "evt_d3636c15c6ad",
+      "rule_id": "ai_equity_selloff",
       "validation_status": "verified",
       "validation_note": "结构化方向与资产敏感区间一致性校验通过",
-      "event_title": "前英伟达CEO黄仁勋将赴美国参议院银行委员会公开作证",
-      "event_title_en": "Jensen Huang to testify publicly before Senate banking panel, Chairman Scott says",
-      "event_summary": "美国参议院银行委员会主席蒂姆·斯科特表示，前英伟达首席执行官黄仁勋将出席参议院银行委员会的公开听证会作证。报道称，此前黄仁勋因涉及与一名涉嫌中国间谍人员的往来而在国会山面临一系列批评。",
-      "event_summary_en": "Former Nvidia CEO Jensen Huang has faced a flurry of criticism on Capitol Hill in the wake of his involvement with a suspected Chinese spy.",
+      "event_title": "现货黄金跌近3500美元创14个月新低，纳指跌超5%、英伟达跌14%及BTC跌破6万美元",
+      "event_title_en": "现货黄金跌近3500美元创14个月新低，纳指跌超5%、英伟达跌14%及BTC跌破6万美元",
+      "event_summary": "11月21日，现货黄金价格贴近3500美元/盎司，创近14个月新低，国内积存金价格跌至7字头，国内多家品牌宣布下调金饰克价，工商银行等多家银行发布紧急提示建议合理控制持仓规模。市场同步出现跨资产下挫，纳指跌超5%、英伟达跌14%（另有市场消息称其股价相较上月接近腰斩）、BTC跌破6万美元。金价回调下国内线下与批发端表现分化，郑州线下金店客流暴增至单日下单量突破1000多单刷新今年记录，而深圳水贝有商家称亏损两三百万元。",
+      "event_summary_en": "%3A%2F%2Ffinance.sina.com.cn%2Fstock%2Fusstock%2Fc%2F2026-11-21%2Fdoc-inizmruv0035217.shtml",
       "category": "finance",
-      "published_at": "2026-11-21T06:08:41+08:00",
-      "source_name": "CNBC Tech & AI",
-      "source_url": "https://www.cnbc.com/2026/11/20/jensen-huang-nvidia-senate-testimony.html",
+      "published_at": "2026-11-22T16:25:36+08:00",
+      "source_name": "百度热搜",
+      "source_url": "https://www.baidu.com/s?wd=%E9%87%91%E4%BB%B7%E8%B7%8C%E5%8A%BF%E5%87%8C%E5%8E%89+%E5%A4%9A%E5%AE%B6%E9%93%B6%E8%A1%8C%E5%8F%91%E7%B4%A7%E6%80%A5%E6%8F%90%E7%A4%BA",
       "sources": [
         {
-          "source_name": "CNBC Tech & AI",
-          "url": "https://www.cnbc.com/2026/11/20/jensen-huang-nvidia-senate-testimony.html"
+          "source_name": "百度热搜",
+          "url": "https://www.baidu.com/s?wd=%E9%87%91%E4%BB%B7%E8%B7%8C%E5%8A%BF%E5%87%8C%E5%8E%89+%E5%A4%9A%E5%AE%B6%E9%93%B6%E8%A1%8C%E5%8F%91%E7%B4%A7%E6%80%A5%E6%8F%90%E7%A4%BA"
         },
         {
-          "source_name": "CNBC Tech & AI",
-          "url": "https://www.cnbc.com/2026/11/20/treasury-secretary-scott-bessent.html"
+          "source_name": "今日头条",
+          "url": "https://www.toutiao.com/trending/7710848438560099878"
+        },
+        {
+          "source_name": "知乎热榜",
+          "url": "https://www.zhihu.com/question/2107407389817321423"
         }
       ],
-      "tag": "海外数据中心重税 / 芯片限制与治理震荡",
-      "tag_en": "Data Center Tax, Export Curbs & Governance",
+      "tag": "AI 算力与科技估值抛压",
+      "tag_en": "AI Equity Valuation Selloff",
       "polarity": "bearish",
-      "intensity": 4,
-      "one_liner": "威胁对海外新建数据中心美企征重税、收紧芯片出口叠加龙头管理层震荡，直接冲击全球 AI 基建资本开支，倒逼国产替代加速。",
-      "one_liner_en": "Proposed overseas datacenter tax & tighter chip curbs hit global AI capex while supporting domestic foundry proxies.",
+      "intensity": 3,
+      "one_liner": "核心 AI 算力龙头放量下挫，触发纳指与港股/A股算力链同步去杠杆，红利防御资产相对抗跌。",
+      "one_liner_en": "Flagship AI compute plunge triggers risk-off repricing across US/HK/A-Share compute chains.",
       "sample_basis": {
-        "sample_n": 15,
+        "sample_n": 18,
         "volatility_pct": 11.91,
-        "volatility_source": "美股算力制裁与关税冲击样本",
-        "horizon": "1~5 个交易日",
-        "confidence_label": "高置信（直击核心估值与供给端）",
-        "confidence_label_en": "High (Direct Capex & Export Shock)"
+        "volatility_source": "NVDA / 纳指实现波动率校准",
+        "horizon": "1~3 个交易日",
+        "confidence_label": "高置信（直接板块联动）",
+        "confidence_label_en": "High (Direct Sector Beta)"
       },
       "affected_tickers": {
-        "NVDA": -0.9,
-        "TSM": -0.7,
-        "AMD": -0.65,
-        "00981.HK": 0.65,
-        "512480.SH": 0.7
+        "NVDA": -1.0,
+        "AMD": -0.85,
+        "TSM": -0.75,
+        "INTC": -0.6,
+        "QQQ": -0.8,
+        "IXIC": -0.8,
+        "HSTECH.HK": -0.7,
+        "00700.HK": -0.4,
+        "00981.HK": -0.45,
+        "512480.SH": -0.55,
+        "515880.SH": -0.65
       },
       "realized_quotes": [
         {
@@ -679,20 +442,20 @@
           "pct_change": -14.01
         },
         {
-          "ticker": "TSM",
-          "name": "台积电",
-          "name_en": "TSMC",
+          "ticker": "IXIC",
+          "name": "纳斯达克",
+          "name_en": "NASDAQ Composite",
           "market": "美股",
-          "price": 318.71,
-          "pct_change": -9.48
+          "price": 22617.73,
+          "pct_change": -5.28
         },
         {
-          "ticker": "00981.HK",
-          "name": "中芯国际",
-          "name_en": "SMIC",
+          "ticker": "HSTECH.HK",
+          "name": "恒生科指",
+          "name_en": "Hang Seng Tech",
           "market": "港股",
-          "price": 49.12,
-          "pct_change": -2.73
+          "price": 3511.14,
+          "pct_change": -3.78
         },
         {
           "ticker": "512480.SH",
@@ -706,84 +469,353 @@
       "bars": [
         {
           "market": "美股",
-          "sector": "美股 GPU 与海外建厂链 (NVDA / TSM)",
-          "sector_en": "US AI Hardware & Foundries (NVDA/TSM)",
-          "pct_low": -5.1,
-          "pct_high": -1.8,
+          "sector": "AI 算力龙头 (NVDA / AMD / QQQ)",
+          "sector_en": "US AI Chips & Nasdaq (NVDA/QQQ)",
+          "pct_low": -4.9,
+          "pct_high": -2.0,
           "direction": "negative",
           "proxy_ticker": "NVDA",
-          "logic": "治理变动与出口及海外数据中心税收威胁叠加压制估值。",
-          "logic_en": "Export limits, overseas capex tax threats & leadership risk weigh on semis."
+          "logic": "高估值算力核心权重放量回撤，直接压制费半及纳指风险偏好。",
+          "logic_en": "Direct valuation compression on US flagship AI semis and Nasdaq."
         },
         {
           "market": "港股",
-          "sector": "港股芯片自主制造 (00981.HK 中芯)",
-          "sector_en": "HKEX Domestic Foundry (00981.HK)",
-          "pct_low": 0.9,
-          "pct_high": 3.3,
-          "direction": "positive",
-          "proxy_ticker": "00981.HK",
-          "logic": "高端进口限制收紧进一步锁定境内晶圆制造份额。",
-          "logic_en": "Tighter US curbs solidify domestic wafer fab utilization expectations."
+          "sector": "恒生科指与大模型生态 (HSTECH / 00700)",
+          "sector_en": "HK Tech & AI Ecosystem (HSTECH)",
+          "pct_low": -3.7,
+          "pct_high": -1.2,
+          "direction": "negative",
+          "proxy_ticker": "HSTECH.HK",
+          "logic": "外资风险预算收缩时，港股科技权重通常跟随纳指承压。",
+          "logic_en": "Foreign risk-off flows weigh on HKEX tech heavyweight multiples."
         },
         {
           "market": "A股",
-          "sector": "国产半导体设备 / 算力自主可控",
-          "sector_en": "A-Share Domestic Semi Equipment",
-          "pct_low": 1.1,
-          "pct_high": 3.6,
+          "sector": "CPO 光模块 / 算力硬件映射",
+          "sector_en": "A-Share Optical / AI Hardware",
+          "pct_low": -4.7,
+          "pct_high": -1.5,
+          "direction": "negative",
+          "proxy_ticker": "515880.SH",
+          "logic": "北美算力资本开支映射承压，短期交易情绪跟随海外龙头回落。",
+          "logic_en": "North American capex proxies retrace alongside US AI hardware peers."
+        },
+        {
+          "market": "A股",
+          "sector": "高股息红利 / 国有大行防御",
+          "sector_en": "A-Share High-Dividend Defense",
+          "pct_low": 0.2,
+          "pct_high": 0.9,
           "direction": "positive",
-          "proxy_ticker": "512480.SH",
-          "logic": "进口替代刚性提升，光刻/刻蚀设备与本土算力获事件催化。",
-          "logic_en": "Localization urgency lifts domestic semiconductor equipment names."
+          "proxy_ticker": "601398.SH",
+          "logic": "成长赛道剧烈波动期间，资金倾向回流低波红利与高股息银行。",
+          "logic_en": "Capital rotates toward low-volatility dividend value during tech drawdowns."
         }
       ],
       "if_then": [
         {
-          "cond": "若白宫正式签发海外数据中心关税行政令",
-          "result": "跨国云厂基建节奏放缓，美股算力硬件承压加深",
+          "cond": "若纳指/英伟达次日止跌企稳且未现机构连续砍单验证",
+          "result": "算力链情绪脉冲消化后关注业绩兑现标的",
+          "tone": "neutral"
+        },
+        {
+          "cond": "若下跌伴随大厂下调来年 Capex 指引或更多 IPO 破发",
+          "result": "科技成长估值中枢下移，防御仓位占优",
+          "tone": "bearish"
+        }
+      ],
+      "milestones": [
+        {
+          "date": "次日美股开盘",
+          "status": "current",
+          "label": "观察 NVDA / QQQ 成交量与机构承接力"
+        },
+        {
+          "date": "未来 2 周",
+          "status": "upcoming",
+          "label": "跟踪 CSP 云巨头资本开支指引是否松动"
+        }
+      ]
+    },
+    {
+      "id": "imp_evt_9ee67b73cf7b",
+      "event_id": "evt_9ee67b73cf7b",
+      "rule_id": "precious_metals_selloff",
+      "validation_status": "verified",
+      "validation_note": "结构化方向与资产敏感区间一致性校验通过",
+      "event_title": "贵金属剧烈震荡：菜百股份及 4 家银行提示风险，莫迪称印度民众少买金避损",
+      "event_title_en": "Caibai flags heightened precious metals market volatility",
+      "event_summary": "11 月 22 日菜百股份发布贵金属市场波动风险提示，称近期受多重因素影响，贵金属价格波动显著加剧、不确定性上升，呼吁顾客树立理性稳健的配置理念并注意价格波动风险；同时有 4 家银行提示贵金属业务市场风险，多家黄金零售方宣布下调金饰克价。此外，印度总理莫迪 11 月 21 日在北方邦勒克瑙出席活动时表示，近期金价大幅下跌，许多听从他此前“非必要一年内不要购买黄金”呼吁的印度民众避免了损失。",
+      "event_summary_en": "【Caibai flags heightened precious metals market volatility】Caibai Co. warned on Nov. 22 that precious metals price volatility has increased significantly amid multiple factors, with uncertainty rising. It urged customers to invest prudently, recognize market r",
+      "category": "finance",
+      "published_at": "2026-11-22T15:53:47+08:00",
+      "source_name": "金十数据",
+      "source_url": "https://flash.jin10.com/detail/20261122155342721800",
+      "sources": [
+        {
+          "source_name": "金十数据",
+          "url": "https://flash.jin10.com/detail/20261122155342721800"
+        },
+        {
+          "source_name": "MKTNews 快讯",
+          "url": "https://mktnews.net/flashDetail.html?id=01a2023f-38bc-7bbc-aca3-cebf9712cd45"
+        }
+      ],
+      "tag": "贵金属剧震与杠杆去化",
+      "tag_en": "Precious Metals Selloff",
+      "polarity": "bearish",
+      "intensity": 3,
+      "one_liner": "国际金银遭遇获利盘践踏与保证金去杠杆，国内银行紧急提示风险，贵金属采掘与金饰链短线明显承压。",
+      "one_liner_en": "Sharp bullion drawdown & bank risk warnings weigh on gold miners and precious-metal ETFs.",
+      "sample_basis": {
+        "sample_n": 16,
+        "volatility_pct": 3.69,
+        "volatility_source": "518880 黄金ETF 20日 ATR",
+        "horizon": "1~5 个交易日",
+        "confidence_label": "高置信（商品直接映射）",
+        "confidence_label_en": "High (Direct Bullion Beta)"
+      },
+      "affected_tickers": {
+        "GLD": -1.0,
+        "518880.SH": -1.0,
+        "02899.HK": -0.85,
+        "601398.SH": 0.2
+      },
+      "realized_quotes": [
+        {
+          "ticker": "GLD",
+          "name": "黄金ETF(美)",
+          "name_en": "SPDR Gold GLD",
+          "market": "美股",
+          "price": 322.87,
+          "pct_change": -3.67
+        },
+        {
+          "ticker": "518880.SH",
+          "name": "黄金ETF(A股)",
+          "name_en": "CN Gold ETF",
+          "market": "A股",
+          "price": 7.282,
+          "pct_change": -4.34
+        },
+        {
+          "ticker": "02899.HK",
+          "name": "紫金矿业",
+          "name_en": "Zijin Mining",
+          "market": "港股",
+          "price": 23.06,
+          "pct_change": -1.28
+        }
+      ],
+      "bars": [
+        {
+          "market": "美股",
+          "sector": "黄金与贵金属 ETF (GLD / GDX)",
+          "sector_en": "US Gold & Miners ETFs (GLD)",
+          "pct_low": -4.9,
+          "pct_high": -2.1,
+          "direction": "negative",
+          "proxy_ticker": "GLD",
+          "logic": "现货金价大幅回撤叠加期货强平压力直接压制金矿股。",
+          "logic_en": "Spot gold slide compresses miner margins and ETF inflows."
+        },
+        {
+          "market": "A股",
+          "sector": "黄金采掘与贵金属板块",
+          "sector_en": "A-Share Gold Miners & Bullion",
+          "pct_low": -5.7,
+          "pct_high": -2.5,
+          "direction": "negative",
+          "proxy_ticker": "518880.SH",
+          "logic": "前期拥挤多头踩踏出清，商业银行同步收紧积存金警示。",
+          "logic_en": "Crowded long unwind and domestic bank risk alerts weigh on sector."
+        },
+        {
+          "market": "港股",
+          "sector": "有色黄金资源 (紫金 / 招金等)",
+          "sector_en": "HKEX Gold Miners (02899.HK)",
+          "pct_low": -5.3,
+          "pct_high": -2.2,
+          "direction": "negative",
+          "proxy_ticker": "02899.HK",
+          "logic": "港股黄金标的受离岸现货金价及汇率波动双重传导。",
+          "logic_en": "HK gold miners react directly to offshore spot bullion swings."
+        }
+      ],
+      "if_then": [
+        {
+          "cond": "若银行提升保证金引发程序化抛盘延续",
+          "result": "贵金属矿企延续二次探底，谨慎抄底",
           "tone": "bearish"
         },
         {
-          "cond": "若英伟达董事会明确过渡安排并澄清核心技术研发不受影响",
-          "result": "治理恐慌折价逐步修复",
+          "cond": "若实际利率转降且央行买金数据恢复净增",
+          "result": "急跌消化杠杆后逐步企稳",
           "tone": "neutral"
         }
       ],
       "milestones": [
         {
-          "date": "两周内",
-          "status": "current",
-          "label": "英伟达治理公告与美国商务部出口税则细则"
+          "date": "下周美联储/CPI数据",
+          "status": "upcoming",
+          "label": "实际利率变动决定金价能否止跌"
         }
       ]
     },
     {
-      "id": "imp_evt_f0e9bd6d3861",
-      "event_id": "evt_f0e9bd6d3861",
+      "id": "imp_evt_007200a1b8e5",
+      "event_id": "evt_007200a1b8e5",
+      "rule_id": "rare_earth_critical_minerals_supply",
+      "validation_status": "verified",
+      "validation_note": "结构化方向与资产敏感区间一致性校验通过",
+      "event_title": "泰国拟禁止稀土开采化学品出口及过境以遏制河流砷污染，11 月 24 日与缅甸会谈",
+      "event_title_en": "Thailand plans ban on exports and transit of chemicals used in rare-earth mining to curb river pollution",
+      "event_summary": "由于北部多条河流检测到异常高浓度砷含量，泰国计划禁止用于稀土开采的化学品出口和过境运输，并与缅甸及其他国家合作治理污染。泰国官员将于 11 月 24 日与缅甸代表举行会晤，随后展开双边磋商。",
+      "event_summary_en": "【Thailand plans ban on exports and transit of chemicals used in rare-earth mining to curb river pollution】Thailand plans to ban exports and transit shipments of chemicals used in rare-earth mining and work with Myanmar and other countries to address pollution",
+      "category": "finance",
+      "published_at": "2026-11-22T12:41:27+08:00",
+      "source_name": "MKTNews 快讯",
+      "source_url": "https://mktnews.net/flashDetail.html?id=01a2018f-21c5-7bbc-aca2-f4c03be5fa89",
+      "sources": [
+        {
+          "source_name": "MKTNews 快讯",
+          "url": "https://mktnews.net/flashDetail.html?id=01a2018f-21c5-7bbc-aca2-f4c03be5fa89"
+        }
+      ],
+      "tag": "稀土上游原料/辅料管制冲击",
+      "tag_en": "Critical Minerals & Rare-Earth Supply Curb",
+      "polarity": "divergent",
+      "intensity": 4,
+      "one_liner": "东南亚跨境稀土冶炼辅料或原矿禁令扰动上游供给预期，中重稀土冶炼及海外替代资源迎重估，永磁下游成本短线承压。",
+      "one_liner_en": "Border restrictions on rare-earth reagents tighten heavy rare-earth supply expectations while raising downstream magnet costs.",
+      "sample_basis": {
+        "sample_n": 12,
+        "volatility_pct": 3.4,
+        "volatility_source": "中重稀土供给扰动与氧化物价格弹性样本",
+        "horizon": "2~7 个交易日",
+        "confidence_label": "高置信（直接供需扰动定价）",
+        "confidence_label_en": "High (Direct Feedstock Disruption)"
+      },
+      "affected_tickers": {
+        "600111.SH": 0.85,
+        "MP": 0.8,
+        "300748.SZ": 0.45
+      },
+      "realized_quotes": [
+        {
+          "ticker": "000001.SH",
+          "name": "上证指数",
+          "name_en": "SSE Composite",
+          "market": "A股",
+          "price": 3533.79,
+          "pct_change": -1.23
+        },
+        {
+          "ticker": "QQQ",
+          "name": "纳指100ETF",
+          "name_en": "Invesco QQQ",
+          "market": "美股",
+          "price": 608.45,
+          "pct_change": -5.67
+        }
+      ],
+      "bars": [
+        {
+          "market": "A股",
+          "sector": "稀土开采冶炼与中重稀土 (北方稀土/广晟)",
+          "sector_en": "A-Share Rare-Earth Mining & Separation",
+          "pct_low": 1.8,
+          "pct_high": 4.8,
+          "direction": "positive",
+          "proxy_ticker": "600111.SH",
+          "logic": "矿山开采辅料（如草酸/萃取试剂）或原矿跨境受限直接抬升氧化镨钕与镝铽现货报价。",
+          "logic_en": "Reagent bans or feedstock disruptions tighten separated oxide pricing."
+        },
+        {
+          "market": "美股",
+          "sector": "北美非中国稀土矿采分离 (MP)",
+          "sector_en": "US Ex-China Rare-Earth Producers (MP)",
+          "pct_low": 1.9,
+          "pct_high": 4.9,
+          "direction": "positive",
+          "proxy_ticker": "MP",
+          "logic": "东南亚跨境供应链扰动推升欧美本土稀土精炼产能的战略溢价。",
+          "logic_en": "Supply-chain bottlenecks strengthen strategic premium for ex-China refining."
+        },
+        {
+          "market": "A股",
+          "sector": "高性能钕铁硼永磁材料 (金力永磁)",
+          "sector_en": "A-Share NdFeB Permanent Magnets",
+          "pct_low": 0.8,
+          "pct_high": 2.5,
+          "direction": "positive",
+          "proxy_ticker": "300748.SZ",
+          "logic": "氧化物现货温和涨价有利于具备低价原料库存的磁材龙头重估。",
+          "logic_en": "Moderate oxide inflation supports inventory revaluation for magnet leaders."
+        },
+        {
+          "market": "美股",
+          "sector": "风电整机与永磁驱动下游 (GEV)",
+          "sector_en": "Wind Turbine & EV Motor OEMs (GEV)",
+          "pct_low": -1.0,
+          "pct_high": -0.2,
+          "direction": "negative",
+          "proxy_ticker": "GEV",
+          "logic": "重稀土镝/铽现货跳涨或挤压未充分套保永磁电驱设备商毛利。",
+          "logic_en": "Dy/Tb spikes pressure margins at unhedged permanent-magnet OEMs."
+        }
+      ],
+      "if_then": [
+        {
+          "cond": "若边境化学品/矿砂禁令持续超 2 周且亚洲金属网镨钕/氧化铽报价连续跳涨",
+          "result": "中重稀土冶炼与具备原矿配额企业涨价弹性延续",
+          "tone": "bullish"
+        },
+        {
+          "cond": "若监管仅清理非法小矿点而正规配额供应未受影响",
+          "result": "供给冲击证伪，板块脉冲冲高后震荡回落",
+          "tone": "neutral"
+        }
+      ],
+      "milestones": [
+        {
+          "date": "未来 1 周",
+          "status": "current",
+          "label": "核查百川盈孚 / 亚洲金属网氧化镨钕、氧化铽周度现货价"
+        },
+        {
+          "date": "下月海关数据",
+          "status": "upcoming",
+          "label": "跟踪自东南亚进口稀土矿砂及冶炼辅料报关量变化"
+        }
+      ]
+    },
+    {
+      "id": "imp_evt_9e0eaafd19d8",
+      "event_id": "evt_9e0eaafd19d8",
       "rule_id": "geopolitics_energy_escalation",
       "validation_status": "verified",
       "validation_note": "结构化方向与资产敏感区间一致性校验通过",
-      "event_title": "霍尔木兹海峡多艘油轮触雷起火，美伊波斯湾军事摩擦升级并引海湾多国谴责",
-      "event_title_en": "UK maritime agency reports two tanker attacks near Oman; Iran says vessel hit mine east of Hormuz",
-      "event_summary": "英国海上贸易安全机构报告称阿曼附近海域发生两起油轮遇袭事件，此前海塞卜港附近亦曾发生类似袭击。伊朗伊斯兰革命卫队海军21日发表声明称，自20日晚美军出动大规模空中力量掩护油轮通过霍尔木兹海峡进行未经授权货物运输期间，海峡南部海域（包括海塞卜港附近及21日清晨盖奈姆岛海岸线约三公里处）发生多起油轮因触碰水雷导致的爆炸和起火事故。另据美方官员称，伊朗发动了新一轮袭击，但美军在该地区的部队和军事资产未遭人员伤亡或损失。",
-      "event_summary_en": "The incidents followed a similar attack on a tanker near Khasab on Friday that caused a fire on board, according to the British maritime security agency.",
+      "event_title": "美伊冲突波及巴林与霍尔木兹海峡，伊朗实施限电并拒绝重开海峡谈判",
+      "event_title_en": "Iran launches attacks in Bahrain, Hormuz and moves against US blockade",
+      "event_summary": "伊朗伊斯兰革命卫队袭击美军基地并在巴林及霍尔木兹海峡发动攻击，反制美方封锁；巴林称伊朗袭击击中一处工业设施，伊朗另瞄准美军防空雷达，霍尔木兹甘省锡里克附近海面亦传出爆炸声。受战争重创能源网络影响，伊朗将实行限电措施。外交层面，卡塔尔调解代表团访问德黑兰，但伊朗外长阿拉格齐表示在美方满足伊方要求前不讨论开放霍尔木兹海峡；特朗普称伊朗所提和平条件“不可接受”、并非寻求政权更迭，但誓言将达成“永久性/无限期协议”。",
+      "event_summary_en": "Iran launches attacks in Bahrain, Hormuz and moves against US blockade Euronews.com Iran targets US air defence radars in Bahrain; Houthi strikes continue Al Jazeera Bahrain says Iranian attack hits industrial facility as air defences intercept attacks Reuter…",
       "category": "global",
-      "published_at": "2026-11-22T14:12:59+08:00",
-      "source_name": "华尔街见闻 美股快讯",
-      "source_url": "https://wallstreetcn.com/livenews/3203668",
+      "published_at": "2026-11-22T15:30:26+08:00",
+      "source_name": "新闻电讯",
+      "source_url": "https://news.google.com/rss/articles/CBMiZkFVX3lxTE1ocTRuVWhNalNyTU81aUUwazMzU1RxZXFsaU13NGllQ2hUUDdyTUw1SWlOWlpGUTFRYlVvZXVhNHhrTXJpS29oMEh3OG1ZZ3dWVjRwNDlhWVU1TTI5UF9SY3h1U2ViUQ?oc=5",
       "sources": [
         {
-          "source_name": "华尔街见闻 美股快讯",
-          "url": "https://wallstreetcn.com/livenews/3203668"
+          "source_name": "新闻电讯",
+          "url": "https://news.google.com/rss/articles/CBMiZkFVX3lxTE1ocTRuVWhNalNyTU81aUUwazMzU1RxZXFsaU13NGllQ2hUUDdyTUw1SWlOWlpGUTFRYlVvZXVhNHhrTXJpS29oMEh3OG1ZZ3dWVjRwNDlhWVU1TTI5UF9SY3h1U2ViUQ?oc=5"
         },
         {
-          "source_name": "CNBC Top News",
-          "url": "https://www.cnbc.com/2026/11/21/two-tanker-attacks-reported-near-omans-khasab-ukmto-says.html"
+          "source_name": "新闻电讯",
+          "url": "https://news.google.com/rss/articles/CBMiaEFVX3lxTE9xMV8yLW5iRUZKSGNCVDh1QmhIX05CSjZLMDVyX1duYzRqd0pNS3pNTVRBOU4yVmwwTy0zZ2VBTmYwaEkyYVZ0Y1FxejhlM1JhY2VvRk95WlV5RklOY19ZRlFZWEJjQTZV?oc=5"
         },
         {
-          "source_name": "华尔街见闻 A股快讯",
-          "url": "https://wallstreetcn.com/livenews/3203665"
+          "source_name": "新闻电讯",
+          "url": "https://news.google.com/rss/articles/CBMiXkFVX3lxTE9SX21sbkszVFZjNm9HZmpZUGxGbTRzRkJxTy11LWxfNFNsUm1VTTMtTDZHNFp0MlFqdHZLU3p3RXBEWXdQSVQydTFfRTJVcGo1cEc0QnllVzhCQVROYmc?oc=5"
         }
       ],
       "tag": "霍尔木兹航道触雷与油运飙升",
@@ -907,24 +939,157 @@
       ]
     },
     {
-      "id": "imp_evt_6ea52d89136e",
-      "event_id": "evt_6ea52d89136e",
-      "rule_id": "ai_equity_selloff",
+      "id": "imp_evt_2423eddc1474",
+      "event_id": "evt_2423eddc1474",
+      "rule_id": "russia_ukraine_peace_deescalation",
       "validation_status": "verified",
       "validation_note": "结构化方向与资产敏感区间一致性校验通过",
-      "event_title": "英伟达遭 SEC 会计审查股价大跌 14%，FT 调查称相关人员涉对华芯片走私网络",
-      "event_title_en": "US technology stocks suffer their worst weekly loss since the pandemic as AI doubts pile up",
-      "event_summary": "因美国证券交易委员会（SEC）正在审查其会计问题，英伟达股价暴跌 14%。与此同时，英伟达最新财报表现与多名科技高管高调呼吁已离任的前 CEO 黄仁勋回归形成了两种截然不同的叙事。此外，《金融时报》（FT）发布调查报道称，与黄仁勋存在情感关系的 Alice Huang 牵涉一个向中国走私英伟达芯片的网络。",
-      "event_summary_en": "The Nasdaq 100 has slipped into a bear market after its worst weekly loss since the Covid-19 crisis. Nvidia plunged 14 percent as the SEC reviews its accounting, and Anthropic lost nearly all of its gains a day after its record IPO. AI doubts, scandals, risin…",
-      "category": "tech",
-      "published_at": "2026-11-22T08:47:52+08:00",
-      "source_name": "The Decoder (AI前沿)",
-      "source_url": "https://the-decoder.com/us-technology-stocks-suffer-their-worst-weekly-loss-since-the-pandemic-as-ai-doubts-pile-up",
+      "event_title": "消息指特朗普力促俄乌明年1月前达成停火协议，称普京为“朋友”引泽连斯基回击",
+      "event_title_en": "Zelensky says Putin is a 'killer' after Trump calls Russian leader a friend",
+      "event_summary": "消息指特朗普政府正敦促乌克兰在2027年1月前与俄罗斯达成协议结束战争。泽连斯基透露，特朗普曾告知欧洲领导人其在乌克兰问题上花费巨大；针对特朗普本周在中国与普京会面前称与俄领导人保持“极佳关系”并将其称为“朋友”，泽连斯基公开反驳称普京是“杀手”。",
+      "event_summary_en": "Earlier this week, Trump greeted Putin ahead of a meeting in China and said the pair have a \"great relationship\".",
+      "category": "global",
+      "published_at": "2026-11-22T07:36:08+08:00",
+      "source_name": "BBC News World",
+      "source_url": "https://www.bbc.co.uk/news/articles/cxnv4zvmdy0jo?at_medium=RSS&at_campaign=rss",
       "sources": [
         {
-          "source_name": "The Decoder (AI前沿)",
-          "url": "https://the-decoder.com/us-technology-stocks-suffer-their-worst-weekly-loss-since-the-pandemic-as-ai-doubts-pile-up"
+          "source_name": "BBC News World",
+          "url": "https://www.bbc.co.uk/news/articles/cxnv4zvmdy0jo?at_medium=RSS&at_campaign=rss"
         },
+        {
+          "source_name": "路透/彭博突发全球雷达",
+          "url": "https://news.google.com/rss/articles/CBMivwFBVV95cUxPc1lrUklOU0NNN255SjN3SXdkR01FdDRYM0FiUzVkYVZtZW1ZR1dRVTBsUkx1MnoxeEhOTURCaEF2OHpLdU1fcVgzcXVZUGFaa2ZCMUNJbWo2UHk0ODNwYW4waUM1R3RvaDY2RFo0OXRiVUx6M29US3M1eHdUMDA0R3FfOVlUUlV5NzlNRVhFQ1JJZTNWN1J5S2pYTl9mMnZmNjBQNVFYam9RU1NRSng5SEpDMGhZNzZvdk5rdzl2aw?oc=5"
+        },
+        {
+          "source_name": "NPR World",
+          "url": "https://www.npr.org/2026/11/21/nx-s1-6047379/military-analyst-phillips-obrien-on-ukraine-and-europe-being-left-out-of-trumps-talks"
+        }
+      ],
+      "tag": "地缘缓和 / 停火预期升温",
+      "tag_en": "Geopolitical De-escalation / Peace Talks",
+      "polarity": "divergent",
+      "intensity": 3,
+      "one_liner": "俄乌和平协议预期削弱能源断供与战争溢价，利空原油及传统军工避险资产，同时降低燃油成本并利好航空及全球风险资产。",
+      "one_liner_en": "Peace-deal optimism compresses war risk premia in crude/defense while lifting airlines & risk appetite.",
+      "sample_basis": {
+        "sample_n": 11,
+        "volatility_pct": 2.2,
+        "volatility_source": "原油/航空历史事件波动统计",
+        "horizon": "2~5 个交易日",
+        "confidence_label": "中高置信（供需与风险溢价逆转）",
+        "confidence_label_en": "Moderate-High (Risk-Premium Unwind)"
+      },
+      "affected_tickers": {
+        "USO": -0.8,
+        "GLD": -0.45,
+        "00883.HK": -0.75,
+        "02899.HK": -0.35
+      },
+      "realized_quotes": [
+        {
+          "ticker": "USO",
+          "name": "原油ETF(美)",
+          "name_en": "US Oil USO",
+          "market": "美股",
+          "price": 139.63,
+          "pct_change": 1.12
+        },
+        {
+          "ticker": "GLD",
+          "name": "黄金ETF(美)",
+          "name_en": "SPDR Gold GLD",
+          "market": "美股",
+          "price": 322.87,
+          "pct_change": -3.67
+        },
+        {
+          "ticker": "00883.HK",
+          "name": "中国海油",
+          "name_en": "CNOOC",
+          "market": "港股",
+          "price": 21.7,
+          "pct_change": -1.9
+        },
+        {
+          "ticker": "HSI.HK",
+          "name": "恒生指数",
+          "name_en": "Hang Seng Index",
+          "market": "港股",
+          "price": 22410.8,
+          "pct_change": -1.89
+        }
+      ],
+      "bars": [
+        {
+          "market": "美股",
+          "sector": "原油与能源期货代理 (USO)",
+          "sector_en": "US Crude Oil & Energy (USO)",
+          "pct_low": -4.2,
+          "pct_high": -1.5,
+          "direction": "negative",
+          "proxy_ticker": "USO",
+          "logic": "停火期待压低制裁溢价预期，油价风偏下修。",
+          "logic_en": "Ceasefire expectations ease supply-risk premium in crude oil."
+        },
+        {
+          "market": "A股",
+          "sector": "航空机场 / 航运及重建基建链",
+          "sector_en": "A-Share Airlines & Reconstruction",
+          "pct_low": 1.4,
+          "pct_high": 3.8,
+          "direction": "positive",
+          "proxy_ticker": null,
+          "logic": "航油成本回落预期叠加跨境重建/外贸风险缓解。",
+          "logic_en": "Lower jet-fuel costs and reconstruction demand benefit aviation & engineering."
+        },
+        {
+          "market": "港股",
+          "sector": "三桶油上游能源 (00883.HK)",
+          "sector_en": "HKEX Upstream Oil (00883.HK)",
+          "pct_low": -3.6,
+          "pct_high": -1.2,
+          "direction": "negative",
+          "proxy_ticker": "00883.HK",
+          "logic": "原油风偏溢价收敛，高弹性能源权重大概率承压回吐。",
+          "logic_en": "Upstream oil producers retrace as geopolitical risk premia fade."
+        }
+      ],
+      "if_then": [
+        {
+          "cond": "若各方正式签字或推进对俄能源制裁放松路线图",
+          "result": "原油中枢继续下移，航空/欧股受益扩大",
+          "tone": "bullish"
+        },
+        {
+          "cond": "若停火谈判再度破裂并恢复前线打击",
+          "result": "战争风险溢价重新快速回补至能源/黄金",
+          "tone": "bearish"
+        }
+      ],
+      "milestones": [
+        {
+          "date": "明年1月前目标窗口",
+          "status": "upcoming",
+          "label": "各方安全保障文本能否落地签字"
+        }
+      ]
+    },
+    {
+      "id": "imp_evt_c77f5dfd342d",
+      "event_id": "evt_c77f5dfd342d",
+      "rule_id": "us_datacenter_tax_and_chip_curb",
+      "validation_status": "verified",
+      "validation_note": "结构化方向与资产敏感区间一致性校验通过",
+      "event_title": "FT 调查称与前英伟达 CEO 黄仁勋存在情感关系的 Alice Huang 牵涉对华芯片走私网络",
+      "event_title_en": "Behind Jensen Huang's exit, questions about a management style reportedly built on fear",
+      "event_summary": "据《金融时报》（FT）调查报道，与已被免职的前英伟达（Nvidia）CEO 黄仁勋（Jensen Huang）存在情感关系的 Alice Huang，牵涉向中国走私英伟达芯片的网络。与此同时，科技界出现关于英伟达的两极叙事：一方面公司最新财报表现亮眼，另一方面部分科技高管公开呼吁黄仁勋回归，Elon Musk 此前亦曾称英伟达员工“爱戴”黄仁勋，但媒体指出员工真实态度或存在分歧。",
+      "event_summary_en": "Elon Musk may have been overstating it when he said Nvidia's employees “love” the ousted Jensen Huang.",
+      "category": "tech",
+      "published_at": "2026-11-22T08:47:52+08:00",
+      "source_name": "TechCrunch AI & Tech",
+      "source_url": "https://techcrunch.com/2026/11/20/behind-jensen-huangs-exit-questions-about-a-management-style-reportedly-built-on-fear",
+      "sources": [
         {
           "source_name": "TechCrunch AI & Tech",
           "url": "https://techcrunch.com/2026/11/20/behind-jensen-huangs-exit-questions-about-a-management-style-reportedly-built-on-fear"
@@ -932,34 +1097,32 @@
         {
           "source_name": "TechCrunch AI & Tech",
           "url": "https://techcrunch.com/2026/11/21/a-tale-of-two-nvidias"
+        },
+        {
+          "source_name": "TechCrunch AI & Tech",
+          "url": "https://techcrunch.com/2026/11/20/california-ag-subpoenas-nvidia-over-worries-about-huangs-ties-with-china"
         }
       ],
-      "tag": "AI 算力与科技估值抛压",
-      "tag_en": "AI Equity Valuation Selloff",
+      "tag": "海外数据中心重税 / 芯片限制与治理震荡",
+      "tag_en": "Data Center Tax, Export Curbs & Governance",
       "polarity": "bearish",
-      "intensity": 5,
-      "one_liner": "核心 AI 算力龙头放量下挫，触发纳指与港股/A股算力链同步去杠杆，红利防御资产相对抗跌。",
-      "one_liner_en": "Flagship AI compute plunge triggers risk-off repricing across US/HK/A-Share compute chains.",
+      "intensity": 4,
+      "one_liner": "威胁对海外新建数据中心美企征重税、收紧芯片出口叠加龙头管理层震荡，直接冲击全球 AI 基建资本开支，倒逼国产替代加速。",
+      "one_liner_en": "Proposed overseas datacenter tax & tighter chip curbs hit global AI capex while supporting domestic foundry proxies.",
       "sample_basis": {
-        "sample_n": 18,
+        "sample_n": 15,
         "volatility_pct": 11.91,
-        "volatility_source": "NVDA / 纳指实现波动率校准",
-        "horizon": "1~3 个交易日",
-        "confidence_label": "高置信（直接板块联动）",
-        "confidence_label_en": "High (Direct Sector Beta)"
+        "volatility_source": "美股算力制裁与关税冲击样本",
+        "horizon": "1~5 个交易日",
+        "confidence_label": "高置信（直击核心估值与供给端）",
+        "confidence_label_en": "High (Direct Capex & Export Shock)"
       },
       "affected_tickers": {
-        "NVDA": -1.0,
-        "AMD": -0.85,
-        "TSM": -0.75,
-        "INTC": -0.6,
-        "QQQ": -0.8,
-        "IXIC": -0.8,
-        "HSTECH.HK": -0.7,
-        "00700.HK": -0.4,
-        "00981.HK": -0.45,
-        "512480.SH": -0.55,
-        "515880.SH": -0.65
+        "NVDA": -0.9,
+        "TSM": -0.7,
+        "AMD": -0.65,
+        "00981.HK": 0.65,
+        "512480.SH": 0.7
       },
       "realized_quotes": [
         {
@@ -971,20 +1134,20 @@
           "pct_change": -14.01
         },
         {
-          "ticker": "IXIC",
-          "name": "纳斯达克",
-          "name_en": "NASDAQ Composite",
+          "ticker": "TSM",
+          "name": "台积电",
+          "name_en": "TSMC",
           "market": "美股",
-          "price": 22617.73,
-          "pct_change": -5.28
+          "price": 318.71,
+          "pct_change": -9.48
         },
         {
-          "ticker": "HSTECH.HK",
-          "name": "恒生科指",
-          "name_en": "Hang Seng Tech",
+          "ticker": "00981.HK",
+          "name": "中芯国际",
+          "name_en": "SMIC",
           "market": "港股",
-          "price": 3511.14,
-          "pct_change": -3.78
+          "price": 49.12,
+          "pct_change": -2.73
         },
         {
           "ticker": "512480.SH",
@@ -998,259 +1161,70 @@
       "bars": [
         {
           "market": "美股",
-          "sector": "AI 算力龙头 (NVDA / AMD / QQQ)",
-          "sector_en": "US AI Chips & Nasdaq (NVDA/QQQ)",
-          "pct_low": -6.8,
-          "pct_high": -2.8,
+          "sector": "美股 GPU 与海外建厂链 (NVDA / TSM)",
+          "sector_en": "US AI Hardware & Foundries (NVDA/TSM)",
+          "pct_low": -4.4,
+          "pct_high": -1.6,
           "direction": "negative",
           "proxy_ticker": "NVDA",
-          "logic": "高估值算力核心权重放量回撤，直接压制费半及纳指风险偏好。",
-          "logic_en": "Direct valuation compression on US flagship AI semis and Nasdaq."
+          "logic": "治理变动与出口及海外数据中心税收威胁叠加压制估值。",
+          "logic_en": "Export limits, overseas capex tax threats & leadership risk weigh on semis."
         },
         {
           "market": "港股",
-          "sector": "恒生科指与大模型生态 (HSTECH / 00700)",
-          "sector_en": "HK Tech & AI Ecosystem (HSTECH)",
-          "pct_low": -4.5,
-          "pct_high": -1.4,
-          "direction": "negative",
-          "proxy_ticker": "HSTECH.HK",
-          "logic": "外资风险预算收缩时，港股科技权重通常跟随纳指承压。",
-          "logic_en": "Foreign risk-off flows weigh on HKEX tech heavyweight multiples."
-        },
-        {
-          "market": "A股",
-          "sector": "CPO 光模块 / 算力硬件映射",
-          "sector_en": "A-Share Optical / AI Hardware",
-          "pct_low": -4.9,
-          "pct_high": -1.5,
-          "direction": "negative",
-          "proxy_ticker": "515880.SH",
-          "logic": "北美算力资本开支映射承压，短期交易情绪跟随海外龙头回落。",
-          "logic_en": "North American capex proxies retrace alongside US AI hardware peers."
-        },
-        {
-          "market": "A股",
-          "sector": "高股息红利 / 国有大行防御",
-          "sector_en": "A-Share High-Dividend Defense",
-          "pct_low": 0.3,
-          "pct_high": 1.3,
+          "sector": "港股芯片自主制造 (00981.HK 中芯)",
+          "sector_en": "HKEX Domestic Foundry (00981.HK)",
+          "pct_low": 0.8,
+          "pct_high": 2.9,
           "direction": "positive",
-          "proxy_ticker": "601398.SH",
-          "logic": "成长赛道剧烈波动期间，资金倾向回流低波红利与高股息银行。",
-          "logic_en": "Capital rotates toward low-volatility dividend value during tech drawdowns."
+          "proxy_ticker": "00981.HK",
+          "logic": "高端进口限制收紧进一步锁定境内晶圆制造份额。",
+          "logic_en": "Tighter US curbs solidify domestic wafer fab utilization expectations."
+        },
+        {
+          "market": "A股",
+          "sector": "国产半导体设备 / 算力自主可控",
+          "sector_en": "A-Share Domestic Semi Equipment",
+          "pct_low": 1.0,
+          "pct_high": 3.1,
+          "direction": "positive",
+          "proxy_ticker": "512480.SH",
+          "logic": "进口替代刚性提升，光刻/刻蚀设备与本土算力获事件催化。",
+          "logic_en": "Localization urgency lifts domestic semiconductor equipment names."
         }
       ],
       "if_then": [
         {
-          "cond": "若纳指/英伟达次日止跌企稳且未现机构连续砍单验证",
-          "result": "算力链情绪脉冲消化后关注业绩兑现标的",
-          "tone": "neutral"
+          "cond": "若白宫正式签发海外数据中心关税行政令",
+          "result": "跨国云厂基建节奏放缓，美股算力硬件承压加深",
+          "tone": "bearish"
         },
         {
-          "cond": "若下跌伴随大厂下调来年 Capex 指引或更多 IPO 破发",
-          "result": "科技成长估值中枢下移，防御仓位占优",
-          "tone": "bearish"
+          "cond": "若英伟达董事会明确过渡安排并澄清核心技术研发不受影响",
+          "result": "治理恐慌折价逐步修复",
+          "tone": "neutral"
         }
       ],
       "milestones": [
         {
-          "date": "次日美股开盘",
+          "date": "两周内",
           "status": "current",
-          "label": "观察 NVDA / QQQ 成交量与机构承接力"
-        },
-        {
-          "date": "未来 1 周",
-          "status": "upcoming",
-          "label": "跟踪 CSP 云巨头资本开支表态是否松动"
+          "label": "英伟达治理公告与美国商务部出口税则细则"
         }
       ]
     },
     {
-      "id": "imp_evt_6b056082e7b7",
-      "event_id": "evt_6b056082e7b7",
-      "rule_id": "insufficient_evidence",
-      "validation_status": "insufficient_evidence",
-      "validation_note": "该事件缺少可验证的历史股票传导渠道，暂不强行套用模板。",
-      "event_title": "报道称：软银孙正义曾探讨以1万亿美元收购SK海力士，发言人称现已不再积极推进",
-      "event_title_en": "报道称：软银孙正义曾探讨以1万亿美元收购SK海力士，发言人称现已不再积极推进",
-      "event_summary": "【据关联报道/尚未见官方披露确认】据媒体援引消息称，软银董事长孙正义近期曾接洽华尔街机构，商议融资推进一笔规模达1万亿美元的收购交易，目标为存储芯片巨头SK海力士。不过，软银发言人表示，孙正义目前已经不再积极推进该笔交易。",
-      "event_summary_en": "【据关联报道/尚未见官方披露确认】据媒体援引消息称，软银董事长孙正义近期曾接洽华尔街机构，商议融资推进一笔规模达1万亿美元的收购交易，目标为存储芯片巨头SK海力士。不过，软银发言人表示，孙正义目前已经不再积极推进该笔交易。",
-      "category": "finance",
-      "published_at": "2026-11-21T10:35:17+08:00",
-      "source_name": "华尔街见闻 美股快讯",
-      "source_url": "https://wallstreetcn.com/livenews/3203635",
-      "sources": [
-        {
-          "source_name": "华尔街见闻 美股快讯",
-          "url": "https://wallstreetcn.com/livenews/3203635"
-        }
-      ],
-      "tag": "暂无可靠量化推演",
-      "tag_en": "No Reliable Quantitative Model",
-      "polarity": "divergent",
-      "intensity": 1,
-      "one_liner": "该事件缺少可验证的历史股票传导渠道，暂不强行套用模板。",
-      "one_liner_en": "Insufficient historical transmission confidence; numeric forecasts withheld to avoid misleading estimates.",
-      "sample_basis": null,
-      "affected_tickers": {},
-      "realized_quotes": [],
-      "bars": [],
-      "if_then": [],
-      "milestones": []
-    },
-    {
-      "id": "imp_evt_6fb9d0e634ef",
-      "event_id": "evt_6fb9d0e634ef",
-      "rule_id": "insufficient_evidence",
-      "validation_status": "insufficient_evidence",
-      "validation_note": "该事件缺少可验证的历史股票传导渠道，暂不强行套用模板。",
-      "event_title": "泰国拟禁止稀土开采化学品出口及过境运输，以应对北部河流砷污染",
-      "event_title_en": "Thailand plans ban on exports and transit of chemicals used in rare-earth mining to curb river pollution",
-      "event_summary": "泰国副总理永猜·翁萨瓦周六在曼谷新闻发布会上表示，由于泰国北部多条河流水体检测出砷含量异常升高，泰国计划禁止用于稀土开采的化学品出口及过境运输，并将与缅甸等国合作治理污染。按计划，泰国官员将于11月24日与缅甸代表会面，随后于11月25日至26日举行泰缅工作组会议。",
-      "event_summary_en": "【Thailand plans ban on exports and transit of chemicals used in rare-earth mining to curb river pollution】Thailand plans to ban exports and transit shipments of chemicals used in rare-earth mining and work with Myanmar and other countries to address pollution",
-      "category": "finance",
-      "published_at": "2026-11-22T12:41:27+08:00",
-      "source_name": "金十数据",
-      "source_url": "https://flash.jin10.com/detail/20261122124123456800",
-      "sources": [
-        {
-          "source_name": "金十数据",
-          "url": "https://flash.jin10.com/detail/20261122124123456800"
-        },
-        {
-          "source_name": "MKTNews 快讯",
-          "url": "https://mktnews.net/flashDetail.html?id=01a2018f-21c5-7bbc-aca2-f4c03be5fa89"
-        }
-      ],
-      "tag": "暂无可靠量化推演",
-      "tag_en": "No Reliable Quantitative Model",
-      "polarity": "divergent",
-      "intensity": 1,
-      "one_liner": "该事件缺少可验证的历史股票传导渠道，暂不强行套用模板。",
-      "one_liner_en": "Insufficient historical transmission confidence; numeric forecasts withheld to avoid misleading estimates.",
-      "sample_basis": null,
-      "affected_tickers": {},
-      "realized_quotes": [],
-      "bars": [],
-      "if_then": [],
-      "milestones": []
-    },
-    {
-      "id": "imp_evt_4738952797fa",
-      "event_id": "evt_4738952797fa",
-      "rule_id": "insufficient_evidence",
-      "validation_status": "insufficient_evidence",
-      "validation_note": "该事件缺少可验证的历史股票传导渠道，暂不强行套用模板。",
-      "event_title": "韩国1至10月对华汽车贸易逆差达42.36亿美元创历史新高，上海产特斯拉领跑在韩进口车销量",
-      "event_title_en": "韩国1至10月对华汽车贸易逆差达42.36亿美元创历史新高，上海产特斯拉领跑在韩进口车销量",
-      "event_summary": "据韩国贸易协会与产业通商部数据及韩联社11月22日报道，今年1至10月韩国对华汽车贸易逆差达42.36亿美元，同比增长92.7%，已超过2025年全年逆差额并创历史最高纪录；同期韩国对华汽车出口额为1.6877亿美元，同比下降34.9%。同时，特斯拉在韩国连续9个月位居进口车销量第一，且在韩销售车型大多产自上海超级工厂。",
-      "event_summary_en": "据韩国贸易协会与产业通商部数据及韩联社11月22日报道，今年1至10月韩国对华汽车贸易逆差达42.36亿美元，同比增长92.7%，已超过2025年全年逆差额并创历史最高纪录；同期韩国对华汽车出口额为1.6877亿美元，同比下降34.9%。同时，特斯拉在韩国连续9个月位居进口车销量第一，且在韩销售车型大多产自上海超级工厂。",
-      "category": "finance",
-      "published_at": "2026-11-22T13:46:43+08:00",
-      "source_name": "IT之家 实时快讯",
-      "source_url": "https://www.ithome.com/1/030/569.htm",
-      "sources": [
-        {
-          "source_name": "IT之家 实时快讯",
-          "url": "https://www.ithome.com/1/030/569.htm"
-        }
-      ],
-      "tag": "暂无可靠量化推演",
-      "tag_en": "No Reliable Quantitative Model",
-      "polarity": "divergent",
-      "intensity": 1,
-      "one_liner": "该事件缺少可验证的历史股票传导渠道，暂不强行套用模板。",
-      "one_liner_en": "Insufficient historical transmission confidence; numeric forecasts withheld to avoid misleading estimates.",
-      "sample_basis": null,
-      "affected_tickers": {},
-      "realized_quotes": [],
-      "bars": [],
-      "if_then": [],
-      "milestones": []
-    },
-    {
-      "id": "imp_evt_ff552ae01c34",
-      "event_id": "evt_ff552ae01c34",
-      "rule_id": "insufficient_evidence",
-      "validation_status": "insufficient_evidence",
-      "validation_note": "该事件缺少可验证的历史股票传导渠道，暂不强行套用模板。",
-      "event_title": "欧盟领导人会议主席科斯塔提议削减2028-2034年预算草案400亿欧元并开征数字税",
-      "event_title_en": "欧盟领导人会议主席科斯塔提议削减2028-2034年预算草案400亿欧元并开征数字税",
-      "event_summary": "欧盟领导人峰会主席安东尼奥·科斯塔周六提议进一步削减2028-2034年欧盟七年期预算草案，较爱尔兰轮值主席国10月提交的方案减少400亿欧元、降至1.582万亿欧元（较欧盟委员会最初提案减少1806亿欧元），并建议通过征收数字税等方式开辟新的收入来源，为欧盟政策提供资金。该方案目前仍属提议阶段。",
-      "event_summary_en": "欧盟领导人峰会主席安东尼奥·科斯塔周六提议进一步削减2028-2034年欧盟七年期预算草案，较爱尔兰轮值主席国10月提交的方案减少400亿欧元、降至1.582万亿欧元（较欧盟委员会最初提案减少1806亿欧元），并建议通过征收数字税等方式开辟新的收入来源，为欧盟政策提供资金。该方案目前仍属提议阶段。",
-      "category": "finance",
-      "published_at": "2026-11-21T21:25:55+08:00",
-      "source_name": "华尔街见闻 美股快讯",
-      "source_url": "https://wallstreetcn.com/livenews/3203683",
-      "sources": [
-        {
-          "source_name": "华尔街见闻 美股快讯",
-          "url": "https://wallstreetcn.com/livenews/3203683"
-        }
-      ],
-      "tag": "暂无可靠量化推演",
-      "tag_en": "No Reliable Quantitative Model",
-      "polarity": "divergent",
-      "intensity": 1,
-      "one_liner": "该事件缺少可验证的历史股票传导渠道，暂不强行套用模板。",
-      "one_liner_en": "Insufficient historical transmission confidence; numeric forecasts withheld to avoid misleading estimates.",
-      "sample_basis": null,
-      "affected_tickers": {},
-      "realized_quotes": [],
-      "bars": [],
-      "if_then": [],
-      "milestones": []
-    },
-    {
-      "id": "imp_evt_ae9e8258da2a",
-      "event_id": "evt_ae9e8258da2a",
-      "rule_id": "insufficient_evidence",
-      "validation_status": "insufficient_evidence",
-      "validation_note": "该事件缺少可验证的历史股票传导渠道，暂不强行套用模板。",
-      "event_title": "特斯拉在美向早期体验成员推送FSD v15，单方宣称安全关键场景处理能力提升25倍",
-      "event_title_en": "特斯拉在美向早期体验成员推送FSD v15，单方宣称安全关键场景处理能力提升25倍",
-      "event_summary": "特斯拉于11月22日宣布在美国市场推出FSD v15，目前已向早期体验计划（EAP）成员推送首批版本。特斯拉官方单方宣称，此次更新对安全关键场景的处理能力提升了25倍。",
-      "event_summary_en": "特斯拉于11月22日宣布在美国市场推出FSD v15，目前已向早期体验计划（EAP）成员推送首批版本。特斯拉官方单方宣称，此次更新对安全关键场景的处理能力提升了25倍。",
-      "category": "finance",
-      "published_at": "2026-11-22T09:11:20+08:00",
-      "source_name": "华尔街见闻 美股快讯",
-      "source_url": "https://wallstreetcn.com/livenews/3203700",
-      "sources": [
-        {
-          "source_name": "华尔街见闻 美股快讯",
-          "url": "https://wallstreetcn.com/livenews/3203700"
-        },
-        {
-          "source_name": "财联社 · 电报",
-          "url": "https://www.cls.cn/detail/2540872"
-        }
-      ],
-      "tag": "暂无可靠量化推演",
-      "tag_en": "No Reliable Quantitative Model",
-      "polarity": "divergent",
-      "intensity": 1,
-      "one_liner": "该事件缺少可验证的历史股票传导渠道，暂不强行套用模板。",
-      "one_liner_en": "Insufficient historical transmission confidence; numeric forecasts withheld to avoid misleading estimates.",
-      "sample_basis": null,
-      "affected_tickers": {},
-      "realized_quotes": [],
-      "bars": [],
-      "if_then": [],
-      "milestones": []
-    },
-    {
-      "id": "imp_evt_39c27252cfbf",
-      "event_id": "evt_39c27252cfbf",
+      "id": "imp_evt_05700c8d35fe",
+      "event_id": "evt_05700c8d35fe",
       "rule_id": "geopolitics_energy_escalation",
       "validation_status": "verified",
       "validation_note": "结构化方向与资产敏感区间一致性校验通过",
-      "event_title": "波兰称俄导弹落入境内、波罗的海俄货船遭无人机袭击起火，欧洲安全警戒升温",
+      "event_title": "乌军袭击克里米亚大桥引发俄方报复警告，俄导弹落入波兰且芬兰湾俄货船遭无人机袭击",
       "event_title_en": "Russia-bound ship attacked in Gulf of Finland",
-      "event_summary": "俄乌冲突外溢效应进一步波及欧洲周边。波兰方面表示俄罗斯导弹击中其领土，北约秘书长吕特强调北约将保卫波兰每一寸领土，美国总统特朗普则称该事件系失误。在波罗的海（芬兰湾）海域，一艘驶往俄罗斯的货船遭无人机袭击起火致船员撤离，芬兰国防军评估乌克兰可能是幕后主使。此外，丹麦指控俄罗斯策划暗杀一名美籍乌克兰裔说唱歌手并驱逐俄驻丹麦武官，俄方予以否认；俄军对泽连斯基家乡的打击造成包括一名7岁儿童及救援人员在内2人死亡、60人受伤。",
+      "event_summary": "乌克兰袭击克里米亚大桥，乌总统泽连斯基在会见英国官员斯特里廷（Streeting）时称此举是对俄军打击乌桥梁的“正当回应”，乌方预计俄方清理坍塌桥梁需数月，而报道显示克里米亚大桥已恢复铁路列车运行；普京则誓言将展开力度更大的报复打击。与此同时，俄方称一艘俄货船在芬兰湾遭无人机袭击；波兰通报俄罗斯导弹落入波兰领土，特朗普称此为“失误”，北约秘书长吕特强调北约将保卫波兰的每一寸领土。",
       "event_summary_en": "Finnish defence forces say that Ukraine was likely behind the drone attack on the vessel.",
       "category": "global",
-      "published_at": "2026-11-22T13:29:33+08:00",
+      "published_at": "2026-11-22T14:28:30+08:00",
       "source_name": "BBC News World",
       "source_url": "https://www.bbc.co.uk/news/articles/cj752ddve27ko?at_medium=RSS&at_campaign=rss",
       "sources": [
@@ -1259,12 +1233,12 @@
           "url": "https://www.bbc.co.uk/news/articles/cj752ddve27ko?at_medium=RSS&at_campaign=rss"
         },
         {
-          "source_name": "BBC News World",
-          "url": "https://www.bbc.co.uk/news/articles/cmde1lj4yjxno?at_medium=RSS&at_campaign=rss"
+          "source_name": "国际媒体",
+          "url": "https://news.google.com/rss/articles/CBMisAFBVV95cUxNRnlCOGxaOTZVblY3RTRxSV9Hd1pESWxqZ2hGaC1wdjZLMDhGN001S3pJQ3lpLVZSVTVtRk0tU1pnM3UtMEVZZWZIWFVKekV6T2EzTEpOM2RiMGR3MmVxUk90ZmtBMk5qalNvUjhqMXZOck9SN2tNbFpNREYwNGlWcTAzN28tVkE5OEFsaTU1MmdoSmRCOHNHY1h3NG95R2F4N0RvS2RIYm5xM1J1TjFqXw?oc=5"
         },
         {
-          "source_name": "权威报道",
-          "url": "https://news.google.com/rss/articles/CBMiugFBVV95cUxPS2NDX2gya2JxN0FLNlFBSjdJcXNqczVsWGJrNHdGVHoxNEF6a2hrSnlKc2hkVC0wSGROWkMzcXgyN0YtaHdMX0k0U043RE5BSkRXVGtlQ3h1Ym9iVk9uaVFnV0YyZEw0a3ZjRWxvUkZ6NHNGVWJSc1dDcEU5aUtrODZ5YTRQMVQ5UTA2WHd5U0ZGUkhybGllQXNseGR0ZHl4dC1JdGtPa2FGT3MzNzhXdkxrSU9XcENkLUE?oc=5"
+          "source_name": "国际媒体",
+          "url": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE94cXdVVUc1b3ZQMTdhdXdRUWF4RFVlNTNMYlJDeWxoR0NZX3hxd3BBOEJwTzhYdDJMQnZNRkZ4TDc3c0pTN3hyX0xBbkVUanpHejhWQUJKMzR2VEE?oc=5"
         }
       ],
       "tag": "东欧/中东武装冲突与军工避险",
@@ -1386,405 +1360,149 @@
           "label": "航道实际通行量及外交通报回应"
         }
       ]
-    },
-    {
-      "id": "imp_evt_27c6df7a161b",
-      "event_id": "evt_27c6df7a161b",
-      "rule_id": "ai_model_launch_catalyst",
-      "validation_status": "verified",
-      "validation_note": "结构化方向与资产敏感区间一致性校验通过",
-      "event_title": "哥伦比亚大学与 CertiK 推出 TensorLean，对生产级 GPU 内核进行 PTX 级形式化验证",
-      "event_title_en": "A Team of Researchers from Columbia and CertiK Introduce TensorLean for Formal Verification of GPU Kernels",
-      "event_summary": "哥伦比亚大学与 CertiK 研究人员联合发布 TensorLean，利用形式化验证语言 Lean 在 PTX 汇编级别对生产级 GPU 内核进行验证，完成了对 DeepSeek 与 FlashAttention 等生产级 AI 算子的形式化验证。该工具共检查了 149 个内核实例，证明其中 83 个完全正确，并在 FlashAttention、DeepGEMM 等算子中发现了 38 个漏洞。",
-      "event_summary_en": "TensorLean, from Columbia University and CertiK, formally verifies production GPU kernels at the PTX level using Lean. It checked 149 kernel instances, proved 83 correct, and found 38 bugs in FlashAttention, DeepGEMM and more. The post A Team of Researchers f…",
-      "category": "tech",
-      "published_at": "2026-11-22T09:51:43+08:00",
-      "source_name": "权威报道",
-      "source_url": "https://news.google.com/rss/articles/CBMiZkFVX3lxTE5VR2ZQRXJuaHdHZEduejI1cFZPMjNySDZsWFh1cnNBOU1ZQXl5cVFzUXAxY1AwWGMtdmdRYWhWVnQ4TzY5WTNnMUxOSlFvMXRqRUdaVHdXMEZ2ckRQRF9peFlxNFVxQQ?oc=5",
-      "sources": [
-        {
-          "source_name": "权威报道",
-          "url": "https://news.google.com/rss/articles/CBMiZkFVX3lxTE5VR2ZQRXJuaHdHZEduejI1cFZPMjNySDZsWFh1cnNBOU1ZQXl5cVFzUXAxY1AwWGMtdmdRYWhWVnQ4TzY5WTNnMUxOSlFvMXRqRUdaVHdXMEZ2ckRQRF9peFlxNFVxQQ?oc=5"
-        },
-        {
-          "source_name": "MarkTechPost (AI论文/模型)",
-          "url": "https://www.marktechpost.com/2026/11/21/columbia-certik-tensorlean-formal-verification-gpu-kernels"
-        },
-        {
-          "source_name": "AIHOT 前沿",
-          "url": "https://aihot.news/items/hf95pziye2nm3tc6agg9ar66g"
-        }
-      ],
-      "tag": "国产与开源大模型性能追赶催化",
-      "tag_en": "China & Open-Weight Model Catch-Up",
-      "polarity": "bullish",
-      "intensity": 3,
-      "one_liner": "受「哥伦比亚大学与 CertiK 推出 TensorLean，对生产」催化，高性价比模型迭代持续拉低私有化部署与 API 推理成本，重点利好国内云平台与本地算力部署链。",
-      "one_liner_en": "Key AI capability catalyst around '哥伦比亚大学与 CertiK 推出 TensorLean，对生产' expands enterprise API & inference monetization.",
-      "sample_basis": {
-        "sample_n": 15,
-        "volatility_pct": 2.9,
-        "volatility_source": "主流大模型与软件应用催化样本",
-        "horizon": "2~5 个交易日",
-        "confidence_label": "中高置信（生态应用催化）",
-        "confidence_label_en": "Moderate-High (Model Ecosystem Catalyst)"
-      },
-      "affected_tickers": {
-        "09988.HK": 0.45,
-        "00700.HK": 0.42,
-        "HSTECH.HK": 0.4
-      },
-      "realized_quotes": [
-        {
-          "ticker": "00700.HK",
-          "name": "腾讯控股",
-          "name_en": "Tencent",
-          "market": "港股",
-          "price": 344.0,
-          "pct_change": -1.26
-        },
-        {
-          "ticker": "HSTECH.HK",
-          "name": "恒生科指",
-          "name_en": "Hang Seng Tech",
-          "market": "港股",
-          "price": 3511.14,
-          "pct_change": -3.78
-        }
-      ],
-      "bars": [
-        {
-          "market": "美股",
-          "sector": "全球推理芯片与云基准估值 (NVDA / QQQ)",
-          "sector_en": "Global Inference Compute & Cloud Benchmarks",
-          "pct_low": 0.9,
-          "pct_high": 2.7,
-          "direction": "positive",
-          "proxy_ticker": "09988.HK",
-          "logic": "开源与低成本模型在「哥伦比亚大学与 CertiK 推出 TensorLean，对生产」展现更高性价比，促使海外云厂商加快高阶模型差异化投入。",
-          "logic_en": "Model ecosystem upgrades expand enterprise cloud consumption."
-        },
-        {
-          "market": "港股",
-          "sector": "国内开源模型底座与云平台 (09988 / 00700)",
-          "sector_en": "HKEX AI Ecosystem & Cloud Platforms",
-          "pct_low": 0.8,
-          "pct_high": 2.5,
-          "direction": "positive",
-          "proxy_ticker": "HSTECH.HK",
-          "logic": "「哥伦比亚大学与 CertiK 推出 TensorLean，对生产」降低开发者企业级微调门槛，直接强化港股云厂商 MaaS 平台调用粘性。",
-          "logic_en": "Model performance progress supports platform ecosystem monetization."
-        },
-        {
-          "market": "A股",
-          "sector": "A股国产算力卡 / 推理服务器与本地部署软件",
-          "sector_en": "A-Share AI Apps & Local Compute",
-          "pct_low": 1.1,
-          "pct_high": 3.1,
-          "direction": "positive",
-          "proxy_ticker": null,
-          "logic": "开源权重轻量化加速政企与金融机构私有化部署落地，提振国产推理一体机与算力需求。",
-          "logic_en": "Expanded capabilities accelerate domestic enterprise adoption."
-        }
-      ],
-      "if_then": [
-        {
-          "cond": "若第三方基准测试与企业付费转化数据超预期",
-          "result": "对应云平台与推理应用链保持结构性活跃",
-          "tone": "bullish"
-        }
-      ],
-      "milestones": [
-        {
-          "date": "未来 2~4 周",
-          "status": "upcoming",
-          "label": "观察开发者 API 活跃度与企业接入量反馈"
-        }
-      ]
     }
   ],
   "event_impact_map": {
-    "evt_f29078944056": {
-      "event_id": "evt_f29078944056",
-      "tag": "头部大模型 IPO 破发 / 估值重锚",
-      "tag_en": "AI IPO Valuation Pullback",
+    "evt_eb01979e75af": {
+      "event_id": "evt_eb01979e75af",
+      "tag": "海外数据中心重税 / 芯片限制与治理震荡",
+      "tag_en": "Data Center Tax, Export Curbs & Governance",
       "polarity": "bearish",
-      "intensity": 5,
+      "intensity": 4,
       "validation_status": "verified",
-      "one_liner": "高估值大模型上市即逼近破发、二级市场对 AI 应用与烧钱亏损商业化兑现更加苛刻，软件应用与云生态短期估值受压。",
+      "one_liner": "威胁对海外新建数据中心美企征重税、收紧芯片出口叠加龙头管理层震荡，直接冲击全球 AI 基建资本开支，倒逼国产替代加速。",
       "top_a": {
         "market": "A股",
-        "sector": "AI 大模型应用 / 通用 SaaS 概念",
-        "sector_en": "A-Share AI Apps & SaaS",
-        "pct_low": -2.9,
-        "pct_high": -0.8,
-        "direction": "negative",
-        "proxy_ticker": null,
-        "logic": "高估值纯概念应用板块受情绪外溢回吐，但现金流硬件相对企稳。",
-        "logic_en": "Story-driven domestic AI application names pull back with overseas IPO weakness."
+        "sector": "国产半导体设备 / 算力自主可控",
+        "sector_en": "A-Share Domestic Semi Equipment",
+        "pct_low": 1.1,
+        "pct_high": 3.6,
+        "direction": "positive",
+        "proxy_ticker": "512480.SH",
+        "logic": "进口替代刚性提升，光刻/刻蚀设备与本土算力获事件催化。",
+        "logic_en": "Localization urgency lifts domestic semiconductor equipment names."
       },
       "top_us": {
         "market": "美股",
-        "sector": "AI 大模型与企业级 SaaS 软件 (QQQ / App)",
-        "sector_en": "US AI Foundation & Enterprise SaaS",
-        "pct_low": -6.2,
-        "pct_high": -2.3,
+        "sector": "美股 GPU 与海外建厂链 (NVDA / TSM)",
+        "sector_en": "US AI Hardware & Foundries (NVDA/TSM)",
+        "pct_low": -5.1,
+        "pct_high": -1.8,
         "direction": "negative",
-        "proxy_ticker": "QQQ",
-        "logic": "一线大模型次新上市承压直接触发高 PS 倍数 AI 应用股估值下修。",
-        "logic_en": "Secondary pressure on marquee AI IPO triggers multiple compression in AI SaaS."
+        "proxy_ticker": "NVDA",
+        "logic": "治理变动与出口及海外数据中心税收威胁叠加压制估值。",
+        "logic_en": "Export limits, overseas capex tax threats & leadership risk weigh on semis."
       },
       "top_hk": {
         "market": "港股",
-        "sector": "港股大模型生态与云计算 (HSTECH / 00700)",
-        "sector_en": "HKEX AI Cloud & Apps (HSTECH)",
-        "pct_low": -3.5,
-        "pct_high": -1.1,
-        "direction": "negative",
-        "proxy_ticker": "HSTECH.HK",
-        "logic": "一级市场估值锚松动压制港股 AI 应用与商业化平台溢价。",
-        "logic_en": "Lower global LLM valuation benchmarks weigh on HK cloud/AI ecosystems."
+        "sector": "港股芯片自主制造 (00981.HK 中芯)",
+        "sector_en": "HKEX Domestic Foundry (00981.HK)",
+        "pct_low": 0.9,
+        "pct_high": 3.3,
+        "direction": "positive",
+        "proxy_ticker": "00981.HK",
+        "logic": "高端进口限制收紧进一步锁定境内晶圆制造份额。",
+        "logic_en": "Tighter US curbs solidify domestic wafer fab utilization expectations."
       },
       "bars": [
         {
           "market": "美股",
-          "sector": "AI 大模型与企业级 SaaS 软件 (QQQ / App)",
-          "sector_en": "US AI Foundation & Enterprise SaaS",
-          "pct_low": -6.2,
-          "pct_high": -2.3,
+          "sector": "美股 GPU 与海外建厂链 (NVDA / TSM)",
+          "sector_en": "US AI Hardware & Foundries (NVDA/TSM)",
+          "pct_low": -5.1,
+          "pct_high": -1.8,
           "direction": "negative",
-          "proxy_ticker": "QQQ",
-          "logic": "一线大模型次新上市承压直接触发高 PS 倍数 AI 应用股估值下修。",
-          "logic_en": "Secondary pressure on marquee AI IPO triggers multiple compression in AI SaaS."
+          "proxy_ticker": "NVDA",
+          "logic": "治理变动与出口及海外数据中心税收威胁叠加压制估值。",
+          "logic_en": "Export limits, overseas capex tax threats & leadership risk weigh on semis."
         },
         {
           "market": "港股",
-          "sector": "港股大模型生态与云计算 (HSTECH / 00700)",
-          "sector_en": "HKEX AI Cloud & Apps (HSTECH)",
-          "pct_low": -3.5,
-          "pct_high": -1.1,
-          "direction": "negative",
-          "proxy_ticker": "HSTECH.HK",
-          "logic": "一级市场估值锚松动压制港股 AI 应用与商业化平台溢价。",
-          "logic_en": "Lower global LLM valuation benchmarks weigh on HK cloud/AI ecosystems."
-        },
-        {
-          "market": "A股",
-          "sector": "AI 大模型应用 / 通用 SaaS 概念",
-          "sector_en": "A-Share AI Apps & SaaS",
-          "pct_low": -2.9,
-          "pct_high": -0.8,
-          "direction": "negative",
-          "proxy_ticker": null,
-          "logic": "高估值纯概念应用板块受情绪外溢回吐，但现金流硬件相对企稳。",
-          "logic_en": "Story-driven domestic AI application names pull back with overseas IPO weakness."
-        },
-        {
-          "market": "A股",
-          "sector": "高股息红利 / 现金流资产防御",
-          "sector_en": "A-Share High-Dividend Cashflow",
-          "pct_low": 0.4,
-          "pct_high": 1.3,
+          "sector": "港股芯片自主制造 (00981.HK 中芯)",
+          "sector_en": "HKEX Domestic Foundry (00981.HK)",
+          "pct_low": 0.9,
+          "pct_high": 3.3,
           "direction": "positive",
-          "proxy_ticker": "601398.SH",
-          "logic": "成长溢价挤泡沫期间，高股息低估值资产吸引避险配置。",
-          "logic_en": "Defensives attract rotation during growth valuation digestion."
+          "proxy_ticker": "00981.HK",
+          "logic": "高端进口限制收紧进一步锁定境内晶圆制造份额。",
+          "logic_en": "Tighter US curbs solidify domestic wafer fab utilization expectations."
+        },
+        {
+          "market": "A股",
+          "sector": "国产半导体设备 / 算力自主可控",
+          "sector_en": "A-Share Domestic Semi Equipment",
+          "pct_low": 1.1,
+          "pct_high": 3.6,
+          "direction": "positive",
+          "proxy_ticker": "512480.SH",
+          "logic": "进口替代刚性提升，光刻/刻蚀设备与本土算力获事件催化。",
+          "logic_en": "Localization urgency lifts domestic semiconductor equipment names."
         }
       ],
       "if_then": [
         {
-          "cond": "若上市首周跌破发行价引发承销护盘失效",
-          "result": "一二级 AI 融资估值折价传导至港股/美股软件应用",
+          "cond": "若白宫正式签发海外数据中心关税行政令",
+          "result": "跨国云厂基建节奏放缓，美股算力硬件承压加深",
           "tone": "bearish"
         },
         {
-          "cond": "若企业级 ARR 签约增速公告超预期带动止跌企稳",
-          "result": "头部 AI 平台估值中枢重新锚定",
+          "cond": "若英伟达董事会明确过渡安排并澄清核心技术研发不受影响",
+          "result": "治理恐慌折价逐步修复",
           "tone": "neutral"
         }
       ],
       "milestones": [
         {
-          "date": "未来 3 个交易日",
+          "date": "两周内",
           "status": "current",
-          "label": "观察发行价保卫战成交量与做空仓位变化"
+          "label": "英伟达治理公告与美国商务部出口税则细则"
         }
       ],
       "sample_basis": {
-        "sample_n": 13,
-        "volatility_pct": 4.82,
-        "volatility_source": "美股科技次新股与 QQQ 波动校准",
-        "horizon": "1~3 个交易日",
-        "confidence_label": "高置信（一二级估值直接锚定）",
-        "confidence_label_en": "High (IPO Valuation Anchor)"
+        "sample_n": 15,
+        "volatility_pct": 11.91,
+        "volatility_source": "美股算力制裁与关税冲击样本",
+        "horizon": "1~5 个交易日",
+        "confidence_label": "高置信（直击核心估值与供给端）",
+        "confidence_label_en": "High (Direct Capex & Export Shock)"
       },
       "realized_quotes": [
         {
-          "ticker": "IXIC",
-          "name": "纳斯达克",
-          "name_en": "NASDAQ Composite",
+          "ticker": "NVDA",
+          "name": "英伟达",
+          "name_en": "NVIDIA",
           "market": "美股",
-          "price": 22617.73,
-          "pct_change": -5.28
+          "price": 125.53,
+          "pct_change": -14.01
         },
         {
-          "ticker": "QQQ",
-          "name": "纳指100ETF",
-          "name_en": "Invesco QQQ",
+          "ticker": "TSM",
+          "name": "台积电",
+          "name_en": "TSMC",
           "market": "美股",
-          "price": 608.45,
-          "pct_change": -5.67
+          "price": 318.71,
+          "pct_change": -9.48
         },
         {
-          "ticker": "HSTECH.HK",
-          "name": "恒生科指",
-          "name_en": "Hang Seng Tech",
+          "ticker": "00981.HK",
+          "name": "中芯国际",
+          "name_en": "SMIC",
           "market": "港股",
-          "price": 3511.14,
-          "pct_change": -3.78
+          "price": 49.12,
+          "pct_change": -2.73
+        },
+        {
+          "ticker": "512480.SH",
+          "name": "A股半导体ETF",
+          "name_en": "CN Semi ETF",
+          "market": "A股",
+          "price": 0.745,
+          "pct_change": -4.36
         }
       ]
     },
-    "evt_e5db2f590686": {
-      "event_id": "evt_e5db2f590686",
-      "tag": "中美关税贸易博弈",
-      "tag_en": "US-China Diplomacy & Trade Tone",
-      "polarity": "divergent",
-      "intensity": 3,
-      "validation_status": "verified",
-      "one_liner": "中美元首深圳会晤释放对话稳定信号，有助缓和地缘风险溢价，短期利好中概互联、港股权重及出口链估值修复。",
-      "top_a": {
-        "market": "A股",
-        "sector": "出口链 / 消费电子与航运",
-        "sector_en": "A-Share Exporters & Consumer Electronics",
-        "pct_low": 1.2,
-        "pct_high": 3.2,
-        "direction": "positive",
-        "proxy_ticker": null,
-        "logic": "贸易关税担忧边际降温提升对美敞口制造业估值。",
-        "logic_en": "Tariff-deescalation expectations support export manufacturing."
-      },
-      "top_us": {
-        "market": "美股",
-        "sector": "中概互联资产 (KWEB)",
-        "sector_en": "US-Listed China Tech (KWEB)",
-        "pct_low": 1.5,
-        "pct_high": 3.9,
-        "direction": "positive",
-        "proxy_ticker": "KWEB",
-        "logic": "中美关系底部托底预期带动外资空头回补与估值折价收敛。",
-        "logic_en": "Stabilizing diplomatic floor triggers ADR short-covering and multiple expansion."
-      },
-      "top_hk": {
-        "market": "港股",
-        "sector": "恒生科指与外资权重 (00700 / HSTECH)",
-        "sector_en": "HKEX Tech Leaders (HSTECH / 00700)",
-        "pct_low": 1.5,
-        "pct_high": 3.8,
-        "direction": "positive",
-        "proxy_ticker": "HSTECH.HK",
-        "logic": "离岸中国资产对中美风险溢价改善弹性最高。",
-        "logic_en": "Offshore HK tech leaders capture strongest risk-premium compression."
-      },
-      "bars": [
-        {
-          "market": "美股",
-          "sector": "中概互联资产 (KWEB)",
-          "sector_en": "US-Listed China Tech (KWEB)",
-          "pct_low": 1.5,
-          "pct_high": 3.9,
-          "direction": "positive",
-          "proxy_ticker": "KWEB",
-          "logic": "中美关系底部托底预期带动外资空头回补与估值折价收敛。",
-          "logic_en": "Stabilizing diplomatic floor triggers ADR short-covering and multiple expansion."
-        },
-        {
-          "market": "港股",
-          "sector": "恒生科指与外资权重 (00700 / HSTECH)",
-          "sector_en": "HKEX Tech Leaders (HSTECH / 00700)",
-          "pct_low": 1.5,
-          "pct_high": 3.8,
-          "direction": "positive",
-          "proxy_ticker": "HSTECH.HK",
-          "logic": "离岸中国资产对中美风险溢价改善弹性最高。",
-          "logic_en": "Offshore HK tech leaders capture strongest risk-premium compression."
-        },
-        {
-          "market": "A股",
-          "sector": "出口链 / 消费电子与航运",
-          "sector_en": "A-Share Exporters & Consumer Electronics",
-          "pct_low": 1.2,
-          "pct_high": 3.2,
-          "direction": "positive",
-          "proxy_ticker": null,
-          "logic": "贸易关税担忧边际降温提升对美敞口制造业估值。",
-          "logic_en": "Tariff-deescalation expectations support export manufacturing."
-        }
-      ],
-      "if_then": [
-        {
-          "cond": "若后续正式联合公报确认推进关税豁免或常态化经贸对话",
-          "result": "外资持续回流港股与中概核心权重",
-          "tone": "bullish"
-        },
-        {
-          "cond": "若会晤后实质科技及资本限制未见松动",
-          "result": "风偏修复仅限短线情绪行情",
-          "tone": "neutral"
-        }
-      ],
-      "milestones": [
-        {
-          "date": "会晤后 72 小时",
-          "status": "current",
-          "label": "双方外交与财政部门跟进文本公布"
-        }
-      ],
-      "sample_basis": {
-        "sample_n": 19,
-        "volatility_pct": 2.35,
-        "volatility_source": "中概 KWEB 外交缓和窗口统计",
-        "horizon": "2~7 个交易日",
-        "confidence_label": "高置信（直接风偏锚定）",
-        "confidence_label_en": "High (Direct Risk-Premium Anchor)"
-      },
-      "realized_quotes": [
-        {
-          "ticker": "KWEB",
-          "name": "中概互联ETF",
-          "name_en": "KraneShares KWEB",
-          "market": "美股",
-          "price": 20.72,
-          "pct_change": -2.77
-        },
-        {
-          "ticker": "HSTECH.HK",
-          "name": "恒生科指",
-          "name_en": "Hang Seng Tech",
-          "market": "港股",
-          "price": 3511.14,
-          "pct_change": -3.78
-        },
-        {
-          "ticker": "00700.HK",
-          "name": "腾讯控股",
-          "name_en": "Tencent",
-          "market": "港股",
-          "price": 344.0,
-          "pct_change": -1.26
-        },
-        {
-          "ticker": "000001.SH",
-          "name": "上证指数",
-          "name_en": "SSE Composite",
-          "market": "A股",
-          "price": 3533.79,
-          "pct_change": -1.23
-        }
-      ]
-    },
-    "evt_12d950b54437": {
-      "event_id": "evt_12d950b54437",
+    "evt_d1d094a6f014": {
+      "event_id": "evt_d1d094a6f014",
       "tag": "美联储鹰派加息 / 流动性收紧",
       "tag_en": "Fed Hawkish Rate Decision",
       "polarity": "bearish",
@@ -1932,108 +1650,124 @@
         }
       ]
     },
-    "evt_74124d519983": {
-      "event_id": "evt_74124d519983",
-      "tag": "海外数据中心重税 / 芯片限制与治理震荡",
-      "tag_en": "Data Center Tax, Export Curbs & Governance",
+    "evt_d3636c15c6ad": {
+      "event_id": "evt_d3636c15c6ad",
+      "tag": "AI 算力与科技估值抛压",
+      "tag_en": "AI Equity Valuation Selloff",
       "polarity": "bearish",
-      "intensity": 4,
+      "intensity": 3,
       "validation_status": "verified",
-      "one_liner": "威胁对海外新建数据中心美企征重税、收紧芯片出口叠加龙头管理层震荡，直接冲击全球 AI 基建资本开支，倒逼国产替代加速。",
+      "one_liner": "核心 AI 算力龙头放量下挫，触发纳指与港股/A股算力链同步去杠杆，红利防御资产相对抗跌。",
       "top_a": {
         "market": "A股",
-        "sector": "国产半导体设备 / 算力自主可控",
-        "sector_en": "A-Share Domestic Semi Equipment",
-        "pct_low": 1.1,
-        "pct_high": 3.6,
-        "direction": "positive",
-        "proxy_ticker": "512480.SH",
-        "logic": "进口替代刚性提升，光刻/刻蚀设备与本土算力获事件催化。",
-        "logic_en": "Localization urgency lifts domestic semiconductor equipment names."
+        "sector": "CPO 光模块 / 算力硬件映射",
+        "sector_en": "A-Share Optical / AI Hardware",
+        "pct_low": -4.7,
+        "pct_high": -1.5,
+        "direction": "negative",
+        "proxy_ticker": "515880.SH",
+        "logic": "北美算力资本开支映射承压，短期交易情绪跟随海外龙头回落。",
+        "logic_en": "North American capex proxies retrace alongside US AI hardware peers."
       },
       "top_us": {
         "market": "美股",
-        "sector": "美股 GPU 与海外建厂链 (NVDA / TSM)",
-        "sector_en": "US AI Hardware & Foundries (NVDA/TSM)",
-        "pct_low": -5.1,
-        "pct_high": -1.8,
+        "sector": "AI 算力龙头 (NVDA / AMD / QQQ)",
+        "sector_en": "US AI Chips & Nasdaq (NVDA/QQQ)",
+        "pct_low": -4.9,
+        "pct_high": -2.0,
         "direction": "negative",
         "proxy_ticker": "NVDA",
-        "logic": "治理变动与出口及海外数据中心税收威胁叠加压制估值。",
-        "logic_en": "Export limits, overseas capex tax threats & leadership risk weigh on semis."
+        "logic": "高估值算力核心权重放量回撤，直接压制费半及纳指风险偏好。",
+        "logic_en": "Direct valuation compression on US flagship AI semis and Nasdaq."
       },
       "top_hk": {
         "market": "港股",
-        "sector": "港股芯片自主制造 (00981.HK 中芯)",
-        "sector_en": "HKEX Domestic Foundry (00981.HK)",
-        "pct_low": 0.9,
-        "pct_high": 3.3,
-        "direction": "positive",
-        "proxy_ticker": "00981.HK",
-        "logic": "高端进口限制收紧进一步锁定境内晶圆制造份额。",
-        "logic_en": "Tighter US curbs solidify domestic wafer fab utilization expectations."
+        "sector": "恒生科指与大模型生态 (HSTECH / 00700)",
+        "sector_en": "HK Tech & AI Ecosystem (HSTECH)",
+        "pct_low": -3.7,
+        "pct_high": -1.2,
+        "direction": "negative",
+        "proxy_ticker": "HSTECH.HK",
+        "logic": "外资风险预算收缩时，港股科技权重通常跟随纳指承压。",
+        "logic_en": "Foreign risk-off flows weigh on HKEX tech heavyweight multiples."
       },
       "bars": [
         {
           "market": "美股",
-          "sector": "美股 GPU 与海外建厂链 (NVDA / TSM)",
-          "sector_en": "US AI Hardware & Foundries (NVDA/TSM)",
-          "pct_low": -5.1,
-          "pct_high": -1.8,
+          "sector": "AI 算力龙头 (NVDA / AMD / QQQ)",
+          "sector_en": "US AI Chips & Nasdaq (NVDA/QQQ)",
+          "pct_low": -4.9,
+          "pct_high": -2.0,
           "direction": "negative",
           "proxy_ticker": "NVDA",
-          "logic": "治理变动与出口及海外数据中心税收威胁叠加压制估值。",
-          "logic_en": "Export limits, overseas capex tax threats & leadership risk weigh on semis."
+          "logic": "高估值算力核心权重放量回撤，直接压制费半及纳指风险偏好。",
+          "logic_en": "Direct valuation compression on US flagship AI semis and Nasdaq."
         },
         {
           "market": "港股",
-          "sector": "港股芯片自主制造 (00981.HK 中芯)",
-          "sector_en": "HKEX Domestic Foundry (00981.HK)",
-          "pct_low": 0.9,
-          "pct_high": 3.3,
-          "direction": "positive",
-          "proxy_ticker": "00981.HK",
-          "logic": "高端进口限制收紧进一步锁定境内晶圆制造份额。",
-          "logic_en": "Tighter US curbs solidify domestic wafer fab utilization expectations."
+          "sector": "恒生科指与大模型生态 (HSTECH / 00700)",
+          "sector_en": "HK Tech & AI Ecosystem (HSTECH)",
+          "pct_low": -3.7,
+          "pct_high": -1.2,
+          "direction": "negative",
+          "proxy_ticker": "HSTECH.HK",
+          "logic": "外资风险预算收缩时，港股科技权重通常跟随纳指承压。",
+          "logic_en": "Foreign risk-off flows weigh on HKEX tech heavyweight multiples."
         },
         {
           "market": "A股",
-          "sector": "国产半导体设备 / 算力自主可控",
-          "sector_en": "A-Share Domestic Semi Equipment",
-          "pct_low": 1.1,
-          "pct_high": 3.6,
+          "sector": "CPO 光模块 / 算力硬件映射",
+          "sector_en": "A-Share Optical / AI Hardware",
+          "pct_low": -4.7,
+          "pct_high": -1.5,
+          "direction": "negative",
+          "proxy_ticker": "515880.SH",
+          "logic": "北美算力资本开支映射承压，短期交易情绪跟随海外龙头回落。",
+          "logic_en": "North American capex proxies retrace alongside US AI hardware peers."
+        },
+        {
+          "market": "A股",
+          "sector": "高股息红利 / 国有大行防御",
+          "sector_en": "A-Share High-Dividend Defense",
+          "pct_low": 0.2,
+          "pct_high": 0.9,
           "direction": "positive",
-          "proxy_ticker": "512480.SH",
-          "logic": "进口替代刚性提升，光刻/刻蚀设备与本土算力获事件催化。",
-          "logic_en": "Localization urgency lifts domestic semiconductor equipment names."
+          "proxy_ticker": "601398.SH",
+          "logic": "成长赛道剧烈波动期间，资金倾向回流低波红利与高股息银行。",
+          "logic_en": "Capital rotates toward low-volatility dividend value during tech drawdowns."
         }
       ],
       "if_then": [
         {
-          "cond": "若白宫正式签发海外数据中心关税行政令",
-          "result": "跨国云厂基建节奏放缓，美股算力硬件承压加深",
-          "tone": "bearish"
+          "cond": "若纳指/英伟达次日止跌企稳且未现机构连续砍单验证",
+          "result": "算力链情绪脉冲消化后关注业绩兑现标的",
+          "tone": "neutral"
         },
         {
-          "cond": "若英伟达董事会明确过渡安排并澄清核心技术研发不受影响",
-          "result": "治理恐慌折价逐步修复",
-          "tone": "neutral"
+          "cond": "若下跌伴随大厂下调来年 Capex 指引或更多 IPO 破发",
+          "result": "科技成长估值中枢下移，防御仓位占优",
+          "tone": "bearish"
         }
       ],
       "milestones": [
         {
-          "date": "两周内",
+          "date": "次日美股开盘",
           "status": "current",
-          "label": "英伟达治理公告与美国商务部出口税则细则"
+          "label": "观察 NVDA / QQQ 成交量与机构承接力"
+        },
+        {
+          "date": "未来 2 周",
+          "status": "upcoming",
+          "label": "跟踪 CSP 云巨头资本开支指引是否松动"
         }
       ],
       "sample_basis": {
-        "sample_n": 15,
+        "sample_n": 18,
         "volatility_pct": 11.91,
-        "volatility_source": "美股算力制裁与关税冲击样本",
-        "horizon": "1~5 个交易日",
-        "confidence_label": "高置信（直击核心估值与供给端）",
-        "confidence_label_en": "High (Direct Capex & Export Shock)"
+        "volatility_source": "NVDA / 纳指实现波动率校准",
+        "horizon": "1~3 个交易日",
+        "confidence_label": "高置信（直接板块联动）",
+        "confidence_label_en": "High (Direct Sector Beta)"
       },
       "realized_quotes": [
         {
@@ -2045,20 +1779,20 @@
           "pct_change": -14.01
         },
         {
-          "ticker": "TSM",
-          "name": "台积电",
-          "name_en": "TSMC",
+          "ticker": "IXIC",
+          "name": "纳斯达克",
+          "name_en": "NASDAQ Composite",
           "market": "美股",
-          "price": 318.71,
-          "pct_change": -9.48
+          "price": 22617.73,
+          "pct_change": -5.28
         },
         {
-          "ticker": "00981.HK",
-          "name": "中芯国际",
-          "name_en": "SMIC",
+          "ticker": "HSTECH.HK",
+          "name": "恒生科指",
+          "name_en": "Hang Seng Tech",
           "market": "港股",
-          "price": 49.12,
-          "pct_change": -2.73
+          "price": 3511.14,
+          "pct_change": -3.78
         },
         {
           "ticker": "512480.SH",
@@ -2070,8 +1804,266 @@
         }
       ]
     },
-    "evt_f0e9bd6d3861": {
-      "event_id": "evt_f0e9bd6d3861",
+    "evt_9ee67b73cf7b": {
+      "event_id": "evt_9ee67b73cf7b",
+      "tag": "贵金属剧震与杠杆去化",
+      "tag_en": "Precious Metals Selloff",
+      "polarity": "bearish",
+      "intensity": 3,
+      "validation_status": "verified",
+      "one_liner": "国际金银遭遇获利盘践踏与保证金去杠杆，国内银行紧急提示风险，贵金属采掘与金饰链短线明显承压。",
+      "top_a": {
+        "market": "A股",
+        "sector": "黄金采掘与贵金属板块",
+        "sector_en": "A-Share Gold Miners & Bullion",
+        "pct_low": -5.7,
+        "pct_high": -2.5,
+        "direction": "negative",
+        "proxy_ticker": "518880.SH",
+        "logic": "前期拥挤多头踩踏出清，商业银行同步收紧积存金警示。",
+        "logic_en": "Crowded long unwind and domestic bank risk alerts weigh on sector."
+      },
+      "top_us": {
+        "market": "美股",
+        "sector": "黄金与贵金属 ETF (GLD / GDX)",
+        "sector_en": "US Gold & Miners ETFs (GLD)",
+        "pct_low": -4.9,
+        "pct_high": -2.1,
+        "direction": "negative",
+        "proxy_ticker": "GLD",
+        "logic": "现货金价大幅回撤叠加期货强平压力直接压制金矿股。",
+        "logic_en": "Spot gold slide compresses miner margins and ETF inflows."
+      },
+      "top_hk": {
+        "market": "港股",
+        "sector": "有色黄金资源 (紫金 / 招金等)",
+        "sector_en": "HKEX Gold Miners (02899.HK)",
+        "pct_low": -5.3,
+        "pct_high": -2.2,
+        "direction": "negative",
+        "proxy_ticker": "02899.HK",
+        "logic": "港股黄金标的受离岸现货金价及汇率波动双重传导。",
+        "logic_en": "HK gold miners react directly to offshore spot bullion swings."
+      },
+      "bars": [
+        {
+          "market": "美股",
+          "sector": "黄金与贵金属 ETF (GLD / GDX)",
+          "sector_en": "US Gold & Miners ETFs (GLD)",
+          "pct_low": -4.9,
+          "pct_high": -2.1,
+          "direction": "negative",
+          "proxy_ticker": "GLD",
+          "logic": "现货金价大幅回撤叠加期货强平压力直接压制金矿股。",
+          "logic_en": "Spot gold slide compresses miner margins and ETF inflows."
+        },
+        {
+          "market": "A股",
+          "sector": "黄金采掘与贵金属板块",
+          "sector_en": "A-Share Gold Miners & Bullion",
+          "pct_low": -5.7,
+          "pct_high": -2.5,
+          "direction": "negative",
+          "proxy_ticker": "518880.SH",
+          "logic": "前期拥挤多头踩踏出清，商业银行同步收紧积存金警示。",
+          "logic_en": "Crowded long unwind and domestic bank risk alerts weigh on sector."
+        },
+        {
+          "market": "港股",
+          "sector": "有色黄金资源 (紫金 / 招金等)",
+          "sector_en": "HKEX Gold Miners (02899.HK)",
+          "pct_low": -5.3,
+          "pct_high": -2.2,
+          "direction": "negative",
+          "proxy_ticker": "02899.HK",
+          "logic": "港股黄金标的受离岸现货金价及汇率波动双重传导。",
+          "logic_en": "HK gold miners react directly to offshore spot bullion swings."
+        }
+      ],
+      "if_then": [
+        {
+          "cond": "若银行提升保证金引发程序化抛盘延续",
+          "result": "贵金属矿企延续二次探底，谨慎抄底",
+          "tone": "bearish"
+        },
+        {
+          "cond": "若实际利率转降且央行买金数据恢复净增",
+          "result": "急跌消化杠杆后逐步企稳",
+          "tone": "neutral"
+        }
+      ],
+      "milestones": [
+        {
+          "date": "下周美联储/CPI数据",
+          "status": "upcoming",
+          "label": "实际利率变动决定金价能否止跌"
+        }
+      ],
+      "sample_basis": {
+        "sample_n": 16,
+        "volatility_pct": 3.69,
+        "volatility_source": "518880 黄金ETF 20日 ATR",
+        "horizon": "1~5 个交易日",
+        "confidence_label": "高置信（商品直接映射）",
+        "confidence_label_en": "High (Direct Bullion Beta)"
+      },
+      "realized_quotes": [
+        {
+          "ticker": "GLD",
+          "name": "黄金ETF(美)",
+          "name_en": "SPDR Gold GLD",
+          "market": "美股",
+          "price": 322.87,
+          "pct_change": -3.67
+        },
+        {
+          "ticker": "518880.SH",
+          "name": "黄金ETF(A股)",
+          "name_en": "CN Gold ETF",
+          "market": "A股",
+          "price": 7.282,
+          "pct_change": -4.34
+        },
+        {
+          "ticker": "02899.HK",
+          "name": "紫金矿业",
+          "name_en": "Zijin Mining",
+          "market": "港股",
+          "price": 23.06,
+          "pct_change": -1.28
+        }
+      ]
+    },
+    "evt_007200a1b8e5": {
+      "event_id": "evt_007200a1b8e5",
+      "tag": "稀土上游原料/辅料管制冲击",
+      "tag_en": "Critical Minerals & Rare-Earth Supply Curb",
+      "polarity": "divergent",
+      "intensity": 4,
+      "validation_status": "verified",
+      "one_liner": "东南亚跨境稀土冶炼辅料或原矿禁令扰动上游供给预期，中重稀土冶炼及海外替代资源迎重估，永磁下游成本短线承压。",
+      "top_a": {
+        "market": "A股",
+        "sector": "稀土开采冶炼与中重稀土 (北方稀土/广晟)",
+        "sector_en": "A-Share Rare-Earth Mining & Separation",
+        "pct_low": 1.8,
+        "pct_high": 4.8,
+        "direction": "positive",
+        "proxy_ticker": "600111.SH",
+        "logic": "矿山开采辅料（如草酸/萃取试剂）或原矿跨境受限直接抬升氧化镨钕与镝铽现货报价。",
+        "logic_en": "Reagent bans or feedstock disruptions tighten separated oxide pricing."
+      },
+      "top_us": {
+        "market": "美股",
+        "sector": "北美非中国稀土矿采分离 (MP)",
+        "sector_en": "US Ex-China Rare-Earth Producers (MP)",
+        "pct_low": 1.9,
+        "pct_high": 4.9,
+        "direction": "positive",
+        "proxy_ticker": "MP",
+        "logic": "东南亚跨境供应链扰动推升欧美本土稀土精炼产能的战略溢价。",
+        "logic_en": "Supply-chain bottlenecks strengthen strategic premium for ex-China refining."
+      },
+      "top_hk": null,
+      "bars": [
+        {
+          "market": "A股",
+          "sector": "稀土开采冶炼与中重稀土 (北方稀土/广晟)",
+          "sector_en": "A-Share Rare-Earth Mining & Separation",
+          "pct_low": 1.8,
+          "pct_high": 4.8,
+          "direction": "positive",
+          "proxy_ticker": "600111.SH",
+          "logic": "矿山开采辅料（如草酸/萃取试剂）或原矿跨境受限直接抬升氧化镨钕与镝铽现货报价。",
+          "logic_en": "Reagent bans or feedstock disruptions tighten separated oxide pricing."
+        },
+        {
+          "market": "美股",
+          "sector": "北美非中国稀土矿采分离 (MP)",
+          "sector_en": "US Ex-China Rare-Earth Producers (MP)",
+          "pct_low": 1.9,
+          "pct_high": 4.9,
+          "direction": "positive",
+          "proxy_ticker": "MP",
+          "logic": "东南亚跨境供应链扰动推升欧美本土稀土精炼产能的战略溢价。",
+          "logic_en": "Supply-chain bottlenecks strengthen strategic premium for ex-China refining."
+        },
+        {
+          "market": "A股",
+          "sector": "高性能钕铁硼永磁材料 (金力永磁)",
+          "sector_en": "A-Share NdFeB Permanent Magnets",
+          "pct_low": 0.8,
+          "pct_high": 2.5,
+          "direction": "positive",
+          "proxy_ticker": "300748.SZ",
+          "logic": "氧化物现货温和涨价有利于具备低价原料库存的磁材龙头重估。",
+          "logic_en": "Moderate oxide inflation supports inventory revaluation for magnet leaders."
+        },
+        {
+          "market": "美股",
+          "sector": "风电整机与永磁驱动下游 (GEV)",
+          "sector_en": "Wind Turbine & EV Motor OEMs (GEV)",
+          "pct_low": -1.0,
+          "pct_high": -0.2,
+          "direction": "negative",
+          "proxy_ticker": "GEV",
+          "logic": "重稀土镝/铽现货跳涨或挤压未充分套保永磁电驱设备商毛利。",
+          "logic_en": "Dy/Tb spikes pressure margins at unhedged permanent-magnet OEMs."
+        }
+      ],
+      "if_then": [
+        {
+          "cond": "若边境化学品/矿砂禁令持续超 2 周且亚洲金属网镨钕/氧化铽报价连续跳涨",
+          "result": "中重稀土冶炼与具备原矿配额企业涨价弹性延续",
+          "tone": "bullish"
+        },
+        {
+          "cond": "若监管仅清理非法小矿点而正规配额供应未受影响",
+          "result": "供给冲击证伪，板块脉冲冲高后震荡回落",
+          "tone": "neutral"
+        }
+      ],
+      "milestones": [
+        {
+          "date": "未来 1 周",
+          "status": "current",
+          "label": "核查百川盈孚 / 亚洲金属网氧化镨钕、氧化铽周度现货价"
+        },
+        {
+          "date": "下月海关数据",
+          "status": "upcoming",
+          "label": "跟踪自东南亚进口稀土矿砂及冶炼辅料报关量变化"
+        }
+      ],
+      "sample_basis": {
+        "sample_n": 12,
+        "volatility_pct": 3.4,
+        "volatility_source": "中重稀土供给扰动与氧化物价格弹性样本",
+        "horizon": "2~7 个交易日",
+        "confidence_label": "高置信（直接供需扰动定价）",
+        "confidence_label_en": "High (Direct Feedstock Disruption)"
+      },
+      "realized_quotes": [
+        {
+          "ticker": "000001.SH",
+          "name": "上证指数",
+          "name_en": "SSE Composite",
+          "market": "A股",
+          "price": 3533.79,
+          "pct_change": -1.23
+        },
+        {
+          "ticker": "QQQ",
+          "name": "纳指100ETF",
+          "name_en": "Invesco QQQ",
+          "market": "美股",
+          "price": 608.45,
+          "pct_change": -5.67
+        }
+      ]
+    },
+    "evt_9e0eaafd19d8": {
+      "event_id": "evt_9e0eaafd19d8",
       "tag": "霍尔木兹航道触雷与油运飙升",
       "tag_en": "Geopolitical & Energy Chokepoint Risk",
       "polarity": "divergent",
@@ -2219,124 +2211,246 @@
         }
       ]
     },
-    "evt_6ea52d89136e": {
-      "event_id": "evt_6ea52d89136e",
-      "tag": "AI 算力与科技估值抛压",
-      "tag_en": "AI Equity Valuation Selloff",
-      "polarity": "bearish",
-      "intensity": 5,
+    "evt_2423eddc1474": {
+      "event_id": "evt_2423eddc1474",
+      "tag": "地缘缓和 / 停火预期升温",
+      "tag_en": "Geopolitical De-escalation / Peace Talks",
+      "polarity": "divergent",
+      "intensity": 3,
       "validation_status": "verified",
-      "one_liner": "核心 AI 算力龙头放量下挫，触发纳指与港股/A股算力链同步去杠杆，红利防御资产相对抗跌。",
+      "one_liner": "俄乌和平协议预期削弱能源断供与战争溢价，利空原油及传统军工避险资产，同时降低燃油成本并利好航空及全球风险资产。",
       "top_a": {
         "market": "A股",
-        "sector": "CPO 光模块 / 算力硬件映射",
-        "sector_en": "A-Share Optical / AI Hardware",
-        "pct_low": -4.9,
-        "pct_high": -1.5,
-        "direction": "negative",
-        "proxy_ticker": "515880.SH",
-        "logic": "北美算力资本开支映射承压，短期交易情绪跟随海外龙头回落。",
-        "logic_en": "North American capex proxies retrace alongside US AI hardware peers."
+        "sector": "航空机场 / 航运及重建基建链",
+        "sector_en": "A-Share Airlines & Reconstruction",
+        "pct_low": 1.4,
+        "pct_high": 3.8,
+        "direction": "positive",
+        "proxy_ticker": null,
+        "logic": "航油成本回落预期叠加跨境重建/外贸风险缓解。",
+        "logic_en": "Lower jet-fuel costs and reconstruction demand benefit aviation & engineering."
       },
       "top_us": {
         "market": "美股",
-        "sector": "AI 算力龙头 (NVDA / AMD / QQQ)",
-        "sector_en": "US AI Chips & Nasdaq (NVDA/QQQ)",
-        "pct_low": -6.8,
-        "pct_high": -2.8,
+        "sector": "原油与能源期货代理 (USO)",
+        "sector_en": "US Crude Oil & Energy (USO)",
+        "pct_low": -4.2,
+        "pct_high": -1.5,
         "direction": "negative",
-        "proxy_ticker": "NVDA",
-        "logic": "高估值算力核心权重放量回撤，直接压制费半及纳指风险偏好。",
-        "logic_en": "Direct valuation compression on US flagship AI semis and Nasdaq."
+        "proxy_ticker": "USO",
+        "logic": "停火期待压低制裁溢价预期，油价风偏下修。",
+        "logic_en": "Ceasefire expectations ease supply-risk premium in crude oil."
       },
       "top_hk": {
         "market": "港股",
-        "sector": "恒生科指与大模型生态 (HSTECH / 00700)",
-        "sector_en": "HK Tech & AI Ecosystem (HSTECH)",
-        "pct_low": -4.5,
-        "pct_high": -1.4,
+        "sector": "三桶油上游能源 (00883.HK)",
+        "sector_en": "HKEX Upstream Oil (00883.HK)",
+        "pct_low": -3.6,
+        "pct_high": -1.2,
         "direction": "negative",
-        "proxy_ticker": "HSTECH.HK",
-        "logic": "外资风险预算收缩时，港股科技权重通常跟随纳指承压。",
-        "logic_en": "Foreign risk-off flows weigh on HKEX tech heavyweight multiples."
+        "proxy_ticker": "00883.HK",
+        "logic": "原油风偏溢价收敛，高弹性能源权重大概率承压回吐。",
+        "logic_en": "Upstream oil producers retrace as geopolitical risk premia fade."
       },
       "bars": [
         {
           "market": "美股",
-          "sector": "AI 算力龙头 (NVDA / AMD / QQQ)",
-          "sector_en": "US AI Chips & Nasdaq (NVDA/QQQ)",
-          "pct_low": -6.8,
-          "pct_high": -2.8,
+          "sector": "原油与能源期货代理 (USO)",
+          "sector_en": "US Crude Oil & Energy (USO)",
+          "pct_low": -4.2,
+          "pct_high": -1.5,
           "direction": "negative",
-          "proxy_ticker": "NVDA",
-          "logic": "高估值算力核心权重放量回撤，直接压制费半及纳指风险偏好。",
-          "logic_en": "Direct valuation compression on US flagship AI semis and Nasdaq."
+          "proxy_ticker": "USO",
+          "logic": "停火期待压低制裁溢价预期，油价风偏下修。",
+          "logic_en": "Ceasefire expectations ease supply-risk premium in crude oil."
+        },
+        {
+          "market": "A股",
+          "sector": "航空机场 / 航运及重建基建链",
+          "sector_en": "A-Share Airlines & Reconstruction",
+          "pct_low": 1.4,
+          "pct_high": 3.8,
+          "direction": "positive",
+          "proxy_ticker": null,
+          "logic": "航油成本回落预期叠加跨境重建/外贸风险缓解。",
+          "logic_en": "Lower jet-fuel costs and reconstruction demand benefit aviation & engineering."
         },
         {
           "market": "港股",
-          "sector": "恒生科指与大模型生态 (HSTECH / 00700)",
-          "sector_en": "HK Tech & AI Ecosystem (HSTECH)",
-          "pct_low": -4.5,
-          "pct_high": -1.4,
+          "sector": "三桶油上游能源 (00883.HK)",
+          "sector_en": "HKEX Upstream Oil (00883.HK)",
+          "pct_low": -3.6,
+          "pct_high": -1.2,
           "direction": "negative",
-          "proxy_ticker": "HSTECH.HK",
-          "logic": "外资风险预算收缩时，港股科技权重通常跟随纳指承压。",
-          "logic_en": "Foreign risk-off flows weigh on HKEX tech heavyweight multiples."
-        },
-        {
-          "market": "A股",
-          "sector": "CPO 光模块 / 算力硬件映射",
-          "sector_en": "A-Share Optical / AI Hardware",
-          "pct_low": -4.9,
-          "pct_high": -1.5,
-          "direction": "negative",
-          "proxy_ticker": "515880.SH",
-          "logic": "北美算力资本开支映射承压，短期交易情绪跟随海外龙头回落。",
-          "logic_en": "North American capex proxies retrace alongside US AI hardware peers."
-        },
-        {
-          "market": "A股",
-          "sector": "高股息红利 / 国有大行防御",
-          "sector_en": "A-Share High-Dividend Defense",
-          "pct_low": 0.3,
-          "pct_high": 1.3,
-          "direction": "positive",
-          "proxy_ticker": "601398.SH",
-          "logic": "成长赛道剧烈波动期间，资金倾向回流低波红利与高股息银行。",
-          "logic_en": "Capital rotates toward low-volatility dividend value during tech drawdowns."
+          "proxy_ticker": "00883.HK",
+          "logic": "原油风偏溢价收敛，高弹性能源权重大概率承压回吐。",
+          "logic_en": "Upstream oil producers retrace as geopolitical risk premia fade."
         }
       ],
       "if_then": [
         {
-          "cond": "若纳指/英伟达次日止跌企稳且未现机构连续砍单验证",
-          "result": "算力链情绪脉冲消化后关注业绩兑现标的",
-          "tone": "neutral"
+          "cond": "若各方正式签字或推进对俄能源制裁放松路线图",
+          "result": "原油中枢继续下移，航空/欧股受益扩大",
+          "tone": "bullish"
         },
         {
-          "cond": "若下跌伴随大厂下调来年 Capex 指引或更多 IPO 破发",
-          "result": "科技成长估值中枢下移，防御仓位占优",
+          "cond": "若停火谈判再度破裂并恢复前线打击",
+          "result": "战争风险溢价重新快速回补至能源/黄金",
           "tone": "bearish"
         }
       ],
       "milestones": [
         {
-          "date": "次日美股开盘",
-          "status": "current",
-          "label": "观察 NVDA / QQQ 成交量与机构承接力"
-        },
-        {
-          "date": "未来 1 周",
+          "date": "明年1月前目标窗口",
           "status": "upcoming",
-          "label": "跟踪 CSP 云巨头资本开支表态是否松动"
+          "label": "各方安全保障文本能否落地签字"
         }
       ],
       "sample_basis": {
-        "sample_n": 18,
+        "sample_n": 11,
+        "volatility_pct": 2.2,
+        "volatility_source": "原油/航空历史事件波动统计",
+        "horizon": "2~5 个交易日",
+        "confidence_label": "中高置信（供需与风险溢价逆转）",
+        "confidence_label_en": "Moderate-High (Risk-Premium Unwind)"
+      },
+      "realized_quotes": [
+        {
+          "ticker": "USO",
+          "name": "原油ETF(美)",
+          "name_en": "US Oil USO",
+          "market": "美股",
+          "price": 139.63,
+          "pct_change": 1.12
+        },
+        {
+          "ticker": "GLD",
+          "name": "黄金ETF(美)",
+          "name_en": "SPDR Gold GLD",
+          "market": "美股",
+          "price": 322.87,
+          "pct_change": -3.67
+        },
+        {
+          "ticker": "00883.HK",
+          "name": "中国海油",
+          "name_en": "CNOOC",
+          "market": "港股",
+          "price": 21.7,
+          "pct_change": -1.9
+        },
+        {
+          "ticker": "HSI.HK",
+          "name": "恒生指数",
+          "name_en": "Hang Seng Index",
+          "market": "港股",
+          "price": 22410.8,
+          "pct_change": -1.89
+        }
+      ]
+    },
+    "evt_c77f5dfd342d": {
+      "event_id": "evt_c77f5dfd342d",
+      "tag": "海外数据中心重税 / 芯片限制与治理震荡",
+      "tag_en": "Data Center Tax, Export Curbs & Governance",
+      "polarity": "bearish",
+      "intensity": 4,
+      "validation_status": "verified",
+      "one_liner": "威胁对海外新建数据中心美企征重税、收紧芯片出口叠加龙头管理层震荡，直接冲击全球 AI 基建资本开支，倒逼国产替代加速。",
+      "top_a": {
+        "market": "A股",
+        "sector": "国产半导体设备 / 算力自主可控",
+        "sector_en": "A-Share Domestic Semi Equipment",
+        "pct_low": 1.0,
+        "pct_high": 3.1,
+        "direction": "positive",
+        "proxy_ticker": "512480.SH",
+        "logic": "进口替代刚性提升，光刻/刻蚀设备与本土算力获事件催化。",
+        "logic_en": "Localization urgency lifts domestic semiconductor equipment names."
+      },
+      "top_us": {
+        "market": "美股",
+        "sector": "美股 GPU 与海外建厂链 (NVDA / TSM)",
+        "sector_en": "US AI Hardware & Foundries (NVDA/TSM)",
+        "pct_low": -4.4,
+        "pct_high": -1.6,
+        "direction": "negative",
+        "proxy_ticker": "NVDA",
+        "logic": "治理变动与出口及海外数据中心税收威胁叠加压制估值。",
+        "logic_en": "Export limits, overseas capex tax threats & leadership risk weigh on semis."
+      },
+      "top_hk": {
+        "market": "港股",
+        "sector": "港股芯片自主制造 (00981.HK 中芯)",
+        "sector_en": "HKEX Domestic Foundry (00981.HK)",
+        "pct_low": 0.8,
+        "pct_high": 2.9,
+        "direction": "positive",
+        "proxy_ticker": "00981.HK",
+        "logic": "高端进口限制收紧进一步锁定境内晶圆制造份额。",
+        "logic_en": "Tighter US curbs solidify domestic wafer fab utilization expectations."
+      },
+      "bars": [
+        {
+          "market": "美股",
+          "sector": "美股 GPU 与海外建厂链 (NVDA / TSM)",
+          "sector_en": "US AI Hardware & Foundries (NVDA/TSM)",
+          "pct_low": -4.4,
+          "pct_high": -1.6,
+          "direction": "negative",
+          "proxy_ticker": "NVDA",
+          "logic": "治理变动与出口及海外数据中心税收威胁叠加压制估值。",
+          "logic_en": "Export limits, overseas capex tax threats & leadership risk weigh on semis."
+        },
+        {
+          "market": "港股",
+          "sector": "港股芯片自主制造 (00981.HK 中芯)",
+          "sector_en": "HKEX Domestic Foundry (00981.HK)",
+          "pct_low": 0.8,
+          "pct_high": 2.9,
+          "direction": "positive",
+          "proxy_ticker": "00981.HK",
+          "logic": "高端进口限制收紧进一步锁定境内晶圆制造份额。",
+          "logic_en": "Tighter US curbs solidify domestic wafer fab utilization expectations."
+        },
+        {
+          "market": "A股",
+          "sector": "国产半导体设备 / 算力自主可控",
+          "sector_en": "A-Share Domestic Semi Equipment",
+          "pct_low": 1.0,
+          "pct_high": 3.1,
+          "direction": "positive",
+          "proxy_ticker": "512480.SH",
+          "logic": "进口替代刚性提升，光刻/刻蚀设备与本土算力获事件催化。",
+          "logic_en": "Localization urgency lifts domestic semiconductor equipment names."
+        }
+      ],
+      "if_then": [
+        {
+          "cond": "若白宫正式签发海外数据中心关税行政令",
+          "result": "跨国云厂基建节奏放缓，美股算力硬件承压加深",
+          "tone": "bearish"
+        },
+        {
+          "cond": "若英伟达董事会明确过渡安排并澄清核心技术研发不受影响",
+          "result": "治理恐慌折价逐步修复",
+          "tone": "neutral"
+        }
+      ],
+      "milestones": [
+        {
+          "date": "两周内",
+          "status": "current",
+          "label": "英伟达治理公告与美国商务部出口税则细则"
+        }
+      ],
+      "sample_basis": {
+        "sample_n": 15,
         "volatility_pct": 11.91,
-        "volatility_source": "NVDA / 纳指实现波动率校准",
-        "horizon": "1~3 个交易日",
-        "confidence_label": "高置信（直接板块联动）",
-        "confidence_label_en": "High (Direct Sector Beta)"
+        "volatility_source": "美股算力制裁与关税冲击样本",
+        "horizon": "1~5 个交易日",
+        "confidence_label": "高置信（直击核心估值与供给端）",
+        "confidence_label_en": "High (Direct Capex & Export Shock)"
       },
       "realized_quotes": [
         {
@@ -2348,20 +2462,20 @@
           "pct_change": -14.01
         },
         {
-          "ticker": "IXIC",
-          "name": "纳斯达克",
-          "name_en": "NASDAQ Composite",
+          "ticker": "TSM",
+          "name": "台积电",
+          "name_en": "TSMC",
           "market": "美股",
-          "price": 22617.73,
-          "pct_change": -5.28
+          "price": 318.71,
+          "pct_change": -9.48
         },
         {
-          "ticker": "HSTECH.HK",
-          "name": "恒生科指",
-          "name_en": "Hang Seng Tech",
+          "ticker": "00981.HK",
+          "name": "中芯国际",
+          "name_en": "SMIC",
           "market": "港股",
-          "price": 3511.14,
-          "pct_change": -3.78
+          "price": 49.12,
+          "pct_change": -2.73
         },
         {
           "ticker": "512480.SH",
@@ -2373,8 +2487,8 @@
         }
       ]
     },
-    "evt_39c27252cfbf": {
-      "event_id": "evt_39c27252cfbf",
+    "evt_05700c8d35fe": {
+      "event_id": "evt_05700c8d35fe",
       "tag": "东欧/中东武装冲突与军工避险",
       "tag_en": "Geopolitical & Energy Chokepoint Risk",
       "polarity": "divergent",
@@ -2519,123 +2633,6 @@
           "market": "港股",
           "price": 23.06,
           "pct_change": -1.28
-        }
-      ]
-    },
-    "evt_27c6df7a161b": {
-      "event_id": "evt_27c6df7a161b",
-      "tag": "国产与开源大模型性能追赶催化",
-      "tag_en": "China & Open-Weight Model Catch-Up",
-      "polarity": "bullish",
-      "intensity": 3,
-      "validation_status": "verified",
-      "one_liner": "受「哥伦比亚大学与 CertiK 推出 TensorLean，对生产」催化，高性价比模型迭代持续拉低私有化部署与 API 推理成本，重点利好国内云平台与本地算力部署链。",
-      "top_a": {
-        "market": "A股",
-        "sector": "A股国产算力卡 / 推理服务器与本地部署软件",
-        "sector_en": "A-Share AI Apps & Local Compute",
-        "pct_low": 1.1,
-        "pct_high": 3.1,
-        "direction": "positive",
-        "proxy_ticker": null,
-        "logic": "开源权重轻量化加速政企与金融机构私有化部署落地，提振国产推理一体机与算力需求。",
-        "logic_en": "Expanded capabilities accelerate domestic enterprise adoption."
-      },
-      "top_us": {
-        "market": "美股",
-        "sector": "全球推理芯片与云基准估值 (NVDA / QQQ)",
-        "sector_en": "Global Inference Compute & Cloud Benchmarks",
-        "pct_low": 0.9,
-        "pct_high": 2.7,
-        "direction": "positive",
-        "proxy_ticker": "09988.HK",
-        "logic": "开源与低成本模型在「哥伦比亚大学与 CertiK 推出 TensorLean，对生产」展现更高性价比，促使海外云厂商加快高阶模型差异化投入。",
-        "logic_en": "Model ecosystem upgrades expand enterprise cloud consumption."
-      },
-      "top_hk": {
-        "market": "港股",
-        "sector": "国内开源模型底座与云平台 (09988 / 00700)",
-        "sector_en": "HKEX AI Ecosystem & Cloud Platforms",
-        "pct_low": 0.8,
-        "pct_high": 2.5,
-        "direction": "positive",
-        "proxy_ticker": "HSTECH.HK",
-        "logic": "「哥伦比亚大学与 CertiK 推出 TensorLean，对生产」降低开发者企业级微调门槛，直接强化港股云厂商 MaaS 平台调用粘性。",
-        "logic_en": "Model performance progress supports platform ecosystem monetization."
-      },
-      "bars": [
-        {
-          "market": "美股",
-          "sector": "全球推理芯片与云基准估值 (NVDA / QQQ)",
-          "sector_en": "Global Inference Compute & Cloud Benchmarks",
-          "pct_low": 0.9,
-          "pct_high": 2.7,
-          "direction": "positive",
-          "proxy_ticker": "09988.HK",
-          "logic": "开源与低成本模型在「哥伦比亚大学与 CertiK 推出 TensorLean，对生产」展现更高性价比，促使海外云厂商加快高阶模型差异化投入。",
-          "logic_en": "Model ecosystem upgrades expand enterprise cloud consumption."
-        },
-        {
-          "market": "港股",
-          "sector": "国内开源模型底座与云平台 (09988 / 00700)",
-          "sector_en": "HKEX AI Ecosystem & Cloud Platforms",
-          "pct_low": 0.8,
-          "pct_high": 2.5,
-          "direction": "positive",
-          "proxy_ticker": "HSTECH.HK",
-          "logic": "「哥伦比亚大学与 CertiK 推出 TensorLean，对生产」降低开发者企业级微调门槛，直接强化港股云厂商 MaaS 平台调用粘性。",
-          "logic_en": "Model performance progress supports platform ecosystem monetization."
-        },
-        {
-          "market": "A股",
-          "sector": "A股国产算力卡 / 推理服务器与本地部署软件",
-          "sector_en": "A-Share AI Apps & Local Compute",
-          "pct_low": 1.1,
-          "pct_high": 3.1,
-          "direction": "positive",
-          "proxy_ticker": null,
-          "logic": "开源权重轻量化加速政企与金融机构私有化部署落地，提振国产推理一体机与算力需求。",
-          "logic_en": "Expanded capabilities accelerate domestic enterprise adoption."
-        }
-      ],
-      "if_then": [
-        {
-          "cond": "若第三方基准测试与企业付费转化数据超预期",
-          "result": "对应云平台与推理应用链保持结构性活跃",
-          "tone": "bullish"
-        }
-      ],
-      "milestones": [
-        {
-          "date": "未来 2~4 周",
-          "status": "upcoming",
-          "label": "观察开发者 API 活跃度与企业接入量反馈"
-        }
-      ],
-      "sample_basis": {
-        "sample_n": 15,
-        "volatility_pct": 2.9,
-        "volatility_source": "主流大模型与软件应用催化样本",
-        "horizon": "2~5 个交易日",
-        "confidence_label": "中高置信（生态应用催化）",
-        "confidence_label_en": "Moderate-High (Model Ecosystem Catalyst)"
-      },
-      "realized_quotes": [
-        {
-          "ticker": "00700.HK",
-          "name": "腾讯控股",
-          "name_en": "Tencent",
-          "market": "港股",
-          "price": 344.0,
-          "pct_change": -1.26
-        },
-        {
-          "ticker": "HSTECH.HK",
-          "name": "恒生科指",
-          "name_en": "Hang Seng Tech",
-          "market": "港股",
-          "price": 3511.14,
-          "pct_change": -3.78
         }
       ]
     }

@@ -1,7 +1,7 @@
 {
   "schema_version": "4.1",
-  "generated_at": "2026-11-22T15:21:52+08:00",
-  "batch_id": "smart-20261122-152152",
+  "generated_at": "2026-11-22T16:26:00+08:00",
+  "batch_id": "smart-20261122-162600",
   "tools": [
     {
       "tool_id": "tool_gh_vllm-project_vllm",
@@ -436,30 +436,6 @@
       "source_url": "https://huggingface.co/microsoft/Aion-1.0-Instruct-2.3B"
     },
     {
-      "tool_id": "tool_hf_stabilityai_sdxl-turbo-amdnpu-medusa",
-      "name": "stabilityai/sdxl-turbo-amdnpu-medusa",
-      "repo": "stabilityai/sdxl-turbo-amdnpu-medusa",
-      "tool_type": "开源模型权重 (text-to-image)",
-      "sector": "AI 大模型",
-      "entity_id": "ent_ai_infra_tools",
-      "availability_stage": "ga",
-      "availability_label": "开源权重可用 (GA)",
-      "latest_version": "更新于 2026-11-09",
-      "version_published_at": "2026-11-09T20:07:24+08:00",
-      "license": "自定义开源许可 (详见模型卡)",
-      "downloads": 0,
-      "likes": 0,
-      "official_url": "https://huggingface.co/stabilityai/sdxl-turbo-amdnpu-medusa",
-      "release_url": "https://huggingface.co/stabilityai/sdxl-turbo-amdnpu-medusa",
-      "docs_url": "https://huggingface.co/stabilityai/sdxl-turbo-amdnpu-medusa",
-      "summary": "文生图扩散视觉生成；高效率文生图模型，适用于海报创意设计、高分辨率图像渲染与可控编辑（近期新发布开源权重）",
-      "deployment_requirements": "需依据模型卡参数规模配置对应 GPU 显存及推理后端（vLLM / Transformers / llama.cpp）",
-      "pricing_or_cost": "开源权重自部署（许可证：自定义开源许可 (详见模型卡)）",
-      "checked_at": "2026-11-22T13:49:09+08:00",
-      "source_name": "Hugging Face Hub API",
-      "source_url": "https://huggingface.co/stabilityai/sdxl-turbo-amdnpu-medusa"
-    },
-    {
       "tool_id": "tool_hf_google_diffusiongemma-26b-a4b-it",
       "name": "google/diffusiongemma-26B-A4B-it",
       "repo": "google/diffusiongemma-26B-A4B-it",
@@ -482,6 +458,28 @@
       "checked_at": "2026-11-22T13:49:09+08:00",
       "source_name": "Hugging Face Hub API",
       "source_url": "https://huggingface.co/google/diffusiongemma-26B-A4B-it"
+    },
+    {
+      "tool_id": "tool_evt_evt_5264a1ec0e28",
+      "name": "Thinking Machines 开源端侧循环 MoE 模型 Inkling 2 Mini",
+      "repo": null,
+      "tool_type": "AI 模型 / 产品动态",
+      "sector": "AI 模型与产品",
+      "entity_id": "ent_ai_infra_tools",
+      "availability_stage": "ga",
+      "availability_label": "正式可用 (GA)",
+      "latest_version": null,
+      "version_published_at": "2026-11-21T06:13:04+08:00",
+      "license": "待核对官方声明/许可证页",
+      "official_url": "https://the-decoder.com/new-open-model-inkling-2-mini-thinks-in-loops-to-solve-problems-with-fewer-words-and-still-runs-on-a-laptop",
+      "release_url": "https://the-decoder.com/new-open-model-inkling-2-mini-thinks-in-loops-to-solve-problems-with-fewer-words-and-still-runs-on-a-laptop",
+      "docs_url": null,
+      "summary": "Thinking Machines Lab 正式发布开源多模态模型 Inkling 2 Mini，该模型已在 Transformers v5.24.0 中获得官方支持。Inkling 2 Mini 采用循环混合专家（Looped MoE）架构，总参数量为 26.4B（激活参数 3.4B），共 24 个解码层并在每个 token 生成时将其中的 12 层循环执行三次，无需输出多余文本即可进行内部推理。",
+      "deployment_requirements": "未披露具体运行需求（留空不臆测）",
+      "pricing_or_cost": "未披露定价",
+      "checked_at": "2026-11-22T16:25:36+08:00",
+      "source_name": "The Decoder (AI前沿)",
+      "source_url": "https://the-decoder.com/new-open-model-inkling-2-mini-thinks-in-loops-to-solve-problems-with-fewer-words-and-still-runs-on-a-laptop"
     }
   ]
 }

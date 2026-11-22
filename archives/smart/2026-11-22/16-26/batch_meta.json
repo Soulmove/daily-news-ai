@@ -1,0 +1,218 @@
+{
+  "schema_version": "4.1",
+  "batch_id": "smart-20261122-162600",
+  "input_batch_id": "raw-20261122-162536",
+  "input_raw_path": "archives/raw/2026-11-22/16-25/",
+  "input_cutoff_at": "2026-11-22T16:25:36+08:00",
+  "generated_at": "2026-11-22T16:26:00+08:00",
+  "published_at": "2026-11-22T16:32:12+08:00",
+  "status": "complete",
+  "mode": "ai",
+  "generation_mode": "mode_ai",
+  "quality_flags": [],
+  "model_name": "gemini-4-hydrogen",
+  "has_comments": false,
+  "gemini_quota": {
+    "total_configured_keys": 12,
+    "healthy_keys": 12,
+    "cooled_down_keys": 0,
+    "exhausted_keys": 0,
+    "daily_calls_total": 95,
+    "date_utc": "2026-11-22",
+    "updated_at": "2026-11-22T08:32:12Z",
+    "keys": [
+      {
+        "slot": "KEY_TECH",
+        "status": "healthy",
+        "daily_calls": 6,
+        "cooldown_until": null,
+        "exhausted_until": null,
+        "last_error_code": null,
+        "last_error": null,
+        "last_success_at": "2026-11-22T08:31:55Z"
+      },
+      {
+        "slot": "KEY_GLOBAL",
+        "status": "healthy",
+        "daily_calls": 7,
+        "cooldown_until": null,
+        "exhausted_until": null,
+        "last_error_code": null,
+        "last_error": null,
+        "last_success_at": "2026-11-22T08:31:30Z"
+      },
+      {
+        "slot": "KEY_FINANCE",
+        "status": "healthy",
+        "daily_calls": 7,
+        "cooldown_until": null,
+        "exhausted_until": null,
+        "last_error_code": null,
+        "last_error": null,
+        "last_success_at": "2026-11-22T08:32:02Z"
+      },
+      {
+        "slot": "KEY_GENERAL",
+        "status": "healthy",
+        "daily_calls": 7,
+        "cooldown_until": null,
+        "exhausted_until": null,
+        "last_error_code": "TRANSIENT_ERROR",
+        "last_error": "ServerError: 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand ",
+        "last_success_at": "2026-11-22T07:13:10Z"
+      },
+      {
+        "slot": "KEY_1",
+        "status": "healthy",
+        "daily_calls": 8,
+        "cooldown_until": null,
+        "exhausted_until": null,
+        "last_error_code": null,
+        "last_error": null,
+        "last_success_at": "2026-11-22T07:26:24Z"
+      },
+      {
+        "slot": "KEY_2",
+        "status": "healthy",
+        "daily_calls": 7,
+        "cooldown_until": null,
+        "exhausted_until": null,
+        "last_error_code": null,
+        "last_error": null,
+        "last_success_at": "2026-11-22T07:26:26Z"
+      },
+      {
+        "slot": "KEY_3",
+        "status": "healthy",
+        "daily_calls": 8,
+        "cooldown_until": null,
+        "exhausted_until": null,
+        "last_error_code": null,
+        "last_error": null,
+        "last_success_at": "2026-11-22T08:29:43Z"
+      },
+      {
+        "slot": "KEY_4",
+        "status": "healthy",
+        "daily_calls": 8,
+        "cooldown_until": null,
+        "exhausted_until": null,
+        "last_error_code": null,
+        "last_error": null,
+        "last_success_at": "2026-11-22T08:32:07Z"
+      },
+      {
+        "slot": "KEY_5",
+        "status": "healthy",
+        "daily_calls": 7,
+        "cooldown_until": null,
+        "exhausted_until": null,
+        "last_error_code": "TRANSIENT_ERROR",
+        "last_error": "ServerError: 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand ",
+        "last_success_at": "2026-11-22T07:24:00Z"
+      },
+      {
+        "slot": "KEY_6",
+        "status": "healthy",
+        "daily_calls": 8,
+        "cooldown_until": null,
+        "exhausted_until": null,
+        "last_error_code": null,
+        "last_error": null,
+        "last_success_at": "2026-11-22T08:32:12Z"
+      },
+      {
+        "slot": "KEY_7",
+        "status": "healthy",
+        "daily_calls": 8,
+        "cooldown_until": null,
+        "exhausted_until": null,
+        "last_error_code": "TRANSIENT_ERROR",
+        "last_error": "ServerError: 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand ",
+        "last_success_at": "2026-11-22T07:13:59Z"
+      },
+      {
+        "slot": "KEY_8",
+        "status": "healthy",
+        "daily_calls": 7,
+        "cooldown_until": null,
+        "exhausted_until": null,
+        "last_error_code": "TRANSIENT_ERROR",
+        "last_error": "ServerError: 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand ",
+        "last_success_at": "2026-11-22T07:05:00Z"
+      },
+      {
+        "slot": "GOOGLE_API_KEY",
+        "status": "unconfigured",
+        "daily_calls": 7,
+        "cooldown_until": null,
+        "exhausted_until": null,
+        "last_error_code": null,
+        "last_error": null,
+        "last_success_at": "2026-11-22T07:26:49Z"
+      }
+    ]
+  },
+  "categories": {
+    "finance": {
+      "batch_id": "smart-20261122-162600",
+      "path": "archives/smart/2026-11-22/16-26/analysis_finance.json",
+      "comments_path": "archives/smart/2026-11-22/16-26/comments_finance.json",
+      "input_batch_id": "raw-20261122-162536",
+      "input_cutoff_at": "2026-11-22T16:25:36+08:00",
+      "generated_at": "2026-11-22T16:28:58+08:00",
+      "status": "ok",
+      "is_fallback": false,
+      "fallback_reason": null,
+      "item_count": 12,
+      "verified_count": 12,
+      "needs_verification_count": 0,
+      "has_comments": false
+    },
+    "global": {
+      "batch_id": "smart-20261122-162600",
+      "path": "archives/smart/2026-11-22/16-26/analysis_global.json",
+      "comments_path": "archives/smart/2026-11-22/16-26/comments_global.json",
+      "input_batch_id": "raw-20261122-162536",
+      "input_cutoff_at": "2026-11-22T16:25:36+08:00",
+      "generated_at": "2026-11-22T16:29:43+08:00",
+      "status": "ok",
+      "is_fallback": false,
+      "fallback_reason": null,
+      "item_count": 6,
+      "verified_count": 6,
+      "needs_verification_count": 0,
+      "has_comments": false
+    },
+    "tech": {
+      "batch_id": "smart-20261122-162600",
+      "path": "archives/smart/2026-11-22/16-26/analysis_tech.json",
+      "comments_path": "archives/smart/2026-11-22/16-26/comments_tech.json",
+      "input_batch_id": "raw-20261122-162536",
+      "input_cutoff_at": "2026-11-22T16:25:36+08:00",
+      "generated_at": "2026-11-22T16:31:55+08:00",
+      "status": "ok",
+      "is_fallback": false,
+      "fallback_reason": null,
+      "item_count": 12,
+      "verified_count": 12,
+      "needs_verification_count": 0,
+      "has_comments": false
+    },
+    "general": {
+      "batch_id": "smart-20261122-162600",
+      "path": "archives/smart/2026-11-22/16-26/analysis_general.json",
+      "comments_path": "archives/smart/2026-11-22/16-26/comments_general.json",
+      "input_batch_id": "raw-20261122-162536",
+      "input_cutoff_at": "2026-11-22T16:25:36+08:00",
+      "generated_at": "2026-11-22T16:31:30+08:00",
+      "status": "ok",
+      "is_fallback": false,
+      "fallback_reason": null,
+      "item_count": 12,
+      "verified_count": 12,
+      "needs_verification_count": 0,
+      "has_comments": false
+    }
+  }
+}
