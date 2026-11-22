@@ -813,7 +813,7 @@ AI_NOISE_RE = re.compile(
     r"开源鸿蒙|openharmony|harmonyos|南水北调|水利|水文|国家水网|调水工程|天河.*(?:工程|调水|水文|水网)|"
     r"影石|insta360|大疆|麦克风|耳机|相机|固件升级|充电宝|路由器|显示器|键盘|鼠标|tech outages.*y2k|outages.*ai agent style|"
     r"套餐|买赠|优惠券|代金券|促销|折扣|限免|会员价|小米\s*mimo.*套餐|mimo.*套餐|学生教师优惠|9\.9元|元/月|优惠上线|"
-    r"调查问卷|大肥鱼|chatterfly|输入法.*内测|艺术中心.*抗议|抗议.*ai|提示词技巧|回答更简短|透明度低于|"
+    r"调查问卷|大肥鱼|chatterfly|neonclipping|youtube\s*shorts.*剪辑|输入法.*内测|艺术中心.*抗议|抗议.*ai|提示词技巧|回答更简短|透明度评分低于|透明度低于|"
     r"演唱会|剧场版|小雪节气|长城坦克|坦克\d+|"
     r"国家中医药管理局|中医药|认证中心|未与任何.{0,6}合作|亦未开展测评|辟谣通告|严正声明|"
     r"投资者是否应|是否值得购买|值得买入吗|\bspcx\b|目标价|股价表现|空头机构|估值泡沫|"
@@ -1021,60 +1021,73 @@ def _lab_result(cid: str) -> tuple[str, str, str]:
     return spec["company_id"], spec["company_name"], spec["region"]
 
 
+def _match_lab_signature(txt_low: str, xai_aliases: Tuple[str, ...]) -> Optional[str]:
+    if any(re.search(rf"(?<![a-z0-9]){re.escape(al)}(?![a-z0-9])", txt_low) for al in xai_aliases):
+        return "xai"
+    if any(k in txt_low for k in ("anthropic", "claude")):
+        return "anthropic"
+    if any(k in txt_low for k in ("openai", "gpt-", "chatgpt", "sora", "codex")):
+        return "openai"
+    if any(k in txt_low for k in ("deepseek", "深度求索")):
+        return "deepseek"
+    if any(k in txt_low for k in ("kimi", "moonshot", "月之暗面")):
+        return "kimi"
+    if any(k in txt_low for k in ("qwen", "千问", "通义", "万相")):
+        return "qwen"
+    if any(k in txt_low for k in ("混元", "hunyuan", "workbuddy", "腾讯元宝", "hy4")):
+        return "tencent_hunyuan"
+    if any(k in txt_low for k in ("豆包", "doubao", "seedance", "bytedance seed", "ui-tars")):
+        return "bytedance_doubao"
+    if any(k in txt_low for k in ("智谱", "zhipu", "glm-4", "glm-5", "glm-z", "chatglm", "bigmodel")):
+        return "zhipu_glm"
+    if any(k in txt_low for k in ("minimax", "海螺ai", "海螺视频", "hailuo")):
+        return "minimax"
+    if any(k in txt_low for k in ("文心", "ernie")):
+        return "baidu_ernie"
+    if any(k in txt_low for k in ("openpangu", "盘古大模型", "华为盘古", "昇腾", "ascend")):
+        return "huawei_pangu"
+    if any(k in txt_low for k in ("mistral", "codestral", "pixtral", "mixtral")):
+        return "mistral"
+    if "perplexity" in txt_low:
+        return "perplexity"
+    if re.search(r"(?<![a-z0-9])cursor(?![a-z0-9])|anysphere", txt_low):
+        return "cursor"
+    if any(k in txt_low for k in ("stability ai", "stable diffusion", "stable video", "stable audio")):
+        return "stability"
+    if any(k in txt_low for k in ("gemini", "gemma", "deepmind", "project genie", "genie 4", "diffusiongemma")):
+        return "google"
+    if any(k in txt_low for k in ("nemotron", "cosmos", "omniverse", "tensorrt", "blackwell", "rubin")):
+        return "nvidia"
+    if any(k in txt_low for k in ("llama.cpp", "ggml", "ollama", "vllm", "sglang", "comfyui", "open-webui", "dify", "langchain")):
+        return "indie_opensource"
+    if any(k in txt_low for k in ("phi-4", "phi4", "copilot", "azure ai")):
+        return "microsoft"
+    if any(k in txt_low for k in ("llama", "meta ai", "metaai")):
+        return "meta"
+    if any(k in txt_low for k in ("apple intelligence", "openelm", "coreml", "ferret")):
+        return "apple_ai"
+    if any(k in txt_low for k in ("amazon nova", "aws bedrock", "bedrock")):
+        return "amazon_aws"
+    return None
+
+
 def _infer_company(title: str, url: str = "", source_name: str = "") -> tuple[str, str, str]:
-    # 1. Inspect title (and non-aggregator source_name); NEVER let aggregator URLs like news.google.com match!
+    # 1. Subject-first inspection so comparison titles (e.g. "GPT-6.2 ... 透明度低于Claude") attribute to primary subject!
     clean_src = "" if "google news" in (source_name or "").lower() else (source_name or "")
+    subject_clause = re.split(r"(?:，|,|；|;|\bvs\.?\b|\bversus\b|低于|高于|相比|对比|超越|不如)", str(title or ""), maxsplit=1)[0].strip()
+    xai_aliases = tuple(ENTITY_BY_ID["ent_xai"].aliases) if "ent_xai" in ENTITY_BY_ID else ("xai", "x.ai", "grok")
+
+    if subject_clause:
+        subj_cid = _match_lab_signature(subject_clause.lower(), xai_aliases)
+        if subj_cid:
+            return _lab_result(subj_cid)
+
     t = f"{title} {clean_src}".lower()
     has_ai_ctx = bool(_CONGLOMERATE_AI_CTX_RE.search(t))
 
-    # Specific non-ambiguous model/lab signatures first (reusing entities.py aliases cleanly)
-    xai_aliases = tuple(ENTITY_BY_ID["ent_xai"].aliases) if "ent_xai" in ENTITY_BY_ID else ("xai", "x.ai", "grok")
-    if any(re.search(rf"(?<![a-z0-9]){re.escape(al)}(?![a-z0-9])", t) for al in xai_aliases):
-        return _lab_result("xai")
-    if any(k in t for k in ("anthropic", "claude")):
-        return _lab_result("anthropic")
-    if any(k in t for k in ("openai", "gpt-", "chatgpt", "sora", "codex")):
-        return _lab_result("openai")
-    if any(k in t for k in ("deepseek", "深度求索")):
-        return _lab_result("deepseek")
-    if any(k in t for k in ("kimi", "moonshot", "月之暗面")):
-        return _lab_result("kimi")
-    if any(k in t for k in ("qwen", "千问", "通义", "万相")):
-        return _lab_result("qwen")
-    if any(k in t for k in ("混元", "hunyuan", "workbuddy", "腾讯元宝", "hy4")):
-        return _lab_result("tencent_hunyuan")
-    if any(k in t for k in ("豆包", "doubao", "seedance", "bytedance seed", "ui-tars")):
-        return _lab_result("bytedance_doubao")
-    if any(k in t for k in ("智谱", "zhipu", "glm-4", "glm-5", "glm-z", "chatglm", "bigmodel")):
-        return _lab_result("zhipu_glm")
-    if any(k in t for k in ("minimax", "海螺ai", "海螺视频", "hailuo")):
-        return _lab_result("minimax")
-    if any(k in t for k in ("文心", "ernie")):
-        return _lab_result("baidu_ernie")
-    if any(k in t for k in ("openpangu", "盘古大模型", "华为盘古", "昇腾", "ascend")):
-        return _lab_result("huawei_pangu")
-    if any(k in t for k in ("mistral", "codestral", "pixtral", "mixtral")):
-        return _lab_result("mistral")
-    if "perplexity" in t:
-        return _lab_result("perplexity")
-    if re.search(r"(?<![a-z0-9])cursor(?![a-z0-9])|anysphere", t):
-        return _lab_result("cursor")
-    if any(k in t for k in ("stability ai", "stable diffusion", "stable video", "stable audio")):
-        return _lab_result("stability")
-    if any(k in t for k in ("gemini", "gemma", "deepmind", "project genie", "genie 4", "diffusiongemma")):
-        return _lab_result("google")
-    if any(k in t for k in ("nemotron", "cosmos", "omniverse", "tensorrt", "blackwell", "rubin")):
-        return _lab_result("nvidia")
-    if any(k in t for k in ("llama.cpp", "ggml", "ollama", "vllm", "sglang", "comfyui", "open-webui", "dify", "langchain")):
-        return _lab_result("indie_opensource")
-    if any(k in t for k in ("phi-4", "phi4", "copilot", "azure ai")):
-        return _lab_result("microsoft")
-    if any(k in t for k in ("llama", "meta ai", "metaai")):
-        return _lab_result("meta")
-    if any(k in t for k in ("apple intelligence", "openelm", "coreml", "ferret")):
-        return _lab_result("apple_ai")
-    if any(k in t for k in ("amazon nova", "aws bedrock", "bedrock")):
-        return _lab_result("amazon_aws")
+    full_cid = _match_lab_signature(t, xai_aliases)
+    if full_cid:
+        return _lab_result(full_cid)
 
     # Conglomerate names matched ONLY when AI/model context is present
     if has_ai_ctx:
@@ -1124,6 +1137,7 @@ def _infer_what_it_does_zh(title: str, summary: str, *, is_tool_release: bool = 
     from .dedup import strip_raw_urls_and_domain_tails, title_similarity
 
     clean_sum = strip_raw_urls_and_domain_tails(re.sub(r"\s+", " ", str(summary or "").strip()))
+    clean_sum = re.sub(r"^【[^】]{4,80}】\s*", "", clean_sum).strip()
     clean_sum = re.sub(r"\s*[A-Za-z0-9-]+\.(?:ai|com|org|io|net|cn|co|dev|app)\s*$", "", clean_sum, flags=re.I).strip()
     clean_sum = re.sub(r"\s+(?:新华网|人民网|央视新闻|环球网|财联社|Reuters|Bloomberg)$", "", clean_sum).strip()
     clean_title = strip_raw_urls_and_domain_tails(re.sub(r"\s+", " ", str(title or "").strip()))

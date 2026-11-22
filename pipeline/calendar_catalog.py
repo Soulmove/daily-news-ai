@@ -819,6 +819,102 @@ def _static_global_schedule() -> List[Dict[str, Any]]:
             "source_name": "HKEX / Tencent IR",
             "source_url": "https://www.tencent.com/zh-cn/investors.html",
         },
+        {
+            "calendar_id": "cal_cb_us_pce_gdp_2026_11",
+            "title": "美国 10 月核心 PCE 物价指数与三季度实际 GDP 修正值公布",
+            "title_en": "US October Core PCE Inflation & Q3 GDP Second Estimate",
+            "scheduled_at": "2026-11-25T21:30:00+08:00",
+            "original_time_note": "2026-11-25 08:30 EST / 21:30 北京时间 (感恩节前夕重要宏观读数)",
+            "event_type": "central_bank",
+            "region": "us",
+            "country": "美国",
+            "city": "华盛顿",
+            "certainty": "confirmed_official",
+            "certainty_label": "美国商务部 BEA 法定发布日",
+            "category": "finance",
+            "entity_ids": ["ent_macro_fomc"],
+            "watch_variable": "核心 PCE 月率/年率与个人消费支出增速，直接影响 12 月 FOMC 利率定调",
+            "pre_expectation": "美联储最青睐的通胀标尺，决定美债收益率与美元短线方向",
+            "source_name": "US BEA",
+            "source_url": "https://www.bea.gov/news/schedule",
+        },
+        {
+            "calendar_id": "cal_pol_cn_ind_profits_2026_11",
+            "title": "中国 10 月规模以上工业企业利润同比增速公布",
+            "title_en": "China NBS October Industrial Enterprise Profits",
+            "scheduled_at": "2026-11-27T09:30:00+08:00",
+            "original_time_note": "2026-11-27 09:30 北京时间 (国家统计局月度工业效益公报)",
+            "event_type": "politics_macro",
+            "region": "china",
+            "country": "中国",
+            "city": "北京",
+            "certainty": "confirmed_official",
+            "certainty_label": "官方例行日程",
+            "category": "finance",
+            "entity_ids": ["ent_china_macro"],
+            "watch_variable": "装备制造业与高技术制造业利润改善斜率及PPI传导压降效应",
+            "pre_expectation": "A 股顺周期与先进制造三季报后盈利拐点交叉验证",
+            "source_name": "国家统计局",
+            "source_url": "https://www.stats.gov.cn/",
+        },
+        {
+            "calendar_id": "cal_tech_aws_reinvent_2026",
+            "title": "AWS re:Invent 2026 全球云计算与 Bedrock AI 智能体大会",
+            "title_en": "AWS re:Invent 2026 Cloud & AI Agent Keynote (Las Vegas)",
+            "scheduled_at": "2026-11-30T23:00:00+08:00",
+            "original_time_note": "2026-11-30 至 12-04 拉斯维加斯（北京时间 12 月 1 日凌晨开讲）",
+            "event_type": "tech_launch",
+            "region": "us",
+            "country": "美国",
+            "city": "拉斯维加斯",
+            "certainty": "confirmed_official",
+            "certainty_label": "云计算年度旗舰大会",
+            "category": "tech",
+            "entity_ids": ["ent_amazon_aws", "ent_ai_infra_tools", "ent_anthropic"],
+            "watch_variable": "Trainium 新一代自研 AI 芯片性能、Nova 模型升级与企业级 Agent 工具链落地",
+            "pre_expectation": "云基础设施 Capex 回报与自研算力替代进度风向标",
+            "source_name": "Amazon Web Services",
+            "source_url": "https://reinvent.awsevents.com/",
+        },
+        {
+            "calendar_id": "cal_cb_us_ism_mfg_2026_12",
+            "title": "美国 11 月 ISM 制造业 PMI 及新订单分项数据发布",
+            "title_en": "US November ISM Manufacturing PMI Report",
+            "scheduled_at": "2026-12-01T23:00:00+08:00",
+            "original_time_note": "2026-12-01 10:00 EST / 23:00 北京时间",
+            "event_type": "central_bank",
+            "region": "us",
+            "country": "美国",
+            "city": "华盛顿",
+            "certainty": "confirmed_official",
+            "certainty_label": "每月首个工作日发布",
+            "category": "finance",
+            "entity_ids": ["ent_macro_fomc"],
+            "watch_variable": "制造业新订单、物价支付指数及就业分项对美国衰退/再通胀预期影响",
+            "pre_expectation": "全球工业大宗商品与美股周期板块短线定价锚点",
+            "source_name": "ISM",
+            "source_url": "https://www.ismworld.org/",
+        },
+        {
+            "calendar_id": "cal_expo_neurips_2026",
+            "title": "NeurIPS 2026 神经信息处理系统全球顶级 AI 学术年会",
+            "title_en": "NeurIPS 2026 Annual AI Research Conference",
+            "scheduled_at": "2026-12-06T09:00:00+08:00",
+            "original_time_note": "2026-12-06 至 12-12（官方年度 AI 顶会窗口）",
+            "event_type": "expo_summit",
+            "region": "global",
+            "country": "全球",
+            "city": "",
+            "certainty": "confirmed_official",
+            "certainty_label": "国际顶级 AI 学术年会",
+            "is_clock_tbd": True,
+            "category": "tech",
+            "entity_ids": ["ent_openai", "ent_anthropic", "ent_google", "ent_deepseek"],
+            "watch_variable": "世界模型、长程推理架构、Test-time Compute 扩展律最佳论文与前沿开源代码发布",
+            "pre_expectation": "2027 年大模型下一代研究范式核心信号源",
+            "source_name": "NeurIPS Foundation",
+            "source_url": "https://neurips.cc/",
+        },
     ]
 
 
@@ -836,6 +932,351 @@ def build_curated_global_calendar(generated_dt: datetime) -> List[Dict[str, Any]
         rec.setdefault("actual_result", None)
         items.append(enrich_calendar_item_metadata(rec, generated_dt))
     return items
+
+
+_ZH_WEEKDAYS = {"一": 0, "二": 1, "三": 2, "四": 3, "五": 4, "六": 5, "日": 6, "天": 6}
+_EN_WEEKDAYS = {
+    "monday": 0,
+    "tuesday": 1,
+    "wednesday": 2,
+    "thursday": 3,
+    "friday": 4,
+    "saturday": 5,
+    "sunday": 6,
+}
+
+_BREAKING_NOISE_RE = re.compile(
+    r"(?:围巾|座驾|同框|开了个玩笑|花絮|是否将举行|没有这方面的信息|美方代表有哪些|发言人回应|外交部回应|"
+    r"邀请.{0,12}组阁|呼吁.{0,10}停火|考虑.{0,10}征税|传闻称|或将讨论|股市表现|股价表现|涨停|跌停|大跌|大涨|"
+    r"IPO后|上市后|复盘|盘点|回顾|闭幕|落幕|已于|此前|上周|昨日|昨天|after\s+ipo|post-?ipo)",
+    re.I,
+)
+
+_BREAKING_ACTION_RE = re.compile(
+    r"(?:发布会|新品发布|开发布会|发布|推出|上线|开源|预告|开幕|召开|举行|公布|揭晓|出访|访问|启程|表决|听证|生效|实施|上市|挂牌|财报|电话会|交付|峰会|论坛|会谈|"
+    r"\blaunch(?:es|ing)?\b|\bunveil(?:s|ing)?\b|\bkeynote\b|\bsummit\b|\bvisit(?:s|ing)?\b|\bearnings\b|\btake effect\b|\beffective\b|\bvote\b)",
+    re.I,
+)
+
+
+def parse_relative_schedule_datetime(
+    text: str,
+    anchor_dt: datetime,
+) -> Optional[Tuple[datetime, str, bool]]:
+    """Parse explicit or ZH/EN relative dates anchored on anchor_dt -> (dt, note, is_clock_tbd)."""
+    if not text or not isinstance(text, str):
+        return None
+    s = re.sub(r"\s+", " ", text).strip()
+    base_hour = 10
+
+    # 1. Explicit date range: M月D日至D日 / M月D日-D日 / YYYY年M月D日
+    m_date = re.search(
+        r"(?:(\d{4})年)?(\d{1,2})月(\d{1,2})日(?:\s*(?:至|到|-|~)\s*(?:\d{1,2}月)?(\d{1,2})日)?(?:\s*(?:上午|下午|晚间|晚)?\s*(\d{1,2})[:：](\d{2}))?",
+        s,
+    )
+    if m_date:
+        yr = int(m_date.group(1) or anchor_dt.year)
+        mo = int(m_date.group(2))
+        dy = int(m_date.group(3))
+        end_dy = m_date.group(4)
+        if not m_date.group(1) and anchor_dt.month == 12 and mo == 1:
+            yr += 1
+        hr = int(m_date.group(5)) if m_date.group(5) else base_hour
+        mn = int(m_date.group(6)) if m_date.group(6) else 0
+        is_tbd = not bool(m_date.group(5))
+        try:
+            dt = anchor_dt.replace(year=yr, month=mo, day=dy, hour=min(23, hr), minute=min(59, mn), second=0, microsecond=0)
+            note = (
+                f"{yr}-{mo:02d}-{dy:02d} 至 {int(end_dy):02d} 日日程窗口"
+                if end_dy
+                else (f"{yr}-{mo:02d}-{dy:02d} {hr:02d}:{mn:02d}" if not is_tbd else f"{yr}-{mo:02d}-{dy:02d} 日程窗口 (具体钟点待定)")
+            )
+            return dt, note, is_tbd
+        except ValueError:
+            return None
+
+    # 2. Relative ZH tokens: 今天 / 明天 / 明晚 / 后天
+    if re.search(r"(?:今晚|今夜|今日|今天)", s):
+        is_night = "今晚" in s or "今夜" in s
+        dt = anchor_dt.replace(hour=20 if is_night else 14, minute=0, second=0, microsecond=0)
+        return dt, f"{dt.strftime('%Y-%m-%d')} {'晚间' if is_night else '当日'}突发排期", True
+
+    if re.search(r"(?:明晚|明日|明天)", s):
+        is_night = "明晚" in s
+        dt = (anchor_dt + timedelta(days=1)).replace(hour=20 if is_night else 10, minute=0, second=0, microsecond=0)
+        return dt, f"{dt.strftime('%Y-%m-%d')} {'明晚' if is_night else '明日'}日程（基于信源发布时间推算）", True
+
+    if "后天" in s:
+        dt = (anchor_dt + timedelta(days=2)).replace(hour=10, minute=0, second=0, microsecond=0)
+        return dt, f"{dt.strftime('%Y-%m-%d')} 后天日程（基于信源发布时间推算）", True
+
+    # 3. Relative ZH week: 下周[一..日] / 本周[一..日] / 下周末 / 本周末
+    m_nxw = re.search(r"下周([一二三四五六日天])", s)
+    if m_nxw:
+        wd = _ZH_WEEKDAYS[m_nxw.group(1)]
+        days_ahead = (7 - anchor_dt.weekday()) + wd
+        dt = (anchor_dt + timedelta(days=days_ahead)).replace(hour=10, minute=0, second=0, microsecond=0)
+        return dt, f"{dt.strftime('%Y-%m-%d')} 下周{m_nxw.group(1)}日程窗口 (来源报道推算)", True
+
+    m_curw = re.search(r"(?:本周|将于周|定于周|拟于周|预计周)([一二三四五六日天])", s)
+    if m_curw:
+        wd = _ZH_WEEKDAYS[m_curw.group(1)]
+        days_ahead = (wd - anchor_dt.weekday()) % 7
+        if days_ahead == 0 and anchor_dt.hour >= 18:
+            days_ahead = 7
+        dt = (anchor_dt + timedelta(days=days_ahead)).replace(hour=10, minute=0, second=0, microsecond=0)
+        return dt, f"{dt.strftime('%Y-%m-%d')} 周{m_curw.group(1)}日程窗口 (来源报道推算)", True
+
+    if "下周末" in s:
+        days_ahead = (7 - anchor_dt.weekday()) + 5
+        dt = (anchor_dt + timedelta(days=days_ahead)).replace(hour=10, minute=0, second=0, microsecond=0)
+        return dt, f"{dt.strftime('%Y-%m-%d')} 下周末日程窗口", True
+
+    if "本周末" in s:
+        days_ahead = max(0, 5 - anchor_dt.weekday())
+        dt = (anchor_dt + timedelta(days=days_ahead)).replace(hour=10, minute=0, second=0, microsecond=0)
+        return dt, f"{dt.strftime('%Y-%m-%d')} 本周末日程窗口", True
+
+    if "下周" in s:
+        days_ahead = 7 - anchor_dt.weekday()
+        dt = (anchor_dt + timedelta(days=days_ahead)).replace(hour=10, minute=0, second=0, microsecond=0)
+        return dt, f"{dt.strftime('%Y-%m-%d')} 下周窗口 (具体日期以官方公布为准)", True
+
+    m_days = re.search(r"(\d{1,2})\s*[天日]后", s)
+    if m_days:
+        delta = int(m_days.group(1))
+        if 1 <= delta <= 60:
+            dt = (anchor_dt + timedelta(days=delta)).replace(hour=10, minute=0, second=0, microsecond=0)
+            return dt, f"{dt.strftime('%Y-%m-%d')}（约 {delta} 天后日程）", True
+
+    if "下月中旬" in s:
+        ny = anchor_dt.year + (1 if anchor_dt.month == 12 else 0)
+        nm = 1 if anchor_dt.month == 12 else anchor_dt.month + 1
+        dt = anchor_dt.replace(year=ny, month=nm, day=15, hour=10, minute=0, second=0, microsecond=0)
+        return dt, f"{ny}-{nm:02d} 中旬预期窗口", True
+
+    # 4. English relative cues
+    if re.search(r"\btomorrow\b", s, re.I):
+        dt = (anchor_dt + timedelta(days=1)).replace(hour=10, minute=0, second=0, microsecond=0)
+        return dt, f"{dt.strftime('%Y-%m-%d')} Tomorrow schedule window", True
+
+    m_en_wd = re.search(r"\bnext\s+(monday|tuesday|wednesday|thursday|friday|saturday|sunday)\b", s, re.I)
+    if m_en_wd:
+        wd = _EN_WEEKDAYS[m_en_wd.group(1).lower()]
+        days_ahead = (7 - anchor_dt.weekday()) + wd
+        dt = (anchor_dt + timedelta(days=days_ahead)).replace(hour=10, minute=0, second=0, microsecond=0)
+        return dt, f"{dt.strftime('%Y-%m-%d')} Next {m_en_wd.group(1).capitalize()} window", True
+
+    if re.search(r"\bnext\s+week\b", s, re.I):
+        days_ahead = 7 - anchor_dt.weekday()
+        dt = (anchor_dt + timedelta(days=days_ahead)).replace(hour=10, minute=0, second=0, microsecond=0)
+        return dt, f"{dt.strftime('%Y-%m-%d')} Next week schedule window", True
+
+    m_en_days = re.search(r"\bin\s+(\d{1,2})\s+days\b", s, re.I)
+    if m_en_days:
+        delta = int(m_en_days.group(1))
+        if 1 <= delta <= 60:
+            dt = (anchor_dt + timedelta(days=delta)).replace(hour=10, minute=0, second=0, microsecond=0)
+            return dt, f"{dt.strftime('%Y-%m-%d')} In {delta} days", True
+
+    return None
+
+
+def build_event_type_watch_variable(event_type: str, title: str = "") -> Tuple[str, str]:
+    """Return strict domain-appropriate watch variables (never inject earnings margins into politics/tech)."""
+    low = (title or "").lower()
+    if event_type == "central_bank":
+        return (
+            "利率决策区间、通胀/就业关键读数及央行前瞻指引措辞变化",
+            "Official policy rate band, inflation/payroll print & forward guidance tone",
+        )
+    if event_type == "earnings_capital":
+        if "ipo" in low or "上市" in low or "挂牌" in low:
+            return (
+                "最终发行价、募资规模、机构基石锁仓比例与首周交易承盘",
+                "Final IPO pricing, proceeds size, anchor lockups & first-week trading",
+            )
+        return (
+            "官方披露实值营收/利润、毛利率与下季资本开支指引",
+            "Reported revenue/EPS, gross margin & next-quarter Capex guidance",
+        )
+    if event_type == "tech_launch":
+        return (
+            "新品/模型实测规格、定价策略、开放可用时间及产业链生态协同",
+            "Released specs/benchmarks, pricing, GA availability & ecosystem impact",
+        )
+    if event_type == "expo_summit":
+        return (
+            "重磅峰会议程、高层政策/行业表态、首发成果与产业签约动向",
+            "Keynote agenda, high-level statements, product unveilings & signed deals",
+        )
+    return (
+        "官方联合公报、新规生效细则、关键表决结果及对经贸/产业链影响",
+        "Official communique, effective rule details, vote outcome & trade impact",
+    )
+
+
+def extract_breaking_calendar_items(
+    *,
+    cat_docs: Dict[str, dict],
+    live_wire_items: List[dict],
+    ai_progress_items: List[dict],
+    generated_dt: datetime,
+    existing_calendar_items: List[dict],
+) -> List[Dict[str, Any]]:
+    """Dynamically extract breaking upcoming schedules from News, 7x24 Live Wire & AI Frontier."""
+    from pipeline.dedup import title_similarity
+    from pipeline.time_utils import to_iso_shanghai
+
+    candidates: List[Dict[str, Any]] = []
+    for doc in (cat_docs or {}).values():
+        for ev in (doc.get("events") or []):
+            if not isinstance(ev, dict):
+                continue
+            indep_c = int(ev.get("independent_publisher_count") or len(ev.get("sources") or []))
+            title = str(ev.get("title") or "").strip()
+            if ev.get("contradictions") or (ev.get("attribution_warning") and indep_c < 2):
+                continue
+            if title.startswith(("报道称", "消息称", "传闻")) and indep_c < 2:
+                continue
+            srcs = ev.get("sources") or []
+            candidates.append(
+                {
+                    "id": str(ev.get("event_id") or ""),
+                    "channel": "news",
+                    "title": title,
+                    "title_en": ev.get("title_en"),
+                    "body": f"{ev.get('fact_summary') or ''} {ev.get('speculation_or_outlook') or ''}",
+                    "anchor_iso": ev.get("first_reported_at") or ev.get("published_at") or ev.get("fetched_at"),
+                    "category": ev.get("category") or "global",
+                    "entity_ids": list(ev.get("entity_ids") or []),
+                    "storyline_id": ev.get("storyline_id"),
+                    "event_id": ev.get("event_id"),
+                    "source_name": (srcs[0].get("source_name") if srcs else "今日要闻"),
+                    "source_url": (srcs[0].get("url") if srcs else None),
+                }
+            )
+
+    for lw in (live_wire_items or [])[:60]:
+        if not isinstance(lw, dict):
+            continue
+        candidates.append(
+            {
+                "id": str(lw.get("id") or lw.get("event_id") or ""),
+                "channel": "live_wire",
+                "title": str(lw.get("title") or "").strip(),
+                "title_en": lw.get("title_en"),
+                "body": str(lw.get("summary") or lw.get("excerpt") or ""),
+                "anchor_iso": lw.get("published_at") or lw.get("fetched_at"),
+                "category": lw.get("category") or "finance",
+                "entity_ids": list(lw.get("entity_ids") or []),
+                "storyline_id": None,
+                "event_id": lw.get("event_id"),
+                "source_name": str(lw.get("source_name") or "7x24快讯"),
+                "source_url": lw.get("url"),
+            }
+        )
+
+    for ai in (ai_progress_items or [])[:50]:
+        if not isinstance(ai, dict) or ai.get("is_baseline_milestone"):
+            continue
+        candidates.append(
+            {
+                "id": str(ai.get("id") or ""),
+                "channel": "ai_progress",
+                "title": str(ai.get("title") or "").strip(),
+                "title_en": ai.get("title_en"),
+                "body": str(ai.get("what_it_does") or ""),
+                "anchor_iso": ai.get("date"),
+                "category": "tech",
+                "entity_ids": [str(ai.get("company_id"))] if ai.get("company_id") else [],
+                "storyline_id": None,
+                "event_id": ai.get("event_id"),
+                "source_name": str(ai.get("source_name") or ai.get("company_name") or "AI前沿"),
+                "source_url": ai.get("source_url"),
+            }
+        )
+
+    known_titles = [str(c.get("title") or "") for c in existing_calendar_items]
+    known_storylines = {str(c.get("storyline_id")) for c in existing_calendar_items if c.get("storyline_id")}
+    known_date_entities = {
+        (str(c.get("scheduled_at") or "")[:10], eid)
+        for c in existing_calendar_items
+        for eid in (c.get("entity_ids") or [])
+        if c.get("scheduled_at") and eid
+    }
+
+    extracted: List[Dict[str, Any]] = []
+    seen_new_titles: List[str] = []
+
+    for cand in candidates:
+        title = cand["title"]
+        if len(title) < 6:
+            continue
+        if cand["storyline_id"] and cand["storyline_id"] in known_storylines:
+            continue
+        combined = f"{title} {cand['body']}"
+        if _BREAKING_NOISE_RE.search(combined):
+            continue
+        if not _BREAKING_ACTION_RE.search(combined):
+            continue
+
+        anchor_dt = parse_iso_datetime(str(cand["anchor_iso"] or "")) or generated_dt
+        parsed = parse_relative_schedule_datetime(combined, anchor_dt)
+        if not parsed:
+            continue
+        sched_dt, orig_note, is_clock_tbd = parsed
+        if sched_dt.date() < generated_dt.date() or (sched_dt.date() - generated_dt.date()).days > 90:
+            continue
+
+        if any(title_similarity(title, kt) >= 0.45 for kt in known_titles + seen_new_titles):
+            continue
+        sched_date = sched_dt.strftime("%Y-%m-%d")
+        eids = cand["entity_ids"]
+        if any((sched_date, eid) in known_date_entities for eid in eids):
+            continue
+
+        # Infer event_type BEFORE choosing watch_variable so domain boilerplate is 100% accurate
+        draft = enrich_calendar_item_metadata(
+            {
+                "calendar_id": f"cal_brk_{cand['channel']}_{cand['id'] or len(extracted)}",
+                "title": title,
+                "title_en": cand.get("title_en"),
+                "scheduled_at": to_iso_shanghai(sched_dt),
+                "original_time_note": orig_note,
+                "timezone": "Asia/Shanghai",
+                "certainty": "reported_tbd",
+                "certainty_label": "⚡ 突发排期预告",
+                "is_breaking_schedule": True,
+                "source_channel": cand["channel"],
+                "is_past": False,
+                "is_clock_tbd": is_clock_tbd,
+                "category": cand["category"],
+                "entity_ids": eids,
+                "storyline_id": cand["storyline_id"],
+                "event_id": cand["event_id"],
+                "pre_expectation": "突发消息/报道排期线索；请等待官方正式日程落地",
+                "pre_expectation_en": "Breaking schedule signal from recent news/wire; await official confirmation.",
+                "actual_result": None,
+                "source_name": cand["source_name"],
+                "source_url": cand["source_url"],
+            },
+            generated_dt,
+        )
+        wv_zh, wv_en = build_event_type_watch_variable(draft["event_type"], title)
+        draft["watch_variable"] = wv_zh
+        draft["watch_variable_en"] = wv_en
+
+        extracted.append(draft)
+        seen_new_titles.append(title)
+        if cand["storyline_id"]:
+            known_storylines.add(cand["storyline_id"])
+        for eid in eids:
+            known_date_entities.add((sched_date, eid))
+        if len(extracted) >= 12:
+            break
+
+    return extracted
 
 
 def _infer_event_type(item: Dict[str, Any], blob_low: str) -> str:

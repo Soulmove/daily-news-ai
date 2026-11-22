@@ -585,12 +585,19 @@ def build_v3_artifacts(
         if t.get("summary"):
             raw_sum = str(t["summary"])
             hf_match = re.search(r"模型任务[：:]\s*([a-z0-9-]+)", raw_sum, re.I)
-            if hf_match:
+            is_hf_card = str(t.get("tool_id") or "").startswith("tool_hf_") or "Hugging Face" in str(t.get("source_name") or "")
+            if hf_match or is_hf_card:
                 dl_match = re.search(r"近期下载(?:量)?[：:]\s*(\d+)", raw_sum)
                 dl_val = int(dl_match.group(1)) if dl_match else t.get("downloads")
                 if dl_val is not None and int(dl_val) < 10:
                     continue
-                t["summary"] = format_hf_tool_summary(hf_match.group(1), dl_val)
+                pt_tag = hf_match.group(1) if hf_match else (re.search(r"\(([^)]+)\)", str(t.get("tool_type") or "")) or [None, "text-generation"])[1]
+                t["summary"] = format_hf_tool_summary(
+                    str(pt_tag),
+                    dl_val,
+                    model_id=str(t.get("repo") or t.get("name") or ""),
+                    tags=list(t.get("tags") or []) if isinstance(t.get("tags"), list) else None,
+                )
             else:
                 # Clean GFM pipe tables, nested badges, orphan Website:/Attestations: labels, commit prefixes & trailing brackets
                 raw_sum = re.sub(r"\[\s*!\[[^\]]*\]\([^)]*\)\s*\]\([^)]*\)", " ", raw_sum)
@@ -828,98 +835,6 @@ def build_v3_artifacts(
                         }
                     )
                     seen_tool_names.add(short_name.lower())
-
-        # Extract scheduled catalyst dates ONLY from genuine schedule/summit/earnings/release items
-        indep_c = int(ev.get("independent_publisher_count") or len(ev.get("sources") or []))
-        is_calendar_fluff = bool(
-            re.search(r"(?:围巾|座驾|同框|开了个玩笑|花絮|是否将举行|没有这方面的信息|美方代表有哪些|发言人回应|外交部回应)", ev_title)
-        )
-        is_rumor_or_gossip = (
-            is_calendar_fluff
-            or bool(ev.get("contradictions"))
-            or (bool(ev.get("attribution_warning")) and indep_c < 3)
-            or (ev_title.startswith(("报道称", "消息称", "传闻")) and indep_c < 3)
-        )
-        is_retrospective_recap = bool(
-            re.search(
-                r"(?:IPO后|上市后|挂牌后|股价表现不佳|收跌|收涨|跌停|涨停|大跌|大涨|引发.*担忧|回顾|复盘|盘点|闭幕|落幕|已于|此前|上周|昨日|昨天|after\s+ipo|post-?ipo|slump)",
-                f"{ev_title} {ev.get('fact_summary') or ''}",
-                re.I,
-            )
-        )
-        if not is_rumor_or_gossip and not is_retrospective_recap and (
-            any(k in ev_title for k in ("下周", "本周重磅", "日程", "财报", "听证会", "峰会", "会晤", "元首", "议息", "APEC", "发布会", "IPO", "发射", "COP", "关税", "峰会"))
-            or re.search(r"(?:将于|定于|拟于|计划于|预计)\s*\d{1,2}月\d{1,2}日", f"{ev_title} {ev.get('fact_summary') or ''}")
-        ):
-            if not any(c.get("storyline_id") == st_id for c in calendar_items):
-                # Parse explicit dates (e.g. "11月19日") or explicit future-cued weekday ("下周四" / "定于周四")
-                combined_sched_txt = f"{ev_title} {ev.get('fact_summary') or ''}"
-                sched_iso: Optional[str] = None
-                orig_note = "具体时刻待官方正式公布 (TBD)"
-                cert_code = "reported_tbd"
-                cert_label = "报道提及（具体日程待官方进一步确认）"
-                date_m = re.search(r"(?:(\d{4})年)?(\d{1,2})月(\d{1,2})日", combined_sched_txt)
-                if date_m:
-                    yr_v = int(date_m.group(1) or generated_dt.year)
-                    mo_v, dy_v = int(date_m.group(2)), int(date_m.group(3))
-                    try:
-                        sched_dt_obj = generated_dt.replace(year=yr_v, month=mo_v, day=dy_v, hour=10, minute=0, second=0)
-                        sched_iso = to_iso_shanghai(sched_dt_obj)
-                        orig_note = f"{yr_v}-{mo_v:02d}-{dy_v:02d} 日程窗口 (具体钟点待定)"
-                        cert_code = "confirmed_official" if any(k in combined_sched_txt for k in ("官宣", "官方", "外交部", "APEC")) else "reported_tbd"
-                        cert_label = "官方/多源已定日程" if cert_code == "confirmed_official" else "报道明确日期（待具体时刻表）"
-                    except ValueError:
-                        sched_iso = None
-                elif re.search(r"(?:下周四|将于周四|定于周四|拟于周四|预计周四|本周四将)", combined_sched_txt):
-                    anchor_dt = parse_iso_datetime(ev.get("first_reported_at")) or generated_dt
-                    days_ahead = (3 - anchor_dt.weekday()) % 7
-                    if "下周四" in combined_sched_txt or (days_ahead == 0 and anchor_dt.hour >= 18):
-                        days_ahead = 7 if days_ahead == 0 else days_ahead
-                    target_th = (anchor_dt + timedelta(days=days_ahead)).replace(hour=10, minute=0, second=0)
-                    sched_iso = to_iso_shanghai(target_th)
-                    orig_note = f"{target_th.strftime('%Y-%m-%d')} 周四日程窗口 (来源报道推算)"
-                    cert_label = "报道明确周四会期（具体时刻待定）"
-
-                sched_dt = parse_iso_datetime(sched_iso) if sched_iso else None
-                ev_t_cal = str(ev.get("title") or "")
-                is_undated_recap = sched_dt is None and (
-                    any(k in ev_t_cal for k in ("密集开展", "达成", "已举行", "期间", "开幕", "闭幕", "握手", "会见"))
-                    and not any(k in ev_t_cal for k in ("将于", "定于", "拟于", "将举行", "计划于"))
-                )
-                is_past_cal = bool((sched_dt and sched_dt < (generated_dt - timedelta(days=2))) or is_undated_recap)
-                if not is_past_cal and sched_iso:
-                    is_macro_cb = any(k in combined_sched_txt.upper() for k in ("FOMC", "美联储", "央行", "议息", "纪要", "利率", "CPI", "非农", "通胀"))
-                    is_diplomatic = any(k in combined_sched_txt for k in ("元首", "峰会", "会晤", "APEC", "外交", "特朗普", "习近平", "普京"))
-                    is_ipo_ev = "IPO" in combined_sched_txt.upper()
-                    watch_var = (
-                        "联邦基金目标利率区间、通胀/就业措辞与后续路径指引"
-                        if is_macro_cb
-                        else (
-                            "官方联合公报、双边/多边高层共识与经贸科技议题表态"
-                            if is_diplomatic
-                            else ("最终发行价、募资规模与挂牌首日表现" if is_ipo_ev else "官方披露实值数据、毛利率与下季指引")
-                        )
-                    )
-                    calendar_items.append(
-                        {
-                            "calendar_id": f"cal_evt_{ev['event_id']}",
-                            "title": ev["title"],
-                            "scheduled_at": sched_iso,
-                            "original_time_note": orig_note,
-                            "timezone": "Asia/Shanghai",
-                            "certainty": cert_code,
-                            "certainty_label": cert_label,
-                            "is_past": False,
-                            "category": ev["category"],
-                            "entity_ids": ev.get("entity_ids", []),
-                            "storyline_id": st_id,
-                            "watch_variable": watch_var,
-                            "pre_expectation": "未提供一致预期数值；请勿用事后报道反向填补",
-                            "actual_result": None,
-                            "source_name": ev["sources"][0]["source_name"] if ev.get("sources") else "财经日程",
-                            "source_url": ev["sources"][0]["url"] if ev.get("sources") else None,
-                        }
-                    )
 
         # Compute explicit transparent Radar score
         rel_pts = 30 if ev.get("entity_ids") else 0
@@ -1416,6 +1331,36 @@ def build_v3_artifacts(
         enrich_zh_ai_progress(ai_progress_doc, base_dir=root)
     except Exception:
         pass
+
+    # Extract dynamic breaking schedules from News + 7x24 Live Wire + AI Frontier & scrub misapplied earnings boilerplate
+    from .calendar_catalog import build_event_type_watch_variable, extract_breaking_calendar_items
+
+    breaking_cals = extract_breaking_calendar_items(
+        cat_docs=cat_docs,
+        live_wire_items=list(wire_disk.get("items") or []) if isinstance(wire_disk, dict) else [],
+        ai_progress_items=list(ai_progress_doc.get("timeline") or []),
+        generated_dt=generated_dt,
+        existing_calendar_items=calendar_items,
+    )
+    if breaking_cals:
+        calendar_items.extend(breaking_cals)
+    for cal in calendar_items:
+        cal_enriched = enrich_calendar_item_metadata(cal, generated_dt)
+        cal.update(cal_enriched)
+        if (
+            cal.get("event_type") != "earnings_capital"
+            and "毛利率与下季指引" in str(cal.get("watch_variable") or "")
+        ):
+            wv_zh, wv_en = build_event_type_watch_variable(str(cal.get("event_type") or "politics_macro"), str(cal.get("title") or ""))
+            cal["watch_variable"] = wv_zh
+            cal["watch_variable_en"] = wv_en
+    calendar_items.sort(
+        key=lambda c: (
+            1 if c.get("is_past") else 0,
+            0 if c.get("is_breaking_schedule") else 1,
+            str(c.get("scheduled_at") or "9999-12-31"),
+        )
+    )
     # Build/refresh live delayed quotes before computing volatility-calibrated market impacts
     quotes_doc: Dict[str, Any] = {}
     try:
@@ -1721,13 +1666,23 @@ def build_v3_artifacts(
             "storylines": storylines,
         },
     )
+    # Guarantee an even tool count (<= 20) so desktop 2-column grid has zero orphan single card
+    final_tools = list(tech_tools[:20])
+    if len(final_tools) > 2 and len(final_tools) % 2 == 1:
+        # Prefer trimming the last HF weight card so all GitHub SDK/framework cards stay intact
+        drop_idx = next(
+            (i for i in range(len(final_tools) - 1, -1, -1) if str(final_tools[i].get("tool_id") or "").startswith("tool_hf_")),
+            len(final_tools) - 1,
+        )
+        final_tools.pop(drop_idx)
+
     atomic_write_json(
         root / "data/calendar.json",
         {
             "schema_version": "4.1",
             "generated_at": generated_at_iso,
             "batch_id": batch_id,
-            "events": calendar_items[:80],
+            "events": calendar_items[:90],
         },
     )
     atomic_write_json(
@@ -1736,7 +1691,7 @@ def build_v3_artifacts(
             "schema_version": "4.1",
             "generated_at": generated_at_iso,
             "batch_id": batch_id,
-            "tools": tech_tools[:50],
+            "tools": final_tools,
         },
     )
     atomic_write_json(
@@ -1763,7 +1718,7 @@ def build_v3_artifacts(
     site_url = os.environ.get("SITE_PUBLIC_URL", "https://111.230.153.15/news/")
     site_base = site_url.rstrip("/") + "/"
     cal_ics_text, cal_ics_exported, cal_ics_skipped = _export_calendar_ics(
-        calendar_items[:80], generated_at_iso=generated_at_iso, site_url=site_base
+        calendar_items[:90], generated_at_iso=generated_at_iso, site_url=site_base
     )
     _atomic_write_text(root / "data/calendar.ics", cal_ics_text)
 
@@ -1819,12 +1774,12 @@ def build_v3_artifacts(
         "ai_progress_count": len(ai_progress_doc.get("timeline") or []),
         "finance_impact_count": len(finance_impact_doc.get("event_impacts") or finance_impact_doc.get("cards") or []),
         "market_quotes_path": "data/market_quotes.json",
-        "calendar_count": len(calendar_items),
+        "calendar_count": len(calendar_items[:90]),
         "calendar_ics_path": "data/calendar.ics",
         "calendar_ics_count": cal_ics_exported,
         "calendar_tbd_skipped": cal_ics_skipped,
         "feed_path": "data/feed.xml",
         "feeds_by_category": feeds_by_category,
-        "tech_tools_count": len(tech_tools),
+        "tech_tools_count": len(final_tools),
         "radar_count": len(radar_items),
     }

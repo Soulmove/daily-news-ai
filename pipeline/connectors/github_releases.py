@@ -18,6 +18,7 @@ DEFAULT_WATCHED_REPOS = [
     {"repo": "pytorch/pytorch", "name": "PyTorch", "entity_id": "ent_ai_infra_tools", "category": "深度学习框架"},
     {"repo": "sgl-project/sglang", "name": "SGLang", "entity_id": "ent_ai_infra_tools", "category": "结构化生成引擎"},
     {"repo": "ollama/ollama", "name": "Ollama", "entity_id": "ent_ai_infra_tools", "category": "本地大模型运行器"},
+    {"repo": "modelcontextprotocol/python-sdk", "name": "MCP Python SDK", "entity_id": "ent_anthropic", "category": "Agent 协议 SDK"},
     {"repo": "anthropics/anthropic-sdk-python", "name": "Anthropic SDK", "entity_id": "ent_anthropic", "category": "模型官方 SDK"},
     {"repo": "openai/openai-python", "name": "OpenAI SDK", "entity_id": "ent_openai", "category": "模型官方 SDK"},
 ]

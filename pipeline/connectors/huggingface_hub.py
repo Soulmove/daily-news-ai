@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from datetime import timedelta
+import re
 import time
 from typing import Any, Dict, List, Optional, Tuple
 
@@ -48,19 +49,71 @@ _HF_PIPELINE_TAG_ZH: Dict[str, Tuple[str, str]] = {
 }
 
 
-def format_hf_tool_summary(pipeline_tag: str, downloads: Any) -> str:
+_HF_ORG_ZH: Dict[str, str] = {
+    "qwen": "阿里通义千问 (Qwen)",
+    "deepseek-ai": "DeepSeek",
+    "tencent": "腾讯混元",
+    "moonshotai": "月之暗面 (Kimi)",
+    "zai-org": "智谱 AI (GLM)",
+    "baichuan-inc": "百川智能",
+    "bytedance-seed": "字节跳动 Seed",
+    "minimaxai": "MiniMax",
+    "mistralai": "Mistral AI",
+    "nvidia": "英伟达 (NVIDIA)",
+    "microsoft": "微软 (Microsoft)",
+    "stabilityai": "Stability AI",
+    "google": "Google / DeepMind",
+    "meta-llama": "Meta Llama",
+}
+
+
+def format_hf_tool_summary(
+    pipeline_tag: str,
+    downloads: Any,
+    model_id: str = "",
+    tags: Optional[List[str]] = None,
+) -> str:
     tag = str(pipeline_tag or "").strip().lower()
     task_label, use_case = _HF_PIPELINE_TAG_ZH.get(
         tag,
-        ("开源多模态与深度学习模型", "支持通过 Transformers / vLLM 等主流推理框架本地或云端部署调用"),
+        ("开源多模态与深度学习模型", "支持 Transformers / vLLM 等主流推理框架部署"),
     )
+    mid = str(model_id or "").strip()
+    org_part, name_part = (mid.split("/", 1) + [""])[:2] if "/" in mid else ("", mid)
+    org_zh = _HF_ORG_ZH.get(org_part.lower(), org_part)
+
+    traits: List[str] = []
+    combined_low = f"{mid} {' '.join(tags or [])}".lower()
+    size_m = re.search(r"(\d+(?:\.\d+)?)\s*([bt])\b", name_part, re.I)
+    if size_m:
+        traits.append(f"{size_m.group(1)}{size_m.group(2).upper()} 参数档")
+    if "moe" in combined_low or re.search(r"-a\d+b\b", name_part.lower()):
+        traits.append("MoE 稀疏激活")
+    if "thinking" in combined_low or "-r1" in combined_low or "reason" in combined_low:
+        traits.append("长链推理强化")
+    elif "coder" in combined_low or "code" in combined_low:
+        traits.append("代码工程专项")
+    elif "vl" in name_part.lower() or "vision" in combined_low or "omni" in combined_low:
+        traits.append("跨模态视觉感知")
+    elif "instruct" in combined_low or "chat" in combined_low:
+        traits.append("指令微调对话版")
+
+    formats = [fmt.upper() for fmt in ("gguf", "fp8", "awq", "gptq", "mlx") if fmt in combined_low]
+    if formats:
+        traits.append(f"支持 {'/'.join(formats[:2])} 量化")
+
     if isinstance(downloads, (int, float)) and downloads > 0:
         if downloads >= 10_000:
             dl_txt = f"近期下载 {downloads / 10_000:.1f} 万次"
         else:
             dl_txt = f"近期下载 {int(downloads)} 次"
     else:
-        dl_txt = "近期新发布开源权重"
+        dl_txt = "近期新发布权重"
+
+    prefix = f"{org_zh} 旗下 {name_part}" if (org_zh and name_part) else (name_part or task_label)
+    trait_str = f"（{' · '.join(traits[:3])}）" if traits else ""
+    if name_part:
+        return f"{prefix}{trait_str}：{task_label}；{use_case}（{dl_txt}）"
     return f"{task_label}；{use_case}（{dl_txt}）"
 
 
@@ -159,10 +212,11 @@ def fetch_huggingface_models(
                         "license": license_id or "详见模型卡",
                         "downloads": downloads,
                         "likes": likes,
+                        "tags": [str(t) for t in tags[:12] if isinstance(t, str)],
                         "official_url": card_url,
                         "release_url": card_url,
                         "docs_url": card_url,
-                        "summary": format_hf_tool_summary(pipeline_tag, downloads),
+                        "summary": format_hf_tool_summary(pipeline_tag, downloads, model_id=model_id, tags=tags),
                         "deployment_requirements": "需依据模型卡参数规模配置对应 GPU 显存及推理后端（vLLM / Transformers / llama.cpp）",
                         "pricing_or_cost": f"开源权重自部署（许可证：{license_id or '详见模型卡'}）",
                         "checked_at": fetched_iso,
