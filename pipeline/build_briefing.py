@@ -1633,6 +1633,8 @@ def build_briefing_batch(
     failed_cats = 0
 
     def _process_category(cat: str) -> Tuple[str, Optional[dict], Optional[dict], Optional[dict], Optional[Exception], dict]:
+        cat_t0 = time.monotonic()
+        print(f"⏳ [{cat}] starting mode={mode}...", flush=True)
         prev_cat_meta = prev_smart_cats.get(cat, {}) if isinstance(prev_smart_cats, dict) else {}
         prev_events: List[dict] = []
         if prev_cat_meta.get("path"):
@@ -1737,8 +1739,13 @@ def build_briefing_batch(
                     "disclaimer": "本批次未启用 AI 模拟观点。",
                     "comments": [],
                 }
+            print(
+                f"✅ [{cat}] finished in {time.monotonic() - cat_t0:.1f}s (model={doc.get('model_name')}, events={len(doc.get('events') or [])})",
+                flush=True,
+            )
             return cat, doc, cdoc, sel_audit, None, prev_cat_meta
         except Exception as exc:
+            print(f"⚠️ [{cat}] errored in {time.monotonic() - cat_t0:.1f}s: {exc}", flush=True)
             return cat, None, None, None, exc, prev_cat_meta
 
     # Run 2 categories concurrently with slight stagger to avoid 4x simultaneous Gemini burst 503s
@@ -1834,6 +1841,8 @@ def build_briefing_batch(
 
     from .bilingual import enrich_bilingual_events
 
+    bi_t0 = time.monotonic()
+    print(f"🌐 Starting enrich_bilingual_events across {len(cat_docs)} categories...", flush=True)
     for doc in cat_docs.values():
         ev_list = doc.get("events") or []
         enrich_bilingual_events(ev_list)
@@ -1843,6 +1852,7 @@ def build_briefing_batch(
             if matched_ev:
                 kc["headline"] = matched_ev.get("title") or kc.get("headline")
                 kc["detail"] = _smart_truncate(matched_ev.get("fact_summary") or kc.get("detail") or "", 190)
+    print(f"🌐 Finished enrich_bilingual_events in {time.monotonic() - bi_t0:.1f}s", flush=True)
 
     published_iso = to_iso_shanghai(now_shanghai())
     batch_status = "complete" if failed_cats == 0 else "partial"
@@ -1894,6 +1904,8 @@ def build_briefing_batch(
     # 2. Build V3 research intelligence memory using complete 4-category view (including fallback docs if any category failed)
     v3_cat_docs = dict(fallback_v3_docs)
     v3_cat_docs.update(cat_docs)
+    v3_t0 = time.monotonic()
+    print("🧠 Building V3 research memory artifacts...", flush=True)
     v3_summary = build_v3_artifacts(
         root,
         batch_id=batch_id,
@@ -1904,6 +1916,7 @@ def build_briefing_batch(
         connectors_payload=connectors_payload,
         raw_items_by_cat=raw_by_cat,
     )
+    print(f"🧠 Finished build_v3_artifacts in {time.monotonic() - v3_t0:.1f}s", flush=True)
 
     # 3. Update smart history index ONLY after batch succeeded & bound archive growth
     index_entry = {

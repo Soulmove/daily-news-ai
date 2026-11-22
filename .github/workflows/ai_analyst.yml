@@ -26,9 +26,10 @@ concurrency:
 jobs:
   ai-briefing-job:
     runs-on: ubuntu-latest
-    timeout-minutes: 12
+    timeout-minutes: 18
     env:
       TZ: 'Asia/Shanghai'
+      PYTHONUNBUFFERED: '1'
     steps:
       - name: 📥 Checkout repository
         uses: actions/checkout@v4
@@ -66,7 +67,7 @@ jobs:
           if [ "${{ github.event.inputs.include_comments }}" = "true" ]; then
             EXTRA_ARGS=""
           fi
-          python -m pipeline.build_briefing --mode ai $EXTRA_ARGS
+          python -u -m pipeline.build_briefing --mode ai $EXTRA_ARGS
 
       - name: 📊 Write GitHub Step Summary
         if: always()

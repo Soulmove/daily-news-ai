@@ -426,15 +426,17 @@ def call_gemini_raw(
     failed_slots_by_model: Dict[str, set[str]] = {}
     per_key_errors: List[Dict[str, str]] = []
     attempts = 0
-    max_attempts = max(24, len(slots) * 2)
+    max_attempts = min(14, max(8, len(slots)))
+    deadline = time.monotonic() + 150.0
     saw_quota_exhaustion = False
 
     for model_name in unique_models:
-        if model_name in unavailable_models or attempts >= max_attempts:
+        if model_name in unavailable_models or attempts >= max_attempts or time.monotonic() >= deadline:
             continue
         failed_for_model = failed_slots_by_model.setdefault(model_name, set())
+        transient_errors_for_model = 0
         for slot in slots:
-            if slot.slot in failed_for_model or attempts >= max_attempts:
+            if slot.slot in failed_for_model or attempts >= max_attempts or time.monotonic() >= deadline:
                 continue
             with _POOL_LOCK:
                 ledger = _load_quota_ledger(base_dir)
@@ -446,7 +448,12 @@ def call_gemini_raw(
             for _try_idx in range(max_transient_tries):
                 attempts += 1
                 try:
-                    client = genai.Client(api_key=slot.secret)
+                    http_opts = types.HttpOptions(timeout=75_000) if hasattr(types, "HttpOptions") else None
+                    client = (
+                        genai.Client(api_key=slot.secret, http_options=http_opts)
+                        if http_opts is not None
+                        else genai.Client(api_key=slot.secret)
+                    )
                     cfg_kwargs: Dict[str, Any] = {"temperature": temperature}
                     if response_mime_type:
                         cfg_kwargs["response_mime_type"] = response_mime_type
@@ -522,9 +529,13 @@ def call_gemini_raw(
                     per_key_errors.append(
                         {"slot": slot.slot, "model": model_name, "code": err_code, "error": short_msg}
                     )
+                    if err_code == "TRANSIENT_ERROR":
+                        transient_errors_for_model += 1
+                        if transient_errors_for_model >= 2:
+                            unavailable_models.add(model_name)
                     break
 
-            if model_name in unavailable_models:
+            if model_name in unavailable_models or time.monotonic() >= deadline:
                 break
 
     last_msg = per_key_errors[-1]["error"] if per_key_errors else "All healthy Gemini keys exhausted or in cooldown"
