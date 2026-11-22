@@ -78,6 +78,21 @@ _HOST_PUBLISHER_MAP = {
     "wired.com": "WIRED",
     "apnews.com": "美联社",
     "nytimes.com": "纽约时报",
+    "ftchinese.com": "FT中文网",
+    "nikkei.com": "日经新闻",
+    "asia.nikkei.com": "Nikkei Asia",
+    "aljazeera.com": "半岛电视台",
+    "cnn.com": "CNN",
+    "theguardian.com": "卫报",
+    "washingtonpost.com": "华盛顿邮报",
+    "venturebeat.com": "VentureBeat",
+    "marktechpost.com": "MarkTechPost",
+    "theinformation.com": "The Information",
+    "semafor.com": "Semafor",
+    "barrons.com": "巴伦周刊",
+    "finance.yahoo.com": "Yahoo Finance",
+    "coindesk.com": "CoinDesk",
+    "cointelegraph.com": "Cointelegraph",
     "cls.cn": "财联社",
     "wallstreetcn.com": "华尔街见闻",
     "ithome.com": "IT之家",
@@ -85,6 +100,13 @@ _HOST_PUBLISHER_MAP = {
     "yicai.com": "第一财经",
     "caixin.com": "财新",
     "stcn.com": "证券时报",
+    "xinhuanet.com": "新华社",
+    "news.cn": "新华网",
+    "people.com.cn": "人民网",
+    "chinanews.com.cn": "中新社",
+    "ifeng.com": "凤凰网",
+    "sina.com.cn": "新浪财经",
+    "eastmoney.com": "东方财富",
     "openai.com": "OpenAI 官方",
     "anthropic.com": "Anthropic 官方",
     "deepmind.google": "Google DeepMind",
@@ -117,7 +139,9 @@ def _clean_source_display_name(raw_name: Any, fallback_title: str = "", url: str
                 return host
         except Exception:
             pass
-    return "权威报道"
+    ascii_chars = len(re.findall(r"[A-Za-z]", str(fallback_title or "")))
+    cjk_chars = len(re.findall(r"[\u4e00-\u9fff]", str(fallback_title or "")))
+    return "国际媒体" if ascii_chars > cjk_chars * 2 else "新闻电讯"
 
 
 def _has_cross_lingual_match(event_text: str, raw_text: str) -> bool:

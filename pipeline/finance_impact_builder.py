@@ -197,7 +197,10 @@ def _build_domain_scenario(
                     {"cond": "若上市首周跌破发行价引发承销护盘失效", "result": "一二级 AI 融资估值折价传导至港股/美股软件应用", "tone": "bearish"},
                     {"cond": "若企业级 ARR 签约增速公告超预期带动止跌企稳", "result": "头部 AI 平台估值中枢重新锚定", "tone": "neutral"},
                 ],
-                "milestones": [{"date": "未来 3 个交易日", "status": "current", "label": "观察发行价保卫战成交量与做空仓位变化"}],
+                "milestones": [
+                    {"date": "上市首周 (T+5)", "status": "current", "label": "观察发行价保卫战成交量与做空仓位变化"},
+                    {"date": "锁定期满前", "status": "upcoming", "label": "核对企业级 ARR 签约与毛利率财报兑现"},
+                ],
             }
 
         nvda_f, atr_v, _ = _volatility_scale("NVDA", quotes_map, intensity)
@@ -287,7 +290,207 @@ def _build_domain_scenario(
             ],
             "milestones": [
                 {"date": "次日美股开盘", "status": "current", "label": "观察 NVDA / QQQ 成交量与机构承接力"},
-                {"date": "未来 1 周", "status": "upcoming", "label": "跟踪 CSP 云巨头资本开支表态是否松动"},
+                {"date": "未来 2 周", "status": "upcoming", "label": "跟踪 CSP 云巨头资本开支指引是否松动"},
+            ],
+        }
+
+    # 1b. 自动驾驶与高阶智驾量产推进 (FSD / Robotaxi)
+    if re.search(r"FSD|自动驾驶|无人驾驶|Robotaxi|端到端智驾|智驾.*开放|高阶智驾", text, re.I):
+        return {
+            "rule_id": "autonomous_driving_fsd",
+            "tag": "端到端智驾商业化 / FSD 落地",
+            "tag_en": "Autonomous Driving & FSD Rollout",
+            "polarity": "divergent",
+            "intensity": 4,
+            "one_liner": "端到端智驾高版本推进强化头部整车软件订阅与 Robotaxi 预期，带动高算力域控及传感器渗透率上行，传统低阶网约车承压。",
+            "one_liner_en": "End-to-end ADAS and FSD deployment lifts smart-driving compute/chassis demand while pressuring legacy ride-hailing.",
+            "sample_basis": {
+                "sample_n": 14,
+                "volatility_pct": 3.8,
+                "volatility_source": "TSLA / 智能驾驶链历史催化窗口",
+                "horizon": "2~7 个交易日",
+                "confidence_label": "高置信（直接产业落地催化）",
+                "confidence_label_en": "High (Direct ADAS Catalyst)",
+            },
+            "affected_tickers": {"TSLA": 0.85, "002920.SZ": 0.7, "09868.HK": 0.55, "UBER": -0.45},
+            "realized_quotes": _quote_snapshot(["QQQ", "HSTECH.HK"]),
+            "bars": [
+                _bar("美股", "特斯拉 FSD 与整车软件估值 (TSLA)", "Tesla FSD & Software Valuation (TSLA)", 2.1, 5.2, "FSD 高版本落地与订阅渗透率提升，强化整车软件及 Robotaxi 远期现金流定价。", "New FSD rollout and subscription adoption strengthen automotive software valuation.", 1.0, "TSLA"),
+                _bar("A股", "智能驾驶域控制器 / 激光雷达", "A-Share ADAS Domain Controller & LiDAR", 1.4, 3.6, "头部车企智驾节奏加快，倒逼国内车企跟进高算力域控、线控制动与传感器配置。", "Accelerated flagship ADAS rollout drives domestic controller and sensor upgrades.", 1.0, "002920.SZ"),
+                _bar("港股", "头部新势力智驾领先车企", "HKEX Leading Smart-EV OEMs", 0.9, 2.8, "端到端智驾模型迭代领先的港股整车厂受益于销量结构上移与估值重估。", "Smart-EV leaders in Hong Kong benefit from mix upgrade and ADAS differentiation.", 1.0, "09868.HK"),
+                _bar("美股", "传统纯人工网约车平台 (UBER)", "Legacy Ride-Hailing Platforms (UBER)", -1.8, -0.4, "若 Robotaxi 商业化时间表前移，纯人工运力撮合平台的中长期抽成空间面临估值折价。", "Faster Robotaxi commercialization compresses terminal multiples for legacy ride-hailing.", 0.9, "UBER"),
+            ],
+            "if_then": [
+                {"cond": "若 4 周内 FSD 开放城市规模或无干预里程 (MPI) 实测超预期", "result": "整车软件订阅与高阶域控链估值重估延续", "tone": "bullish"},
+                {"cond": "若试点期间出现监管安全问询或推送范围收窄", "result": "概念溢价回吐，市场回归单车交付量与毛利率主线", "tone": "bearish"},
+            ],
+            "milestones": [
+                {"date": "推送后 2 周", "status": "current", "label": "跟踪首批车型 OTA 推送比例及无干预接管里程实测"},
+                {"date": "未来 1 季度", "status": "upcoming", "label": "观察 FSD 订阅选装率与中美监管准入批复"},
+            ],
+        }
+
+    # 1c. 存储芯片与 HBM 并购/产能扩张 (SK 海力士 / 美光 / 三星)
+    if re.search(r"海力士|SK\s*Hynix|美光|Micron|HBM|高带宽内存|DRAM|NAND.*收购|NAND.*扩产", text, re.I) and re.search(
+        r"收购|洽购|入股|并购|扩张|扩产|短缺|涨价|合同价|资本|投资|AI\s*芯片|供货|软银", text, re.I
+    ):
+        return {
+            "rule_id": "memory_hbm_ma_supply",
+            "tag": "HBM / 存储资本整合与周期重估",
+            "tag_en": "AI Memory & HBM Deal Flow",
+            "polarity": "divergent",
+            "intensity": 4,
+            "one_liner": "AI 存储/HBM 资本运作升温强化高带宽内存稀缺性定价，利好核心存储原厂与先进封测，PC 等整机 BOM 成本短期承压。",
+            "one_liner_en": "Strategic M&A and capacity focus in HBM reinforce memory pricing while lifting downstream hardware BOM costs.",
+            "sample_basis": {
+                "sample_n": 15,
+                "volatility_pct": 3.9,
+                "volatility_source": "费半/存储芯片周期催化样本",
+                "horizon": "2~5 个交易日",
+                "confidence_label": "高置信（直击存储器估值与产能格局）",
+                "confidence_label_en": "High (Direct Memory Cycle Catalyst)",
+            },
+            "affected_tickers": {"MU": 0.85, "NVDA": 0.35, "603986.SH": 0.65, "HPQ": -0.45},
+            "realized_quotes": _quote_snapshot(["QQQ", "512480.SH"]),
+            "bars": [
+                _bar("美股", "HBM 与企业级存储龙头 (MU)", "US HBM & Enterprise Memory (MU)", 1.8, 4.5, "产业资本竞逐 HBM 产能与稀缺技术资产，强化高阶存储合约价预期。", "Strategic capital chasing HBM scarcity reinforces high-bandwidth memory pricing.", 1.0, "MU"),
+                _bar("亚太", "韩国头部 HBM 晶圆与软银概念", "Korea HBM Foundry & Strategic Suitors", 1.5, 4.2, "战略并购或入股预期提升目标资产估值中枢，并加深与 AI 算力生态绑定。", "Strategic M&A talks lift asset valuation and deepen AI compute ecosystem ties.", 1.0, "000660.KS"),
+                _bar("A股", "国产存储芯片与先进封装测试", "A-Share Memory & Advanced Packaging", 1.2, 3.4, "国际大厂资源向 HBM 倾斜加速常规 DRAM 产能出清，封测与模组同步受益。", "Global HBM reallocation tightens conventional DRAM supply and lifts packaging.", 1.0, "603986.SH"),
+                _bar("美股", "传统消费级 PC OEM 组装厂 (HPQ)", "Commodity PC OEMs (HPQ)", -1.4, -0.3, "DRAM/NAND 合约价回升抬高整机 BOM 成本，若终端换机需求偏弱将挤压毛利。", "Rising DRAM/NAND contract prices squeeze hardware OEM margins if demand lags.", 0.9, "HPQ"),
+            ],
+            "if_then": [
+                {"cond": "若交易估值溢价落地或下季度 HBM/DRAM 合约价环比涨幅超 10%", "result": "存储原厂与先进封测主升浪扩散", "tone": "bullish"},
+                {"cond": "若谈判因监管或估值分歧搁置，且消费级现货成交走弱", "result": "事件性溢价回落，回归季度稼动率定价", "tone": "bearish"},
+            ],
+            "milestones": [
+                {"date": "未来 2-4 周", "status": "current", "label": "核实双方正式公告及 TrendForce 当月 DRAM/NAND 合约报价"},
+                {"date": "下轮原厂财报", "status": "upcoming", "label": "验证 HBM 位元出货指引与明年产能锁定比例"},
+            ],
+        }
+
+    # 1d. AI 基础设施融资缺口与资本开支紧缩预警
+    if re.search(r"缺钱|资金短缺|融资.*困|现金流.*紧张|资本开支.*紧|烧钱|funding\s*shortage|capital\s*crunch", text, re.I) and re.search(
+        r"AI|大模型|算力|数据中心|马斯克|OpenAI|Anthropic|xAI", text, re.I
+    ):
+        return {
+            "rule_id": "ai_funding_capex_squeeze",
+            "tag": "AI 烧钱节奏与算力融资约束",
+            "tag_en": "AI Funding Crunch & Capex Caution",
+            "polarity": "divergent",
+            "intensity": 4,
+            "one_liner": "行业领军者警示 AI 融资缺口将加剧市场对高杠杆独立算力股估值折价，自由现金流充沛的云巨头防御护城河反而走阔。",
+            "one_liner_en": "Warnings over AI funding shortfalls pressure cash-burning compute plays while widening the moat for cash-rich hyperscalers.",
+            "sample_basis": {
+                "sample_n": 13,
+                "volatility_pct": 3.5,
+                "volatility_source": "纳指 AI Capex 预期修正样本",
+                "horizon": "1~5 个交易日",
+                "confidence_label": "中高置信（直击一级到二级算力融资链）",
+                "confidence_label_en": "Moderate-High (AI Capex Financing Sensitivity)",
+            },
+            "affected_tickers": {"MSFT": 0.4, "QQQ": -0.35, "600941.SH": 0.45},
+            "realized_quotes": _quote_snapshot(["QQQ", "HSTECH.HK", "000001.SH"]),
+            "bars": [
+                _bar("美股", "高现金流云巨头与资产负债表龙头 (MSFT)", "Cash-Rich Cloud Hyperscalers (MSFT)", 0.4, 1.8, "外部股权与债权融资收紧时，自带充沛自由现金流的超级平台护城河扩大。", "Tighter external AI financing widens the moat for self-funded hyperscalers.", 0.9, "MSFT"),
+                _bar("美股", "高杠杆独立算力租赁 / 高估 AI 应用", "Leveraged Neocloud & Unprofitable AI", -4.2, -1.5, "依赖举债扩张机柜的二三线算力股对信用利差走阔及 Capex 放缓最为敏感。", "Debt-dependent compute renters face acute valuation compression.", 1.0),
+                _bar("美股", "科技高收益债 / 私募信贷 (HYG)", "Tech High-Yield Credit (HYG)", -1.8, -0.4, "算力基建回报期拉长引发市场重估非投资级科技债再融资风险。", "Extended AI payback horizons pressure high-yield tech credit spreads.", 0.9, "HYG"),
+                _bar("A股", "高股息电信运营商与红利资产", "A-Share Telecom & High-Dividend Value", 0.4, 1.4, "全球 AI ROI 分歧放大阶段，资金偏好现金流确定性高的高股息防御板块。", "Domestic flows tilt toward dividend-paying telecoms amid AI ROI debates.", 0.9, "600941.SH"),
+            ],
+            "if_then": [
+                {"cond": "若头部大模型厂商随后披露大额股权融资到账且 CSP 维持 Capex 指引", "result": "资金恐慌修复，一线算力龙头快速企稳", "tone": "bullish"},
+                {"cond": "若高收益信用利差连续 5 个交易日走阔且云厂商下调机柜租赁预期", "result": "高杠杆算力与二线 AI 估值中枢下杀", "tone": "bearish"},
+            ],
+            "milestones": [
+                {"date": "未来 2 周", "status": "current", "label": "观察美股科技高收益债利差与头部 AI 独角兽融资进展"},
+                {"date": "下季财报季", "status": "upcoming", "label": "核对 MSFT / AMZN / GOOG 资本开支自由现金流占比"},
+            ],
+        }
+
+    # 1e. 加密资产关键关口突破与风险偏好传导 (比特币 / 以太坊)
+    if re.search(r"比特币|Bitcoin|BTC|以太坊|Ethereum|ETH|加密货币|Coinbase|MicroStrategy", text, re.I) and re.search(
+        r"万|跌破|突破|涨超|跌超|反弹|暴跌|暴涨|ETF|监管|储备|清算|重返", text, re.I
+    ):
+        is_bull_crypto = bool(re.search(r"突破|涨超|反弹|暴涨|站上|创.*新高|流入|重返", text, re.I)) and not bool(
+            re.search(r"跌破|暴跌|崩盘|爆仓|流出|禁令", text, re.I)
+        )
+        c_dir = 1.0 if is_bull_crypto else -1.0
+        return {
+            "rule_id": "crypto_risk_appetite_swing",
+            "tag": "比特币关键关口修复与加密概念反弹" if is_bull_crypto else "加密资产回撤与持币财库股去杠杆",
+            "tag_en": "Crypto Threshold Swing & Treasury Equities",
+            "polarity": "bullish" if is_bull_crypto else "bearish",
+            "intensity": 4,
+            "one_liner": (
+                "比特币重返关键整数关口激活市场风险偏好，高 Beta 持币财库股、合规交易所与算力矿企具显著杠杆弹性。"
+                if is_bull_crypto
+                else "加密资产回撤触发高杠杆爆仓与套息交易平仓，持币财库股、合规交易所及矿企短线估值承压。"
+            ),
+            "one_liner_en": (
+                "Bitcoin threshold recovery lifts risk appetite across crypto treasury equities, regulated exchanges, and miners."
+                if is_bull_crypto
+                else "Crypto drawdown triggers deleveraging across treasury equities, exchanges, and mining names."
+            ),
+            "sample_basis": {
+                "sample_n": 20,
+                "volatility_pct": 5.2,
+                "volatility_source": "BTC / MSTR / COIN 现货与概念联动样本",
+                "horizon": "1~3 个交易日",
+                "confidence_label": "高置信（数字资产直驱映射）",
+                "confidence_label_en": "High (Direct Spot-Crypto Beta)",
+            },
+            "affected_tickers": {"MSTR": round(0.95 * c_dir, 2), "COIN": round(0.8 * c_dir, 2), "MARA": round(0.85 * c_dir, 2)},
+            "realized_quotes": _quote_snapshot(["QQQ", "HSI.HK"]),
+            "bars": [
+                _bar("美股", "高 Beta 持币财库股 (MSTR)", "US Bitcoin Treasury Equities (MSTR)", 3.5 * c_dir, 8.2 * c_dir, "持币企业兼具现货净值敞口与可转债杠杆，日内振幅显著高于比特币现货。", "Bitcoin treasury equities act as levered proxies via balance-sheet holdings.", 1.0, "MSTR"),
+                _bar("美股", "合规数字资产交易平台 (COIN)", "Regulated Crypto Exchanges (COIN)", 2.1 * c_dir, 5.4 * c_dir, "现货波动与衍生品成交量共振直接决定散户交易费率与托管收入弹性。", "Spot volatility and retail trading volumes drive exchange fee sensitivity.", 1.0, "COIN"),
+                _bar("港股", "香港持牌虚拟资产与 ETF 映射 (00863)", "HKEX Licensed Virtual Asset Proxies", 1.6 * c_dir, 4.2 * c_dir, "亚太时段比特币关键关口变动直接映射至港股持牌交易及现货 ETF 概念。", "Asia-hours crypto swings transmit directly to HK licensed exchanges.", 1.0, "00863.HK"),
+                _bar("美股", "比特币矿企与算力托管 (MARA)", "Bitcoin Miners & Hosting (MARA)", 2.4 * c_dir, 6.0 * c_dir, "币价与全网难度比决定矿企单位算力现金流及 AI 机柜转型估值弹性。", "Hashprice margins expand or compress sharply with BTC spot swings.", 1.0, "MARA"),
+            ],
+            "if_then": [
+                {"cond": "若美股现货 BTC ETF 连续 3 日净流入且资金费率维持健康水平", "result": "趋势性买盘支撑持币股与矿企高弹性延续", "tone": "bullish"},
+                {"cond": "若 24 小时永续合约爆仓额放大且 ETF 转为净流出", "result": "杠杆去化压力卷土重来，高 Beta 矿企剧烈回吐", "tone": "bearish"},
+            ],
+            "milestones": [
+                {"date": "次日美东收盘", "status": "current", "label": "跟踪 IBIT / FBTC 现货 ETF 单日净申购与 CME 未平仓合约"},
+                {"date": "未来 7 天", "status": "upcoming", "label": "观察 60,000 / 65,000 美元整数关口周线站稳与否"},
+            ],
+        }
+
+    # 1f. 关键矿产与稀土上游化学品/配额供给冲击
+    if re.search(r"稀土|稀散金属|镓|锗|锑|钨|关键矿产|critical\s*minerals|rare\s*earth", text, re.I) and re.search(
+        r"禁|限制|出口|管制|配额|停产|断供|关税|泰国|缅甸|征收|冻结|走私|打击", text, re.I
+    ):
+        return {
+            "rule_id": "rare_earth_critical_minerals_supply",
+            "tag": "稀土上游原料/辅料管制冲击",
+            "tag_en": "Critical Minerals & Rare-Earth Supply Curb",
+            "polarity": "divergent",
+            "intensity": 4,
+            "one_liner": "东南亚跨境稀土冶炼辅料或原矿禁令扰动上游供给预期，中重稀土冶炼及海外替代资源迎重估，永磁下游成本短线承压。",
+            "one_liner_en": "Border restrictions on rare-earth reagents tighten heavy rare-earth supply expectations while raising downstream magnet costs.",
+            "sample_basis": {
+                "sample_n": 12,
+                "volatility_pct": 3.4,
+                "volatility_source": "中重稀土供给扰动与氧化物价格弹性样本",
+                "horizon": "2~7 个交易日",
+                "confidence_label": "高置信（直接供需扰动定价）",
+                "confidence_label_en": "High (Direct Feedstock Disruption)",
+            },
+            "affected_tickers": {"600111.SH": 0.85, "MP": 0.8, "300748.SZ": 0.45},
+            "realized_quotes": _quote_snapshot(["000001.SH", "QQQ"]),
+            "bars": [
+                _bar("A股", "稀土开采冶炼与中重稀土 (北方稀土/广晟)", "A-Share Rare-Earth Mining & Separation", 1.8, 4.8, "矿山开采辅料（如草酸/萃取试剂）或原矿跨境受限直接抬升氧化镨钕与镝铽现货报价。", "Reagent bans or feedstock disruptions tighten separated oxide pricing.", 1.0, "600111.SH"),
+                _bar("美股", "北美非中国稀土矿采分离 (MP)", "US Ex-China Rare-Earth Producers (MP)", 1.9, 4.9, "东南亚跨境供应链扰动推升欧美本土稀土精炼产能的战略溢价。", "Supply-chain bottlenecks strengthen strategic premium for ex-China refining.", 1.0, "MP"),
+                _bar("A股", "高性能钕铁硼永磁材料 (金力永磁)", "A-Share NdFeB Permanent Magnets", 0.8, 2.5, "氧化物现货温和涨价有利于具备低价原料库存的磁材龙头重估。", "Moderate oxide inflation supports inventory revaluation for magnet leaders.", 1.0, "300748.SZ"),
+                _bar("美股", "风电整机与永磁驱动下游 (GEV)", "Wind Turbine & EV Motor OEMs (GEV)", -1.1, -0.2, "重稀土镝/铽现货跳涨或挤压未充分套保永磁电驱设备商毛利。", "Dy/Tb spikes pressure margins at unhedged permanent-magnet OEMs.", 0.9, "GEV"),
+            ],
+            "if_then": [
+                {"cond": "若边境化学品/矿砂禁令持续超 2 周且亚洲金属网镨钕/氧化铽报价连续跳涨", "result": "中重稀土冶炼与具备原矿配额企业涨价弹性延续", "tone": "bullish"},
+                {"cond": "若监管仅清理非法小矿点而正规配额供应未受影响", "result": "供给冲击证伪，板块脉冲冲高后震荡回落", "tone": "neutral"},
+            ],
+            "milestones": [
+                {"date": "未来 1 周", "status": "current", "label": "核查百川盈孚 / 亚洲金属网氧化镨钕、氧化铽周度现货价"},
+                {"date": "下月海关数据", "status": "upcoming", "label": "跟踪自东南亚进口稀土矿砂及冶炼辅料报关量变化"},
             ],
         }
 
@@ -510,8 +713,9 @@ def _build_domain_scenario(
         }
 
     # 8. US Overseas Datacenter Tax Threat + Chip Export Restriction + NVIDIA Leadership Turbulence
-    if any(k in t for k in ("数据中心.*征", "征重税", "巨税", "限制对华", "出口中国", "88 万颗", "黄仁勋")) and any(
-        k in t for k in ("芯片", "英伟达", "amd", "数据中心")
+    if (
+        re.search(r"海外.*数据中心.*(?:征|税|关税)|巨额关税|征重税|巨税|限制对华|出口中国|88\s*万颗|黄仁勋", t)
+        and any(k in t for k in ("芯片", "英伟达", "amd", "数据中心", "关税", "税"))
     ):
         is_positive_grant = "批准" in t and "征重税" not in t and "巨税" not in t and "限制" not in t and "辞职" not in t
         if is_positive_grant:
@@ -573,8 +777,12 @@ def _build_domain_scenario(
             "milestones": [{"date": "两周内", "status": "current", "label": "英伟达治理公告与美国商务部出口税则细则"}],
         }
 
-    # 9. Genuine US-China Summit / Bilateral Diplomacy Peace Declaration (ONLY bilateral US-China / APEC!)
-    if ("中美" in t or "apec" in t) and any(k in t for k in ("三方和平", "一致同意", "对话", "关税调整", "峰会", "会晤")):
+    # 9. Genuine US-China Summit / Bilateral Diplomacy Peace Declaration (ONLY bilateral US-China / APEC; never tariff threats!)
+    if (
+        ("中美" in t or "apec" in t)
+        and any(k in t for k in ("三方和平", "一致同意", "对话", "关税调整", "峰会", "会晤"))
+        and not re.search(r"巨额关税|征重税|巨税|加征关税|威胁征税|关税威胁", t)
+    ):
         is_truce = any(k in t for k in ("和平宣言", "一致同意", "不陷入", "合作", "建设性"))
         kweb_f, atr_v, _ = _volatility_scale("KWEB", quotes_map, 3)
         return {
@@ -636,25 +844,36 @@ def _build_domain_scenario(
                 "if_then": [{"cond": "若双方正式宣布约束性收购报价", "result": "全行业安全软件 EV/Sales 估值中枢获提振", "tone": "bullish"}],
                 "milestones": [{"date": "2 周内", "status": "current", "label": "双方董事会是否公布正式并购条款或否认传闻"}],
             }
-        if any(k in t for k in ("反蒸馏", "蒸馏", "思考链提取", "黎曼")):
+        if any(
+            k in t
+            for k in (
+                "屏蔽", "阻断", "禁用", "限制读取", "截屏", "反蒸馏", "蒸馏", "思考链提取",
+                "黎曼", "形式化验证", "数学证明", "论文", "投资者是否应", "解散",
+                "tensorlean", "certik", "内核验证", "gpu内核", "gpu 内核", "flashattention", "cuda",
+            )
+        ):
             return None
         if any(k in t for k in ("甲骨文", "openai", "gpt", "gemini", "anthropic", "claude", "混元", "千问", "qwen", "deepseek", "llm")):
             is_infra = "甲骨文" in t or "筹足" in t or "合同" in t or "自由现金流" in t
             if not is_infra:
-                title_short = str(title or "").strip()[:32]
                 if "openai" in t or "gpt" in t:
-                    eco_tag = "OpenAI 新模型发布与推理生态催化"
+                    eco_tag = "OpenAI 模型迭代与微软云算力链"
                     eco_tag_en = "OpenAI Model Launch & Inference Ecosystem"
                     tickers = {"MSFT": 0.48, "NVDA": 0.42, "QQQ": 0.28}
                     quotes_list = ["MSFT", "NVDA", "QQQ"]
                     us_sector = "Azure 与 AI 算力核心生态 (MSFT / NVDA)"
                     us_sector_en = "Azure & AI Compute Ecosystem (MSFT/NVDA)"
-                    us_logic = f"围绕「{title_short}」的模型调用需求，直接强化微软云企业 Copilot 商业化与 Nvidia GPU 推理算力消耗。"
+                    us_logic = "OpenAI 新模型与企业 Copilot / 实时推理接口扩张，直接拉动微软云 Azure 消耗与 NVIDIA GPU 集群需求。"
                     hk_sector = "AI 应用入口与云计算映射 (HSTECH / 00700)"
-                    hk_logic = f"参考 OpenAI 最新模型定价与推理形态，映射港股互联网平台端侧 AI 与 API 工具链重估。"
+                    hk_logic = "头部闭源模型编程与推理工具链升级，推升港股云平台与商业化 SaaS 估值比价锚。"
                     a_sector = "A股端侧 Agent 与语音/多模态软件"
-                    a_logic = f"对标「{title_short}」聚焦实时交互与编码自动化，催化国内 SaaS 与多模态应用厂商跟进升级。"
-                    one_liner = f"围绕「{title_short}」，OpenAI 新代际能力迭代推动实时 Agent 与编程工具 API 消耗扩张，直接映射微软云生态及 GPU 推理算力链。"
+                    a_logic = "企业级实时交互与多模态 API 需求升温，利好国内跟进垂直 Agent 与语音交互软件的商业化厂商。"
+                    one_liner = "OpenAI 代际推理与实时 Agent 工具扩容直接拉动微软 Azure 云消耗及 NVDA 推理芯片利用率，同步提振港/A 应用 SaaS 估值。"
+                    if_then = [
+                        {"cond": "若微软下一季财报显示 Azure AI 营收贡献环比提升 >= 2 个百分点", "result": "MSFT 与 NVDA 推理硬件链上修盈利预期", "tone": "bullish"},
+                        {"cond": "若第三方基准与开发者调研显示企业付费率不及预期", "result": "纯概念 AI 应用软件面临获利回吐压力", "tone": "bearish"},
+                    ]
+                    milestones = [{"date": "未来 2~4 周", "status": "upcoming", "label": "跟踪 OpenAI API 日均 Token 调用量及微软 Copilot 席位转化数据"}]
                 elif "gemini" in t or "google" in t or "谷歌" in t or "deepmind" in t:
                     eco_tag = "Google Gemini 架构迭代与自研 TPU 生态"
                     eco_tag_en = "Google Gemini Iteration & TPU Compute Stack"
@@ -662,12 +881,17 @@ def _build_domain_scenario(
                     quotes_list = ["GOOGL", "AVGO", "QQQ"]
                     us_sector = "Google 与定制 ASIC/TPU 算力链 (GOOGL / AVGO)"
                     us_sector_en = "Google & Custom TPU Stack (GOOGL/AVGO)"
-                    us_logic = f"事件「{title_short}」验证谷歌全栈模型效率，边际利好搜索广告变现防线及博通 (AVGO) 定制 TPU 订单预期。"
+                    us_logic = "谷歌全栈多模态与端云推理效率升级，加固搜索广告防线并利好博通 (AVGO) 定制 TPU ASIC 出货。"
                     hk_sector = "多模态消费应用与移动生态 (HSTECH)"
-                    hk_logic = f"谷歌模型轻量化与原生多模态升级，提振港股互联网端侧分发与海外流量变现估值。"
+                    hk_logic = "端云协同轻量化模型能力提升，改善港股互联网端侧分发与海外广告变现效率。"
                     a_sector = "A股高密度光模块 / ASIC 测试与端侧软件"
-                    a_logic = f"跟随「{title_short}」高带宽低延迟推理方向，映射光通信与端侧硬件供应链需求。"
-                    one_liner = f"基于「{title_short}」，谷歌深耕端云协同推理效率与原生 TPU 栈，对 GOOGL 搜索/云业务及定制芯片供应链形成直接结构性支撑。"
+                    a_logic = "高吞吐 TPU 集群与端云推理带旺光通信模块与 ASIC 封装测试链。"
+                    one_liner = "谷歌全栈 Gemini 推理与自研 TPU 降本增效直接强化 GOOGL 云与搜索护城河，利好博通 (AVGO) ASIC 供应链。"
+                    if_then = [
+                        {"cond": "若 Google Cloud 季度营业利润率站稳 15% 以上且 TPU v6 外部订单放量", "result": "GOOGL 与 AVGO 获得云基础设施估值重估", "tone": "bullish"},
+                        {"cond": "若算力投入导致谷歌资本开支占营收比升破 20% 且短期广告增速放缓", "result": "市场对自由现金流折损定价偏谨慎", "tone": "bearish"},
+                    ]
+                    milestones = [{"date": "未来 2~4 周", "status": "upcoming", "label": "观察 Google Cloud API 定价变动及 AVGO AI ASIC 订单指引"}]
                 elif "anthropic" in t or "claude" in t:
                     eco_tag = "Anthropic 企业级 Agent 与云托管竞合"
                     eco_tag_en = "Anthropic Enterprise Agent & Cloud Hosting"
@@ -675,12 +899,17 @@ def _build_domain_scenario(
                     quotes_list = ["AMZN", "GOOGL", "QQQ"]
                     us_sector = "AWS / 云代码 Agent 托管生态 (AMZN / GOOGL)"
                     us_sector_en = "AWS & Enterprise Coding AI Stack (AMZN/GOOGL)"
-                    us_logic = f"「{title_short}」反映企业级代码工作流与安全托管渗透提升，直接带动主要股东及云宿主 AWS 调用量。"
+                    us_logic = "企业级长上下文与安全编码 Agent 渗透深化，直接放量 AWS Bedrock 与 GCP 的高毛利调用营收。"
                     hk_sector = "企业软件与港股云计算龙头 (HSTECH)"
-                    hk_logic = f"企业级模型定价锚上移，缓解市场对国内云厂商企业订阅客单价受压的担忧。"
+                    hk_logic = "海外企业级订阅与 Agent 客单价抬升，改善市场对港股云计算平台 B 端变现的预期。"
                     a_sector = "A股代码辅助 / 企业知识库与国产大模型"
-                    a_logic = f"企业级复杂编码与合规托管需求升温，利好国内垂直行业 Agent 服务商。"
-                    one_liner = f"针对「{title_short}」，企业级 AI 工作流渗透深化推动云托管刚性支出增长，映射到 AWS/GCP 企业订阅与垂类 Agent 软件。"
+                    a_logic = "复杂代码重构与企业知识库合规托管需求升温，利好国内垂直行业 Agent 服务商。"
+                    one_liner = "Anthropic 企业编码与 Agent 工作流加速商用，直接推高 AWS Bedrock/GCP 云托管调用量并支撑 B 端 SaaS 估值。"
+                    if_then = [
+                        {"cond": "若 AWS 与企业客户端续约 ARR 同比增速维持 30% 以上", "result": "AMZN 云板块及代码安全生态延续超额收益", "tone": "bullish"},
+                        {"cond": "若企业端客户因高推理单价转向开源轻量替代方案", "result": "闭源企业级 SaaS 议价空间面临压缩", "tone": "bearish"},
+                    ]
+                    milestones = [{"date": "未来 2~4 周", "status": "upcoming", "label": "跟踪 AWS Bedrock 模型调用占比与企业客户 ARR 披露"}]
                 else:
                     eco_tag = "国产与开源大模型性能追赶催化"
                     eco_tag_en = "China & Open-Weight Model Catch-Up"
@@ -688,12 +917,17 @@ def _build_domain_scenario(
                     quotes_list = ["09988.HK", "00700.HK", "HSTECH.HK"]
                     us_sector = "全球推理芯片与云基准估值 (NVDA / QQQ)"
                     us_sector_en = "Global Inference Compute & Cloud Benchmarks"
-                    us_logic = f"开源与低成本模型在「{title_short}」展现更高性价比，促使海外云厂商加快高阶模型差异化投入。"
+                    us_logic = "低成本高性价比开源模型持续拉低每百万 Token 推理价格，刺激终端调用总量并检验海外高溢价闭源模型壁垒。"
                     hk_sector = "国内开源模型底座与云平台 (09988 / 00700)"
-                    hk_logic = f"「{title_short}」降低开发者企业级微调门槛，直接强化港股云厂商 MaaS 平台调用粘性。"
+                    hk_logic = "国产与开源大模型能力追平海外一线梯队，直接提升阿里云百炼/腾讯云等港股 MaaS 平台调用粘性。"
                     a_sector = "A股国产算力卡 / 推理服务器与本地部署软件"
-                    a_logic = f"开源权重轻量化加速政企与金融机构私有化部署落地，提振国产推理一体机与算力需求。"
-                    one_liner = f"受「{title_short}」催化，高性价比模型迭代持续拉低私有化部署与 API 推理成本，重点利好国内云平台与本地算力部署链。"
+                    a_logic = "开源权重轻量化加速政企与金融机构本地化部署落地，带动国产推理一体机与算力卡需求。"
+                    one_liner = "高性价比开源与国产大模型持续压低企业部署门槛，重点利好阿里/腾讯等云底座与国内本地推理算力链。"
+                    if_then = [
+                        {"cond": "若主流云平台 MaaS 日均 Token 吞吐量季度翻倍且单位推理毛利转正", "result": "09988.HK / 00700.HK 云计算业务迎来重估", "tone": "bullish"},
+                        {"cond": "若海外高阶模型同期开启新一轮 API 降价 50% 以上", "result": "纯模型层盈利空间受挤压，算力基建占优", "tone": "neutral"},
+                    ]
+                    milestones = [{"date": "未来 2~4 周", "status": "upcoming", "label": "关注 Hugging Face 下载排名及云厂商企业微调调用增长"}]
                 return {
                     "rule_id": "ai_model_launch_catalyst",
                     "tag": eco_tag,
@@ -701,7 +935,7 @@ def _build_domain_scenario(
                     "polarity": "bullish",
                     "intensity": 3,
                     "one_liner": one_liner,
-                    "one_liner_en": f"Key AI capability catalyst around '{title_short}' expands enterprise API & inference monetization.",
+                    "one_liner_en": f"{eco_tag_en} expands enterprise cloud consumption and AI developer monetization.",
                     "sample_basis": {
                         "sample_n": 15,
                         "volatility_pct": 2.9,
@@ -717,8 +951,8 @@ def _build_domain_scenario(
                         _bar("港股", hk_sector, "HKEX AI Ecosystem & Cloud Platforms", 0.8, 2.5, hk_logic, "Model performance progress supports platform ecosystem monetization.", 1.0, "HSTECH.HK"),
                         _bar("A股", a_sector, "A-Share AI Apps & Local Compute", 1.1, 3.1, a_logic, "Expanded capabilities accelerate domestic enterprise adoption.", 1.0),
                     ],
-                    "if_then": [{"cond": "若第三方基准测试与企业付费转化数据超预期", "result": "对应云平台与推理应用链保持结构性活跃", "tone": "bullish"}],
-                    "milestones": [{"date": "未来 2~4 周", "status": "upcoming", "label": "观察开发者 API 活跃度与企业接入量反馈"}],
+                    "if_then": if_then,
+                    "milestones": milestones,
                 }
             return {
                 "rule_id": "ai_infra_or_model_catalyst",
@@ -836,7 +1070,7 @@ def build_finance_impact_artifact(
         cat = str(ev.get("category") or "")
         imp = 3 if ev.get("importance") == "high" else 1
         base = 6 if cat == "finance" else (4 if cat in ("tech", "global") else 1)
-        kw_bonus = 2 if re.search(r"股|市场|芯片|英伟达|美联储|利率|金价|油|关税|协议|IPO|融资|市值|美伊|俄乌|微软|OpenAI|Anthropic", title, re.I) else 0
+        kw_bonus = 2 if re.search(r"股|市场|芯片|英伟达|美联储|利率|金价|油|关税|协议|IPO|融资|市值|美伊|俄乌|微软|OpenAI|Anthropic|FSD|海力士|HBM|比特币|BTC|ETH|稀土|资金短缺", title, re.I) else 0
         scored.append((base + imp + kw_bonus, ev))
 
     scored.sort(key=lambda x: x[0], reverse=True)
@@ -859,38 +1093,6 @@ def build_finance_impact_artifact(
         pub_at = str(ev.get("latest_reported_at") or ev.get("published_at") or ev.get("fetched_at") or generated_at_iso)
 
         if not valid or scenario is None:
-            # Expose explicit "insufficient reliable model" card ONLY for high-importance finance/global items if needed,
-            # or attach honest boundary badge without fabricating wrong numbers!
-            if str(ev.get("category") or "") == "finance" and len(impacts) < 16:
-                card = {
-                    "id": f"imp_{eid}",
-                    "event_id": eid,
-                    "rule_id": "insufficient_evidence",
-                    "validation_status": "insufficient_evidence",
-                    "validation_note": check_note,
-                    "event_title": title,
-                    "event_title_en": ev.get("title_en") or title,
-                    "event_summary": summary,
-                    "event_summary_en": ev.get("summary_en") or summary,
-                    "category": str(ev.get("category") or "finance"),
-                    "published_at": pub_at,
-                    "source_name": src_name,
-                    "source_url": src_url,
-                    "sources": [{"source_name": s.get("source_name"), "url": s.get("url")} for s in srcs[:3] if s.get("url")],
-                    "tag": "暂无可靠量化推演",
-                    "tag_en": "No Reliable Quantitative Model",
-                    "polarity": "divergent",
-                    "intensity": 1,
-                    "one_liner": check_note,
-                    "one_liner_en": "Insufficient historical transmission confidence; numeric forecasts withheld to avoid misleading estimates.",
-                    "sample_basis": None,
-                    "affected_tickers": {},
-                    "realized_quotes": [],
-                    "bars": [],
-                    "if_then": [],
-                    "milestones": [],
-                }
-                impacts.append(card)
             continue
 
         rid = scenario["rule_id"]

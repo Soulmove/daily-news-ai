@@ -308,7 +308,7 @@ ENTITY_REGISTRY: List[EntityDef] = [
         canonical_name="全球关税、制裁与出口管制",
         entity_type="macro",
         sector="贸易政策与供应链安全",
-        aliases=("关税", "tariff", "出口管制", "实体清单", "芯片禁令", "制裁", "贸易战", "碳关税", "稀土"),
+        aliases=("关税", "tariff", "出口管制", "实体清单", "芯片禁令", "制裁", "贸易战", "碳关税"),
         operating_variables=("美欧对华关税税率与豁免清单", "高端芯片/光刻设备出口限制边界"),
         validation_milestones=("美国商务部 BIS / USTR 与中方商务部正式公告",),
     ),

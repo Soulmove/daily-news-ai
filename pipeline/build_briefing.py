@@ -235,11 +235,11 @@ def _build_ai_prompt(category: str, input_cutoff_at: str, catalog_text: str) -> 
 1. 只能依据下面提供的素材条目输出，禁止编造任何素材中未提及的数字、日期、金额、百分比或公司动作。
 2. 若素材标注为 `(仅标题)`，说明没有正文或摘要：`fact_summary` 只能客观复述标题已明确表达的事实，禁止脑补任何未经原文提及的具体数字、日期或因果，也不要输出“原始素材仅含标题”“R001”等采编术语！
 3. 每条新闻事件必须填写 `source_refs`（例如 `["R001", "R005"]`），只能引用下方方括号内真实存在的 R 编号；禁止输出 URL，禁止输出可信度百分比。
-4. 严格区分事实与判断：
-   - `fact_summary`：只写素材里已出现的可核验事实。
-   - `ai_analysis`：你的背景解释或影响分析（明确是解读而非事实）。
+4. 严格区分事实与判断，且严守【专有名词与直接因果保真铁律】：
+   - `fact_summary`：只写素材里已出现的可核验事实，**必须完整保留原文中的核心专有名词、涉事对手方、产品别名、关键高管/船只/城市名及核心争议条款**（例如：产品/别名「比亚迪 Ti7 / 方程豹钛7」、起诉方「捷豹路虎卫士外观侵权」、临时接替人选「Colette Kress」、涉事企业「新加坡 Megaspeed」、遇袭俄船「Sparta II」、气候大会举办地「土耳其安塔利亚」与「草案删去淘汰化石燃料」争议），**严禁把具体机构、人名、地名或争议焦点的实质细节概括丢掉！**
+   - `ai_analysis`：写出本事件**不同于同类新闻的独特影响链路、具体受益/受损对象与直接因果约束**（1–2 句，**禁止**「凸显了…」「反映出…」「标志着重大转折」「加速智能化普及」「引发广泛关注」等八股套话）。
    - `unverified_claims`：数组，列出素材中带有传闻、匿名爆料或未获官方证实的说法；无则填 `[]`。
-   - `speculation_or_outlook`：可选前瞻观察点；素材不足时填 `null`，不要硬凑预测。
+   - `speculation_or_outlook`：可选前瞻观察点，须给出具体的待核实数字/日期/监管或产品信号；素材不足时填 `null`，不要硬凑预测。
 5. 事实精确度与限定词要求：
    - **涨跌幅与交易时段**：股价或并购消息必须保留直接诱因（如监管调查、财报、并购报价）、交易时段限定（如盘后/盘前/收盘）及交易双方的涨跌影响，不可把并购方下跌或盘后波动概括为日内普涨。
    - **发行/募资口径**：涉及 IPO 或融资，必须严格区分基础发行规模、绿鞋/超额配售选择权（未行使不得写为已募集）及私募配售；涉及法律和解需写明“原则性和解/尚待签署与批准”等生效前提；涉及呼吁或提议需写明核心结论（如董事会拒绝或接受）。
@@ -759,10 +759,12 @@ def _infer_event_dialectic_slots(ev: dict) -> Tuple[str, str, str]:
     elif any(k in combined for k in ("signal", "截屏", "加密通讯", "端到端加密", "隐私保护")):
         unknown = "系统权限限制的实际生效范围及跨平台客户端同步节奏。"
         catalyst = "关注应用后续版本更新日志及跨平台安全特性适配进展。"
-    elif any(k in combined for k in ("宕机", "故障", "瘫痪", "停飞", "恢复")):
+    elif any(k in combined for k in ("宕机", "故障", "瘫痪", "停飞", "服务中断")) or ("恢复" in combined and any(k in combined for k in ("服务", "系统", "网络", "供电", "运行", "机场", "航班"))):
         unknown = "事故根本原因 (Root Cause)、SLA 赔付规模与冗余架构整改期限。"
         catalyst = "关注官方状态页 Postmortem 复盘报告及恢复运营通告。"
-    elif any(k in combined for k in ("开源", "github", "hugging face", "模型", "评测", "芯片", "framework", "论文")):
+    elif any(k in combined for k in ("开源", "github", "hugging face", "paper", "framework", "论文", "黎曼", "lean")) or (
+        any(k in combined for k in ("大模型", "模型发布", "评测")) and not any(k in combined for k in ("资金", "融资", "ipo", "股价", "股", "投资"))
+    ):
         unknown = "完整权重许可条款、实际推理成本效率及第三方独立基准复现表现。"
         catalyst = "跟踪 GitHub / Hugging Face 模型卡更新及独立开发者压测反馈。"
     elif any(k in combined for k in ("统计局", "宏观", "利率", "fomc", "央行", "会晤", "峰会", "外长")):
@@ -1206,6 +1208,12 @@ _TOPIC_PAIRS = [
     ({"apec", "深圳", "峰会"}, {"三方", "双边", "和平宣言", "元首", "会晤", "高市早苗", "落幕"}),
     ({"英国", "脱欧"}, {"欧盟", "峰会", "协议"}),
     ({"美联储", "fomc"}, {"加息", "放鹰", "分歧", "库克", "紧缩"}),
+    ({"黎曼猜想", "riemann", "tensorlean"}, {"lean", "形式化", "证明", "验证"}),
+    ({"特斯拉", "tesla", "fsd"}, {"fsd", "v15", "自动驾驶", "开放", "欧洲", "中国"}),
+    ({"克里米亚大桥", "克里米亚"}, {"爆炸", "恢复", "通车", "通行"}),
+    ({"比特币", "bitcoin", "btc"}, {"60000", "6万", "跌破", "重返", "反弹", "61000"}),
+    ({"稀土", "泰国"}, {"化学品", "禁止", "出口", "稀土"}),
+    ({"欧盟", "欧洲"}, {"多年期预算", "削减预算", "预算案"}),
 ]
 
 
@@ -1345,12 +1353,12 @@ def _same_cross_category_story(ev_a: dict, ev_b: dict) -> bool:
                     return True
     if entities_conflict(ta, tb, item_a=ev_a, item_b=ev_b):
         return False
-    sim = title_similarity(ta, tb)
-    if sim >= 0.42:
-        return True
     urls_a = {canonicalize_url(s.get("url")) for s in ev_a.get("sources") or [] if s.get("url")}
     urls_b = {canonicalize_url(s.get("url")) for s in ev_b.get("sources") or [] if s.get("url")}
-    if (urls_a & urls_b) and sim >= 0.25:
+    if urls_a & urls_b:
+        return True
+    sim = title_similarity(ta, tb)
+    if sim >= 0.42:
         return True
     return False
 

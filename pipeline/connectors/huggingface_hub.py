@@ -136,6 +136,8 @@ def fetch_huggingface_models(
             pipeline_tag = m.get("pipeline_tag") or "text-generation"
             downloads = m.get("downloads")
             likes = m.get("likes")
+            if downloads is not None and int(downloads) < 10:
+                continue
             gated = m.get("gated")
             avail_stage = "waitlist" if gated else "ga"
             avail_label = "需申请授权下载" if gated else "开源权重可用 (GA)"

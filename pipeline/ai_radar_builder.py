@@ -784,6 +784,7 @@ AI_NOISE_RE = re.compile(
     r"影石|insta360|大疆|麦克风|耳机|相机|固件升级|充电宝|路由器|显示器|键盘|鼠标|tech outages.*y2k|outages.*ai agent style|"
     r"套餐|买赠|优惠券|代金券|促销|折扣|限免|会员价|小米\s*mimo.*套餐|mimo.*套餐|演唱会|剧场版|小雪节气|长城坦克|坦克\d+|"
     r"国家中医药管理局|中医药|认证中心|未与任何.{0,6}合作|亦未开展测评|辟谣通告|严正声明|"
+    r"投资者是否应|是否值得购买|值得买入吗|\bspcx\b|目标价|股价表现|空头机构|估值泡沫|"
     r"微信香港钱包|微信支付|支付宝|信用卡|消费券|手游|主机游戏|steam|帮信罪|刑事拘留)",
     re.I,
 )
@@ -1173,12 +1174,17 @@ def build_ai_progress_artifact(
     seen_titles: set[str] = set()
 
     def _add_item(it: Dict[str, Any]) -> None:
+        src_id = str(it.get("source_id") or "")
+        src_name = re.sub(r"\s*[财新财联华尔街见闻第一财经每日经济新闻证券时报人民网新华网中新社]+$", "", str(it.get("source_name") or "").strip()) or str(it.get("source_name") or "")
         title = strip_raw_urls_and_domain_tails(str(it.get("title") or "").strip())
+        title = re.sub(r"\s+(?:财联社|华尔街见闻|第一财经|证券时报|澎湃新闻|界面新闻|凤凰网|央视网|新浪财经|东方财富)$", "", title).strip()
         url = str(it.get("source_url") or "").strip()
         what = strip_raw_urls_and_domain_tails(str(it.get("what_it_does") or ""))
+        what = re.sub(r"(?:^(?:财联社|凤凰网|央视网|新浪财经)\s*[丨|：:]?\s*|\s*(?:财联社|华尔街见闻|第一财经|证券时报|澎湃新闻|界面新闻|凤凰网|央视网)$)", "", what).strip()
         if not title or AI_NOISE_RE.search(f"{title} {what}") or is_omnibus_digest_title(title):
             return
         it = dict(it)
+        it["source_name"] = src_name
         it["title"] = title
         it["what_it_does"] = what
         if it.get("what_it_does_en"):

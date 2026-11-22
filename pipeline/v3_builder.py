@@ -12,7 +12,7 @@ from typing import Any, Dict, List, Optional
 from xml.sax.saxutils import escape as xml_escape
 
 from pipeline.dedup import is_omnibus_digest_title, smart_truncate, strip_raw_urls_and_domain_tails, title_similarity
-from pipeline.entities import ENTITY_BY_ID, _match_alias, build_entities_index_base
+from pipeline.entities import ENTITY_BY_ID, _match_alias, build_entities_index_base, match_entities_with_reasons
 from pipeline.id_utils import make_storyline_id
 from pipeline.manifest import atomic_write_json, load_json_if_exists
 from pipeline.time_utils import SHANGHAI_TZ, now_shanghai, parse_iso_datetime, to_iso_shanghai
@@ -121,31 +121,41 @@ def _storyline_semantic_bucket(title: str) -> Optional[str]:
 
 
 def _is_financial_corporate_event(event: dict) -> bool:
-    combined = f"{event.get('title', '')} {event.get('fact_summary', '')}".lower()
-    if any(k in combined for k in ("漏洞", "攻击", "cve", "零日", "注入", "宕机", "故障", "瘫痪", "论文", "framework", "输入法")):
+    title_l = str(event.get("title") or "").lower()
+    combined = f"{title_l} {str(event.get('fact_summary') or '').lower()}"
+    if any(k in combined for k in ("漏洞", "攻击", "cve", "零日", "注入", "宕机", "故障", "瘫痪", "论文", "framework", "输入法", "黎曼", "定理", "地震", "神舟", "cop31", "停火", "袭击", "触雷")):
         return False
     return event.get("category") == "finance" or any(
-        k in combined for k in ("sec", "8-k", "10-q", "10-k", "财报", "营收", "目标价", "评级", "ipo", "融资", "ceo", "继任")
+        k in title_l for k in ("sec", "8-k", "10-q", "10-k", "财报", "营收", "目标价", "评级", "ipo", "融资", "ceo", "继任", "收购", "洽购", "入股")
     )
 
 
 def _infer_domain_next_catalyst(event: dict, matched_primary_ent: Optional[dict]) -> str:
-    combined = f"{event.get('title', '')} {event.get('fact_summary', '')}".lower()
-    if any(k in combined for k in ("霍尔木兹", "油轮", "触雷", "海峡", "航运", "导弹", "空袭", "无人机", "停火", "和平协议", "北约", "美伊", "伊朗", "俄乌", "波兰", "红海")):
+    title_l = str(event.get("title") or "").lower()
+    combined = f"{title_l} {str(event.get('fact_summary') or '').lower()}"
+    if any(k in combined for k in ("比特币", "bitcoin", "btc", "以太坊", "eth", "加密货币", "虚拟货币")):
+        return "跟踪现货 BTC/ETH ETF 净流入、期货持仓量及关键整数关口得失"
+    if any(k in combined for k in ("霍尔木兹", "油轮", "触雷", "海峡", "航运", "导弹", "空袭", "无人机", "停火", "和平协议", "北约", "美伊", "伊朗", "俄乌", "波兰", "红海", "克里米亚", "黑海")):
         return "关注国际海事与军政安全通报、各方外交斡旋进展及航运/油价波动"
+    if any(k in title_l for k in ("预算", "拨款", "欧盟", "欧洲议会", "政府停摆", "关税", "稀土", "泰国", "缅甸")):
+        return "关注涉事经济体财政/贸易主管部门正式公报、执行细则与产业链现货价"
     if any(k in combined for k in ("漏洞", "cve", "零日", "0day", "rce", "sql注入", "代码执行", "勒索软件", "数据泄露", "黑客攻击", "安全补丁")):
         return "等待官方安全响应中心发布补丁编号、受影响版本清单与安全整改指南"
-    if any(k in combined for k in ("fsd", "自动驾驶", "智驾", "ota", "无人驾驶")):
+    if any(k in combined for k in ("fsd", "自动驾驶", "智驾", "ota", "无人驾驶", "robotaxi")):
         return "关注车企后续软件推送说明、实际开放范围与监管合规反馈"
     if any(k in combined for k in ("signal", "截屏", "端到端加密", "隐私保护")):
         return "关注应用后续版本更新日志及跨平台安全特性适配进展"
-    if any(k in combined for k in ("宕机", "故障", "瘫痪", "恢复", "停飞")):
+    if any(k in combined for k in ("宕机", "故障", "瘫痪", "掉线", "停飞", "服务中断")) or ("恢复" in combined and any(k in combined for k in ("服务", "系统", "网络", "供电", "运行", "机场", "航班"))):
         return "等待官方服务状态页发布事故根因复盘 (Postmortem) 与全面恢复确认"
-    if any(k in combined for k in ("开源", "github", "hugging face", "模型", "论文", "framework", "bttf", "longcat", "openpangu", "llama.cpp")):
+    if any(k in title_l for k in ("资金短缺", "缺钱", "烧钱", "资本开支")) and any(k in combined for k in ("ai", "算力", "数据中心", "马斯克", "xai", "openai")):
+        return "跟踪头部大模型厂商股权/债权融资落地及云巨头下季 Capex 指引"
+    if any(k in title_l for k in ("开源", "github", "hugging face", "hugging", "benchmark", "基准测试", "framework", "bttf", "longcat", "openpangu", "llama.cpp", "黎曼", "lean")) or (
+        any(k in title_l for k in ("大模型", "模型发布", "参数")) and not any(k in title_l for k in ("资金", "融资", "ipo", "股价", "股", "投资"))
+    ):
         return "跟踪 GitHub / Hugging Face 官方仓库权重、许可及第三方独立评测基准"
     if any(k in combined for k in ("统计局", "宏观", "利率", "fomc", "央行", "净回笼", "gdp", "cpi", "进出口", "房地产")):
         return "关注国家统计局 / 央行下期官方公报或 FOMC 决议声明"
-    if any(k in combined for k in ("会晤", "峰会", "外长", "apec", "声明", "边界")):
+    if any(k in combined for k in ("会晤", "峰会", "外长", "apec", "声明", "边界", "cop31")):
         return "关注官方联合声明全文或相关外交/经贸部门正式通告"
     if _is_financial_corporate_event(event) and matched_primary_ent:
         val_list = _as_str_list(matched_primary_ent.get("validation_milestones"))
@@ -156,14 +166,35 @@ def _infer_domain_next_catalyst(event: dict, matched_primary_ent: Optional[dict]
     return "关注涉事机构或主管部门下一轮正式公开声明"
 
 
+def _infer_domain_operating_variables(event: dict, combined: str) -> List[str]:
+    low = combined.lower()
+    if any(k in low for k in ("比特币", "bitcoin", "btc", "以太坊", "eth", "加密货币")):
+        return ["现货 BTC ETF 日度净申购与 CME 期货未平仓合约", "美债实际利率与美元指数对加密风险偏好影响", "永续合约资金费率与 24h 全网爆仓规模"]
+    if any(k in low for k in ("资金短缺", "缺钱", "烧钱", "资本开支")) and any(k in low for k in ("ai", "算力", "数据中心", "马斯克", "xai")):
+        return ["头部大模型厂商股权/债券融资落地进展", "云巨头 (MSFT/AMZN/GOOG/META) 下季 Capex 占自由现金流比重", "高收益科技信贷利差与算力租户违约率"]
+    if any(k in low for k in ("预算", "欧洲", "欧盟", "财政", "政府", "公共开支")):
+        return ["欧盟多年期财政框架拨款与研发/防务预算分配比例", "欧元区主权债利差与核心成员国财政赤字约束", "绿色转型与科研基金实际支出节奏"]
+    if any(k in low for k in ("稀土", "矿产", "草酸", "冶炼", "泰国", "缅甸")):
+        return ["重稀土氧化铽/氧化镝及镨钕周度现货报价", "边境化工辅料与原矿进口清关配额变化", "下游高性能磁材厂库存周转天数"]
+    if any(k in low for k in ("霍尔木兹", "油轮", "触雷", "俄乌", "克里米亚", "大桥", "伊朗", "美伊", "停火")):
+        return ["布伦特原油与超大型油轮 (VLCC) 战争险保费/运价", "黑海/海湾港口吞吐量与实际航运改道比例", "各方外交接触及制裁/停火约束条款进展"]
+    return []
+
+
 def _build_investment_card(event: dict, entities_map: Dict[str, dict]) -> Optional[Dict[str, Any]]:
     """
     Construct a 5-stage structured investment research card:
       事实变化 -> 经营变量 -> 产业链关系 -> 相关资产 -> 验证节点
-    Matches validation nodes by event domain so security/outage/paper items never copy SEC boilerplate.
+    Derives primary entity relevance from title first so incidental body mentions
+    (e.g. 'ahead of Anthropic/SpaceX IPOs' inside a Bitcoin article) never hijack related_assets.
     """
-    matched_eids = event.get("entity_ids") or []
-    if not matched_eids and event.get("category") not in {"finance", "tech"}:
+    title_str = str(event.get("title") or "")
+    combined_str = f"{title_str} {str(event.get('fact_summary') or '')}"
+    title_eids = [m["entity_id"] for m in match_entities_with_reasons(title_str)] if title_str else []
+    raw_eids = list(event.get("entity_ids") or [])
+    matched_eids = list(dict.fromkeys(title_eids + [e for e in raw_eids if not title_eids or e == title_eids[0]]))
+    is_domain_special = bool(_infer_domain_operating_variables(event, combined_str))
+    if not matched_eids and not is_domain_special and event.get("category") not in {"finance", "tech"}:
         return None
     primary_ent = entities_map.get(matched_eids[0]) if matched_eids else None
     is_fin = _is_financial_corporate_event(event)
@@ -174,7 +205,7 @@ def _build_investment_card(event: dict, entities_map: Dict[str, dict]) -> Option
     downstream: List[str] = []
     milestones: List[str] = []
 
-    for eid in matched_eids[:4]:
+    for eid in ([] if (is_domain_special and not title_eids) else matched_eids[:4]):
         ed = entities_map.get(eid)
         if not ed:
             continue
@@ -193,20 +224,28 @@ def _build_investment_card(event: dict, entities_map: Dict[str, dict]) -> Option
         if is_fin:
             milestones.extend(_as_str_list(ed.get("validation_milestones"))[:2])
 
+    domain_vars = _infer_domain_operating_variables(event, combined_str)
+    if domain_vars:
+        op_vars = domain_vars + [v for v in op_vars if v not in domain_vars]
     domain_node = _infer_domain_next_catalyst(event, primary_ent)
     if domain_node and domain_node not in milestones:
         milestones.insert(0, domain_node)
 
+    fallback_vars = (
+        ["核心产品出货、单价趋势与季度毛利率兑现"]
+        if is_fin
+        else ["相关政策细则落地节奏、资金流向及产业链现货指标"]
+    )
     return {
         "fact_change": event.get("fact_summary") or event.get("title"),
-        "operating_variables": list(dict.fromkeys(op_vars))[:5] or ["核心产品出货与价格/毛利率变化（待财报季核对）"],
+        "operating_variables": list(dict.fromkeys(op_vars))[:5] or fallback_vars,
         "supply_chain_links": {
             "upstream": list(dict.fromkeys(upstream))[:4],
             "downstream": list(dict.fromkeys(downstream))[:4],
         },
         "related_assets": assets[:6],
         "validation_nodes": list(dict.fromkeys(milestones))[:4],
-        "financial_actuals_preview": (primary_ent.get("financial_actuals") or [])[:4] if primary_ent else [],
+        "financial_actuals_preview": (primary_ent.get("financial_actuals") or [])[:4] if (primary_ent and (title_eids or not is_domain_special)) else [],
         "market_data_disclosure": "当前静态版本暂未接入付费实时行情、估值倍数及华尔街一致预期接口；相关资产仅呈现可验证业务关联与 SEC/交易所历史公开披露事实。",
     }
 
@@ -519,6 +558,8 @@ def build_v3_artifacts(
             if hf_match:
                 dl_match = re.search(r"近期下载(?:量)?[：:]\s*(\d+)", raw_sum)
                 dl_val = int(dl_match.group(1)) if dl_match else t.get("downloads")
+                if dl_val is not None and int(dl_val) < 10:
+                    continue
                 t["summary"] = format_hf_tool_summary(hf_match.group(1), dl_val)
             else:
                 # Clean GFM pipe tables, nested badges, orphan Website:/Attestations: labels, commit prefixes & trailing brackets
@@ -775,7 +816,10 @@ def build_v3_artifacts(
                 re.I,
             )
         )
-        if not is_rumor_or_gossip and not is_retrospective_recap and any(k in ev_title for k in ("下周", "本周重磅", "日程", "财报", "听证会", "峰会", "会晤", "元首", "议息", "APEC", "发布会", "IPO")):
+        if not is_rumor_or_gossip and not is_retrospective_recap and (
+            any(k in ev_title for k in ("下周", "本周重磅", "日程", "财报", "听证会", "峰会", "会晤", "元首", "议息", "APEC", "发布会", "IPO", "发射", "COP", "关税", "峰会"))
+            or re.search(r"(?:将于|定于|拟于|计划于|预计)\s*\d{1,2}月\d{1,2}日", f"{ev_title} {ev.get('fact_summary') or ''}")
+        ):
             if not any(c.get("storyline_id") == st_id for c in calendar_items):
                 # Parse explicit dates (e.g. "11月19日") or explicit future-cued weekday ("下周四" / "定于周四")
                 combined_sched_txt = f"{ev_title} {ev.get('fact_summary') or ''}"
@@ -959,7 +1003,12 @@ def build_v3_artifacts(
         nc_old = str(clean_old.get("next_catalyst") or "")
         is_genuine_vuln = bool(re.search(r"(?:0day|cve-\d+|安全漏洞|严重漏洞|勒索软件|木马|黑客入侵)", old_title, re.I))
         has_stale_cve_tpl = ("补丁编号" in nc_old or "安全响应中心" in nc_old) and not is_genuine_vuln
-        if not nc_old or len(nc_old) <= 2 or has_stale_cve_tpl or (not _is_financial_corporate_event(clean_old) and "SEC" in nc_old):
+        has_stale_domain_tpl = (
+            ("Postmortem" in nc_old and not any(k in old_title for k in ("宕机", "故障", "瘫痪", "停飞", "服务中断")))
+            or ("GitHub / Hugging Face" in nc_old and "GitHub / Hugging Face" not in domain_cat)
+            or ("BIS" in nc_old and "BIS" not in domain_cat)
+        )
+        if not nc_old or len(nc_old) <= 2 or has_stale_cve_tpl or has_stale_domain_tpl or (not _is_financial_corporate_event(clean_old) and "SEC" in nc_old):
             clean_old["next_catalyst"] = domain_cat
         if isinstance(clean_old.get("investment_card"), dict):
             clean_old["investment_card"] = _build_investment_card(clean_old, entities_map) or clean_old["investment_card"]
@@ -1279,6 +1328,21 @@ def build_v3_artifacts(
             }
         )
 
+    # Merge verified 5-category Global Politics, Expos, Tech Giants & Macro Catalyst schedule and enrich ALL calendar items
+    from .calendar_catalog import build_curated_global_calendar, enrich_calendar_item_metadata
+
+    existing_cal_ids = {str(c.get("calendar_id") or "") for c in calendar_items}
+    existing_cal_titles = [str(c.get("title") or "") for c in calendar_items]
+    for anch in build_curated_global_calendar(generated_dt):
+        if anch["calendar_id"] in existing_cal_ids:
+            continue
+        if any(title_similarity(anch["title"], ct) >= 0.6 for ct in existing_cal_titles):
+            continue
+        calendar_items.append(anch)
+        existing_cal_ids.add(anch["calendar_id"])
+        existing_cal_titles.append(anch["title"])
+
+    calendar_items = [enrich_calendar_item_metadata(cal, generated_dt) for cal in calendar_items]
     # Sort calendar cleanly: upcoming ascending first, past recent at tail
     calendar_items.sort(key=lambda c: (1 if c.get("is_past") else 0, str(c.get("scheduled_at") or "9999-12-31")))
 
@@ -1363,14 +1427,94 @@ def build_v3_artifacts(
                 # Keep change_count_30d strictly honest (= len(recent_events)); preserve filing freshness timestamp separately
                 ed["last_event_at"] = ed.get("last_event_at") or f"{ed['recent_filings'][0].get('filing_date', '')}T09:00:00+08:00"
 
-    # Auto-settle due or verifiable predictions & include historical replay calibration benchmarks
+    # Preserve existing version history & auto-evolve probabilities/judgments when matching new events arrive
     for p in seed_predictions:
         pid = p.get("prediction_id") or ""
         old_p = prev_preds_by_id.get(pid) or {}
+        if isinstance(old_p.get("versions"), list) and len(old_p["versions"]) >= len(p.get("versions") or []):
+            p["versions"] = list(old_p["versions"])
         if old_p.get("settlement") and not p.get("settlement"):
             p["settlement"] = old_p["settlement"]
             p["status"] = "settled"
         if p.get("status") == "open":
+            # Signal-driven probability & version evolution from newly ingested batch evidence
+            new_prob = int(p.get("probability_pct") or 50)
+            new_reason = ""
+            new_judgment = str(p.get("current_judgment") or "")
+            if pid == "pred_seed_nvda_sec_502":
+                has_nvda_news = [
+                    ev for ev in all_events
+                    if not ev.get("is_stale_rehash")
+                    and any(k in str(ev.get("title") or "") for k in ("黄仁勋", "英伟达"))
+                    and any(k in str(ev.get("title") or "") for k in ("辞", "继任", "过渡", "董事", "管理层"))
+                ]
+                if nvda_502 and has_nvda_news:
+                    new_prob = 64
+                    new_judgment = f"SEC 8-K Item 5.02 已披露于 {nvda_502.get('filing_date', '近期')}；本批 {len(has_nvda_news)} 条最新报道聚焦过渡安排，待正式继任公告"
+                    new_reason = f"本批捕捉到 {len(has_nvda_news)} 条英伟达管理层过渡相关最新报道（含：{smart_truncate(str(has_nvda_news[0].get('title') or ''), 32)}）"
+            elif pid == "pred_seed_qwen_release_ga":
+                has_qwen_news = [
+                    ev for ev in all_events
+                    if not ev.get("is_stale_rehash")
+                    and ("qwen" in str(ev.get("title") or "").lower() or "千问" in str(ev.get("title") or ""))
+                ]
+                has_hf_qwen = any("qwen" in str(t.get("name") or "").lower() for t in tech_tools)
+                if has_qwen_news or has_hf_qwen:
+                    new_prob = 60 if (has_qwen_news and has_hf_qwen) else 57
+                    new_judgment = "官方 Hugging Face / 社区持续迭代，正盯防 Qwen 新版模型卡或百炼 API GA 文档上架"
+                    new_reason = "本批监测到 Qwen 生态最新动态或 Hugging Face 活跃提交"
+            elif pid == "pred_live_fomc_2026_12":
+                has_fed_news = [
+                    ev for ev in all_events
+                    if not ev.get("is_stale_rehash")
+                    and any(k in str(ev.get("title") or "").lower() for k in ("美联储", "fomc", "鲍威尔", "降息", "加息"))
+                ]
+                if has_fed_news:
+                    is_hawk = any(any(k in str(ev.get("title") or "") for k in ("放鹰", "加息", "通胀粘性")) for ev in has_fed_news)
+                    new_prob = 66 if is_hawk else 58
+                    new_judgment = "本批美联储官员表态及市场通胀预期延续博弈，12 月点阵图对 2027 路径至关重要"
+                    new_reason = f"本批纳入 {len(has_fed_news)} 条美联储利率路径最新报道（含：{smart_truncate(str(has_fed_news[0].get('title') or ''), 32)}）"
+            elif pid == "pred_live_apec_2026_communique":
+                has_apec_news = [
+                    ev for ev in all_events
+                    if not ev.get("is_stale_rehash")
+                    and any(k in str(ev.get("title") or "").lower() for k in ("apec", "深圳", "中美", "联合声明", "公报"))
+                ]
+                if has_apec_news:
+                    has_decl = any("声明" in str(ev.get("title") or "") or "和平宣言" in str(ev.get("title") or "") or "协议" in str(ev.get("title") or "") for ev in has_apec_news)
+                    new_prob = 54 if has_decl else 46
+                    new_judgment = "深圳峰会双边接触与会谈持续推进，正核对白宫/外交部正式经贸或 AI 书面文本"
+                    new_reason = f"本批捕捉到 {len(has_apec_news)} 条 APEC/中美峰会最新报道"
+
+            if new_reason:
+                vers = list(p.get("versions") or [])
+                last_v = vers[-1] if vers else {}
+                if (
+                    int(last_v.get("probability_pct") or -1) != new_prob
+                    or str(last_v.get("reason") or "") != new_reason
+                ):
+                    if len(vers) < 8:
+                        vers.append(
+                            {
+                                "version": len(vers) + 1,
+                                "updated_at": generated_at_iso,
+                                "judgment": new_judgment,
+                                "probability_pct": new_prob,
+                                "reason": new_reason,
+                            }
+                        )
+                    else:
+                        vers[-1] = {
+                            "version": int(last_v.get("version") or len(vers)),
+                            "updated_at": generated_at_iso,
+                            "judgment": new_judgment,
+                            "probability_pct": new_prob,
+                            "reason": new_reason,
+                        }
+                    p["versions"] = vers
+                p["probability_pct"] = new_prob
+                p["current_judgment"] = new_judgment
+
             due_dt = parse_iso_datetime(str(p.get("due_at") or ""))
             # Auto-settle expired NVDA 8-K or APEC communique or verifiable market outcomes
             if pid == "pred_seed_nvda_sec_502" and nvda_502:
@@ -1544,7 +1688,7 @@ def build_v3_artifacts(
             "schema_version": "4.1",
             "generated_at": generated_at_iso,
             "batch_id": batch_id,
-            "events": calendar_items[:60],
+            "events": calendar_items[:80],
         },
     )
     atomic_write_json(
@@ -1580,7 +1724,7 @@ def build_v3_artifacts(
     site_url = os.environ.get("SITE_PUBLIC_URL", "https://111.230.153.15/news/")
     site_base = site_url.rstrip("/") + "/"
     cal_ics_text, cal_ics_exported, cal_ics_skipped = _export_calendar_ics(
-        calendar_items[:60], generated_at_iso=generated_at_iso, site_url=site_base
+        calendar_items[:80], generated_at_iso=generated_at_iso, site_url=site_base
     )
     _atomic_write_text(root / "data/calendar.ics", cal_ics_text)
 
