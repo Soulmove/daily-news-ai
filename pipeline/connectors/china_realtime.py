@@ -169,7 +169,7 @@ def _fetch_wallstreetcn_channel(channel: str, label: str, default_cat: str, fetc
                     # Extract 【Headline】 if present
                     m = re.match(r"【([^】]{4,80})】", content)
                     title = m.group(1) if m else _clean(content, 88)
-                if not title or len(title) < 4:
+                if not title or len(title) < 4 or _PURE_WIRE_FLUFF_RE.search(title):
                     continue
                 uri = row.get("uri") or f"https://wallstreetcn.com/livenews/{row.get('id', '')}"
                 canon = canonicalize_url(uri) or f"https://wallstreetcn.com/livenews/{row.get('id', '')}"
@@ -226,7 +226,7 @@ def _fetch_cls_telegraph(fetched_iso: str) -> Dict[str, Any]:
                 if not title and content:
                     m = re.match(r"【([^】]{4,80})】", content)
                     title = m.group(1) if m else _clean(content, 88)
-                if not title or len(title) < 4:
+                if not title or len(title) < 4 or _PURE_WIRE_FLUFF_RE.search(title):
                     continue
                 rid = row.get("id") or ""
                 canon = canonicalize_url(row.get("shareurl") or f"https://www.cls.cn/detail/{rid}") or f"https://www.cls.cn/detail/{rid}"
@@ -466,7 +466,7 @@ def refresh_live_wire_file(base_dir: Path | str = ".", extra_items: Optional[Lis
 
     def _add(it: dict) -> None:
         title = str(it.get("title") or "").strip()
-        if not title or len(title) < 4:
+        if not title or len(title) < 4 or _PURE_WIRE_FLUFF_RE.search(title):
             return
         canon_u = canonicalize_url(it.get("url") or it.get("canonical_url")) or ""
         if canon_u and canon_u in seen_urls:

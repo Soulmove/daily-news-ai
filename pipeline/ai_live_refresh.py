@@ -17,6 +17,7 @@ from pipeline.ai_radar_builder import (
     AI_KW_RE,
     AI_NOISE_RE,
     AI_RELEASE_RE,
+    _BOILERPLATE_WHAT_RE,
     _LAB_CATALOG,
     _infer_company,
     _infer_what_it_does_zh,
@@ -84,18 +85,10 @@ def _sort_key_iso_desc(date_str: Any) -> Tuple[int, str]:
 
 
 def _summarize_release(title: str, excerpt: str, source_name: str, *, is_open_source: bool, is_first_hand: bool) -> Tuple[str, str]:
+    del source_name, is_open_source, is_first_hand
     clean_excerpt = strip_raw_urls_and_domain_tails(re.sub(r"\s+", " ", str(excerpt or "").strip()))
-    inferred = _infer_what_it_does_zh(title, clean_excerpt, is_tool_release=False)
-    if _has_zh(clean_excerpt) and len(clean_excerpt) >= 12:
-        zh = _smart_truncate(clean_excerpt, 180)
-    elif inferred:
-        zh = inferred
-    elif _FUNDING_RE.search(title):
-        zh = f"资本战略与产业融资动态（来源：{source_name}）：涉及核心算力投资或股权估值进展。"
-    else:
-        zh = ""
-
-    en = _smart_truncate(clean_excerpt, 180) if clean_excerpt else ""
+    zh = _infer_what_it_does_zh(title, clean_excerpt, is_tool_release=False)
+    en = _smart_truncate(clean_excerpt, 180) if clean_excerpt and clean_excerpt != title else ""
     return zh, en
 
 
@@ -428,20 +421,10 @@ def merge_live_ai_items_into_doc(
             if "GitHub Changelog" in it_src and not re.search(r"(?:copilot|\bai\b|model|agent|mcp)", it_title, re.I):
                 mutated = True
                 continue
-            # Repair mislabeled SDK/Agent or Privacy items and scrub canned placeholder filler
             w_cur = str(it.get("what_it_does") or "")
-            tl_low = it_title.lower()
-            if (
-                not w_cur.strip()
-                or w_cur.strip() == it_title.strip()
-                or (len(it_title) >= 10 and w_cur.strip().startswith(it_title.strip()[:16]))
-                or (any(k in tl_low for k in ("sdk", "agent", "cli", "coding", "workbuddy")) and "多模态生成" in w_cur)
-                or (any(k in tl_low for k in ("隐私", "泄露", "诱饵", "反蒸馏", "distill", "privacy", "security")) and ("轻量" in w_cur or "端侧" in w_cur))
-                or ("具身智能/物理仿真模型工具" in w_cur and not it_id.startswith("ai_tool_") and "world model" not in tl_low)
-                or _CANNED_WHAT_RE.search(w_cur)
-                or ("实验室官方一手发布（来源：" in w_cur and it_title[:16] in w_cur)
-            ):
-                it["what_it_does"] = _infer_what_it_does_zh(it_title, w_cur, is_tool_release=it_id.startswith("ai_tool_"))
+            w_cleaned = _infer_what_it_does_zh(it_title, w_cur, is_tool_release=it_id.startswith("ai_tool_"))
+            if w_cleaned != w_cur.strip() or _BOILERPLATE_WHAT_RE.search(w_cur) or _CANNED_WHAT_RE.search(w_cur):
+                it["what_it_does"] = w_cleaned
                 mutated = True
             if _CANNED_WHO_RE.search(str(it.get("who_cares") or "").strip()):
                 it["who_cares"] = ""
@@ -472,8 +455,10 @@ def merge_live_ai_items_into_doc(
         it_title = str(it.get("title") or "")
         if AI_NOISE_RE.search(it_title):
             continue
-        if any(k in it_title.lower() for k in ("sdk", "agent", "cli", "coding", "workbuddy")) and "多模态生成" in str(it.get("what_it_does") or ""):
-            it["what_it_does"] = _infer_what_it_does_zh(it_title, "")
+        w_cur = str(it.get("what_it_does") or "")
+        w_cleaned = _infer_what_it_does_zh(it_title, w_cur, is_tool_release=str(it.get("id") or "").startswith("ai_tool_"))
+        if w_cleaned != w_cur.strip():
+            it["what_it_does"] = w_cleaned
             mutated = True
         _register(it)
 

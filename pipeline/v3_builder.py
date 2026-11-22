@@ -502,8 +502,17 @@ def build_v3_artifacts(
     from pipeline.connectors.huggingface_hub import format_hf_tool_summary
 
     tech_tools: List[dict] = []
+    seen_payload_tool_keys: set[str] = set()
     for raw_tool in (connectors_payload.get("tech_tools") or []):
         t = dict(raw_tool)
+        tid_k = str(t.get("tool_id") or "").strip().lower()
+        tname_k = str(t.get("name") or "").strip().lower()
+        if (tid_k and tid_k in seen_payload_tool_keys) or (tname_k and tname_k in seen_payload_tool_keys):
+            continue
+        if tid_k:
+            seen_payload_tool_keys.add(tid_k)
+        if tname_k:
+            seen_payload_tool_keys.add(tname_k)
         if t.get("summary"):
             raw_sum = str(t["summary"])
             hf_match = re.search(r"模型任务[：:]\s*([a-z0-9-]+)", raw_sum, re.I)

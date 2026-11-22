@@ -71,8 +71,15 @@ _GENERIC_NEWS_TOKS = {
     "中国", "美国", "市场", "今日", "消息", "表示", "曝光", "预计", "正式", "全新", "升级",
     "支持", "首款", "首批", "累计", "突破", "实现", "启动", "推进", "工作", "合作", "项目",
     "汽车", "手机", "芯片", "技术", "产品", "系统", "服务", "行业", "企业", "报道", "称",
+    "日电", "发生", "完成", "合同", "方面", "目前", "可能", "正在", "首次", "今年", "去年",
+    "明年", "全国", "国际", "媒体", "显示", "时间", "问题", "情况", "影响", "进行", "开展",
+    "通过", "成为", "重要", "持续", "引发", "关注", "继续", "地区", "机构", "部门", "相关",
     "the", "and", "for", "with", "from", "new", "says", "after", "over", "into",
 }
+
+_WIRE_DATELINE_RE = re.compile(
+    r"^(?:【[^】]{1,20}】\s*|(?:财联社|新华网|新华社|央视新闻|人民网|金十数据|法布财经|格隆汇)\s*(?:\d{1,2}月\d{1,2}日)?电[，,：:\s]*(?:据[^，,：:]{2,22}(?:消息|报道|称)[，,：:\s]*)?|(?:外电|快讯|报道称|独家|最新|消息称|外媒称|官方|欧洲地中海地震中心|美国地质调查局(?:（USGS）)?)\s*[:：]\s*)"
+)
 
 _CATEGORY_BADGE_MAP = {
     "global": "国际与地缘主线",
@@ -98,12 +105,14 @@ def _get_entity_alias_tokens() -> Set[str]:
 
 
 def _storyline_tokens(title: str) -> Set[str]:
-    """Return event-specific tokens excluding generic filler and bare conglomerate entity names."""
+    """Return event-specific tokens excluding generic filler, bare numbers, and conglomerate entity names."""
     alias_toks = _get_entity_alias_tokens()
     return {
         tok
         for tok in extract_tokens(title)
-        if tok not in _GENERIC_NEWS_TOKS and tok not in alias_toks
+        if tok not in _GENERIC_NEWS_TOKS
+        and tok not in alias_toks
+        and not re.fullmatch(r"\d+(?:\.\d+)?%?", tok)
     }
 
 
@@ -307,22 +316,37 @@ def _dedupe_timeline_nodes(nodes: List[dict], *, max_nodes: int = 60) -> List[di
     return kept
 
 
+def _safe_clip_headline(text: str, max_len: int = 36) -> str:
+    txt = str(text or "").strip().rstrip("。！？!?，；;：:…‘“(")
+    if len(txt) <= max_len:
+        return txt
+    # Prefer clean boundary for English vs Chinese so we never chop mid-word or leave dangling quotes
+    sub = txt[:max_len]
+    if sum(1 for c in sub if "\u4e00" <= c <= "\u9fff") < 4:
+        ws = sub.rfind(" ")
+        if ws >= 12:
+            sub = sub[:ws]
+    return sub.rstrip("，；：、‘“(- ").rstrip("。！？!?….")
+
+
 def _clean_headline_phrase(raw_title: str) -> str:
     txt = strip_raw_urls_and_domain_tails(str(raw_title or "").strip())
-    txt = re.sub(r"^(?:【[^】]{1,20}】|(?:快讯|报道称|独家|最新|消息称|外媒称|官方)[:：])\s*", "", txt).strip()
+    for _ in range(2):
+        stripped = _WIRE_DATELINE_RE.sub("", txt).strip()
+        if stripped == txt:
+            break
+        txt = stripped
     txt = txt.rstrip("。！？!?，；;：:….")
-    if len(txt) > 26:
+    if len(txt) > 34:
         parts = [p.strip(" ，；：") for p in re.split(r"[；;。]|(?<=\D)[:：](?=\D)", txt) if p.strip()]
         if parts and len(parts[0]) >= 10:
-            candidate = f"{parts[0]}：{parts[1]}" if len(parts) > 1 and len(parts[0]) + len(parts[1]) <= 26 else parts[0]
+            candidate = f"{parts[0]}：{parts[1]}" if len(parts) > 1 and len(parts[0]) + len(parts[1]) <= 34 else parts[0]
             txt = candidate
         elif "，" in txt:
             c0 = txt.split("，", 1)[0].strip()
             if len(c0) >= 12:
                 txt = c0
-    if len(txt) > 30:
-        txt = txt[:30].rstrip("，；：、 ")
-    return txt.rstrip("。！？!?，；;：:….")
+    return _safe_clip_headline(txt, max_len=36)
 
 
 def _infer_cluster_topic_id(nodes: List[dict], eids: Set[str], category: str) -> str:
@@ -351,26 +375,49 @@ def _build_cluster_headline(deduped_nodes: List[dict], eids: Set[str]) -> Tuple[
             f"覆盖 {max(1, pub_cnt)} 家信源、共 {len(deduped_nodes)} 条独立脉络进展",
             "国际主线专题",
         )
-    anchor_raw = str((deduped_nodes[0] if deduped_nodes else {}).get("title") or "全网突发焦点追踪")
+    # Pick the consensus Chinese node (most coherent with cluster core) rather than arbitrary newest outlier
+    if len(deduped_nodes) > 1:
+        node_toks = [_storyline_tokens(str(n.get("title") or "")) for n in deduped_nodes[:12]]
+        best_idx = 0
+        best_score = (-1, -1)
+        for idx, nd in enumerate(deduped_nodes[:12]):
+            has_zh = 1 if any("\u4e00" <= c <= "\u9fff" for c in str(nd.get("title") or "")) else 0
+            cohesion = sum(1 for jdx, toks_j in enumerate(node_toks) if jdx != idx and (len(node_toks[idx] & toks_j) >= 2 or title_similarity(str(nd.get("title") or ""), str(deduped_nodes[jdx].get("title") or "")) >= 0.25))
+            sc = (has_zh, cohesion)
+            if sc > best_score:
+                best_score = sc
+                best_idx = idx
+        anchor_raw = str(deduped_nodes[best_idx].get("title") or "全网突发焦点追踪")
+    else:
+        anchor_raw = str((deduped_nodes[0] if deduped_nodes else {}).get("title") or "全网突发焦点追踪")
     anchor_phrase = _clean_headline_phrase(anchor_raw) or "全网突发焦点追踪"
 
     ent_labels: List[str] = []
+    anchor_low = anchor_phrase.lower()
+    joined_low = " ".join(str(n.get("title") or "") for n in deduped_nodes[:6]).lower()
     for eid in sorted(eids):
         if eid in _NON_STORY_ANCHOR_ENTITIES:
             continue
         ed = ENTITY_BY_ID.get(eid)
-        if ed:
-            short = re.sub(r"\s*\([^)]+\)\s*", "", ed.canonical_name).split("/")[0].strip()
-            if short and short not in ent_labels:
-                ent_labels.append(short)
-        if len(ent_labels) >= 2:
+        if not ed:
+            continue
+        # Only attach entity prefix if that entity actually appears in the cluster's core nodes
+        hit_aliases = [al.lower() for al in (ed.aliases or ()) if len(al) >= 2]
+        if hit_aliases and not any(al in joined_low for al in hit_aliases):
+            continue
+        if any(al in anchor_low for al in hit_aliases):
+            continue
+        raw_parts = [p.strip() for p in re.sub(r"\s*\([^)]+\)\s*", "", ed.canonical_name).split("/") if p.strip()]
+        chosen = next((p for p in raw_parts if p.lower() in joined_low), raw_parts[0] if raw_parts else "")
+        if chosen and chosen.lower() not in anchor_low and chosen not in ent_labels:
+            ent_labels.append(chosen)
+        if len(ent_labels) >= 1:
             break
-    if ent_labels and all(lbl.lower() not in anchor_phrase.lower() for lbl in ent_labels):
+    if ent_labels:
         title = f"{ent_labels[0]}：{anchor_phrase}"
     else:
         title = anchor_phrase
-    if len(title) > 32:
-        title = title[:32].rstrip("，；：、。… ")
+    title = _safe_clip_headline(title, max_len=38)
     pub_cnt = len({str(n.get("publisher_name") or n.get("source_name") or "") for n in deduped_nodes if n.get("source_name") or n.get("publisher_name")})
     subtitle = f"覆盖 {max(1, pub_cnt)} 家信源、共 {len(deduped_nodes)} 条独立脉络进展"
     cat = str((deduped_nodes[0] if deduped_nodes else {}).get("category") or "global")
@@ -415,15 +462,19 @@ def _compute_lifecycle(
 def _matches_existing_topic(cand: dict, topic: dict) -> bool:
     cand_title = str(cand.get("title") or "")
     tp_title = str(topic.get("title") or "")
-    tp_titles = [tp_title] + [str(n.get("title") or "") for n in (topic.get("timeline") or topic.get("raw_nodes") or [])[:6]]
+    is_curated = bool(topic.get("is_curated") or not topic.get("is_auto_clustered", True))
+    core_nodes = (topic.get("timeline") or topic.get("raw_nodes") or [])[: (4 if is_curated else 3)]
+    tp_titles = [tp_title] + [str(n.get("title") or "") for n in core_nodes]
     if any(entities_conflict(cand_title, t) for t in tp_titles[:3] if t):
         return False
 
     cand_story = _storyline_tokens(cand_title)
-    tp_story = _storyline_tokens(" ".join(tp_titles[:4]))
+    tp_story = _storyline_tokens(" ".join(tp_titles[:3]))
     story_overlap = len(cand_story & tp_story)
 
-    if any(title_similarity(cand_title, t) >= 0.30 for t in tp_titles if t) or story_overlap >= 4:
+    if any(title_similarity(cand_title, t) >= 0.38 and len(cand_story & _storyline_tokens(t)) >= 2 for t in tp_titles if t):
+        return True
+    if story_overlap >= 5:
         return True
 
     cand_eids = set(cand.get("entity_ids") or [])
@@ -433,12 +484,51 @@ def _matches_existing_topic(cand: dict, topic: dict) -> bool:
 
     if len(shared_spec) >= 2 and story_overlap >= 2:
         return True
-    if len(shared_any) >= 1 and story_overlap >= 3:
+    if len(shared_any) >= 1 and story_overlap >= 4:
         return True
     # Also bridge by domain-matched curated topic keywords when entity matches & storyline shares concrete signal
-    if len(shared_spec) >= 1 and story_overlap >= 2 and bool(topic.get("is_curated") or not topic.get("is_auto_clustered", True)):
+    if len(shared_spec) >= 1 and story_overlap >= 2 and is_curated:
         return True
     return False
+
+
+def _filter_coherent_auto_nodes(tp_title: str, nodes: List[dict]) -> List[dict]:
+    """Prune stray off-topic nodes that leaked into a persisted auto-clustered topic via transitive linkage."""
+    if len(nodes) <= 2:
+        return nodes
+    # Pick medoid node (most similar to other nodes in the cluster) as true storyline core
+    node_toks = [_storyline_tokens(str(n.get("title") or "")) for n in nodes]
+    node_eids = [{str(m["entity_id"]) for m in match_entities_with_reasons(str(n.get("title") or ""))} - _NON_STORY_ANCHOR_ENTITIES for n in nodes]
+    scores = []
+    for i, ni in enumerate(nodes):
+        s_i = sum(
+            1
+            for j in range(len(nodes))
+            if i != j
+            and (
+                len(node_toks[i] & node_toks[j]) >= 2
+                or title_similarity(str(ni.get("title") or ""), str(nodes[j].get("title") or "")) >= 0.28
+                or len(node_eids[i] & node_eids[j]) >= 2
+            )
+        )
+        scores.append((s_i, 1 if any("\u4e00" <= c <= "\u9fff" for c in str(ni.get("title") or "")) else 0))
+    medoid_idx = max(range(len(nodes)), key=lambda i: scores[i])
+    core_toks = set(node_toks[medoid_idx]) | _storyline_tokens(_clean_headline_phrase(tp_title))
+    core_title = str(nodes[medoid_idx].get("title") or tp_title)
+    core_eids = set(node_eids[medoid_idx])
+    coherent: List[dict] = []
+    for idx, n in enumerate(nodes):
+        nt = str(n.get("title") or "")
+        if entities_conflict(nt, core_title):
+            continue
+        if (
+            idx == medoid_idx
+            or len(node_toks[idx] & core_toks) >= 2
+            or title_similarity(nt, core_title) >= 0.24
+            or (core_eids and len(node_eids[idx] & core_eids) >= 1 and len(node_toks[idx] & core_toks) >= 1)
+        ):
+            coherent.append(n)
+    return coherent
 
 
 def _topic_heat_score(tp: dict) -> Tuple[int, str, int]:
@@ -489,6 +579,14 @@ def build_dynamic_topics(
                     tp_copy["total_mentions"] = len(clean_arch_tl)
                     pub_s = {str(n.get("publisher_name") or n.get("source_name") or "") for n in clean_arch_tl if n.get("source_name") or n.get("publisher_name")}
                     tp_copy["source_count"] = max(1, len(pub_s))
+                    is_cur_arch = bool(tp_copy.get("is_curated") or not tp_copy.get("is_auto_clustered", True))
+                    if not is_cur_arch:
+                        arch_eids = {str(x) for x in (tp_copy.get("entity_ids") or [])}
+                        old_at = str(tp_copy.get("title") or "")
+                        if re.search(r"[‘“(]$|^财联社\d+月\d+日电", old_at) or len(old_at) <= 20:
+                            re_t, re_s, _ = _build_cluster_headline(clean_arch_tl, arch_eids)
+                            tp_copy["title"] = re_t
+                            tp_copy["subtitle"] = re_s
                     archived_by_id[tp["topic_id"]] = tp_copy
 
     upcoming_eids: Set[str] = set()
@@ -529,8 +627,13 @@ def build_dynamic_topics(
         clean_old_nodes = _clean_stored_nodes(tp.get("timeline") or [], keep_hotlist_if_scarce=is_curated)
         if not clean_old_nodes:
             continue
+        if not is_curated:
+            clean_old_nodes = _filter_coherent_auto_nodes(str(tp.get("title") or ""), clean_old_nodes)
+            if len(clean_old_nodes) < 3:
+                unmatched.extend(clean_old_nodes)
+                continue
         tp_eids = list(tp.get("entity_ids") or [])
-        if not tp_eids:
+        if not tp_eids or not is_curated:
             tp_eids = [
                 m["entity_id"]
                 for m in match_entities_with_reasons(" ".join(str(n.get("title") or "") for n in clean_old_nodes[:6]))
@@ -604,17 +707,17 @@ def build_dynamic_topics(
                 continue
             sim = title_similarity(ti, tj)
             story_overlap = len(cand_story_toks[i] & cand_story_toks[j])
-            if sim >= 0.30 or story_overlap >= 4:
+            if (sim >= 0.38 and story_overlap >= 2) or story_overlap >= 5:
                 adj[i].add(j)
                 adj[j].add(i)
                 continue
             shared_spec = cand_spec_eids[i] & cand_spec_eids[j]
-            if len(shared_spec) >= 2:
+            if (len(shared_spec) >= 2 and story_overlap >= 2) or (len(shared_spec) >= 1 and story_overlap >= 3):
                 adj[i].add(j)
                 adj[j].add(i)
                 continue
             shared_any = cand_any_eids[i] & cand_any_eids[j]
-            if len(shared_any) >= 1 and story_overlap >= 3:
+            if len(shared_any) >= 1 and story_overlap >= 4:
                 adj[i].add(j)
                 adj[j].add(i)
 
@@ -642,17 +745,10 @@ def build_dynamic_topics(
         unique_ev_ids = {cn["event_id"] for cn in comp_nodes if cn.get("event_id")}
         has_briefing_ev = bool(unique_ev_ids)
 
-        # Post-dedup qualification: require >=3 unique nodes (>=2 publishers),
-        # or 2 distinct post-dedup nodes ONLY when anchored by multiple high-importance corroborations (>=3 total sources).
-        if len(deduped_cand) >= 3:
-            if len(dedup_pubs) < 2:
-                continue
-            if not has_briefing_ev and not (len(deduped_cand) >= 4 and len(dedup_pubs) >= 3):
-                continue
-        elif len(deduped_cand) == 2:
-            if not (len(dedup_pubs) >= 2 and ((has_high_ev and len(unique_ev_ids) >= 2) or max_ev_src >= 3)):
-                continue
-        else:
+        # Strict Iron Rule 2 & 7 post-dedup qualification: require >=3 unique nodes (>=2 publishers)
+        if len(deduped_cand) < 3 or len(dedup_pubs) < 2:
+            continue
+        if not has_briefing_ev and not (len(deduped_cand) >= 4 and len(dedup_pubs) >= 3):
             continue
 
         trivial_hits = sum(1 for n in deduped_cand if _TRIVIAL_TOPIC_RE.search(str(n.get("title") or "")))
@@ -705,16 +801,12 @@ def build_dynamic_topics(
     for tid, tb in topic_buckets.items():
         deduped_tl = _dedupe_timeline_nodes(tb.get("raw_nodes") or [], max_nodes=60)
         is_curated = bool(tb.get("is_curated") or not tb.get("is_auto_clustered", True))
-        if len(deduped_tl) < 2:
+        if len(deduped_tl) < 3:
             continue
-        if len(deduped_tl) == 2 and not is_curated:
-            tb_ev_cnt = len(set(tb.get("event_ids") or []))
-            if not ((tb.get("has_high_ev") and tb_ev_cnt >= 2) or int(tb.get("max_ev_src") or 1) >= 3):
-                continue
         pub_set = {str(n.get("publisher_name") or n.get("source_name") or "") for n in deduped_tl if n.get("source_name") or n.get("publisher_name")}
+        if len(pub_set) < 2 and not is_curated:
+            continue
         if not is_curated:
-            if len(pub_set) < 2:
-                continue
             if _TRIVIAL_TOPIC_RE.search(str(deduped_tl[0].get("title") or "")) or _TRIVIAL_TOPIC_RE.search(str(tb.get("title") or "")):
                 continue
 

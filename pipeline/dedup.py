@@ -79,6 +79,18 @@ _CONCEPT_ALIASES = {
 }
 
 
+_EN_STOPWORDS = frozenset({
+    "the", "of", "to", "in", "is", "it", "on", "at", "by", "an", "as", "be", "or", "if",
+    "so", "no", "up", "do", "we", "he", "my", "us", "are", "was", "for", "and", "not",
+    "but", "has", "had", "its", "all", "can", "may", "new", "now", "out", "our", "who",
+    "how", "why", "get", "got", "one", "two", "day", "his", "her", "she", "you", "your",
+    "they", "them", "that", "this", "with", "from", "have", "will", "what", "when",
+    "into", "over", "more", "than", "been", "were", "said", "says", "just", "also",
+    "here", "there", "their", "could", "would", "should", "about", "after", "still",
+    "worth", "good", "end", "year", "years", "time", "first", "last",
+})
+
+
 def extract_tokens(text: str) -> Set[str]:
     """Extract CJK bigrams + normalized ASCII words + concept aliases for similarity matching."""
     if not text:
@@ -87,6 +99,8 @@ def extract_tokens(text: str) -> Set[str]:
     tokens: Set[str] = set()
 
     for word in _ASCII_WORD_RE.findall(lowered):
+        if word in _EN_STOPWORDS:
+            continue
         tokens.add(word)
         alias = _CONCEPT_ALIASES.get(word)
         if alias:

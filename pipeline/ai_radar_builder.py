@@ -978,18 +978,37 @@ def _infer_company(title: str, url: str = "", source_name: str = "") -> tuple[st
     return _lab_result("indie_opensource")
 
 
+_BOILERPLATE_WHAT_RE = re.compile(
+    r"(?:前沿 AI 模型或产品能力更新：关注核心推理性能提升|"
+    r"大模型安全、隐私合规与防泄漏动态|大模型安全与对抗评估进展|"
+    r"领域专项评测基准发布：用于量化评估|AI 科研与生命科学模型进展：面向生物酶|"
+    r"前沿 AI 算法与数学推理突破：验证模型|开源模型与开发者生态进展：展现开放权重|"
+    r"AI 编程与智能体（Agent）工具进展：支持工程代码|"
+    r"大模型资本与算力投入动态：反映前沿实验室|下一代模型路线图与发布传闻核验|"
+    r"资本战略与产业融资动态（来源：|前沿 AI 模型研究与开发生态动态|实验室官方一线研究动态（来源：)"
+)
+
+
 def _infer_what_it_does_zh(title: str, summary: str, *, is_tool_release: bool = False) -> str:
     from .dedup import strip_raw_urls_and_domain_tails, title_similarity
 
     clean_sum = strip_raw_urls_and_domain_tails(re.sub(r"\s+", " ", str(summary or "").strip()))
+    clean_sum = re.sub(r"\s*[A-Za-z0-9-]+\.(?:ai|com|org|io|net|cn|co|dev|app)\s*$", "", clean_sum, flags=re.I).strip()
     clean_sum = re.sub(r"\s+(?:新华网|人民网|央视新闻|环球网|财联社|Reuters|Bloomberg)$", "", clean_sum).strip()
     clean_title = strip_raw_urls_and_domain_tails(re.sub(r"\s+", " ", str(title or "").strip()))
+    if _BOILERPLATE_WHAT_RE.search(clean_sum):
+        clean_sum = ""
+
+    norm_sum = re.sub(r"[\W_]+", "", clean_sum).lower()
+    norm_title = re.sub(r"[\W_]+", "", clean_title).lower()
     cjk_count = sum(1 for ch in clean_sum if "\u4e00" <= ch <= "\u9fff")
     is_echo = (
         not clean_sum
         or clean_sum == clean_title
+        or (norm_title and norm_sum == norm_title)
+        or (len(norm_title) >= 8 and norm_sum.startswith(norm_title[:12]))
         or (len(clean_title) >= 10 and clean_sum.startswith(clean_title[:16]))
-        or (len(clean_sum) >= 8 and title_similarity(clean_sum, clean_title) >= 0.65)
+        or (len(clean_sum) >= 8 and title_similarity(clean_sum, clean_title) >= 0.60)
     )
     if not is_echo and cjk_count >= 8:
         return (clean_sum[:118] + "…") if len(clean_sum) > 118 else clean_sum
@@ -997,26 +1016,11 @@ def _infer_what_it_does_zh(title: str, summary: str, *, is_tool_release: bool = 
     t = f"{clean_title} {clean_sum}".lower()
     if any(k in t for k in ("隐私泄露", "隐私数据", "零数据保留", "诱饵请求", "反蒸馏", "抗蒸馏", "distillation")):
         return "大模型安全、隐私合规与防泄漏动态：聚焦零数据保留机制校验、抗蒸馏防护与调用链审计。"
-    if any(k in t for k in ("密码分析", "cryptanal", "红队", "漏洞", "越狱", "prompt injection", "adversarial")):
-        return "大模型安全与对抗评估进展：检验前沿模型在复杂密码学分析、攻防渗透与安全边界上的能力与风险。"
-    if any(k in t for k in ("基准", "评测", "benchmark", "bench", "eval", "arena", "评估", "榜单")):
-        return "领域专项评测基准发布：用于量化评估大模型在专业科学、医疗或工程推理任务上的真实准确率边界。"
-    if any(k in t for k in ("生物", "酶", "药物", "蛋白", "化学", "synth", "chem")):
-        return "AI 科研与生命科学模型进展：面向生物酶结构设计、分子模拟与药物研发加速等专业实验场景。"
-    if any(k in t for k in ("论文", "算法", "定理", "形式化", "tensorlean", "3sum", "数学", "arxiv", "paper")):
-        return "前沿 AI 算法与数学推理突破：验证模型在核心计算复杂度优化、形式化定理证明等基础研究中的潜力。"
-    if any(k in t for k in ("vllm", "llama.cpp", "ollama", "sglang", "推理引擎", "inference engine")):
-        return "开源本地/服务器推理加速工具：帮开发者更快、更省显存地部署和运行开源大模型。"
-    if any(k in t for k in ("开源生态", "下载量", "huggingface", "开源权重", "open source", "open-source", "开源")):
-        return "开源模型与开发者生态进展：展现开放权重体系的模型分发规模、推理兼容生态与全球社区采用率变化。"
-    if is_tool_release or any(k in t for k in ("agent sdk", "sdk", "harness", "工具套件", "workbuddy", "cli tool", "开发者预览", "智能体", "agent")):
-        return "AI 编程与智能体（Agent）工具进展：支持工程代码协同、开发脚手架测试与自动化多步骤任务执行。"
-    if any(k in t for k in ("融资", "投资", "押注", "估值", "ipo", "募资", "亿美元")):
-        return "大模型资本与算力投入动态：反映前沿实验室融资规模、算力基础设施绑定与商业化竞争格局。"
-    if any(k in t for k in ("传闻", "存在吗", "核实", "真的吗", "rumor")):
-        return "下一代模型路线图与发布传闻核验：梳理官方披露信号与社区传言差异，避免误判发布节奏。"
-    if re.search(r"(?:openai|anthropic|claude|gpt-\d|gemini|deepseek|qwen|千问|kimi|混元|hunyuan|豆包|minimax|智谱|glm|llama|grok|mistral|nvidia|sora|genie|manus)", t):
-        return "前沿 AI 模型或产品能力更新：关注核心推理性能提升、开发者工具集成与实际应用落地验证。"
+    if is_tool_release or re.search(r"(?:agent\s*sdk|工具套件|workflow\s*harness|cli\s*tool)", t):
+        if any(k in t for k in ("vllm", "llama.cpp", "ollama", "sglang", "推理引擎", "inference engine")):
+            return "开源本地/服务器推理加速工具：帮开发者更快、更省显存地部署和运行开源大模型。"
+        if re.search(r"(?:agent\s*sdk|工具套件|workflow\s*harness|cli\s*tool)", t):
+            return "AI 编程与智能体（Agent）工具进展：支持工程代码协同、开发脚手架测试与自动化多步骤任务执行。"
     return ""
 
 

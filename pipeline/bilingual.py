@@ -695,6 +695,9 @@ def enrich_bilingual_topics(
             if manual_tp:
                 tp["title"] = manual_tp
                 tp["title_zh"] = manual_tp
+            else:
+                en_idx.append((ti, -1, "title"))
+                en_src.append(tp_title)
         for ni, node in enumerate(tp.get("timeline") or []):
             t = str(node.get("title") or "").strip()
             if is_mostly_english(t):
@@ -733,6 +736,14 @@ def enrich_bilingual_topics(
         )
         for pos, (ti, ni, kind) in enumerate(en_idx):
             src_t = en_src[pos]
+            if ni == -1:
+                tp_obj = topic_list[ti]
+                val = translated[pos] if (translated and pos < len(translated) and translated[pos]) else ""
+                zh_t = val or _lookup_offline_phrase(src_t) or _translate_offline_fallback(src_t, is_summary=False)
+                if zh_t and zh_t != src_t:
+                    tp_obj["title_zh"] = zh_t
+                    tp_obj["title"] = zh_t
+                continue
             node = topic_list[ti]["timeline"][ni]
             node["translation_attempts"] = max(attempts, 1)
             val = translated[pos] if (translated and pos < len(translated) and translated[pos]) else ""

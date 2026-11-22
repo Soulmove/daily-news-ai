@@ -62,9 +62,18 @@ def _try_reuse_cached_connector(
             dict(t)
             for t in (prev_tools or [])
             if isinstance(t, dict) and (
-                ("huggingface.co" in str(t.get("official_url") or ""))
+                (
+                    str(t.get("tool_id") or "").startswith("tool_hf_")
+                    or "huggingface.co" in str(t.get("official_url") or "")
+                )
                 if cid == "huggingface-hub"
-                else ("github.com" in str(t.get("official_url") or "") or t.get("repo"))
+                else (
+                    str(t.get("tool_id") or "").startswith("tool_gh_")
+                    or (
+                        "github.com" in str(t.get("official_url") or "")
+                        and "huggingface.co" not in str(t.get("official_url") or "")
+                    )
+                )
             )
         ]
     else:
@@ -125,6 +134,7 @@ def run_all_first_party_connectors(base_dir: Path | str = ".") -> Dict[str, Any]
     reports: List[Dict[str, Any]] = []
     all_items: List[dict] = []
     tech_tools: List[dict] = []
+    seen_tool_keys: set[str] = set()
     calendar_events: List[dict] = []
     entity_updates: Dict[str, dict] = {}
     direct_platforms_by_category: Dict[str, List[dict]] = {"finance": [], "global": [], "tech": [], "general": []}
@@ -163,7 +173,18 @@ def run_all_first_party_connectors(base_dir: Path | str = ".") -> Dict[str, Any]
                 rep_row[extra_k] = res[extra_k]
         reports.append(rep_row)
         all_items.extend(res.get("items") or [])
-        tech_tools.extend(res.get("tech_tools") or [])
+        for raw_t in (res.get("tech_tools") or []):
+            if not isinstance(raw_t, dict):
+                continue
+            tid_k = str(raw_t.get("tool_id") or "").strip().lower()
+            tname_k = str(raw_t.get("name") or "").strip().lower()
+            if (tid_k and tid_k in seen_tool_keys) or (tname_k and tname_k in seen_tool_keys):
+                continue
+            if tid_k:
+                seen_tool_keys.add(tid_k)
+            if tname_k:
+                seen_tool_keys.add(tname_k)
+            tech_tools.append(raw_t)
         calendar_events.extend(res.get("calendar_events") or [])
         for cat_k, plat_list in (res.get("platforms_by_category") or {}).items():
             direct_platforms_by_category.setdefault(cat_k, []).extend(plat_list)
