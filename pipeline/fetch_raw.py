@@ -14,7 +14,7 @@ import requests
 from pipeline.connectors import run_all_first_party_connectors
 from pipeline.connectors.article_enricher import deep_fetch_selected_items
 from pipeline.connectors.base import HttpCacheStore, repair_mojibake
-from pipeline.dedup import deduplicate_raw_items, strip_raw_urls_and_domain_tails
+from pipeline.dedup import deduplicate_raw_items, is_consumer_promo_or_fluff, strip_raw_urls_and_domain_tails
 from pipeline.id_utils import canonicalize_url, make_raw_item_id
 from pipeline.manifest import (
     atomic_write_json,
@@ -164,6 +164,9 @@ def normalize_upstream_items(
                 continue
 
         excerpt = _clean_text(extra.get("hover"), max_len=420)
+        if is_consumer_promo_or_fluff(title, excerpt or ""):
+            skipped += 1
+            continue
         raw_thumb = extra.get("thumbnail") or extra.get("image") or item.get("thumbnail_url")
         thumb_url = raw_thumb.strip() if isinstance(raw_thumb, str) and raw_thumb.strip().startswith(("http://", "https://")) else None
         metric_label = _format_metric(extra.get("info"))

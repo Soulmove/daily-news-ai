@@ -18,7 +18,7 @@ from xml.etree import ElementTree as ET
 import requests
 
 from pipeline.connectors.base import HttpCacheStore
-from pipeline.dedup import smart_truncate, strip_raw_urls_and_domain_tails
+from pipeline.dedup import is_consumer_promo_or_fluff, is_hotlist_aggregator_source, smart_truncate, strip_raw_urls_and_domain_tails
 from pipeline.id_utils import canonicalize_url, make_raw_item_id
 from pipeline.manifest import atomic_write_json, load_json_if_exists
 from pipeline.time_utils import SHANGHAI_TZ, now_shanghai, parse_published_at, to_iso_shanghai
@@ -196,7 +196,7 @@ def _fetch_wallstreetcn_channel(channel: str, label: str, default_cat: str, fetc
                     # Extract 【Headline】 if present
                     m = re.match(r"【([^】]{4,80})】", content)
                     title = m.group(1) if m else _clean(content, 88)
-                if not title or len(title) < 4 or _PURE_WIRE_FLUFF_RE.search(title):
+                if not title or len(title) < 4 or _PURE_WIRE_FLUFF_RE.search(title) or is_consumer_promo_or_fluff(title, content):
                     continue
                 uri = row.get("uri") or f"https://wallstreetcn.com/livenews/{row.get('id', '')}"
                 canon = canonicalize_url(uri) or f"https://wallstreetcn.com/livenews/{row.get('id', '')}"
@@ -253,7 +253,7 @@ def _fetch_cls_telegraph(fetched_iso: str) -> Dict[str, Any]:
                 if not title and content:
                     m = re.match(r"【([^】]{4,80})】", content)
                     title = m.group(1) if m else _clean(content, 88)
-                if not title or len(title) < 4 or _PURE_WIRE_FLUFF_RE.search(title):
+                if not title or len(title) < 4 or _PURE_WIRE_FLUFF_RE.search(title) or is_consumer_promo_or_fluff(title, content):
                     continue
                 rid = row.get("id") or ""
                 canon = canonicalize_url(row.get("shareurl") or f"https://www.cls.cn/detail/{rid}") or f"https://www.cls.cn/detail/{rid}"
@@ -319,7 +319,7 @@ def _fetch_sina_7x24_telegraph(fetched_iso: str) -> Dict[str, Any]:
                     continue
                 m = re.match(r"【([^】]{4,80})】", content)
                 title = m.group(1) if m else _clean(content, 88)
-                if not title or len(title) < 4 or _PURE_WIRE_FLUFF_RE.search(title):
+                if not title or len(title) < 4 or _PURE_WIRE_FLUFF_RE.search(title) or is_consumer_promo_or_fluff(title, content):
                     continue
                 ext_doc = None
                 try:
@@ -390,7 +390,7 @@ def _fetch_rss_flash(feed_id: str, label: str, default_cat: str, url: str, famil
                 title = _clean(t_el.text if t_el is not None else "", max_len=170)
                 link = (l_el.text or "").strip() if l_el is not None else ""
                 canon = canonicalize_url(link)
-                if not title or not canon or _PURE_WIRE_FLUFF_RE.search(title):
+                if not title or not canon or _PURE_WIRE_FLUFF_RE.search(title) or is_consumer_promo_or_fluff(title, raw_desc):
                     continue
                 pub_iso, pub_src = parse_published_at(p_el.text.strip() if (p_el is not None and p_el.text) else None, feed_id)
                 raw_desc = d_el.text if d_el is not None else ""
@@ -531,11 +531,48 @@ def fetch_china_realtime_wires(cache: Optional[HttpCacheStore] = None) -> Dict[s
     }
 
 
+_WIRE_S_TIER_RE = re.compile(
+    r"(?:融资保证金比例|下调.*保证金|释放\s*\d+(?:,\d+)?亿|沪深北交易所|三大交易所|"
+    r"上交所.*(?:做市|降费)|深交所.*(?:做市|征求意见)|中国结算.*暂免|证监会.*(?:重大|修订|调整|推出)|"
+    r"央行.*(?:降准|降息|LPR)|美联储.*(?:利率|加息|降息|FOMC)|"
+    r"美伊.*(?:冲突|遇袭|霍尔木兹|航母|击落)|俄乌.*(?:停火|和平协议)|中美元首.*(?:协议|联合声明|关税)|"
+    r"菲尔兹奖.*黎曼|梅纳德.*黎曼|BepiColombo|进入水星轨道|神舟.*(?:发射|升空)|星舰.*回收)",
+    re.I,
+)
+_WIRE_A_TIER_RE = re.compile(
+    r"(?:自贸协定|百亿美元并购|法院禁售|出口管制|实体清单|重大漏洞|CVE|IPO.*(?:首日|募资)|"
+    r"GPT-?\d|Claude|Gemini\s*\d|DeepSeek|Qwen|大模型.*发布|央行.*纪要|国务院.*印发)",
+    re.I,
+)
+_EXCHANGE_REFORM_CLUSTER_RE = re.compile(
+    r"(?:融资保证金|沪深北交易所|上交所.*做市|深交所.*做市|中国结算.*债券|增量资金|做市商规则|组合降费)",
+    re.I,
+)
+
+
+def _classify_wire_severity(
+    title: str,
+    excerpt: str,
+    source_id: str,
+    source_name: str,
+) -> tuple[str, str]:
+    """Classify wire item severity into S / A / B using authoritative sources + substantive impact."""
+    if is_hotlist_aggregator_source(source_id, source_name) or is_consumer_promo_or_fluff(title, excerpt):
+        return "B", "常规动态"
+    blob = f"{title} {excerpt}"
+    if _WIRE_S_TIER_RE.search(blob):
+        return "S", "S级突发重磅"
+    if _WIRE_A_TIER_RE.search(blob):
+        return "A", "A级要闻"
+    return "B", "常规动态"
+
+
 def refresh_live_wire_file(base_dir: Path | str = ".", extra_items: Optional[List[dict]] = None) -> Dict[str, Any]:
     """Fetch fresh 7x24 flash wires and merge with existing overseas items into `data/live_wire.json`."""
     root = Path(base_dir)
     res = fetch_china_realtime_wires()
     fetched_iso = res["fetched_at"]
+    now_dt = now_shanghai()
 
     prev_doc = load_json_if_exists(root / "data/live_wire.json", default={})
     prev_items = prev_doc.get("items", []) if isinstance(prev_doc, dict) else []
@@ -573,7 +610,8 @@ def refresh_live_wire_file(base_dir: Path | str = ".", extra_items: Optional[Lis
 
     def _add(it: dict) -> None:
         title = str(it.get("title") or "").strip()
-        if not title or len(title) < 4 or _PURE_WIRE_FLUFF_RE.search(title):
+        excerpt_clean = _clean(it.get("excerpt") or "", 240)
+        if not title or len(title) < 4 or _PURE_WIRE_FLUFF_RE.search(title) or is_consumer_promo_or_fluff(title, excerpt_clean):
             return
         canon_u = canonicalize_url(it.get("url") or it.get("canonical_url")) or ""
         if canon_u and canon_u in seen_urls:
@@ -589,20 +627,23 @@ def refresh_live_wire_file(base_dir: Path | str = ".", extra_items: Optional[Lis
         seen_keys.add(k)
         seen_norms.append(norm_full)
         pub = str(it.get("published_at") or it.get("fetched_at") or fetched_iso)
-        excerpt_clean = _clean(it.get("excerpt") or "", 240)
         cat_norm = _classify_wire_item(title, excerpt_clean, str(it.get("category") or "general"))
+        src_id = str(it.get("source_id") or "")
+        src_name = str(it.get("source_name") or "实时快讯")
+        sev_tier, _ = _classify_wire_severity(title, excerpt_clean, src_id, src_name)
         merged.append(
             {
                 "id": str(it.get("item_id") or it.get("id") or f"lw_{len(merged)}"),
                 "title": title,
                 "excerpt": excerpt_clean,
                 "category": cat_norm,
-                "source_name": str(it.get("source_name") or "实时快讯"),
+                "source_name": src_name,
                 "url": canon_u or str(it.get("url") or it.get("canonical_url") or ""),
                 "published_at": pub,
                 "thumbnail_url": it.get("thumbnail_url"),
-                "importance": str(it.get("importance") or ("high" if it.get("metric_label") else "normal")),
-                "tag": str(it.get("metric_label") or ""),
+                "severity_tier": sev_tier,
+                "importance": "high" if sev_tier in {"S", "A"} else "normal",
+                "tag": str(it.get("metric_label") or it.get("tag") or ""),
             }
         )
 
@@ -617,12 +658,86 @@ def refresh_live_wire_file(base_dir: Path | str = ".", extra_items: Optional[Lis
     merged.sort(key=lambda x: str(x.get("published_at") or ""), reverse=True)
     merged = merged[:120]
 
+    # Fast-Track Promotion: cluster <12h authoritative S-tier wires into breaking_highlights for immediate homepage surfacing
+    breaking_highlights: List[Dict[str, Any]] = []
+    policy_cluster_items: List[Dict[str, Any]] = []
+    other_s_items: List[Dict[str, Any]] = []
+    for item in merged:
+        if item.get("severity_tier") != "S":
+            continue
+        pub_dt = None
+        try:
+            pub_raw = str(item.get("published_at") or "")
+            if pub_raw:
+                pub_dt = datetime.fromisoformat(pub_raw.replace("Z", "+00:00"))
+                if pub_dt.tzinfo is None:
+                    pub_dt = pub_dt.replace(tzinfo=SHANGHAI_TZ)
+        except Exception:
+            pub_dt = None
+        if pub_dt is not None and (now_dt - pub_dt).total_seconds() > 12 * 3600:
+            continue
+        blob = f"{item.get('title') or ''} {item.get('excerpt') or ''}"
+        if _EXCHANGE_REFORM_CLUSTER_RE.search(blob):
+            policy_cluster_items.append(item)
+        else:
+            other_s_items.append(item)
+
+    if policy_cluster_items:
+        # Prefer the strongest headline mentioning 融资保证金 / 释放 4000 亿 as the cluster lead
+        lead = max(
+            policy_cluster_items,
+            key=lambda x: (
+                1 if ("保证金" in str(x.get("title") or "") or "4000亿" in str(x.get("title") or "")) else 0,
+                str(x.get("published_at") or ""),
+            ),
+        )
+        related_titles = [
+            str(x.get("title") or "")
+            for x in policy_cluster_items
+            if x is not lead and str(x.get("title") or "")
+        ][:4]
+        breaking_highlights.append(
+            {
+                "id": f"brk_{lead['id']}",
+                "title": lead["title"],
+                "excerpt": lead.get("excerpt") or "",
+                "category": lead.get("category") or "finance",
+                "severity_tier": "S",
+                "breaking_label": "刚刚突发 · 重磅",
+                "source_name": lead.get("source_name") or "权威电报",
+                "url": lead.get("url") or "",
+                "published_at": lead.get("published_at") or fetched_iso,
+                "related_count": len(related_titles),
+                "related_titles": related_titles,
+            }
+        )
+
+    for item in other_s_items:
+        if len(breaking_highlights) >= 3:
+            break
+        breaking_highlights.append(
+            {
+                "id": f"brk_{item['id']}",
+                "title": item["title"],
+                "excerpt": item.get("excerpt") or "",
+                "category": item.get("category") or "finance",
+                "severity_tier": "S",
+                "breaking_label": "刚刚突发 · 重磅",
+                "source_name": item.get("source_name") or "权威电报",
+                "url": item.get("url") or "",
+                "published_at": item.get("published_at") or fetched_iso,
+                "related_count": 0,
+                "related_titles": [],
+            }
+        )
+
     doc = {
-        "schema_version": "5.0",
+        "schema_version": "5.1",
         "updated_at": fetched_iso,
         "status": res["status"],
         "sources_online": res["connector_name"],
         "total": len(merged),
+        "breaking_highlights": breaking_highlights,
         "items": merged,
     }
     atomic_write_json(root / "data/live_wire.json", doc)

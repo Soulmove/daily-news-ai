@@ -14,10 +14,16 @@ from typing import Any, Dict, List, Optional, Set, Tuple
 
 from pipeline.connectors.base import repair_mojibake
 from pipeline.dedup import (
+    _MARKET_PRICE_RE,
+    _SOCIAL_HOTLIST_IDS,
+    _source_rank_key,
     deduplicate_raw_items,
     entities_conflict,
     extract_tokens,
     get_publisher_family,
+    has_authoritative_primary_source,
+    is_consumer_promo_or_fluff,
+    is_hotlist_aggregator_source,
     is_omnibus_digest_title,
     score_cluster_for_briefing,
     smart_truncate,
@@ -245,10 +251,11 @@ def _build_ai_prompt(category: str, input_cutoff_at: str, catalog_text: str) -> 
    - **发行/募资口径**：涉及 IPO 或融资，必须严格区分基础发行规模、绿鞋/超额配售选择权（未行使不得写为已募集）及私募配售；涉及法律和解需写明“原则性和解/尚待签署与批准”等生效前提；涉及呼吁或提议需写明核心结论（如董事会拒绝或接受）。
    - **第三方评测与单方宣称**：厂商自报或缺乏独立出处的评测分数（如红队单项测试、未证实榜单名次）必须明确标注测试边界与单方归因，不得写成行业公认指标。
    - **事件真实时间**：填写 `event_date`（`YYYY-MM-DD` 或 `null`）标明事件实际发生日期；若报道只是旧事件回顾/多周前决议重提，必须置 `"is_stale_rehash": true` 且不得将其写成今日突发冲击。
-6. 如果有效素材较少，请宁缺毋滥（输出 8–14 条高质量事件即可），禁止为了凑数把无关条目拼在一起，也禁止把高优先级重大全球/国家大事（如元首访华行程、APEC/G20 重要双边与三边会晤、美联储/主要央行政策、头部企业重大 IPO、商业航天/AI 里程碑）漏选，而去选地方琐事或八卦。
-7. 对于跨多日、多场次的超级重磅事件（例如大国元首访问行程与重要峰会），**标题必须保留核心人物姓名、地点与具体日程节点**，按关键节点拆分清晰（例如「抵访接待/机场会面」「重要双边/三边会谈」「实质经贸协议」），切忌把 10 篇重磅报道压缩成 1 条连人物和日程都看不见的笼统概括！
-8. 若核心事件已被 ≥3 家权威媒体实况报道（如公开接待、演讲、已签协议），不要因为个别外媒附带了衍生猜测就把整条核心事实混进 `unverified_claims`；仅将真正未证实的猜测单独放入 `unverified_claims`。
-9. 提取 3 条最值得关注的关键变化 `key_changes`，每条也必须附带 `source_refs`。
+6. 如果有效素材较少，请宁缺毋滥（输出 8–14 条高质量事件即可），**严禁把多家无关公司的日常公告硬拼成一条拼盘要闻**（如「某公司回购、另公司增资、第三家高管辞职」必须拆开或仅选重大项），禁止收录消费硬件带货报价（显示器/耳机/家电多少元）、游戏打折/帧率、领导晒照片花边或发布会场地抗议；涉及股票/黄金/比特币等行情综述必须优先引用专业财经媒体与官方信源，禁止把无时间戳热搜旧拼盘当成突发大事件。
+7. **严格划分 `importance`（绝不滥用 `"high"`）**：仅限具备**权威媒体/监管一手信源**、且属于央行/监管重磅政策（如降准降息、三大交易所调整保证金）、重磅军事外交协定、百亿美元以上并购/重大法院禁令、代际 AI/科学突破的最近 24 小时事件，才可标为 `"high"`；仅有百度热搜/头条/微博/知乎讨论、单家公司常规增资/人事变动、或超过 24 小时无最新实质推进的旧闻，一律只标 `"medium"` 或 `"normal"`。
+8. 对于跨多日、多场次的超级重磅事件（例如大国元首访问行程与重要峰会），**标题必须保留核心人物姓名、地点与具体日程节点**，按关键节点拆分清晰（例如「抵访接待/机场会面」「重要双边/三边会谈」「实质经贸协议」），切忌把 10 篇重磅报道压缩成 1 条连人物和日程都看不见的笼统概括！
+9. 若核心事件已被 ≥3 家权威媒体实况报道（如公开接待、演讲、已签协议），不要因为个别外媒附带了衍生猜测就把整条核心事实混进 `unverified_claims`；仅将真正未证实的猜测单独放入 `unverified_claims`。
+10. 提取 3 条最值得关注的关键变化 `key_changes`，每条也必须附带 `source_refs`。
 
 输入素材列表：
 {catalog_text}
@@ -1094,9 +1101,12 @@ def _ground_update_category(
     scored_fresh: List[Tuple[float, dict]] = []
     for cl in clustered_own:
         t = str(cl.get("title") or "").strip()
-        if not t or is_omnibus_digest_title(t):
+        if not t or is_omnibus_digest_title(t) or is_consumer_promo_or_fluff(t, str(cl.get("excerpt") or "")) or _is_unrelated_company_mashup(t):
             continue
         if cl.get("source_kind") == "discussion":
+            continue
+        cl_srcs = cl.get("related_sources") or [cl]
+        if _MARKET_PRICE_RE.search(t) and not has_authoritative_primary_source(cl_srcs):
             continue
         cu = canonicalize_url(cl.get("canonical_url") or cl.get("url"))
         if cu in seen_urls or any(title_similarity(t, et) >= 0.38 or not entities_conflict(t, et) and title_similarity(t, et) >= 0.30 for et in existing_norm_titles):
@@ -1123,7 +1133,7 @@ def _ground_update_category(
             "unverified_claims": [],
             "speculation_or_outlook": None,
             "entities": [h["canonical_name"] for h in match_entities_with_reasons(cl["title"])[:3]],
-            "importance": "high" if (sc >= 32.0 or cl.get("independent_publisher_count", 1) >= 2) else "medium",
+            "importance": "medium",
             "sentiment": "Neutral",
             "source_refs": src_ids,
         }
@@ -1338,12 +1348,36 @@ def _reclassify_region_topic_events(cat_docs: Dict[str, dict]) -> None:
                 dst_evs.append(ev)
 
 
+_MASHUP_CORP_VERB_RE = re.compile(r"(?:回购|增资|辞职|辞任|减持|增持|定增|分红|预披露|股东大会|更换|聘任)")
+_MASHUP_SHARED_PREFIX_GUARD_RE = re.compile(r"(?:沪深北交易所|三大交易所|联合|集体|多只|多家|证监会)")
+
+
+def _is_unrelated_company_mashup(title: str) -> bool:
+    """Detect synthetic multi-company bulletin roundups like '通威股份回购、思特威增资、三安光电辞职'."""
+    t = str(title or "").strip()
+    if not t or _MASHUP_SHARED_PREFIX_GUARD_RE.search(t):
+        return False
+    parts = [p.strip() for p in re.split(r"[、,，;；]", t) if p.strip()]
+    if len(parts) < 3:
+        return False
+    verb_parts = sum(1 for p in parts if _MASHUP_CORP_VERB_RE.search(p))
+    return verb_parts >= 2
+
+
 def _same_cross_category_story(ev_a: dict, ev_b: dict) -> bool:
     """Detect cross-category echoes (only same core story in titles, never collapsing distinct angles like MSFT/NVDA ratings)."""
     ta = str(ev_a.get("title") or "")
     tb = str(ev_b.get("title") or "")
     la = ta.lower()
     lb = tb.lower()
+    for ent_pair in (
+        ("思特威", "增资"),
+        ("思特威", "15亿"),
+        ("bepicolombo", "水星"),
+        ("梅纳德", "黎曼"),
+    ):
+        if all(k in la for k in ent_pair) and all(k in lb for k in ent_pair):
+            return True
     # Explicit shared macro/event-cluster topic pairs (even if headlines highlight adjacent tickers like NVDA vs Anthropic in the same market selloff)
     distinct_angle_re = re.compile(r"(?:目标价|评级|tpu|走私|法院)")
     if distinct_angle_re.search(la) == distinct_angle_re.search(lb):
@@ -1417,7 +1451,8 @@ def _clean_single_event_sources_and_dates(ev: dict) -> dict:
         rs_s = _PIPELINE_JARGON_RE.sub("", str(ev["evidence_status_reason"])).strip()
         ev["evidence_status_reason"] = rs_s or "暂缺足够一手原文链接，已归入待核实区域"
 
-    ev["sources"] = clean_srcs
+    ev["sources"] = sorted(clean_srcs, key=_source_rank_key)
+    clean_srcs = ev["sources"]
     if not ev.get("thumbnail_url"):
         ev["thumbnail_url"] = next((s.get("thumbnail_url") for s in clean_srcs if s.get("thumbnail_url")), None)
     ev["source_count"] = len(clean_srcs)
@@ -1478,25 +1513,184 @@ def _compute_event_radar_score(ev: dict) -> int:
     return max(0, min(100, rel_pts + nov_pts + indep_pts + official_pts + depth_pts + reprint_penalty + rumor_penalty + title_only_penalty + stale_penalty))
 
 
+_S_TIER_EVENT_RE = re.compile(
+    r"(?:降准|降息|LPR|美联储.*(?:利率|加息|降息|FOMC)|FOMC|融资保证金比例|释放\s*\d+(?:,\d+)?亿|沪深北交易所|三大交易所|"
+    r"证监会.*(?:重大|修订|调整)|上交所.*(?:做市|降费)|深交所.*(?:做市|征求意见)|"
+    r"中美元首.*(?:协议|联合声明|公报|关税)|美伊.*(?:冲突|遇袭|霍尔木兹|停火|航母)|俄乌.*(?:停火|和平协议|袭击)|"
+    r"IPO.*(?:首日|创纪录|935亿|813亿)|万亿.*危机|英伟达.*(?:暴跌|换帅|调查|禁止)|"
+    r"通用大模型.*代际|GPT-\d|Gemini\s*\d|Claude\s*\d|黎曼猜想.*证明|星舰.*回收)",
+    re.I,
+)
+_A_TIER_EVENT_RE = re.compile(
+    r"(?:自贸协定|自由贸易协定|百亿美元并购|欧盟.*禁售|法院禁令|出口管制|实体清单|菲尔兹奖|梅纳德|BepiColombo|水星轨道|"
+    r"神舟.*(?:发射|合练)|COP31|气候大会|关税|黄金.*暴跌|比特币.*(?:跌破|突破)|并购|收购.*亿美元|"
+    r"OpenAI|Anthropic|Google|DeepSeek|Qwen|英伟达|NVIDIA|特斯拉|FSD|SpaceX)",
+    re.I,
+)
+
+
+def _event_age_hours(ev: dict, now_dt: Any) -> Tuple[float, float]:
+    """Return (first_age_hours, latest_update_age_hours) against now_dt."""
+    pub_iso = ev.get("first_reported_at") or ev.get("published_at") or ev.get("fetched_at")
+    upd_iso = ev.get("latest_reported_at") or ev.get("latest_fact_update_at") or pub_iso
+    pub_dt = parse_iso_datetime(str(pub_iso)) if pub_iso else None
+    upd_dt = parse_iso_datetime(str(upd_iso)) if upd_iso else pub_dt
+    age_h = max(0.0, (now_dt - pub_dt).total_seconds() / 3600.0) if pub_dt else 24.0
+    upd_h = max(0.0, (now_dt - upd_dt).total_seconds() / 3600.0) if upd_dt else age_h
+    return age_h, upd_h
+
+
+def classify_event_severity(ev: dict, now_dt: Any = None) -> Tuple[str, str]:
+    """
+    Classify raw candidate severity BEFORE site-wide budget calibration:
+      - Hotlist-only items, needs_verification, mashups, single-source rumors, and >24h un-updated items CANNOT be S or A.
+    """
+    now_ref = now_dt or now_shanghai()
+    title = str(ev.get("title") or "")
+    summary = str(ev.get("fact_summary") or "")
+    blob = f"{title} {summary[:160]}"
+    sources = ev.get("sources") or []
+    if not has_authoritative_primary_source(sources):
+        return "B", "社媒热榜聚合（不进 S/A 重磅）"
+    if _is_unrelated_company_mashup(title):
+        return "B", "多公司日常公告组合（降为常规）"
+    if ev.get("evidence_status") == "needs_verification" or ev.get("is_stale_rehash"):
+        return "B", "待核实或滞后旧闻"
+    if ev.get("evidence_status") == "single_source" and ev.get("attribution_warning"):
+        return "B", "单一非一手传闻（降为常规）"
+
+    age_h, upd_h = _event_age_hours(ev, now_ref)
+    is_fresh_24h = age_h <= 24.0 or upd_h <= 6.0
+    is_recent_48h = age_h <= 48.0 or upd_h <= 12.0
+
+    if is_fresh_24h and _S_TIER_EVENT_RE.search(blob):
+        return "S", "S级核心重磅"
+    if is_recent_48h and (_S_TIER_EVENT_RE.search(blob) or _A_TIER_EVENT_RE.search(blob)):
+        return "A", "A级重要要闻"
+    return "B", "B级常规要闻"
+
+
+def calibrate_sitewide_severity_tiers(cat_docs: Dict[str, dict], now_dt: Any = None) -> None:
+    """Enforce site-wide S <= 3, (S + A) <= max(3, int(25% * total)), and demote >24h stale is_new_in_batch flags."""
+    now_ref = now_dt or now_shanghai()
+    all_evs: List[dict] = []
+    for doc in cat_docs.values():
+        if isinstance(doc, dict):
+            all_evs.extend(doc.get("events") or [])
+    if not all_evs:
+        return
+
+    # 1. Mark stale market price contradictions (e.g., old 'BTC跌破6万' when newer authoritative report says '突破/重返6万')
+    newer_btc_up = None
+    for ev in all_evs:
+        t = str(ev.get("title") or "")
+        if re.search(r"(?:比特币|\bBTC\b).*(?:突破|重返|站上|涨超)\s*6万", t, re.I) and has_authoritative_primary_source(ev.get("sources") or []):
+            dt = parse_iso_datetime(str(ev.get("latest_reported_at") or ev.get("published_at") or ""))
+            if dt and (newer_btc_up is None or dt > newer_btc_up):
+                newer_btc_up = dt
+    if newer_btc_up is not None:
+        for ev in all_evs:
+            t = str(ev.get("title") or "")
+            if re.search(r"(?:比特币|\bBTC\b).*跌破\s*6万", t, re.I):
+                dt = parse_iso_datetime(str(ev.get("latest_reported_at") or ev.get("published_at") or ""))
+                if dt is None or dt < newer_btc_up:
+                    ev["is_stale_rehash"] = True
+
+    s_candidates: List[Tuple[tuple, dict]] = []
+    a_candidates: List[Tuple[tuple, dict]] = []
+    for ev in all_evs:
+        age_h, upd_h = _event_age_hours(ev, now_ref)
+        if age_h > 24.0 and upd_h > 6.0:
+            ev["is_new_in_batch"] = False
+
+        cand_tier, _ = classify_event_severity(ev, now_ref)
+        indep = int(ev.get("independent_publisher_count") or 1)
+        is_off = 1 if ev.get("evidence_status") == "official_confirmed" else 0
+        radar = int(ev.get("radar_score") or 0)
+        key_tuple = (
+            1 if ev.get("is_new_in_batch") else 0,
+            is_off,
+            min(indep, 6),
+            radar,
+            -age_h,
+        )
+        if cand_tier == "S":
+            s_candidates.append((key_tuple, ev))
+        elif cand_tier == "A":
+            a_candidates.append((key_tuple, ev))
+        else:
+            ev["severity_tier"] = "B"
+            ev["severity_label"] = "B级常规"
+            ev["importance"] = "medium" if (has_authoritative_primary_source(ev.get("sources") or []) and radar >= 55) else "normal"
+
+    s_candidates.sort(key=lambda x: x[0], reverse=True)
+    total_events = len(all_evs)
+    max_sa_budget = max(3, int(total_events * 0.25))
+
+    s_count = 0
+    demoted_to_a: List[Tuple[tuple, dict]] = []
+    for key_t, ev in s_candidates:
+        if s_count < 3 and s_count < max_sa_budget:
+            ev["severity_tier"] = "S"
+            ev["severity_label"] = "S级重磅"
+            ev["importance"] = "high"
+            s_count += 1
+        else:
+            demoted_to_a.append((key_t, ev))
+
+    remaining_a = max(0, max_sa_budget - s_count)
+    merged_a = [(key_t, ev) for key_t, ev in demoted_to_a] + a_candidates
+    merged_a.sort(key=lambda x: x[0], reverse=True)
+
+    a_count = 0
+    for _, ev in merged_a:
+        if a_count < remaining_a:
+            ev["severity_tier"] = "A"
+            ev["severity_label"] = "A级要闻"
+            ev["importance"] = "high"
+            a_count += 1
+        else:
+            radar = int(ev.get("radar_score") or 0)
+            ev["severity_tier"] = "B"
+            ev["severity_label"] = "B级常规"
+            ev["importance"] = "medium" if radar >= 50 else "normal"
+
+
 def _postprocess_and_prune_cross_category(
     cat_docs: Dict[str, dict],
     cat_manifest: Dict[str, dict],
     max_per_category: int = 10,
 ) -> None:
     """
-    Remove omnibus roundups, fix cross-entity source pollution, dedupe cross-category stories,
-    enforce region/topic classification, and keep high-signal category compactness.
+    Remove omnibus roundups, consumer promos/fluff, hotlist-only market price recaps,
+    fix cross-entity source pollution, dedupe cross-category stories, enforce S/A/B caps,
+    and keep high-signal category compactness.
     """
     _reclassify_region_topic_events(cat_docs)
     for cat, doc in cat_docs.items():
         raw_evs = [_clean_single_event_sources_and_dates(ev) for ev in doc.get("events", [])]
-        filtered = [
-            ev for ev in raw_evs
-            if not is_omnibus_digest_title(str(ev.get("title") or "")) and not _is_low_value_appendix_event(ev)
-        ]
+        filtered = []
+        for ev in raw_evs:
+            title_s = str(ev.get("title") or "")
+            sum_s = str(ev.get("fact_summary") or "")
+            srcs = ev.get("sources") or []
+            if is_omnibus_digest_title(title_s) or _is_low_value_appendix_event(ev):
+                continue
+            if is_consumer_promo_or_fluff(title_s, sum_s):
+                continue
+            if _MARKET_PRICE_RE.search(title_s) and not has_authoritative_primary_source(srcs):
+                continue
+            filtered.append(ev)
         if len(raw_evs) >= 6 and len(filtered) < 5:
             for ev in raw_evs:
-                if ev not in filtered and not is_omnibus_digest_title(str(ev.get("title") or "")):
+                title_s = str(ev.get("title") or "")
+                sum_s = str(ev.get("fact_summary") or "")
+                if (
+                    ev not in filtered
+                    and not is_omnibus_digest_title(title_s)
+                    and not is_consumer_promo_or_fluff(title_s, sum_s)
+                    and not (_MARKET_PRICE_RE.search(title_s) and not has_authoritative_primary_source(ev.get("sources") or []))
+                ):
                     filtered.append(ev)
                     if len(filtered) >= 6:
                         break
@@ -1520,13 +1714,15 @@ def _postprocess_and_prune_cross_category(
     def _quality_score(ev: dict, cat_name: str) -> tuple:
         tier_rank = {"official_confirmed": 3, "multi_source": 2, "single_source": 1, "needs_verification": 0}
         cat_priority = {"finance": 3, "tech": 2, "global": 2, "general": 0}.get(cat_name, 0)
+        has_auth = 1 if has_authoritative_primary_source(ev.get("sources") or []) else 0
         news_src_cnt = sum(
             1
             for s in ev.get("sources") or []
             if s.get("source_kind") not in {"discussion", "social"}
-            and s.get("source_id") not in {"zhihu", "weibo", "tieba", "baidu", "toutiao"}
+            and not is_hotlist_aggregator_source(str(s.get("source_id") or ""), str(s.get("source_name") or ""))
         )
         return (
+            has_auth,
             tier_rank.get(ev.get("evidence_status", "needs_verification"), 0),
             cat_priority,
             1 if news_src_cnt > 0 else 0,
@@ -1570,6 +1766,10 @@ def _postprocess_and_prune_cross_category(
             if ev.get("ai_analysis"):
                 ev["ai_analysis"] = _PIPELINE_JARGON_RE.sub("", str(ev["ai_analysis"])).strip() or None
             ev["radar_score"] = _compute_event_radar_score(ev)
+
+    calibrate_sitewide_severity_tiers(cat_docs, now_dt=now_shanghai())
+
+    for cat, doc in cat_docs.items():
         doc["key_changes"] = _sync_key_changes_attribution(doc.get("key_changes") or [], doc["events"])
         if not doc["key_changes"]:
             doc["key_changes"] = _build_key_changes_from_events(doc["events"])

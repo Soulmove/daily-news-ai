@@ -17,6 +17,100 @@ _MATERIAL_CORPORATE_OR_SECURITY_RE = re.compile(
 )
 _EXTRAORDINARY_CLAIM_RE = re.compile(r"(?:证明|猜想|裁定|和解|收购|并购|破产|ipo|违约|制裁)", re.I)
 _COMMUNITY_GOSSIP_IDS = {"zhihu", "weibo", "tieba", "douyin", "hupu", "coolapk", "v2ex-share"}
+_SOCIAL_HOTLIST_IDS = frozenset({
+    "baidu", "toutiao", "weibo", "zhihu", "douyin", "bilibili-hot-search",
+    "tieba", "douban", "hupu", "coolapk", "v2ex-share", "nowcoder",
+    "chongbuluo-hot", "chongbuluo-latest", "pcbeta-windows11",
+})
+_SOCIAL_HOTLIST_NAMES_RE = re.compile(
+    r"(?:百度热搜|今日头条|微博热搜|知乎热榜|抖音热点|B站热搜|贴吧|豆瓣|虎扑|酷安|V2EX|牛客|虫部落|远景论坛)"
+)
+
+_CONSUMER_DEVICE_RE = re.compile(
+    r"(?:显示器|电竞屏|耳机|音箱|键鼠|机械键盘|鼠标|路由器|充电宝|数码相框|扫地机器人|投影仪|平板|电视|冰箱|空调|洗衣机|洗碗机|吹风机|剃须刀|咖啡机|电动牙刷|智能手表|手环)"
+)
+_CONSUMER_PROMO_PRICE_RE = re.compile(
+    r"(?:\d{2,5}\s*元|首销|首发价|到手价|补贴价|国补后|预售|开售|上架|现货开售|五折|半价|满减|优惠券|优惠|\d{2,3}\s*英寸\s*(?:2K|4K|OLED|IPS|VA|Fast)?|\d{3}\s*Hz)",
+    re.I,
+)
+_GAME_PROMO_PLATFORM_RE = re.compile(
+    r"(?:Steam|Epic|PSN|PlayStation|Xbox|Switch|育碧|Ubisoft|EA|暴雪|《极限国度》|《黑色洛城)",
+    re.I,
+)
+_GAME_PROMO_DEAL_RE = re.compile(
+    r"(?:史低|新史低|\d+(?:\.\d+)?\s*折|免费领|喜加一|促销|特惠|打折|帧率|\d+\s*FPS|203\d年发售|重制版|导剪版|DLC)",
+    re.I,
+)
+_CORP_FINANCE_GUARD_RE = re.compile(
+    r"(?:财报|营收|净利润|IPO|上市|并购|收购|增资|回购|证监会|沪深北|上交所|深交所|出口管制|关税|反垄断|首日销售额\s*\d+\s*亿美元|收入高达\s*\d+\s*亿美元)",
+    re.I,
+)
+_PHOTO_OR_VENUE_FLUFF_RE = re.compile(
+    r"(?:发布\s*\d+余?张.*照片|晒出?\s*\d*余?张?.*照片|会议照片并肯定|肯定(?:深圳)?城市?面貌|赞扬.*(?:接待|欢迎)|公开赞扬.*APEC|欣赏.*城市风貌|"
+    r"发布会?(?:遭到|遭遇)?场地抗议|场地外?抗议|Helsing.*抗议|"
+    r"今日小雪|小雪节气|大雪节气|立冬节气|冬至节气|首支单曲|主题曲|动画电影|剧场版|斗破苍穹)",
+    re.I,
+)
+_MINOR_QUAKE_NOISE_RE = re.compile(r"(?<!\d)[0-4](?:\.\d+)?\s*级地震")
+_SEVERE_DISASTER_GUARD_RE = re.compile(r"(?:遇难|死亡|伤亡|海啸|倒塌|受灾|应急响应|救援)")
+
+_MARKET_PRICE_RE = re.compile(
+    r"(?:现货黄金|黄金价格|金价|纳指|标普|道指|沪指|创业板指|A股|美股|港股|恒指|"
+    r"英伟达.*跌|比特币|以太坊|\bBTC\b|\bETH\b|跌破|重返|涨超|跌超|暴跌|重挫|收盘|行情)",
+    re.I,
+)
+
+
+def is_hotlist_aggregator_source(source_id: str, source_name: str = "") -> bool:
+    sid = (source_id or "").lower().strip()
+    if sid in _SOCIAL_HOTLIST_IDS:
+        return True
+    if not sid and _SOCIAL_HOTLIST_NAMES_RE.search(str(source_name or "")):
+        return True
+    return False
+
+
+def has_authoritative_primary_source(sources: List[dict]) -> bool:
+    """Return True iff at least one source is a genuine media/official/tech outlet (not pure social hotlists)."""
+    if not sources:
+        return False
+    for s in sources:
+        if not isinstance(s, dict):
+            continue
+        sid = str(s.get("source_id") or "").lower().strip()
+        sname = str(s.get("publisher_name") or s.get("source_name") or "")
+        tier = str(s.get("source_tier") or "")
+        kind = str(s.get("source_kind") or "news")
+        if is_hotlist_aggregator_source(sid, sname):
+            continue
+        if tier in {"first_party", "direct_media", "tech_material"}:
+            return True
+        if kind in {"news", "official_filing", "regulatory_release", "repo_release", "model_card"}:
+            return True
+    return False
+
+
+def is_consumer_promo_or_fluff(title: str, excerpt: str = "") -> bool:
+    """Reject C-tier retail hardware promos, game discounts/FPS/distant releases, photo-ops, venue protests, and minor quakes."""
+    t = str(title or "").strip()
+    if not t:
+        return False
+    blob = f"{t} {str(excerpt or '')[:160]}"
+    if _PHOTO_OR_VENUE_FLUFF_RE.search(t):
+        return True
+    if _MINOR_QUAKE_NOISE_RE.search(t) and not _SEVERE_DISASTER_GUARD_RE.search(blob):
+        return True
+    if _CORP_FINANCE_GUARD_RE.search(t):
+        return False
+    if _CONSUMER_DEVICE_RE.search(t) and _CONSUMER_PROMO_PRICE_RE.search(blob):
+        return True
+    if re.search(r"\b(?:TCL|飞利浦|Philips|AOC|蚂蚁电竞|HKC|KOORUI|泰坦军团|创维|Redmi|小米|三星|LG)\b.*\d{2,5}\s*元", t, re.I):
+        return True
+    if _GAME_PROMO_PLATFORM_RE.search(t) and _GAME_PROMO_DEAL_RE.search(blob):
+        return True
+    if re.search(r"(?:203\d年发售|史低\s*\d+(?:\.\d+)?\s*元|\d+折史低|新史低)", t):
+        return True
+    return False
 
 _CLEAN_RE = re.compile(r"[\s\W_]+", re.UNICODE)
 _ASCII_WORD_RE = re.compile(r"[a-z0-9]{2,}")
@@ -268,19 +362,20 @@ def _source_rank_key(src: dict) -> tuple:
     tier = src.get("source_tier") or ""
     kind = src.get("source_kind") or "news"
     sid = (src.get("source_id") or "").lower()
+    is_hotlist = is_hotlist_aggregator_source(sid, str(src.get("source_name") or ""))
     if tier == "first_party":
         tier_score = 0
     elif tier == "direct_media":
         tier_score = 1
     elif tier == "tech_material":
         tier_score = 2
-    elif kind == "news" and sid not in _COMMUNITY_GOSSIP_IDS:
+    elif kind == "news" and not is_hotlist:
         tier_score = 3
     elif kind == "repo":
         tier_score = 4
     else:
         tier_score = 5
-    is_omnibus = 1 if (sid == "aihot" or sid in _COMMUNITY_GOSSIP_IDS or kind == "discussion" or src.get("is_reprint_copy")) else 0
+    is_omnibus = 1 if (sid == "aihot" or is_hotlist or kind == "discussion" or src.get("is_reprint_copy")) else 0
     has_excerpt = 0 if src.get("excerpt") else 1
     has_thumb = 0 if src.get("thumbnail_url") else 1
     return (tier_score, is_omnibus, has_excerpt, has_thumb)
@@ -363,6 +458,10 @@ def score_cluster_for_briefing(cluster: dict, watched_match_count: int = 0) -> T
                 score -= 18.0
                 reasons.append("超过48小时历史报道降权")
 
+    if is_consumer_promo_or_fluff(title_str, excerpt_str):
+        score -= 60.0
+        reasons.append("消费带货/游戏促销/花边噪音降权")
+
     if is_omnibus_digest_title(title_str):
         score -= 48.0
         reasons.append("拼盘早报/多事件合集降权")
@@ -370,17 +469,17 @@ def score_cluster_for_briefing(cluster: dict, watched_match_count: int = 0) -> T
         score -= 20.0
         reasons.append("含八卦/情绪化表述降权")
 
-    # Single community discussion post (e.g. standalone zhihu/weibo/tieba/coolapk) without authoritative corroboration
-    all_community = bool(related) and all(
-        (s.get("source_id") in _COMMUNITY_GOSSIP_IDS or s.get("source_kind") == "discussion")
-        for s in related
-    )
-    if all_community and indep_cnt <= 1 and not _MAJOR_BREAKING_RE.search(text_blob):
-        score -= 14.0
-        reasons.append("单一社区热榜讨论降权")
-    if all_community and _EXTRAORDINARY_CLAIM_RE.search(title_str):
-        score -= 16.0
-        reasons.append("重大科学/司法/并购传闻仅见社区讨论（缺权威媒体交叉）")
+    # Social/hotlist-only clusters (e.g. baidu/toutiao/zhihu/weibo/tieba) without authoritative media corroboration
+    all_hotlist = bool(related) and not has_authoritative_primary_source(related)
+    if all_hotlist:
+        score -= 18.0
+        reasons.append("仅社媒热榜聚合（缺权威/一线信源）")
+        if _MARKET_PRICE_RE.search(text_blob):
+            score -= 40.0
+            reasons.append("金融行情缺乏专业财经主信源")
+        if _EXTRAORDINARY_CLAIM_RE.search(title_str):
+            score -= 18.0
+            reasons.append("重大科学/司法/并购传闻仅见热榜讨论（缺权威媒体交叉）")
 
     return round(score, 2), reasons
 
