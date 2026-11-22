@@ -1,6 +1,6 @@
 {
   "schema_version": "4.1",
-  "site_published_at": "2026-11-22T20:32:01+08:00",
+  "site_published_at": "2026-11-22T21:11:46+08:00",
   "smart": {
     "latest_batch_id": "smart-20261122-202703",
     "latest_path": "archives/smart/2026-11-22/20-27/",
@@ -83,73 +83,73 @@
     }
   },
   "raw": {
-    "latest_batch_id": "raw-20261122-194618",
-    "latest_path": "archives/raw/2026-11-22/19-46/",
-    "meta_path": "archives/raw/2026-11-22/19-46/meta.json",
-    "connectors_path": "archives/raw/2026-11-22/19-46/connectors.json",
-    "fetched_at": "2026-11-22T19:46:18+08:00",
-    "published_at": "2026-11-22T19:46:36+08:00",
+    "latest_batch_id": "raw-20261122-211125",
+    "latest_path": "archives/raw/2026-11-22/21-11/",
+    "meta_path": "archives/raw/2026-11-22/21-11/meta.json",
+    "connectors_path": "archives/raw/2026-11-22/21-11/connectors.json",
+    "fetched_at": "2026-11-22T21:11:25+08:00",
+    "published_at": "2026-11-22T21:11:46+08:00",
     "target_cadence_minutes": 60,
     "schedule_source": "workflow_dispatch",
     "status": "partial",
     "summary": {
       "configured_sources": 77,
-      "ok_sources": 76,
+      "ok_sources": 74,
       "empty_sources": 1,
-      "error_sources": 0,
+      "error_sources": 2,
       "stale_sources": 0,
       "retired_sources": 5,
-      "total_raw_items": 1480,
+      "total_raw_items": 1423,
       "first_party_items": 22,
       "healthy_connectors": 7,
       "total_connectors": 7,
-      "deep_fetched_enriched": 14,
-      "deduped_events": 1232
+      "deep_fetched_enriched": 16,
+      "deduped_events": 1207
     },
     "categories": {
       "finance": {
         "file": "data_finance.json",
-        "path": "archives/raw/2026-11-22/19-46/data_finance.json",
+        "path": "archives/raw/2026-11-22/21-11/data_finance.json",
         "status": "ok",
         "source_count": 19,
         "ok_sources": 19,
         "error_sources": 0,
         "empty_sources": 0,
         "stale_sources": 0,
-        "item_count": 378
+        "item_count": 369
       },
       "global": {
         "file": "data_global.json",
-        "path": "archives/raw/2026-11-22/19-46/data_global.json",
-        "status": "ok",
+        "path": "archives/raw/2026-11-22/21-11/data_global.json",
+        "status": "partial",
         "source_count": 13,
-        "ok_sources": 13,
-        "error_sources": 0,
+        "ok_sources": 12,
+        "error_sources": 1,
         "empty_sources": 0,
         "stale_sources": 0,
-        "item_count": 264
+        "item_count": 246
       },
       "tech": {
         "file": "data_tech.json",
-        "path": "archives/raw/2026-11-22/19-46/data_tech.json",
+        "path": "archives/raw/2026-11-22/21-11/data_tech.json",
         "status": "partial",
         "source_count": 30,
-        "ok_sources": 29,
-        "error_sources": 0,
+        "ok_sources": 28,
+        "error_sources": 1,
         "empty_sources": 1,
         "stale_sources": 0,
-        "item_count": 495
+        "item_count": 469
       },
       "general": {
         "file": "data_general.json",
-        "path": "archives/raw/2026-11-22/19-46/data_general.json",
+        "path": "archives/raw/2026-11-22/21-11/data_general.json",
         "status": "ok",
         "source_count": 15,
         "ok_sources": 15,
         "error_sources": 0,
         "empty_sources": 0,
         "stale_sources": 0,
-        "item_count": 343
+        "item_count": 339
       }
     }
   },
@@ -161,11 +161,11 @@
   },
   "connectors": {
     "latest_path": "data/connectors_latest.json",
-    "fetched_at": "2026-11-22T19:46:18+08:00",
+    "fetched_at": "2026-11-22T21:11:25+08:00",
     "summary": {
       "total_connectors": 7,
       "healthy_connectors": 7,
-      "total_first_party_items": 511,
+      "total_first_party_items": 469,
       "tech_tools_count": 20,
       "calendar_events_count": 5
     }
@@ -208,19 +208,19 @@
   "degraded": true,
   "alerts": [
     {
-      "code": "partial_category_fallback",
+      "code": "raw_crawl_degraded",
       "severity": "warning",
-      "message": "本批次有 2 个板块使用上一批降级回退"
+      "message": "原始抓取状态：partial（错误源 2 个）"
     }
   ],
   "gemini_quota": {
     "total_configured_keys": 12,
-    "healthy_keys": 11,
-    "cooled_down_keys": 1,
+    "healthy_keys": 12,
+    "cooled_down_keys": 0,
     "exhausted_keys": 0,
-    "daily_calls_total": 110,
+    "daily_calls_total": 113,
     "date_utc": "2026-11-22",
-    "updated_at": "2026-11-22T12:32:01Z",
+    "updated_at": "2026-11-22T13:11:35Z",
     "keys": [
       {
         "slot": "KEY_TECH",
@@ -254,7 +254,7 @@
       },
       {
         "slot": "KEY_GENERAL",
-        "status": "cooldown",
+        "status": "healthy",
         "daily_calls": 10,
         "cooldown_until": null,
         "exhausted_until": null,
@@ -315,12 +315,12 @@
       {
         "slot": "KEY_6",
         "status": "healthy",
-        "daily_calls": 8,
+        "daily_calls": 9,
         "cooldown_until": null,
         "exhausted_until": null,
         "last_error_code": null,
         "last_error": null,
-        "last_success_at": "2026-11-22T08:32:12Z"
+        "last_success_at": "2026-11-22T12:32:52Z"
       },
       {
         "slot": "KEY_7",
@@ -335,33 +335,33 @@
       {
         "slot": "KEY_8",
         "status": "healthy",
-        "daily_calls": 8,
+        "daily_calls": 9,
         "cooldown_until": null,
         "exhausted_until": null,
         "last_error_code": null,
         "last_error": null,
-        "last_success_at": "2026-11-22T08:32:47Z"
+        "last_success_at": "2026-11-22T12:32:54Z"
       },
       {
         "slot": "GOOGLE_API_KEY",
         "status": "unconfigured",
-        "daily_calls": 8,
+        "daily_calls": 9,
         "cooldown_until": null,
         "exhausted_until": null,
         "last_error_code": null,
         "last_error": null,
-        "last_success_at": "2026-11-22T08:32:55Z"
+        "last_success_at": "2026-11-22T12:33:06Z"
       }
     ]
   },
   "quota": {
     "total_configured_keys": 12,
-    "healthy_keys": 11,
-    "cooled_down_keys": 1,
+    "healthy_keys": 12,
+    "cooled_down_keys": 0,
     "exhausted_keys": 0,
-    "daily_calls_total": 110,
+    "daily_calls_total": 113,
     "date_utc": "2026-11-22",
-    "updated_at": "2026-11-22T12:32:01Z",
+    "updated_at": "2026-11-22T13:11:35Z",
     "keys": [
       {
         "slot": "KEY_TECH",
@@ -395,7 +395,7 @@
       },
       {
         "slot": "KEY_GENERAL",
-        "status": "cooldown",
+        "status": "healthy",
         "daily_calls": 10,
         "cooldown_until": null,
         "exhausted_until": null,
@@ -456,12 +456,12 @@
       {
         "slot": "KEY_6",
         "status": "healthy",
-        "daily_calls": 8,
+        "daily_calls": 9,
         "cooldown_until": null,
         "exhausted_until": null,
         "last_error_code": null,
         "last_error": null,
-        "last_success_at": "2026-11-22T08:32:12Z"
+        "last_success_at": "2026-11-22T12:32:52Z"
       },
       {
         "slot": "KEY_7",
@@ -476,22 +476,22 @@
       {
         "slot": "KEY_8",
         "status": "healthy",
-        "daily_calls": 8,
+        "daily_calls": 9,
         "cooldown_until": null,
         "exhausted_until": null,
         "last_error_code": null,
         "last_error": null,
-        "last_success_at": "2026-11-22T08:32:47Z"
+        "last_success_at": "2026-11-22T12:32:54Z"
       },
       {
         "slot": "GOOGLE_API_KEY",
         "status": "unconfigured",
-        "daily_calls": 8,
+        "daily_calls": 9,
         "cooldown_until": null,
         "exhausted_until": null,
         "last_error_code": null,
         "last_error": null,
-        "last_success_at": "2026-11-22T08:32:55Z"
+        "last_success_at": "2026-11-22T12:33:06Z"
       }
     ]
   }
