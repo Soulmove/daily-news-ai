@@ -499,42 +499,57 @@ def build_v3_artifacts(
         for ev in doc.get("events", []):
             all_events.append(ev)
 
+    from pipeline.connectors.huggingface_hub import format_hf_tool_summary
+
     tech_tools: List[dict] = []
     for raw_tool in (connectors_payload.get("tech_tools") or []):
         t = dict(raw_tool)
         if t.get("summary"):
             raw_sum = str(t["summary"])
-            # Clean GFM pipe tables, nested badges, orphan Website:/Attestations: labels, commit prefixes & trailing brackets
-            raw_sum = re.sub(r"\[\s*!\[[^\]]*\]\([^)]*\)\s*\]\([^)]*\)", " ", raw_sum)
-            raw_sum = re.sub(r"!\[[^\]]*\]\([^)]*\)", " ", raw_sum)
-            lines_clean: List[str] = []
-            for seg in re.split(r"[\r\n；]+", raw_sum):
-                seg_s = strip_raw_urls_and_domain_tails(seg.strip())
-                seg_s = re.sub(r"\s*\(#?\d{3,6}\)\s*$", "", seg_s).strip()
-                if not seg_s or re.match(r"^\|?[\s:\-|]+\|?$", seg_s):
-                    continue
-                if re.match(r"^(?:Website|Attestations|Full Changelog|Checksums)\s*[:：]?\s*$", seg_s, re.I):
-                    continue
-                if re.match(r"^(?:sycl|cuda|metal|vulkan|rpc|ggml|model|feat|fix|chore|api|eval|llm|cmd)\b[^:：]{0,20}[:：]", seg_s, re.I):
-                    continue
-                if "|" in seg_s:
-                    cells = [c.strip() for c in seg_s.strip("|").split("|") if c.strip() and not re.match(r"^[-:]+$", c.strip())]
-                    # Skip bare table headers like "Model / Type / Cookbook"
-                    if cells and not {"model", "type", "cookbook", "name", "status"}.issuperset({c.lower() for c in cells}):
-                        seg_s = " · ".join(cells)
-                    else:
+            hf_match = re.search(r"模型任务[：:]\s*([a-z0-9-]+)", raw_sum, re.I)
+            if hf_match:
+                dl_match = re.search(r"近期下载(?:量)?[：:]\s*(\d+)", raw_sum)
+                dl_val = int(dl_match.group(1)) if dl_match else t.get("downloads")
+                t["summary"] = format_hf_tool_summary(hf_match.group(1), dl_val)
+            else:
+                # Clean GFM pipe tables, nested badges, orphan Website:/Attestations: labels, commit prefixes & trailing brackets
+                raw_sum = re.sub(r"\[\s*!\[[^\]]*\]\([^)]*\)\s*\]\([^)]*\)", " ", raw_sum)
+                raw_sum = re.sub(r"!\[[^\]]*\]\([^)]*\)", " ", raw_sum)
+                lines_clean: List[str] = []
+                for seg in re.split(r"[\r\n；]+", raw_sum):
+                    seg_s = strip_raw_urls_and_domain_tails(seg.strip())
+                    seg_s = re.sub(r"\s*\(#?\d{3,6}\)\s*$", "", seg_s).strip()
+                    if not seg_s or re.match(r"^\|?[\s:\-|]+\|?$", seg_s):
                         continue
-                lines_clean.append(seg_s)
-            clean_sum = "；".join(lines_clean) if lines_clean else raw_sum
-            clean_sum = re.sub(r"<[^>]+>", " ", clean_sum)
-            clean_sum = re.sub(r"!\[[^\]]*\]\([^)]*\)", "", clean_sum)
-            clean_sum = re.sub(r"\[([^\]]+)\]\([^)]+\)", r"\1", clean_sum)
-            clean_sum = re.sub(r"[#*`|]+", " ", clean_sum)
-            clean_sum = re.sub(r"\s+", " ", clean_sum).strip().lstrip("；;:：•- ")
-            if clean_sum.count("）") > clean_sum.count("（") and clean_sum.endswith(("）", "）。")):
-                clean_sum = clean_sum.rstrip("。").rstrip("）").strip()
-            clean_sum = smart_truncate(clean_sum, 360)
-            t["summary"] = clean_sum or "详见官方 Release 说明。"
+                    if re.match(r"^(?:Website|Attestations|Full Changelog|Checksums|Features|Improvements|Bug Fixes|New Features|Release Notes)\s*[:：]?\s*$", seg_s, re.I):
+                        continue
+                    if re.match(r"^v?\d+\.\d+(?:\.\d+)?\s*(?:\(\d{4}-\d{2}-\d{2}\))?\s*$", seg_s, re.I):
+                        continue
+                    if re.match(r"^(?:sycl|cuda|metal|vulkan|rpc|ggml|model|feat|fix|chore|eval|llm|cmd)\b[^:：]{0,20}[:：]", seg_s, re.I):
+                        continue
+                    if "|" in seg_s:
+                        cells = [c.strip() for c in seg_s.strip("|").split("|") if c.strip() and not re.match(r"^[-:]+$", c.strip())]
+                        # Skip bare table headers like "Model / Type / Cookbook"
+                        if cells and not {"model", "type", "cookbook", "name", "status"}.issuperset({c.lower() for c in cells}):
+                            seg_s = " · ".join(cells)
+                        else:
+                            continue
+                    lines_clean.append(seg_s)
+                if lines_clean:
+                    clean_sum = "；".join(lines_clean)
+                else:
+                    tname_c = str(t.get("name") or "开源工具").strip()
+                    ver_c = str(t.get("latest_version") or "").strip()
+                    clean_sum = f"{tname_c}{' ' + ver_c if ver_c else ''} 官方版本发布，包含功能改进、性能优化与稳定性修复。"
+                clean_sum = re.sub(r"<[^>]+>", " ", clean_sum)
+                clean_sum = re.sub(r"!\[[^\]]*\]\([^)]*\)", "", clean_sum)
+                clean_sum = re.sub(r"\[([^\]]+)\]\([^)]+\)", r"\1", clean_sum)
+                clean_sum = re.sub(r"[#*`|]+", " ", clean_sum)
+                clean_sum = re.sub(r"\s+", " ", clean_sum).strip().lstrip("；;:：•- ")
+                if clean_sum.count("）") > clean_sum.count("（") and clean_sum.endswith(("）", "）。")):
+                    clean_sum = clean_sum.rstrip("。").rstrip("）").strip()
+                clean_sum = smart_truncate(clean_sum, 360)
+                t["summary"] = clean_sum or "详见官方 Release 说明。"
         if str(t.get("license") or "").upper() == "NOASSERTION":
             t["license"] = "多许可证/自定义条款 (见仓库 LICENSE)"
         tech_tools.append(t)
@@ -932,7 +947,10 @@ def build_v3_artifacts(
         ent_ids_old = clean_old.get("entity_ids") or []
         prim_old = entities_map.get(ent_ids_old[0]) if ent_ids_old else None
         domain_cat = _infer_domain_next_catalyst(clean_old, prim_old)
-        if not clean_old.get("next_catalyst") or len(str(clean_old.get("next_catalyst"))) <= 2 or (not _is_financial_corporate_event(clean_old) and "SEC" in str(clean_old.get("next_catalyst"))):
+        nc_old = str(clean_old.get("next_catalyst") or "")
+        is_genuine_vuln = bool(re.search(r"(?:0day|cve-\d+|安全漏洞|严重漏洞|勒索软件|木马|黑客入侵)", old_title, re.I))
+        has_stale_cve_tpl = ("补丁编号" in nc_old or "安全响应中心" in nc_old) and not is_genuine_vuln
+        if not nc_old or len(nc_old) <= 2 or has_stale_cve_tpl or (not _is_financial_corporate_event(clean_old) and "SEC" in nc_old):
             clean_old["next_catalyst"] = domain_cat
         if isinstance(clean_old.get("investment_card"), dict):
             clean_old["investment_card"] = _build_investment_card(clean_old, entities_map) or clean_old["investment_card"]

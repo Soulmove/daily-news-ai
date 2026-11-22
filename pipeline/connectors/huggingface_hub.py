@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from datetime import timedelta
 import time
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Tuple
 
 from pipeline.connectors.base import HttpCacheStore, polite_get
 from pipeline.id_utils import make_raw_item_id
@@ -26,6 +26,42 @@ DEFAULT_HF_ORGS = [
     {"org": "google", "name": "Google / Gemma", "entity_id": "ent_google"},
     {"org": "meta-llama", "name": "Meta Llama", "entity_id": "ent_meta"},
 ]
+
+_HF_PIPELINE_TAG_ZH: Dict[str, Tuple[str, str]] = {
+    "image-text-to-text": ("图文多模态理解与对话生成", "支持输入图像与文本并生成精准分析回复，适用于视觉问答、图表解析与多模态代理"),
+    "video-text-to-text": ("视频与多模态语义理解", "可联合解析视频帧与指令文本，用于视频内容总结、动作理解与长时序检索"),
+    "image-text-to-video": ("文生/图生高清视频生成", "根据参考图片与文本提示生成连贯视频画面，适用于数字内容创作与镜头合成"),
+    "text-to-video": ("文本生成视频模型", "直接由自然语言提示生成多帧连续视频序列，支持高帧率动态场景表达"),
+    "text-to-image": ("文生图扩散视觉生成", "高效率文生图模型，适用于海报创意设计、高分辨率图像渲染与可控编辑"),
+    "image-to-image": ("图像重绘与风格编辑", "支持局部修图、超分辨率重建与多风格图像迁移任务"),
+    "text-generation": ("通用大语言文本生成", "具备代码编写、逻辑推理、多轮对话与长文本理解能力的开源对话/基座模型"),
+    "automatic-speech-recognition": ("高精度语音识别转写 (ASR)", "将多语种音频流或本地录音实时转写为高精度带标点文本，适用于会议纪要与语音助手"),
+    "text-to-speech": ("自然语音合成 (TTS)", "高拟真度多音色文本转语音模型，用于有声播报与实时语音交互"),
+    "feature-extraction": ("向量表征与特征提取", "用于语义向量编码、稀疏自编码器分析或 RAG 知识库高维特征检索"),
+    "sentence-similarity": ("语义相似度匹配引擎", "计算句对相关性得分，专为检索重排与知识库召回优化"),
+    "image-classification": ("图像分类与识别模型", "面向视觉物体归类与质检场景的高效率判别模型"),
+    "question-answering": ("智能问答抽取模型", "面向长文档精准抽取答案与结构化信息"),
+    "summarization": ("长文本自动摘要模型", "自动提炼长篇报告、论文与新闻资讯核心要点"),
+    "translation": ("多语种神经机器翻译", "面向跨语言长句、技术文档与资讯的高精度互译"),
+    "fill-mask": ("掩码语义理解基座模型", "用于预训练语义表示学习与文本填空预测任务"),
+    "any-to-any": ("全模态任意输入输出模型", "打通文本、图像、音频及视频联合表征与跨模态端到端推理"),
+}
+
+
+def format_hf_tool_summary(pipeline_tag: str, downloads: Any) -> str:
+    tag = str(pipeline_tag or "").strip().lower()
+    task_label, use_case = _HF_PIPELINE_TAG_ZH.get(
+        tag,
+        ("开源多模态与深度学习模型", "支持通过 Transformers / vLLM 等主流推理框架本地或云端部署调用"),
+    )
+    if isinstance(downloads, (int, float)) and downloads > 0:
+        if downloads >= 10_000:
+            dl_txt = f"近期下载 {downloads / 10_000:.1f} 万次"
+        else:
+            dl_txt = f"近期下载 {int(downloads)} 次"
+    else:
+        dl_txt = "近期新发布开源权重"
+    return f"{task_label}；{use_case}（{dl_txt}）"
 
 
 def _extract_license(tags: List[str]) -> Optional[str]:
@@ -124,7 +160,7 @@ def fetch_huggingface_models(
                         "official_url": card_url,
                         "release_url": card_url,
                         "docs_url": card_url,
-                        "summary": f"模型任务：{pipeline_tag}；近期下载：{downloads if downloads is not None else '未知'} 次",
+                        "summary": format_hf_tool_summary(pipeline_tag, downloads),
                         "deployment_requirements": "需依据模型卡参数规模配置对应 GPU 显存及推理后端（vLLM / Transformers / llama.cpp）",
                         "pricing_or_cost": f"开源权重自部署（许可证：{license_id or '详见模型卡'}）",
                         "checked_at": fetched_iso,

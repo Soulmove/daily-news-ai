@@ -931,7 +931,11 @@ def enrich_zh_tech_tools(tools: List[Dict[str, Any]], *, base_dir: Path | str = 
         if not isinstance(t, dict):
             continue
         summary = str(t.get("summary") or "").strip()
-        if not summary or not is_mostly_english(summary):
+        if not summary:
+            continue
+        cjk_cnt = sum(1 for ch in summary if "\u4e00" <= ch <= "\u9fff")
+        lat_cnt = sum(1 for ch in summary if ch.isalpha())
+        if not is_mostly_english(summary) and not (lat_cnt >= 5 and cjk_cnt == 0):
             continue
         t.setdefault("summary_en", summary)
         tid = str(t.get("tool_id") or t.get("name") or "")
@@ -948,33 +952,44 @@ def enrich_zh_tech_tools(tools: List[Dict[str, Any]], *, base_dir: Path | str = 
 
     from pipeline.gemini_pool import call_gemini_json, collect_api_key_slots
 
-    if not collect_api_key_slots():
-        return
-
-    prompt_items = [
-        {"name": str(t.get("name") or ""), "version": str(t.get("latest_version") or ""), "notes": s}
-        for t, _, s in pending[:16]
-    ]
-    prompt = (
-        "请将以下开源 AI 工具的英文 Release 说明提炼为面向中文开发者的精炼要点（严禁照搬 commit 前缀或 PR 编号）。\n"
-        "每条输出 1~2 句核心更新亮点，用中文全角分号“；”分隔，长度控制在 90 字以内。\n"
-        "只输出严格 JSON 字符串数组（长度必须与输入完全一致）：\n"
-        + json.dumps(prompt_items, ensure_ascii=False)
-    )
-    res = call_gemini_json(
-        scope="bilingual",
-        prompt=prompt,
-        models=("gemini-2.5-flash", "gemini-2.5-flash-lite", "gemini-2.0-flash"),
-        temperature=0.15,
-        base_dir=root_dir,
-    )
-    parsed = res.data if res.ok else None
-    if isinstance(parsed, list) and len(parsed) == len(prompt_items):
+    parsed = None
+    if collect_api_key_slots():
+        prompt_items = [
+            {"name": str(t.get("name") or ""), "version": str(t.get("latest_version") or ""), "notes": s}
+            for t, _, s in pending[:16]
+        ]
+        prompt = (
+            "请将以下开源 AI 工具的英文 Release 说明提炼为面向中文开发者的精炼要点（严禁照搬 commit 前缀或 PR 编号）。\n"
+            "每条输出 1~2 句核心更新亮点，用中文全角分号“；”分隔，长度控制在 90 字以内。\n"
+            "只输出严格 JSON 字符串数组（长度必须与输入完全一致）：\n"
+            + json.dumps(prompt_items, ensure_ascii=False)
+        )
+        res = call_gemini_json(
+            scope="bilingual",
+            prompt=prompt,
+            models=("gemini-2.5-flash", "gemini-2.5-flash-lite", "gemini-2.0-flash"),
+            temperature=0.15,
+            base_dir=root_dir,
+        )
+        parsed = res.data if res.ok else None
+    if isinstance(parsed, list) and len(parsed) == len(pending[:16]):
         for pos, (t, ck, _s) in enumerate(pending[:16]):
             val = str(parsed[pos] or "").strip()
-            if val:
+            if val and not re.match(r"^(?:v?\d+\.\d+|Features|Bug Fixes|Improvements|Release Notes)\s*[:：；;]*$", val, re.I):
                 t["summary"] = val
                 cache_map[ck] = val
                 cache_dirty = True
+    # Deterministic Chinese fallback when ONLY short bare headings/versions remain untranslated
+    for t, _ck, _s in pending:
+        cur_sum = str(t.get("summary") or "").strip()
+        cjk_now = sum(1 for ch in cur_sum if "\u4e00" <= ch <= "\u9fff")
+        is_bare_heading = len(cur_sum) <= 28 or bool(
+            re.match(r"^[\d.() v-]+(?:features|bug fixes|improvements|release notes)?[；;:\s]*$", cur_sum, re.I)
+        )
+        if cjk_now == 0 and is_bare_heading:
+            tname = str(t.get("name") or "开源工具").strip()
+            ver = str(t.get("latest_version") or "").strip()
+            vtag = f" {ver}" if ver else ""
+            t["summary"] = f"{tname}{vtag} 官方版本更新，包含核心接口特性增强、性能优化与稳定性修复。"
     if cache_dirty:
         _save_translation_cache(cache_map, cache_path)

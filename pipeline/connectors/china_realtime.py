@@ -66,6 +66,10 @@ def _clean(raw: Any, max_len: int = 240) -> str:
     return smart_truncate(s, max_len=max_len)
 
 
+_PURE_WIRE_FLUFF_RE = re.compile(
+    r"(?:斗破苍穹|剧场版|动画电影|首支单曲|主题曲|今日小雪|小雪节气|大雪节气|立冬节气|冬至节气|长城坦克首支单曲)",
+    re.I,
+)
 _NON_TECH_CONSUMER_OR_CRIME_RE = re.compile(
     r"(?:帮信罪|刑拘|逮捕|派出所|警方|涉案|诈骗案|Steam|黑五.*游戏|游戏新史低|重制版|导剪版|折扣促销|"
     r"剧场版|动画电影|动漫|斗破苍穹|演唱会|首支单曲|主题曲|音乐节|票房|"
@@ -280,7 +284,7 @@ def _fetch_rss_flash(feed_id: str, label: str, default_cat: str, url: str, famil
                 title = _clean(t_el.text if t_el is not None else "", max_len=170)
                 link = (l_el.text or "").strip() if l_el is not None else ""
                 canon = canonicalize_url(link)
-                if not title or not canon:
+                if not title or not canon or _PURE_WIRE_FLUFF_RE.search(title):
                     continue
                 pub_iso, pub_src = parse_published_at(p_el.text.strip() if (p_el is not None and p_el.text) else None, feed_id)
                 raw_desc = d_el.text if d_el is not None else ""

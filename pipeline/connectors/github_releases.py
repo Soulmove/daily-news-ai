@@ -26,9 +26,10 @@ _PRERELEASE_TAG_RE = re.compile(r"(?:rc\d*|alpha|beta|preview|dev\d*)\b", re.I)
 
 
 _RAW_NOISE_LINE_RE = re.compile(
-    r"^(?:What's Changed|Highlights|TL;DR|Bug Fixes|Release Notes|New Features|Full Changelog(?:\s*:.*)?|Website(?:\s*:.*)?|Attestations(?:\s*:.*)?|Checksums(?:\s*:.*)?|Backwards Incompatible Changes|Deprecations|Features|New models|"
+    r"^(?:What's Changed|Highlights|TL;DR|Bug Fixes|Release Notes|New Features|Full Changelog(?:\s*:.*)?|Website(?:\s*:.*)?|Attestations(?:\s*:.*)?|Checksums(?:\s*:.*)?|Backwards Incompatible Changes|Deprecations|Features|Improvements|New models|"
+    r"v?\d+\.\d+(?:\.\d+)?\s*(?:\(\d{4}-\d{2}-\d{2}\))?\s*|"
     r"\|.*\|.*|.*\b\d[\d,]*\s+(?:commits?|PRs?|contributors?)\b.*|.*\bby\s+@\S+.*|.*@(?:dependabot|github-actions)\[bot\].*|"
-    r"(?:model|feat|fix|chore|refactor|ci|docs|test|build|perf|style|sycl|cuda|metal|vulkan|rpc|ggml|api|llm|cmd(?:/[a-z]+)?)\s*[:：].*|\S+\s+https?:\/\/github\.com\/.*|"
+    r"(?:model|feat|fix|chore|refactor|ci|docs|test|build|perf|style|sycl|cuda|metal|vulkan|rpc|ggml|llm|cmd(?:/[a-z]+)?)\s*[:：].*|\S+\s+https?:\/\/github\.com\/.*|"
     r"[A-Za-z][A-Za-z0-9 _/-]{1,28}\s*:\s*)$",
     re.I,
 )
@@ -51,7 +52,7 @@ def _clean_notes(body: Optional[str], max_len: int = 320) -> str:
             continue
         if re.match(r"^[A-Za-z][A-Za-z0-9 _/-]{1,24}\s*[:：]\s*$", clean_ln):
             continue
-        if re.match(r"^(?:sycl|cuda|metal|vulkan|rpc|ggml|model|feat|fix|chore|api|eval|llm|cmd)\b[^:：]{0,20}[:：]", clean_ln, re.I):
+        if re.match(r"^(?:sycl|cuda|metal|vulkan|rpc|ggml|model|feat|fix|chore|eval|llm|cmd)\b[^:：]{0,20}[:：]", clean_ln, re.I):
             continue
         # Clean stray unmatched closing brackets at line boundaries
         if clean_ln.count("）") > clean_ln.count("（") and clean_ln.endswith(("）", "）。")):

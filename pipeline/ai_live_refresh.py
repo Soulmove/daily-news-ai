@@ -432,13 +432,16 @@ def merge_live_ai_items_into_doc(
             w_cur = str(it.get("what_it_does") or "")
             tl_low = it_title.lower()
             if (
-                (any(k in tl_low for k in ("sdk", "agent", "cli", "coding", "workbuddy")) and "多模态生成" in w_cur)
+                not w_cur.strip()
+                or w_cur.strip() == it_title.strip()
+                or (len(it_title) >= 10 and w_cur.strip().startswith(it_title.strip()[:16]))
+                or (any(k in tl_low for k in ("sdk", "agent", "cli", "coding", "workbuddy")) and "多模态生成" in w_cur)
                 or (any(k in tl_low for k in ("隐私", "泄露", "诱饵", "反蒸馏", "distill", "privacy", "security")) and ("轻量" in w_cur or "端侧" in w_cur))
                 or ("具身智能/物理仿真模型工具" in w_cur and not it_id.startswith("ai_tool_") and "world model" not in tl_low)
                 or _CANNED_WHAT_RE.search(w_cur)
                 or ("实验室官方一手发布（来源：" in w_cur and it_title[:16] in w_cur)
             ):
-                it["what_it_does"] = _infer_what_it_does_zh(it_title, "", is_tool_release=it_id.startswith("ai_tool_"))
+                it["what_it_does"] = _infer_what_it_does_zh(it_title, w_cur, is_tool_release=it_id.startswith("ai_tool_"))
                 mutated = True
             if _CANNED_WHO_RE.search(str(it.get("who_cares") or "").strip()):
                 it["who_cares"] = ""

@@ -783,6 +783,7 @@ AI_NOISE_RE = re.compile(
     r"开源鸿蒙|openharmony|harmonyos|南水北调|水利|水文|国家水网|调水工程|天河.*(?:工程|调水|水文|水网)|"
     r"影石|insta360|大疆|麦克风|耳机|相机|固件升级|充电宝|路由器|显示器|键盘|鼠标|tech outages.*y2k|outages.*ai agent style|"
     r"套餐|买赠|优惠券|代金券|促销|折扣|限免|会员价|小米\s*mimo.*套餐|mimo.*套餐|演唱会|剧场版|小雪节气|长城坦克|坦克\d+|"
+    r"国家中医药管理局|中医药|认证中心|未与任何.{0,6}合作|亦未开展测评|辟谣通告|严正声明|"
     r"微信香港钱包|微信支付|支付宝|信用卡|消费券|手游|主机游戏|steam|帮信罪|刑事拘留)",
     re.I,
 )
@@ -978,20 +979,44 @@ def _infer_company(title: str, url: str = "", source_name: str = "") -> tuple[st
 
 
 def _infer_what_it_does_zh(title: str, summary: str, *, is_tool_release: bool = False) -> str:
-    from .dedup import strip_raw_urls_and_domain_tails
+    from .dedup import strip_raw_urls_and_domain_tails, title_similarity
 
     clean_sum = strip_raw_urls_and_domain_tails(re.sub(r"\s+", " ", str(summary or "").strip()))
-    clean_title = strip_raw_urls_and_domain_tails(title)
+    clean_sum = re.sub(r"\s+(?:新华网|人民网|央视新闻|环球网|财联社|Reuters|Bloomberg)$", "", clean_sum).strip()
+    clean_title = strip_raw_urls_and_domain_tails(re.sub(r"\s+", " ", str(title or "").strip()))
     cjk_count = sum(1 for ch in clean_sum if "\u4e00" <= ch <= "\u9fff")
-    if clean_sum and cjk_count >= 6 and clean_sum != clean_title:
+    is_echo = (
+        not clean_sum
+        or clean_sum == clean_title
+        or (len(clean_title) >= 10 and clean_sum.startswith(clean_title[:16]))
+        or (len(clean_sum) >= 8 and title_similarity(clean_sum, clean_title) >= 0.65)
+    )
+    if not is_echo and cjk_count >= 8:
         return (clean_sum[:118] + "…") if len(clean_sum) > 118 else clean_sum
+
     t = f"{clean_title} {clean_sum}".lower()
     if any(k in t for k in ("隐私泄露", "隐私数据", "零数据保留", "诱饵请求", "反蒸馏", "抗蒸馏", "distillation")):
         return "大模型安全、隐私合规与防泄漏动态：聚焦零数据保留机制校验、抗蒸馏防护与调用链审计。"
+    if any(k in t for k in ("密码分析", "cryptanal", "红队", "漏洞", "越狱", "prompt injection", "adversarial")):
+        return "大模型安全与对抗评估进展：检验前沿模型在复杂密码学分析、攻防渗透与安全边界上的能力与风险。"
+    if any(k in t for k in ("基准", "评测", "benchmark", "bench", "eval", "arena", "评估", "榜单")):
+        return "领域专项评测基准发布：用于量化评估大模型在专业科学、医疗或工程推理任务上的真实准确率边界。"
+    if any(k in t for k in ("生物", "酶", "药物", "蛋白", "化学", "synth", "chem")):
+        return "AI 科研与生命科学模型进展：面向生物酶结构设计、分子模拟与药物研发加速等专业实验场景。"
+    if any(k in t for k in ("论文", "算法", "定理", "形式化", "tensorlean", "3sum", "数学", "arxiv", "paper")):
+        return "前沿 AI 算法与数学推理突破：验证模型在核心计算复杂度优化、形式化定理证明等基础研究中的潜力。"
     if any(k in t for k in ("vllm", "llama.cpp", "ollama", "sglang", "推理引擎", "inference engine")):
         return "开源本地/服务器推理加速工具：帮开发者更快、更省显存地部署和运行开源大模型。"
-    if is_tool_release or any(k in t for k in ("agent sdk", "sdk", "工具套件", "workbuddy", "cli tool")):
-        return "AI 编程与智能体（Agent）工具：支持代码读写、外部工具与 SDK 调用及多步骤任务执行。"
+    if any(k in t for k in ("开源生态", "下载量", "huggingface", "开源权重", "open source", "open-source", "开源")):
+        return "开源模型与开发者生态进展：展现开放权重体系的模型分发规模、推理兼容生态与全球社区采用率变化。"
+    if is_tool_release or any(k in t for k in ("agent sdk", "sdk", "harness", "工具套件", "workbuddy", "cli tool", "开发者预览", "智能体", "agent")):
+        return "AI 编程与智能体（Agent）工具进展：支持工程代码协同、开发脚手架测试与自动化多步骤任务执行。"
+    if any(k in t for k in ("融资", "投资", "押注", "估值", "ipo", "募资", "亿美元")):
+        return "大模型资本与算力投入动态：反映前沿实验室融资规模、算力基础设施绑定与商业化竞争格局。"
+    if any(k in t for k in ("传闻", "存在吗", "核实", "真的吗", "rumor")):
+        return "下一代模型路线图与发布传闻核验：梳理官方披露信号与社区传言差异，避免误判发布节奏。"
+    if re.search(r"(?:openai|anthropic|claude|gpt-\d|gemini|deepseek|qwen|千问|kimi|混元|hunyuan|豆包|minimax|智谱|glm|llama|grok|mistral|nvidia|sora|genie|manus)", t):
+        return "前沿 AI 模型或产品能力更新：关注核心推理性能提升、开发者工具集成与实际应用落地验证。"
     return ""
 
 
@@ -1328,9 +1353,11 @@ def build_ai_progress_artifact(
             cleaned_prev["company_id"] = pcid
             cleaned_prev["company_name"] = pcname
             cleaned_prev["region"] = preg
-            # Scrub bogus robot/distill boilerplate injected on non-tool news
+            # Scrub bogus robot/distill boilerplate or empty/title-echo descriptions on carried-forward items
             if "具身智能/物理仿真模型工具" in prev_sum and "robot" not in prev_t.lower() and not str(cleaned_prev.get("id") or "").startswith("ai_tool_"):
                 prev_sum = ""
+            is_prev_tool = str(cleaned_prev.get("id") or "").startswith("ai_tool_")
+            prev_sum = _infer_what_it_does_zh(prev_t, prev_sum, is_tool_release=is_prev_tool)
             cleaned_prev["title"] = prev_t
             cleaned_prev["what_it_does"] = prev_sum
             _add_item(cleaned_prev)
