@@ -186,6 +186,22 @@ _PRECEDENT_DB: Dict[str, List[Dict[str, str]]] = {
             "lesson": "紧盯云厂资本开支（Capex）是否接受涨价而不砍单，这是区分强景气与伪周期的核心锚点。",
         },
     ],
+    "nvda_ceo_succession_transition": [
+        {
+            "date": "2011-08-24",
+            "event_title": "苹果宣布 Tim Cook 接任 CEO 后的治理过渡与供应链连续性检验",
+            "t1_reaction": "消息公布次日苹果股价短暂波动 -0.6%，随即聚焦新管理层对现有研发与供应链路线图延续性。",
+            "t5_reaction": "T+5 机构确认核心硬件与芯片迭代规划未受扰动后股价企稳回升。",
+            "lesson": "创始人或灵魂高管接班遴选传闻重点盯紧董事会正式公告、高管团队留任及路线图连续性，而非轻信单一媒体猜测。",
+        },
+        {
+            "date": "2014-02-04",
+            "event_title": "微软董事会宣布 Nadella 出任新任 CEO 引发组织重构与云战略重估",
+            "t1_reaction": "正式任命公告期市场短期审慎观望，随后估值主线切换至战略执行力验证。",
+            "t5_reaction": "T+5 随着核心产品线战略明确，长线资金重新评估治理与资本开支效率。",
+            "lesson": "遴选传闻未落定前多为事件不确定性折价，待接班名单与过渡时间表明确后风险溢价收敛。",
+        },
+    ],
     "asic_tpu_order_cut": [
         {
             "date": "2024-11-14",
@@ -547,32 +563,60 @@ _RULE_TRANSMISSION_DEFAULTS: Dict[str, List[Dict[str, Any]]] = {
             ],
         },
     ],
-    "asic_tpu_order_cut": [
+    "nvda_ceo_succession_transition": [
         {
             "tier": 1,
-            "tier_label": "一阶直接冲击（北美定制 ASIC 设计与配套高速链路承压）",
-            "summary": "谷歌 2027 年 TPU 8i 出货预计削减约 100 万颗，直接打击博通定制 ASIC 业务预期及单一谷歌链光模块订单弹性。",
+            "tier_label": "一阶直接冲击（核心管理层连续性与 GPU 龙头估值讨论）",
+            "summary": "董事会启动下一任 CEO 外部遴选的单一媒体报道引发长期治理讨论，尚未获公司 8-K 正式声明确认。",
             "stocks": [
-                {"name": "博通", "code": "AVGO", "market": "美股", "exposure_logic": "谷歌 TPU 核心定制 ASIC 设计伙伴，百万颗级出货指引下修直接下压 AI 收入预期", "direction": "negative"},
-                {"name": "中际旭创", "code": "300308.SZ", "market": "A股", "exposure_logic": "前期深度配套北美云厂 TPU/800G 集群，需消化订单节奏下修带来的预期差", "direction": "negative"},
-                {"name": "英伟达", "code": "NVDA", "market": "美股", "exposure_logic": "云厂自研 ASIC 放量若放缓，反而稳固通用 GPU 在大模型训练集群中的不可替代份额", "direction": "positive"},
+                {"name": "英伟达", "code": "NVDA", "market": "美股", "exposure_logic": "单一媒体接班报道短期带来治理折价讨论，需以董事会正式披露为准", "direction": "negative"},
+                {"name": "台积电", "code": "TSM", "market": "台股", "exposure_logic": "先进封装与晶圆排产核心锚定云厂 AI Capex，受传闻间接映射较温和", "direction": "mixed"},
             ],
         },
         {
             "tier": 2,
-            "tier_label": "二阶产业链传导（高阶服务器 PCB / 晶圆 CoWoS 产能再分配）",
-            "summary": "TPU 8i 砍单可能使部分台积电 CoWoS 封装产能与高速 PCB 产能释放，转向英伟达或亚马逊等其余算力客户。",
+            "tier_label": "二阶产业链传导（海外算力链情绪 vs 自主生态关注）",
+            "summary": "单一传闻尚未改变 Blackwell/Rubin 交付节奏，北美硬件互连链与国产算力映射呈温和高分歧。",
             "stocks": [
-                {"name": "沪电股份", "code": "002463.SZ", "market": "A股", "exposure_logic": "北美数据中心高频高速 PCB 核心供应商，短期面临部分 AI ASIC 料号排产节奏调整验证", "direction": "negative"},
-                {"name": "新易盛", "code": "300502.SZ", "market": "A股", "exposure_logic": "多云厂客户结构下需警惕行业整体 ASIC vs GPU 采购占比波动对估值倍数的传导", "direction": "mixed"},
+                {"name": "中际旭创", "code": "300308.SZ", "market": "A股", "exposure_logic": "海外光模块情绪受 NVDA 估值讨论轻度牵动，核心仍看季度资本开支", "direction": "mixed"},
+                {"name": "中芯国际", "code": "00981.HK", "market": "港股", "exposure_logic": "境外龙头治理不确定性温和抬升境内晶圆替代情绪对比度", "direction": "positive"},
             ],
         },
         {
             "tier": 3,
             "tier_label": "三阶资金面与风格跷跷板效应",
-            "summary": "机构资金从此前极度拥挤的“自研 ASIC 替代 GPU”叙事短暂回摆向通用 CUDA 生态及国内算力基建。",
+            "summary": "高估值海外算力筹码若因传闻短线避险，资金倾向分流至境内算力 ETF 或现金流红利资产。",
             "stocks": [
-                {"name": "寒武纪", "code": "688256.SH", "market": "A股", "exposure_logic": "北美芯片内部份额波动期间，境内独立算力线以国内互联网 Capex 为锚受影响较小", "direction": "mixed"},
+                {"name": "半导体ETF", "code": "512480.SH", "market": "A股", "exposure_logic": "承接海外龙头波动期间的境内科技对冲配置需求", "direction": "positive"},
+            ],
+        },
+    ],
+    "asic_tpu_order_cut": [
+        {
+            "tier": 1,
+            "tier_label": "一阶直接冲击（TPU 供应商切换：博通 8i 承压 vs 联发科 8t 受益）",
+            "summary": "谷歌削减博通设计的 TPU 8i 约 100 万颗（占约 20%），但预计增加联发科设计的 TPU 8t 出货，本质为谷歌在 ASIC 伙伴间的结构切换而非总算力需求下调。",
+            "stocks": [
+                {"name": "博通", "code": "AVGO", "market": "美股", "exposure_logic": "原 TPU 8i 主力设计伙伴，份额向 TPU 8t 切换直接挤压该代际 ASIC 预期差", "direction": "negative"},
+                {"name": "联发科", "code": "2454.TW", "market": "台股", "exposure_logic": "TPU 8t 预计出货上修直接兑现谷歌二供切入份额红利，承接谷歌定制 ASIC 结构性增量", "direction": "positive"},
+                {"name": "英伟达", "code": "NVDA", "market": "美股", "exposure_logic": "谷歌定制 ASIC 双供切换摩擦期，反而稳固通用 GPU 在主力云厂商中的交付确定性", "direction": "positive"},
+            ],
+        },
+        {
+            "tier": 2,
+            "tier_label": "二阶产业链传导（高速光模块 / CoWoS 封测按产品线重分配）",
+            "summary": "谷歌总 AI 算力 Capex 并未下修，台积电 CoWoS 与光模块需求仅在 8i/8t 与通用集群间结构再平衡，多元客户龙头具备对冲韧性。",
+            "stocks": [
+                {"name": "中际旭创", "code": "300308.SZ", "market": "A股", "exposure_logic": "短期需消化 TPU 8i 切单情绪扰动，但作为多云厂 800G/1.6T 龙头仍可承接总算力与联发科/NVDA 增量", "direction": "mixed"},
+                {"name": "沪电股份", "code": "002463.SZ", "market": "A股", "exposure_logic": "北美云厂高速 PCB 料号跟随 8i→8t 切换节奏微调排产，需盯紧总 Capex 验证", "direction": "mixed"},
+            ],
+        },
+        {
+            "tier": 3,
+            "tier_label": "三阶资金面与风格跷跷板效应",
+            "summary": "机构从单一定制芯片供应商估值溢价转向多云互连基建、台股二供替代及通用 GPU 均衡配置。",
+            "stocks": [
+                {"name": "寒武纪", "code": "688256.SH", "market": "A股", "exposure_logic": "海外云厂 ASIC 份额内部分流期间，境内自主推理芯片仍锚定国内互联网资本开支", "direction": "mixed"},
             ],
         },
     ],
@@ -895,6 +939,15 @@ def _detect_session_context(pub_at_iso: str, title: str, rule_id: str, quotes_ma
             "expectation_gap": gap,
         }
 
+    if rule_id == "nvda_ceo_succession_transition":
+        return {
+            "status_code": "partially_priced",
+            "status_label": "待官方披露核实（单一信源传闻窗口）",
+            "status_label_en": "Pending Official Confirmation (Single-Source Report)",
+            "session_context": "该消息主要源于海外单一媒体报道，尚未获得英伟达董事会 SEC 8-K 正式披露确认",
+            "expectation_gap": "切忌与国会监管传票混为一谈；在董事会正式回应或公布接班时间表前，市场多按温和治理不确定性折价处理，核心观察管理层与核心架构师团队稳定性。",
+        }
+
     if rule_id in ("chip_smuggling_export_compliance", "nvda_senate_sec_governance", "us_datacenter_tax_and_chip_curb", "asic_tpu_order_cut", "ai_ipo_pullback", "ai_equity_selloff") and overseas_big_move:
         nv_hint = f"NVDA ({nvda_pct:+}%)" if nvda_pct is not None else "美股算力权重"
         qq_hint = f"QQQ ({qqq_pct:+}%)" if qqq_pct is not None else "纳指"
@@ -1052,6 +1105,22 @@ def _build_quant_if_then(rule_id: str, title: str, scenario: Dict[str, Any]) -> 
                 "trigger_metric": "提价后月度出货增速 & 组装净利率",
                 "threshold": "若提价超 30% 后出现云厂推迟 Q1 机柜验收超 4 周或零部件成本完全吞噬组装利润",
                 "action_implication": "纯代工组装厂有脉冲后回落风险，仅保留高壁垒液冷与光互连标的。",
+            },
+        ],
+        "nvda_ceo_succession_transition": [
+            {
+                "case": "bull",
+                "label": "传闻澄清 · 管理层与路线图稳定",
+                "trigger_metric": "英伟达董事会公告 / SEC 8-K 与 Blackwell 交付指引",
+                "threshold": "若董事会明确长期任职安排且下一代架构交付节奏与云厂采购指引零下修",
+                "action_implication": "治理折价迅速收敛，NVDA 及北美算力硬件链重回基本面景气定价。",
+            },
+            {
+                "case": "bear",
+                "label": "实质变动 · 伴随核心高管团队调整",
+                "trigger_metric": "SEC Form 8-K 高管变动公告 & 机构评级调整",
+                "threshold": "若正式披露接班时间表且同期出现核心架构/销售高管离任变动",
+                "action_implication": "治理溢价面临阶段性重估，暂控制海外高弹性 GPU 敞口。",
             },
         ],
         "asic_tpu_order_cut": [
@@ -1219,6 +1288,7 @@ def _build_generic_transmission_layers(
         "603986.SH": ("兆易创新", "A股"),
         "600941.SH": ("中国移动", "A股"),
         "000660.KS": ("SK海力士", "亚太"),
+        "2454.TW": ("联发科", "台股"),
     }
 
     for idx, b in enumerate(bars):
@@ -1297,7 +1367,9 @@ def customize_event_copy_and_basis(
     elif rid == "precious_metals_physical_divergence":
         custom_ol = "国际期金急跌触发矿企利润与多头杠杆去化承压，但北京菜百金条抢购一空印证下游高周转实物金条渠道放量创收，形成“矿金承压 vs 金店零售抗跌”期现背离。"
     elif rid == "asic_tpu_order_cut":
-        custom_ol = "供应链传闻谷歌削减 2027 年 TPU 8i 出货约 100 万颗，直接打压定制 ASIC 伙伴博通 (AVGO) 与北美高单客光模块预期，通用 GPU (NVDA) 竞争压力反而边际缓解。"
+        custom_ol = "谷歌虽拟削减博通设计的 TPU 8i 出货约 100 万颗（占 20%），但预计同步增加联发科设计的 TPU 8t 出货——本质属于 ASIC 供应商结构切换而非谷歌总算力需求下调，呈现“博通承压 vs 联发科 (2454.TW) 受益”。"
+    elif rid == "nvda_ceo_succession_transition":
+        custom_ol = "英伟达董事会启动 CEO 外部遴选程序的单一信源传闻带来管理层传承不确定性讨论，对长期核心舵手溢价构成温和扰动，需先核实公司正式治理声明再定性影响。"
     elif rid == "memory_hbm_supercycle":
         custom_ol = "三星未来 3 年多数存储产能被锁且客户要求保障至 2031 年，印证 AI 服务器级 DRAM/HBM 极端紧缺卖方格局延续，利好美光 (MU) 及国产存储/接口链。"
     elif rid == "ai_server_price_hike":
@@ -1341,7 +1413,17 @@ def enrich_card_deep_research(
     title = str(card.get("event_title") or "")
     pub_at = str(card.get("published_at") or "")
 
-    card["priced_in_analysis"] = _detect_session_context(pub_at, title, rid, quotes_map)
+    pia = _detect_session_context(pub_at, title, rid, quotes_map)
+    notes: List[str] = []
+    if card.get("effective_date_label"):
+        notes.append(str(card["effective_date_label"]))
+    if card.get("qualifier_badge"):
+        notes.append(str(card["qualifier_badge"]))
+    if notes and pia.get("expectation_gap"):
+        prefix = "【" + " · ".join(notes) + "】"
+        if prefix not in pia["expectation_gap"]:
+            pia["expectation_gap"] = prefix + pia["expectation_gap"]
+    card["priced_in_analysis"] = pia
 
     if rid in _RULE_TRANSMISSION_DEFAULTS:
         card["transmission_layers"] = [dict(layer) for layer in _RULE_TRANSMISSION_DEFAULTS[rid]]

@@ -813,7 +813,7 @@ AI_NOISE_RE = re.compile(
     r"开源鸿蒙|openharmony|harmonyos|南水北调|水利|水文|国家水网|调水工程|天河.*(?:工程|调水|水文|水网)|"
     r"影石|insta360|大疆|麦克风|耳机|相机|固件升级|充电宝|路由器|显示器|键盘|鼠标|tech outages.*y2k|outages.*ai agent style|"
     r"套餐|买赠|优惠券|代金券|促销|折扣|限免|会员价|小米\s*mimo.*套餐|mimo.*套餐|学生教师优惠|9\.9元|元/月|优惠上线|"
-    r"调查问卷|大肥鱼|chatterfly|neonclipping|youtube\s*shorts.*剪辑|输入法.*内测|艺术中心.*抗议|抗议.*ai|提示词技巧|回答更简短|透明度评分低于|透明度低于|"
+    r"调查问卷|大肥鱼|chatterfly|neonclipping|youtube\s*shorts.*剪辑|输入法.*内测|艺术中心.*抗议|抗议.*ai|提示词技巧|回答更简短|透明度评分低于|透明度低于|score\s+lower\s+on\s+transparency|get\s+to\s+the\s+point\s+faster|"
     r"演唱会|剧场版|小雪节气|长城坦克|坦克\d+|"
     r"国家中医药管理局|中医药|认证中心|未与任何.{0,6}合作|亦未开展测评|辟谣通告|严正声明|"
     r"投资者是否应|是否值得购买|值得买入吗|\bspcx\b|目标价|股价表现|空头机构|估值泡沫|"
@@ -1074,7 +1074,12 @@ def _match_lab_signature(txt_low: str, xai_aliases: Tuple[str, ...]) -> Optional
 def _infer_company(title: str, url: str = "", source_name: str = "") -> tuple[str, str, str]:
     # 1. Subject-first inspection so comparison titles (e.g. "GPT-6.2 ... 透明度低于Claude") attribute to primary subject!
     clean_src = "" if "google news" in (source_name or "").lower() else (source_name or "")
-    subject_clause = re.split(r"(?:，|,|；|;|\bvs\.?\b|\bversus\b|低于|高于|相比|对比|超越|不如)", str(title or ""), maxsplit=1)[0].strip()
+    subject_clause = re.split(
+        r"(?:，|,|；|;|\bvs\.?\b|\bversus\b|\bbut\b|\bwhile\b|\bthough\b|\balthough\b|\bcompared\s+(?:with|to)\b|\bthan\b|低于|高于|相比|对比|超越|不如)",
+        str(title or ""),
+        maxsplit=1,
+        flags=re.IGNORECASE,
+    )[0].strip()
     xai_aliases = tuple(ENTITY_BY_ID["ent_xai"].aliases) if "ent_xai" in ENTITY_BY_ID else ("xai", "x.ai", "grok")
 
     if subject_clause:
@@ -1620,12 +1625,16 @@ def build_ai_progress_artifact(
                 continue
             if any(bad in rtitle.lower() for bad in ("听证会", "诈骗", "fcc", "fda", "围巾", "座驾", "中期选举", "ipo", "募资", "发行价", "灰市", "selling pressure", "股票", "股价", "lawsuit", "sues")):
                 continue
+            if AI_NOISE_RE.search(f"{rtitle} {excerpt}"):
+                continue
             cid, cname, reg = _infer_company(rtitle, rurl, rsrc)
             pub_date = normalize_ai_timestamp(
                 raw_it.get("published_at") or raw_it.get("fetched_at") or generated_at_iso,
                 generated_at_iso,
             )
             zh_title = ensure_zh_headline(rtitle, "tech")
+            if AI_NOISE_RE.search(zh_title):
+                continue
             is_os = detect_is_open_source(zh_title, excerpt, url=rurl, company_id=cid, source_id=rsid)
             _add_or_merge_item(
                 {

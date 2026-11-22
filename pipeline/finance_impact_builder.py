@@ -15,7 +15,89 @@ import re
 from typing import Any, Dict, List, Optional, Tuple
 
 from .finance_deep_research import customize_event_copy_and_basis, enrich_card_deep_research
-from .time_utils import now_shanghai, to_iso_shanghai
+from .time_utils import now_shanghai, parse_iso_datetime, to_iso_shanghai
+
+
+_EVIDENCE_LABELS = {
+    "official": "🏛️ 官方公告 / 监管披露",
+    "research": "📊 机构研报 / 渠道调研",
+    "corroborated": "📰 多源媒体证实",
+    "single_source": "⚠️ 单一信源线索",
+}
+
+_OFFICIAL_SOURCE_RE = re.compile(
+    r"证监会|沪深交易所|沪深北交易所|上交所|深交所|北交所|央行|中国人民银行|财政部|商务部|工信部|"
+    r"国家统计局|国家发改委|国务院|外交部|美联储|Federal\s*Reserve|SEC|中国结算|新华网|新华社|人民日报",
+    re.I,
+)
+_RESEARCH_TEXT_RE = re.compile(
+    r"研报|策略报告|招商证券|中信证券|中金公司|华泰证券|国泰君安|高盛|摩根士丹利|大摩|小摩|瑞银|天风|"
+    r"郭明錤|供应链调研|渠道路演|分析师(?:披露|指出|预测|测算)",
+    re.I,
+)
+
+
+def infer_event_evidence_tier(ev: Dict[str, Any], title: str = "", summary: str = "") -> Tuple[str, str]:
+    """Classify event evidence strictly into 4 unified verification tiers."""
+    t_str = f"{title or ev.get('title') or ''} {summary or ev.get('fact_summary') or ''}"
+    srcs = [s for s in (ev.get("sources") or []) if isinstance(s, dict)]
+    src_names = " ".join(str(s.get("source_name") or "") for s in srcs)
+    ind_cnt = int(ev.get("independent_publisher_count") or len({str(s.get("source_name") or "").strip() for s in srcs if s.get("source_name")}) or 0)
+
+    if _OFFICIAL_SOURCE_RE.search(src_names) or (
+        re.search(r"(?:中国证监会|沪深北交易所|沪深交易所|中国结算|央行|财政部|商务部|美联储).*(?:公告|通知|批准|施行|生效|减免|决议|规定)", t_str)
+    ):
+        return "official", _EVIDENCE_LABELS["official"]
+    if _RESEARCH_TEXT_RE.search(f"{src_names} {t_str}"):
+        return "research", _EVIDENCE_LABELS["research"]
+    if ind_cnt >= 2 or len(srcs) >= 2:
+        return "corroborated", _EVIDENCE_LABELS["corroborated"]
+    return "single_source", _EVIDENCE_LABELS["single_source"]
+
+
+def extract_effective_date_label(title: str, summary: str = "") -> Optional[str]:
+    """Extract formal statutory effective / start dates from policy & corporate notices."""
+    blob = f"{title} {summary}"
+    m = re.search(r"自\s*(?:(202[6-9])年)?\s*(\d{1,2})月(\d{1,2})日起(?:正式)?(?:施行|生效|实施|减免|执行)", blob)
+    if m:
+        yr, mo, dy = m.group(1), m.group(2), m.group(3)
+        prefix = f"{yr}年" if yr and yr != "2026" else ""
+        return f"⏳ {prefix}{mo}月{dy}日起正式生效"
+    m2 = re.search(r"(?:(202[6-9])年)?(\d{1,2})月(\d{1,2})日(?:起|起正式|正式)(?:生效|施行|实施|启用|减免|免收|执行)", blob)
+    if m2:
+        yr, mo, dy = m2.group(1), m2.group(2), m2.group(3)
+        prefix = f"{yr}年" if yr and yr != "2026" else ""
+        return f"⏳ {prefix}{mo}月{dy}日生效"
+    if "下周一" in blob and any(k in blob for k in ("保证金", "两融", "施行", "实施")):
+        return "⏳ 下周一起正式实施"
+    return None
+
+
+def extract_qualifier_badge(title: str, summary: str = "") -> Optional[str]:
+    """Promote key hedging qualifiers ('up to X%', 'talks', 'unconfirmed') next to the headline."""
+    blob = f"{title} {summary}"
+    m_up = re.search(r"最高(?:提价|涨价|涨幅|调价|上调)\s*(\d+(?:\.\d+)?)\s*%", blob)
+    if m_up:
+        return f"⚠️ 要价上限 {m_up.group(1)}% · 关注客户实际接受率"
+    if re.search(r"(?:削减|减少).*?(?:100万|20%).*?(?:联发科|TPU\s*8t)", blob, re.I):
+        return "🔀 供应商切换：减博通 8i / 增联发科 8t"
+    if re.search(r"遴选|接班|外部.*?CEO", blob, re.I) and "8-K" not in blob:
+        return "⚠️ 未获董事会正式确认"
+    if re.search(r"传闻|据传|洽购|磋商|意向", blob):
+        return "🔎 尚在磋商阶段 · 关注正式签约"
+    return None
+
+
+def _topic_dedup_key(rid: str, title: str, pub_at: str) -> Optional[str]:
+    """Collapse duplicate clusters covering the exact same event on the same day."""
+    day = str(pub_at or "")[:10] or "nodate"
+    if rid == "a_share_capital_market_reform" and any(k in title for k in ("80%", "保证金", "两融", "4000亿")):
+        return f"topic:a_share_margin_80:{day}"
+    if rid == "asic_tpu_order_cut":
+        return f"topic:google_tpu_cut:{day}"
+    if rid == "nvda_ceo_succession_transition":
+        return f"topic:nvda_ceo_search:{day}"
+    return None
 
 _NEGATIVE_SHOCK_RE = re.compile(
     r"(?:暴跌|重挫|下挫|大跌|跳水|跌破|抹去(?:年内|全部)?涨幅|逼近破发|破发|"
@@ -247,26 +329,27 @@ def _build_domain_scenario(
             "milestones": [{"date": "2 周内", "status": "current", "label": "核查云厂季度 Capex 指引及整机厂商毛利率反馈"}],
         }
 
-    # 0f. ASIC / TPU Order Cut (Google / Broadcom vs NVIDIA)
+    # 0f. ASIC / TPU Order Cut & Vendor Substitution (Broadcom 8i vs MediaTek 8t vs NVDA)
     if re.search(r"tpu|asic|博通", text, re.I) and re.search(r"削减|砍单|下调.*出货|减少.*颗", text, re.I):
         return {
             "rule_id": "asic_tpu_order_cut",
-            "tag": "云巨头定制 ASIC / TPU 砍单冲击与 GPU 回摆",
-            "tag_en": "Custom ASIC / TPU Shipment Cut & GPU Rotation",
+            "tag": "谷歌 TPU 供应链切换：博通 8i 承压 vs 联发科 8t 受益",
+            "tag_en": "Google TPU Supplier Shift (Broadcom 8i Cut vs MediaTek 8t Gain)",
             "polarity": "divergent",
             "intensity": 4,
-            "one_liner": "知名分析师披露谷歌大幅削减 2027 年定制 TPU 出货，直接压制博通 (AVGO) 与单一大厂 ASIC 配套链估值，反利好通用 GPU (NVDA) 份额稳固。",
-            "one_liner_en": "Projected cuts in Google TPU shipments pressure Broadcom and custom-ASIC suppliers while easing competitive overhang on Nvidia GPUs.",
-            "sample_basis": {"sample_n": 12, "volatility_pct": 4.1, "volatility_source": "北美云厂芯片链砍单修正样本", "horizon": "1~5 个交易日", "confidence_label": "高置信（直接改写 ASIC 盈利指引）", "confidence_label_en": "High (Direct ASIC Guidance Revision)"},
-            "affected_tickers": {"AVGO": -0.9, "300308.SZ": -0.65, "NVDA": 0.45, "QQQ": -0.25},
+            "one_liner": "谷歌削减博通设计的 TPU 8i 约 100 万颗（约 20%），但预计同步增加联发科设计的 TPU 8t 出货——本质是云巨头 ASIC 供应商切换而非总算力需求下调。",
+            "one_liner_en": "Google cutting ~1M Broadcom-designed TPU 8i (~20%) while ramping MediaTek TPU 8t is a supplier-share shift rather than an overall AI compute cut.",
+            "sample_basis": {"sample_n": 12, "volatility_pct": 4.1, "volatility_source": "北美云厂芯片链切换与砍单样本", "horizon": "1~5 个交易日", "confidence_label": "高置信（直接改写 ASIC 供应商份额）", "confidence_label_en": "High (Direct ASIC Share Reallocation)"},
+            "affected_tickers": {"AVGO": -0.85, "2454.TW": 0.72, "300308.SZ": -0.35, "NVDA": 0.3, "QQQ": -0.1},
             "realized_quotes": _quote_snapshot(["AVGO", "NVDA", "QQQ"]),
             "bars": [
-                _bar("美股", "定制 AI ASIC 设计与云链 (AVGO)", "US Custom AI ASIC Leaders (AVGO)", -5.2, -2.0, "百万颗级别 TPU 8i 出货预期下修直接打击博通定制芯片增长故事核心溢价。", "Million-unit TPU shipment cuts directly hit Broadcom's custom AI silicon growth thesis.", 1.0, "AVGO"),
-                _bar("A股", "北美单一 ASIC 客户配套 PCB / 光模块", "A-Share North American ASIC PCB/Optics", -3.8, -1.2, "深度绑定单一云巨头自研芯片集群的高频 PCB 与光模块面临排产预期修正。", "Suppliers tied closely to hyperscaler custom-ASIC ramps face near-term order repricing.", 1.0, "300308.SZ"),
-                _bar("美股", "通用 AI GPU 核心生态 (NVDA)", "Merchant AI GPU Ecosystem (NVDA)", 0.8, 2.9, "自研 ASIC 商业推进受阻缓解了“定制芯片替代英伟达”的估值折价压力。", "Slower custom ASIC scaling eases competitive substitution risk for merchant Nvidia GPUs.", 1.0, "NVDA"),
+                _bar("美股", "定制 ASIC 原主力设计伙伴 (AVGO 博通)", "US Custom ASIC Incumbent (AVGO)", -4.8, -1.8, "百万颗级 TPU 8i 削减（约 20%）直接挤压博通该代际定制芯片增长预期与溢价。", "Cutting ~1M TPU 8i units (~20%) directly squeezes Broadcom's custom-silicon upside.", 1.0, "AVGO"),
+                _bar("台股", "联发科 TPU 8t 定制二供替代链 (2454.TW)", "Taiwan Custom ASIC Beneficiary MediaTek (2454.TW)", 1.6, 4.5, "谷歌预计增加联发科设计的 TPU 8t 出货以承接部分算力需求，二供份额放量成为事件核心正向对冲腿。", "Expected ramp of MediaTek-designed TPU 8t captures shifted Google ASIC volume.", 1.0, "2454.TW"),
+                _bar("A股", "北美多云光模块/PCB 结构性再平衡 (300308)", "A-Share Optical & PCB Capex Balance (300308)", -2.4, 0.8, "谷歌总 AI 算力 Capex 并未下修，仅在 8i/8t 料号与客户间调配，多云客户光模块龙头韧性强于单料号厂。", "Google's total AI Capex stays intact; multi-cloud optics vendors face modest timing noise.", 1.0, "300308.SZ"),
+                _bar("美股", "通用 AI GPU 核心生态 (NVDA)", "Merchant AI GPU Ecosystem (NVDA)", 0.4, 2.2, "定制 ASIC 双供切换磨合期客观稳固通用 GPU 在大模型主集群中的交付确定性。", "Vendor transition friction in custom ASICs modestly steadies merchant GPU demand.", 1.0, "NVDA"),
             ],
             "if_then": [],
-            "milestones": [{"date": "7 日内", "status": "current", "label": "观察博通 / 谷歌官方回应与台积电 CoWoS 产能分配调整"}],
+            "milestones": [{"date": "7 日内", "status": "current", "label": "观察博通 / 联发科对 TPU 8i/8t 订单配比与 CoWoS 分配最新回应"}],
         }
 
     # 0g. Corporate Share Buyback & Dividend Floor
@@ -1083,9 +1166,44 @@ def _build_domain_scenario(
             "milestones": [{"date": "2026-12-10 03:00", "status": "upcoming", "label": "下次 FOMC 决议与季度 SEP 点阵图"}],
         }
 
+    # 8a-0. NVIDIA CEO Succession Search / Board Transition (must NEVER match Senate testimony)
+    if ("黄仁勋" in t or "英伟达" in t or "nvidia" in t) and re.search(
+        r"遴选|接班|继任|外部.*ceo|ceo.*继任", t
+    ):
+        nvda_f, atr_v, _ = _volatility_scale("NVDA", quotes_map, 3)
+        return {
+            "rule_id": "nvda_ceo_succession_transition",
+            "tag": "龙头 CEO 接班人与治理过渡不确定性",
+            "tag_en": "NVIDIA CEO Succession Search & Governance Watch",
+            "polarity": "bearish",
+            "intensity": 3,
+            "one_liner": "英伟达董事会启动下一任 CEO 外部遴选程序的媒体报道引发管理层传承讨论，短期或带来温和治理折价情绪，需先核实董事会正式公告。",
+            "one_liner_en": "Reports of NVIDIA's board opening an external CEO succession search introduce modest leadership-transition discussion pending formal board filings.",
+            "sample_basis": {
+                "sample_n": 10,
+                "volatility_pct": atr_v or 4.0,
+                "volatility_source": "美股科技龙头管理层接班过渡样本",
+                "horizon": "1~5 个交易日",
+                "confidence_label": "待核实（单一媒体报道，尚未获董事会8-K确认）",
+                "confidence_label_en": "Unconfirmed (Single-Source Media Report)",
+            },
+            "affected_tickers": {"NVDA": -0.55, "TSM": -0.3, "00981.HK": 0.25, "512480.SH": 0.3},
+            "realized_quotes": _quote_snapshot(["NVDA", "TSM", "00981.HK", "512480.SH"]),
+            "bars": [
+                _bar("美股", "美股 AI 算力龙头与架构领导力预期 (NVDA)", "US AI Compute Leadership (NVDA)", -3.2, -0.8, "核心掌舵人传承规划报道短期引发组织连续性讨论，在公司正式回应前风险溢价温和走阔。", "Succession reports slightly widen governance discount pending formal board clarity.", min(1.1, nvda_f * 0.45), "NVDA"),
+                _bar("台股", "先进封装与算力代工映射 (TSM)", "Leading-Node Foundry Proxies (TSM)", -1.6, 0.2, "中长期晶圆与 CoWoS 排产仍由云厂商资本开支决定，短期仅作温和情绪映射。", "Foundry schedules remain anchored by hyperscaler Capex despite headline noise.", 0.9, "TSM"),
+                _bar("A股", "境内自主算力与芯片生态", "A-Share Domestic Compute Alternatives", 0.3, 1.8, "海外龙头传闻期温和抬升境内算力替代链关注度，但幅度弱于实质制裁。", "Mild attention shift toward domestic accelerators without substantive supply shock.", 0.9, "512480.SH"),
+            ],
+            "if_then": [
+                {"cond": "若英伟达董事会正式发布声明澄清时间表或长期留任过渡安排", "result": "治理猜测情绪消退，估值重回 Blackwell/Rubin 交付周期", "tone": "bullish"},
+                {"cond": "若后续伴随核心技术高管同步离任变动", "result": "NVDA 组织溢价面临阶段性重估压力", "tone": "bearish"},
+            ],
+            "milestones": [{"date": "未来 7 日", "status": "current", "label": "核查英伟达官方新闻稿及 SEC 8-K 公告澄清"}],
+        }
+
     # 8a. NVIDIA CEO Senate Hearing / SEC Investigation / Leadership Governance Shock
     if ("黄仁勋" in t or "英伟达" in t or "nvidia" in t) and re.search(
-        r"参议院|听证|作证|sec\s*调查|辞任|辞职|治理|董事会", t
+        r"参议院|听证|作证|sec\s*调查|辞任|辞职", t
     ):
         nvda_f, atr_v, _ = _volatility_scale("NVDA", quotes_map, 4)
         return {
@@ -1291,13 +1409,34 @@ def _build_domain_scenario(
                 "屏蔽", "阻断", "禁用", "限制读取", "截屏", "反蒸馏", "蒸馏", "思考链提取",
                 "黎曼", "形式化验证", "数学证明", "论文", "投资者是否应", "解散",
                 "tensorlean", "certik", "内核验证", "gpu内核", "gpu 内核", "flashattention", "cuda",
+                "自主攻击", "网络攻击", "入侵", "黑客", "越狱攻击", "漏洞利用", "安全预警",
             )
         ):
             return None
         if any(k in t for k in ("甲骨文", "openai", "gpt", "gemini", "anthropic", "claude", "混元", "千问", "qwen", "deepseek", "llm")):
             is_infra = "甲骨文" in t or "筹足" in t or "合同" in t or "自由现金流" in t
             if not is_infra:
-                if "openai" in t or "gpt" in t:
+                subject_clause = re.split(
+                    r"(?:，|,|；|;|与|对比|超越|竞争|叫板|\bvs\.?\b|\bversus\b|\bbut\b|\bwhile\b)",
+                    t,
+                    maxsplit=1,
+                )[0].strip()
+                if "gemini" in subject_clause or "google" in subject_clause or "谷歌" in subject_clause or "deepmind" in subject_clause:
+                    target_lab = "google"
+                elif "anthropic" in subject_clause or "claude" in subject_clause:
+                    target_lab = "anthropic"
+                elif "openai" in subject_clause or "gpt" in subject_clause:
+                    target_lab = "openai"
+                elif "gemini" in t or "google" in t or "谷歌" in t or "deepmind" in t:
+                    target_lab = "google"
+                elif "anthropic" in t or "claude" in t:
+                    target_lab = "anthropic"
+                elif "openai" in t or "gpt" in t:
+                    target_lab = "openai"
+                else:
+                    target_lab = "china_open"
+
+                if target_lab == "openai":
                     eco_tag = "OpenAI 模型迭代与微软云算力链"
                     eco_tag_en = "OpenAI Model Launch & Inference Ecosystem"
                     tickers = {"MSFT": 0.48, "NVDA": 0.42, "QQQ": 0.28}
@@ -1315,7 +1454,7 @@ def _build_domain_scenario(
                         {"cond": "若第三方基准与开发者调研显示企业付费率不及预期", "result": "纯概念 AI 应用软件面临获利回吐压力", "tone": "bearish"},
                     ]
                     milestones = [{"date": "未来 2~4 周", "status": "upcoming", "label": "跟踪 OpenAI API 日均 Token 调用量及微软 Copilot 席位转化数据"}]
-                elif "gemini" in t or "google" in t or "谷歌" in t or "deepmind" in t:
+                elif target_lab == "google":
                     eco_tag = "Google Gemini 架构迭代与自研 TPU 生态"
                     eco_tag_en = "Google Gemini Iteration & TPU Compute Stack"
                     tickers = {"GOOGL": 0.55, "AVGO": 0.38, "QQQ": 0.28}
@@ -1333,7 +1472,7 @@ def _build_domain_scenario(
                         {"cond": "若算力投入导致谷歌资本开支占营收比升破 20% 且短期广告增速放缓", "result": "市场对自由现金流折损定价偏谨慎", "tone": "bearish"},
                     ]
                     milestones = [{"date": "未来 2~4 周", "status": "upcoming", "label": "观察 Google Cloud API 定价变动及 AVGO AI ASIC 订单指引"}]
-                elif "anthropic" in t or "claude" in t:
+                elif target_lab == "anthropic":
                     eco_tag = "Anthropic 企业级 Agent 与云托管竞合"
                     eco_tag_en = "Anthropic Enterprise Agent & Cloud Hosting"
                     tickers = {"AMZN": 0.45, "GOOGL": 0.35, "QQQ": 0.28}
@@ -1472,6 +1611,7 @@ def build_finance_impact_artifact(
     quotes_doc: Optional[Dict[str, Any]] = None,
     cat_docs: Optional[Dict[str, dict]] = None,
     breaking_highlights: Optional[List[dict]] = None,
+    prev_doc: Optional[Dict[str, Any]] = None,
 ) -> Dict[str, Any]:
     """Generate structurally validated Event -> Direction -> Sector -> Stock impact maps."""
     if all_events is None and isinstance(cat_docs, dict):
@@ -1531,7 +1671,7 @@ def build_finance_impact_artifact(
         title = str(ev.get("title") or "").strip()
         if not title:
             continue
-        tkey = re.sub(r"[\s\W]+", "", title.lower())[:16]
+        tkey = re.sub(r"[\s\W]+", "", title.lower())[:28]
         if tkey in seen_titles:
             continue
         seen_titles.add(tkey)
@@ -1559,8 +1699,10 @@ def build_finance_impact_artifact(
     event_impact_map: Dict[str, dict] = {}
     used_rule_counts: Dict[str, int] = {}
     used_one_liners: set[str] = set()
+    seen_event_ids: set[str] = set()
+    topic_card_idx: Dict[str, int] = {}
 
-    for _, ev in scored[:48]:
+    for _, ev in scored[:60]:
         title = str(ev.get("title") or "")
         summary = str(ev.get("fact_summary") or "")
         blob = f"{title} {summary}"
@@ -1576,12 +1718,46 @@ def build_finance_impact_artifact(
         if not valid or scenario is None:
             continue
 
+        rid = scenario["rule_id"]
+        topic_key = _topic_dedup_key(rid, title, pub_at)
+        incoming_sources = [{"source_name": s.get("source_name"), "url": s.get("url")} for s in srcs[:5] if isinstance(s, dict) and s.get("url")]
+
+        # Coalesce duplicate clusters reporting the same event on the same day into one authoritative card
+        if topic_key and topic_key in topic_card_idx:
+            target_card = impacts[topic_card_idx[topic_key]]
+            existing_urls = {str(s.get("url") or "") for s in (target_card.get("sources") or [])}
+            for s in incoming_sources:
+                if s.get("url") and str(s.get("url")) not in existing_urls:
+                    target_card.setdefault("sources", []).append(s)
+                    existing_urls.add(str(s.get("url")))
+            # Upgrade evidence tier if combined sources now corroborate or come from official disclosure
+            ev_tier, ev_tier_label = infer_event_evidence_tier(
+                {**ev, "sources": target_card.get("sources") or srcs},
+                str(target_card.get("event_title") or title),
+                str(target_card.get("event_summary") or summary),
+            )
+            tier_rank = {"single_source": 1, "corroborated": 2, "research": 3, "official": 4}
+            if tier_rank.get(ev_tier, 0) > tier_rank.get(str(target_card.get("evidence_tier") or "single_source"), 0):
+                target_card["evidence_tier"] = ev_tier
+                target_card["evidence_tier_label"] = ev_tier_label
+            if not target_card.get("effective_date_label"):
+                eff = extract_effective_date_label(title, summary)
+                if eff:
+                    target_card["effective_date_label"] = eff
+            if not target_card.get("qualifier_badge"):
+                qual = extract_qualifier_badge(title, summary)
+                if qual:
+                    target_card["qualifier_badge"] = qual
+            if eid:
+                seen_event_ids.add(eid)
+                event_impact_map[eid] = event_impact_map.get(str(target_card.get("event_id") or ""), {})
+            continue
+
         custom_one_liner, custom_sample_basis = customize_event_copy_and_basis(scenario, ev, title, quotes_map)
         ol_key = custom_one_liner.strip()
         if ol_key and ol_key in used_one_liners:
             continue
 
-        rid = scenario["rule_id"]
         occ_idx = used_rule_counts.get(rid, 0)
         if occ_idx >= 2:
             continue
@@ -1599,12 +1775,21 @@ def build_finance_impact_artifact(
                 nb["pct_low"], nb["pct_high"] = _scale_band(float(b["pct_low"]), float(b["pct_high"]), atten)
                 adj_bars.append(nb)
             bars = adj_bars
+
+        ev_tier, ev_tier_label = infer_event_evidence_tier(ev, title, summary)
+        eff_date_label = extract_effective_date_label(title, summary)
+        qual_badge = extract_qualifier_badge(title, summary)
+
         card = {
             "id": f"imp_{eid}",
             "event_id": eid,
             "rule_id": rid,
             "validation_status": "verified",
             "validation_note": check_note,
+            "evidence_tier": ev_tier,
+            "evidence_tier_label": ev_tier_label,
+            "effective_date_label": eff_date_label,
+            "qualifier_badge": qual_badge,
             "event_title": title,
             "event_title_en": ev.get("title_en") or title,
             "event_summary": summary,
@@ -1613,7 +1798,7 @@ def build_finance_impact_artifact(
             "published_at": pub_at,
             "source_name": src_name,
             "source_url": src_url,
-            "sources": [{"source_name": s.get("source_name"), "url": s.get("url")} for s in srcs[:3] if s.get("url")],
+            "sources": incoming_sources[:5],
             "tag": scenario["tag"],
             "tag_en": scenario["tag_en"],
             "polarity": scenario["polarity"],
@@ -1628,6 +1813,10 @@ def build_finance_impact_artifact(
             "milestones": scenario["milestones"],
         }
         enrich_card_deep_research(card, ev, scenario, quotes_map)
+        if topic_key:
+            topic_card_idx[topic_key] = len(impacts)
+        if eid:
+            seen_event_ids.add(eid)
         impacts.append(card)
 
         top_a = next((b for b in bars if b["market"] == "A股"), bars[0])
@@ -1640,6 +1829,10 @@ def build_finance_impact_artifact(
             "polarity": scenario["polarity"],
             "intensity": scenario["intensity"],
             "validation_status": "verified",
+            "evidence_tier": ev_tier,
+            "evidence_tier_label": ev_tier_label,
+            "effective_date_label": eff_date_label,
+            "qualifier_badge": qual_badge,
             "one_liner": card["one_liner"],
             "top_a": top_a,
             "top_us": top_us,
@@ -1655,8 +1848,71 @@ def build_finance_impact_artifact(
             "quant_if_then": card.get("quant_if_then"),
         }
 
-        if len(impacts) >= 15:
+        if len(impacts) >= 17:
             break
+
+    # Carry over recent (<72h) verified cards from prev_doc across midnight rollovers so card volume never drops below 15
+    if len(impacts) < 16 and isinstance(prev_doc, dict):
+        now_dt = parse_iso_datetime(generated_at_iso) or now_shanghai()
+        for prev_card in (prev_doc.get("event_impacts") or []):
+            if len(impacts) >= 16:
+                break
+            if not isinstance(prev_card, dict) or prev_card.get("validation_status") != "verified":
+                continue
+            p_eid = str(prev_card.get("event_id") or "")
+            p_title = str(prev_card.get("event_title") or "").strip()
+            p_summary = str(prev_card.get("event_summary") or "")
+            p_rid = str(prev_card.get("rule_id") or "")
+            if not p_title or (p_eid and p_eid in seen_event_ids):
+                continue
+            p_tkey = re.sub(r"[\s\W]+", "", p_title.lower())[:28]
+            if p_tkey in seen_titles:
+                continue
+            if _LOW_IMPACT_TECH_CHATTER_RE.search(p_title.lower()) or any(k in p_title for k in ("自主攻击", "网络攻击")):
+                continue
+            if p_rid == "nvda_senate_sec_governance" and re.search(r"遴选|接班|继任", p_title):
+                continue
+            p_pub = str(prev_card.get("published_at") or "")
+            p_dt = parse_iso_datetime(p_pub)
+            if p_dt is not None and (now_dt - p_dt).total_seconds() > 72 * 3600:
+                continue
+            p_topic = _topic_dedup_key(p_rid, p_title, p_pub)
+            if p_topic and p_topic in topic_card_idx:
+                continue
+            p_ol = str(prev_card.get("one_liner") or "").strip()
+            if p_ol and p_ol in used_one_liners:
+                continue
+            if used_rule_counts.get(p_rid, 0) >= 2:
+                continue
+
+            card_copy = dict(prev_card)
+            card_copy["carried_over"] = True
+            if not card_copy.get("evidence_tier"):
+                ev_t, ev_l = infer_event_evidence_tier(
+                    {"sources": card_copy.get("sources") or []}, p_title, p_summary
+                )
+                card_copy["evidence_tier"] = ev_t
+                card_copy["evidence_tier_label"] = ev_l
+            if not card_copy.get("effective_date_label"):
+                eff = extract_effective_date_label(p_title, p_summary)
+                if eff:
+                    card_copy["effective_date_label"] = eff
+            if not card_copy.get("qualifier_badge"):
+                qual = extract_qualifier_badge(p_title, p_summary)
+                if qual:
+                    card_copy["qualifier_badge"] = qual
+
+            seen_titles.add(p_tkey)
+            if p_eid:
+                seen_event_ids.add(p_eid)
+            if p_topic:
+                topic_card_idx[p_topic] = len(impacts)
+            if p_ol:
+                used_one_liners.add(p_ol)
+            used_rule_counts[p_rid] = used_rule_counts.get(p_rid, 0) + 1
+            impacts.append(card_copy)
+            if p_eid and isinstance(prev_doc.get("event_impact_map"), dict) and p_eid in prev_doc["event_impact_map"]:
+                event_impact_map[p_eid] = dict(prev_doc["event_impact_map"][p_eid])
 
     return {
         "schema_version": "4.2",

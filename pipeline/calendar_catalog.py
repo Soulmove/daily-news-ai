@@ -953,7 +953,7 @@ _BREAKING_NOISE_RE = re.compile(
 )
 
 _BREAKING_ACTION_RE = re.compile(
-    r"(?:发布会|新品发布|开发布会|发布|推出|上线|开源|预告|开幕|召开|举行|公布|揭晓|出访|访问|启程|表决|听证|生效|实施|上市|挂牌|财报|电话会|交付|峰会|论坛|会谈|"
+    r"(?:发布会|新品发布|开发布会|发布|推出|上线|开源|预告|开幕|召开|举行|公布|揭晓|出访|访问|启程|表决|听证|生效|施行|实施|减免|免收|执行|上市|挂牌|财报|电话会|交付|峰会|论坛|会谈|"
     r"\blaunch(?:es|ing)?\b|\bunveil(?:s|ing)?\b|\bkeynote\b|\bsummit\b|\bvisit(?:s|ing)?\b|\bearnings\b|\btake effect\b|\beffective\b|\bvote\b)",
     re.I,
 )
@@ -968,6 +968,23 @@ def parse_relative_schedule_datetime(
         return None
     s = re.sub(r"\s+", " ", text).strip()
     base_hour = 10
+
+    # 0. Statutory / policy effective dates take priority over article datelines (e.g. 自2026年11月30日起施行)
+    m_eff = re.search(
+        r"(?:自|将于)\s*(?:(\d{4})年)?(\d{1,2})月(\d{1,2})日(?:起|起正式)?(?:施行|生效|实施|减免|免收|执行)",
+        s,
+    )
+    if m_eff:
+        yr = int(m_eff.group(1) or anchor_dt.year)
+        mo = int(m_eff.group(2))
+        dy = int(m_eff.group(3))
+        if not m_eff.group(1) and anchor_dt.month == 12 and mo == 1:
+            yr += 1
+        try:
+            dt = anchor_dt.replace(year=yr, month=mo, day=dy, hour=9, minute=0, second=0, microsecond=0)
+            return dt, f"{yr}-{mo:02d}-{dy:02d} 政策/新规生效日", True
+        except ValueError:
+            pass
 
     # 1. Explicit date range: M月D日至D日 / M月D日-D日 / YYYY年M月D日
     m_date = re.search(
@@ -1226,7 +1243,7 @@ def extract_breaking_calendar_items(
         if not parsed:
             continue
         sched_dt, orig_note, is_clock_tbd = parsed
-        if sched_dt.date() < generated_dt.date() or (sched_dt.date() - generated_dt.date()).days > 90:
+        if sched_dt.date() < generated_dt.date() or (sched_dt.date() - generated_dt.date()).days > 120:
             continue
 
         if any(title_similarity(title, kt) >= 0.45 for kt in known_titles + seen_new_titles):

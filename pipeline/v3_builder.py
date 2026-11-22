@@ -13,6 +13,7 @@ from xml.sax.saxutils import escape as xml_escape
 
 from pipeline.dedup import is_omnibus_digest_title, smart_truncate, strip_raw_urls_and_domain_tails, title_similarity
 from pipeline.entities import ENTITY_BY_ID, _match_alias, build_entities_index_base, match_entities_with_reasons
+from pipeline.finance_impact_builder import infer_event_evidence_tier
 from pipeline.id_utils import make_storyline_id
 from pipeline.manifest import atomic_write_json, load_json_if_exists
 from pipeline.time_utils import SHANGHAI_TZ, now_shanghai, parse_iso_datetime, to_iso_shanghai
@@ -764,6 +765,7 @@ def build_v3_artifacts(
             if isinstance(tn, dict) and tn.get("fact_summary"):
                 tn["fact_summary"] = _scrub_ph(str(tn["fact_summary"]))
 
+        st_tier, st_tier_label = infer_event_evidence_tier(ev)
         storylines[st_id] = {
             "storyline_id": st_id,
             "current_event_id": ev["event_id"],
@@ -774,6 +776,8 @@ def build_v3_artifacts(
             "current_stage": diff["change_type_label"],
             "evidence_status": ev.get("evidence_status", "single_source"),
             "evidence_label": ev.get("evidence_label") or "单一信源",
+            "evidence_tier": st_tier,
+            "evidence_tier_label": st_tier_label,
             "first_discovered_at": existing_st.get("first_discovered_at") or ev.get("first_discovered_at"),
             "first_reported_at": ev.get("first_reported_at"),
             "latest_fact_update_at": ev.get("latest_fact_update_at"),
@@ -1370,12 +1374,14 @@ def build_v3_artifacts(
     except Exception:
         quotes_doc = load_json_if_exists(root / "data/market_quotes.json", default={}) or {}
 
+    prev_finance_impact = load_json_if_exists(root / "data/finance_impact.json", default={}) or {}
     finance_impact_doc = build_finance_impact_artifact(
         batch_id=batch_id,
         generated_at_iso=generated_at_iso,
         cat_docs=cat_docs,
         quotes_doc=quotes_doc,
         breaking_highlights=list(wire_disk.get("breaking_highlights") or []) if isinstance(wire_disk, dict) else None,
+        prev_doc=prev_finance_impact,
     )
 
     # Enrich entities_map (TSMC/Intel/SMIC etc.) with word-boundary matched storylines; keep change_count_30d aligned with actual events

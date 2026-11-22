@@ -421,7 +421,11 @@ def merge_live_ai_items_into_doc(
             if it_id.startswith(placeholder_curated_prefixes) or it_src.strip().lower() == "batch_digest":
                 mutated = True
                 continue
-            if is_omnibus_digest_title(it_title) or AI_NOISE_RE.search(f"{it_title} {it.get('what_it_does') or ''}") or is_foreign_subject_blocked(it_title, str(it.get("what_it_does") or "")):
+            if (
+                is_omnibus_digest_title(it_title)
+                or AI_NOISE_RE.search(f"{it_title} {it.get('title_en') or ''} {it.get('what_it_does') or ''}")
+                or is_foreign_subject_blocked(it_title, str(it.get("what_it_does") or ""))
+            ):
                 mutated = True
                 continue
             if it_title.startswith("[HF Paper]"):
