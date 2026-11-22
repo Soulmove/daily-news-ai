@@ -1,10 +1,10 @@
 {
   "schema_version": "4.1",
-  "batch_id": "smart-20261122-145938",
+  "batch_id": "smart-20261122-150902",
   "input_batch_id": "raw-20261122-145849",
   "input_cutoff_at": "2026-11-22T14:58:49+08:00",
-  "generated_at": "2026-11-22T15:03:23+08:00",
-  "published_at": "2026-11-22T15:04:32+08:00",
+  "generated_at": "2026-11-22T15:13:39+08:00",
+  "published_at": "2026-11-22T15:14:00+08:00",
   "category": "tech",
   "category_label": "科技/AI",
   "generation_mode": "ai_v3_grounded",
@@ -12,88 +12,74 @@
   "quality_flags": [],
   "key_changes": [
     {
-      "headline": "Anthropic 数学家借助 Claude 证明黎曼猜想获 Lean 官方认证，斯坦福同日发布纯人类草案",
-      "detail": "11 月 20 日，Anthropic 数学家莱文特·阿尔波格（Levent Alpöge）在个人网站发布四页笔记，称与 AI 系统 Claude 合作完成黎曼猜想证明，并附上用 Lean 编写的 1740 万行计算机代码。随后 Lean 官方与 Mathlib 发布联合声明，确认该证明完全正确，多个不同语言编写的独立验证器均已跑通并排除 AI 作弊可能；",
+      "headline": "Anthropic 数学家与 Claude 合作证明黎曼猜想获 Lean 官方核验，斯坦福同日发纯人类草稿",
+      "detail": "11 月 20 日，Anthropic 数学家 Levent Alpöge 发布笔记并附上一套 1740 万行 Lean 代码，称其与 AI 系统 Claude 合作完成了黎曼猜想证明。11 月 22 日前后，Lean 官方与 Mathlib 发布联合声明确认该证明代码完全正确，多个不同语言编写的独立验证器均已跑通并排除漏洞作弊可能。",
       "primary_url": "https://wallstreetcn.com/livenews/3203710",
       "source_name": "华尔街见闻 7×24 全球",
-      "event_id": "evt_2697ac398d3d",
+      "event_id": "evt_39b8e3dc24fa",
       "storyline_id": "st_a8c07f2eaaa3"
     },
     {
-      "headline": "Signal 更新默认屏蔽应用内截图，防范 Siri 与 Gemini 等 AI 智能体读取隐私对话",
-      "detail": "开源端到端加密聊天应用 Signal 近日推出 iOS 与 Android 版更新，默认关闭并屏蔽应用内截图和录屏功能，以防止苹果 Siri AI、谷歌 Gemini Intelligence 以及 Meta Muse 等 AI 智能体在用户不知情时通过屏幕读取私人聊天消息。",
-      "primary_url": "https://news.google.com/rss/articles/CBMiqwFBVV95cUxQRWc3MkF6MnRNLVpEYWZiMkY1eHdGVmhjb0VuR2RZU0poNkJmWE1ORW13MTNVNm1PNXZyOXM0OEhHWmFCU1dmQU11RG9LOUR6WWJMNjhqUzNlUWVfMzE5MUNPRWtpNXR2enA0cjJoR2pzWWdWUVNjQklfcjVySHBicVFBN3poTy1nNFRQbUhzUVVvZjdKRklRdGJkUGZKX2JFQTRicFpqMjNaM28?oc=5",
-      "source_name": "Google News 开源 AI 与推理雷达",
-      "event_id": "evt_1338c60a8e1b",
-      "storyline_id": "st_203a9d885055"
+      "headline": "全球电子协会警告 AI 挤占产能致 PCB 或短缺至 2027 年上半年，风险堪比 2021 年芯片荒",
+      "detail": "全球电子协会（Global Electronics Association）于 11 月 18 日发布行业警报称，印制电路板（PCB）供应链短缺持续加剧，汽车、工业、医疗、国防和电信企业均反映交期延长且难以保障供应，短缺态势可能延续至 2027 年上半年。",
+      "primary_url": "https://www.ithome.com/1/030/573.htm",
+      "source_name": "IT之家 实时快讯",
+      "event_id": "evt_067c298f87ce",
+      "storyline_id": "st_41232caed896"
     }
   ],
   "overview_sections": [
     {
-      "title": "前沿模型突破与工程验证",
+      "title": "前沿模型与形式化验证突破",
       "points": [
         {
-          "text": "Anthropic 数学家称与 Claude 合作完成黎曼猜想证明并获 Lean 官方及 Mathlib 联合认证，斯坦福大学同日发布纯人类竞争草案。",
+          "text": "Anthropic 数学家 Levent Alpöge 与 Claude 合作发布的 1740 万行黎曼猜想 Lean 代码获 Lean 官方与 Mathlib 验证通过，斯坦福大学同日发布纯人类竞争草稿。",
           "source_refs": [
             "R001",
-            "R002",
-            "R003",
-            "R004",
-            "R029",
-            "R030",
             "R034",
-            "R035",
-            "R036",
-            "R037",
-            "R044"
+            "R061"
           ]
         },
         {
-          "text": "哥伦比亚大学与 CertiK 发布 TensorLean，利用 Lean 在 PTX 级完成 DeepSeek 与 FlashAttention 等生产级 GPU 内核形式化验证并发现 38 个漏洞。",
+          "text": "OpenAI 发布 GPT-6 与低待机费率的语音模型 GPT-Live-1.1，并在微软 Copilot 全球部署 GPT-6.2 Sol 的同时推进反蒸馏封号与防护。",
           "source_refs": [
-            "R014",
-            "R015",
-            "R130"
+            "R032",
+            "R042",
+            "R044",
+            "R100",
+            "R114"
           ]
         },
         {
-          "text": "英伟达研究团队发表观点认为盲目扩大 AI 上下文窗口是昂贵且过度的做法，定期摘要加定向检索在多项测试中效果相当；OpenAI 则强化反蒸馏与推理链防护。",
+          "text": "哥伦比亚大学与 CertiK 推出 TensorLean 对 GPU 内核做 PTX 级形式化验证，Nvidia 研究则质疑盲目扩大上下文窗口的技术路线。",
           "source_refs": [
             "R005",
-            "R006",
-            "R007",
-            "R042",
-            "R096",
-            "R105",
-            "R114"
+            "R014",
+            "R130"
           ]
         }
       ]
     },
     {
-      "title": "资本市场震荡与半导体供应链",
+      "title": "资本市场震荡与供应链风险",
       "points": [
         {
-          "text": "纳斯达克 100 指数在经历新冠疫情以来最差周跌幅后跌入熊市，Anthropic 创纪录 IPO 次日回吐近全部涨幅，英伟达因 SEC 会计审查下跌 14%。",
+          "text": "纳斯达克 100 指数在经历疫情以来最大单周跌幅后跌入熊市，Anthropic 上市后迅速回吐涨幅，Nvidia 受 SEC 会计审查影响大跌 14%。",
           "source_refs": [
-            "R008",
             "R009",
-            "R038",
-            "R063",
-            "R159"
+            "R063"
           ]
         },
         {
-          "text": "英国《金融时报》调查指涉与被罢免的黄仁勋存在情感关系的 Alice Huang 牵涉对华走私英伟达芯片网络；另据报道软银孙正义曾探讨万亿美元收购 SK 海力士但已停止积极推进。",
+          "text": "FT 调查披露与前 Nvidia CEO 黄仁勋有关联的 Alice Huang 涉对华芯片走私网络；软银孙正义曾探讨万亿美元收购 SK 海力士但已不再积极推进。",
           "source_refs": [
             "R026",
-            "R027",
-            "R028",
-            "R116"
+            "R116",
+            "R163"
           ]
         },
         {
-          "text": "全球电子协会发布警报，AI 服务器转向 40 至 60 层以上高多层板正挤占产能，PCB 供应短缺可能持续至 2027 年上半年。",
+          "text": "全球电子协会警告 AI 服务器推高高多层板需求，PCB 供应短缺或延续至 2027 年上半年。",
           "source_refs": [
             "R064",
             "R065"
@@ -102,35 +88,28 @@
       ]
     },
     {
-      "title": "AI 安全治理、自动驾驶与航天低空进展",
+      "title": "AI 隐私边界、网络攻击与治理冲击",
       "points": [
         {
-          "text": "AI 安全与隐私摩擦升温：Signal 默认屏蔽应用内截图以阻止 Siri、Gemini 等读取私信；韩国教育部长官崔教振因高考 AI 作弊事件辞职；联合国日内瓦会议未能就监管自主武器达成规则。",
+          "text": "Signal 在 iOS 与 Android 端默认屏蔽应用内截图，防范 Siri AI、Gemini 等智能体读取用户私密聊天内容。",
           "source_refs": [
-            "R048",
-            "R049",
-            "R050",
-            "R059",
             "R084",
             "R120",
-            "R137",
             "R146"
           ]
         },
         {
-          "text": "特斯拉在美推送 FSD v15“实景视图”并更新 Cybercab 与 Model Y Robotaxi 应急方案；中国方面，神舟二十四号船箭组合体已转运发射区，小鹏汇天 A868 电动飞行汽车完成倾转过渡试飞。",
+          "text": "美国 FBI 国家犯罪信息中心与农业部据报遭黑客入侵；微软公布 11 月 12 日全球宕机最终报告，确认部分邮件投递失败且安全功能受影响。",
           "source_refs": [
-            "R010",
-            "R011",
-            "R012",
-            "R013",
-            "R016",
-            "R017",
-            "R066",
-            "R067",
-            "R068",
-            "R079",
-            "R080"
+            "R040",
+            "R138",
+            "R147"
+          ]
+        },
+        {
+          "text": "韩国 2027 年度高考发生多起 AI 作弊事件，教育部长官崔教振于 11 月 22 日引咎辞职。",
+          "source_refs": [
+            "R047"
           ]
         }
       ]
@@ -139,7 +118,7 @@
   "events": [
     {
       "schema_version": "4.1",
-      "event_id": "evt_2697ac398d3d",
+      "event_id": "evt_39b8e3dc24fa",
       "storyline_id": "st_a8c07f2eaaa3",
       "article_ids": [
         "rss-gnews-ai-models-en_5b44a0b95416",
@@ -151,20 +130,19 @@
         "rss-gnews-ai-models-en_564ce0283be7",
         "rss-gnews-ai-models-en_11730400b55b",
         "solidot_5dd3dee27728",
-        "ithome_f8a5401c7913",
         "aihot_4b24e14b54b8",
         "solidot_cb2bc6ad3b8f",
         "aihot_2a6b61afae74"
       ],
       "legacy_event_ids": [],
-      "title": "Anthropic 数学家借助 Claude 证明黎曼猜想获 Lean 官方认证，斯坦福同日发布纯人类草案",
+      "title": "Anthropic 数学家与 Claude 合作证明黎曼猜想获 Lean 官方核验，斯坦福同日发纯人类草稿",
       "category": "tech",
       "entities": [
         "Anthropic / Claude",
         "Levent Alpöge",
         "Lean",
         "Mathlib",
-        "斯坦福大学"
+        "陶哲轩"
       ],
       "entity_ids": [
         "ent_anthropic"
@@ -198,19 +176,19 @@
       "source_status": "ok",
       "evidence_status": "multi_source",
       "evidence_label": "多独立来源提及（待核官方全文）",
-      "evidence_status_reason": "已有 6 家独立媒体族（另识别 4 条高度相似转载）提及（含摘要或正文首段）；多源转载不代表官方公告已证实",
+      "evidence_status_reason": "已有 5 家独立媒体族（另识别 4 条高度相似转载）提及（含摘要或正文首段）；多源转载不代表官方公告已证实",
       "attribution_warning": null,
       "regulatory_note": null,
       "contradictions": [],
       "downweight_reasons": [],
       "quality_flags": [],
       "material_depth": "title_and_excerpt",
-      "source_count": 13,
-      "platform_count": 9,
-      "independent_publisher_count": 6,
+      "source_count": 12,
+      "platform_count": 8,
+      "independent_publisher_count": 5,
       "reprint_count": 4,
       "published_at": "2026-11-20T23:14:05+08:00",
-      "event_date": "2026-11-21",
+      "event_date": "2026-11-22",
       "event_time": "2026-11-20T23:14:05+08:00",
       "stale": false,
       "event_date_source": "llm_extracted",
@@ -223,12 +201,12 @@
       "latest_reported_at": "2026-11-22T12:59:51+08:00",
       "fetched_at": "2026-11-22T14:58:49+08:00",
       "input_batch_id": "raw-20261122-145849",
-      "fact_summary": "11 月 20 日，Anthropic 数学家莱文特·阿尔波格（Levent Alpöge）在个人网站发布四页笔记，称与 AI 系统 Claude 合作完成黎曼猜想证明，并附上用 Lean 编写的 1740 万行计算机代码。随后 Lean 官方与 Mathlib 发布联合声明，确认该证明完全正确，多个不同语言编写的独立验证器均已跑通并排除 AI 作弊可能；数十名社区成员亦报告代码库编译正确。",
+      "fact_summary": "11 月 20 日，Anthropic 数学家 Levent Alpöge 发布笔记并附上一套 1740 万行 Lean 代码，称其与 AI 系统 Claude 合作完成了黎曼猜想证明。11 月 22 日前后，Lean 官方与 Mathlib 发布联合声明确认该证明代码完全正确，多个不同语言编写的独立验证器均已跑通并排除漏洞作弊可能。菲尔兹奖得主陶哲轩初步分析认为，该证明使用了朗兰兹纲领和算术几何前沿成果，学界消化理解尚需时日。",
       "fact_atoms": [
         {
-          "atom_id": "fa_16795655",
+          "atom_id": "fa_9584046",
           "subject": "Anthropic / Claude",
-          "metric_or_action": "Anthropic 数学家借助 Claude 证明黎曼猜想获 Lean 官方认证，斯坦福同日发布纯人类草案",
+          "metric_or_action": "Anthropic 数学家与 Claude 合作证明黎曼猜想获 Lean 官方核验，斯坦福同日发纯人类草稿",
           "value": null,
           "unit": null,
           "period": "单次披露/未注明周期",
@@ -243,12 +221,11 @@
           "revision": 1
         }
       ],
-      "ai_analysis": "该事件标志着大模型与形式化验证语言结合在基础数学研究中的实质性突破。通过 Lean 机械化核验，AI 辅助生成超大规模复杂证明的正确性首次在世纪数学难题上获得工具链层面的闭环确认，但也凸显出机器验证与人类数学界直观理解之间存在明显鸿沟。",
+      "ai_analysis": "AI 辅助数学研究正借助形式化验证语言 Lean 绕过传统同行评审中的信任门槛，使超大规模机器生成证明具备可自动核验性，但人类数学界对核心证明思路的直觉理解与学术确认仍需时间。",
       "unverified_claims": [
-        "莱文特·阿尔波格个人预期该方法可轻松推广并解决广义黎曼猜想及扩展黎曼猜想，相关推广尚未经完整证明与验证",
-        "斯坦福大学同日发布的纯人类竞争性证明草案尚处于草案阶段，报道未披露其已完成独立同行评审或形式化验证"
+        "Levent Alpöge 个人表示该方法可轻松推广至广义黎曼猜想，并预期后续可解决扩展黎曼猜想，目前尚待独立验证。"
       ],
-      "speculation_or_outlook": "学界后续将重点审查 Claude 生成的 1740 万行 Lean 证明背后的数学思想与人类可解释性，以及斯坦福人类草案与该证明的路径异同。",
+      "speculation_or_outlook": "数学界后续将对这份 1740 万行 Lean 代码的证明结构与斯坦福纯人类草稿进行交叉拆解与学术评议。",
       "sources": [
         {
           "item_id": "rss-gnews-ai-models-en_5b44a0b95416",
@@ -436,26 +413,6 @@
           "deep_fetch_status": null
         },
         {
-          "item_id": "ithome_f8a5401c7913",
-          "article_id": "ithome_f8a5401c7913",
-          "source_id": "ithome",
-          "source_name": "IT之家",
-          "publisher_name": "IT之家",
-          "source_status": "ok",
-          "source_kind": "news",
-          "source_tier": "aggregator_lead",
-          "publisher_family": "ithome",
-          "is_reprint_copy": false,
-          "title": "Anthropic 数学家 AI 攻克黎曼猜想？Lean 社区通过核验，数十人报告代码库编译正确",
-          "url": "https://www.ithome.com/1/030/547.htm",
-          "published_at": "2026-11-22T10:31:50+08:00",
-          "published_at_source": "upstream_local_cst",
-          "fetched_at": "2026-11-22T14:58:49+08:00",
-          "excerpt": null,
-          "thumbnail_url": null,
-          "deep_fetch_status": null
-        },
-        {
           "item_id": "aihot_4b24e14b54b8",
           "article_id": "aihot_4b24e14b54b8",
           "source_id": "aihot",
@@ -524,9 +481,9 @@
       },
       "followup": {
         "is_continuing": true,
-        "prev_batch_id": "smart-20261122-143735",
-        "prev_event_id": "evt_a241492ece59",
-        "prev_title": "Anthropic 数学家与 Claude 完成黎曼猜想 Lean 证明并获核验，斯坦福发布人类竞争草案",
+        "prev_batch_id": "smart-20261122-145938",
+        "prev_event_id": "evt_2697ac398d3d",
+        "prev_title": "Anthropic 数学家借助 Claude 证明黎曼猜想获 Lean 官方认证，斯坦福同日发布纯人类草案",
         "delta_note": "同一事件在最新批次出现表述修订或信息补充"
       },
       "is_new_in_batch": false,
@@ -534,16 +491,16 @@
       "radar_score": 93,
       "translation_attempts": 0,
       "translation_error": null,
-      "title_zh": "Anthropic 数学家借助 Claude 证明黎曼猜想获 Lean 官方认证，斯坦福同日发布纯人类草案",
+      "title_zh": "Anthropic 数学家与 Claude 合作证明黎曼猜想获 Lean 官方核验，斯坦福同日发纯人类草稿",
       "translation_status": "native_zh",
-      "summary_zh": "11 月 20 日，Anthropic 数学家莱文特·阿尔波格（Levent Alpöge）在个人网站发布四页笔记，称与 AI 系统 Claude 合作完成黎曼猜想证明，并附上用 Lean 编写的 1740 万行计算机代码。随后 Lean 官方与 Mathlib 发布联合声明，确认该证明完全正确，多个不同语言编写的独立验证器均已跑通并排除 AI 作弊可能；数十名社区成员亦报告代码库编译正确。",
+      "summary_zh": "11 月 20 日，Anthropic 数学家 Levent Alpöge 发布笔记并附上一套 1740 万行 Lean 代码，称其与 AI 系统 Claude 合作完成了黎曼猜想证明。11 月 22 日前后，Lean 官方与 Mathlib 发布联合声明确认该证明代码完全正确，多个不同语言编写的独立验证器均已跑通并排除漏洞作弊可能。菲尔兹奖得主陶哲轩初步分析认为，该证明使用了朗兰兹纲领和算术几何前沿成果，学界消化理解尚需时日。",
       "title_en": "Hours after Anthropic claims a Claude proof of the Riemann hypothesis, Stanford releases an all-human competing draft",
       "summary_en": "Hours after Anthropic claims a Claude proof of the Riemann hypothesis, Stanford releases an all-human competing draft The Decoder",
       "ai_analysis_en": ""
     },
     {
       "schema_version": "4.1",
-      "event_id": "evt_7f33ec1dc092",
+      "event_id": "evt_1765b5e7d053",
       "storyline_id": "st_f50ece07eecc",
       "article_ids": [
         "rss-techcrunch_931b5d702822",
@@ -553,14 +510,12 @@
         "aihot_6dfec01f52eb"
       ],
       "legacy_event_ids": [],
-      "title": "英媒调查指与被罢免黄仁勋有情感关系的 Alice Huang 牵涉对华走私英伟达芯片网络",
+      "title": "FT 调查称与前 Nvidia CEO 黄仁勋存在情感关系的 Alice Huang 牵涉对华芯片走私网络",
       "category": "tech",
       "entities": [
         "英伟达 (NVIDIA)",
         "Alice Huang",
-        "金融时报",
-        "埃隆·马斯克",
-        "TechCrunch"
+        "Financial Times"
       ],
       "entity_ids": [
         "ent_nvidia"
@@ -575,8 +530,9 @@
           "entity_type": "company",
           "sector": "半导体 / AI算力",
           "matched_aliases": [
+            "nvidia",
             "黄仁勋",
-            "英伟达"
+            "jensen huang"
           ],
           "tickers": [
             {
@@ -587,7 +543,7 @@
               "label": "NVDA.US (NASDAQ)"
             }
           ],
-          "reason": "正文/实体匹配关键词「黄仁勋 / 英伟达」",
+          "reason": "正文/实体匹配关键词「nvidia / 黄仁勋」",
           "confidence": 0.96
         }
       ],
@@ -627,12 +583,12 @@
       "latest_reported_at": "2026-11-22T08:47:52+08:00",
       "fetched_at": "2026-11-22T14:58:49+08:00",
       "input_batch_id": "raw-20261122-145849",
-      "fact_summary": "据英国《金融时报》（FT）调查报道，与已被罢免的英伟达前首席执行官黄仁勋存在情感关系的 Alice Huang，牵涉一个向中国走私英伟达芯片的网络。另据 TechCrunch 报道与播客节目指出，当前关于英伟达存在两种截然不同的叙事：一方面是公司最新的财报表现，另一方面则是科技界高管高调呼吁黄仁勋回归；TechCrunch 并指出埃隆·马斯克称英伟达员工“爱戴”被罢免的黄仁勋的说法可能言过其实。",
+      "fact_summary": "据《金融时报》（FT）调查报道，与已卸任的前 Nvidia CEO 黄仁勋（Jensen Huang）存在情感关系的 Alice Huang 牵涉一个向中国走私 Nvidia 芯片的网络。与此同时，TechCrunch 指出，Nvidia 近期呈现出两幅截然不同的图景：一方面公司最新财报表现亮眼，另一方面部分科技高管正公开呼吁让黄仁勋重返公司，而前任高管层的相关争议仍在发酵。",
       "fact_atoms": [
         {
-          "atom_id": "fa_30006350",
+          "atom_id": "fa_37561849",
           "subject": "英伟达 (NVIDIA)",
-          "metric_or_action": "英媒调查指与被罢免黄仁勋有情感关系的 Alice Huang 牵涉对华走私英伟达芯片网络",
+          "metric_or_action": "FT 调查称与前 Nvidia CEO 黄仁勋存在情感关系的 Alice Huang 牵涉对华芯片走私网络",
           "value": null,
           "unit": null,
           "period": "单次披露/未注明周期",
@@ -647,10 +603,8 @@
           "revision": 1
         }
       ],
-      "ai_analysis": "英伟达在面临 SEC 会计审查的同时，围绕前任核心高管的人事风波与芯片走私合规风险进一步放大了外部治理不确定性，可能对出口管制合规及公司治理声誉产生持续冲击。",
-      "unverified_claims": [
-        "关于“科技界高管请愿黄仁勋回归”与“英伟达员工对黄仁勋态度”的相关外部表态及调查细节仍有待公司官方进一步回应"
-      ],
+      "ai_analysis": "核心领导层变动与芯片出口合规调查并存，使 Nvidia 在保持基本面业绩的同时面临额外的公司治理与地缘监管不确定性。",
+      "unverified_claims": [],
       "speculation_or_outlook": null,
       "sources": [
         {
@@ -765,9 +719,9 @@
       },
       "followup": {
         "is_continuing": true,
-        "prev_batch_id": "smart-20261122-143735",
-        "prev_event_id": "evt_5ec141654e61",
-        "prev_title": "《金融时报》调查称与黄仁勋有情感关系的 Alice Huang 牵涉英伟达芯片走私网络",
+        "prev_batch_id": "smart-20261122-145938",
+        "prev_event_id": "evt_7f33ec1dc092",
+        "prev_title": "英媒调查指与被罢免黄仁勋有情感关系的 Alice Huang 牵涉对华走私英伟达芯片网络",
         "delta_note": "同一事件在最新批次出现表述修订或信息补充"
       },
       "is_new_in_batch": false,
@@ -775,36 +729,45 @@
       "radar_score": 75,
       "translation_attempts": 0,
       "translation_error": null,
-      "title_zh": "英媒调查指与被罢免黄仁勋有情感关系的 Alice Huang 牵涉对华走私英伟达芯片网络",
+      "title_zh": "FT 调查称与前 Nvidia CEO 黄仁勋存在情感关系的 Alice Huang 牵涉对华芯片走私网络",
       "translation_status": "native_zh",
-      "summary_zh": "据英国《金融时报》（FT）调查报道，与已被罢免的英伟达前首席执行官黄仁勋存在情感关系的 Alice Huang，牵涉一个向中国走私英伟达芯片的网络。另据 TechCrunch 报道与播客节目指出，当前关于英伟达存在两种截然不同的叙事：一方面是公司最新的财报表现，另一方面则是科技界高管高调呼吁黄仁勋回归；TechCrunch 并指出埃隆·马斯克称英伟达员工“爱戴”被罢免的黄仁勋的说法可能言过其实。",
+      "summary_zh": "据《金融时报》（FT）调查报道，与已卸任的前 Nvidia CEO 黄仁勋（Jensen Huang）存在情感关系的 Alice Huang 牵涉一个向中国走私 Nvidia 芯片的网络。与此同时，TechCrunch 指出，Nvidia 近期呈现出两幅截然不同的图景：一方面公司最新财报表现亮眼，另一方面部分科技高管正公开呼吁让黄仁勋重返公司，而前任高管层的相关争议仍在发酵。",
       "title_en": "Behind Jensen Huang's exit, questions about a management style reportedly built on fear",
       "summary_en": "Elon Musk may have been overstating it when he said Nvidia's employees “love” the ousted Jensen Huang.",
       "ai_analysis_en": ""
     },
     {
       "schema_version": "4.1",
-      "event_id": "evt_143b38b4074e",
-      "storyline_id": "st_fee71433ad60",
+      "event_id": "evt_0ff90a53ab86",
+      "storyline_id": "st_c0c2a5098d4c",
       "article_ids": [
+        "rss-marktechpost_c631822720d9",
         "rss-the-decoder_21d64142ad93",
-        "rss-gnews-ai-models-zh_bc17f86570dc",
+        "rss-gnews-ai-models-en_9aaa319fd101",
+        "rss-the-decoder_d91e0aeda19c",
         "rss-openai-news_58f433896ab7",
-        "rss-gnews-ai-models-zh_5a15daf0a144"
+        "rss-gnews-ai-models-zh_5a7366b35cfa",
+        "rss-gnews-ai-models-zh_5a15daf0a144",
+        "rss-gnews-ai-models-en_b5ac03c77c23"
       ],
       "legacy_event_ids": [],
-      "title": "OpenAI 启动反蒸馏封号行动并强化 GPT-6.2 防护，称受保护推理提取率降至 0.2%",
+      "title": "OpenAI 发布 GPT-6 与 GPT-Live-1.1，并在自测红队中将 GPT-6.2 思考链提取率降至 0.2%",
       "category": "tech",
       "entities": [
         "OpenAI",
+        "微软 (Microsoft)",
+        "GPT-6",
+        "GPT-Live-1.1",
         "GPT-6.2 Astra",
         "GPT-6.2 Sol"
       ],
       "entity_ids": [
-        "ent_openai"
+        "ent_openai",
+        "ent_microsoft"
       ],
       "entity_confidences": {
-        "OpenAI": 0.99
+        "OpenAI": 0.99,
+        "微软 (Microsoft)": 0.73
       },
       "matched_entities": [
         {
@@ -818,30 +781,51 @@
           "tickers": [],
           "reason": "正文/实体匹配关键词「openai」",
           "confidence": 0.99
+        },
+        {
+          "entity_id": "ent_microsoft",
+          "canonical_name": "微软 (Microsoft)",
+          "entity_type": "company",
+          "sector": "云基础设施 / AI算力需求方",
+          "matched_aliases": [
+            "微软",
+            "microsoft"
+          ],
+          "tickers": [
+            {
+              "symbol": "MSFT",
+              "market": "US",
+              "exchange": "NASDAQ",
+              "currency": "USD",
+              "label": "MSFT.US (NASDAQ)"
+            }
+          ],
+          "reason": "正文/实体匹配关键词「微软 / microsoft」",
+          "confidence": 0.73
         }
       ],
       "importance": "high",
-      "sentiment": "Neutral",
+      "sentiment": "Bullish",
       "special_note": null,
       "material_stage": null,
       "material_stage_label": null,
       "material_stage_confidence": null,
-      "thumbnail_url": "https://the-decoder.com/wp-content/uploads/2026/02/ai_model_distill.jpeg",
-      "publisher_name": "The Decoder (AI前沿)",
+      "thumbnail_url": "https://s.w.org/images/core/emoji/17.0.2/72x72/25b6.png",
+      "publisher_name": "MarkTechPost (AI论文/模型)",
       "source_status": "ok",
       "evidence_status": "multi_source",
       "evidence_label": "多独立来源提及（待核官方全文）",
-      "evidence_status_reason": "已有 2 家独立媒体族提及（含摘要或正文首段）；多源转载不代表官方公告已证实",
+      "evidence_status_reason": "已有 2 家独立媒体族（另识别 1 条高度相似转载）提及（含摘要或正文首段）；多源转载不代表官方公告已证实",
       "attribution_warning": null,
       "regulatory_note": null,
       "contradictions": [],
       "downweight_reasons": [],
       "quality_flags": [],
       "material_depth": "title_and_excerpt",
-      "source_count": 4,
-      "platform_count": 3,
+      "source_count": 8,
+      "platform_count": 5,
       "independent_publisher_count": 2,
-      "reprint_count": 0,
+      "reprint_count": 1,
       "published_at": "2026-11-20T18:00:00+08:00",
       "event_date": "2026-11-21",
       "event_time": "2026-11-20T18:00:00+08:00",
@@ -850,36 +834,59 @@
       "is_stale_rehash": false,
       "time_trust_level": "article_timestamp",
       "time_confidence": "article_timestamp",
-      "first_discovered_at": "2026-11-22T14:36:45+08:00",
+      "first_discovered_at": "2026-11-22T14:58:49+08:00",
       "first_reported_at": "2026-11-20T18:00:00+08:00",
-      "latest_fact_update_at": "2026-11-22T09:40:00+08:00",
-      "latest_reported_at": "2026-11-22T09:40:00+08:00",
+      "latest_fact_update_at": "2026-11-22T08:23:53+08:00",
+      "latest_reported_at": "2026-11-22T08:23:53+08:00",
       "fetched_at": "2026-11-22T14:58:49+08:00",
       "input_batch_id": "raw-20261122-145849",
-      "fact_summary": "OpenAI 近期发布多层次对抗性蒸馏（adversarial distillation）防护方案，结合模型训练、安全护栏、检测与执法封号等手段防止模型能力被非法提取。OpenAI 披露，在针对 GPT-6.2 Astra 和 GPT-6.2 Sol 的防护强化后，其受保护内部推理（思考链）被提取的成功率从 54% 降至 0.2%（注：该数据源自 OpenAI 自报的自适应红队测试结果）。",
+      "fact_summary": "OpenAI 于 11 月 20 日发布 GPT-6，同时向 API 推出全双工语音模型 GPT-Live-1.1，优化多语言口音与转写能力，并将闲置 WebRTC 待机计费从每分钟 0.05 美元降至 0.02 美元；微软亦已将 GPT-6.2 Sol 全球部署至 Copilot。针对模型能力窃取问题，OpenAI 采取大规模封号与分层防护措施开展反蒸馏行动。",
       "fact_atoms": [
         {
-          "atom_id": "fa_75622725",
+          "atom_id": "fa_15272028",
           "subject": "OpenAI",
-          "metric_or_action": "OpenAI 启动反蒸馏封号行动并强化 GPT-6.2 防护，称受保护推理提取率降至 0.2%",
+          "metric_or_action": "OpenAI 发布 GPT-6 与 GPT-Live-1.1，并在自测红队中将 GPT-6.2 思考链提取率降至 0.2%",
           "value": "0.2",
           "unit": "%",
           "period": "单次披露/未注明周期",
           "scope": "新闻事件陈述",
           "fact_status": "multi_source_reported",
-          "attribution": "The Decoder (AI前沿)",
-          "source_ref": "rss-the-decoder_21d64142ad93",
-          "source_url": "https://the-decoder.com/openai-makes-it-much-harder-for-attackers-to-extract-how-its-latest-ai-models-think",
-          "source_excerpt_or_locator": "OpenAI has significantly strengthened safeguards against extracting internal reasoning from GPT-6.2 Astra and GPT-6.2 Sol. In adaptive red-teaming tests, the success rate for extra",
-          "published_at": "2026-11-21T04:31:50+08:00",
-          "discovered_at": "2026-11-22T14:36:45+08:00",
+          "attribution": "MarkTechPost (AI论文/模型)",
+          "source_ref": "rss-marktechpost_c631822720d9",
+          "source_url": "https://www.marktechpost.com/2026/11/21/openai-gpt-live-1-1-api-standby-mode",
+          "source_excerpt_or_locator": "OpenAI has released GPT-Live-1.1 in the API. The full-duplex voice model improves multilingual accents and transcription, and a new standby mode bills idle WebRTC time at $0.02 per",
+          "published_at": "2026-11-21T19:46:17+08:00",
+          "discovered_at": "2026-11-22T14:58:49+08:00",
           "revision": 1
         }
       ],
-      "ai_analysis": "随着推理型大模型将高价值能力沉淀在内部思考链中，防止竞争对手通过大规模 API 调用进行“模型蒸馏”已成为头部 AI 实验室保护技术护城河与商业壁垒的核心手段，但也可能对第三方开发者调用边界与合规审查带来更严格限制。",
-      "unverified_claims": [],
+      "ai_analysis": "OpenAI 正同步推进新一代模型迭代、语音智能体降本与推理链知识产权保护，但 0.2% 的抗提取指标目前来自其自身红队测试，外部真实对抗环境下防护有效性仍待观察。",
+      "unverified_claims": [
+        "GPT-6.2 Astra 与 GPT-6.2 Sol 思考链提取成功率从 54% 降至 0.2% 系 OpenAI 自身自适应红队测试结果，尚无独立第三方验证。"
+      ],
       "speculation_or_outlook": null,
       "sources": [
+        {
+          "item_id": "rss-marktechpost_c631822720d9",
+          "article_id": "rss-marktechpost_c631822720d9",
+          "source_id": "rss-marktechpost",
+          "source_name": "MarkTechPost (AI论文/模型)",
+          "publisher_name": "MarkTechPost (AI论文/模型)",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "rss",
+          "is_reprint_copy": false,
+          "title": "OpenAI Ships GPT-Live-1.1 for Voice Agents, Cuts Idle Cost to $0.02/Min",
+          "url": "https://www.marktechpost.com/2026/11/21/openai-gpt-live-1-1-api-standby-mode",
+          "published_at": "2026-11-21T19:46:17+08:00",
+          "published_at_source": "upstream_rfc2822",
+          "fetched_at": "2026-11-22T14:58:54+08:00",
+          "excerpt": "OpenAI has released GPT-Live-1.1 in the API. The full-duplex voice model improves multilingual accents and transcription, and a new standby mode bills idle WebRTC time at $0.02 per minute instead of $0.05. The post OpenAI Ships GPT-Live-1.1 for Voice Agents,…",
+          "thumbnail_url": "https://s.w.org/images/core/emoji/17.0.2/72x72/25b6.png",
+          "deep_fetch_status": null,
+          "title_zh": "OpenAI发布用于语音代理的GPT-Live-1.1，将闲置成本降至每分钟0.02美元"
+        },
         {
           "item_id": "rss-the-decoder_21d64142ad93",
           "article_id": "rss-the-decoder_21d64142ad93",
@@ -902,9 +909,9 @@
           "title_zh": "OpenAI大幅提高了攻击者提取其最新AI模型思考方式的难度"
         },
         {
-          "item_id": "rss-gnews-ai-models-zh_bc17f86570dc",
-          "article_id": "rss-gnews-ai-models-zh_bc17f86570dc",
-          "source_id": "rss-gnews-ai-models-zh",
+          "item_id": "rss-gnews-ai-models-en_9aaa319fd101",
+          "article_id": "rss-gnews-ai-models-en_9aaa319fd101",
+          "source_id": "rss-gnews-ai-models-en",
           "source_name": "权威报道",
           "publisher_name": "权威报道",
           "source_status": "ok",
@@ -912,14 +919,36 @@
           "source_tier": "direct_media",
           "publisher_family": "gnews-aggregator",
           "is_reprint_copy": false,
-          "title": "大规模封号来了！OpenAI开打反蒸馏战",
-          "url": "https://news.google.com/rss/articles/CBMiSEFVX3lxTE1LRXFjT09RWXQ5eDBoSXRyaFkzQzE2Um9kcnhjV2JpVEFsMVZZMDhZT3B5U2hKU3lNcnJsV19TaFExVWU5QUgxNw?oc=5",
-          "published_at": "2026-11-22T09:40:00+08:00",
+          "title": "Microsoft puts OpenAI's GPT-6.2 Sol in Copilot worldwide as MAI models push in",
+          "url": "https://news.google.com/rss/articles/CBMipwFBVV95cUxQU3lkS2VOWU1vclhfMk44Smk4QlotQUxDaUZxWW9JRkNtS0FIUC1rWnZuSXFqdktMaXROMjVxRWM1UkVMY0Nfbjk5YmhMQTR4LTFrUU5xUEFYdDZPQnU4UGR0YjhERnRVWXd2RGwya05ZSGotdDFPN0RfWDhrZFhzRVN6bWdIdjVrRC1reWlISVUtaGdQanRBTVh3ZlBhVVlLSGd2WlI0SQ?oc=5",
+          "published_at": "2026-11-22T08:23:53+08:00",
           "published_at_source": "upstream_rfc2822",
           "fetched_at": "2026-11-22T14:58:54+08:00",
-          "excerpt": "大规模封号来了！OpenAI开打反蒸馏战 智源社区",
+          "excerpt": "Microsoft puts OpenAI's GPT-6.2 Sol in Copilot worldwide as MAI models push in Startup Fortune",
           "thumbnail_url": null,
-          "deep_fetch_status": null
+          "deep_fetch_status": null,
+          "title_zh": "微软在全球 Copilot 中引入 OpenAI 的 GPT-6.2 Sol，MAI 模型加速普及"
+        },
+        {
+          "item_id": "rss-the-decoder_d91e0aeda19c",
+          "article_id": "rss-the-decoder_d91e0aeda19c",
+          "source_id": "rss-the-decoder",
+          "source_name": "The Decoder (AI前沿)",
+          "publisher_name": "The Decoder (AI前沿)",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "rss",
+          "is_reprint_copy": false,
+          "title": "OpenAI shares new prompting tips for GPT-6.2 Astra and Sol to fix brief answers and unnecessary questions",
+          "url": "https://the-decoder.com/openai-shares-new-prompting-tips-for-gpt-6-2-astra-and-sol-to-fix-brief-answers-and-unnecessary-questions",
+          "published_at": "2026-11-21T21:32:35+08:00",
+          "published_at_source": "upstream_rfc2822",
+          "fetched_at": "2026-11-22T14:58:54+08:00",
+          "excerpt": "OpenAI has released new prompt templates for GPT-6.2 Astra and Sol meant to fix common model behaviors such as overly brief answers, unnecessary follow-up questions, and excessive testing when coding. The API is changing as well, since editing a conversation'…",
+          "thumbnail_url": null,
+          "deep_fetch_status": null,
+          "title_zh": "OpenAI 分享 GPT-6.2 Astra 和 Sol 新提示词技巧，旨在解决回答简短和不必要提问问题"
         },
         {
           "item_id": "rss-openai-news_58f433896ab7",
@@ -943,6 +972,26 @@
           "title_zh": "对抗性蒸馏"
         },
         {
+          "item_id": "rss-gnews-ai-models-zh_5a7366b35cfa",
+          "article_id": "rss-gnews-ai-models-zh_5a7366b35cfa",
+          "source_id": "rss-gnews-ai-models-zh",
+          "source_name": "权威报道",
+          "publisher_name": "权威报道",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "gnews-aggregator",
+          "is_reprint_copy": false,
+          "title": "OpenAI发布GPT-6 并宣告“欢迎来到AGI时代”",
+          "url": "https://news.google.com/rss/articles/CBMiVEFVX3lxTE42MkZRdnhNVkptcUVpLXhDV3Z5WXZ4Unh6WFNZRDFMSkRTSTd3cEV6akxma0FBdmh1d3ZjOW9HUURzQXJLWlhDc1c2dy1hTGRRZzdxVA?oc=5",
+          "published_at": "2026-11-20T20:35:53+08:00",
+          "published_at_source": "upstream_rfc2822",
+          "fetched_at": "2026-11-22T14:58:54+08:00",
+          "excerpt": "OpenAI发布GPT-6 并宣告“欢迎来到AGI时代” 第一财经",
+          "thumbnail_url": null,
+          "deep_fetch_status": null
+        },
+        {
           "item_id": "rss-gnews-ai-models-zh_5a15daf0a144",
           "article_id": "rss-gnews-ai-models-zh_5a15daf0a144",
           "source_id": "rss-gnews-ai-models-zh",
@@ -961,6 +1010,148 @@
           "excerpt": "OpenAI反蒸馏防护进展：GPT-6.2 Astra思考链提取成功率从54%降至0.2% Sohu",
           "thumbnail_url": null,
           "deep_fetch_status": null
+        },
+        {
+          "item_id": "rss-gnews-ai-models-en_b5ac03c77c23",
+          "article_id": "rss-gnews-ai-models-en_b5ac03c77c23",
+          "source_id": "rss-gnews-ai-models-en",
+          "source_name": "权威报道",
+          "publisher_name": "权威报道",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "gnews-aggregator",
+          "is_reprint_copy": true,
+          "title": "OpenAI Ships GPT-Live-1.1 for Voice Agents, Cuts Idle Cost to $0.02/Min",
+          "url": "https://news.google.com/rss/articles/CBMigwFBVV95cUxPZl9NVnpyaGtfLXJXQTNEZ1p2SDN1bDZMT2luSGdwbS1ITXp6ek5pUHRjUF9DeVNqR1hCSFo3QjRLRXZRWWZybG5LenJxNjdTbFpzOUtxV3VjMUlhTDBSa2IxWUM4cHB1dFJJUjRROGxkTWhieDlzRnFSNHctaU12WW5oZ9IBgwFBVV95cUxPZl9NVnpyaGtfLXJXQTNEZ1p2SDN1bDZMT2luSGdwbS1ITXp6ek5pUHRjUF9DeVNqR1hCSFo3QjRLRXZRWWZybG5LenJxNjdTbFpzOUtxV3VjMUlhTDBSa2IxWUM4cHB1dFJJUjRROGxkTWhieDlzRnFSNHctaU12WW5oZw?oc=5",
+          "published_at": "2026-11-21T19:46:17+08:00",
+          "published_at_source": "upstream_rfc2822",
+          "fetched_at": "2026-11-22T14:58:54+08:00",
+          "excerpt": "OpenAI Ships GPT-Live-1.1 for Voice Agents, Cuts Idle Cost to $0.02/Min MarkTechPost",
+          "thumbnail_url": "https://s.w.org/images/core/emoji/17.0.2/72x72/25b6.png",
+          "deep_fetch_status": null,
+          "title_zh": "OpenAI发布用于语音代理的GPT-Live-1.1，将闲置成本降至每分钟0.02美元"
+        }
+      ],
+      "verification": {
+        "all_refs_valid": false,
+        "has_primary_url": true,
+        "rejected_refs": [
+          {
+            "ref": "R042",
+            "reason": "引用条目与事件标题语义相关性不足"
+          }
+        ],
+        "has_first_party": false
+      },
+      "followup": null,
+      "is_new_in_batch": true,
+      "update_kind": "new_discovery",
+      "radar_score": 82,
+      "translation_attempts": 0,
+      "translation_error": null,
+      "title_zh": "OpenAI 发布 GPT-6 与 GPT-Live-1.1，并在自测红队中将 GPT-6.2 思考链提取率降至 0.2%",
+      "translation_status": "native_zh",
+      "summary_zh": "OpenAI 于 11 月 20 日发布 GPT-6，同时向 API 推出全双工语音模型 GPT-Live-1.1，优化多语言口音与转写能力，并将闲置 WebRTC 待机计费从每分钟 0.05 美元降至 0.02 美元；微软亦已将 GPT-6.2 Sol 全球部署至 Copilot。针对模型能力窃取问题，OpenAI 采取大规模封号与分层防护措施开展反蒸馏行动。",
+      "title_en": "OpenAI Ships GPT-Live-1.1 for Voice Agents, Cuts Idle Cost to $0.02/Min",
+      "summary_en": "OpenAI has released GPT-Live-1.1 in the API. The full-duplex voice model improves multilingual accents and transcription, and a new standby mode bills idle WebRTC time at $0.02 per minute instead of $0.05. The post OpenAI Ships GPT-Live-1.1 for Voice Agents,…",
+      "ai_analysis_en": ""
+    },
+    {
+      "schema_version": "4.1",
+      "event_id": "evt_067c298f87ce",
+      "storyline_id": "st_41232caed896",
+      "article_ids": [
+        "ithome-rss_260123d59289"
+      ],
+      "legacy_event_ids": [],
+      "title": "全球电子协会警告 AI 挤占产能致 PCB 或短缺至 2027 年上半年，风险堪比 2021 年芯片荒",
+      "category": "tech",
+      "entities": [
+        "全球电子协会"
+      ],
+      "entity_ids": [],
+      "entity_confidences": {},
+      "matched_entities": [],
+      "importance": "high",
+      "sentiment": "Bearish",
+      "special_note": null,
+      "material_stage": null,
+      "material_stage_label": null,
+      "material_stage_confidence": null,
+      "thumbnail_url": null,
+      "publisher_name": "IT之家 实时快讯",
+      "source_status": "ok",
+      "evidence_status": "single_source",
+      "evidence_label": "单一独立来源线索",
+      "evidence_status_reason": "目前仅见 1 家独立来源（共 1 条引用含转载，含摘要/首段），尚未见独立渠道交叉或官方确认",
+      "attribution_warning": null,
+      "regulatory_note": null,
+      "contradictions": [],
+      "downweight_reasons": [],
+      "quality_flags": [],
+      "material_depth": "title_and_excerpt",
+      "source_count": 1,
+      "platform_count": 1,
+      "independent_publisher_count": 1,
+      "reprint_count": 1,
+      "published_at": "2026-11-22T14:25:23+08:00",
+      "event_date": "2026-11-22",
+      "event_time": "2026-11-22T14:25:23+08:00",
+      "stale": false,
+      "event_date_source": "llm_extracted",
+      "is_stale_rehash": false,
+      "time_trust_level": "article_timestamp",
+      "time_confidence": "article_timestamp",
+      "first_discovered_at": "2026-11-22T14:58:49+08:00",
+      "first_reported_at": "2026-11-22T14:25:23+08:00",
+      "latest_fact_update_at": "2026-11-22T14:25:23+08:00",
+      "latest_reported_at": "2026-11-22T14:25:23+08:00",
+      "fetched_at": "2026-11-22T14:58:49+08:00",
+      "input_batch_id": "raw-20261122-145849",
+      "fact_summary": "全球电子协会（Global Electronics Association）于 11 月 18 日发布行业警报称，印制电路板（PCB）供应链短缺持续加剧，汽车、工业、医疗、国防和电信企业均反映交期延长且难以保障供应，短缺态势可能延续至 2027 年上半年。协会指出，AI 服务器用板正从普通约 12 层转向 40 至 60 层以上，每增加一层均大幅消耗玻纤布、树脂、铜箔与覆铜板，正在挤占原有产能。",
+      "fact_atoms": [
+        {
+          "atom_id": "fa_7613420",
+          "subject": "全球电子协会",
+          "metric_or_action": "全球电子协会警告 AI 挤占产能致 PCB 或短缺至 2027 年上半年，风险堪比 2021 年芯片荒",
+          "value": null,
+          "unit": null,
+          "period": "单次披露/未注明周期",
+          "scope": "新闻事件陈述",
+          "fact_status": "reported_unconfirmed_by_filing",
+          "attribution": "IT之家 实时快讯",
+          "source_ref": "ithome-rss_260123d59289",
+          "source_url": "https://www.ithome.com/1/030/573.htm",
+          "source_excerpt_or_locator": "IT之家 11 月 22 日消息，全球电子协会（Global Electronics Association）11 月 18 日发布行业警报称，印制电路板（PCB）供应链短缺持续加剧，汽车、工业、医疗、国防和电信企业均反映交期延长、难以保障供应，AI 需求正在挤占本就紧张的产能。 协会指出，这轮需求不仅规模超出供应链原有承载能力，形态也更耗材料。普通 PCB",
+          "published_at": "2026-11-22T14:25:23+08:00",
+          "discovered_at": "2026-11-22T14:58:49+08:00",
+          "revision": 1
+        }
+      ],
+      "ai_analysis": "AI 算力基础设施扩张的瓶颈正从芯片与封装外溢至基础电子元器件与材料环节，高多层 PCB 产能挤占效应可能抬升非 AI 制造业的硬件交付成本与周期。",
+      "unverified_claims": [],
+      "speculation_or_outlook": "若上游玻纤布、铜箔及覆铜板扩产不及预期，传统工业与汽车电子供应链在 2027 年前仍将面临持续排产挤压。",
+      "sources": [
+        {
+          "item_id": "ithome-rss_260123d59289",
+          "article_id": "ithome-rss_260123d59289",
+          "source_id": "ithome-rss",
+          "source_name": "IT之家 实时快讯",
+          "publisher_name": "IT之家 实时快讯",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "ithome-rss",
+          "is_reprint_copy": true,
+          "title": "全球电子协会警告 PCB 或短缺至 2027 年上半年，风险堪比 2021 年芯片短缺",
+          "url": "https://www.ithome.com/1/030/573.htm",
+          "published_at": "2026-11-22T14:25:23+08:00",
+          "published_at_source": "upstream_local_cst",
+          "fetched_at": "2026-11-22T14:58:50+08:00",
+          "excerpt": "IT之家 11 月 22 日消息，全球电子协会（Global Electronics Association）11 月 18 日发布行业警报称，印制电路板（PCB）供应链短缺持续加剧，汽车、工业、医疗、国防和电信企业均反映交期延长、难以保障供应，AI 需求正在挤占本就紧张的产能。 协会指出，这轮需求不仅规模超出供应链原有承载能力，形态也更耗材料。普通 PCB 约为 12 层， AI 服务器用板正转向 40-60 层以上 ，每增加一层都要消耗更多玻纤布、树脂、铜箔和覆铜板。",
+          "thumbnail_url": null,
+          "deep_fetch_status": null
         }
       ],
       "verification": {
@@ -971,26 +1162,260 @@
       },
       "followup": {
         "is_continuing": true,
-        "prev_batch_id": "smart-20261122-143735",
-        "prev_event_id": "evt_25652e9c44ef",
-        "prev_title": "OpenAI 强化反蒸馏防线，红队测试称 GPT-6.2 思考链提取成功率降至 0.2%",
+        "prev_batch_id": "smart-20261122-145938",
+        "prev_event_id": "evt_44bb5925092d",
+        "prev_title": "全球电子协会警告 AI 服务器推高多层板需求，PCB 或短缺至 2027 年上半年",
         "delta_note": "同一事件在最新批次出现表述修订或信息补充"
       },
       "is_new_in_batch": false,
       "update_kind": "new_fact_update",
-      "radar_score": 75,
+      "radar_score": 39,
       "translation_attempts": 0,
       "translation_error": null,
-      "title_zh": "OpenAI 启动反蒸馏封号行动并强化 GPT-6.2 防护，称受保护推理提取率降至 0.2%",
+      "title_zh": "全球电子协会警告 AI 挤占产能致 PCB 或短缺至 2027 年上半年，风险堪比 2021 年芯片荒",
       "translation_status": "native_zh",
-      "summary_zh": "OpenAI 近期发布多层次对抗性蒸馏（adversarial distillation）防护方案，结合模型训练、安全护栏、检测与执法封号等手段防止模型能力被非法提取。OpenAI 披露，在针对 GPT-6.2 Astra 和 GPT-6.2 Sol 的防护强化后，其受保护内部推理（思考链）被提取的成功率从 54% 降至 0.2%（注：该数据源自 OpenAI 自报的自适应红队测试结果）。",
-      "title_en": "OpenAI makes it much harder for attackers to extract how its latest AI models think",
-      "summary_en": "OpenAI has significantly strengthened safeguards against extracting internal reasoning from GPT-6.2 Astra and GPT-6.2 Sol. In adaptive red-teaming tests, the success rate for extracting protected reasoning fell from 54 percent to 0.2 percent. The company is a…",
+      "summary_zh": "全球电子协会（Global Electronics Association）于 11 月 18 日发布行业警报称，印制电路板（PCB）供应链短缺持续加剧，汽车、工业、医疗、国防和电信企业均反映交期延长且难以保障供应，短缺态势可能延续至 2027 年上半年。协会指出，AI 服务器用板正从普通约 12 层转向 40 至 60 层以上，每增加一层均大幅消耗玻纤布、树脂、铜箔与覆铜板，正在挤占原有产能。",
+      "title_en": "",
+      "summary_en": "",
       "ai_analysis_en": ""
     },
     {
       "schema_version": "4.1",
-      "event_id": "evt_6c8200815557",
+      "event_id": "evt_c227c5f0b728",
+      "storyline_id": "st_203a9d885055",
+      "article_ids": [
+        "rss-the-decoder_a7ee49c5f9be",
+        "rss-gnews-opensource-ai_6f7f9acaf19a",
+        "rss-techcrunch_c89f4df24160",
+        "aihot_213668956e5c"
+      ],
+      "legacy_event_ids": [],
+      "title": "Signal 更新客户端默认屏蔽截图，阻断 Siri AI、Gemini 等智能体读取私密消息",
+      "category": "tech",
+      "entities": [
+        "Signal",
+        "苹果 (Apple)",
+        "Meta",
+        "Siri AI",
+        "Gemini Intelligence"
+      ],
+      "entity_ids": [
+        "ent_google",
+        "ent_ai_infra_tools",
+        "ent_apple"
+      ],
+      "entity_confidences": {
+        "Google / DeepMind / Gemini": 0.96,
+        "AI 推理与框架生态 (vLLM / llama.cpp / Transformers)": 0.86,
+        "苹果 (Apple)": 0.99
+      },
+      "matched_entities": [
+        {
+          "entity_id": "ent_google",
+          "canonical_name": "Google / DeepMind / Gemini",
+          "entity_type": "company",
+          "sector": "AI 模型与云基础设施",
+          "matched_aliases": [
+            "gemini",
+            "google"
+          ],
+          "tickers": [
+            {
+              "symbol": "GOOGL",
+              "market": "US",
+              "exchange": "NASDAQ",
+              "currency": "USD",
+              "label": "GOOGL.US (NASDAQ)"
+            }
+          ],
+          "reason": "正文/实体匹配关键词「gemini / google」",
+          "confidence": 0.96
+        },
+        {
+          "entity_id": "ent_ai_infra_tools",
+          "canonical_name": "AI 推理与框架生态 (vLLM / llama.cpp / Transformers)",
+          "entity_type": "tech",
+          "sector": "AI 开源基础设施",
+          "matched_aliases": [
+            "智能体"
+          ],
+          "tickers": [],
+          "reason": "正文/实体匹配关键词「智能体」",
+          "confidence": 0.86
+        },
+        {
+          "entity_id": "ent_apple",
+          "canonical_name": "苹果 (Apple)",
+          "entity_type": "company",
+          "sector": "消费电子与端侧AI",
+          "matched_aliases": [
+            "ios",
+            "apple"
+          ],
+          "tickers": [
+            {
+              "symbol": "AAPL",
+              "market": "US",
+              "exchange": "NASDAQ",
+              "currency": "USD",
+              "label": "AAPL.US (NASDAQ)"
+            }
+          ],
+          "reason": "正文/实体匹配关键词「ios / apple」",
+          "confidence": 0.99
+        }
+      ],
+      "importance": "high",
+      "sentiment": "Mixed",
+      "special_note": null,
+      "material_stage": null,
+      "material_stage_label": null,
+      "material_stage_confidence": null,
+      "thumbnail_url": "https://the-decoder.com/wp-content/uploads/2026/11/signal_ai_agents.png",
+      "publisher_name": "The Decoder (AI前沿)",
+      "source_status": "ok",
+      "evidence_status": "multi_source",
+      "evidence_label": "多独立来源提及（待核官方全文）",
+      "evidence_status_reason": "已有 3 家独立媒体族提及（含摘要或正文首段）；多源转载不代表官方公告已证实",
+      "attribution_warning": null,
+      "regulatory_note": null,
+      "contradictions": [],
+      "downweight_reasons": [],
+      "quality_flags": [],
+      "material_depth": "title_and_excerpt",
+      "source_count": 3,
+      "platform_count": 3,
+      "independent_publisher_count": 3,
+      "reprint_count": 0,
+      "published_at": "2026-11-22T02:01:36+08:00",
+      "event_date": "2026-11-22",
+      "event_time": "2026-11-21T03:50:27+08:00",
+      "stale": false,
+      "event_date_source": "llm_extracted",
+      "is_stale_rehash": false,
+      "time_trust_level": "article_timestamp",
+      "time_confidence": "article_timestamp",
+      "first_discovered_at": "2026-11-22T13:48:58+08:00",
+      "first_reported_at": "2026-11-22T02:01:36+08:00",
+      "latest_fact_update_at": "2026-11-22T07:28:10+08:00",
+      "latest_reported_at": "2026-11-22T07:28:10+08:00",
+      "fetched_at": "2026-11-22T14:58:49+08:00",
+      "input_batch_id": "raw-20261122-145849",
+      "fact_summary": "开源端到端加密聊天应用 Signal 近期推出 iOS（含 iOS 27 相关适配）与 Android 版更新，默认屏蔽应用内截图与录屏功能，以防止 Apple 的 Siri AI、Google 的 Gemini Intelligence 以及 Meta 的 Muse 等操作系统级 AI 智能体在用户不知情的情况下读取私人聊天内容。",
+      "fact_atoms": [
+        {
+          "atom_id": "fa_59583792",
+          "subject": "Signal",
+          "metric_or_action": "Signal 更新客户端默认屏蔽截图，阻断 Siri AI、Gemini 等智能体读取私密消息",
+          "value": null,
+          "unit": null,
+          "period": "单次披露/未注明周期",
+          "scope": "新闻事件陈述",
+          "fact_status": "multi_source_reported",
+          "attribution": "The Decoder (AI前沿)",
+          "source_ref": "rss-the-decoder_a7ee49c5f9be",
+          "source_url": "https://the-decoder.com/signal-blocks-screenshots-on-ios-27-and-android-to-stop-ai-agents-from-reading-private-chats",
+          "source_excerpt_or_locator": "Signal is blocking screenshots to stop AI agents like Apple's Siri AI, Google's Gemini Intelligence, and Meta's Muse from reading private chats. The app calls it an \"existential th",
+          "published_at": "2026-11-21T03:50:27+08:00",
+          "discovered_at": "2026-11-22T13:48:58+08:00",
+          "revision": 1
+        }
+      ],
+      "ai_analysis": "随着手机与桌面操作系统将跨应用读屏作为 AI 智能体的核心能力，隐私通讯软件与系统级 AI 助手之间的权限博弈正直接走向技术对抗。",
+      "unverified_claims": [],
+      "speculation_or_outlook": null,
+      "sources": [
+        {
+          "item_id": "rss-gnews-opensource-ai_6f7f9acaf19a",
+          "article_id": "rss-gnews-opensource-ai_6f7f9acaf19a",
+          "source_id": "rss-gnews-opensource-ai",
+          "source_name": "权威报道",
+          "publisher_name": "权威报道",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "gnews-aggregator",
+          "is_reprint_copy": false,
+          "title": "Signal Blocks Siri, Gemini and Other AI Agents From Reading Your Messages",
+          "url": "https://news.google.com/rss/articles/CBMiqwFBVV95cUxQRWc3MkF6MnRNLVpEYWZiMkY1eHdGVmhjb0VuR2RZU0poNkJmWE1ORW13MTNVNm1PNXZyOXM0OEhHWmFCU1dmQU11RG9LOUR6WWJMNjhqUzNlUWVfMzE5MUNPRWtpNXR2enA0cjJoR2pzWWdWUVNjQklfcjVySHBicVFBN3poTy1nNFRQbUhzUVVvZjdKRklRdGJkUGZKX2JFQTRicFpqMjNaM28?oc=5",
+          "published_at": "2026-11-22T02:01:36+08:00",
+          "published_at_source": "upstream_rfc2822",
+          "fetched_at": "2026-11-22T14:58:54+08:00",
+          "excerpt": "Signal Blocks Siri, Gemini and Other AI Agents From Reading Your Messages gHacks",
+          "thumbnail_url": null,
+          "deep_fetch_status": null,
+          "title_zh": "Signal 阻止 Siri、Gemini 及其他 AI 代理读取您的消息"
+        },
+        {
+          "item_id": "rss-techcrunch_c89f4df24160",
+          "article_id": "rss-techcrunch_c89f4df24160",
+          "source_id": "rss-techcrunch",
+          "source_name": "TechCrunch AI & Tech",
+          "publisher_name": "TechCrunch AI & Tech",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "rss",
+          "is_reprint_copy": false,
+          "title": "Signal restricts mobile screenshots as it confronts ‘existential threat’ of AI surveillance",
+          "url": "https://techcrunch.com/2026/11/21/signal-restricts-mobile-screenshots-as-it-confronts-existential-threat-of-ai-surveillance",
+          "published_at": "2026-11-22T05:37:10+08:00",
+          "published_at_source": "upstream_rfc2822",
+          "fetched_at": "2026-11-22T14:58:54+08:00",
+          "excerpt": "Signal is limiting users' ability to take screenshots in both its Android and iOS apps.",
+          "thumbnail_url": null,
+          "deep_fetch_status": null,
+          "title_zh": "Signal 限制移动设备截图，以应对 AI 监控的“生存威胁”"
+        },
+        {
+          "item_id": "aihot_213668956e5c",
+          "article_id": "aihot_213668956e5c",
+          "source_id": "aihot",
+          "source_name": "AIHOT 前沿",
+          "publisher_name": "AIHOT 前沿",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "aggregator_lead",
+          "publisher_family": "aihot",
+          "is_reprint_copy": false,
+          "title": "Signal 更新默认屏蔽截图，阻止 Siri AI 和 Gemini 等 AI 智能体读取消息",
+          "url": "https://aihot.news/items/ef9x7y2sig0grv75qqa6qfr6q",
+          "published_at": "2026-11-22T07:28:10+08:00",
+          "published_at_source": "upstream_rfc2822",
+          "fetched_at": "2026-11-22T14:58:49+08:00",
+          "excerpt": "加密聊天应用 Signal 默认屏蔽截图，防止 AI 智能体读取用户消息 Signal 推出 iOS / Android 更新，默认阻止应用内截图和录屏，以防止 Siri AI、Gemini 等 AI 智能体在用户不知情时读取私人消息。 IT之家 11 月 22 日消息，开源端到端加密聊天应用 Signal 近日推出 iOS / Android 版更新，默认关闭应用程序内截图功能，以阻止 Siri AI 和 Gemini 等 AI 智能体读取用户私人消息。",
+          "thumbnail_url": "https://aihot.news/og/items/ef9x7y2sig0grv75qqa6qfr6q.png",
+          "deep_fetch_status": null
+        }
+      ],
+      "verification": {
+        "all_refs_valid": true,
+        "has_primary_url": true,
+        "rejected_refs": [],
+        "has_first_party": false
+      },
+      "followup": {
+        "is_continuing": true,
+        "prev_batch_id": "smart-20261122-145938",
+        "prev_event_id": "evt_1338c60a8e1b",
+        "prev_title": "Signal 更新默认屏蔽应用内截图，防范 Siri 与 Gemini 等 AI 智能体读取隐私对话",
+        "delta_note": "新增 1 条跟进/转载出处（核心事实待对比差异）"
+      },
+      "is_new_in_batch": false,
+      "update_kind": "new_fact_update",
+      "radar_score": 81,
+      "translation_attempts": 0,
+      "translation_error": null,
+      "title_zh": "Signal 更新客户端默认屏蔽截图，阻断 Siri AI、Gemini 等智能体读取私密消息",
+      "translation_status": "native_zh",
+      "summary_zh": "开源端到端加密聊天应用 Signal 近期推出 iOS（含 iOS 27 相关适配）与 Android 版更新，默认屏蔽应用内截图与录屏功能，以防止 Apple 的 Siri AI、Google 的 Gemini Intelligence 以及 Meta 的 Muse 等操作系统级 AI 智能体在用户不知情的情况下读取私人聊天内容。",
+      "title_en": "Signal Blocks Siri, Gemini and Other AI Agents From Reading Your Messages",
+      "summary_en": "Signal Blocks Siri, Gemini and Other AI Agents From Reading Your Messages gHacks",
+      "ai_analysis_en": ""
+    },
+    {
+      "schema_version": "4.1",
+      "event_id": "evt_b94c56c6d2a4",
       "storyline_id": "st_563c413ed997",
       "article_ids": [
         "rss-gnews-ai-models-zh_4ff41f3eac4a",
@@ -998,15 +1423,15 @@
         "aihot_683510716101"
       ],
       "legacy_event_ids": [],
-      "title": "哥大与 CertiK 推出 TensorLean，完成 DeepSeek 与 FlashAttention 等 GPU 内核形式化验证",
+      "title": "哥伦比亚大学与 CertiK 推出 TensorLean，完成 DeepSeek 与 FlashAttention 等 GPU 内核形式化验证",
       "category": "tech",
       "entities": [
         "哥伦比亚大学",
         "CertiK",
         "TensorLean",
-        "Lean",
         "DeepSeek (深度求索)",
-        "FlashAttention"
+        "FlashAttention",
+        "DeepGEMM"
       ],
       "entity_ids": [
         "ent_deepseek"
@@ -1028,7 +1453,7 @@
           "confidence": 0.86
         }
       ],
-      "importance": "high",
+      "importance": "medium",
       "sentiment": "Bullish",
       "special_note": null,
       "material_stage": null,
@@ -1064,12 +1489,12 @@
       "latest_reported_at": "2026-11-22T09:51:43+08:00",
       "fetched_at": "2026-11-22T14:58:49+08:00",
       "input_batch_id": "raw-20261122-145849",
-      "fact_summary": "哥伦比亚大学与安全机构 CertiK 的研究人员联合发布 TensorLean，利用形式化验证语言 Lean 在 PTX 级别对生产级 GPU 内核进行形式化验证，在 AI 算子领域完成了针对 DeepSeek 与 FlashAttention 生产级算子的首次形式化验证。",
+      "fact_summary": "哥伦比亚大学与安全机构 CertiK 的研究人员联合发布 TensorLean 工具，使用形式化验证语言 Lean 在 PTX 指令级对生产级 GPU 计算内核进行形式化验证，在业内首次完成 DeepSeek 与 FlashAttention 生产级 AI 算子的形式化验证。该系统共检查了 149 个内核实例，证明其中 83 个完全正确，并在 FlashAttention、DeepGEMM 等主流算子中发现 38 个漏洞。",
       "fact_atoms": [
         {
-          "atom_id": "fa_45134707",
+          "atom_id": "fa_25274771",
           "subject": "哥伦比亚大学",
-          "metric_or_action": "哥大与 CertiK 推出 TensorLean，完成 DeepSeek 与 FlashAttention 等 GPU 内核形式化验证",
+          "metric_or_action": "哥伦比亚大学与 CertiK 推出 TensorLean，完成 DeepSeek 与 FlashAttention 等 GPU 内核形式化验证",
           "value": null,
           "unit": null,
           "period": "单次披露/未注明周期",
@@ -1084,7 +1509,7 @@
           "revision": 1
         }
       ],
-      "ai_analysis": "底层 AI 算子直接决定大模型训练与推理的计算精度和稳定性。将形式化验证从数学定理下沉至 GPU 汇编级（PTX）生产算子，有助于在基础设施层消除隐蔽的数值误差与内存缺陷。",
+      "ai_analysis": "将形式化验证从数学定理下沉到底层 GPU PTX 内核，有助于在海量 AI 训练与推理部署前消除隐蔽的数值计算与内存安全缺陷。",
       "unverified_claims": [],
       "speculation_or_outlook": null,
       "sources": [
@@ -1158,9 +1583,9 @@
       },
       "followup": {
         "is_continuing": true,
-        "prev_batch_id": "smart-20261122-143735",
-        "prev_event_id": "evt_1782362c4292",
-        "prev_title": "哥伦比亚大学与 CertiK 发布 TensorLean，首次完成 DeepSeek 与 FlashAttention GPU 内核形式化验证",
+        "prev_batch_id": "smart-20261122-145938",
+        "prev_event_id": "evt_6c8200815557",
+        "prev_title": "哥大与 CertiK 推出 TensorLean，完成 DeepSeek 与 FlashAttention 等 GPU 内核形式化验证",
         "delta_note": "同一事件在最新批次出现表述修订或信息补充"
       },
       "is_new_in_batch": false,
@@ -1168,16 +1593,16 @@
       "radar_score": 81,
       "translation_attempts": 0,
       "translation_error": null,
-      "title_zh": "哥大与 CertiK 推出 TensorLean，完成 DeepSeek 与 FlashAttention 等 GPU 内核形式化验证",
+      "title_zh": "哥伦比亚大学与 CertiK 推出 TensorLean，完成 DeepSeek 与 FlashAttention 等 GPU 内核形式化验证",
       "translation_status": "native_zh",
-      "summary_zh": "哥伦比亚大学与安全机构 CertiK 的研究人员联合发布 TensorLean，利用形式化验证语言 Lean 在 PTX 级别对生产级 GPU 内核进行形式化验证，在 AI 算子领域完成了针对 DeepSeek 与 FlashAttention 生产级算子的首次形式化验证。",
+      "summary_zh": "哥伦比亚大学与安全机构 CertiK 的研究人员联合发布 TensorLean 工具，使用形式化验证语言 Lean 在 PTX 指令级对生产级 GPU 计算内核进行形式化验证，在业内首次完成 DeepSeek 与 FlashAttention 生产级 AI 算子的形式化验证。该系统共检查了 149 个内核实例，证明其中 83 个完全正确，并在 FlashAttention、DeepGEMM 等主流算子中发现 38 个漏洞。",
       "title_en": "A Team of Researchers from Columbia and CertiK Introduce TensorLean for Formal Verification of GPU Kernels",
       "summary_en": "TensorLean, from Columbia University and CertiK, formally verifies production GPU kernels at the PTX level using Lean. It checked 149 kernel instances, proved 83 correct, and found 38 bugs in FlashAttention, DeepGEMM and more. The post A Team of Researchers f…",
       "ai_analysis_en": ""
     },
     {
       "schema_version": "4.1",
-      "event_id": "evt_ad4350e8487f",
+      "event_id": "evt_a06876b70501",
       "storyline_id": "st_84c701383ced",
       "article_ids": [
         "rss-the-decoder_fbf0657e0d25",
@@ -1185,7 +1610,7 @@
         "aihot_1eece03f9398"
       ],
       "legacy_event_ids": [],
-      "title": "英伟达研究团队称超大 AI 上下文窗口是死路，建议以定期摘要加定向检索替代",
+      "title": "Nvidia 研究团队称盲目扩大 AI 上下文窗口是“死路”，定期摘要加检索性价比更高",
       "category": "tech",
       "entities": [
         "英伟达 (NVIDIA)",
@@ -1193,12 +1618,10 @@
         "GPT 5.6 Sol"
       ],
       "entity_ids": [
-        "ent_nvidia",
-        "ent_openai"
+        "ent_nvidia"
       ],
       "entity_confidences": {
-        "英伟达 (NVIDIA)": 0.86,
-        "OpenAI": 0.76
+        "英伟达 (NVIDIA)": 0.86
       },
       "matched_entities": [
         {
@@ -1207,7 +1630,7 @@
           "entity_type": "company",
           "sector": "半导体 / AI算力",
           "matched_aliases": [
-            "英伟达"
+            "nvidia"
           ],
           "tickers": [
             {
@@ -1218,20 +1641,8 @@
               "label": "NVDA.US (NASDAQ)"
             }
           ],
-          "reason": "正文/实体匹配关键词「英伟达」",
+          "reason": "正文/实体匹配关键词「nvidia」",
           "confidence": 0.86
-        },
-        {
-          "entity_id": "ent_openai",
-          "canonical_name": "OpenAI",
-          "entity_type": "company",
-          "sector": "AI 模型与应用",
-          "matched_aliases": [
-            "gpt-4"
-          ],
-          "tickers": [],
-          "reason": "正文/实体匹配关键词「gpt-4」",
-          "confidence": 0.76
         }
       ],
       "importance": "medium",
@@ -1270,12 +1681,12 @@
       "latest_reported_at": "2026-11-22T00:23:45+08:00",
       "fetched_at": "2026-11-22T14:58:49+08:00",
       "input_batch_id": "raw-20261122-145849",
-      "fact_summary": "英伟达研究团队发表观点指出，一味扩大 AI 模型的上下文窗口往往是过度且昂贵的做法，而采用“定期摘要加定向检索”的策略在多项测试中能够取得相当的效果。报道对比称，GPT-4 于 2023 年 3 月发布时上下文窗口为 8,192 tokens，而如今的 GPT 5.6 Sol 可处理约一百万 tokens，规模约为前者的 120 倍。",
+      "fact_summary": "Nvidia 研究团队最新指出，一味扩大 AI 模型的上下文窗口往往过度且成本高昂，定期摘要结合定向检索在多项测试中的表现与超长上下文窗口相当。作为对比，2023 年 3 月发布的 GPT-4 上下文窗口为 8,192 tokens，而如今 GPT 5.6 Sol 可处理约 100 万 tokens，扩大了约 120 倍。",
       "fact_atoms": [
         {
-          "atom_id": "fa_98254691",
+          "atom_id": "fa_82544036",
           "subject": "英伟达 (NVIDIA)",
-          "metric_or_action": "英伟达研究团队称超大 AI 上下文窗口是死路，建议以定期摘要加定向检索替代",
+          "metric_or_action": "Nvidia 研究团队称盲目扩大 AI 上下文窗口是“死路”，定期摘要加检索性价比更高",
           "value": null,
           "unit": null,
           "period": "单次披露/未注明周期",
@@ -1290,7 +1701,7 @@
           "revision": 1
         }
       ],
-      "ai_analysis": "在算力成本与推理延迟受关注的背景下，该研究折射出业界对单纯堆叠长上下文窗口边际收益的反思，推动记忆管理与检索增强架构（RAG）向更经济的分层处理方向演进。",
+      "ai_analysis": "即便在算力芯片龙头内部，研究重心也开始反思无节制堆砌长上下文推理带来的显存与算力开销，记忆压缩与检索架构或成为推理降本的关键替代路线。",
       "unverified_claims": [],
       "speculation_or_outlook": null,
       "sources": [
@@ -1365,9 +1776,9 @@
       },
       "followup": {
         "is_continuing": true,
-        "prev_batch_id": "smart-20261122-143735",
-        "prev_event_id": "evt_1b32ea3c8615",
-        "prev_title": "英伟达研究团队称超大 AI 上下文窗口是死路，主张“定期摘要+定向检索”",
+        "prev_batch_id": "smart-20261122-145938",
+        "prev_event_id": "evt_ad4350e8487f",
+        "prev_title": "英伟达研究团队称超大 AI 上下文窗口是死路，建议以定期摘要加定向检索替代",
         "delta_note": "同一事件在最新批次出现表述修订或信息补充"
       },
       "is_new_in_batch": false,
@@ -1375,16 +1786,16 @@
       "radar_score": 81,
       "translation_attempts": 0,
       "translation_error": null,
-      "title_zh": "英伟达研究团队称超大 AI 上下文窗口是死路，建议以定期摘要加定向检索替代",
+      "title_zh": "Nvidia 研究团队称盲目扩大 AI 上下文窗口是“死路”，定期摘要加检索性价比更高",
       "translation_status": "native_zh",
-      "summary_zh": "英伟达研究团队发表观点指出，一味扩大 AI 模型的上下文窗口往往是过度且昂贵的做法，而采用“定期摘要加定向检索”的策略在多项测试中能够取得相当的效果。报道对比称，GPT-4 于 2023 年 3 月发布时上下文窗口为 8,192 tokens，而如今的 GPT 5.6 Sol 可处理约一百万 tokens，规模约为前者的 120 倍。",
+      "summary_zh": "Nvidia 研究团队最新指出，一味扩大 AI 模型的上下文窗口往往过度且成本高昂，定期摘要结合定向检索在多项测试中的表现与超长上下文窗口相当。作为对比，2023 年 3 月发布的 GPT-4 上下文窗口为 8,192 tokens，而如今 GPT 5.6 Sol 可处理约 100 万 tokens，扩大了约 120 倍。",
       "title_en": "Nvidia researchers argue huge AI context windows are a dead end",
       "summary_en": "Nvidia researchers argue that language models often don't need their full context windows—which are slow, expensive, and prone to errors—and propose an alternative. In tests, periodic summaries and targeted keyword search usually matched full-context results…",
       "ai_analysis_en": ""
     },
     {
       "schema_version": "4.1",
-      "event_id": "evt_a6c23641f6e1",
+      "event_id": "evt_88a472374d37",
       "storyline_id": "st_1be11efb26e7",
       "article_ids": [
         "ithome-rss_e8eb1656cf4e",
@@ -1397,7 +1808,7 @@
       "category": "tech",
       "entities": [
         "SpaceX / 特斯拉 / 马斯克生态",
-        "埃隆·马斯克",
+        "FSD v15",
         "Cybercab",
         "Model Y"
       ],
@@ -1431,7 +1842,7 @@
           "confidence": 0.96
         }
       ],
-      "importance": "high",
+      "importance": "medium",
       "sentiment": "Bullish",
       "special_note": null,
       "material_stage": null,
@@ -1469,10 +1880,10 @@
       "latest_reported_at": "2026-11-22T14:30:14+08:00",
       "fetched_at": "2026-11-22T14:58:49+08:00",
       "input_batch_id": "raw-20261122-145849",
-      "fact_summary": "11 月 22 日，特斯拉宣布在美国市场推出 FSD v15，带来全新可视化界面“Tesla Reality View”（特斯拉实景视图，含天空箭头导航），马斯克当日亦发文对该功能进行说明。此外，特斯拉于 11 月 20 日更新了 Robotaxi（无人驾驶出租车）应急人员交互方案文件，其中 Cybercab 应急计划版本从 1.2 升级至 1.3，Model Y Robotaxi 应急计划更新至 1.6，报道称文件确认了…",
+      "fact_summary": "【据关联报道/尚未见官方披露确认】特斯拉今日宣布在美国市场推出 FSD v15，引入名为“Tesla Reality View”（特斯拉实景视图）的全新可视化导航界面，马斯克随后发文对该功能进行了说明。",
       "fact_atoms": [
         {
-          "atom_id": "fa_34985831",
+          "atom_id": "fa_73538997",
           "subject": "SpaceX / 特斯拉 / 马斯克生态",
           "metric_or_action": "报道称：特斯拉在美推送 FSD v15“实景视图”，并更新 Cybercab 与 Model Y Robotaxi 应急方案",
           "value": null,
@@ -1489,10 +1900,9 @@
           "revision": 1
         }
       ],
-      "ai_analysis": "软件可视化升级与无人驾驶出租车应急交互规范的同步推进，显示特斯拉正加快端到端自动驾驶交互透明化以及 Robotaxi 商业化运营前的合规与安全流程准备。",
+      "ai_analysis": "FSD 可视化升级与 Robotaxi 应急规范的密集迭代，显示特斯拉正加速推进自动驾驶软件体验优化与无人车队商业运营前的合规准备。",
       "unverified_claims": [
-        "博主 @旌旗超智能 分析称特斯拉 FSD v15 是在硬件劣势下采用 3D 高斯全场景重建，并称检查特斯拉 FSD 2 代芯片规格后认为其不如多家新势力自研芯片，该技术拆解与芯片对比属第三方个人观点",
-        "关于“个人车辆入网在即”为网友及媒体根据应急文件版本调整做出的推断，尚待特斯拉官方公布具体时间表"
+        "国内博主“@旌旗超智能”分析称特斯拉 FSD 2 代芯片规格不如部分新势力自研芯片，并在硬件劣势下采用了 3D 高斯全场景重建，该技术路径未获特斯拉官方证实。"
       ],
       "speculation_or_outlook": null,
       "sources": [
@@ -1585,9 +1995,9 @@
       },
       "followup": {
         "is_continuing": true,
-        "prev_batch_id": "smart-20261122-143735",
-        "prev_event_id": "evt_d725b15afbb2",
-        "prev_title": "特斯拉在美推出 FSD v15 带来“实景视图”，并更新 Robotaxi 应急方案",
+        "prev_batch_id": "smart-20261122-145938",
+        "prev_event_id": "evt_a6c23641f6e1",
+        "prev_title": "报道称：特斯拉在美推送 FSD v15“实景视图”，并更新 Cybercab 与 Model Y Robotaxi 应急方案",
         "delta_note": "同一事件在最新批次出现表述修订或信息补充"
       },
       "is_new_in_batch": false,
@@ -1597,533 +2007,20 @@
       "translation_error": null,
       "title_zh": "报道称：特斯拉在美推送 FSD v15“实景视图”，并更新 Cybercab 与 Model Y Robotaxi 应急方案",
       "translation_status": "native_zh",
-      "summary_zh": "11 月 22 日，特斯拉宣布在美国市场推出 FSD v15，带来全新可视化界面“Tesla Reality View”（特斯拉实景视图，含天空箭头导航），马斯克当日亦发文对该功能进行说明。此外，特斯拉于 11 月 20 日更新了 Robotaxi（无人驾驶出租车）应急人员交互方案文件，其中 Cybercab 应急计划版本从 1.2 升级至 1.3，Model Y Robotaxi 应急计划更新至 1.6，报道称文件确认了…",
+      "summary_zh": "【据关联报道/尚未见官方披露确认】特斯拉今日宣布在美国市场推出 FSD v15，引入名为“Tesla Reality View”（特斯拉实景视图）的全新可视化导航界面，马斯克随后发文对该功能进行了说明。",
       "title_en": "",
       "summary_en": "",
       "ai_analysis_en": ""
     },
     {
       "schema_version": "4.1",
-      "event_id": "evt_44bb5925092d",
-      "storyline_id": "st_41232caed896",
-      "article_ids": [
-        "ithome-rss_260123d59289"
-      ],
-      "legacy_event_ids": [],
-      "title": "全球电子协会警告 AI 服务器推高多层板需求，PCB 或短缺至 2027 年上半年",
-      "category": "tech",
-      "entities": [
-        "全球电子协会"
-      ],
-      "entity_ids": [],
-      "entity_confidences": {},
-      "matched_entities": [],
-      "importance": "high",
-      "sentiment": "Bearish",
-      "special_note": null,
-      "material_stage": null,
-      "material_stage_label": null,
-      "material_stage_confidence": null,
-      "thumbnail_url": null,
-      "publisher_name": "IT之家 实时快讯",
-      "source_status": "ok",
-      "evidence_status": "single_source",
-      "evidence_label": "单一独立来源线索",
-      "evidence_status_reason": "目前仅见 1 家独立来源（共 1 条引用含转载，含摘要/首段），尚未见独立渠道交叉或官方确认",
-      "attribution_warning": null,
-      "regulatory_note": null,
-      "contradictions": [],
-      "downweight_reasons": [],
-      "quality_flags": [],
-      "material_depth": "title_and_excerpt",
-      "source_count": 1,
-      "platform_count": 1,
-      "independent_publisher_count": 1,
-      "reprint_count": 1,
-      "published_at": "2026-11-22T14:25:23+08:00",
-      "event_date": "2026-11-18",
-      "event_time": "2026-11-22T14:25:23+08:00",
-      "stale": false,
-      "event_date_source": "llm_extracted",
-      "is_stale_rehash": false,
-      "time_trust_level": "article_timestamp",
-      "time_confidence": "article_timestamp",
-      "first_discovered_at": "2026-11-22T14:58:49+08:00",
-      "first_reported_at": "2026-11-22T14:25:23+08:00",
-      "latest_fact_update_at": "2026-11-22T14:25:23+08:00",
-      "latest_reported_at": "2026-11-22T14:25:23+08:00",
-      "fetched_at": "2026-11-22T14:58:49+08:00",
-      "input_batch_id": "raw-20261122-145849",
-      "fact_summary": "全球电子协会（Global Electronics Association）于 11 月 18 日发布行业警报称，印制电路板（PCB）供应链短缺持续加剧，风险堪比 2021 年芯片短缺，汽车、工业、医疗、国防和电信企业均反映交期延长、难以保障供应。",
-      "fact_atoms": [
-        {
-          "atom_id": "fa_52007404",
-          "subject": "全球电子协会",
-          "metric_or_action": "全球电子协会警告 AI 服务器推高多层板需求，PCB 或短缺至 2027 年上半年",
-          "value": null,
-          "unit": null,
-          "period": "单次披露/未注明周期",
-          "scope": "新闻事件陈述",
-          "fact_status": "reported_unconfirmed_by_filing",
-          "attribution": "IT之家 实时快讯",
-          "source_ref": "ithome-rss_260123d59289",
-          "source_url": "https://www.ithome.com/1/030/573.htm",
-          "source_excerpt_or_locator": "IT之家 11 月 22 日消息，全球电子协会（Global Electronics Association）11 月 18 日发布行业警报称，印制电路板（PCB）供应链短缺持续加剧，汽车、工业、医疗、国防和电信企业均反映交期延长、难以保障供应，AI 需求正在挤占本就紧张的产能。 协会指出，这轮需求不仅规模超出供应链原有承载能力，形态也更耗材料。普通 PCB",
-          "published_at": "2026-11-22T14:25:23+08:00",
-          "discovered_at": "2026-11-22T14:58:49+08:00",
-          "revision": 1
-        }
-      ],
-      "ai_analysis": "AI 基础设施扩建带来的算力瓶颈正向上游基础电子元器件与材料环节传导，高多层板对上游玻纤布、铜箔及覆铜板的成倍消耗，可能推升非 AI 制造行业的采购成本与交付周期。",
-      "unverified_claims": [],
-      "speculation_or_outlook": "汽车、工业及电信等传统制造业在 2027 年上半年之前可能持续面临 PCB 交期拉长与产能分配竞争。",
-      "sources": [
-        {
-          "item_id": "ithome-rss_260123d59289",
-          "article_id": "ithome-rss_260123d59289",
-          "source_id": "ithome-rss",
-          "source_name": "IT之家 实时快讯",
-          "publisher_name": "IT之家 实时快讯",
-          "source_status": "ok",
-          "source_kind": "news",
-          "source_tier": "direct_media",
-          "publisher_family": "ithome-rss",
-          "is_reprint_copy": true,
-          "title": "全球电子协会警告 PCB 或短缺至 2027 年上半年，风险堪比 2021 年芯片短缺",
-          "url": "https://www.ithome.com/1/030/573.htm",
-          "published_at": "2026-11-22T14:25:23+08:00",
-          "published_at_source": "upstream_local_cst",
-          "fetched_at": "2026-11-22T14:58:50+08:00",
-          "excerpt": "IT之家 11 月 22 日消息，全球电子协会（Global Electronics Association）11 月 18 日发布行业警报称，印制电路板（PCB）供应链短缺持续加剧，汽车、工业、医疗、国防和电信企业均反映交期延长、难以保障供应，AI 需求正在挤占本就紧张的产能。 协会指出，这轮需求不仅规模超出供应链原有承载能力，形态也更耗材料。普通 PCB 约为 12 层， AI 服务器用板正转向 40-60 层以上 ，每增加一层都要消耗更多玻纤布、树脂、铜箔和覆铜板。",
-          "thumbnail_url": null,
-          "deep_fetch_status": null
-        }
-      ],
-      "verification": {
-        "all_refs_valid": true,
-        "has_primary_url": true,
-        "rejected_refs": [],
-        "has_first_party": false
-      },
-      "followup": null,
-      "is_new_in_batch": true,
-      "update_kind": "new_discovery",
-      "radar_score": 46,
-      "translation_attempts": 0,
-      "translation_error": null,
-      "title_zh": "全球电子协会警告 AI 服务器推高多层板需求，PCB 或短缺至 2027 年上半年",
-      "translation_status": "native_zh",
-      "summary_zh": "全球电子协会（Global Electronics Association）于 11 月 18 日发布行业警报称，印制电路板（PCB）供应链短缺持续加剧，风险堪比 2021 年芯片短缺，汽车、工业、医疗、国防和电信企业均反映交期延长、难以保障供应。",
-      "title_en": "",
-      "summary_en": "",
-      "ai_analysis_en": ""
-    },
-    {
-      "schema_version": "4.1",
-      "event_id": "evt_1338c60a8e1b",
-      "storyline_id": "st_203a9d885055",
-      "article_ids": [
-        "rss-the-decoder_a7ee49c5f9be",
-        "rss-gnews-opensource-ai_6f7f9acaf19a",
-        "rss-techcrunch_c89f4df24160",
-        "aihot_213668956e5c"
-      ],
-      "legacy_event_ids": [],
-      "title": "Signal 更新默认屏蔽应用内截图，防范 Siri 与 Gemini 等 AI 智能体读取隐私对话",
-      "category": "tech",
-      "entities": [
-        "Signal",
-        "苹果",
-        "Siri",
-        "Meta"
-      ],
-      "entity_ids": [
-        "ent_google",
-        "ent_ai_infra_tools",
-        "ent_apple"
-      ],
-      "entity_confidences": {
-        "Google / DeepMind / Gemini": 0.96,
-        "AI 推理与框架生态 (vLLM / llama.cpp / Transformers)": 0.86,
-        "苹果 (Apple)": 0.74
-      },
-      "matched_entities": [
-        {
-          "entity_id": "ent_google",
-          "canonical_name": "Google / DeepMind / Gemini",
-          "entity_type": "company",
-          "sector": "AI 模型与云基础设施",
-          "matched_aliases": [
-            "gemini",
-            "谷歌"
-          ],
-          "tickers": [
-            {
-              "symbol": "GOOGL",
-              "market": "US",
-              "exchange": "NASDAQ",
-              "currency": "USD",
-              "label": "GOOGL.US (NASDAQ)"
-            }
-          ],
-          "reason": "正文/实体匹配关键词「gemini / 谷歌」",
-          "confidence": 0.96
-        },
-        {
-          "entity_id": "ent_ai_infra_tools",
-          "canonical_name": "AI 推理与框架生态 (vLLM / llama.cpp / Transformers)",
-          "entity_type": "tech",
-          "sector": "AI 开源基础设施",
-          "matched_aliases": [
-            "智能体"
-          ],
-          "tickers": [],
-          "reason": "正文/实体匹配关键词「智能体」",
-          "confidence": 0.86
-        },
-        {
-          "entity_id": "ent_apple",
-          "canonical_name": "苹果 (Apple)",
-          "entity_type": "company",
-          "sector": "消费电子与端侧AI",
-          "matched_aliases": [
-            "ios"
-          ],
-          "tickers": [
-            {
-              "symbol": "AAPL",
-              "market": "US",
-              "exchange": "NASDAQ",
-              "currency": "USD",
-              "label": "AAPL.US (NASDAQ)"
-            }
-          ],
-          "reason": "正文/实体匹配关键词「ios」",
-          "confidence": 0.74
-        }
-      ],
-      "importance": "medium",
-      "sentiment": "Neutral",
-      "special_note": null,
-      "material_stage": null,
-      "material_stage_label": null,
-      "material_stage_confidence": null,
-      "thumbnail_url": "https://the-decoder.com/wp-content/uploads/2026/11/signal_ai_agents.png",
-      "publisher_name": "The Decoder (AI前沿)",
-      "source_status": "ok",
-      "evidence_status": "multi_source",
-      "evidence_label": "多独立来源提及（待核官方全文）",
-      "evidence_status_reason": "已有 3 家独立媒体族提及（含摘要或正文首段）；多源转载不代表官方公告已证实",
-      "attribution_warning": null,
-      "regulatory_note": null,
-      "contradictions": [],
-      "downweight_reasons": [],
-      "quality_flags": [],
-      "material_depth": "title_and_excerpt",
-      "source_count": 3,
-      "platform_count": 3,
-      "independent_publisher_count": 3,
-      "reprint_count": 0,
-      "published_at": "2026-11-22T02:01:36+08:00",
-      "event_date": "2026-11-22",
-      "event_time": "2026-11-21T03:50:27+08:00",
-      "stale": false,
-      "event_date_source": "llm_extracted",
-      "is_stale_rehash": false,
-      "time_trust_level": "article_timestamp",
-      "time_confidence": "article_timestamp",
-      "first_discovered_at": "2026-11-22T13:48:58+08:00",
-      "first_reported_at": "2026-11-22T02:01:36+08:00",
-      "latest_fact_update_at": "2026-11-22T07:28:10+08:00",
-      "latest_reported_at": "2026-11-22T07:28:10+08:00",
-      "fetched_at": "2026-11-22T14:58:49+08:00",
-      "input_batch_id": "raw-20261122-145849",
-      "fact_summary": "开源端到端加密聊天应用 Signal 近日推出 iOS 与 Android 版更新，默认关闭并屏蔽应用内截图和录屏功能，以防止苹果 Siri AI、谷歌 Gemini Intelligence 以及 Meta Muse 等 AI 智能体在用户不知情时通过屏幕读取私人聊天消息。Signal 将 AI 智能体对隐私的窥探称为“生存威胁”，但同时承认目前在 macOS 等平台上的防护措施仍不完善。",
-      "fact_atoms": [
-        {
-          "atom_id": "fa_71421700",
-          "subject": "Signal",
-          "metric_or_action": "Signal 更新默认屏蔽应用内截图，防范 Siri 与 Gemini 等 AI 智能体读取隐私对话",
-          "value": null,
-          "unit": null,
-          "period": "单次披露/未注明周期",
-          "scope": "新闻事件陈述",
-          "fact_status": "multi_source_reported",
-          "attribution": "The Decoder (AI前沿)",
-          "source_ref": "rss-the-decoder_a7ee49c5f9be",
-          "source_url": "https://the-decoder.com/signal-blocks-screenshots-on-ios-27-and-android-to-stop-ai-agents-from-reading-private-chats",
-          "source_excerpt_or_locator": "Signal is blocking screenshots to stop AI agents like Apple's Siri AI, Google's Gemini Intelligence, and Meta's Muse from reading private chats. The app calls it an \"existential th",
-          "published_at": "2026-11-21T03:50:27+08:00",
-          "discovered_at": "2026-11-22T13:48:58+08:00",
-          "revision": 1
-        }
-      ],
-      "ai_analysis": "随着操作系统级 AI 智能体开始具备跨应用识屏与后台操作能力，端到端加密通信的隐私边界正从“传输链路加密”被迫转向“终端屏幕防读取”，平台方与隐私应用间的权限博弈将加剧。",
-      "unverified_claims": [],
-      "speculation_or_outlook": null,
-      "sources": [
-        {
-          "item_id": "rss-gnews-opensource-ai_6f7f9acaf19a",
-          "article_id": "rss-gnews-opensource-ai_6f7f9acaf19a",
-          "source_id": "rss-gnews-opensource-ai",
-          "source_name": "权威报道",
-          "publisher_name": "权威报道",
-          "source_status": "ok",
-          "source_kind": "news",
-          "source_tier": "direct_media",
-          "publisher_family": "gnews-aggregator",
-          "is_reprint_copy": false,
-          "title": "Signal Blocks Siri, Gemini and Other AI Agents From Reading Your Messages",
-          "url": "https://news.google.com/rss/articles/CBMiqwFBVV95cUxQRWc3MkF6MnRNLVpEYWZiMkY1eHdGVmhjb0VuR2RZU0poNkJmWE1ORW13MTNVNm1PNXZyOXM0OEhHWmFCU1dmQU11RG9LOUR6WWJMNjhqUzNlUWVfMzE5MUNPRWtpNXR2enA0cjJoR2pzWWdWUVNjQklfcjVySHBicVFBN3poTy1nNFRQbUhzUVVvZjdKRklRdGJkUGZKX2JFQTRicFpqMjNaM28?oc=5",
-          "published_at": "2026-11-22T02:01:36+08:00",
-          "published_at_source": "upstream_rfc2822",
-          "fetched_at": "2026-11-22T14:58:54+08:00",
-          "excerpt": "Signal Blocks Siri, Gemini and Other AI Agents From Reading Your Messages gHacks",
-          "thumbnail_url": null,
-          "deep_fetch_status": null,
-          "title_zh": "Signal 阻止 Siri、Gemini 及其他 AI 代理读取您的消息"
-        },
-        {
-          "item_id": "rss-techcrunch_c89f4df24160",
-          "article_id": "rss-techcrunch_c89f4df24160",
-          "source_id": "rss-techcrunch",
-          "source_name": "TechCrunch AI & Tech",
-          "publisher_name": "TechCrunch AI & Tech",
-          "source_status": "ok",
-          "source_kind": "news",
-          "source_tier": "direct_media",
-          "publisher_family": "rss",
-          "is_reprint_copy": false,
-          "title": "Signal restricts mobile screenshots as it confronts ‘existential threat’ of AI surveillance",
-          "url": "https://techcrunch.com/2026/11/21/signal-restricts-mobile-screenshots-as-it-confronts-existential-threat-of-ai-surveillance",
-          "published_at": "2026-11-22T05:37:10+08:00",
-          "published_at_source": "upstream_rfc2822",
-          "fetched_at": "2026-11-22T14:58:54+08:00",
-          "excerpt": "Signal is limiting users' ability to take screenshots in both its Android and iOS apps.",
-          "thumbnail_url": null,
-          "deep_fetch_status": null,
-          "title_zh": "Signal 限制移动设备截图，以应对 AI 监控的“生存威胁”"
-        },
-        {
-          "item_id": "aihot_213668956e5c",
-          "article_id": "aihot_213668956e5c",
-          "source_id": "aihot",
-          "source_name": "AIHOT 前沿",
-          "publisher_name": "AIHOT 前沿",
-          "source_status": "ok",
-          "source_kind": "news",
-          "source_tier": "aggregator_lead",
-          "publisher_family": "aihot",
-          "is_reprint_copy": false,
-          "title": "Signal 更新默认屏蔽截图，阻止 Siri AI 和 Gemini 等 AI 智能体读取消息",
-          "url": "https://aihot.news/items/ef9x7y2sig0grv75qqa6qfr6q",
-          "published_at": "2026-11-22T07:28:10+08:00",
-          "published_at_source": "upstream_rfc2822",
-          "fetched_at": "2026-11-22T14:58:49+08:00",
-          "excerpt": "加密聊天应用 Signal 默认屏蔽截图，防止 AI 智能体读取用户消息 Signal 推出 iOS / Android 更新，默认阻止应用内截图和录屏，以防止 Siri AI、Gemini 等 AI 智能体在用户不知情时读取私人消息。 IT之家 11 月 22 日消息，开源端到端加密聊天应用 Signal 近日推出 iOS / Android 版更新，默认关闭应用程序内截图功能，以阻止 Siri AI 和 Gemini 等 AI 智能体读取用户私人消息。",
-          "thumbnail_url": "https://aihot.news/og/items/ef9x7y2sig0grv75qqa6qfr6q.png",
-          "deep_fetch_status": null
-        }
-      ],
-      "verification": {
-        "all_refs_valid": true,
-        "has_primary_url": true,
-        "rejected_refs": [],
-        "has_first_party": false
-      },
-      "followup": {
-        "is_continuing": true,
-        "prev_batch_id": "smart-20261122-143735",
-        "prev_event_id": "evt_1a21358b7fe1",
-        "prev_title": "Signal 更新 iOS 与 Android 应用默认屏蔽截图，阻止 Siri 与 Gemini 等 AI 智能体读消息",
-        "delta_note": "同一事件在最新批次出现表述修订或信息补充"
-      },
-      "is_new_in_batch": false,
-      "update_kind": "new_fact_update",
-      "radar_score": 81,
-      "translation_attempts": 0,
-      "translation_error": null,
-      "title_zh": "Signal 更新默认屏蔽应用内截图，防范 Siri 与 Gemini 等 AI 智能体读取隐私对话",
-      "translation_status": "native_zh",
-      "summary_zh": "开源端到端加密聊天应用 Signal 近日推出 iOS 与 Android 版更新，默认关闭并屏蔽应用内截图和录屏功能，以防止苹果 Siri AI、谷歌 Gemini Intelligence 以及 Meta Muse 等 AI 智能体在用户不知情时通过屏幕读取私人聊天消息。Signal 将 AI 智能体对隐私的窥探称为“生存威胁”，但同时承认目前在 macOS 等平台上的防护措施仍不完善。",
-      "title_en": "Signal Blocks Siri, Gemini and Other AI Agents From Reading Your Messages",
-      "summary_en": "Signal Blocks Siri, Gemini and Other AI Agents From Reading Your Messages gHacks",
-      "ai_analysis_en": ""
-    },
-    {
-      "schema_version": "4.1",
-      "event_id": "evt_177e8a72ff6f",
-      "storyline_id": "st_1c696d1c31cb",
-      "article_ids": [
-        "wscn-global-channel_352729e2ba18",
-        "aihot_4d0519dfb5e3",
-        "ithome_176a16f17215"
-      ],
-      "legacy_event_ids": [],
-      "title": "韩国教育部长官崔教振因 2027 年度高考 AI 作弊事件引咎辞职",
-      "category": "tech",
-      "entities": [
-        "崔教振",
-        "韩国教育部"
-      ],
-      "entity_ids": [],
-      "entity_confidences": {},
-      "matched_entities": [],
-      "importance": "medium",
-      "sentiment": "Bearish",
-      "special_note": null,
-      "material_stage": null,
-      "material_stage_label": null,
-      "material_stage_confidence": null,
-      "thumbnail_url": null,
-      "publisher_name": "华尔街见闻 7×24 全球",
-      "source_status": "ok",
-      "evidence_status": "single_source",
-      "evidence_label": "多独立来源提及（待核官方全文）",
-      "evidence_status_reason": "已有 3 家独立媒体族（另识别 3 条高度相似转载）提及（含摘要或正文首段）；多源转载不代表官方公告已证实",
-      "attribution_warning": null,
-      "regulatory_note": null,
-      "contradictions": [],
-      "downweight_reasons": [],
-      "quality_flags": [],
-      "material_depth": "title_and_excerpt",
-      "source_count": 3,
-      "platform_count": 3,
-      "independent_publisher_count": 1,
-      "reprint_count": 3,
-      "published_at": "2026-11-22T11:10:07+08:00",
-      "event_date": "2026-11-22",
-      "event_time": "2026-11-22T11:10:07+08:00",
-      "stale": false,
-      "event_date_source": "llm_extracted",
-      "is_stale_rehash": false,
-      "time_trust_level": "article_timestamp",
-      "time_confidence": "article_timestamp",
-      "first_discovered_at": "2026-11-22T13:48:58+08:00",
-      "first_reported_at": "2026-11-22T11:10:07+08:00",
-      "latest_fact_update_at": "2026-11-22T11:21:10+08:00",
-      "latest_reported_at": "2026-11-22T11:21:10+08:00",
-      "fetched_at": "2026-11-22T14:58:49+08:00",
-      "input_batch_id": "raw-20261122-145849",
-      "fact_summary": "当地时间 11 月 22 日，韩国教育部长官崔教振辞去职务，为韩国 2027 年度大学修学能力考试（韩国高考）期间防范高科技作弊措施不足引发混乱承担责任。近期韩国发生多起利用人工智能工具在考试中作弊的事件，引发当地民众广泛担忧。",
-      "fact_atoms": [
-        {
-          "atom_id": "fa_3674940",
-          "subject": "崔教振",
-          "metric_or_action": "韩国教育部长官崔教振因 2027 年度高考 AI 作弊事件引咎辞职",
-          "value": null,
-          "unit": null,
-          "period": "单次披露/未注明周期",
-          "scope": "新闻事件陈述",
-          "fact_status": "multi_source_reported",
-          "attribution": "华尔街见闻 7×24 全球",
-          "source_ref": "wscn-global-channel_352729e2ba18",
-          "source_url": "https://wallstreetcn.com/livenews/3203709",
-          "source_excerpt_or_locator": "当地时间22日，韩国教育部长官崔教振辞去职务，为韩国2027年度大学修学能力考试（韩国高考）期间防范高科技作弊措施不足引发混乱而承担责任。近期，韩国发生多起利用人工智能工具作弊事件，引发民众广泛担忧。",
-          "published_at": "2026-11-22T11:10:07+08:00",
-          "discovered_at": "2026-11-22T13:48:58+08:00",
-          "revision": 1
-        }
-      ],
-      "ai_analysis": "生成式 AI 与可穿戴智能设备的普及正在对国家级高利害标准化考试的防作弊体系构成严峻挑战，并首次直接触发高级别教育官员问责辞职。",
-      "unverified_claims": [],
-      "speculation_or_outlook": null,
-      "sources": [
-        {
-          "item_id": "wscn-global-channel_352729e2ba18",
-          "article_id": "wscn-global-channel_352729e2ba18",
-          "source_id": "wscn-global-channel",
-          "source_name": "华尔街见闻 7×24 全球",
-          "publisher_name": "华尔街见闻 7×24 全球",
-          "source_status": "ok",
-          "source_kind": "news",
-          "source_tier": "direct_media",
-          "publisher_family": "wallstreetcn",
-          "is_reprint_copy": true,
-          "title": "韩国高考AI作弊事件发酵，教育部长引咎辞职",
-          "url": "https://wallstreetcn.com/livenews/3203709",
-          "published_at": "2026-11-22T11:10:07+08:00",
-          "published_at_source": "upstream_rfc2822",
-          "fetched_at": "2026-11-22T14:58:50+08:00",
-          "excerpt": "当地时间22日，韩国教育部长官崔教振辞去职务，为韩国2027年度大学修学能力考试（韩国高考）期间防范高科技作弊措施不足引发混乱而承担责任。近期，韩国发生多起利用人工智能工具作弊事件，引发民众广泛担忧。",
-          "thumbnail_url": null,
-          "deep_fetch_status": null
-        },
-        {
-          "item_id": "aihot_4d0519dfb5e3",
-          "article_id": "aihot_4d0519dfb5e3",
-          "source_id": "aihot",
-          "source_name": "AIHOT 前沿",
-          "publisher_name": "AIHOT 前沿",
-          "source_status": "ok",
-          "source_kind": "news",
-          "source_tier": "aggregator_lead",
-          "publisher_family": "aihot",
-          "is_reprint_copy": true,
-          "title": "韩国高考 AI 作弊事件发酵，教育部长崔教振引咎辞职",
-          "url": "https://aihot.news/items/pyf9a8fjorvbn6o2gg11w7dbt",
-          "published_at": "2026-11-22T11:21:10+08:00",
-          "published_at_source": "upstream_rfc2822",
-          "fetched_at": "2026-11-22T14:58:49+08:00",
-          "excerpt": "当地时间22日，韩国教育部长官崔教振辞去职务，为韩国2027年度大学修学能力考试（韩国高考）期间防范高科技作弊措施不足引发混乱而承担责任。近期，韩国发生多起利用人工智能工具作弊事件，引发民众广泛担忧。",
-          "thumbnail_url": null,
-          "deep_fetch_status": null
-        },
-        {
-          "item_id": "ithome_176a16f17215",
-          "article_id": "ithome_176a16f17215",
-          "source_id": "ithome",
-          "source_name": "IT之家",
-          "publisher_name": "IT之家",
-          "source_status": "ok",
-          "source_kind": "news",
-          "source_tier": "aggregator_lead",
-          "publisher_family": "ithome",
-          "is_reprint_copy": true,
-          "title": "韩国高考 AI 作弊事件发酵，教育部长引咎辞职",
-          "url": "https://www.ithome.com/1/030/558.htm",
-          "published_at": "2026-11-22T11:21:10+08:00",
-          "published_at_source": "upstream_rfc2822",
-          "fetched_at": "2026-11-22T14:58:49+08:00",
-          "excerpt": "当地时间22日，韩国教育部长官崔教振辞去职务，为韩国2027年度大学修学能力考试（韩国高考）期间防范高科技作弊措施不足引发混乱而承担责任。近期，韩国发生多起利用人工智能工具作弊事件，引发民众广泛担忧。",
-          "thumbnail_url": null,
-          "deep_fetch_status": null
-        }
-      ],
-      "verification": {
-        "all_refs_valid": true,
-        "has_primary_url": true,
-        "rejected_refs": [],
-        "has_first_party": false
-      },
-      "followup": {
-        "is_continuing": true,
-        "prev_batch_id": "smart-20261122-143735",
-        "prev_event_id": "evt_7e59ebeeb673",
-        "prev_title": "韩国高考 AI 作弊风波持续发酵，教育部长官崔教振引咎辞职",
-        "delta_note": "较上期新增 2 家独立来源报道"
-      },
-      "is_new_in_batch": false,
-      "update_kind": "new_fact_update",
-      "radar_score": 39,
-      "translation_attempts": 0,
-      "translation_error": null,
-      "title_zh": "韩国教育部长官崔教振因 2027 年度高考 AI 作弊事件引咎辞职",
-      "translation_status": "native_zh",
-      "summary_zh": "当地时间 11 月 22 日，韩国教育部长官崔教振辞去职务，为韩国 2027 年度大学修学能力考试（韩国高考）期间防范高科技作弊措施不足引发混乱承担责任。近期韩国发生多起利用人工智能工具在考试中作弊的事件，引发当地民众广泛担忧。",
-      "title_en": "",
-      "summary_en": "",
-      "ai_analysis_en": ""
-    },
-    {
-      "schema_version": "4.1",
-      "event_id": "evt_c0743442965c",
+      "event_id": "evt_894854269aa0",
       "storyline_id": "st_08ca59cc77eb",
       "article_ids": [
         "ithome-rss_ac9d686730a4"
       ],
       "legacy_event_ids": [],
-      "title": "微软公布 11 月 12 日 Outlook 全球宕机最终报告：确认部分邮件投递失败且安全功能受损",
+      "title": "微软公布 11 月 12 日 Outlook 全球宕机最终报告：确认部分邮件投递失败且安全功能受影响",
       "category": "tech",
       "entities": [
         "微软 (Microsoft)",
@@ -2196,12 +2093,12 @@
       "latest_reported_at": "2026-11-22T14:49:02+08:00",
       "fetched_at": "2026-11-22T14:58:49+08:00",
       "input_batch_id": "raw-20261122-145849",
-      "fact_summary": "微软近日公布了针对 11 月 12 日全球大规模服务故障的最终事故报告。该次故障曾导致全球数百万用户无法正常访问 Outlook、Exchange Online 及其他多项 Microsoft 365 服务，微软经过约 12 小时才逐步恢复全部服务。最终报告披露了此前未公开的细节，确认故障期间部分邮件未能成功送达预定收件人，且部分安全功能也受到影响。",
+      "fact_summary": "针对 11 月 12 日导致全球数百万用户无法正常访问 Outlook、Exchange Online 及多项 Microsoft 365 服务的长达约 12 小时大规模故障，微软于 11 月 22 日公布了最终事故报告。报告披露了此前初步报告中未公开的关键细节，确认故障期间部分邮件未能成功送达预定收件人，且部分安全功能也受到了影响。",
       "fact_atoms": [
         {
-          "atom_id": "fa_98750650",
+          "atom_id": "fa_13372460",
           "subject": "微软 (Microsoft)",
-          "metric_or_action": "微软公布 11 月 12 日 Outlook 全球宕机最终报告：确认部分邮件投递失败且安全功能受损",
+          "metric_or_action": "微软公布 11 月 12 日 Outlook 全球宕机最终报告：确认部分邮件投递失败且安全功能受影响",
           "value": null,
           "unit": null,
           "period": "单次披露/未注明周期",
@@ -2216,7 +2113,7 @@
           "revision": 1
         }
       ],
-      "ai_analysis": "此次最终复盘披露的“邮件丢失”与“安全功能受影响”细节，比最初约 12 小时的服务不可用更具实质业务风险，可能促使大型企业客户重新评估单一大厂云办公套件的冗余与容灾方案。",
+      "ai_analysis": "云端生产力套件在核心通信与安全链路上的级联故障，暴露出大型企业高度依赖单一云服务架构时面临的业务连续性与合规审计风险。",
       "unverified_claims": [],
       "speculation_or_outlook": null,
       "sources": [
@@ -2247,121 +2144,293 @@
         "rejected_refs": [],
         "has_first_party": false
       },
-      "followup": null,
-      "is_new_in_batch": true,
-      "update_kind": "new_discovery",
-      "radar_score": 76,
+      "followup": {
+        "is_continuing": true,
+        "prev_batch_id": "smart-20261122-145938",
+        "prev_event_id": "evt_c0743442965c",
+        "prev_title": "微软公布 11 月 12 日 Outlook 全球宕机最终报告：确认部分邮件投递失败且安全功能受损",
+        "delta_note": "同一事件在最新批次出现表述修订或信息补充"
+      },
+      "is_new_in_batch": false,
+      "update_kind": "new_fact_update",
+      "radar_score": 69,
       "translation_attempts": 0,
       "translation_error": null,
-      "title_zh": "微软公布 11 月 12 日 Outlook 全球宕机最终报告：确认部分邮件投递失败且安全功能受损",
+      "title_zh": "微软公布 11 月 12 日 Outlook 全球宕机最终报告：确认部分邮件投递失败且安全功能受影响",
       "translation_status": "native_zh",
-      "summary_zh": "微软近日公布了针对 11 月 12 日全球大规模服务故障的最终事故报告。该次故障曾导致全球数百万用户无法正常访问 Outlook、Exchange Online 及其他多项 Microsoft 365 服务，微软经过约 12 小时才逐步恢复全部服务。最终报告披露了此前未公开的细节，确认故障期间部分邮件未能成功送达预定收件人，且部分安全功能也受到影响。",
+      "summary_zh": "针对 11 月 12 日导致全球数百万用户无法正常访问 Outlook、Exchange Online 及多项 Microsoft 365 服务的长达约 12 小时大规模故障，微软于 11 月 22 日公布了最终事故报告。报告披露了此前初步报告中未公开的关键细节，确认故障期间部分邮件未能成功送达预定收件人，且部分安全功能也受到了影响。",
       "title_en": "",
       "summary_en": "",
       "ai_analysis_en": ""
     },
     {
       "schema_version": "4.1",
-      "event_id": "evt_b451ef543eff",
-      "storyline_id": "st_b165d83e2619",
+      "event_id": "evt_7d4c83660f70",
+      "storyline_id": "st_36ec6094884b",
       "article_ids": [
-        "ithome-rss_569c31f0dd3f",
-        "ithome_4650651bb2f5"
+        "rss-theverge_6ee9338d3bb4",
+        "rss-techcrunch_74676458acd6"
       ],
       "legacy_event_ids": [],
-      "title": "神舟二十四号船箭组合体转运至发射区择机发射，空间站将切换“六人模式”",
+      "title": "报道称：美国 FBI 国家犯罪信息中心与农业部据报遭黑客入侵，特朗普称“情况不妙”",
       "category": "tech",
       "entities": [
-        "中国空间站",
-        "神舟二十四号",
-        "神舟二十三号"
+        "FBI",
+        "美国农业部",
+        "唐纳德·特朗普",
+        "CNN"
+      ],
+      "entity_ids": [],
+      "entity_confidences": {},
+      "matched_entities": [],
+      "importance": "high",
+      "sentiment": "Bearish",
+      "special_note": null,
+      "material_stage": null,
+      "material_stage_label": null,
+      "material_stage_confidence": null,
+      "thumbnail_url": "https://platform.theverge.com/wp-content/uploads/sites/2/chorus/uploads/chorus_asset/file/23318430/akrales_220309_4977_0038.jpg?quality=90&strip=all&crop=0,0,100,100",
+      "publisher_name": "The Verge",
+      "source_status": "ok",
+      "evidence_status": "single_source",
+      "evidence_label": "单一独立来源线索",
+      "evidence_status_reason": "目前仅见 1 家独立来源（共 2 条引用含转载，含摘要/首段），尚未见独立渠道交叉或官方确认",
+      "attribution_warning": "该事件包含未获官方披露证实的说法，标题与摘要已保留报道归因限定。",
+      "regulatory_note": null,
+      "contradictions": [],
+      "downweight_reasons": [
+        "含未证实归因限定 (-10)"
+      ],
+      "quality_flags": [],
+      "material_depth": "title_and_excerpt",
+      "source_count": 2,
+      "platform_count": 2,
+      "independent_publisher_count": 1,
+      "reprint_count": 0,
+      "published_at": "2026-11-22T01:42:27+08:00",
+      "event_date": "2026-11-21",
+      "event_time": "2026-11-22T01:42:27+08:00",
+      "stale": false,
+      "event_date_source": "llm_extracted",
+      "is_stale_rehash": false,
+      "time_trust_level": "article_timestamp",
+      "time_confidence": "article_timestamp",
+      "first_discovered_at": "2026-11-22T14:58:49+08:00",
+      "first_reported_at": "2026-11-22T01:42:27+08:00",
+      "latest_fact_update_at": "2026-11-22T02:44:53+08:00",
+      "latest_reported_at": "2026-11-22T02:44:53+08:00",
+      "fetched_at": "2026-11-22T14:58:49+08:00",
+      "input_batch_id": "raw-20261122-145849",
+      "fact_summary": "【据关联报道/尚未见官方披露确认】据多家媒体周五（11 月 20 日）报道，美国联邦调查局（FBI）和美国农业部（USDA）均遭到黑客入侵。CNN 报道指出，这是 FBI 近几个月来遭遇的第二次类似攻击，本次攻击的目标是其国家犯罪信息中心（NCIC）数据库，FBI 正在展开调查。美国总统唐纳德·特朗普对此回应称，被报道的 FBI 数据库遭黑客入侵事件“情况不妙”（not good）。",
+      "fact_atoms": [
+        {
+          "atom_id": "fa_50645807",
+          "subject": "FBI",
+          "metric_or_action": "报道称：美国 FBI 国家犯罪信息中心与农业部据报遭黑客入侵，特朗普称“情况不妙”",
+          "value": null,
+          "unit": null,
+          "period": "单次披露/未注明周期",
+          "scope": "新闻事件陈述",
+          "fact_status": "reported_unconfirmed_by_filing",
+          "attribution": "The Verge",
+          "source_ref": "rss-theverge_6ee9338d3bb4",
+          "source_url": "https://www.theverge.com/tech/1039543/fbi-usda-hacked",
+          "source_excerpt_or_locator": "Friday, it was reported that both the US Department of Agriculture (USDA) and the FBI were hacked. In reporting on the FBI hack, CNN noted that this is the second such attack on th",
+          "published_at": "2026-11-22T01:42:27+08:00",
+          "discovered_at": "2026-11-22T14:58:49+08:00",
+          "revision": 1
+        }
+      ],
+      "ai_analysis": "联邦执法核心数据库连续成为攻击目标，凸显美国政府关键基础设施网络安全防御面临严峻挑战。",
+      "unverified_claims": [
+        "关于入侵具体发生时间、渗透范围及攻击者归属尚未有官方正式定论，案件仍在调查中。"
+      ],
+      "speculation_or_outlook": null,
+      "sources": [
+        {
+          "item_id": "rss-theverge_6ee9338d3bb4",
+          "article_id": "rss-theverge_6ee9338d3bb4",
+          "source_id": "rss-theverge",
+          "source_name": "The Verge",
+          "publisher_name": "The Verge",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "rss",
+          "is_reprint_copy": false,
+          "title": "The FBI and USDA were reportedly hacked",
+          "url": "https://www.theverge.com/tech/1039543/fbi-usda-hacked",
+          "published_at": "2026-11-22T01:42:27+08:00",
+          "published_at_source": "upstream_iso",
+          "fetched_at": "2026-11-22T14:58:54+08:00",
+          "excerpt": "Friday, it was reported that both the US Department of Agriculture (USDA) and the FBI were hacked. In reporting on the FBI hack, CNN noted that this is the second such attack on the agency in the last few months, this time targeting the National Crime Informa…",
+          "thumbnail_url": "https://platform.theverge.com/wp-content/uploads/sites/2/chorus/uploads/chorus_asset/file/23318430/akrales_220309_4977_0038.jpg?quality=90&strip=all&crop=0,0,100,100",
+          "deep_fetch_status": null,
+          "title_zh": "据报道，联邦调查局和美国农业部遭到黑客攻击"
+        },
+        {
+          "item_id": "rss-techcrunch_74676458acd6",
+          "article_id": "rss-techcrunch_74676458acd6",
+          "source_id": "rss-techcrunch",
+          "source_name": "TechCrunch AI & Tech",
+          "publisher_name": "TechCrunch AI & Tech",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "rss",
+          "is_reprint_copy": false,
+          "title": "Trump says reported FBI database hack is ‘not good’",
+          "url": "https://techcrunch.com/2026/11/21/trump-says-reported-fbi-database-hack-is-not-good",
+          "published_at": "2026-11-22T02:44:53+08:00",
+          "published_at_source": "upstream_rfc2822",
+          "fetched_at": "2026-11-22T14:58:54+08:00",
+          "excerpt": "The FBI is reportedly investigating a hack of the National Crime Information Center.",
+          "thumbnail_url": null,
+          "deep_fetch_status": null,
+          "title_zh": "特朗普称联邦调查局数据库遭黑客攻击的报道‘不好’"
+        }
+      ],
+      "verification": {
+        "all_refs_valid": true,
+        "has_primary_url": true,
+        "rejected_refs": [],
+        "has_first_party": false
+      },
+      "followup": null,
+      "is_new_in_batch": true,
+      "update_kind": "new_discovery",
+      "radar_score": 36,
+      "translation_attempts": 0,
+      "translation_error": null,
+      "title_zh": "报道称：美国 FBI 国家犯罪信息中心与农业部据报遭黑客入侵，特朗普称“情况不妙”",
+      "translation_status": "native_zh",
+      "summary_zh": "【据关联报道/尚未见官方披露确认】据多家媒体周五（11 月 20 日）报道，美国联邦调查局（FBI）和美国农业部（USDA）均遭到黑客入侵。CNN 报道指出，这是 FBI 近几个月来遭遇的第二次类似攻击，本次攻击的目标是其国家犯罪信息中心（NCIC）数据库，FBI 正在展开调查。美国总统唐纳德·特朗普对此回应称，被报道的 FBI 数据库遭黑客入侵事件“情况不妙”（not good）。",
+      "title_en": "The FBI and USDA were reportedly hacked",
+      "summary_en": "Friday, it was reported that both the US Department of Agriculture (USDA) and the FBI were hacked. In reporting on the FBI hack, CNN noted that this is the second such attack on the agency in the last few months, this time targeting the National Crime Informa…",
+      "ai_analysis_en": ""
+    },
+    {
+      "schema_version": "4.1",
+      "event_id": "evt_bad2ca00fdcb",
+      "storyline_id": "st_1c696d1c31cb",
+      "article_ids": [
+        "wscn-global-channel_352729e2ba18",
+        "aihot_4d0519dfb5e3",
+        "ithome_176a16f17215"
+      ],
+      "legacy_event_ids": [],
+      "title": "韩国 2027 年度高考 AI 作弊事件持续发酵，教育部长官崔教振引咎辞职",
+      "category": "tech",
+      "entities": [
+        "韩国教育部",
+        "崔教振"
       ],
       "entity_ids": [],
       "entity_confidences": {},
       "matched_entities": [],
       "importance": "medium",
-      "sentiment": "Bullish",
+      "sentiment": "Bearish",
       "special_note": null,
       "material_stage": null,
       "material_stage_label": null,
       "material_stage_confidence": null,
-      "thumbnail_url": "https://img.ithome.com/newsuploadfiles/2026/11/9187ec1b-ddcf-4c29-a814-7013e31dd216.png",
-      "publisher_name": "IT之家 实时快讯",
+      "thumbnail_url": null,
+      "publisher_name": "华尔街见闻 7×24 全球",
       "source_status": "ok",
       "evidence_status": "single_source",
       "evidence_label": "多独立来源提及（待核官方全文）",
-      "evidence_status_reason": "已有 2 家独立媒体族（另识别 2 条高度相似转载）提及（含摘要或正文首段）；多源转载不代表官方公告已证实",
+      "evidence_status_reason": "已有 3 家独立媒体族（另识别 3 条高度相似转载）提及（含摘要或正文首段）；多源转载不代表官方公告已证实",
       "attribution_warning": null,
       "regulatory_note": null,
       "contradictions": [],
       "downweight_reasons": [],
       "quality_flags": [],
       "material_depth": "title_and_excerpt",
-      "source_count": 2,
-      "platform_count": 2,
+      "source_count": 3,
+      "platform_count": 3,
       "independent_publisher_count": 1,
-      "reprint_count": 2,
-      "published_at": "2026-11-22T10:56:27+08:00",
+      "reprint_count": 3,
+      "published_at": "2026-11-22T11:10:07+08:00",
       "event_date": "2026-11-22",
-      "event_time": "2026-11-22T10:56:27+08:00",
+      "event_time": "2026-11-22T11:10:07+08:00",
       "stale": false,
       "event_date_source": "llm_extracted",
       "is_stale_rehash": false,
       "time_trust_level": "article_timestamp",
       "time_confidence": "article_timestamp",
-      "first_discovered_at": "2026-11-22T14:36:45+08:00",
-      "first_reported_at": "2026-11-22T10:56:27+08:00",
-      "latest_fact_update_at": "2026-11-22T14:08:30+08:00",
-      "latest_reported_at": "2026-11-22T14:08:30+08:00",
+      "first_discovered_at": "2026-11-22T13:48:58+08:00",
+      "first_reported_at": "2026-11-22T11:10:07+08:00",
+      "latest_fact_update_at": "2026-11-22T11:21:10+08:00",
+      "latest_reported_at": "2026-11-22T11:21:10+08:00",
       "fetched_at": "2026-11-22T14:58:49+08:00",
       "input_batch_id": "raw-20261122-145849",
-      "fact_summary": "据央视新闻报道，神舟二十四号船箭组合体已于 11 月 17 日转运至发射区，计划于近日择机发射。为迎接新乘组进驻实现“太空会师”，在轨的神舟二十三号乘组在陆续回收空间生物实验样品的同时，已提前开展舱内环境清理、物资清点及睡眠空间准备；新乘组进驻后，中国空间站将从 3 人在轨切换为 6 人在轨，氧气与用水等资源消耗将翻倍。",
+      "fact_summary": "当地时间 11 月 22 日，韩国教育部长官崔教振宣布辞去职务，以承担在韩国 2027 年度大学修学能力考试（韩国高考）期间未能充分防范高科技作弊并引发混乱的责任。近期韩国发生多起利用人工智能工具实施考试作弊的事件，引发当地民众广泛担忧。",
       "fact_atoms": [
         {
-          "atom_id": "fa_19029925",
-          "subject": "中国空间站",
-          "metric_or_action": "神舟二十四号船箭组合体转运至发射区择机发射，空间站将切换“六人模式”",
+          "atom_id": "fa_3593207",
+          "subject": "韩国教育部",
+          "metric_or_action": "韩国 2027 年度高考 AI 作弊事件持续发酵，教育部长官崔教振引咎辞职",
           "value": null,
           "unit": null,
           "period": "单次披露/未注明周期",
           "scope": "新闻事件陈述",
           "fact_status": "multi_source_reported",
-          "attribution": "IT之家 实时快讯",
-          "source_ref": "ithome-rss_569c31f0dd3f",
-          "source_url": "https://www.ithome.com/1/030/572.htm",
-          "source_excerpt_or_locator": "IT之家 11 月 22 日消息，据央视新闻报道，神舟二十四号船箭组合体于 11 月 17 日转运至发射区，计划于近日择机发射。空间站也将迎来一次特别的“太空会师”。 按照以往任务惯例，迎接新的乘组，在轨乘组要提前进行空间站物品整理和物资清点，为新乘组准备好日常生活物资、睡眠空间和用品。这段时间，神舟二十三号乘组在陆续回收空间生物实验样品、坚持在轨锻炼的同时",
-          "published_at": "2026-11-22T14:08:30+08:00",
-          "discovered_at": "2026-11-22T14:36:45+08:00",
+          "attribution": "华尔街见闻 7×24 全球",
+          "source_ref": "wscn-global-channel_352729e2ba18",
+          "source_url": "https://wallstreetcn.com/livenews/3203709",
+          "source_excerpt_or_locator": "当地时间22日，韩国教育部长官崔教振辞去职务，为韩国2027年度大学修学能力考试（韩国高考）期间防范高科技作弊措施不足引发混乱而承担责任。近期，韩国发生多起利用人工智能工具作弊事件，引发民众广泛担忧。",
+          "published_at": "2026-11-22T11:10:07+08:00",
+          "discovered_at": "2026-11-22T13:48:58+08:00",
           "revision": 1
         }
       ],
-      "ai_analysis": "任务进入发射窗口临近阶段，在轨轮换的常态化与“六人模式”下的双倍保障能力，进一步验证了中国空间站长期载人运营与空间生命科学实验的成熟度。",
+      "ai_analysis": "生成式 AI 与便携智能终端的普及正对高利害标准化考试的监考与技术反制体系构成直接冲击，治理滞后已演变为公共信任危机。",
       "unverified_claims": [],
-      "speculation_or_outlook": "近日将关注神舟二十四号的具体发射窗口及两乘组在轨交接任务推进。",
+      "speculation_or_outlook": null,
       "sources": [
         {
-          "item_id": "ithome-rss_569c31f0dd3f",
-          "article_id": "ithome-rss_569c31f0dd3f",
-          "source_id": "ithome-rss",
-          "source_name": "IT之家 实时快讯",
-          "publisher_name": "IT之家 实时快讯",
+          "item_id": "wscn-global-channel_352729e2ba18",
+          "article_id": "wscn-global-channel_352729e2ba18",
+          "source_id": "wscn-global-channel",
+          "source_name": "华尔街见闻 7×24 全球",
+          "publisher_name": "华尔街见闻 7×24 全球",
           "source_status": "ok",
           "source_kind": "news",
           "source_tier": "direct_media",
-          "publisher_family": "ithome-rss",
+          "publisher_family": "wallstreetcn",
           "is_reprint_copy": true,
-          "title": "神舟二十三乘组整理“太空家园”，提前切换“六人模式”",
-          "url": "https://www.ithome.com/1/030/572.htm",
-          "published_at": "2026-11-22T14:08:30+08:00",
-          "published_at_source": "upstream_local_cst",
+          "title": "韩国高考AI作弊事件发酵，教育部长引咎辞职",
+          "url": "https://wallstreetcn.com/livenews/3203709",
+          "published_at": "2026-11-22T11:10:07+08:00",
+          "published_at_source": "upstream_rfc2822",
           "fetched_at": "2026-11-22T14:58:50+08:00",
-          "excerpt": "IT之家 11 月 22 日消息，据央视新闻报道，神舟二十四号船箭组合体于 11 月 17 日转运至发射区，计划于近日择机发射。空间站也将迎来一次特别的“太空会师”。 按照以往任务惯例，迎接新的乘组，在轨乘组要提前进行空间站物品整理和物资清点，为新乘组准备好日常生活物资、睡眠空间和用品。这段时间，神舟二十三号乘组在陆续回收空间生物实验样品、坚持在轨锻炼的同时，也开展了舱内环境的清理。 新乘组进驻后， 空间站将从 3 人在轨切换为 6 人在轨 ，氧气、用水等资源消耗都要翻倍。",
-          "thumbnail_url": "https://img.ithome.com/newsuploadfiles/2026/11/9187ec1b-ddcf-4c29-a814-7013e31dd216.png",
+          "excerpt": "当地时间22日，韩国教育部长官崔教振辞去职务，为韩国2027年度大学修学能力考试（韩国高考）期间防范高科技作弊措施不足引发混乱而承担责任。近期，韩国发生多起利用人工智能工具作弊事件，引发民众广泛担忧。",
+          "thumbnail_url": null,
           "deep_fetch_status": null
         },
         {
-          "item_id": "ithome_4650651bb2f5",
-          "article_id": "ithome_4650651bb2f5",
+          "item_id": "aihot_4d0519dfb5e3",
+          "article_id": "aihot_4d0519dfb5e3",
+          "source_id": "aihot",
+          "source_name": "AIHOT 前沿",
+          "publisher_name": "AIHOT 前沿",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "aggregator_lead",
+          "publisher_family": "aihot",
+          "is_reprint_copy": true,
+          "title": "韩国高考 AI 作弊事件发酵，教育部长崔教振引咎辞职",
+          "url": "https://aihot.news/items/pyf9a8fjorvbn6o2gg11w7dbt",
+          "published_at": "2026-11-22T11:21:10+08:00",
+          "published_at_source": "upstream_rfc2822",
+          "fetched_at": "2026-11-22T14:58:49+08:00",
+          "excerpt": "当地时间22日，韩国教育部长官崔教振辞去职务，为韩国2027年度大学修学能力考试（韩国高考）期间防范高科技作弊措施不足引发混乱而承担责任。近期，韩国发生多起利用人工智能工具作弊事件，引发民众广泛担忧。",
+          "thumbnail_url": null,
+          "deep_fetch_status": null
+        },
+        {
+          "item_id": "ithome_176a16f17215",
+          "article_id": "ithome_176a16f17215",
           "source_id": "ithome",
           "source_name": "IT之家",
           "publisher_name": "IT之家",
@@ -2370,13 +2439,13 @@
           "source_tier": "aggregator_lead",
           "publisher_family": "ithome",
           "is_reprint_copy": true,
-          "title": "神舟二十三乘组在轨将满六个月，中国空间站将迎来首位外籍航天员到访",
-          "url": "https://www.ithome.com/1/030/552.htm",
-          "published_at": "2026-11-22T10:56:27+08:00",
-          "published_at_source": "upstream_local_cst",
+          "title": "韩国高考 AI 作弊事件发酵，教育部长引咎辞职",
+          "url": "https://www.ithome.com/1/030/558.htm",
+          "published_at": "2026-11-22T11:21:10+08:00",
+          "published_at_source": "upstream_rfc2822",
           "fetched_at": "2026-11-22T14:58:49+08:00",
-          "excerpt": "IT之家 11 月 22 日消息，据央视新闻报道，神舟二十四号船箭组合体于 11 月 17 日转运至发射区，计划于近日择机发射。空间站也将迎来一次特别的“太空会师”。 按照以往任务惯例，迎接新的乘组，在轨乘组要提前进行空间站物品整理和物资清点，为新乘组准备好日常生活物资、睡眠空间和用品。这段时间，神舟二十三号乘组在陆续回收空间生物实验样品、坚持在轨锻炼的同时，也开展了舱内环境的清理。 新乘组进驻后， 空间站将从 3 人在轨切换为 6 人在轨 ，氧气、用水等资源消耗都要翻倍。",
-          "thumbnail_url": "https://img.ithome.com/newsuploadfiles/2026/11/9187ec1b-ddcf-4c29-a814-7013e31dd216.png",
+          "excerpt": "当地时间22日，韩国教育部长官崔教振辞去职务，为韩国2027年度大学修学能力考试（韩国高考）期间防范高科技作弊措施不足引发混乱而承担责任。近期，韩国发生多起利用人工智能工具作弊事件，引发民众广泛担忧。",
+          "thumbnail_url": null,
           "deep_fetch_status": null
         }
       ],
@@ -2388,136 +2457,19 @@
       },
       "followup": {
         "is_continuing": true,
-        "prev_batch_id": "smart-20261122-143735",
-        "prev_event_id": "evt_5bcca64f9f61",
-        "prev_title": "神舟二十三号乘组整理中国空间站物资，备战神舟二十四号“六人模式”",
-        "delta_note": "较上期新增 1 家独立来源报道"
+        "prev_batch_id": "smart-20261122-145938",
+        "prev_event_id": "evt_177e8a72ff6f",
+        "prev_title": "韩国教育部长官崔教振因 2027 年度高考 AI 作弊事件引咎辞职",
+        "delta_note": "较上期新增 2 家独立来源报道"
       },
       "is_new_in_batch": false,
       "update_kind": "new_fact_update",
       "radar_score": 39,
       "translation_attempts": 0,
       "translation_error": null,
-      "title_zh": "神舟二十四号船箭组合体转运至发射区择机发射，空间站将切换“六人模式”",
+      "title_zh": "韩国 2027 年度高考 AI 作弊事件持续发酵，教育部长官崔教振引咎辞职",
       "translation_status": "native_zh",
-      "summary_zh": "据央视新闻报道，神舟二十四号船箭组合体已于 11 月 17 日转运至发射区，计划于近日择机发射。为迎接新乘组进驻实现“太空会师”，在轨的神舟二十三号乘组在陆续回收空间生物实验样品的同时，已提前开展舱内环境清理、物资清点及睡眠空间准备；新乘组进驻后，中国空间站将从 3 人在轨切换为 6 人在轨，氧气与用水等资源消耗将翻倍。",
-      "title_en": "",
-      "summary_en": "",
-      "ai_analysis_en": ""
-    },
-    {
-      "schema_version": "4.1",
-      "event_id": "evt_e9df6b099b8f",
-      "storyline_id": "st_b65ebe4bcc42",
-      "article_ids": [
-        "ithome-rss_f2c48c2b6252"
-      ],
-      "legacy_event_ids": [],
-      "title": "小鹏汇天全尺寸电动飞行汽车 A868 完成倾转过渡试飞",
-      "category": "tech",
-      "entities": [
-        "小鹏汇天",
-        "A868"
-      ],
-      "entity_ids": [],
-      "entity_confidences": {},
-      "matched_entities": [],
-      "importance": "medium",
-      "sentiment": "Bullish",
-      "special_note": null,
-      "material_stage": null,
-      "material_stage_label": null,
-      "material_stage_confidence": null,
-      "thumbnail_url": "https://img.ithome.com/newsuploadfiles/2026/11/db094d5d-eca5-45e0-80bc-d1dbfd680112.jpg",
-      "publisher_name": "IT之家 实时快讯",
-      "source_status": "ok",
-      "evidence_status": "single_source",
-      "evidence_label": "单一独立来源线索",
-      "evidence_status_reason": "目前仅见 1 家独立来源（共 1 条引用含转载，含摘要/首段），尚未见独立渠道交叉或官方确认",
-      "attribution_warning": null,
-      "regulatory_note": null,
-      "contradictions": [],
-      "downweight_reasons": [],
-      "quality_flags": [],
-      "material_depth": "title_and_excerpt",
-      "source_count": 1,
-      "platform_count": 1,
-      "independent_publisher_count": 1,
-      "reprint_count": 1,
-      "published_at": "2026-11-22T12:02:19+08:00",
-      "event_date": "2026-11-22",
-      "event_time": "2026-11-22T12:02:19+08:00",
-      "stale": false,
-      "event_date_source": "llm_extracted",
-      "is_stale_rehash": false,
-      "time_trust_level": "article_timestamp",
-      "time_confidence": "article_timestamp",
-      "first_discovered_at": "2026-11-22T14:58:49+08:00",
-      "first_reported_at": "2026-11-22T12:02:19+08:00",
-      "latest_fact_update_at": "2026-11-22T12:02:19+08:00",
-      "latest_reported_at": "2026-11-22T12:02:19+08:00",
-      "fetched_at": "2026-11-22T14:58:49+08:00",
-      "input_batch_id": "raw-20261122-145849",
-      "fact_summary": "11 月 22 日，小鹏汇天宣布其全尺寸全倾转电动飞行汽车 A868 倾转过渡试飞成功，由此成为中国第一家完成全尺寸样机倾转过渡飞行的企业。小鹏汇天说明，“倾转过渡成功”指飞行汽车能够从垂直起降状态完整转换为高速平飞状态，区别于单纯的垂直起降演示。",
-      "fact_atoms": [
-        {
-          "atom_id": "fa_55312913",
-          "subject": "小鹏汇天",
-          "metric_or_action": "小鹏汇天全尺寸电动飞行汽车 A868 完成倾转过渡试飞",
-          "value": null,
-          "unit": null,
-          "period": "单次披露/未注明周期",
-          "scope": "新闻事件陈述",
-          "fact_status": "reported_unconfirmed_by_filing",
-          "attribution": "IT之家 实时快讯",
-          "source_ref": "ithome-rss_f2c48c2b6252",
-          "source_url": "https://www.ithome.com/1/030/561.htm",
-          "source_excerpt_or_locator": "IT之家 11 月 22 日消息，小鹏汇天今天宣布，其全尺寸全倾转电动飞行汽车 A868 倾转过渡试飞成功。小鹏汇天由此成为中国第一家完成全尺寸样机倾转过渡飞行的企业。 意味着中国在该技术领域 ， 正式跨入全球第一梯队 。 IT之家从汇天飞行汽车公众号获悉， “倾转过渡成功”是指飞行汽车能够从垂直起降状态 ， 完整转换为高速平飞状态 ，与单纯的起降演示有所不",
-          "published_at": "2026-11-22T12:02:19+08:00",
-          "discovered_at": "2026-11-22T14:58:49+08:00",
-          "revision": 1
-        }
-      ],
-      "ai_analysis": "倾转旋翼过渡飞行是 eVTOL 兼顾垂直起降便利性与高速长航程平飞效率的关键技术难点，全尺寸样机突破该节点有助于加速国内低空飞行器向商业化适航迈进。",
-      "unverified_claims": [],
-      "speculation_or_outlook": null,
-      "sources": [
-        {
-          "item_id": "ithome-rss_f2c48c2b6252",
-          "article_id": "ithome-rss_f2c48c2b6252",
-          "source_id": "ithome-rss",
-          "source_name": "IT之家 实时快讯",
-          "publisher_name": "IT之家 实时快讯",
-          "source_status": "ok",
-          "source_kind": "news",
-          "source_tier": "direct_media",
-          "publisher_family": "ithome-rss",
-          "is_reprint_copy": true,
-          "title": "中国第一家：小鹏汇天 A868 电动飞行汽车倾转过渡试飞成功",
-          "url": "https://www.ithome.com/1/030/561.htm",
-          "published_at": "2026-11-22T12:02:19+08:00",
-          "published_at_source": "upstream_local_cst",
-          "fetched_at": "2026-11-22T14:58:50+08:00",
-          "excerpt": "IT之家 11 月 22 日消息，小鹏汇天今天宣布，其全尺寸全倾转电动飞行汽车 A868 倾转过渡试飞成功。小鹏汇天由此成为中国第一家完成全尺寸样机倾转过渡飞行的企业。 意味着中国在该技术领域 ， 正式跨入全球第一梯队 。 IT之家从汇天飞行汽车公众号获悉， “倾转过渡成功”是指飞行汽车能够从垂直起降状态 ， 完整转换为高速平飞状态 ，与单纯的起降演示有所不同。",
-          "thumbnail_url": "https://img.ithome.com/newsuploadfiles/2026/11/db094d5d-eca5-45e0-80bc-d1dbfd680112.jpg",
-          "deep_fetch_status": null
-        }
-      ],
-      "verification": {
-        "all_refs_valid": true,
-        "has_primary_url": true,
-        "rejected_refs": [],
-        "has_first_party": false
-      },
-      "followup": null,
-      "is_new_in_batch": true,
-      "update_kind": "new_discovery",
-      "radar_score": 46,
-      "translation_attempts": 0,
-      "translation_error": null,
-      "title_zh": "小鹏汇天全尺寸电动飞行汽车 A868 完成倾转过渡试飞",
-      "translation_status": "native_zh",
-      "summary_zh": "11 月 22 日，小鹏汇天宣布其全尺寸全倾转电动飞行汽车 A868 倾转过渡试飞成功，由此成为中国第一家完成全尺寸样机倾转过渡飞行的企业。小鹏汇天说明，“倾转过渡成功”指飞行汽车能够从垂直起降状态完整转换为高速平飞状态，区别于单纯的垂直起降演示。",
+      "summary_zh": "当地时间 11 月 22 日，韩国教育部长官崔教振宣布辞去职务，以承担在韩国 2027 年度大学修学能力考试（韩国高考）期间未能充分防范高科技作弊并引发混乱的责任。近期韩国发生多起利用人工智能工具实施考试作弊的事件，引发当地民众广泛担忧。",
       "title_en": "",
       "summary_en": "",
       "ai_analysis_en": ""

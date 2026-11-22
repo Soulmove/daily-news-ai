@@ -1,20 +1,20 @@
 {
   "schema_version": "4.1",
   "date_utc": "2026-11-22",
-  "updated_at": "2026-11-22T07:05:07Z",
+  "updated_at": "2026-11-22T07:14:16Z",
   "keys": {
     "KEY_TECH": {
       "slot": "KEY_TECH",
       "fingerprint": "09c80db8",
       "date_utc": "2026-11-22",
-      "daily_calls": 3,
+      "daily_calls": 4,
       "cooldown_until": null,
       "exhausted_until": null,
       "model_exhausted_until": {},
-      "last_error_code": "TRANSIENT_ERROR",
-      "last_error": "ServerError: 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand ",
-      "last_success_at": "2026-11-22T06:41:07Z",
-      "consecutive_errors": 1,
+      "last_error_code": null,
+      "last_error": null,
+      "last_success_at": "2026-11-22T07:13:39Z",
+      "consecutive_errors": 0,
       "model_cooldown_until": {
         "gemini-4-hydrogen": "2026-11-22T07:02:32Z"
       }
@@ -39,69 +39,37 @@
       "slot": "KEY_FINANCE",
       "fingerprint": "08e82e75",
       "date_utc": "2026-11-22",
-      "daily_calls": 4,
+      "daily_calls": 5,
       "cooldown_until": null,
       "exhausted_until": null,
       "model_exhausted_until": {},
-      "last_error_code": null,
-      "last_error": null,
+      "last_error_code": "TRANSIENT_ERROR",
+      "last_error": "ServerError: 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand ",
       "last_success_at": "2026-11-22T06:42:36Z",
-      "consecutive_errors": 0,
+      "consecutive_errors": 1,
       "model_cooldown_until": {
-        "gemini-4-hydrogen": "2026-11-22T05:52:32Z"
+        "gemini-4-hydrogen": "2026-11-22T07:09:29Z"
       }
     },
     "KEY_GENERAL": {
       "slot": "KEY_GENERAL",
       "fingerprint": "f9d158c9",
       "date_utc": "2026-11-22",
-      "daily_calls": 4,
+      "daily_calls": 6,
       "cooldown_until": null,
       "exhausted_until": null,
       "model_exhausted_until": {},
       "last_error_code": null,
       "last_error": null,
-      "last_success_at": "2026-11-22T06:42:45Z",
+      "last_success_at": "2026-11-22T07:13:10Z",
       "consecutive_errors": 0,
       "model_cooldown_until": {
-        "gemini-4-hydrogen": "2026-11-22T05:52:34Z"
+        "gemini-4-hydrogen": "2026-11-22T07:09:30Z"
       }
     },
     "KEY_1": {
       "slot": "KEY_1",
       "fingerprint": "f48c8cc9",
-      "date_utc": "2026-11-22",
-      "daily_calls": 4,
-      "cooldown_until": null,
-      "exhausted_until": null,
-      "model_exhausted_until": {},
-      "last_error_code": null,
-      "last_error": null,
-      "last_success_at": "2026-11-22T06:42:55Z",
-      "consecutive_errors": 0,
-      "model_cooldown_until": {
-        "gemini-4-hydrogen": "2026-11-22T05:52:41Z"
-      }
-    },
-    "KEY_2": {
-      "slot": "KEY_2",
-      "fingerprint": "d6427670",
-      "date_utc": "2026-11-22",
-      "daily_calls": 5,
-      "cooldown_until": null,
-      "exhausted_until": null,
-      "model_exhausted_until": {},
-      "last_error_code": null,
-      "last_error": null,
-      "last_success_at": "2026-11-22T07:04:32Z",
-      "consecutive_errors": 0,
-      "model_cooldown_until": {
-        "gemini-4-hydrogen": "2026-11-22T05:52:41Z"
-      }
-    },
-    "KEY_3": {
-      "slot": "KEY_3",
-      "fingerprint": "0ca484b5",
       "date_utc": "2026-11-22",
       "daily_calls": 5,
       "cooldown_until": null,
@@ -109,8 +77,40 @@
       "model_exhausted_until": {},
       "last_error_code": "TRANSIENT_ERROR",
       "last_error": "ServerError: 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand ",
-      "last_success_at": "2026-11-22T06:43:08Z",
+      "last_success_at": "2026-11-22T06:42:55Z",
       "consecutive_errors": 1,
+      "model_cooldown_until": {
+        "gemini-4-hydrogen": "2026-11-22T07:09:29Z"
+      }
+    },
+    "KEY_2": {
+      "slot": "KEY_2",
+      "fingerprint": "d6427670",
+      "date_utc": "2026-11-22",
+      "daily_calls": 6,
+      "cooldown_until": null,
+      "exhausted_until": null,
+      "model_exhausted_until": {},
+      "last_error_code": "TRANSIENT_ERROR",
+      "last_error": "ServerError: 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand ",
+      "last_success_at": "2026-11-22T07:04:32Z",
+      "consecutive_errors": 1,
+      "model_cooldown_until": {
+        "gemini-4-hydrogen": "2026-11-22T07:09:35Z"
+      }
+    },
+    "KEY_3": {
+      "slot": "KEY_3",
+      "fingerprint": "0ca484b5",
+      "date_utc": "2026-11-22",
+      "daily_calls": 6,
+      "cooldown_until": null,
+      "exhausted_until": null,
+      "model_exhausted_until": {},
+      "last_error_code": null,
+      "last_error": null,
+      "last_success_at": "2026-11-22T07:11:08Z",
+      "consecutive_errors": 0,
       "model_cooldown_until": {
         "gemini-4-hydrogen": "2026-11-22T07:00:42Z"
       }
@@ -119,13 +119,13 @@
       "slot": "KEY_4",
       "fingerprint": "27eb07c4",
       "date_utc": "2026-11-22",
-      "daily_calls": 5,
+      "daily_calls": 6,
       "cooldown_until": null,
       "exhausted_until": null,
       "model_exhausted_until": {},
       "last_error_code": null,
       "last_error": null,
-      "last_success_at": "2026-11-22T07:02:07Z",
+      "last_success_at": "2026-11-22T07:14:00Z",
       "consecutive_errors": 0,
       "model_cooldown_until": {
         "gemini-4-hydrogen": "2026-11-22T05:52:44Z"
@@ -151,13 +151,13 @@
       "slot": "KEY_6",
       "fingerprint": "3ccfa6cf",
       "date_utc": "2026-11-22",
-      "daily_calls": 5,
+      "daily_calls": 6,
       "cooldown_until": null,
       "exhausted_until": null,
       "model_exhausted_until": {},
       "last_error_code": null,
       "last_error": null,
-      "last_success_at": "2026-11-22T07:03:23Z",
+      "last_success_at": "2026-11-22T07:14:16Z",
       "consecutive_errors": 0,
       "model_cooldown_until": {
         "gemini-4-hydrogen": "2026-11-22T07:00:28Z"
@@ -167,13 +167,13 @@
       "slot": "KEY_7",
       "fingerprint": "1b965772",
       "date_utc": "2026-11-22",
-      "daily_calls": 5,
+      "daily_calls": 6,
       "cooldown_until": null,
       "exhausted_until": null,
       "model_exhausted_until": {},
       "last_error_code": null,
       "last_error": null,
-      "last_success_at": "2026-11-22T07:04:26Z",
+      "last_success_at": "2026-11-22T07:13:59Z",
       "consecutive_errors": 0,
       "model_cooldown_until": {
         "gemini-4-hydrogen": "2026-11-22T05:52:28Z"
