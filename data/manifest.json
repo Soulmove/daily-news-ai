@@ -1,6 +1,6 @@
 {
   "schema_version": "4.1",
-  "site_published_at": "2026-11-22T23:11:13+08:00",
+  "site_published_at": "2026-11-23T00:24:27+08:00",
   "smart": {
     "latest_batch_id": "smart-20261122-230616",
     "latest_path": "archives/smart/2026-11-22/23-06/",
@@ -83,12 +83,12 @@
     }
   },
   "raw": {
-    "latest_batch_id": "raw-20261122-230420",
-    "latest_path": "archives/raw/2026-11-22/23-04/",
-    "meta_path": "archives/raw/2026-11-22/23-04/meta.json",
-    "connectors_path": "archives/raw/2026-11-22/23-04/connectors.json",
-    "fetched_at": "2026-11-22T23:04:20+08:00",
-    "published_at": "2026-11-22T23:04:38+08:00",
+    "latest_batch_id": "raw-20261123-002357",
+    "latest_path": "archives/raw/2026-11-23/00-23/",
+    "meta_path": "archives/raw/2026-11-23/00-23/meta.json",
+    "connectors_path": "archives/raw/2026-11-23/00-23/connectors.json",
+    "fetched_at": "2026-11-23T00:23:57+08:00",
+    "published_at": "2026-11-23T00:24:27+08:00",
     "target_cadence_minutes": 60,
     "schedule_source": "workflow_dispatch",
     "status": "partial",
@@ -99,57 +99,57 @@
       "error_sources": 1,
       "stale_sources": 0,
       "retired_sources": 5,
-      "total_raw_items": 1440,
+      "total_raw_items": 1443,
       "first_party_items": 22,
       "healthy_connectors": 7,
       "total_connectors": 7,
-      "deep_fetched_enriched": 16,
-      "deduped_events": 1236
+      "deep_fetched_enriched": 20,
+      "deduped_events": 1233
     },
     "categories": {
       "finance": {
         "file": "data_finance.json",
-        "path": "archives/raw/2026-11-22/23-04/data_finance.json",
+        "path": "archives/raw/2026-11-23/00-23/data_finance.json",
         "status": "ok",
         "source_count": 19,
         "ok_sources": 19,
         "error_sources": 0,
         "empty_sources": 0,
         "stale_sources": 0,
-        "item_count": 369
+        "item_count": 383
       },
       "global": {
         "file": "data_global.json",
-        "path": "archives/raw/2026-11-22/23-04/data_global.json",
+        "path": "archives/raw/2026-11-23/00-23/data_global.json",
         "status": "ok",
         "source_count": 13,
         "ok_sources": 13,
         "error_sources": 0,
         "empty_sources": 0,
         "stale_sources": 0,
-        "item_count": 264
+        "item_count": 250
       },
       "tech": {
         "file": "data_tech.json",
-        "path": "archives/raw/2026-11-22/23-04/data_tech.json",
+        "path": "archives/raw/2026-11-23/00-23/data_tech.json",
         "status": "partial",
         "source_count": 30,
         "ok_sources": 28,
         "error_sources": 1,
         "empty_sources": 1,
         "stale_sources": 0,
-        "item_count": 468
+        "item_count": 470
       },
       "general": {
         "file": "data_general.json",
-        "path": "archives/raw/2026-11-22/23-04/data_general.json",
+        "path": "archives/raw/2026-11-23/00-23/data_general.json",
         "status": "ok",
         "source_count": 15,
         "ok_sources": 15,
         "error_sources": 0,
         "empty_sources": 0,
         "stale_sources": 0,
-        "item_count": 339
+        "item_count": 340
       }
     }
   },
@@ -161,12 +161,12 @@
   },
   "connectors": {
     "latest_path": "data/connectors_latest.json",
-    "fetched_at": "2026-11-22T23:04:20+08:00",
+    "fetched_at": "2026-11-23T00:23:57+08:00",
     "summary": {
       "total_connectors": 7,
       "healthy_connectors": 7,
       "total_first_party_items": 484,
-      "tech_tools_count": 20,
+      "tech_tools_count": 21,
       "calendar_events_count": 5
     }
   },
@@ -208,19 +208,19 @@
   "degraded": true,
   "alerts": [
     {
-      "code": "partial_category_fallback",
+      "code": "raw_crawl_degraded",
       "severity": "warning",
-      "message": "本批次有 1 个板块使用上一批降级回退"
+      "message": "原始抓取状态：partial（错误源 1 个）"
     }
   ],
   "gemini_quota": {
     "total_configured_keys": 12,
-    "healthy_keys": 11,
-    "cooled_down_keys": 1,
+    "healthy_keys": 12,
+    "cooled_down_keys": 0,
     "exhausted_keys": 0,
-    "daily_calls_total": 172,
+    "daily_calls_total": 174,
     "date_utc": "2026-11-22",
-    "updated_at": "2026-11-22T15:11:13Z",
+    "updated_at": "2026-11-22T16:24:17Z",
     "keys": [
       {
         "slot": "KEY_TECH",
@@ -245,12 +245,12 @@
       {
         "slot": "KEY_FINANCE",
         "status": "healthy",
-        "daily_calls": 12,
+        "daily_calls": 13,
         "cooldown_until": null,
         "exhausted_until": null,
         "last_error_code": null,
         "last_error": null,
-        "last_success_at": "2026-11-22T13:44:01Z"
+        "last_success_at": "2026-11-22T15:11:57Z"
       },
       {
         "slot": "KEY_GENERAL",
@@ -304,7 +304,7 @@
       },
       {
         "slot": "KEY_5",
-        "status": "cooldown",
+        "status": "healthy",
         "daily_calls": 14,
         "cooldown_until": null,
         "exhausted_until": null,
@@ -315,12 +315,12 @@
       {
         "slot": "KEY_6",
         "status": "healthy",
-        "daily_calls": 13,
+        "daily_calls": 14,
         "cooldown_until": null,
         "exhausted_until": null,
-        "last_error_code": "TRANSIENT_ERROR",
-        "last_error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status':",
-        "last_success_at": "2026-11-22T13:42:58Z"
+        "last_error_code": null,
+        "last_error": null,
+        "last_success_at": "2026-11-22T15:12:02Z"
       },
       {
         "slot": "KEY_7",
@@ -356,12 +356,12 @@
   },
   "quota": {
     "total_configured_keys": 12,
-    "healthy_keys": 11,
-    "cooled_down_keys": 1,
+    "healthy_keys": 12,
+    "cooled_down_keys": 0,
     "exhausted_keys": 0,
-    "daily_calls_total": 172,
+    "daily_calls_total": 174,
     "date_utc": "2026-11-22",
-    "updated_at": "2026-11-22T15:11:13Z",
+    "updated_at": "2026-11-22T16:24:17Z",
     "keys": [
       {
         "slot": "KEY_TECH",
@@ -386,12 +386,12 @@
       {
         "slot": "KEY_FINANCE",
         "status": "healthy",
-        "daily_calls": 12,
+        "daily_calls": 13,
         "cooldown_until": null,
         "exhausted_until": null,
         "last_error_code": null,
         "last_error": null,
-        "last_success_at": "2026-11-22T13:44:01Z"
+        "last_success_at": "2026-11-22T15:11:57Z"
       },
       {
         "slot": "KEY_GENERAL",
@@ -445,7 +445,7 @@
       },
       {
         "slot": "KEY_5",
-        "status": "cooldown",
+        "status": "healthy",
         "daily_calls": 14,
         "cooldown_until": null,
         "exhausted_until": null,
@@ -456,12 +456,12 @@
       {
         "slot": "KEY_6",
         "status": "healthy",
-        "daily_calls": 13,
+        "daily_calls": 14,
         "cooldown_until": null,
         "exhausted_until": null,
-        "last_error_code": "TRANSIENT_ERROR",
-        "last_error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status':",
-        "last_success_at": "2026-11-22T13:42:58Z"
+        "last_error_code": null,
+        "last_error": null,
+        "last_success_at": "2026-11-22T15:12:02Z"
       },
       {
         "slot": "KEY_7",
