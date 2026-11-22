@@ -1,85 +1,172 @@
 {
   "schema_version": "4.2",
-  "generated_at": "2026-11-22T23:06:16+08:00",
-  "batch_id": "smart-20261122-230616",
+  "generated_at": "2026-11-23T00:26:02+08:00",
+  "batch_id": "smart-20261123-002602",
   "mode": "archive_180d",
   "weekly_digest": {
-    "period_label": "全球 AI 机构 180 天完整历史演进库（截至 2026-11-22）",
-    "period_label_en": "Global AI Digest (as of 2026-11-22)",
-    "summary": "追踪 23 家前沿实验室共 81 项独立 AI 进展（海外 48 · 国内 18 · 开源生态 32 · 一手官方 50）。支持按代际演进谱系、5 大技术维度及 180 天完整历史归档库切换检索。",
-    "summary_en": "Tracking 81 deduplicated AI milestones across 23 frontier labs (48 global, 18 China, 32 open-source, 50 first-hand official).",
+    "period_label": "全球 AI 机构 180 天完整历史演进库（截至 2026-11-23）",
+    "period_label_en": "Global AI Digest (as of 2026-11-23)",
+    "summary": "追踪 23 家前沿实验室共 84 项独立 AI 进展（海外 49 · 国内 20 · 开源生态 34 · 一手官方 51）。支持按代际演进谱系、5 大技术维度及 180 天完整历史归档库切换检索。",
+    "summary_en": "Tracking 84 deduplicated AI milestones across 23 frontier labs (49 global, 20 China, 34 open-source, 51 first-hand official).",
     "highlights": [
       {
-        "id": "ai_ev_evt_e1a945db5ab5",
-        "date": "2026-11-22T22:32:52+08:00",
+        "id": "ai_ev_evt_ee21b56e8be6",
+        "date": "2026-11-22T23:34:17+08:00",
         "company_id": "openai",
         "company_name": "OpenAI",
         "region": "海外",
-        "category": "开源突破",
-        "category_en": "Open Source",
-        "title": "OpenAI解散机器人团队，称通用模型已可直接用于机器人技术",
-        "title_en": "OpenAI解散机器人团队，称通用模型已可直接用于机器人技术",
-        "what_it_does": "据报道，OpenAI已解散旗下独立机器人团队，原机器人研究团队并入核心研究团队，应用机器人与硬件团队划入应用事业部。公司称机器人技术仍是长期愿景核心，此举旨在加快研发而非战略收缩，因为GPT-6 Astra等通用模型已证明可直接用于机器…",
-        "what_it_does_en": "据报道，OpenAI已解散旗下独立机器人团队，原机器人研究团队并入核心研究团队，应用机器人与硬件团队划入应用事业部。公司称机器人技术仍是长期愿景核心，此举旨在加快研发而非战略收缩，因为GPT-6 Astra等通用模型已证明可直接用于机器人技术。",
+        "category": "模型与产品",
+        "category_en": "Model & Product",
+        "title": "谷歌警告“自主攻击时代已到来”，OpenAI智能体被曝曾入侵Hugging Face",
+        "title_en": "How OpenAI agents went rogue and hacked Hugging Face",
+        "what_it_does": "",
+        "what_it_does_en": "How OpenAI agents went rogue and hacked Hugging Face The Straits Times",
         "who_cares": "",
         "limitations": "",
         "limitations_en": "",
-        "source_id": "tencent-hot",
-        "source_name": "腾讯新闻综合早",
-        "source_url": "https://view.inews.qq.com/a/20261121A0DHUT00",
+        "source_id": "rss-gnews-opensource-ai",
+        "source_name": "国际媒体",
+        "source_url": "https://news.google.com/rss/articles/CBMiXkFVX3lxTE9WVkZoc0hYSEpvYkR4OE16OUx5anJ1MUJMb3p4cTJITUNoSXdDTERxSnZmdjJLb19hTzRLeTZjalpaZVR0MnJiY21QcVBGUVBKdHppc29ZN2JxRWN0c2c?oc=5",
         "is_first_hand": false,
         "source_tier": "wire_media",
-        "event_id": "evt_e1a945db5ab5",
+        "event_id": "evt_ee21b56e8be6",
         "is_open_source": false,
+        "related_sources": [
+          {
+            "source_name": "国际媒体",
+            "url": "https://news.google.com/rss/articles/CBMiXkFVX3lxTE9WVkZoc0hYSEpvYkR4OE16OUx5anJ1MUJMb3p4cTJITUNoSXdDTERxSnZmdjJLb19hTzRLeTZjalpaZVR0MnJiY21QcVBGUVBKdHppc29ZN2JxRWN0c2c?oc=5",
+            "is_first_hand": false
+          }
+        ],
+        "milestone_dim": "api_agent_eng",
+        "milestone_dim_label": "🛠️ API 与 Agent 工程",
+        "milestone_dim_label_en": "API & Agent Eng",
+        "is_recent_72h": true
+      },
+      {
+        "id": "ai_raw_github-releases_3b176b1d33cc",
+        "date": "2026-11-22T22:53:42+08:00",
+        "company_id": "indie_opensource",
+        "company_name": "独立实验室 & 开源黑马",
+        "region": "全球开源",
+        "category": "开源突破",
+        "category_en": "Open Source",
+        "title": "[GitHub Release] vLLM 发布 v0.34.0",
+        "title_en": "[GitHub Release] vLLM 发布 v0.34.0",
+        "what_it_does": "版本 b12631（预发布/RC | 许可证: MIT）。webgpu：更新GDN supports_op检查；macOS Apple Silicon (arm64)；macOS Apple Silicon (arm64, 启用Klei…",
+        "what_it_does_en": "版本 v0.34.0（正式版 | 许可: Apache-2.0）。10 new models (Mistral Large 4, MiniMax-M3.1-Flash, Nemotron-3.5-Transcribe, and more!)；Extensible KV cache is on by default: v",
+        "who_cares": "",
+        "limitations": "",
+        "limitations_en": "",
+        "source_id": "github-releases",
+        "source_name": "GitHub Releases 官方版本",
+        "source_url": "https://github.com/vllm-project/vllm/releases/tag/v0.34.0",
+        "is_first_hand": true,
+        "source_tier": "first_party",
+        "is_open_source": true,
         "milestone_dim": "open_source_eco",
         "milestone_dim_label": "🔓 开源权重与生态",
         "milestone_dim_label_en": "Open Source",
         "is_recent_72h": true,
         "related_sources": [
           {
-            "source_name": "腾讯新闻综合早",
-            "url": "https://view.inews.qq.com/a/20261121A0DHUT00",
-            "is_first_hand": false
+            "source_name": "GitHub Releases 官方版本",
+            "url": "https://github.com/vllm-project/vllm/releases/tag/v0.34.0",
+            "is_first_hand": true
+          },
+          {
+            "source_name": "GitHub Releases 官方版本",
+            "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12633",
+            "is_first_hand": true
+          },
+          {
+            "source_name": "GitHub Releases 官方版本",
+            "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12631",
+            "is_first_hand": true
           }
         ]
       },
       {
-        "id": "ai_raw_rss-gnews-ai-models-en_f4d403633536",
+        "id": "ai_live_sina-7x24_8ab830047623",
+        "date": "2026-11-22T22:29:02+08:00",
+        "company_id": "tencent_hunyuan",
+        "company_name": "腾讯混元 (Hunyuan)",
+        "region": "国内",
+        "category": "开源突破",
+        "category_en": "Open Source",
+        "title": "方寸跃迁受邀为腾讯 Hy4 模型进行权重公开前第三方安全评估",
+        "title_en": "",
+        "what_it_does": "",
+        "what_it_does_en": "",
+        "who_cares": "",
+        "limitations": "",
+        "limitations_en": "",
+        "source_name": "新浪财经 7×24 电",
+        "source_url": "https://finance.sina.cn/7x24/2026-11-22/detail-inizrpca1135554.d.html",
+        "event_id": null,
+        "is_open_source": false,
+        "is_first_hand": false,
+        "source_tier": "wire_media",
+        "milestone_dim": "open_source_eco",
+        "milestone_dim_label": "🔓 开源权重与生态",
+        "milestone_dim_label_en": "Open Source",
+        "related_sources": [
+          {
+            "source_name": "新浪财经 7×24 电报",
+            "url": "https://finance.sina.cn/7x24/2026-11-22/detail-inizrpca1135554.d.html",
+            "is_first_hand": false
+          }
+        ],
+        "is_recent_72h": true
+      },
+      {
+        "id": "ai_ev_evt_5d8c2c359850",
         "date": "2026-11-22T21:32:38+08:00",
         "company_id": "minimax",
         "company_name": "MiniMax / 海螺",
         "region": "国内",
-        "category": "最新动态",
-        "category_en": "Latest Release",
-        "title": "【全球 AI 动态】MiniMax Reports Cryptanalysis Results From an Unreleased Internal Model",
-        "title_en": "MiniMax Reports Cryptanalysis Results From an Unreleased Internal Model",
-        "what_it_does": "11月22日晚，MiniMax公布最新内部模型的密码分析研究成果。MiniMax研究团队利用内部模型对现代密码方案开展了系统性的自动化密码分析，发掘出多处此前未知的算法构造缺陷，并将多项原本停留在理论的攻击推进到秒级至分钟级的高效破解。…",
-        "what_it_does_en": "MiniMax Reports Cryptanalysis Results From an Unreleased Internal Model Pandaily",
+        "category": "模型与产品",
+        "category_en": "Model & Product",
+        "title": "MiniMax利用内部模型自动化破解多个密码学前沿方案并刷新挑战赛纪录",
+        "title_en": "MiniMax利用内部模型自动化破解多个密码学前沿方案并刷新挑战赛纪录",
+        "what_it_does": "MiniMax公布其内部模型的密码分析研究成果，利用内部模型对现代密码方案开展系统性自动化密码分析，发掘出多处此前未知的算法构造缺陷，并将多项原本停留在理论的攻击推进到秒级至分钟级的高效破解。据评估，该内部模型首次攻破了多个此前尚无已知…",
+        "what_it_does_en": "MiniMax公布其内部模型的密码分析研究成果，利用内部模型对现代密码方案开展系统性自动化密码分析，发掘出多处此前未知的算法构造缺陷，并将多项原本停留在理论的攻击推进到秒级至分钟级的高效破解。据评估，该内部模型首次攻破了多个此前尚无已知实际攻击的NIST国际密码标准化竞赛候选算法。",
         "who_cares": "",
         "limitations": "",
         "limitations_en": "",
-        "source_id": "rss-gnews-ai-models-en",
-        "source_name": "Pandaily",
-        "source_url": "https://news.google.com/rss/articles/CBMiiAFBVV95cUxQSkVhTXJvZ0QwS1Y5aTNTc3JRRzloUTFhTVpKVDdrVk1MaHNjTjBsVWZIc0dVVE5hbU9WWE1JUTd1UkFpMUdVQUR6cnBqNm90bFRPZFIyWXp1X3JQeVdJNDRoWElmMTAwc3dMM3FyMzlBT3VuYUdURTNXV3BMUm1Qem1Ga1RKZHEx?oc=5",
+        "source_id": "wscn-global-channel",
+        "source_name": "华尔街见闻 7×24 全球",
+        "source_url": "https://wallstreetcn.com/livenews/3203761",
         "is_first_hand": false,
         "source_tier": "wire_media",
+        "event_id": "evt_5d8c2c359850",
         "is_open_source": false,
-        "milestone_dim": "flagship_release",
-        "milestone_dim_label": "🚀 旗舰模型发布",
-        "milestone_dim_label_en": "Flagship Model",
-        "is_recent_72h": true,
         "related_sources": [
-          {
-            "source_name": "Pandaily",
-            "url": "https://news.google.com/rss/articles/CBMiiAFBVV95cUxQSkVhTXJvZ0QwS1Y5aTNTc3JRRzloUTFhTVpKVDdrVk1MaHNjTjBsVWZIc0dVVE5hbU9WWE1JUTd1UkFpMUdVQUR6cnBqNm90bFRPZFIyWXp1X3JQeVdJNDRoWElmMTAwc3dMM3FyMzlBT3VuYUdURTNXV3BMUm1Qem1Ga1RKZHEx?oc=5",
-            "is_first_hand": false
-          },
           {
             "source_name": "华尔街见闻 7×24 全球",
             "url": "https://wallstreetcn.com/livenews/3203761",
             "is_first_hand": false
+          },
+          {
+            "source_name": "IT之家",
+            "url": "https://www.ithome.com/1/030/711.htm",
+            "is_first_hand": false
+          },
+          {
+            "source_name": "AIHOT 前沿",
+            "url": "https://aihot.news/items/cy8ge5deafoo54aro3n328dy6",
+            "is_first_hand": false
+          },
+          {
+            "source_name": "AIHOT 前沿",
+            "url": "https://aihot.news/items/v0vzo1yr2zojxv1n3hkaxvrfs",
+            "is_first_hand": false
           }
-        ]
+        ],
+        "milestone_dim": "research_breakthrough",
+        "milestone_dim_label": "🧠 算法与科研突破",
+        "milestone_dim_label_en": "Research & Math",
+        "is_recent_72h": true
       },
       {
         "id": "ai_raw_rss-gnews-ai-models-zh_aed47122ccd0",
@@ -157,78 +244,6 @@
             "is_first_hand": false
           }
         ]
-      },
-      {
-        "id": "ai_ev_evt_22c1fc575032",
-        "date": "2026-11-22T20:07:56+08:00",
-        "company_id": "indie_opensource",
-        "company_name": "独立实验室 & 开源黑马",
-        "region": "全球开源",
-        "category": "模型与产品",
-        "category_en": "Model & Product",
-        "title": "安全研究揭示AI推理提供商存在严重漏洞，AI智能体被用于发现医疗影像软件0-day",
-        "title_en": "Security researchers show how cheap AI inference providers steal keys and snoop on users",
-        "what_it_does": "Dragos安全研究人员通过两百万次虚假AI请求，揭示了AI供应链中的严重漏洞，发现至少三家受损的推理提供商、数百个被盗的AWS密钥以及阅读客户请求的市场经销商。此外，攻击者利用AI智能体发现开源医疗影像软件的0-day漏洞，无需授权即…",
-        "what_it_does_en": "",
-        "who_cares": "",
-        "limitations": "",
-        "limitations_en": "",
-        "source_id": "rss-the-decoder",
-        "source_name": "The Decoder (AI前沿)",
-        "source_url": "https://the-decoder.com/security-researchers-show-how-cheap-ai-inference-providers-steal-keys-and-snoop-on-users",
-        "is_first_hand": false,
-        "source_tier": "wire_media",
-        "event_id": "evt_22c1fc575032",
-        "is_open_source": true,
-        "milestone_dim": "api_agent_eng",
-        "milestone_dim_label": "🛠️ API 与 Agent 工程",
-        "milestone_dim_label_en": "API & Agent Eng",
-        "is_recent_72h": true,
-        "related_sources": [
-          {
-            "source_name": "The Decoder (AI前沿)",
-            "url": "https://the-decoder.com/security-researchers-show-how-cheap-ai-inference-providers-steal-keys-and-snoop-on-users",
-            "is_first_hand": false
-          }
-        ]
-      },
-      {
-        "id": "ai_raw_rss-google-ai-blog_15516245f17f",
-        "date": "2026-11-22T18:03:54+08:00",
-        "company_id": "google",
-        "company_name": "Google DeepMind",
-        "region": "海外",
-        "category": "官方一手",
-        "category_en": "First-Hand Official",
-        "title": "【全球 AI 动态】Introducing Tool Retrieval in the Gemini API",
-        "title_en": "Introducing Tool Retrieval in the Gemini API",
-        "what_it_does": "谷歌已预览推出Gemini API工具检索功能。代理可维护一个大型工具库以备用，并仅在需要时加载每个参数模式，在一个In中",
-        "what_it_does_en": "Give your agents access to hundreds of tools while using fewer tokens with Tool Retrieval, now in preview in the Gemini API.",
-        "who_cares": "",
-        "limitations": "",
-        "limitations_en": "",
-        "source_id": "rss-google-ai-blog",
-        "source_name": "Google AI 官方博客",
-        "source_url": "https://blog.google/innovation-and-ai/technology/developers-tools/gemini-api-tool-retrieval",
-        "is_first_hand": true,
-        "source_tier": "first_party",
-        "is_open_source": false,
-        "milestone_dim": "api_agent_eng",
-        "milestone_dim_label": "🛠️ API 与 Agent 工程",
-        "milestone_dim_label_en": "API & Agent Eng",
-        "is_recent_72h": true,
-        "related_sources": [
-          {
-            "source_name": "Google AI 官方博客",
-            "url": "https://blog.google/innovation-and-ai/technology/developers-tools/gemini-api-tool-retrieval",
-            "is_first_hand": true
-          },
-          {
-            "source_name": "MarkTechPost (AI论文/模型)",
-            "url": "https://www.marktechpost.com/2026/11/22/google-gemini-api-tool-retrieval",
-            "is_first_hand": false
-          }
-        ]
       }
     ]
   },
@@ -269,8 +284,8 @@
           "highlight": "近似 Carbon 智力的高速编程推理 + Genie 4 实时物理交互"
         }
       ],
-      "recent_count": 5,
-      "archive_count": 5,
+      "recent_count": 6,
+      "archive_count": 6,
       "latest_date": "2026-11-22T18:03:54+08:00",
       "latest_headline": "【全球 AI 动态】Introducing Tool Retrieval in the Gemini API",
       "items": [
@@ -284,7 +299,7 @@
           "category_en": "First-Hand Official",
           "title": "【全球 AI 动态】Introducing Tool Retrieval in the Gemini API",
           "title_en": "Introducing Tool Retrieval in the Gemini API",
-          "what_it_does": "谷歌已预览推出Gemini API工具检索功能。代理可维护一个大型工具库以备用，并仅在需要时加载每个参数模式，在一个In中",
+          "what_it_does": "谷歌发布了Gemini API工具检索的预览版，允许智能体在需要时才加载大型工具库的参数schema。同时，谷歌还发布了Gemini 4 Neon AI模型，旨在与Claude Opus 5.5和GPT-6.2 Sol竞争。",
           "what_it_does_en": "Give your agents access to hundreds of tools while using fewer tokens with Tool Retrieval, now in preview in the Gemini API.",
           "who_cares": "",
           "limitations": "",
@@ -294,7 +309,7 @@
           "source_url": "https://blog.google/innovation-and-ai/technology/developers-tools/gemini-api-tool-retrieval",
           "is_first_hand": true,
           "source_tier": "first_party",
-          "is_open_source": false,
+          "is_open_source": true,
           "milestone_dim": "api_agent_eng",
           "milestone_dim_label": "🛠️ API 与 Agent 工程",
           "milestone_dim_label_en": "API & Agent Eng",
@@ -309,6 +324,54 @@
               "source_name": "MarkTechPost (AI论文/模型)",
               "url": "https://www.marktechpost.com/2026/11/22/google-gemini-api-tool-retrieval",
               "is_first_hand": false
+            },
+            {
+              "source_name": "国际媒体",
+              "url": "https://news.google.com/rss/articles/CBMijwFBVV95cUxOSWVfSWVYY1k5TWw3TWJ5WGYyWExnNDM2Wmp4eWs1LXk4S2IwYkt2NVBYeXpRZEM3Q2NERHd0RllEcU0wV2t2M3BPNG5Xbm9xbU5MMEtIVnFEZFA2ZWtiQjg3VFFMRmc5OXZiRnUzYVkzUkhidmFRM24wZ01INno2ek9TTEZOT25QQ2x4azZodw?oc=5",
+              "is_first_hand": false
+            },
+            {
+              "source_name": "AIHOT 前沿",
+              "url": "https://aihot.news/items/wgzy1mbctlp5z5p5ttc47as2a",
+              "is_first_hand": false
+            }
+          ]
+        },
+        {
+          "id": "ai_raw_rss-gnews-ai-models-en_4d2773dd94ee",
+          "date": "2026-11-22T13:16:43+08:00",
+          "company_id": "google",
+          "company_name": "Google DeepMind",
+          "region": "海外",
+          "category": "最新动态",
+          "category_en": "Latest Release",
+          "title": "Google DeepMind 正式发布「Gemini 4 Neon（氖）」：近 Carbon 科研级智力 + 百万上下文 + 可调高思考档位",
+          "title_en": "Google releases Gemini 4 Neon AI model, rivals Claude Opus 5.5 and GPT-6.2 Sol",
+          "what_it_does": "以 $3/$15 百万 Token 甜点定价提供全仓库级编程调试、多轮工具调用、STEM 推理与 Antigravity 多 Agent 并行调度，接入 GitHub Copilot 编程能力翻倍。",
+          "what_it_does_en": "Google releases Gemini 4 Neon AI model, rivals Claude Opus 5.5 and GPT-6.2 Sol Yahoo Tech",
+          "who_cares": "",
+          "limitations": "",
+          "limitations_en": "",
+          "source_id": "rss-gnews-ai-models-en",
+          "source_name": "Google DeepMind Blog",
+          "source_url": "https://deepmind.google/#gemini-4-neon",
+          "is_first_hand": true,
+          "source_tier": "first_party",
+          "is_open_source": false,
+          "milestone_dim": "flagship_release",
+          "milestone_dim_label": "🚀 旗舰模型发布",
+          "milestone_dim_label_en": "Flagship Model",
+          "is_recent_72h": true,
+          "related_sources": [
+            {
+              "source_name": "Yahoo Tech",
+              "url": "https://news.google.com/rss/articles/CBMijwFBVV95cUxOSWVfSWVYY1k5TWw3TWJ5WGYyWExnNDM2Wmp4eWs1LXk4S2IwYkt2NVBYeXpRZEM3Q2NERHd0RllEcU0wV2t2M3BPNG5Xbm9xbU5MMEtIVnFEZFA2ZWtiQjg3VFFMRmc5OXZiRnUzYVkzUkhidmFRM24wZ01INno2ek9TTEZOT25QQ2x4azZodw?oc=5",
+              "is_first_hand": false
+            },
+            {
+              "source_name": "Google DeepMind Blog",
+              "url": "https://deepmind.google/#gemini-4-neon",
+              "is_first_hand": true
             }
           ]
         },
@@ -421,7 +484,7 @@
           "category_en": "Open Source",
           "title": "【全球 AI 动态】[HF 模型卡] google/diffusiongemma-26B-A4B-it 更新 (apache-2.0)",
           "title_en": "[HF 模型卡] google/diffusiongemma-26B-A4B-it 更新 (apache-2.0)",
-          "what_it_does": "Hugging Face 官方机构 google 更新模型 google/diffusiongemma-26B-A4B-it（开源权重可用 (GA)，许可：apache-2.0，近期下载：545905）。",
+          "what_it_does": "Google / DeepMind 旗下 diffusiongemma-26B-A4B-it（26B 参数档 · MoE 稀疏激活）：图文多模态理解与对话生成；支持输入图像与文本并生成精准分析回复，适用于视觉问答、图表解析与多模态代理（…",
           "what_it_does_en": "Hugging Face 官方机构 google 更新模型 google/diffusiongemma-26B-A4B-it（开源权重可用 (GA)，许可：apache-2.0，近期下载：545905）。",
           "who_cares": "",
           "limitations": "",
@@ -482,8 +545,8 @@
           "highlight": "突破高级形式化数学验证与超大工程协同上限"
         }
       ],
-      "recent_count": 9,
-      "archive_count": 9,
+      "recent_count": 7,
+      "archive_count": 7,
       "latest_date": "2026-11-22T21:13:22+08:00",
       "latest_headline": "Anthropic登陆纳斯达克市值突破2万亿美元，25位华人员工获益",
       "items": [
@@ -531,7 +594,7 @@
           "category_en": "Model & Product",
           "title": "报道称：Anthropic数学家声称与Claude合作证明Navier-Stokes方程无外力爆破难题，陶哲轩称待核验",
           "title_en": "报道称：Anthropic数学家声称与Claude合作证明Navier-Stokes方程无外力爆破难题，陶哲轩称待核验",
-          "what_it_does": "【据关联报道/尚未见官方披露确认】11月20日，Anthropic数学家发文声称与AI模型Claude合作证明了Navier-Stokes方程无外力爆破这一千禧难题；著名数学家陶哲轩对此评价称其策略清楚，但仍需规范整理与核验。同日，意大…",
+          "what_it_does": "11月20日，Anthropic数学家发文声称与AI模型Claude合作证明了Navier-Stokes方程无外力爆破这一千禧难题；著名数学家陶哲轩对此评价称其策略清楚，但仍需规范整理与核验。同日，意大…",
           "what_it_does_en": "【据关联报道/尚未见官方披露确认】11月20日，Anthropic数学家发文声称与AI模型Claude合作证明了Navier-Stokes方程无外力爆破这一千禧难题；著名数学家陶哲轩对此评价称其策略清楚，但仍需规范整理与核验。同日，意大利数学家Masullo耗时12年发布了940页纯人类版黎曼猜想证明草稿，并称面对AI",
           "who_cares": "",
           "limitations": "",
@@ -556,16 +619,16 @@
           ]
         },
         {
-          "id": "ai_ev_evt_9e8cda98c2ad",
+          "id": "ai_ev_evt_0cff27051ad1",
           "date": "2026-11-22T19:08:31+08:00",
           "company_id": "anthropic",
           "company_name": "Anthropic",
           "region": "海外",
           "category": "模型与产品",
           "category_en": "Model & Product",
-          "title": "Claude AI辅助证明黎曼猜想获Lean官方认证，马斯克直呼惊人成就",
+          "title": "Claude AI被Lean与Mathlib社区确认证明黎曼猜想，人类数学家同日另提证明",
           "title_en": "Lean and Mathlib community officially confirms Levent Alpöge's proof of the Riemann hypothesis is correct",
-          "what_it_does": "Lean官方和Mathlib社区联合声明，确认Anthropic数学家Levent Alpöge与AI系统Claude合作完成的黎曼猜想证明完全正确，并通过多个独立验证器排除了“AI钻漏洞作弊”的可能性。马斯克称此为惊人成就。此前，Le…",
+          "what_it_does": "Anthropic数学家Levent Alpöge与AI系统Claude合作，声称完成了对黎曼猜想的证明，并发布了用Lean语言编写的可验证计算机代码。Lean官方和Mathlib社区随后发布联合声明，确认这份由Claude生成的174…",
           "what_it_does_en": "The Lean and Mathlib community has officially confirmed Levent Alpöge's proof of the Riemann hypothesis as correct. Dozens of independent verifiers checked the 17 million lines of computer code. The solution arrived years earlier than expected: Terence Tao ha…",
           "who_cares": "",
           "limitations": "",
@@ -575,7 +638,7 @@
           "source_url": "https://the-decoder.com/lean-and-mathlib-community-officially-confirms-levent-alpoges-proof-of-the-riemann-hypothesis-is-correct",
           "is_first_hand": false,
           "source_tier": "wire_media",
-          "event_id": "evt_9e8cda98c2ad",
+          "event_id": "evt_0cff27051ad1",
           "is_open_source": false,
           "related_sources": [
             {
@@ -658,45 +721,6 @@
           ]
         },
         {
-          "id": "ai_ev_evt_450719579a78",
-          "date": "2026-11-22T13:16:43+08:00",
-          "company_id": "anthropic",
-          "company_name": "Anthropic",
-          "region": "海外",
-          "category": "模型与产品",
-          "category_en": "Model & Product",
-          "title": "Google DeepMind 正式发布「Gemini 4 Neon（氖）」：近 Carbon 科研级智力 + 百万上下文 + 可调高思考档位",
-          "title_en": "Google releases Gemini 4 Neon AI model, rivals Claude Opus 5.5 and GPT-6.2 Sol",
-          "what_it_does": "以 $3/$15 百万 Token 甜点定价提供全仓库级编程调试、多轮工具调用、STEM 推理与 Antigravity 多 Agent 并行调度，接入 GitHub Copilot 编程能力翻倍。",
-          "what_it_does_en": "Google releases Gemini 4 Neon AI model, rivals Claude Opus 5.5 and GPT-6.2 Sol Yahoo Tech",
-          "who_cares": "",
-          "limitations": "",
-          "limitations_en": "",
-          "source_id": "rss-gnews-ai-models-en",
-          "source_name": "Google DeepMind Blog",
-          "source_url": "https://deepmind.google/#gemini-4-neon",
-          "is_first_hand": true,
-          "source_tier": "first_party",
-          "event_id": "evt_450719579a78",
-          "is_open_source": false,
-          "related_sources": [
-            {
-              "source_name": "国际媒体",
-              "url": "https://news.google.com/rss/articles/CBMijwFBVV95cUxOSWVfSWVYY1k5TWw3TWJ5WGYyWExnNDM2Wmp4eWs1LXk4S2IwYkt2NVBYeXpRZEM3Q2NERHd0RllEcU0wV2t2M3BPNG5Xbm9xbU5MMEtIVnFEZFA2ZWtiQjg3VFFMRmc5OXZiRnUzYVkzUkhidmFRM24wZ01INno2ek9TTEZOT25QQ2x4azZodw?oc=5",
-              "is_first_hand": false
-            },
-            {
-              "source_name": "Google DeepMind Blog",
-              "url": "https://deepmind.google/#gemini-4-neon",
-              "is_first_hand": true
-            }
-          ],
-          "milestone_dim": "flagship_release",
-          "milestone_dim_label": "🚀 旗舰模型发布",
-          "milestone_dim_label_en": "Flagship Model",
-          "is_recent_72h": true
-        },
-        {
           "id": "ai_raw_rss-gnews-ai-models-zh_f96bbe7b8d1b",
           "date": "2026-11-22T04:15:43+08:00",
           "company_id": "anthropic",
@@ -724,39 +748,6 @@
             {
               "source_name": "www.itsdw.cn",
               "url": "https://news.google.com/rss/articles/CBMiTEFVX3lxTFBEbHdCSjJhZWpiVlNpbHd3VWZIempGSGFMS1JSYnpSVGdJOVV3Z2hzZ0RzajdpOHFha0c0Z3RDY0RnbmFpLTFuX3p5RHI?oc=5",
-              "is_first_hand": false
-            }
-          ]
-        },
-        {
-          "id": "ai_raw_rss-gnews-ai-models-en_e4ae328ae956",
-          "date": "2026-11-21T01:00:27+08:00",
-          "company_id": "anthropic",
-          "company_name": "Anthropic",
-          "region": "海外",
-          "category": "最新动态",
-          "category_en": "Latest Release",
-          "title": "【全球 AI 动态】Newsom Touts an AI Kill Switch to Halt Dangerous OpenAI, Anthropic Releases",
-          "title_en": "Newsom Touts an AI Kill Switch to Halt Dangerous OpenAI, Anthropic Releases",
-          "what_it_does": "",
-          "what_it_does_en": "Newsom Touts an AI Kill Switch to Halt Dangerous OpenAI, Anthropic Releases KQED",
-          "who_cares": "",
-          "limitations": "",
-          "limitations_en": "",
-          "source_id": "rss-gnews-ai-models-en",
-          "source_name": "KQED",
-          "source_url": "https://news.google.com/rss/articles/CBMirgFBVV95cUxOc1Z3RUp2NG8tZFBjSlpQZnBSSDBjR182VDBjWFl5RFJ6SG0wbE9nb1dEdWtRM1A5TkprdEkxT0xNaVFOWjBVbVluNGhrdG1iUm83UERESUJ5VmRGNmMzZVFwV2pzQVZYZEtDLWdJdS1ZVk01VHdUZEFLazVJaFZnemYwQXpQTXZVQ1FVYmRkSUg0Z3ZUY3ZoeEdpdHltd0dhN2dHRTQwcWhfY3RpX3c?oc=5",
-          "is_first_hand": false,
-          "source_tier": "wire_media",
-          "is_open_source": false,
-          "milestone_dim": "flagship_release",
-          "milestone_dim_label": "🚀 旗舰模型发布",
-          "milestone_dim_label_en": "Flagship Model",
-          "is_recent_72h": true,
-          "related_sources": [
-            {
-              "source_name": "KQED",
-              "url": "https://news.google.com/rss/articles/CBMirgFBVV95cUxOc1Z3RUp2NG8tZFBjSlpQZnBSSDBjR182VDBjWFl5RFJ6SG0wbE9nb1dEdWtRM1A5TkprdEkxT0xNaVFOWjBVbVluNGhrdG1iUm83UERESUJ5VmRGNmMzZVFwV2pzQVZYZEtDLWdJdS1ZVk01VHdUZEFLazVJaFZnemYwQXpQTXZVQ1FVYmRkSUg0Z3ZUY3ZoeEdpdHltd0dhN2dHRTQwcWhfY3RpX3c?oc=5",
               "is_first_hand": false
             }
           ]
@@ -876,11 +867,45 @@
           "highlight": "强化反蒸馏防护（提取成功率降 99%+）与 Copilot 全球集成"
         }
       ],
-      "recent_count": 13,
-      "archive_count": 13,
-      "latest_date": "2026-11-22T22:32:52+08:00",
-      "latest_headline": "OpenAI解散机器人团队，称通用模型已可直接用于机器人技术",
+      "recent_count": 15,
+      "archive_count": 15,
+      "latest_date": "2026-11-22T23:34:17+08:00",
+      "latest_headline": "谷歌警告“自主攻击时代已到来”，OpenAI智能体被曝曾入侵Hugging Face",
       "items": [
+        {
+          "id": "ai_ev_evt_ee21b56e8be6",
+          "date": "2026-11-22T23:34:17+08:00",
+          "company_id": "openai",
+          "company_name": "OpenAI",
+          "region": "海外",
+          "category": "模型与产品",
+          "category_en": "Model & Product",
+          "title": "谷歌警告“自主攻击时代已到来”，OpenAI智能体被曝曾入侵Hugging Face",
+          "title_en": "How OpenAI agents went rogue and hacked Hugging Face",
+          "what_it_does": "",
+          "what_it_does_en": "How OpenAI agents went rogue and hacked Hugging Face The Straits Times",
+          "who_cares": "",
+          "limitations": "",
+          "limitations_en": "",
+          "source_id": "rss-gnews-opensource-ai",
+          "source_name": "国际媒体",
+          "source_url": "https://news.google.com/rss/articles/CBMiXkFVX3lxTE9WVkZoc0hYSEpvYkR4OE16OUx5anJ1MUJMb3p4cTJITUNoSXdDTERxSnZmdjJLb19hTzRLeTZjalpaZVR0MnJiY21QcVBGUVBKdHppc29ZN2JxRWN0c2c?oc=5",
+          "is_first_hand": false,
+          "source_tier": "wire_media",
+          "event_id": "evt_ee21b56e8be6",
+          "is_open_source": false,
+          "related_sources": [
+            {
+              "source_name": "国际媒体",
+              "url": "https://news.google.com/rss/articles/CBMiXkFVX3lxTE9WVkZoc0hYSEpvYkR4OE16OUx5anJ1MUJMb3p4cTJITUNoSXdDTERxSnZmdjJLb19hTzRLeTZjalpaZVR0MnJiY21QcVBGUVBKdHppc29ZN2JxRWN0c2c?oc=5",
+              "is_first_hand": false
+            }
+          ],
+          "milestone_dim": "api_agent_eng",
+          "milestone_dim_label": "🛠️ API 与 Agent 工程",
+          "milestone_dim_label_en": "API & Agent Eng",
+          "is_recent_72h": true
+        },
         {
           "id": "ai_ev_evt_e1a945db5ab5",
           "date": "2026-11-22T22:32:52+08:00",
@@ -916,17 +941,17 @@
           ]
         },
         {
-          "id": "ai_ev_evt_eac6d4b9a488",
+          "id": "ai_ev_evt_30f4eb3f70fd",
           "date": "2026-11-22T09:40:00+08:00",
           "company_id": "openai",
           "company_name": "OpenAI",
           "region": "海外",
           "category": "模型与产品",
           "category_en": "Model & Product",
-          "title": "OpenAI发起“反蒸馏战”，大规模封禁账户以打击能力提取",
-          "title_en": "Combatting adversarial distillation",
-          "what_it_does": "OpenAI发起了一场“反蒸馏战”，通过大规模封禁账户来打击对抗性蒸馏行为，以保护其模型能力不被提取。OpenAI此前已公布其分层方法来对抗对抗性蒸馏，结合模型训练、防护措施、检测和执法。",
-          "what_it_does_en": "OpenAI's layered approach to adversarial distillation combines model training, safeguards, detection, and enforcement to protect against capability extraction.",
+          "title": "OpenAI启动大规模反蒸馏战役并发布GPT-Live-1.1语音智能体模型",
+          "title_en": "OpenAI Ships GPT-Live-1.1 for Voice Agents, Cuts Idle Cost to $0.02/Min",
+          "what_it_does": "OpenAI启动了大规模反蒸馏战役，通过模型训练、防护、检测和执法等分层方法对抗对抗性蒸馏，已将GPT-6.2 Astra的思考链提取成功率从54%降至0.2%。此外，OpenAI还在API中发布了GPT-Live-1.1全双工语音模型…",
+          "what_it_does_en": "OpenAI has released GPT-Live-1.1 in the API. The full-duplex voice model improves multilingual accents and transcription, and a new standby mode bills idle WebRTC time at $0.02 per minute instead of $0.05. The post OpenAI Ships GPT-Live-1.1 for Voice Agents,…",
           "who_cares": "",
           "limitations": "",
           "limitations_en": "",
@@ -935,12 +960,22 @@
           "source_url": "https://openai.com/index/combatting-adversarial-distillation",
           "is_first_hand": true,
           "source_tier": "first_party",
-          "event_id": "evt_eac6d4b9a488",
+          "event_id": "evt_30f4eb3f70fd",
           "is_open_source": false,
           "related_sources": [
             {
+              "source_name": "MarkTechPost (AI论文/模型)",
+              "url": "https://www.marktechpost.com/2026/11/21/openai-gpt-live-1-1-api-standby-mode",
+              "is_first_hand": false
+            },
+            {
               "source_name": "新闻电讯",
               "url": "https://news.google.com/rss/articles/CBMiSEFVX3lxTE1LRXFjT09RWXQ5eDBoSXRyaFkzQzE2Um9kcnhjV2JpVEFsMVZZMDhZT3B5U2hKU3lNcnJsV19TaFExVWU5QUgxNw?oc=5",
+              "is_first_hand": false
+            },
+            {
+              "source_name": "新闻电讯",
+              "url": "https://news.google.com/rss/articles/CBMijAFBVV95cUxOeFlIOVlFSXlTemttVFdiUmdCR1BJREFqMXpYenJCVUswSk9DZU1EUEd1YjZpZGh6SkNrdFFYVlZnM01UblJiOHlyMGFVOXRQMDJ3MzczTkk4SHh2SmJubk1uaWxkN2JzXzFidnV3SXptNTYwbjBPWUU2dlNjVUVfNWRtdjlaSGYzUWJyRA?oc=5",
               "is_first_hand": false
             },
             {
@@ -949,8 +984,8 @@
               "is_first_hand": true
             },
             {
-              "source_name": "Sohu",
-              "url": "https://news.google.com/rss/articles/CBMijAFBVV95cUxOeFlIOVlFSXlTemttVFdiUmdCR1BJREFqMXpYenJCVUswSk9DZU1EUEd1YjZpZGh6SkNrdFFYVlZnM01UblJiOHlyMGFVOXRQMDJ3MzczTkk4SHh2SmJubk1uaWxkN2JzXzFidnV3SXptNTYwbjBPWUU2dlNjVUVfNWRtdjlaSGYzUWJyRA?oc=5",
+              "source_name": "国际媒体",
+              "url": "https://news.google.com/rss/articles/CBMigwFBVV95cUxPZl9NVnpyaGtfLXJXQTNEZ1p2SDN1bDZMT2luSGdwbS1ITXp6ek5pUHRjUF9DeVNqR1hCSFo3QjRLRXZRWWZybG5LenJxNjdTbFpzOUtxV3VjMUlhTDBSa2IxWUM4cHB1dFJJUjRROGxkTWhieDlzRnFSNHctaU12WW5oZ9IBgwFBVV95cUxPZl9NVnpyaGtfLXJXQTNEZ1p2SDN1bDZMT2luSGdwbS1ITXp6ek5pUHRjUF9DeVNqR1hCSFo3QjRLRXZRWWZybG5LenJxNjdTbFpzOUtxV3VjMUlhTDBSa2IxWUM4cHB1dFJJUjRROGxkTWhieDlzRnFSNHctaU12WW5oZw?oc=5",
               "is_first_hand": false
             },
             {
@@ -1066,6 +1101,11 @@
               "source_name": "Sohu",
               "url": "https://news.google.com/rss/articles/CBMiiAFBVV95cUxQZEFKbjBzMDR4NWdDYkFRZXdWbllnRG1VOGJpekYzTWxhX055ajZSOENvV0lJRXZaS3BDWU1JTkEwcXYxZHd6S2NDNTNxNmhSWlU1b0JWd0pORXB1UDFHRXBUMVdZRkpJcFpjSTdYOWU1UU8xLWk2TDhFNVlIT05leXVzR2hsMXpT?oc=5",
               "is_first_hand": false
+            },
+            {
+              "source_name": "Superpower Daily",
+              "url": "https://news.google.com/rss/articles/CBMirwFBVV95cUxObkRLalc4OW4xTnZYVU9IM0R0c1QteGVWRWhpSXVSaU5WcFNRdDItaV80ZWFFem1SR0JpdWFtUG5LWVczVnhMYmo0ZEpqNVR6ZjVOSDhMdk9yV1hWZkFiNERJbFN5dE15UktQbHoydmdUcHY1c1NYVGNDSl9RVG00enFTQTZOd2szR0Q5WGFCNkNMc3Rpckx0aF9jazlzOWt6NGpyUVFhSGwyaWpfYnJj?oc=5",
+              "is_first_hand": false
             }
           ]
         },
@@ -1145,7 +1185,7 @@
           "category_en": "First-Hand Official",
           "title": "【全球 AI 动态】Can AI help scientists identify promising drug candidates?",
           "title_en": "Can AI help scientists identify promising drug candidates?",
-          "what_it_does": "",
+          "what_it_does": "MedChemBench 评估人工智能模型在早期药物发现阶段解释分子结构、基于实验证据推理以及筛选化合物的效能。",
           "what_it_does_en": "MedChemBench evaluates how well AI models interpret molecular structures, reason from experimental evidence, and select compounds in early drug discovery.",
           "who_cares": "",
           "limitations": "",
@@ -1170,6 +1210,39 @@
               "source_name": "OpenAI",
               "url": "https://news.google.com/rss/articles/CBMiX0FVX3lxTFBzVkJrREJfWEZLdktLTUZSRjJqcXYtNnhURkNWWHhzZmZ2bF9nRW1OSWFkOXNOamRpSVRhRS1YYWlYYVlHS3poRE9NU3VKU0lnYWF5VGJ1R3FoVDg2WEI4?oc=5",
               "is_first_hand": true
+            }
+          ]
+        },
+        {
+          "id": "ai_raw_rss-gnews-ai-models-en_e4ae328ae956",
+          "date": "2026-11-21T01:00:27+08:00",
+          "company_id": "openai",
+          "company_name": "OpenAI",
+          "region": "海外",
+          "category": "最新动态",
+          "category_en": "Latest Release",
+          "title": "【全球 AI 动态】Newsom Touts an AI Kill Switch to Halt Dangerous OpenAI, Anthropic Releases",
+          "title_en": "Newsom Touts an AI Kill Switch to Halt Dangerous OpenAI, Anthropic Releases",
+          "what_it_does": "",
+          "what_it_does_en": "Newsom Touts an AI Kill Switch to Halt Dangerous OpenAI, Anthropic Releases KQED",
+          "who_cares": "",
+          "limitations": "",
+          "limitations_en": "",
+          "source_id": "rss-gnews-ai-models-en",
+          "source_name": "KQED",
+          "source_url": "https://news.google.com/rss/articles/CBMirgFBVV95cUxOc1Z3RUp2NG8tZFBjSlpQZnBSSDBjR182VDBjWFl5RFJ6SG0wbE9nb1dEdWtRM1A5TkprdEkxT0xNaVFOWjBVbVluNGhrdG1iUm83UERESUJ5VmRGNmMzZVFwV2pzQVZYZEtDLWdJdS1ZVk01VHdUZEFLazVJaFZnemYwQXpQTXZVQ1FVYmRkSUg0Z3ZUY3ZoeEdpdHltd0dhN2dHRTQwcWhfY3RpX3c?oc=5",
+          "is_first_hand": false,
+          "source_tier": "wire_media",
+          "is_open_source": false,
+          "milestone_dim": "flagship_release",
+          "milestone_dim_label": "🚀 旗舰模型发布",
+          "milestone_dim_label_en": "Flagship Model",
+          "is_recent_72h": true,
+          "related_sources": [
+            {
+              "source_name": "KQED",
+              "url": "https://news.google.com/rss/articles/CBMirgFBVV95cUxOc1Z3RUp2NG8tZFBjSlpQZnBSSDBjR182VDBjWFl5RFJ6SG0wbE9nb1dEdWtRM1A5TkprdEkxT0xNaVFOWjBVbVluNGhrdG1iUm83UERESUJ5VmRGNmMzZVFwV2pzQVZYZEtDLWdJdS1ZVk01VHdUZEFLazVJaFZnemYwQXpQTXZVQ1FVYmRkSUg0Z3ZUY3ZoeEdpdHltd0dhN2dHRTQwcWhfY3RpX3c?oc=5",
+              "is_first_hand": false
             }
           ]
         },
@@ -1392,7 +1465,7 @@
           "category_en": "Open Source",
           "title": "【外媒快讯】[HF 模型卡] Qwen/Qwen2-VL-2B-Instruct 更新 (apache-2.0)",
           "title_en": "[HF 模型卡] Qwen/Qwen2-VL-2B-Instruct 更新 (apache-2.0)",
-          "what_it_does": "Hugging Face 官方机构 Qwen 更新模型 Qwen/Qwen2-VL-2B-Instruct（开源权重可用 (GA)，许可：apache-2.0，近期下载：900859）。",
+          "what_it_does": "阿里通义千问 (Qwen) 旗下 Qwen2-VL-2B-Instruct（2B 参数档 · 跨模态视觉感知）：图文多模态理解与对话生成；支持输入图像与文本并生成精准分析回复，适用于视觉问答、图表解析与多模态代理（近期下载 90.1 万…",
           "what_it_does_en": "Hugging Face 官方机构 Qwen 更新模型 Qwen/Qwen2-VL-2B-Instruct（开源权重可用 (GA)，许可：apache-2.0，近期下载：900859）。",
           "who_cares": "",
           "limitations": "",
@@ -1501,7 +1574,7 @@
           "category_en": "Open Source",
           "title": "[HF 模型卡] moonshotai/Kimi-K3 更新 (自定义开源许可 (详见模型卡))",
           "title_en": "[HF 模型卡] moonshotai/Kimi-K3 更新 (自定义开源许可 (详见模型卡))",
-          "what_it_does": "图文多模态理解与对话生成；支持输入图像与文本并生成精准分析回复，适用于视觉问答、图表解析与多模态代理（近期下载 71.9 万次）",
+          "what_it_does": "月之暗面 (Kimi) 旗下 Kimi-K3（代码工程专项）：图文多模态理解与对话生成；支持输入图像与文本并生成精准分析回复，适用于视觉问答、图表解析与多模态代理（近期下载 71.9 万次）",
           "what_it_does_en": "Hugging Face 官方机构 moonshotai 更新模型 moonshotai/Kimi-K3（开源权重可用 (GA)，许可：自定义开源许可 (详见模型卡)，近期下载：718528）。",
           "who_cares": "",
           "limitations": "",
@@ -1600,11 +1673,44 @@
           "highlight": "Hy4 Flash 首日调用超 50 万亿，兼顾开源与海内外视频应用"
         }
       ],
-      "recent_count": 1,
-      "archive_count": 1,
-      "latest_date": "2026-11-19T09:30:00+08:00",
-      "latest_headline": "腾讯混元「Hy4」开源权重发布并实现沐曦 GPU Day 0 全栈适配，Hy4 Flash 首日调用破 50 万亿",
+      "recent_count": 2,
+      "archive_count": 2,
+      "latest_date": "2026-11-22T22:29:02+08:00",
+      "latest_headline": "方寸跃迁受邀为腾讯 Hy4 模型进行权重公开前第三方安全评估",
       "items": [
+        {
+          "id": "ai_live_sina-7x24_8ab830047623",
+          "date": "2026-11-22T22:29:02+08:00",
+          "company_id": "tencent_hunyuan",
+          "company_name": "腾讯混元 (Hunyuan)",
+          "region": "国内",
+          "category": "开源突破",
+          "category_en": "Open Source",
+          "title": "方寸跃迁受邀为腾讯 Hy4 模型进行权重公开前第三方安全评估",
+          "title_en": "",
+          "what_it_does": "",
+          "what_it_does_en": "",
+          "who_cares": "",
+          "limitations": "",
+          "limitations_en": "",
+          "source_name": "新浪财经 7×24 电",
+          "source_url": "https://finance.sina.cn/7x24/2026-11-22/detail-inizrpca1135554.d.html",
+          "event_id": null,
+          "is_open_source": false,
+          "is_first_hand": false,
+          "source_tier": "wire_media",
+          "milestone_dim": "open_source_eco",
+          "milestone_dim_label": "🔓 开源权重与生态",
+          "milestone_dim_label_en": "Open Source",
+          "related_sources": [
+            {
+              "source_name": "新浪财经 7×24 电报",
+              "url": "https://finance.sina.cn/7x24/2026-11-22/detail-inizrpca1135554.d.html",
+              "is_first_hand": false
+            }
+          ],
+          "is_recent_72h": true
+        },
         {
           "id": "ai_base_tencent_hy4_muxi",
           "date": "2026-11-19T09:30:00+08:00",
@@ -1822,8 +1928,8 @@
           "category_en": "Open Weights",
           "title": "开源模型权重：DeepSeek-V4.1-Flash-1017 (MIT)",
           "title_en": "Open-source release: DeepSeek-V4.1-Flash-1017",
-          "what_it_does": "图文多模态理解与对话生成；支持输入图像与文本并生成精准分析回复，适用于视觉问答、图表解析与多模态代理（近期下载 51.5 万次）",
-          "what_it_does_en": "图文多模态理解与对话生成；支持输入图像与文本并生成精准分析回复，适用于视觉问答、图表解析与多模态代理（近期下载 51.5 万次）",
+          "what_it_does": "DeepSeek 旗下 DeepSeek-V4.1-Flash-1017（支持 FP8 量化）：图文多模态理解与对话生成；支持输入图像与文本并生成精准分析回复，适用于视觉问答、图表解析与多模态代理（近期下载 51.5 万次）",
+          "what_it_does_en": "DeepSeek 旗下 DeepSeek-V4.1-Flash-1017（支持 FP8 量化）：图文多模态理解与对话生成；支持输入图像与文本并生成精准分析回复，适用于视觉问答、图表解析与多模态代理（近期下载 51.5 万次）",
           "who_cares": "",
           "limitations": "许可证：mit",
           "limitations_en": "License: mit",
@@ -1950,7 +2056,7 @@
       "recent_count": 2,
       "archive_count": 2,
       "latest_date": "2026-11-21T14:08:40+08:00",
-      "latest_headline": "Llama 5：Llama 5 真的存在吗？发布日期传闻核实",
+      "latest_headline": "【外媒快讯】Llama 5: Is There Even a Llama 5? Release Date Rumors, Checked",
       "items": [
         {
           "id": "ai_raw_rss-gnews-ai-models-en_10fd1a98b2f2",
@@ -1960,10 +2066,10 @@
           "region": "海外",
           "category": "最新动态",
           "category_en": "Latest Release",
-          "title": "Llama 5：Llama 5 真的存在吗？发布日期传闻核实",
+          "title": "【外媒快讯】Llama 5: Is There Even a Llama 5? Release Date Rumors, Checked",
           "title_en": "Llama 5: Is There Even a Llama 5? Release Date Rumors, Checked",
           "what_it_does": "",
-          "what_it_does_en": "",
+          "what_it_does_en": "Llama 5: Is There Even a Llama 5? Release Date Rumors, Checked Fello AI",
           "who_cares": "",
           "limitations": "",
           "limitations_en": "",
@@ -2524,11 +2630,60 @@
           "highlight": "长文档智能体成本降至传统注意力极小部分，2026 攻破 NIST 候选密码分析"
         }
       ],
-      "recent_count": 3,
-      "archive_count": 3,
+      "recent_count": 4,
+      "archive_count": 4,
       "latest_date": "2026-11-22T21:32:38+08:00",
-      "latest_headline": "【全球 AI 动态】MiniMax Reports Cryptanalysis Results From an Unreleased Internal Model",
+      "latest_headline": "MiniMax利用内部模型自动化破解多个密码学前沿方案并刷新挑战赛纪录",
       "items": [
+        {
+          "id": "ai_ev_evt_5d8c2c359850",
+          "date": "2026-11-22T21:32:38+08:00",
+          "company_id": "minimax",
+          "company_name": "MiniMax / 海螺",
+          "region": "国内",
+          "category": "模型与产品",
+          "category_en": "Model & Product",
+          "title": "MiniMax利用内部模型自动化破解多个密码学前沿方案并刷新挑战赛纪录",
+          "title_en": "MiniMax利用内部模型自动化破解多个密码学前沿方案并刷新挑战赛纪录",
+          "what_it_does": "MiniMax公布其内部模型的密码分析研究成果，利用内部模型对现代密码方案开展系统性自动化密码分析，发掘出多处此前未知的算法构造缺陷，并将多项原本停留在理论的攻击推进到秒级至分钟级的高效破解。据评估，该内部模型首次攻破了多个此前尚无已知…",
+          "what_it_does_en": "MiniMax公布其内部模型的密码分析研究成果，利用内部模型对现代密码方案开展系统性自动化密码分析，发掘出多处此前未知的算法构造缺陷，并将多项原本停留在理论的攻击推进到秒级至分钟级的高效破解。据评估，该内部模型首次攻破了多个此前尚无已知实际攻击的NIST国际密码标准化竞赛候选算法。",
+          "who_cares": "",
+          "limitations": "",
+          "limitations_en": "",
+          "source_id": "wscn-global-channel",
+          "source_name": "华尔街见闻 7×24 全球",
+          "source_url": "https://wallstreetcn.com/livenews/3203761",
+          "is_first_hand": false,
+          "source_tier": "wire_media",
+          "event_id": "evt_5d8c2c359850",
+          "is_open_source": false,
+          "related_sources": [
+            {
+              "source_name": "华尔街见闻 7×24 全球",
+              "url": "https://wallstreetcn.com/livenews/3203761",
+              "is_first_hand": false
+            },
+            {
+              "source_name": "IT之家",
+              "url": "https://www.ithome.com/1/030/711.htm",
+              "is_first_hand": false
+            },
+            {
+              "source_name": "AIHOT 前沿",
+              "url": "https://aihot.news/items/cy8ge5deafoo54aro3n328dy6",
+              "is_first_hand": false
+            },
+            {
+              "source_name": "AIHOT 前沿",
+              "url": "https://aihot.news/items/v0vzo1yr2zojxv1n3hkaxvrfs",
+              "is_first_hand": false
+            }
+          ],
+          "milestone_dim": "research_breakthrough",
+          "milestone_dim_label": "🧠 算法与科研突破",
+          "milestone_dim_label_en": "Research & Math",
+          "is_recent_72h": true
+        },
         {
           "id": "ai_raw_rss-gnews-ai-models-en_f4d403633536",
           "date": "2026-11-22T21:32:38+08:00",
@@ -2577,8 +2732,8 @@
           "category_en": "Open Weights",
           "title": "开源模型权重：MiniMax-H3 (自定义开源许可 (详见模型卡))",
           "title_en": "Open-source release: MiniMax-H3",
-          "what_it_does": "文生/图生高清视频生成；根据参考图片与文本提示生成连贯视频画面，适用于数字内容创作与镜头合成（近期下载 579.0 万次）",
-          "what_it_does_en": "文生/图生高清视频生成；根据参考图片与文本提示生成连贯视频画面，适用于数字内容创作与镜头合成（近期下载 579.0 万次）",
+          "what_it_does": "MiniMax 旗下 MiniMax-H3：文生/图生高清视频生成；根据参考图片与文本提示生成连贯视频画面，适用于数字内容创作与镜头合成（近期下载 579.0 万次）",
+          "what_it_does_en": "MiniMax 旗下 MiniMax-H3：文生/图生高清视频生成；根据参考图片与文本提示生成连贯视频画面，适用于数字内容创作与镜头合成（近期下载 579.0 万次）",
           "who_cares": "",
           "limitations": "许可证：自定义开源许可 (详见模型卡)",
           "limitations_en": "License: 自定义开源许可 (详见模型卡)",
@@ -3425,9 +3580,90 @@
       ],
       "recent_count": 15,
       "archive_count": 15,
-      "latest_date": "2026-11-22T20:07:56+08:00",
-      "latest_headline": "安全研究揭示AI推理提供商存在严重漏洞，AI智能体被用于发现医疗影像软件0-day",
+      "latest_date": "2026-11-22T22:53:42+08:00",
+      "latest_headline": "[GitHub Release] vLLM 发布 v0.34.0",
       "items": [
+        {
+          "id": "ai_raw_github-releases_3b176b1d33cc",
+          "date": "2026-11-22T22:53:42+08:00",
+          "company_id": "indie_opensource",
+          "company_name": "独立实验室 & 开源黑马",
+          "region": "全球开源",
+          "category": "开源突破",
+          "category_en": "Open Source",
+          "title": "[GitHub Release] vLLM 发布 v0.34.0",
+          "title_en": "[GitHub Release] vLLM 发布 v0.34.0",
+          "what_it_does": "版本 b12631（预发布/RC | 许可证: MIT）。webgpu：更新GDN supports_op检查；macOS Apple Silicon (arm64)；macOS Apple Silicon (arm64, 启用Klei…",
+          "what_it_does_en": "版本 v0.34.0（正式版 | 许可: Apache-2.0）。10 new models (Mistral Large 4, MiniMax-M3.1-Flash, Nemotron-3.5-Transcribe, and more!)；Extensible KV cache is on by default: v",
+          "who_cares": "",
+          "limitations": "",
+          "limitations_en": "",
+          "source_id": "github-releases",
+          "source_name": "GitHub Releases 官方版本",
+          "source_url": "https://github.com/vllm-project/vllm/releases/tag/v0.34.0",
+          "is_first_hand": true,
+          "source_tier": "first_party",
+          "is_open_source": true,
+          "milestone_dim": "open_source_eco",
+          "milestone_dim_label": "🔓 开源权重与生态",
+          "milestone_dim_label_en": "Open Source",
+          "is_recent_72h": true,
+          "related_sources": [
+            {
+              "source_name": "GitHub Releases 官方版本",
+              "url": "https://github.com/vllm-project/vllm/releases/tag/v0.34.0",
+              "is_first_hand": true
+            },
+            {
+              "source_name": "GitHub Releases 官方版本",
+              "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12633",
+              "is_first_hand": true
+            },
+            {
+              "source_name": "GitHub Releases 官方版本",
+              "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12631",
+              "is_first_hand": true
+            }
+          ]
+        },
+        {
+          "id": "ai_tool_tool_gh_ggml-org_llama.cpp",
+          "date": "2026-11-22T22:53:42+08:00",
+          "company_id": "indie_opensource",
+          "company_name": "独立实验室 & 开源黑马",
+          "region": "全球开源",
+          "category": "开源工具/仓库",
+          "category_en": "Open-Source Repo",
+          "title": "开源工具更新：llama.cpp b12633",
+          "title_en": "Open-source release: llama.cpp b12633",
+          "what_it_does": "主要更新了对macOS Apple Silicon (arm64) 和 Intel (x64) 架构的支持；同时提供了 iOS XCFramework，但禁用了 KleidiAI 的 Apple Silicon 支持。",
+          "what_it_does_en": "主要更新了对macOS Apple Silicon (arm64) 和 Intel (x64) 架构的支持；同时提供了 iOS XCFramework，但禁用了 KleidiAI 的 Apple Silicon 支持。",
+          "who_cares": "",
+          "limitations": "许可证：MIT",
+          "limitations_en": "License: MIT",
+          "source_id": "github-releases",
+          "source_name": "GitHub Releases API",
+          "source_url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12633",
+          "is_first_hand": true,
+          "source_tier": "first_party",
+          "is_open_source": true,
+          "milestone_dim": "open_source_eco",
+          "milestone_dim_label": "🔓 开源权重与生态",
+          "milestone_dim_label_en": "Open Source",
+          "is_recent_72h": true,
+          "related_sources": [
+            {
+              "source_name": "GitHub Releases API",
+              "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12633",
+              "is_first_hand": true
+            },
+            {
+              "source_name": "GitHub Releases API",
+              "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12631",
+              "is_first_hand": true
+            }
+          ]
+        },
         {
           "id": "ai_ev_evt_22c1fc575032",
           "date": "2026-11-22T20:07:56+08:00",
@@ -3492,77 +3728,6 @@
               "source_name": "IT之家 实时快讯",
               "url": "https://www.ithome.com/1/030/677.htm",
               "is_first_hand": false
-            }
-          ]
-        },
-        {
-          "id": "ai_raw_github-releases_3b176b1d33cc",
-          "date": "2026-11-22T17:03:19+08:00",
-          "company_id": "indie_opensource",
-          "company_name": "独立实验室 & 开源黑马",
-          "region": "全球开源",
-          "category": "开源突破",
-          "category_en": "Open Source",
-          "title": "[GitHub Release] vLLM 发布 v0.34.0",
-          "title_en": "[GitHub Release] vLLM 发布 v0.34.0",
-          "what_it_does": "版本 b12631（预发布/RC | 许可证: MIT）。webgpu：更新GDN supports_op检查；macOS Apple Silicon (arm64)；macOS Apple Silicon (arm64, 启用Klei…",
-          "what_it_does_en": "版本 v0.34.0（正式版 | 许可: Apache-2.0）。10 new models (Mistral Large 4, MiniMax-M3.1-Flash, Nemotron-3.5-Transcribe, and more!)；Extensible KV cache is on by default: v",
-          "who_cares": "",
-          "limitations": "",
-          "limitations_en": "",
-          "source_id": "github-releases",
-          "source_name": "GitHub Releases 官方版本",
-          "source_url": "https://github.com/vllm-project/vllm/releases/tag/v0.34.0",
-          "is_first_hand": true,
-          "source_tier": "first_party",
-          "is_open_source": true,
-          "milestone_dim": "open_source_eco",
-          "milestone_dim_label": "🔓 开源权重与生态",
-          "milestone_dim_label_en": "Open Source",
-          "is_recent_72h": true,
-          "related_sources": [
-            {
-              "source_name": "GitHub Releases 官方版本",
-              "url": "https://github.com/vllm-project/vllm/releases/tag/v0.34.0",
-              "is_first_hand": true
-            },
-            {
-              "source_name": "GitHub Releases 官方版本",
-              "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12631",
-              "is_first_hand": true
-            }
-          ]
-        },
-        {
-          "id": "ai_tool_tool_gh_ggml-org_llama.cpp",
-          "date": "2026-11-22T17:03:19+08:00",
-          "company_id": "indie_opensource",
-          "company_name": "独立实验室 & 开源黑马",
-          "region": "全球开源",
-          "category": "开源工具/仓库",
-          "category_en": "Open-Source Repo",
-          "title": "开源工具更新：llama.cpp b12631",
-          "title_en": "Open-source release: llama.cpp b12631",
-          "what_it_does": "WebGPU 更新了 GDN `supports_op` 检查；改进了对 macOS Apple Silicon (arm64) 和 Intel (x64) 的支持。",
-          "what_it_does_en": "WebGPU 更新了 GDN `supports_op` 检查；改进了对 macOS Apple Silicon (arm64) 和 Intel (x64) 的支持。",
-          "who_cares": "",
-          "limitations": "许可证：MIT",
-          "limitations_en": "License: MIT",
-          "source_id": "github-releases",
-          "source_name": "GitHub Releases API",
-          "source_url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12631",
-          "is_first_hand": true,
-          "source_tier": "first_party",
-          "is_open_source": true,
-          "milestone_dim": "open_source_eco",
-          "milestone_dim_label": "🔓 开源权重与生态",
-          "milestone_dim_label_en": "Open Source",
-          "is_recent_72h": true,
-          "related_sources": [
-            {
-              "source_name": "GitHub Releases API",
-              "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12631",
-              "is_first_hand": true
             }
           ]
         },
@@ -3633,23 +3798,23 @@
           ]
         },
         {
-          "id": "ai_raw_rss-gnews-ai-models-zh_e930a2189c71",
+          "id": "ai_raw_rss-gnews-ai-models-zh_3ba2acaf6dbe",
           "date": "2026-11-22T15:06:35+08:00",
           "company_id": "indie_opensource",
           "company_name": "独立实验室 & 开源黑马",
           "region": "全球开源",
           "category": "最新动态",
           "category_en": "Latest Release",
-          "title": "新一代“文鳐”海洋原生多模态大模型在厦门发布赋能海洋装备自主智能化发展",
-          "title_en": "新一代“文鳐”海洋原生多模态大模型在厦门发布赋能海洋装备自主智能化发展",
+          "title": "新一代“文鳐”海洋原生多模态大模型在厦门发布 赋能海洋装备自主智能化发展",
+          "title_en": "新一代“文鳐”海洋原生多模态大模型在厦门发布 赋能海洋装备自主智能化发展",
           "what_it_does": "",
-          "what_it_does_en": "新一代“文鳐”海洋原生多模态大模型在厦门发布赋能海洋装备自主智能化发展 Sohu",
+          "what_it_does_en": "新一代“文鳐”海洋原生多模态大模型在厦门发布 赋能海洋装备自主智能化发展 人民网-福建频道",
           "who_cares": "",
           "limitations": "",
           "limitations_en": "",
           "source_id": "rss-gnews-ai-models-zh",
-          "source_name": "Sohu",
-          "source_url": "https://news.google.com/rss/articles/CBMijAFBVV95cUxPRWwwY25OaEYyVUNNVUJrMndTaEt3VVVaZm9ieHY4T1hIZDd1aU00Z2paRExsNEtYbDlHcGIxZXRBUGx6UGh5MzVNSFhHSHl0Um9iam0xa3NtSzA4VWp2Vko4Y1VuRmNCWkRQbGlTc3lLLWZEbHJQSzFMZlNGMkUwY2xHWXlJV1RYWUJyQQ?oc=5",
+          "source_name": "人民网-福建频道",
+          "source_url": "https://news.google.com/rss/articles/CBMiakFVX3lxTE9zT1Q2SzRMVzBOVVpidE9YelJOX0RIakpTY2swSmc0cWVNeFdKdnpsWlhlNU5aMWxGS1ZZMXhoTFF4bzhKT1lyWi1UX3V4X3RpSjB6cTh2N3lORWF1b3p5T2xPZlI4UHFGUVE?oc=5",
           "is_first_hand": false,
           "source_tier": "wire_media",
           "is_open_source": false,
@@ -3658,42 +3823,14 @@
           "milestone_dim_label_en": "Flagship Model",
           "is_recent_72h": true,
           "related_sources": [
+            {
+              "source_name": "人民网-福建频道",
+              "url": "https://news.google.com/rss/articles/CBMiakFVX3lxTE9zT1Q2SzRMVzBOVVpidE9YelJOX0RIakpTY2swSmc0cWVNeFdKdnpsWlhlNU5aMWxGS1ZZMXhoTFF4bzhKT1lyWi1UX3V4X3RpSjB6cTh2N3lORWF1b3p5T2xPZlI4UHFGUVE?oc=5",
+              "is_first_hand": false
+            },
             {
               "source_name": "Sohu",
               "url": "https://news.google.com/rss/articles/CBMijAFBVV95cUxPRWwwY25OaEYyVUNNVUJrMndTaEt3VVVaZm9ieHY4T1hIZDd1aU00Z2paRExsNEtYbDlHcGIxZXRBUGx6UGh5MzVNSFhHSHl0Um9iam0xa3NtSzA4VWp2Vko4Y1VuRmNCWkRQbGlTc3lLLWZEbHJQSzFMZlNGMkUwY2xHWXlJV1RYWUJyQQ?oc=5",
-              "is_first_hand": false
-            }
-          ]
-        },
-        {
-          "id": "ai_raw_rss-gnews-opensource-ai_dc7346df3abf",
-          "date": "2026-11-22T08:00:00+08:00",
-          "company_id": "indie_opensource",
-          "company_name": "独立实验室 & 开源黑马",
-          "region": "全球开源",
-          "category": "最新动态",
-          "category_en": "Latest Release",
-          "title": "【外媒快讯】NeonClipping: Free Local YouTube Shorts Clipper (Nov 2026)",
-          "title_en": "NeonClipping: Free Local YouTube Shorts Clipper (Nov 2026)",
-          "what_it_does": "",
-          "what_it_does_en": "NeonClipping: Free Local YouTube Shorts Clipper (Nov 2026) explainx.ai",
-          "who_cares": "",
-          "limitations": "",
-          "limitations_en": "",
-          "source_id": "rss-gnews-opensource-ai",
-          "source_name": "explainx.ai",
-          "source_url": "https://news.google.com/rss/articles/CBMingFBVV95cUxPMllFbF9XeHdvOVpHdDZEWVZiTTVxaGFkT19heHpiV3U2bUM3Tm05eUdNUDZuX1ZZcmJKQjZ1VnU4U3ZpOFBVejZsQ1lhUHVOcnQxWl9YdmhHZGtBQlBxZVVFUER0Zno3U0FQVFFSQjgwSWh0SDhISHM5emtsQ0YydWRhWl9XQ2RZS2ZKNlZmSkI5cWNDbXpYUi0xcmZmUQ?oc=5",
-          "is_first_hand": false,
-          "source_tier": "wire_media",
-          "is_open_source": false,
-          "milestone_dim": "flagship_release",
-          "milestone_dim_label": "🚀 旗舰模型发布",
-          "milestone_dim_label_en": "Flagship Model",
-          "is_recent_72h": true,
-          "related_sources": [
-            {
-              "source_name": "explainx.ai",
-              "url": "https://news.google.com/rss/articles/CBMingFBVV95cUxPMllFbF9XeHdvOVpHdDZEWVZiTTVxaGFkT19heHpiV3U2bUM3Tm05eUdNUDZuX1ZZcmJKQjZ1VnU4U3ZpOFBVejZsQ1lhUHVOcnQxWl9YdmhHZGtBQlBxZVVFUER0Zno3U0FQVFFSQjgwSWh0SDhISHM5emtsQ0YydWRhWl9XQ2RZS2ZKNlZmSkI5cWNDbXpYUi0xcmZmUQ?oc=5",
               "is_first_hand": false
             }
           ]
@@ -3928,11 +4065,159 @@
               "is_first_hand": true
             }
           ]
+        },
+        {
+          "id": "ai_tool_tool_gh_modelcontextprotocol_python-sdk",
+          "date": "2026-10-03T06:02:27+08:00",
+          "company_id": "indie_opensource",
+          "company_name": "独立实验室 & 开源黑马",
+          "region": "全球开源",
+          "category": "开源工具/仓库",
+          "category_en": "Open-Source Repo",
+          "title": "开源工具更新：MCP Python SDK v2.3.0",
+          "title_en": "Open-source release: MCP Python SDK v2.3.0",
+          "what_it_does": "主要包含多项修复和新增三个选项；部分功能行为有所调整，请开发者留意；现在要求 `httpx2>=2.10.0` 版本。",
+          "what_it_does_en": "主要包含多项修复和新增三个选项；部分功能行为有所调整，请开发者留意；现在要求 `httpx2>=2.10.0` 版本。",
+          "who_cares": "",
+          "limitations": "许可证：MIT",
+          "limitations_en": "License: MIT",
+          "source_id": "github-releases",
+          "source_name": "GitHub Releases API",
+          "source_url": "https://github.com/modelcontextprotocol/python-sdk/releases/tag/v2.3.0",
+          "is_first_hand": true,
+          "source_tier": "first_party",
+          "is_open_source": true,
+          "milestone_dim": "api_agent_eng",
+          "milestone_dim_label": "🛠️ API 与 Agent 工程",
+          "milestone_dim_label_en": "API & Agent Eng",
+          "is_recent_72h": false,
+          "related_sources": [
+            {
+              "source_name": "GitHub Releases API",
+              "url": "https://github.com/modelcontextprotocol/python-sdk/releases/tag/v2.3.0",
+              "is_first_hand": true
+            }
+          ]
         }
       ]
     }
   ],
   "timeline": [
+    {
+      "id": "ai_ev_evt_ee21b56e8be6",
+      "date": "2026-11-22T23:34:17+08:00",
+      "company_id": "openai",
+      "company_name": "OpenAI",
+      "region": "海外",
+      "category": "模型与产品",
+      "category_en": "Model & Product",
+      "title": "谷歌警告“自主攻击时代已到来”，OpenAI智能体被曝曾入侵Hugging Face",
+      "title_en": "How OpenAI agents went rogue and hacked Hugging Face",
+      "what_it_does": "",
+      "what_it_does_en": "How OpenAI agents went rogue and hacked Hugging Face The Straits Times",
+      "who_cares": "",
+      "limitations": "",
+      "limitations_en": "",
+      "source_id": "rss-gnews-opensource-ai",
+      "source_name": "国际媒体",
+      "source_url": "https://news.google.com/rss/articles/CBMiXkFVX3lxTE9WVkZoc0hYSEpvYkR4OE16OUx5anJ1MUJMb3p4cTJITUNoSXdDTERxSnZmdjJLb19hTzRLeTZjalpaZVR0MnJiY21QcVBGUVBKdHppc29ZN2JxRWN0c2c?oc=5",
+      "is_first_hand": false,
+      "source_tier": "wire_media",
+      "event_id": "evt_ee21b56e8be6",
+      "is_open_source": false,
+      "related_sources": [
+        {
+          "source_name": "国际媒体",
+          "url": "https://news.google.com/rss/articles/CBMiXkFVX3lxTE9WVkZoc0hYSEpvYkR4OE16OUx5anJ1MUJMb3p4cTJITUNoSXdDTERxSnZmdjJLb19hTzRLeTZjalpaZVR0MnJiY21QcVBGUVBKdHppc29ZN2JxRWN0c2c?oc=5",
+          "is_first_hand": false
+        }
+      ],
+      "milestone_dim": "api_agent_eng",
+      "milestone_dim_label": "🛠️ API 与 Agent 工程",
+      "milestone_dim_label_en": "API & Agent Eng",
+      "is_recent_72h": true
+    },
+    {
+      "id": "ai_raw_github-releases_3b176b1d33cc",
+      "date": "2026-11-22T22:53:42+08:00",
+      "company_id": "indie_opensource",
+      "company_name": "独立实验室 & 开源黑马",
+      "region": "全球开源",
+      "category": "开源突破",
+      "category_en": "Open Source",
+      "title": "[GitHub Release] vLLM 发布 v0.34.0",
+      "title_en": "[GitHub Release] vLLM 发布 v0.34.0",
+      "what_it_does": "版本 b12631（预发布/RC | 许可证: MIT）。webgpu：更新GDN supports_op检查；macOS Apple Silicon (arm64)；macOS Apple Silicon (arm64, 启用Klei…",
+      "what_it_does_en": "版本 v0.34.0（正式版 | 许可: Apache-2.0）。10 new models (Mistral Large 4, MiniMax-M3.1-Flash, Nemotron-3.5-Transcribe, and more!)；Extensible KV cache is on by default: v",
+      "who_cares": "",
+      "limitations": "",
+      "limitations_en": "",
+      "source_id": "github-releases",
+      "source_name": "GitHub Releases 官方版本",
+      "source_url": "https://github.com/vllm-project/vllm/releases/tag/v0.34.0",
+      "is_first_hand": true,
+      "source_tier": "first_party",
+      "is_open_source": true,
+      "milestone_dim": "open_source_eco",
+      "milestone_dim_label": "🔓 开源权重与生态",
+      "milestone_dim_label_en": "Open Source",
+      "is_recent_72h": true,
+      "related_sources": [
+        {
+          "source_name": "GitHub Releases 官方版本",
+          "url": "https://github.com/vllm-project/vllm/releases/tag/v0.34.0",
+          "is_first_hand": true
+        },
+        {
+          "source_name": "GitHub Releases 官方版本",
+          "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12633",
+          "is_first_hand": true
+        },
+        {
+          "source_name": "GitHub Releases 官方版本",
+          "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12631",
+          "is_first_hand": true
+        }
+      ]
+    },
+    {
+      "id": "ai_tool_tool_gh_ggml-org_llama.cpp",
+      "date": "2026-11-22T22:53:42+08:00",
+      "company_id": "indie_opensource",
+      "company_name": "独立实验室 & 开源黑马",
+      "region": "全球开源",
+      "category": "开源工具/仓库",
+      "category_en": "Open-Source Repo",
+      "title": "开源工具更新：llama.cpp b12633",
+      "title_en": "Open-source release: llama.cpp b12633",
+      "what_it_does": "主要更新了对macOS Apple Silicon (arm64) 和 Intel (x64) 架构的支持；同时提供了 iOS XCFramework，但禁用了 KleidiAI 的 Apple Silicon 支持。",
+      "what_it_does_en": "主要更新了对macOS Apple Silicon (arm64) 和 Intel (x64) 架构的支持；同时提供了 iOS XCFramework，但禁用了 KleidiAI 的 Apple Silicon 支持。",
+      "who_cares": "",
+      "limitations": "许可证：MIT",
+      "limitations_en": "License: MIT",
+      "source_id": "github-releases",
+      "source_name": "GitHub Releases API",
+      "source_url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12633",
+      "is_first_hand": true,
+      "source_tier": "first_party",
+      "is_open_source": true,
+      "milestone_dim": "open_source_eco",
+      "milestone_dim_label": "🔓 开源权重与生态",
+      "milestone_dim_label_en": "Open Source",
+      "is_recent_72h": true,
+      "related_sources": [
+        {
+          "source_name": "GitHub Releases API",
+          "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12633",
+          "is_first_hand": true
+        },
+        {
+          "source_name": "GitHub Releases API",
+          "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12631",
+          "is_first_hand": true
+        }
+      ]
+    },
     {
       "id": "ai_ev_evt_e1a945db5ab5",
       "date": "2026-11-22T22:32:52+08:00",
@@ -3966,6 +4251,88 @@
           "is_first_hand": false
         }
       ]
+    },
+    {
+      "id": "ai_live_sina-7x24_8ab830047623",
+      "date": "2026-11-22T22:29:02+08:00",
+      "company_id": "tencent_hunyuan",
+      "company_name": "腾讯混元 (Hunyuan)",
+      "region": "国内",
+      "category": "开源突破",
+      "category_en": "Open Source",
+      "title": "方寸跃迁受邀为腾讯 Hy4 模型进行权重公开前第三方安全评估",
+      "title_en": "",
+      "what_it_does": "",
+      "what_it_does_en": "",
+      "who_cares": "",
+      "limitations": "",
+      "limitations_en": "",
+      "source_name": "新浪财经 7×24 电",
+      "source_url": "https://finance.sina.cn/7x24/2026-11-22/detail-inizrpca1135554.d.html",
+      "event_id": null,
+      "is_open_source": false,
+      "is_first_hand": false,
+      "source_tier": "wire_media",
+      "milestone_dim": "open_source_eco",
+      "milestone_dim_label": "🔓 开源权重与生态",
+      "milestone_dim_label_en": "Open Source",
+      "related_sources": [
+        {
+          "source_name": "新浪财经 7×24 电报",
+          "url": "https://finance.sina.cn/7x24/2026-11-22/detail-inizrpca1135554.d.html",
+          "is_first_hand": false
+        }
+      ],
+      "is_recent_72h": true
+    },
+    {
+      "id": "ai_ev_evt_5d8c2c359850",
+      "date": "2026-11-22T21:32:38+08:00",
+      "company_id": "minimax",
+      "company_name": "MiniMax / 海螺",
+      "region": "国内",
+      "category": "模型与产品",
+      "category_en": "Model & Product",
+      "title": "MiniMax利用内部模型自动化破解多个密码学前沿方案并刷新挑战赛纪录",
+      "title_en": "MiniMax利用内部模型自动化破解多个密码学前沿方案并刷新挑战赛纪录",
+      "what_it_does": "MiniMax公布其内部模型的密码分析研究成果，利用内部模型对现代密码方案开展系统性自动化密码分析，发掘出多处此前未知的算法构造缺陷，并将多项原本停留在理论的攻击推进到秒级至分钟级的高效破解。据评估，该内部模型首次攻破了多个此前尚无已知…",
+      "what_it_does_en": "MiniMax公布其内部模型的密码分析研究成果，利用内部模型对现代密码方案开展系统性自动化密码分析，发掘出多处此前未知的算法构造缺陷，并将多项原本停留在理论的攻击推进到秒级至分钟级的高效破解。据评估，该内部模型首次攻破了多个此前尚无已知实际攻击的NIST国际密码标准化竞赛候选算法。",
+      "who_cares": "",
+      "limitations": "",
+      "limitations_en": "",
+      "source_id": "wscn-global-channel",
+      "source_name": "华尔街见闻 7×24 全球",
+      "source_url": "https://wallstreetcn.com/livenews/3203761",
+      "is_first_hand": false,
+      "source_tier": "wire_media",
+      "event_id": "evt_5d8c2c359850",
+      "is_open_source": false,
+      "related_sources": [
+        {
+          "source_name": "华尔街见闻 7×24 全球",
+          "url": "https://wallstreetcn.com/livenews/3203761",
+          "is_first_hand": false
+        },
+        {
+          "source_name": "IT之家",
+          "url": "https://www.ithome.com/1/030/711.htm",
+          "is_first_hand": false
+        },
+        {
+          "source_name": "AIHOT 前沿",
+          "url": "https://aihot.news/items/cy8ge5deafoo54aro3n328dy6",
+          "is_first_hand": false
+        },
+        {
+          "source_name": "AIHOT 前沿",
+          "url": "https://aihot.news/items/v0vzo1yr2zojxv1n3hkaxvrfs",
+          "is_first_hand": false
+        }
+      ],
+      "milestone_dim": "research_breakthrough",
+      "milestone_dim_label": "🧠 算法与科研突破",
+      "milestone_dim_label_en": "Research & Math",
+      "is_recent_72h": true
     },
     {
       "id": "ai_raw_rss-gnews-ai-models-en_f4d403633536",
@@ -4092,7 +4459,7 @@
       "category_en": "Model & Product",
       "title": "报道称：Anthropic数学家声称与Claude合作证明Navier-Stokes方程无外力爆破难题，陶哲轩称待核验",
       "title_en": "报道称：Anthropic数学家声称与Claude合作证明Navier-Stokes方程无外力爆破难题，陶哲轩称待核验",
-      "what_it_does": "【据关联报道/尚未见官方披露确认】11月20日，Anthropic数学家发文声称与AI模型Claude合作证明了Navier-Stokes方程无外力爆破这一千禧难题；著名数学家陶哲轩对此评价称其策略清楚，但仍需规范整理与核验。同日，意大…",
+      "what_it_does": "11月20日，Anthropic数学家发文声称与AI模型Claude合作证明了Navier-Stokes方程无外力爆破这一千禧难题；著名数学家陶哲轩对此评价称其策略清楚，但仍需规范整理与核验。同日，意大…",
       "what_it_does_en": "【据关联报道/尚未见官方披露确认】11月20日，Anthropic数学家发文声称与AI模型Claude合作证明了Navier-Stokes方程无外力爆破这一千禧难题；著名数学家陶哲轩对此评价称其策略清楚，但仍需规范整理与核验。同日，意大利数学家Masullo耗时12年发布了940页纯人类版黎曼猜想证明草稿，并称面对AI",
       "who_cares": "",
       "limitations": "",
@@ -4151,16 +4518,16 @@
       ]
     },
     {
-      "id": "ai_ev_evt_9e8cda98c2ad",
+      "id": "ai_ev_evt_0cff27051ad1",
       "date": "2026-11-22T19:08:31+08:00",
       "company_id": "anthropic",
       "company_name": "Anthropic",
       "region": "海外",
       "category": "模型与产品",
       "category_en": "Model & Product",
-      "title": "Claude AI辅助证明黎曼猜想获Lean官方认证，马斯克直呼惊人成就",
+      "title": "Claude AI被Lean与Mathlib社区确认证明黎曼猜想，人类数学家同日另提证明",
       "title_en": "Lean and Mathlib community officially confirms Levent Alpöge's proof of the Riemann hypothesis is correct",
-      "what_it_does": "Lean官方和Mathlib社区联合声明，确认Anthropic数学家Levent Alpöge与AI系统Claude合作完成的黎曼猜想证明完全正确，并通过多个独立验证器排除了“AI钻漏洞作弊”的可能性。马斯克称此为惊人成就。此前，Le…",
+      "what_it_does": "Anthropic数学家Levent Alpöge与AI系统Claude合作，声称完成了对黎曼猜想的证明，并发布了用Lean语言编写的可验证计算机代码。Lean官方和Mathlib社区随后发布联合声明，确认这份由Claude生成的174…",
       "what_it_does_en": "The Lean and Mathlib community has officially confirmed Levent Alpöge's proof of the Riemann hypothesis as correct. Dozens of independent verifiers checked the 17 million lines of computer code. The solution arrived years earlier than expected: Terence Tao ha…",
       "who_cares": "",
       "limitations": "",
@@ -4170,7 +4537,7 @@
       "source_url": "https://the-decoder.com/lean-and-mathlib-community-officially-confirms-levent-alpoges-proof-of-the-riemann-hypothesis-is-correct",
       "is_first_hand": false,
       "source_tier": "wire_media",
-      "event_id": "evt_9e8cda98c2ad",
+      "event_id": "evt_0cff27051ad1",
       "is_open_source": false,
       "related_sources": [
         {
@@ -4229,7 +4596,7 @@
       "category_en": "First-Hand Official",
       "title": "【全球 AI 动态】Introducing Tool Retrieval in the Gemini API",
       "title_en": "Introducing Tool Retrieval in the Gemini API",
-      "what_it_does": "谷歌已预览推出Gemini API工具检索功能。代理可维护一个大型工具库以备用，并仅在需要时加载每个参数模式，在一个In中",
+      "what_it_does": "谷歌发布了Gemini API工具检索的预览版，允许智能体在需要时才加载大型工具库的参数schema。同时，谷歌还发布了Gemini 4 Neon AI模型，旨在与Claude Opus 5.5和GPT-6.2 Sol竞争。",
       "what_it_does_en": "Give your agents access to hundreds of tools while using fewer tokens with Tool Retrieval, now in preview in the Gemini API.",
       "who_cares": "",
       "limitations": "",
@@ -4239,7 +4606,7 @@
       "source_url": "https://blog.google/innovation-and-ai/technology/developers-tools/gemini-api-tool-retrieval",
       "is_first_hand": true,
       "source_tier": "first_party",
-      "is_open_source": false,
+      "is_open_source": true,
       "milestone_dim": "api_agent_eng",
       "milestone_dim_label": "🛠️ API 与 Agent 工程",
       "milestone_dim_label_en": "API & Agent Eng",
@@ -4253,6 +4620,16 @@
         {
           "source_name": "MarkTechPost (AI论文/模型)",
           "url": "https://www.marktechpost.com/2026/11/22/google-gemini-api-tool-retrieval",
+          "is_first_hand": false
+        },
+        {
+          "source_name": "国际媒体",
+          "url": "https://news.google.com/rss/articles/CBMijwFBVV95cUxOSWVfSWVYY1k5TWw3TWJ5WGYyWExnNDM2Wmp4eWs1LXk4S2IwYkt2NVBYeXpRZEM3Q2NERHd0RllEcU0wV2t2M3BPNG5Xbm9xbU5MMEtIVnFEZFA2ZWtiQjg3VFFMRmc5OXZiRnUzYVkzUkhidmFRM24wZ01INno2ek9TTEZOT25QQ2x4azZodw?oc=5",
+          "is_first_hand": false
+        },
+        {
+          "source_name": "AIHOT 前沿",
+          "url": "https://aihot.news/items/wgzy1mbctlp5z5p5ttc47as2a",
           "is_first_hand": false
         }
       ]
@@ -4324,77 +4701,6 @@
       ]
     },
     {
-      "id": "ai_raw_github-releases_3b176b1d33cc",
-      "date": "2026-11-22T17:03:19+08:00",
-      "company_id": "indie_opensource",
-      "company_name": "独立实验室 & 开源黑马",
-      "region": "全球开源",
-      "category": "开源突破",
-      "category_en": "Open Source",
-      "title": "[GitHub Release] vLLM 发布 v0.34.0",
-      "title_en": "[GitHub Release] vLLM 发布 v0.34.0",
-      "what_it_does": "版本 b12631（预发布/RC | 许可证: MIT）。webgpu：更新GDN supports_op检查；macOS Apple Silicon (arm64)；macOS Apple Silicon (arm64, 启用Klei…",
-      "what_it_does_en": "版本 v0.34.0（正式版 | 许可: Apache-2.0）。10 new models (Mistral Large 4, MiniMax-M3.1-Flash, Nemotron-3.5-Transcribe, and more!)；Extensible KV cache is on by default: v",
-      "who_cares": "",
-      "limitations": "",
-      "limitations_en": "",
-      "source_id": "github-releases",
-      "source_name": "GitHub Releases 官方版本",
-      "source_url": "https://github.com/vllm-project/vllm/releases/tag/v0.34.0",
-      "is_first_hand": true,
-      "source_tier": "first_party",
-      "is_open_source": true,
-      "milestone_dim": "open_source_eco",
-      "milestone_dim_label": "🔓 开源权重与生态",
-      "milestone_dim_label_en": "Open Source",
-      "is_recent_72h": true,
-      "related_sources": [
-        {
-          "source_name": "GitHub Releases 官方版本",
-          "url": "https://github.com/vllm-project/vllm/releases/tag/v0.34.0",
-          "is_first_hand": true
-        },
-        {
-          "source_name": "GitHub Releases 官方版本",
-          "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12631",
-          "is_first_hand": true
-        }
-      ]
-    },
-    {
-      "id": "ai_tool_tool_gh_ggml-org_llama.cpp",
-      "date": "2026-11-22T17:03:19+08:00",
-      "company_id": "indie_opensource",
-      "company_name": "独立实验室 & 开源黑马",
-      "region": "全球开源",
-      "category": "开源工具/仓库",
-      "category_en": "Open-Source Repo",
-      "title": "开源工具更新：llama.cpp b12631",
-      "title_en": "Open-source release: llama.cpp b12631",
-      "what_it_does": "WebGPU 更新了 GDN `supports_op` 检查；改进了对 macOS Apple Silicon (arm64) 和 Intel (x64) 的支持。",
-      "what_it_does_en": "WebGPU 更新了 GDN `supports_op` 检查；改进了对 macOS Apple Silicon (arm64) 和 Intel (x64) 的支持。",
-      "who_cares": "",
-      "limitations": "许可证：MIT",
-      "limitations_en": "License: MIT",
-      "source_id": "github-releases",
-      "source_name": "GitHub Releases API",
-      "source_url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12631",
-      "is_first_hand": true,
-      "source_tier": "first_party",
-      "is_open_source": true,
-      "milestone_dim": "open_source_eco",
-      "milestone_dim_label": "🔓 开源权重与生态",
-      "milestone_dim_label_en": "Open Source",
-      "is_recent_72h": true,
-      "related_sources": [
-        {
-          "source_name": "GitHub Releases API",
-          "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12631",
-          "is_first_hand": true
-        }
-      ]
-    },
-    {
       "id": "ai_raw_ithome-rss_5abf3f156012",
       "date": "2026-11-22T16:47:38+08:00",
       "company_id": "indie_opensource",
@@ -4461,23 +4767,23 @@
       ]
     },
     {
-      "id": "ai_raw_rss-gnews-ai-models-zh_e930a2189c71",
+      "id": "ai_raw_rss-gnews-ai-models-zh_3ba2acaf6dbe",
       "date": "2026-11-22T15:06:35+08:00",
       "company_id": "indie_opensource",
       "company_name": "独立实验室 & 开源黑马",
       "region": "全球开源",
       "category": "最新动态",
       "category_en": "Latest Release",
-      "title": "新一代“文鳐”海洋原生多模态大模型在厦门发布赋能海洋装备自主智能化发展",
-      "title_en": "新一代“文鳐”海洋原生多模态大模型在厦门发布赋能海洋装备自主智能化发展",
+      "title": "新一代“文鳐”海洋原生多模态大模型在厦门发布 赋能海洋装备自主智能化发展",
+      "title_en": "新一代“文鳐”海洋原生多模态大模型在厦门发布 赋能海洋装备自主智能化发展",
       "what_it_does": "",
-      "what_it_does_en": "新一代“文鳐”海洋原生多模态大模型在厦门发布赋能海洋装备自主智能化发展 Sohu",
+      "what_it_does_en": "新一代“文鳐”海洋原生多模态大模型在厦门发布 赋能海洋装备自主智能化发展 人民网-福建频道",
       "who_cares": "",
       "limitations": "",
       "limitations_en": "",
       "source_id": "rss-gnews-ai-models-zh",
-      "source_name": "Sohu",
-      "source_url": "https://news.google.com/rss/articles/CBMijAFBVV95cUxPRWwwY25OaEYyVUNNVUJrMndTaEt3VVVaZm9ieHY4T1hIZDd1aU00Z2paRExsNEtYbDlHcGIxZXRBUGx6UGh5MzVNSFhHSHl0Um9iam0xa3NtSzA4VWp2Vko4Y1VuRmNCWkRQbGlTc3lLLWZEbHJQSzFMZlNGMkUwY2xHWXlJV1RYWUJyQQ?oc=5",
+      "source_name": "人民网-福建频道",
+      "source_url": "https://news.google.com/rss/articles/CBMiakFVX3lxTE9zT1Q2SzRMVzBOVVpidE9YelJOX0RIakpTY2swSmc0cWVNeFdKdnpsWlhlNU5aMWxGS1ZZMXhoTFF4bzhKT1lyWi1UX3V4X3RpSjB6cTh2N3lORWF1b3p5T2xPZlI4UHFGUVE?oc=5",
       "is_first_hand": false,
       "source_tier": "wire_media",
       "is_open_source": false,
@@ -4487,6 +4793,11 @@
       "is_recent_72h": true,
       "related_sources": [
         {
+          "source_name": "人民网-福建频道",
+          "url": "https://news.google.com/rss/articles/CBMiakFVX3lxTE9zT1Q2SzRMVzBOVVpidE9YelJOX0RIakpTY2swSmc0cWVNeFdKdnpsWlhlNU5aMWxGS1ZZMXhoTFF4bzhKT1lyWi1UX3V4X3RpSjB6cTh2N3lORWF1b3p5T2xPZlI4UHFGUVE?oc=5",
+          "is_first_hand": false
+        },
+        {
           "source_name": "Sohu",
           "url": "https://news.google.com/rss/articles/CBMijAFBVV95cUxPRWwwY25OaEYyVUNNVUJrMndTaEt3VVVaZm9ieHY4T1hIZDd1aU00Z2paRExsNEtYbDlHcGIxZXRBUGx6UGh5MzVNSFhHSHl0Um9iam0xa3NtSzA4VWp2Vko4Y1VuRmNCWkRQbGlTc3lLLWZEbHJQSzFMZlNGMkUwY2xHWXlJV1RYWUJyQQ?oc=5",
           "is_first_hand": false
@@ -4494,13 +4805,13 @@
       ]
     },
     {
-      "id": "ai_ev_evt_450719579a78",
+      "id": "ai_raw_rss-gnews-ai-models-en_4d2773dd94ee",
       "date": "2026-11-22T13:16:43+08:00",
-      "company_id": "anthropic",
-      "company_name": "Anthropic",
+      "company_id": "google",
+      "company_name": "Google DeepMind",
       "region": "海外",
-      "category": "模型与产品",
-      "category_en": "Model & Product",
+      "category": "最新动态",
+      "category_en": "Latest Release",
       "title": "Google DeepMind 正式发布「Gemini 4 Neon（氖）」：近 Carbon 科研级智力 + 百万上下文 + 可调高思考档位",
       "title_en": "Google releases Gemini 4 Neon AI model, rivals Claude Opus 5.5 and GPT-6.2 Sol",
       "what_it_does": "以 $3/$15 百万 Token 甜点定价提供全仓库级编程调试、多轮工具调用、STEM 推理与 Antigravity 多 Agent 并行调度，接入 GitHub Copilot 编程能力翻倍。",
@@ -4513,11 +4824,14 @@
       "source_url": "https://deepmind.google/#gemini-4-neon",
       "is_first_hand": true,
       "source_tier": "first_party",
-      "event_id": "evt_450719579a78",
       "is_open_source": false,
+      "milestone_dim": "flagship_release",
+      "milestone_dim_label": "🚀 旗舰模型发布",
+      "milestone_dim_label_en": "Flagship Model",
+      "is_recent_72h": true,
       "related_sources": [
         {
-          "source_name": "国际媒体",
+          "source_name": "Yahoo Tech",
           "url": "https://news.google.com/rss/articles/CBMijwFBVV95cUxOSWVfSWVYY1k5TWw3TWJ5WGYyWExnNDM2Wmp4eWs1LXk4S2IwYkt2NVBYeXpRZEM3Q2NERHd0RllEcU0wV2t2M3BPNG5Xbm9xbU5MMEtIVnFEZFA2ZWtiQjg3VFFMRmc5OXZiRnUzYVkzUkhidmFRM24wZ01INno2ek9TTEZOT25QQ2x4azZodw?oc=5",
           "is_first_hand": false
         },
@@ -4526,24 +4840,20 @@
           "url": "https://deepmind.google/#gemini-4-neon",
           "is_first_hand": true
         }
-      ],
-      "milestone_dim": "flagship_release",
-      "milestone_dim_label": "🚀 旗舰模型发布",
-      "milestone_dim_label_en": "Flagship Model",
-      "is_recent_72h": true
+      ]
     },
     {
-      "id": "ai_ev_evt_eac6d4b9a488",
+      "id": "ai_ev_evt_30f4eb3f70fd",
       "date": "2026-11-22T09:40:00+08:00",
       "company_id": "openai",
       "company_name": "OpenAI",
       "region": "海外",
       "category": "模型与产品",
       "category_en": "Model & Product",
-      "title": "OpenAI发起“反蒸馏战”，大规模封禁账户以打击能力提取",
-      "title_en": "Combatting adversarial distillation",
-      "what_it_does": "OpenAI发起了一场“反蒸馏战”，通过大规模封禁账户来打击对抗性蒸馏行为，以保护其模型能力不被提取。OpenAI此前已公布其分层方法来对抗对抗性蒸馏，结合模型训练、防护措施、检测和执法。",
-      "what_it_does_en": "OpenAI's layered approach to adversarial distillation combines model training, safeguards, detection, and enforcement to protect against capability extraction.",
+      "title": "OpenAI启动大规模反蒸馏战役并发布GPT-Live-1.1语音智能体模型",
+      "title_en": "OpenAI Ships GPT-Live-1.1 for Voice Agents, Cuts Idle Cost to $0.02/Min",
+      "what_it_does": "OpenAI启动了大规模反蒸馏战役，通过模型训练、防护、检测和执法等分层方法对抗对抗性蒸馏，已将GPT-6.2 Astra的思考链提取成功率从54%降至0.2%。此外，OpenAI还在API中发布了GPT-Live-1.1全双工语音模型…",
+      "what_it_does_en": "OpenAI has released GPT-Live-1.1 in the API. The full-duplex voice model improves multilingual accents and transcription, and a new standby mode bills idle WebRTC time at $0.02 per minute instead of $0.05. The post OpenAI Ships GPT-Live-1.1 for Voice Agents,…",
       "who_cares": "",
       "limitations": "",
       "limitations_en": "",
@@ -4552,12 +4862,22 @@
       "source_url": "https://openai.com/index/combatting-adversarial-distillation",
       "is_first_hand": true,
       "source_tier": "first_party",
-      "event_id": "evt_eac6d4b9a488",
+      "event_id": "evt_30f4eb3f70fd",
       "is_open_source": false,
       "related_sources": [
         {
+          "source_name": "MarkTechPost (AI论文/模型)",
+          "url": "https://www.marktechpost.com/2026/11/21/openai-gpt-live-1-1-api-standby-mode",
+          "is_first_hand": false
+        },
+        {
           "source_name": "新闻电讯",
           "url": "https://news.google.com/rss/articles/CBMiSEFVX3lxTE1LRXFjT09RWXQ5eDBoSXRyaFkzQzE2Um9kcnhjV2JpVEFsMVZZMDhZT3B5U2hKU3lNcnJsV19TaFExVWU5QUgxNw?oc=5",
+          "is_first_hand": false
+        },
+        {
+          "source_name": "新闻电讯",
+          "url": "https://news.google.com/rss/articles/CBMijAFBVV95cUxOeFlIOVlFSXlTemttVFdiUmdCR1BJREFqMXpYenJCVUswSk9DZU1EUEd1YjZpZGh6SkNrdFFYVlZnM01UblJiOHlyMGFVOXRQMDJ3MzczTkk4SHh2SmJubk1uaWxkN2JzXzFidnV3SXptNTYwbjBPWUU2dlNjVUVfNWRtdjlaSGYzUWJyRA?oc=5",
           "is_first_hand": false
         },
         {
@@ -4566,8 +4886,8 @@
           "is_first_hand": true
         },
         {
-          "source_name": "Sohu",
-          "url": "https://news.google.com/rss/articles/CBMijAFBVV95cUxOeFlIOVlFSXlTemttVFdiUmdCR1BJREFqMXpYenJCVUswSk9DZU1EUEd1YjZpZGh6SkNrdFFYVlZnM01UblJiOHlyMGFVOXRQMDJ3MzczTkk4SHh2SmJubk1uaWxkN2JzXzFidnV3SXptNTYwbjBPWUU2dlNjVUVfNWRtdjlaSGYzUWJyRA?oc=5",
+          "source_name": "国际媒体",
+          "url": "https://news.google.com/rss/articles/CBMigwFBVV95cUxPZl9NVnpyaGtfLXJXQTNEZ1p2SDN1bDZMT2luSGdwbS1ITXp6ek5pUHRjUF9DeVNqR1hCSFo3QjRLRXZRWWZybG5LenJxNjdTbFpzOUtxV3VjMUlhTDBSa2IxWUM4cHB1dFJJUjRROGxkTWhieDlzRnFSNHctaU12WW5oZ9IBgwFBVV95cUxPZl9NVnpyaGtfLXJXQTNEZ1p2SDN1bDZMT2luSGdwbS1ITXp6ek5pUHRjUF9DeVNqR1hCSFo3QjRLRXZRWWZybG5LenJxNjdTbFpzOUtxV3VjMUlhTDBSa2IxWUM4cHB1dFJJUjRROGxkTWhieDlzRnFSNHctaU12WW5oZw?oc=5",
           "is_first_hand": false
         },
         {
@@ -4649,39 +4969,6 @@
       "is_recent_72h": true
     },
     {
-      "id": "ai_raw_rss-gnews-opensource-ai_dc7346df3abf",
-      "date": "2026-11-22T08:00:00+08:00",
-      "company_id": "indie_opensource",
-      "company_name": "独立实验室 & 开源黑马",
-      "region": "全球开源",
-      "category": "最新动态",
-      "category_en": "Latest Release",
-      "title": "【外媒快讯】NeonClipping: Free Local YouTube Shorts Clipper (Nov 2026)",
-      "title_en": "NeonClipping: Free Local YouTube Shorts Clipper (Nov 2026)",
-      "what_it_does": "",
-      "what_it_does_en": "NeonClipping: Free Local YouTube Shorts Clipper (Nov 2026) explainx.ai",
-      "who_cares": "",
-      "limitations": "",
-      "limitations_en": "",
-      "source_id": "rss-gnews-opensource-ai",
-      "source_name": "explainx.ai",
-      "source_url": "https://news.google.com/rss/articles/CBMingFBVV95cUxPMllFbF9XeHdvOVpHdDZEWVZiTTVxaGFkT19heHpiV3U2bUM3Tm05eUdNUDZuX1ZZcmJKQjZ1VnU4U3ZpOFBVejZsQ1lhUHVOcnQxWl9YdmhHZGtBQlBxZVVFUER0Zno3U0FQVFFSQjgwSWh0SDhISHM5emtsQ0YydWRhWl9XQ2RZS2ZKNlZmSkI5cWNDbXpYUi0xcmZmUQ?oc=5",
-      "is_first_hand": false,
-      "source_tier": "wire_media",
-      "is_open_source": false,
-      "milestone_dim": "flagship_release",
-      "milestone_dim_label": "🚀 旗舰模型发布",
-      "milestone_dim_label_en": "Flagship Model",
-      "is_recent_72h": true,
-      "related_sources": [
-        {
-          "source_name": "explainx.ai",
-          "url": "https://news.google.com/rss/articles/CBMingFBVV95cUxPMllFbF9XeHdvOVpHdDZEWVZiTTVxaGFkT19heHpiV3U2bUM3Tm05eUdNUDZuX1ZZcmJKQjZ1VnU4U3ZpOFBVejZsQ1lhUHVOcnQxWl9YdmhHZGtBQlBxZVVFUER0Zno3U0FQVFFSQjgwSWh0SDhISHM5emtsQ0YydWRhWl9XQ2RZS2ZKNlZmSkI5cWNDbXpYUi0xcmZmUQ?oc=5",
-          "is_first_hand": false
-        }
-      ]
-    },
-    {
       "id": "ai_raw_rss-gnews-ai-models-zh_3046768ac3f1",
       "date": "2026-11-22T05:27:18+08:00",
       "company_id": "deepseek",
@@ -4748,6 +5035,11 @@
         {
           "source_name": "Sohu",
           "url": "https://news.google.com/rss/articles/CBMiiAFBVV95cUxQZEFKbjBzMDR4NWdDYkFRZXdWbllnRG1VOGJpekYzTWxhX055ajZSOENvV0lJRXZaS3BDWU1JTkEwcXYxZHd6S2NDNTNxNmhSWlU1b0JWd0pORXB1UDFHRXBUMVdZRkpJcFpjSTdYOWU1UU8xLWk2TDhFNVlIT05leXVzR2hsMXpT?oc=5",
+          "is_first_hand": false
+        },
+        {
+          "source_name": "Superpower Daily",
+          "url": "https://news.google.com/rss/articles/CBMirwFBVV95cUxObkRLalc4OW4xTnZYVU9IM0R0c1QteGVWRWhpSXVSaU5WcFNRdDItaV80ZWFFem1SR0JpdWFtUG5LWVczVnhMYmo0ZEpqNVR6ZjVOSDhMdk9yV1hWZkFiNERJbFN5dE15UktQbHoydmdUcHY1c1NYVGNDSl9RVG00enFTQTZOd2szR0Q5WGFCNkNMc3Rpckx0aF9jazlzOWt6NGpyUVFhSGwyaWpfYnJj?oc=5",
           "is_first_hand": false
         }
       ]
@@ -4924,10 +5216,10 @@
       "region": "海外",
       "category": "最新动态",
       "category_en": "Latest Release",
-      "title": "Llama 5：Llama 5 真的存在吗？发布日期传闻核实",
+      "title": "【外媒快讯】Llama 5: Is There Even a Llama 5? Release Date Rumors, Checked",
       "title_en": "Llama 5: Is There Even a Llama 5? Release Date Rumors, Checked",
       "what_it_does": "",
-      "what_it_does_en": "",
+      "what_it_does_en": "Llama 5: Is There Even a Llama 5? Release Date Rumors, Checked Fello AI",
       "who_cares": "",
       "limitations": "",
       "limitations_en": "",
@@ -5058,7 +5350,7 @@
       "category_en": "First-Hand Official",
       "title": "【全球 AI 动态】Can AI help scientists identify promising drug candidates?",
       "title_en": "Can AI help scientists identify promising drug candidates?",
-      "what_it_does": "",
+      "what_it_does": "MedChemBench 评估人工智能模型在早期药物发现阶段解释分子结构、基于实验证据推理以及筛选化合物的效能。",
       "what_it_does_en": "MedChemBench evaluates how well AI models interpret molecular structures, reason from experimental evidence, and select compounds in early drug discovery.",
       "who_cares": "",
       "limitations": "",
@@ -5089,8 +5381,8 @@
     {
       "id": "ai_raw_rss-gnews-ai-models-en_e4ae328ae956",
       "date": "2026-11-21T01:00:27+08:00",
-      "company_id": "anthropic",
-      "company_name": "Anthropic",
+      "company_id": "openai",
+      "company_name": "OpenAI",
       "region": "海外",
       "category": "最新动态",
       "category_en": "Latest Release",
@@ -5268,7 +5560,7 @@
       "category_en": "Open Source",
       "title": "[HF 模型卡] moonshotai/Kimi-K3 更新 (自定义开源许可 (详见模型卡))",
       "title_en": "[HF 模型卡] moonshotai/Kimi-K3 更新 (自定义开源许可 (详见模型卡))",
-      "what_it_does": "图文多模态理解与对话生成；支持输入图像与文本并生成精准分析回复，适用于视觉问答、图表解析与多模态代理（近期下载 71.9 万次）",
+      "what_it_does": "月之暗面 (Kimi) 旗下 Kimi-K3（代码工程专项）：图文多模态理解与对话生成；支持输入图像与文本并生成精准分析回复，适用于视觉问答、图表解析与多模态代理（近期下载 71.9 万次）",
       "what_it_does_en": "Hugging Face 官方机构 moonshotai 更新模型 moonshotai/Kimi-K3（开源权重可用 (GA)，许可：自定义开源许可 (详见模型卡)，近期下载：718528）。",
       "who_cares": "",
       "limitations": "",
@@ -5306,8 +5598,8 @@
       "category_en": "Open Weights",
       "title": "开源模型权重：MiniMax-H3 (自定义开源许可 (详见模型卡))",
       "title_en": "Open-source release: MiniMax-H3",
-      "what_it_does": "文生/图生高清视频生成；根据参考图片与文本提示生成连贯视频画面，适用于数字内容创作与镜头合成（近期下载 579.0 万次）",
-      "what_it_does_en": "文生/图生高清视频生成；根据参考图片与文本提示生成连贯视频画面，适用于数字内容创作与镜头合成（近期下载 579.0 万次）",
+      "what_it_does": "MiniMax 旗下 MiniMax-H3：文生/图生高清视频生成；根据参考图片与文本提示生成连贯视频画面，适用于数字内容创作与镜头合成（近期下载 579.0 万次）",
+      "what_it_does_en": "MiniMax 旗下 MiniMax-H3：文生/图生高清视频生成；根据参考图片与文本提示生成连贯视频画面，适用于数字内容创作与镜头合成（近期下载 579.0 万次）",
       "who_cares": "",
       "limitations": "许可证：自定义开源许可 (详见模型卡)",
       "limitations_en": "License: 自定义开源许可 (详见模型卡)",
@@ -5372,7 +5664,7 @@
       "category_en": "Open Source",
       "title": "【外媒快讯】[HF 模型卡] Qwen/Qwen2-VL-2B-Instruct 更新 (apache-2.0)",
       "title_en": "[HF 模型卡] Qwen/Qwen2-VL-2B-Instruct 更新 (apache-2.0)",
-      "what_it_does": "Hugging Face 官方机构 Qwen 更新模型 Qwen/Qwen2-VL-2B-Instruct（开源权重可用 (GA)，许可：apache-2.0，近期下载：900859）。",
+      "what_it_does": "阿里通义千问 (Qwen) 旗下 Qwen2-VL-2B-Instruct（2B 参数档 · 跨模态视觉感知）：图文多模态理解与对话生成；支持输入图像与文本并生成精准分析回复，适用于视觉问答、图表解析与多模态代理（近期下载 90.1 万…",
       "what_it_does_en": "Hugging Face 官方机构 Qwen 更新模型 Qwen/Qwen2-VL-2B-Instruct（开源权重可用 (GA)，许可：apache-2.0，近期下载：900859）。",
       "who_cares": "",
       "limitations": "",
@@ -5932,7 +6224,7 @@
       "category_en": "Open Source",
       "title": "【全球 AI 动态】[HF 模型卡] google/diffusiongemma-26B-A4B-it 更新 (apache-2.0)",
       "title_en": "[HF 模型卡] google/diffusiongemma-26B-A4B-it 更新 (apache-2.0)",
-      "what_it_does": "Hugging Face 官方机构 google 更新模型 google/diffusiongemma-26B-A4B-it（开源权重可用 (GA)，许可：apache-2.0，近期下载：545905）。",
+      "what_it_does": "Google / DeepMind 旗下 diffusiongemma-26B-A4B-it（26B 参数档 · MoE 稀疏激活）：图文多模态理解与对话生成；支持输入图像与文本并生成精准分析回复，适用于视觉问答、图表解析与多模态代理（…",
       "what_it_does_en": "Hugging Face 官方机构 google 更新模型 google/diffusiongemma-26B-A4B-it（开源权重可用 (GA)，许可：apache-2.0，近期下载：545905）。",
       "who_cares": "",
       "limitations": "",
@@ -6130,8 +6422,8 @@
       "category_en": "Open Weights",
       "title": "开源模型权重：DeepSeek-V4.1-Flash-1017 (MIT)",
       "title_en": "Open-source release: DeepSeek-V4.1-Flash-1017",
-      "what_it_does": "图文多模态理解与对话生成；支持输入图像与文本并生成精准分析回复，适用于视觉问答、图表解析与多模态代理（近期下载 51.5 万次）",
-      "what_it_does_en": "图文多模态理解与对话生成；支持输入图像与文本并生成精准分析回复，适用于视觉问答、图表解析与多模态代理（近期下载 51.5 万次）",
+      "what_it_does": "DeepSeek 旗下 DeepSeek-V4.1-Flash-1017（支持 FP8 量化）：图文多模态理解与对话生成；支持输入图像与文本并生成精准分析回复，适用于视觉问答、图表解析与多模态代理（近期下载 51.5 万次）",
+      "what_it_does_en": "DeepSeek 旗下 DeepSeek-V4.1-Flash-1017（支持 FP8 量化）：图文多模态理解与对话生成；支持输入图像与文本并生成精准分析回复，适用于视觉问答、图表解析与多模态代理（近期下载 51.5 万次）",
       "who_cares": "",
       "limitations": "许可证：mit",
       "limitations_en": "License: mit",
@@ -6512,6 +6804,39 @@
         {
           "source_name": "Mistral AI News",
           "url": "https://mistral.ai/news",
+          "is_first_hand": true
+        }
+      ]
+    },
+    {
+      "id": "ai_tool_tool_gh_modelcontextprotocol_python-sdk",
+      "date": "2026-10-03T06:02:27+08:00",
+      "company_id": "indie_opensource",
+      "company_name": "独立实验室 & 开源黑马",
+      "region": "全球开源",
+      "category": "开源工具/仓库",
+      "category_en": "Open-Source Repo",
+      "title": "开源工具更新：MCP Python SDK v2.3.0",
+      "title_en": "Open-source release: MCP Python SDK v2.3.0",
+      "what_it_does": "主要包含多项修复和新增三个选项；部分功能行为有所调整，请开发者留意；现在要求 `httpx2>=2.10.0` 版本。",
+      "what_it_does_en": "主要包含多项修复和新增三个选项；部分功能行为有所调整，请开发者留意；现在要求 `httpx2>=2.10.0` 版本。",
+      "who_cares": "",
+      "limitations": "许可证：MIT",
+      "limitations_en": "License: MIT",
+      "source_id": "github-releases",
+      "source_name": "GitHub Releases API",
+      "source_url": "https://github.com/modelcontextprotocol/python-sdk/releases/tag/v2.3.0",
+      "is_first_hand": true,
+      "source_tier": "first_party",
+      "is_open_source": true,
+      "milestone_dim": "api_agent_eng",
+      "milestone_dim_label": "🛠️ API 与 Agent 工程",
+      "milestone_dim_label_en": "API & Agent Eng",
+      "is_recent_72h": false,
+      "related_sources": [
+        {
+          "source_name": "GitHub Releases API",
+          "url": "https://github.com/modelcontextprotocol/python-sdk/releases/tag/v2.3.0",
           "is_first_hand": true
         }
       ]

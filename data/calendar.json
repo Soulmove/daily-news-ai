@@ -1,7 +1,7 @@
 {
   "schema_version": "4.1",
-  "generated_at": "2026-11-22T23:06:16+08:00",
-  "batch_id": "smart-20261122-230616",
+  "generated_at": "2026-11-23T00:26:02+08:00",
+  "batch_id": "smart-20261123-002602",
   "events": [
     {
       "calendar_id": "cal_expo_cop31_overtime_2026_11",
@@ -30,7 +30,7 @@
       "event_type_label": "大型展会与峰会",
       "region_label": "全球",
       "location_display": "土耳其·安塔利亚",
-      "countdown_days": 1
+      "countdown_days": 0
     },
     {
       "calendar_id": "cal_tech_shenzhou_24_launch",
@@ -57,6 +57,34 @@
       "event_type_label": "国家大会与政经",
       "region_label": "中国",
       "location_display": "中国·酒泉",
+      "countdown_days": 1
+    },
+    {
+      "calendar_id": "cal_cb_us_pce_gdp_2026_11",
+      "title": "美国 10 月核心 PCE 物价指数与三季度实际 GDP 修正值公布",
+      "title_en": "US October Core PCE Inflation & Q3 GDP Second Estimate",
+      "scheduled_at": "2026-11-25T21:30:00+08:00",
+      "original_time_note": "2026-11-25 08:30 EST / 21:30 北京时间 (感恩节前夕重要宏观读数)",
+      "event_type": "central_bank",
+      "region": "us",
+      "country": "美国",
+      "city": "华盛顿",
+      "certainty": "confirmed_official",
+      "certainty_label": "美国商务部 BEA 法定发布日",
+      "category": "finance",
+      "entity_ids": [
+        "ent_macro_fomc"
+      ],
+      "watch_variable": "核心 PCE 月率/年率与个人消费支出增速，直接影响 12 月 FOMC 利率定调",
+      "pre_expectation": "美联储最青睐的通胀标尺，决定美债收益率与美元短线方向",
+      "source_name": "US BEA",
+      "source_url": "https://www.bea.gov/news/schedule",
+      "is_past": false,
+      "storyline_id": null,
+      "actual_result": null,
+      "event_type_label": "央行与宏观",
+      "region_label": "美国",
+      "location_display": "美国·华盛顿",
       "countdown_days": 2
     },
     {
@@ -87,7 +115,35 @@
       "event_type_label": "财报与资本",
       "region_label": "美国",
       "location_display": "美国·纽约",
-      "countdown_days": 5
+      "countdown_days": 4
+    },
+    {
+      "calendar_id": "cal_pol_cn_ind_profits_2026_11",
+      "title": "中国 10 月规模以上工业企业利润同比增速公布",
+      "title_en": "China NBS October Industrial Enterprise Profits",
+      "scheduled_at": "2026-11-27T09:30:00+08:00",
+      "original_time_note": "2026-11-27 09:30 北京时间 (国家统计局月度工业效益公报)",
+      "event_type": "politics_macro",
+      "region": "china",
+      "country": "中国",
+      "city": "北京",
+      "certainty": "confirmed_official",
+      "certainty_label": "官方例行日程",
+      "category": "finance",
+      "entity_ids": [
+        "ent_china_macro"
+      ],
+      "watch_variable": "装备制造业与高技术制造业利润改善斜率及PPI传导压降效应",
+      "pre_expectation": "A 股顺周期与先进制造三季报后盈利拐点交叉验证",
+      "source_name": "国家统计局",
+      "source_url": "https://www.stats.gov.cn/",
+      "is_past": false,
+      "storyline_id": null,
+      "actual_result": null,
+      "event_type_label": "国家大会与政经",
+      "region_label": "中国",
+      "location_display": "中国·北京",
+      "countdown_days": 4
     },
     {
       "calendar_id": "cal_pol_cn_nbs_pmi_2026_11",
@@ -116,6 +172,64 @@
       "event_type_label": "国家大会与政经",
       "region_label": "中国",
       "location_display": "中国·北京",
+      "countdown_days": 7
+    },
+    {
+      "calendar_id": "cal_tech_aws_reinvent_2026",
+      "title": "AWS re:Invent 2026 全球云计算与 Bedrock AI 智能体大会",
+      "title_en": "AWS re:Invent 2026 Cloud & AI Agent Keynote (Las Vegas)",
+      "scheduled_at": "2026-11-30T23:00:00+08:00",
+      "original_time_note": "2026-11-30 至 12-04 拉斯维加斯（北京时间 12 月 1 日凌晨开讲）",
+      "event_type": "tech_launch",
+      "region": "us",
+      "country": "美国",
+      "city": "拉斯维加斯",
+      "certainty": "confirmed_official",
+      "certainty_label": "云计算年度旗舰大会",
+      "category": "tech",
+      "entity_ids": [
+        "ent_amazon_aws",
+        "ent_ai_infra_tools",
+        "ent_anthropic"
+      ],
+      "watch_variable": "Trainium 新一代自研 AI 芯片性能、Nova 模型升级与企业级 Agent 工具链落地",
+      "pre_expectation": "云基础设施 Capex 回报与自研算力替代进度风向标",
+      "source_name": "Amazon Web Services",
+      "source_url": "https://reinvent.awsevents.com/",
+      "is_past": false,
+      "storyline_id": null,
+      "actual_result": null,
+      "event_type_label": "企业发布会",
+      "region_label": "美国",
+      "location_display": "美国·拉斯维加斯",
+      "countdown_days": 7
+    },
+    {
+      "calendar_id": "cal_cb_us_ism_mfg_2026_12",
+      "title": "美国 11 月 ISM 制造业 PMI 及新订单分项数据发布",
+      "title_en": "US November ISM Manufacturing PMI Report",
+      "scheduled_at": "2026-12-01T23:00:00+08:00",
+      "original_time_note": "2026-12-01 10:00 EST / 23:00 北京时间",
+      "event_type": "central_bank",
+      "region": "us",
+      "country": "美国",
+      "city": "华盛顿",
+      "certainty": "confirmed_official",
+      "certainty_label": "每月首个工作日发布",
+      "category": "finance",
+      "entity_ids": [
+        "ent_macro_fomc"
+      ],
+      "watch_variable": "制造业新订单、物价支付指数及就业分项对美国衰退/再通胀预期影响",
+      "pre_expectation": "全球工业大宗商品与美股周期板块短线定价锚点",
+      "source_name": "ISM",
+      "source_url": "https://www.ismworld.org/",
+      "is_past": false,
+      "storyline_id": null,
+      "actual_result": null,
+      "event_type_label": "央行与宏观",
+      "region_label": "美国",
+      "location_display": "美国·华盛顿",
       "countdown_days": 8
     },
     {
@@ -144,35 +258,39 @@
       "event_type_label": "央行与宏观",
       "region_label": "美国",
       "location_display": "美国·华盛顿",
-      "countdown_days": 12
+      "countdown_days": 11
     },
     {
-      "calendar_id": "cal_evt_evt_a289a80c4c64",
-      "title": "以色列“正直党”正式邀请内塔尼亚胡阵营参加组阁谈判",
-      "scheduled_at": "2026-12-06T10:00:00+08:00",
-      "original_time_note": "2026-12-06 日程窗口 (具体钟点待定)",
-      "timezone": "Asia/Shanghai",
-      "certainty": "reported_tbd",
-      "certainty_label": "报道明确日期（待具体时刻表）",
-      "is_past": false,
-      "category": "general",
-      "entity_ids": [
-        "ent_geopolitics_energy"
-      ],
-      "storyline_id": "st_e27def4d7eb7",
-      "watch_variable": "官方披露实值数据、毛利率与下季指引",
-      "pre_expectation": "未提供一致预期数值；请勿用事后报道反向填补",
-      "actual_result": null,
-      "source_name": "腾讯新闻综合早报",
-      "source_url": "https://view.inews.qq.com/a/20261122A059V900",
-      "event_type": "politics_macro",
-      "event_type_label": "国家大会与政经",
+      "calendar_id": "cal_expo_neurips_2026",
+      "title": "NeurIPS 2026 神经信息处理系统全球顶级 AI 学术年会",
+      "title_en": "NeurIPS 2026 Annual AI Research Conference",
+      "scheduled_at": "2026-12-06T09:00:00+08:00",
+      "original_time_note": "2026-12-06 至 12-12（官方年度 AI 顶会窗口）",
+      "event_type": "expo_summit",
       "region": "global",
-      "region_label": "全球",
       "country": "全球",
       "city": "",
+      "certainty": "confirmed_official",
+      "certainty_label": "国际顶级 AI 学术年会",
+      "is_clock_tbd": true,
+      "category": "tech",
+      "entity_ids": [
+        "ent_openai",
+        "ent_anthropic",
+        "ent_google",
+        "ent_deepseek"
+      ],
+      "watch_variable": "世界模型、长程推理架构、Test-time Compute 扩展律最佳论文与前沿开源代码发布",
+      "pre_expectation": "2027 年大模型下一代研究范式核心信号源",
+      "source_name": "NeurIPS Foundation",
+      "source_url": "https://neurips.cc/",
+      "is_past": false,
+      "storyline_id": null,
+      "actual_result": null,
+      "event_type_label": "大型展会与峰会",
+      "region_label": "全球",
       "location_display": "全球",
-      "countdown_days": 14
+      "countdown_days": 13
     },
     {
       "calendar_id": "cal_cb_opec_plus_2026_12",
@@ -201,7 +319,7 @@
       "event_type_label": "央行与宏观",
       "region_label": "全球",
       "location_display": "奥地利·维也纳",
-      "countdown_days": 14
+      "countdown_days": 13
     },
     {
       "calendar_id": "cal_pol_cn_nbs_cpi_2026_12",
@@ -230,7 +348,7 @@
       "event_type_label": "国家大会与政经",
       "region_label": "中国",
       "location_display": "中国·北京",
-      "countdown_days": 17
+      "countdown_days": 16
     },
     {
       "calendar_id": "cal_fomc_2026-12-09",
@@ -258,7 +376,7 @@
       "actual_result": null,
       "source_name": "Federal Reserve 官方 FOMC 日历",
       "source_url": "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm",
-      "countdown_days": 18
+      "countdown_days": 17
     },
     {
       "calendar_id": "cal_cb_us_cpi_2026_12",
@@ -286,7 +404,7 @@
       "event_type_label": "央行与宏观",
       "region_label": "美国",
       "location_display": "美国·华盛顿",
-      "countdown_days": 18
+      "countdown_days": 17
     },
     {
       "calendar_id": "cal_pol_cn_cewc_2026_12",
@@ -316,7 +434,7 @@
       "event_type_label": "国家大会与政经",
       "region_label": "中国",
       "location_display": "中国·北京",
-      "countdown_days": 19
+      "countdown_days": 18
     },
     {
       "calendar_id": "cal_cb_boe_rate_2026_12",
@@ -342,7 +460,7 @@
       "event_type_label": "央行与宏观",
       "region_label": "欧洲/亚太",
       "location_display": "英国·伦敦",
-      "countdown_days": 25
+      "countdown_days": 24
     },
     {
       "calendar_id": "cal_cb_ecb_rate_2026_12",
@@ -368,7 +486,7 @@
       "event_type_label": "央行与宏观",
       "region_label": "欧洲/亚太",
       "location_display": "德国·法兰克福",
-      "countdown_days": 25
+      "countdown_days": 24
     },
     {
       "calendar_id": "cal_cb_boj_rate_2026_12",
@@ -394,7 +512,7 @@
       "event_type_label": "央行与宏观",
       "region_label": "欧洲/亚太",
       "location_display": "日本·东京",
-      "countdown_days": 26
+      "countdown_days": 25
     },
     {
       "calendar_id": "cal_pol_cn_lpr_2026_12",
@@ -423,7 +541,7 @@
       "event_type_label": "国家大会与政经",
       "region_label": "中国",
       "location_display": "中国·北京",
-      "countdown_days": 29
+      "countdown_days": 28
     },
     {
       "calendar_id": "cal_tech_tesla_q4_fsd_node",
@@ -451,7 +569,7 @@
       "event_type_label": "企业发布会",
       "region_label": "美国",
       "location_display": "美国·奥斯汀",
-      "countdown_days": 41
+      "countdown_days": 40
     },
     {
       "calendar_id": "cal_expo_ces_2027",
@@ -480,7 +598,7 @@
       "event_type_label": "大型展会与峰会",
       "region_label": "美国",
       "location_display": "美国·拉斯维加斯",
-      "countdown_days": 44
+      "countdown_days": 43
     },
     {
       "calendar_id": "cal_expo_davos_wef_2027",
@@ -508,7 +626,7 @@
       "event_type_label": "大型展会与峰会",
       "region_label": "全球",
       "location_display": "瑞士·达沃斯",
-      "countdown_days": 57
+      "countdown_days": 56
     },
     {
       "calendar_id": "cal_pol_cn_gdp_2027_01",
@@ -537,7 +655,7 @@
       "event_type_label": "国家大会与政经",
       "region_label": "中国",
       "location_display": "中国·北京",
-      "countdown_days": 58
+      "countdown_days": 57
     },
     {
       "calendar_id": "cal_fomc_2027-01-27",
@@ -565,7 +683,7 @@
       "actual_result": null,
       "source_name": "Federal Reserve 官方 FOMC 日历",
       "source_url": "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm",
-      "countdown_days": 67
+      "countdown_days": 66
     },
     {
       "calendar_id": "cal_cap_tesla_q4_earnings_2027",
@@ -594,7 +712,7 @@
       "event_type_label": "财报与资本",
       "region_label": "美国",
       "location_display": "美国·奥斯汀",
-      "countdown_days": 67
+      "countdown_days": 66
     },
     {
       "calendar_id": "cal_cap_nvidia_fy27_q4_2027",
@@ -624,7 +742,7 @@
       "event_type_label": "财报与资本",
       "region_label": "美国",
       "location_display": "美国·加州圣克拉拉",
-      "countdown_days": 95
+      "countdown_days": 94
     },
     {
       "calendar_id": "cal_expo_mwc_barcelona_2027",
@@ -653,7 +771,7 @@
       "event_type_label": "大型展会与峰会",
       "region_label": "欧洲/亚太",
       "location_display": "西班牙·巴塞罗那",
-      "countdown_days": 99
+      "countdown_days": 98
     },
     {
       "calendar_id": "cal_pol_cn_cppcc_14_5",
@@ -681,7 +799,7 @@
       "event_type_label": "国家大会与政经",
       "region_label": "中国",
       "location_display": "中国·北京",
-      "countdown_days": 102
+      "countdown_days": 101
     },
     {
       "calendar_id": "cal_pol_cn_npc_14_5",
@@ -710,7 +828,7 @@
       "event_type_label": "国家大会与政经",
       "region_label": "中国",
       "location_display": "中国·北京",
-      "countdown_days": 103
+      "countdown_days": 102
     },
     {
       "calendar_id": "cal_tech_nvidia_gtc_2027",
@@ -739,7 +857,7 @@
       "event_type_label": "企业发布会",
       "region_label": "美国",
       "location_display": "美国·加州圣何塞",
-      "countdown_days": 114
+      "countdown_days": 113
     },
     {
       "calendar_id": "cal_fomc_2027-03-17",
@@ -767,7 +885,7 @@
       "actual_result": null,
       "source_name": "Federal Reserve 官方 FOMC 日历",
       "source_url": "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm",
-      "countdown_days": 116
+      "countdown_days": 115
     },
     {
       "calendar_id": "cal_cap_tencent_hkex_fy26_2027",
@@ -796,7 +914,7 @@
       "event_type_label": "财报与资本",
       "region_label": "中国",
       "location_display": "中国·深圳/香港",
-      "countdown_days": 117
+      "countdown_days": 116
     },
     {
       "calendar_id": "cal_expo_cicpe_hainan_2027",
@@ -824,7 +942,7 @@
       "event_type_label": "大型展会与峰会",
       "region_label": "中国",
       "location_display": "中国·海口",
-      "countdown_days": 142
+      "countdown_days": 141
     },
     {
       "calendar_id": "cal_expo_canton_fair_141_2027",
@@ -853,7 +971,7 @@
       "event_type_label": "大型展会与峰会",
       "region_label": "中国",
       "location_display": "中国·广州",
-      "countdown_days": 144
+      "countdown_days": 143
     },
     {
       "calendar_id": "cal_fomc_2027-04-28",
@@ -881,7 +999,7 @@
       "actual_result": null,
       "source_name": "Federal Reserve 官方 FOMC 日历",
       "source_url": "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm",
-      "countdown_days": 158
+      "countdown_days": 157
     },
     {
       "calendar_id": "cal_tech_google_io_2027",
@@ -911,7 +1029,7 @@
       "event_type_label": "企业发布会",
       "region_label": "美国",
       "location_display": "美国·加州山景城",
-      "countdown_days": 178
+      "countdown_days": 177
     },
     {
       "calendar_id": "cal_tech_msft_build_2027",
@@ -941,7 +1059,7 @@
       "event_type_label": "企业发布会",
       "region_label": "美国",
       "location_display": "美国·西雅图",
-      "countdown_days": 178
+      "countdown_days": 177
     },
     {
       "calendar_id": "cal_expo_sz_icif_2027",
@@ -970,7 +1088,7 @@
       "event_type_label": "大型展会与峰会",
       "region_label": "中国",
       "location_display": "中国·深圳",
-      "countdown_days": 181
+      "countdown_days": 180
     },
     {
       "calendar_id": "cal_tech_computex_2027",
@@ -1000,7 +1118,7 @@
       "event_type_label": "企业发布会",
       "region_label": "中国",
       "location_display": "中国·台北",
-      "countdown_days": 191
+      "countdown_days": 190
     },
     {
       "calendar_id": "cal_tech_apple_wwdc_2027",
@@ -1029,7 +1147,7 @@
       "event_type_label": "企业发布会",
       "region_label": "美国",
       "location_display": "美国·加州库比蒂诺",
-      "countdown_days": 198
+      "countdown_days": 197
     },
     {
       "calendar_id": "cal_tech_huawei_hdc_2027",
@@ -1058,7 +1176,7 @@
       "event_type_label": "企业发布会",
       "region_label": "中国",
       "location_display": "中国·东莞",
-      "countdown_days": 210
+      "countdown_days": 209
     },
     {
       "calendar_id": "cal_expo_mwc_shanghai_2027",
@@ -1086,7 +1204,7 @@
       "event_type_label": "大型展会与峰会",
       "region_label": "中国",
       "location_display": "中国·上海",
-      "countdown_days": 213
+      "countdown_days": 212
     },
     {
       "calendar_id": "cal_expo_waic_2027",
@@ -1117,7 +1235,7 @@
       "event_type_label": "大型展会与峰会",
       "region_label": "中国",
       "location_display": "中国·上海",
-      "countdown_days": 222
+      "countdown_days": 221
     },
     {
       "calendar_id": "cal_tech_apple_fall_2027",
@@ -1147,7 +1265,7 @@
       "event_type_label": "企业发布会",
       "region_label": "美国",
       "location_display": "美国·加州库比蒂诺",
-      "countdown_days": 292
+      "countdown_days": 291
     },
     {
       "calendar_id": "cal_tech_huawei_connect_2027",
@@ -1176,7 +1294,7 @@
       "event_type_label": "企业发布会",
       "region_label": "中国",
       "location_display": "中国·上海",
-      "countdown_days": 300
+      "countdown_days": 299
     },
     {
       "calendar_id": "cal_expo_ciie_10_2027",
@@ -1205,7 +1323,7 @@
       "event_type_label": "大型展会与峰会",
       "region_label": "中国",
       "location_display": "中国·上海",
-      "countdown_days": 348
+      "countdown_days": 347
     },
     {
       "calendar_id": "cal_expo_chtf_sz_2027",
@@ -1234,7 +1352,7 @@
       "event_type_label": "大型展会与峰会",
       "region_label": "中国",
       "location_display": "中国·深圳",
-      "countdown_days": 357
+      "countdown_days": 356
     },
     {
       "calendar_id": "cal_expo_zhuhai_airshow_2026_next",
@@ -1263,7 +1381,7 @@
       "event_type_label": "大型展会与峰会",
       "region_label": "中国",
       "location_display": "中国·珠海",
-      "countdown_days": 719
+      "countdown_days": 718
     },
     {
       "calendar_id": "cal_fomc_2026-10-28",
@@ -1292,7 +1410,7 @@
       "source_name": "Federal Reserve 官方 FOMC 日历",
       "source_url": "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm",
       "needs_actual_result": true,
-      "countdown_days": -24
+      "countdown_days": -25
     }
   ]
 }
