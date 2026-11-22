@@ -75,13 +75,15 @@ def _norm_title_key(title: Any) -> str:
     return cleaned[:48]
 
 
-def _sort_key_iso_desc(date_str: Any) -> Tuple[int, str]:
+def _sort_key_iso_desc(date_str: Any) -> Tuple[str, int, str]:
+    """Group by YYYY-MM-DD day bucket first so date-only items stay on their actual day rather than sinking below older timestamps."""
     raw = str(date_str or "").strip()
     if not raw:
-        return (0, "")
+        return ("", 0, "")
+    day = raw[:10]
     if re.fullmatch(r"\d{4}-\d{2}-\d{2}", raw):
-        return (1, raw + "T00:00:00+08:00")
-    return (2, raw)
+        return (day, 0, raw + "T00:00:00+08:00")
+    return (day, 1, raw)
 
 
 def _summarize_release(title: str, excerpt: str, source_name: str, *, is_open_source: bool, is_first_hand: bool) -> Tuple[str, str]:
@@ -537,13 +539,14 @@ def merge_live_ai_items_into_doc(
     all_items = sorted(unique_global.values(), key=lambda x: _sort_key_iso_desc(x.get("date")), reverse=True)
     base["timeline"] = all_items[:80]
 
-    # Top highlights: prioritize newest items with full timestamps / first-hand sources
+    # Top highlights: prioritize newest day-bucket, then first-hand / full-timestamp items
     highlights = sorted(
         all_items,
         key=lambda x: (
-            1 if len(str(x.get("date") or "")) > 10 else 0,
+            _sort_key_iso_desc(x.get("date"))[0],
             1 if x.get("is_first_hand") else 0,
-            str(x.get("date") or ""),
+            _sort_key_iso_desc(x.get("date"))[1],
+            _sort_key_iso_desc(x.get("date"))[2],
         ),
         reverse=True,
     )[:8]

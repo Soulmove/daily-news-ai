@@ -196,7 +196,7 @@ def _static_global_schedule() -> List[Dict[str, Any]]:
             "scheduled_at": "2026-11-23T22:00:00+08:00",
             "original_time_note": "2026-11-23 土耳其安塔利亚加时全会最终表决窗口",
             "event_type": "expo_summit",
-            "region": "europe_apac",
+            "region": "global",
             "country": "土耳其",
             "city": "安塔利亚",
             "certainty": "reported_tbd",
@@ -235,7 +235,7 @@ def _static_global_schedule() -> List[Dict[str, Any]]:
             "scheduled_at": "2027-01-18T15:00:00+08:00",
             "original_time_note": "2027-01-18 ~ 01-22 瑞士达沃斯",
             "event_type": "expo_summit",
-            "region": "europe_apac",
+            "region": "global",
             "country": "瑞士",
             "city": "达沃斯",
             "certainty": "confirmed_official",
@@ -429,7 +429,7 @@ def _static_global_schedule() -> List[Dict[str, Any]]:
             "title_en": "Shenzhou-24 Crewed Spacecraft Final Rehearsal & Launch Window (Jiuquan)",
             "scheduled_at": "2026-11-24T12:00:00+08:00",
             "original_time_note": "全区合练已完成，待中国载人航天工程办公室公布精确点火时刻",
-            "event_type": "tech_launch",
+            "event_type": "politics_macro",
             "region": "china",
             "country": "中国",
             "city": "酒泉",
@@ -648,7 +648,7 @@ def _static_global_schedule() -> List[Dict[str, Any]]:
             "scheduled_at": "2026-12-06T18:00:00+08:00",
             "original_time_note": "2026 年 12 月初 奥地利维也纳（历年年底产油配额决策窗口）",
             "event_type": "central_bank",
-            "region": "europe_apac",
+            "region": "global",
             "country": "奥地利",
             "city": "维也纳",
             "certainty": "reported_tbd",
@@ -844,13 +844,13 @@ def _infer_event_type(item: Dict[str, Any], blob_low: str) -> str:
         return cur
     if any(k in blob_low for k in ("fomc", "美联储", "欧洲央行", "ecb", "boe", "英国央行", "boj", "日本央行", "cpi", "非农", "pce", "opec+", "议息", "利率")):
         return "central_bank"
-    if any(k in blob_low for k in ("人代会", "政协", "两会", "中央经济", "统计局", "pmi", "gdp", "lpr", "外交部", "预算", "政府工作")):
+    if any(k in blob_low for k in ("人代会", "政协", "两会", "中央经济", "统计局", "pmi", "gdp", "lpr", "外交部", "预算", "政府工作", "神舟", "载人飞船", "空间站", "航天工程", "卫星发射", "探月", "火箭发射")):
         return "politics_macro"
     if any(k in blob_low for k in ("apec", "g20", "cop31", "气候大会", "广交会", "高交会", "进博会", "消博会", "文博会", "航展", "达沃斯", "waic", "ces", "mwc", "峰会", "会晤", "博览会")):
         return "expo_summit"
     if any(k in blob_low for k in ("财报", "业绩", "ipo", "上市", "募资", "股东大会", "目标价", "年报", "季报")):
         return "earnings_capital"
-    if any(k in blob_low for k in ("发布会", "wwdc", "gtc", "build", "google i/o", "hdc", "fsd", "发射", "神舟", "科技日", "devday", "推出")):
+    if any(k in blob_low for k in ("发布会", "wwdc", "gtc", "build", "google i/o", "hdc", "fsd", "科技日", "devday", "推出")):
         return "tech_launch"
     cat = str(item.get("category") or "")
     if cat == "finance":
@@ -885,13 +885,13 @@ def _infer_location(item: Dict[str, Any], blob: str) -> Tuple[str, str, str]:
         ("西雅图|microsoft|微软", "us", "美国", "西雅图"),
         ("纽约|anthropic|纳斯达克|华尔街", "us", "美国", "纽约"),
         ("fomc|美联储|华盛顿|非农|bls|cpi|白宫|特朗普", "us", "美国", "华盛顿"),
-        ("达沃斯|davos", "europe_apac", "瑞士", "达沃斯"),
+        ("达沃斯|davos", "global", "瑞士", "达沃斯"),
         ("巴塞罗那|mwc", "europe_apac", "西班牙", "巴塞罗那"),
-        ("安塔利亚|cop31", "europe_apac", "土耳其", "安塔利亚"),
+        ("安塔利亚|cop31", "global", "土耳其", "安塔利亚"),
         ("法兰克福|ecb|欧洲央行", "europe_apac", "德国", "法兰克福"),
         ("伦敦|英国央行|boe", "europe_apac", "英国", "伦敦"),
         ("东京|日本央行|boj", "europe_apac", "日本", "东京"),
-        ("维也纳|opec", "europe_apac", "奥地利", "维也纳"),
+        ("维也纳|opec", "global", "奥地利", "维也纳"),
         ("欧盟|欧洲议会|欧洲", "europe_apac", "欧洲", "布鲁塞尔"),
     ]
     for pat, r_k, c_k, ct_k in city_rules:

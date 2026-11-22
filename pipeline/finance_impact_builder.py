@@ -712,9 +712,79 @@ def _build_domain_scenario(
             "milestones": [{"date": "2026-12-10 03:00", "status": "upcoming", "label": "下次 FOMC 决议与季度 SEP 点阵图"}],
         }
 
-    # 8. US Overseas Datacenter Tax Threat + Chip Export Restriction + NVIDIA Leadership Turbulence
+    # 8a. NVIDIA CEO Senate Hearing / SEC Investigation / Leadership Governance Shock
+    if ("黄仁勋" in t or "英伟达" in t or "nvidia" in t) and re.search(
+        r"参议院|听证|作证|sec\s*调查|辞任|辞职|治理|董事会", t
+    ):
+        nvda_f, atr_v, _ = _volatility_scale("NVDA", quotes_map, 4)
+        return {
+            "rule_id": "nvda_senate_sec_governance",
+            "tag": "国会听证监管 / SEC 调查与龙头治理风险",
+            "tag_en": "Senate Testimony, SEC Inquiry & Governance Risk",
+            "polarity": "bearish",
+            "intensity": 4,
+            "one_liner": "前任核心高管将赴美参议院银行委员会公开作证叠加 SEC 调查传闻，放大龙头合规不确定性与治理折价，压制美股 AI 硬件链风险偏好。",
+            "one_liner_en": "Senate banking panel testimony & SEC probe reports amplify NVIDIA governance overhang and weigh on AI hardware multiples.",
+            "sample_basis": {
+                "sample_n": 14,
+                "volatility_pct": atr_v or 4.6,
+                "volatility_source": "美股科技龙头监管听证与治理事件样本",
+                "horizon": "1~5 个交易日",
+                "confidence_label": "高置信（直接冲击估值溢价与机构持仓意愿）",
+                "confidence_label_en": "High (Direct Governance & Regulatory Overhang)",
+            },
+            "affected_tickers": {"NVDA": -0.9, "TSM": -0.65, "AMD": -0.55, "00981.HK": 0.55, "512480.SH": 0.6},
+            "realized_quotes": _quote_snapshot(["NVDA", "TSM", "00981.HK", "512480.SH"]),
+            "bars": [
+                _bar("美股", "美股 AI 算力龙头与硬件链 (NVDA / TSM)", "US AI Hardware & Foundries (NVDA/TSM)", -4.8, -1.7, "国会听证质询与监管调查折价直接压制英伟达机构配置情绪。", "Congressional testimony & SEC scrutiny compress NVIDIA valuation premium.", min(1.3, nvda_f * 0.6), "NVDA"),
+                _bar("港股", "港股自主晶圆代工 (00981.HK 中芯)", "HKEX Domestic Foundry (00981.HK)", 0.7, 2.8, "海外龙头监管不确定性抬升境内外客户对境内供应链备份关注度。", "Overseas regulatory overhang reinforces domestic foundry hedging demand.", 1.0, "00981.HK"),
+                _bar("A股", "国产算力芯片与替代生态", "A-Share Domestic Compute Alternatives", 0.9, 3.2, "海外算力供给风险溢价上升催化本土推理芯片估值修复。", "Domestic compute ecosystems attract incremental defensive rotation.", 1.0, "512480.SH"),
+            ],
+            "if_then": [
+                {"cond": "若参议院听证披露涉及公司层面的正式执法或禁令线索", "result": "NVDA 与北美服务器 Capex 链面临二次下修", "tone": "bearish"},
+                {"cond": "若英伟达董事会出具独立审计澄清且业务订单未受扰动", "result": "治理恐慌情绪见底收敛", "tone": "neutral"},
+            ],
+            "milestones": [{"date": "听证会窗口", "status": "current", "label": "参议院银行委员会公开证词记录与 SEC 官方披露"}],
+        }
+
+    # 8b. Cross-Border AI Chip Smuggling & BIS Export-Control Compliance Crackdown
+    if re.search(r"走私|绕道|出口合规|megaspeed|alice\s*huang|查获.*芯片|违规.*出口", t) and any(
+        k in t for k in ("芯片", "英伟达", "nvidia", "gpu", "对华")
+    ):
+        nvda_f, atr_v, _ = _volatility_scale("NVDA", quotes_map, 4)
+        return {
+            "rule_id": "chip_smuggling_export_compliance",
+            "tag": "芯片出口合规审查与灰色渠道执法风险",
+            "tag_en": "Export Compliance & Grey-Market Crackdown",
+            "polarity": "bearish",
+            "intensity": 4,
+            "one_liner": "跨境算力芯片走私网络曝光将倒逼美方收紧流向审查并追查第三国转口，短期抑制灰色渠道出货预期同时强化国内晶圆/设备自主刚需。",
+            "one_liner_en": "Chip-smuggling revelations heighten BIS third-country transshipment scrutiny, squeezing grey channels while boosting China localization.",
+            "sample_basis": {
+                "sample_n": 13,
+                "volatility_pct": atr_v or 4.5,
+                "volatility_source": "美商务部 BIS 半导体转口执法样本",
+                "horizon": "2~7 个交易日",
+                "confidence_label": "高置信（直击转口需求与国产替代预期）",
+                "confidence_label_en": "High (Direct Export-Control Enforcement)",
+            },
+            "affected_tickers": {"NVDA": -0.8, "TSM": -0.6, "AMD": -0.5, "00981.HK": 0.7, "512480.SH": 0.75},
+            "realized_quotes": _quote_snapshot(["NVDA", "TSM", "00981.HK", "512480.SH"]),
+            "bars": [
+                _bar("美股", "受转口核查敏感半导体厂商 (NVDA / TSM)", "US Export-Sensitive GPU Vendors (NVDA/TSM)", -4.2, -1.4, "东南亚/中东转口审核收紧削弱边缘市场 GPU 增量出货弹性。", "Stricter BIS transshipment audits curb grey-market GPU demand.", min(1.25, nvda_f * 0.55), "NVDA"),
+                _bar("港股", "港股先进制程替代核心 (00981.HK 中芯)", "HKEX Domestic Foundry (00981.HK)", 1.0, 3.5, "海外算力外部采购通道收窄倒逼境内大模型加速绑定本土代工产能。", "Tighter external channels lock in domestic foundry utilization.", 1.0, "00981.HK"),
+                _bar("A股", "半导体设备 / 先进封装与国产算力卡", "A-Share Semi Equipment & Domestic Accelerators", 1.3, 3.8, "绕道通路受堵进一步确认光刻/刻蚀设备与本土算力集群高景气。", "Localization urgency accelerates capital flow into domestic semi gear.", 1.0, "512480.SH"),
+            ],
+            "if_then": [
+                {"cond": "若美国商务部对涉事转口实体追加实体清单制裁", "result": "国内头部算力与设备板块获得超额资金催化", "tone": "bullish"},
+                {"cond": "若执法焦点集中于历史个人责任而非新增禁运名单", "result": "美股硬件端短线负向冲击逐步消化", "tone": "neutral"},
+            ],
+            "milestones": [{"date": "1~2 周内", "status": "current", "label": "美国商务部 BIS 执法通报与英伟达合规声明"}],
+        }
+
+    # 8c. US Overseas Datacenter Tax Threat + Chip Export Quota
     if (
-        re.search(r"海外.*数据中心.*(?:征|税|关税)|巨额关税|征重税|巨税|限制对华|出口中国|88\s*万颗|黄仁勋", t)
+        re.search(r"海外.*数据中心.*(?:征|税|关税)|巨额关税|征重税|巨税|限制对华|出口中国|88\s*万颗", t)
         and any(k in t for k in ("芯片", "英伟达", "amd", "数据中心", "关税", "税"))
     ):
         is_positive_grant = "批准" in t and "征重税" not in t and "巨税" not in t and "限制" not in t and "辞职" not in t
@@ -1078,6 +1148,7 @@ def build_finance_impact_artifact(
     impacts: List[dict] = []
     event_impact_map: Dict[str, dict] = {}
     used_rule_counts: Dict[str, int] = {}
+    used_one_liners: set[str] = set()
 
     for _, ev in scored[:28]:
         title = str(ev.get("title") or "")
@@ -1095,10 +1166,16 @@ def build_finance_impact_artifact(
         if not valid or scenario is None:
             continue
 
+        ol_key = str(scenario.get("one_liner") or "").strip()
+        if ol_key and ol_key in used_one_liners:
+            continue
+
         rid = scenario["rule_id"]
         occ_idx = used_rule_counts.get(rid, 0)
         if occ_idx >= 3:
             continue
+        if ol_key:
+            used_one_liners.add(ol_key)
         used_rule_counts[rid] = occ_idx + 1
 
         # Differentiate secondary/indirect occurrences sharing the same macro rule so cards never clone identical % ranges

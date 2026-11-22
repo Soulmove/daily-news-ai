@@ -1222,7 +1222,10 @@ def build_ai_progress_artifact(
             src_name = str(src0.get("publisher_name") or src0.get("source_name") or "镜信科技快讯")
             first_hand = is_first_hand_ai_source(src_id, src_name, src_url)
             cid, cname, reg = _infer_company(title, src_url, src_name)
-            pub_date = str(ev.get("first_reported_at") or ev.get("latest_reported_at") or generated_at_iso)[:10]
+            pub_date = normalize_ai_timestamp(
+                ev.get("latest_reported_at") or ev.get("first_reported_at") or generated_at_iso,
+                generated_at_iso,
+            )
             summary = str(ev.get("fact_summary") or ev.get("summary") or "")
             is_os = any(k in title.lower() for k in ("开源", "open", "github", "hugging", "vllm", "llama.cpp", "gemma", "权重"))
             _add_item(
@@ -1322,7 +1325,7 @@ def build_ai_progress_artifact(
         turl = str(tool.get("release_url") or tool.get("official_url") or "")
         tsrc = str(tool.get("source_name") or "GitHub / Hugging Face")
         cid, cname, reg = _infer_company(f"{name} {tool.get('repo') or ''}", turl, tsrc)
-        pub_date = str(tool.get("version_published_at") or generated_at_iso)[:10]
+        pub_date = normalize_ai_timestamp(tool.get("version_published_at") or generated_at_iso, generated_at_iso)
         summary = strip_raw_urls_and_domain_tails(str(tool.get("summary") or "").strip())
         lic = str(tool.get("license") or "").strip()
         _add_item(
@@ -1378,7 +1381,14 @@ def build_ai_progress_artifact(
         for m in _CURATED_AI_MILESTONES:
             _add_item(dict(m))
 
-    items.sort(key=lambda x: (str(x.get("date") or ""), 1 if not x["id"].startswith("ai_tool_") else 0), reverse=True)
+    def _ai_item_sort_key(it: Dict[str, Any]) -> Tuple[str, int, str, int]:
+        d_raw = str(it.get("date") or "").strip()
+        day = d_raw[:10]
+        has_time = 0 if (not d_raw or len(d_raw) <= 10) else 1
+        non_tool = 1 if not str(it.get("id") or "").startswith("ai_tool_") else 0
+        return (day, has_time, d_raw, non_tool)
+
+    items.sort(key=_ai_item_sort_key, reverse=True)
 
     companies: List[Dict[str, Any]] = []
     for lab in _LAB_CATALOG:

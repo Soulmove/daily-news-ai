@@ -40,9 +40,20 @@ _TRIVIAL_TOPIC_RE = re.compile(
 )
 _CONCLUDED_SIGNAL_RE = re.compile(
     r"(?:圆满闭幕|正式闭幕|落下帷幕|闭幕|落幕|圆满结束|收官|峰会成果|深圳展望|挂牌上市后|IPO后|上市次日|"
-    r"首日.{0,6}收|次日股价|首周定价|顺利回收|圆满完成|签署联合声明|已正式退市|宣布取消)",
+    r"首日.{0,6}收|次日股价|首周定价|顺利回收|圆满完成|签署联合声明|已正式退市|宣布取消|"
+    r"签署.{0,12}协定|正式签署|自贸协定|达成协议|三大象征意义|照片并肯定|返美后)",
     re.I,
 )
+_WINDING_DOWN_SIGNAL_RE = re.compile(
+    r"(?:加时磋商|第二天加时|进入.{0,4}加时|最终草案|终稿表决|最后阶段|即将闭幕|进入尾声|收官阶段|继续延期|被迫.{0,2}加时|拖堂)",
+    re.I,
+)
+_APEC_STRAY_RE = re.compile(
+    r"(?:英伟达|nvidia|黄仁勋|alice\s*huang|走私|数据中心.*(?:重税|巨税|关税)|公海条约|加州.*调查)",
+    re.I,
+)
+_GTA_GAMING_RE = re.compile(r"(?:gta\s*6|gta6|侠盗猎车手|文娱史上最成功发售)", re.I)
+_SOVEREIGN_BOND_RE = re.compile(r"(?:主权债券|发行.*国债|国债发行)", re.I)
 _HOTLIST_NO_TIME_SOURCES = {"zhihu", "baidu", "weibo", "toutiao", "tencent-hot", "tieba", "douyin", "hupu", "coolapk"}
 _BROAD_CLUSTER_ENTITIES = {
     "ent_ai_infra_tools",
@@ -60,7 +71,11 @@ _THEATER_US_IRAN_RE = re.compile(
 _MATH_RIEMANN_RE = re.compile(r"(?:黎曼猜想|riemann|数论|素数|圣杯.{0,8}数学|数学证明|数学家.{0,12}lean)", re.I)
 _TENSORLEAN_GPU_RE = re.compile(r"(?:tensorlean|certik|哥伦比亚大学|gpu\s*内核|deepseek.{0,10}内核|flashattention|cuda)", re.I)
 _FED_MACRO_RE = re.compile(r"(?:美联储|fomc|鲍威尔|利率路径|联邦基金|降息|加息|黄金|金价|美元走强)", re.I)
-_MILITARY_BLOCKADE_RE = re.compile(r"(?:中央司令部|centcom|封锁|革命卫队|无人机袭击|美军基地|战斗机|空袭|导弹|触雷)", re.I)
+_MILITARY_BLOCKADE_RE = re.compile(
+    r"(?:中央司令部|centcom|封锁|革命卫队|无人机袭击|美军基地|战斗机|空袭|导弹|触雷|"
+    r"伊朗.*(?:袭击|打击)|发动.*(?:袭击|打击)|军事资产|美军部队|中东.*袭击|对伊朗.*打击|新一轮袭击)",
+    re.I,
+)
 _ACTIVE_UPCOMING_SIGNAL_RE = re.compile(
     r"(?:全区合练|合练|准备发射|即将发射|发射在即|加时|磋商|谈判继续|继续谈判|草案|酝酿|推进中|即将推出|开放测试|筹备|待公布)",
     re.I,
@@ -116,7 +131,7 @@ def _theater_conflict(ta: str, tb: str) -> bool:
 
 
 def _subtopic_conflict(ta: str, tb: str) -> bool:
-    """Prevent conflating Russia-Ukraine vs US-Iran, Riemann pure-math vs TensorLean GPU kernels, or Fed policy vs military ops."""
+    """Prevent conflating Russia-Ukraine vs US-Iran, Riemann pure-math vs TensorLean GPU kernels, Fed policy vs military ops, GTA6 vs sovereign bonds, or APEC vs stray NVIDIA/UN articles."""
     if _theater_conflict(ta, tb):
         return True
     riem_a, gpu_a = bool(_MATH_RIEMANN_RE.search(ta)), bool(_TENSORLEAN_GPU_RE.search(ta))
@@ -126,6 +141,17 @@ def _subtopic_conflict(ta: str, tb: str) -> bool:
     fed_a, mil_a = bool(_FED_MACRO_RE.search(ta)), bool(_MILITARY_BLOCKADE_RE.search(ta))
     fed_b, mil_b = bool(_FED_MACRO_RE.search(tb)), bool(_MILITARY_BLOCKADE_RE.search(tb))
     if (fed_a and not mil_a and mil_b and not fed_b) or (mil_a and not fed_a and fed_b and not mil_b):
+        return True
+    gta_a, bond_a = bool(_GTA_GAMING_RE.search(ta)), bool(_SOVEREIGN_BOND_RE.search(ta))
+    gta_b, bond_b = bool(_GTA_GAMING_RE.search(tb)), bool(_SOVEREIGN_BOND_RE.search(tb))
+    if (gta_a and not bond_a and bond_b and not gta_b) or (bond_a and not gta_a and gta_b and not bond_b):
+        return True
+    apec_re = re.compile(r"(?:apec|深圳峰会|中美元首)", re.I)
+    apec_a = bool(apec_re.search(ta))
+    apec_b = bool(apec_re.search(tb))
+    stray_a = bool(_APEC_STRAY_RE.search(ta)) and not apec_a
+    stray_b = bool(_APEC_STRAY_RE.search(tb)) and not apec_b
+    if (apec_a and stray_b) or (apec_b and stray_a):
         return True
     return False
 
@@ -399,9 +425,21 @@ def _safe_clip_headline(text: str, max_len: int = 42) -> str:
     txt = re.sub(r"[，,]\s*(?:该设施|该项目|该系统|该公司|相关报道|称受保护|并更新|同时称)[^，,。]{0,16}$", "", txt).strip()
     if len(txt) > max_len:
         # Prefer splitting at a clean Chinese/English clause delimiter so NO word/number/unit is chopped in half
-        clause_breaks = [m.start() for m in re.finditer(r"[，,；;：:。！？!?——|｜]", txt) if 12 <= m.start() <= max_len + 4]
+        # Skip splitting right after a pure quoted slogan (e.g. “...”！GTA 6...) that leaves the subject orphaned
+        def _is_orphaned_quote(prefix: str) -> bool:
+            ps = prefix.strip()
+            return ps.startswith(("“", "「")) and ps.endswith(("”", "」"))
+
+        clause_breaks = [
+            m.start()
+            for m in re.finditer(r"[，,；;：:。！？!?——|｜]", txt)
+            if 12 <= m.start() <= max_len + 4 and not _is_orphaned_quote(txt[: m.start()])
+        ]
         if clause_breaks:
             txt = txt[: clause_breaks[-1]].strip()
+        elif any(k in txt for k in ("《", "GTA", "！”", "！」")) and len(txt) <= max(max_len + 12, 54):
+            # Keep the full subject clause after the closing quote when total length is modest
+            pass
         else:
             cut = max_len
             while cut < len(txt) and cut < max_len + 8 and (
@@ -512,6 +550,8 @@ def _match_canonical_topic_theme(joined: str) -> Optional[Tuple[str, str, str]]:
         return "topic_eu_budget_trade", "欧盟多年期财政预算博弈与财政框架争议", "国际与地缘主线"
     if "ink" in j or "inkling" in j or "thinking machines" in j:
         return "topic_thinking_machines_inkling", "Thinking Machines 发布 Inkling 系列高效推理模型", "前沿科技主线"
+    if _GTA_GAMING_RE.search(j):
+        return "topic_gta6_launch", "《GTA 6》发行首日销售额破纪录：“文娱史上最成功发售”", "全网热点追踪"
     if "amazon" in j or ("亚马逊" in j and "相框" in j):
         return "topic_amazon_devices", "亚马逊发布家用智能相框与黑色星期五硬件促销", "前沿科技主线"
     return None
@@ -535,6 +575,24 @@ def _derive_topic_entity_ids(deduped_tl: List[dict], final_title: str, is_curate
     return verified[:6]
 
 
+def _match_region_tag(text_low: str) -> Optional[Tuple[str, str]]:
+    if re.search(r"cop31|气候大会|气候变化大会|安塔利亚|联合国气候|全球|gta\s*6|gta6|opec", text_low, re.I):
+        return "global", "全球"
+    if re.search(r"apec|中美元首|习特会", text_low, re.I) or ("中美" in text_low and any(k in text_low for k in ("峰会", "会晤", "深圳", "访华"))):
+        return "china", "中美·亚太"
+    if any(k in text_low for k in ("神舟", "北京", "深圳", "广州", "上海", "中国", "中国人民银行", "人大", "政协", "雅安", "华为", "比亚迪", "方程豹", "腾讯", "阿里", "deepseek", "千问")):
+        return "china", "中国"
+    if any(k in text_low for k in ("美联储", "fomc", "anthropic", "openai", "英伟达", "nvidia", "特斯拉", "tesla", "spacex", "谷歌", "google", "微软", "亚马逊", "amazon", "thinking machines", "lean", "黎曼", "vmware", "美国", "纳指")):
+        return "us", "美国"
+    if _THEATER_US_IRAN_RE.search(text_low) or any(k in text_low for k in ("霍尔木兹", "中东", "沙特", "阿联酋", "巴林", "以色列", "伊朗")):
+        return "middle_east", "中东"
+    if _THEATER_RU_UA_RE.search(text_low) or any(k in text_low for k in ("欧盟", "欧洲议会", "欧洲", "英国", "波兰", "芬兰湾", "俄罗斯", "乌克兰")):
+        return "europe_ru_ua", "欧洲·俄乌"
+    if any(k in text_low for k in ("泰国", "印尼", "印度尼西亚", "韩国", "日本", "海力士", "软银", "东南亚")):
+        return "apac", "亚太"
+    return None
+
+
 def _classify_topic_region_and_orgs(
     title: str,
     nodes: List[dict],
@@ -542,27 +600,18 @@ def _classify_topic_region_and_orgs(
     category: str,
 ) -> Tuple[str, str, List[str], str]:
     """Return structured (region, region_label, primary_orgs, domain_tag) for UI categorization."""
-    joined = f"{title} " + " ".join(str(n.get("title") or "") for n in nodes[:8])
-    low = joined.lower()
+    title_low = str(title or "").lower()
+    node_titles_low = [str(n.get("title") or "").lower() for n in nodes[:8]]
+    joined_low = f"{title_low} " + " ".join(node_titles_low)
 
-    if any(k in low for k in ("神舟", "北京", "深圳", "广州", "上海", "中国", "央行", "人大", "政协", "雅安", "华为", "比亚迪", "方程豹", "腾讯", "阿里", "deepseek", "千问")):
-        if any(k in low for k in ("特朗普", "中美", "美国", "美联储", "apec")) and any(k in low for k in ("中美元首", "中美", "apec")):
-            region, region_label = "china", "中美·亚太"
-        else:
-            region, region_label = "china", "中国"
-    elif _THEATER_US_IRAN_RE.search(low) or any(k in low for k in ("霍尔木兹", "中东", "沙特", "阿联酋", "巴林", "以色列", "土耳其", "安塔利亚")):
-        region, region_label = "middle_east", "中东"
-    elif _THEATER_RU_UA_RE.search(low) or any(k in low for k in ("欧盟", "欧洲议会", "欧洲", "英国", "波兰", "芬兰湾", "俄罗斯", "乌克兰")):
-        region, region_label = "europe_ru_ua", "欧洲·俄乌"
-    elif any(k in low for k in ("美联储", "fomc", "anthropic", "openai", "英伟达", "nvidia", "特斯拉", "tesla", "spacex", "谷歌", "google", "微软", "亚马逊", "amazon", "美国", "纳指")):
-        region, region_label = "us", "美国"
-    elif any(k in low for k in ("泰国", "印尼", "印度尼西亚", "韩国", "日本", "海力士", "软银", "东南亚")):
-        region, region_label = "apac", "亚太"
+    matched_reg = _match_region_tag(title_low) or _match_region_tag(" ".join(node_titles_low[:6]))
+    if matched_reg:
+        region, region_label = matched_reg
     else:
         region, region_label = "global", "全球"
 
     orgs: List[str] = []
-    # Explicit keyword checks against actual headline corpus first (zero false company tagging!)
+    # Explicit keyword checks against topic title first, requiring >=2 node hits for body-only mentions
     org_patterns = [
         ("anthropic", "Anthropic"),
         ("openai", "OpenAI"),
@@ -575,7 +624,9 @@ def _classify_topic_region_and_orgs(
         ("美联储|fomc", "美联储"),
         ("欧洲议会|欧盟", "欧盟"),
         ("神舟|中国航天", "中国航天"),
-        ("cop31|联合国", "联合国 UNFCCC"),
+        ("cop31|unfccc|气候变化大会|气候公约", "联合国 UNFCCC"),
+        ("apec", "APEC 峰会"),
+        (r"gta\s*6|gta6|rockstar|r星", "Rockstar / Take-Two"),
         ("tensorlean|certik", "CertiK / 哥伦比亚大学"),
         ("lean|黎曼", "Lean 社区"),
         ("thinking machines", "Thinking Machines"),
@@ -586,7 +637,9 @@ def _classify_topic_region_and_orgs(
         ("deepseek", "DeepSeek"),
     ]
     for pat, label in org_patterns:
-        if re.search(pat, low, re.I) and label not in orgs:
+        in_title = bool(re.search(pat, title_low, re.I))
+        node_hits = sum(1 for nt_l in node_titles_low if re.search(pat, nt_l, re.I))
+        if (in_title or node_hits >= 2) and label not in orgs:
             orgs.append(label)
         if len(orgs) >= 2:
             break
@@ -598,13 +651,13 @@ def _classify_topic_region_and_orgs(
                 if short_name and short_name not in orgs:
                     orgs.append(short_name)
 
-    if any(k in low for k in ("战", "袭击", "导弹", "封锁", "峰会", "会晤", "外交", "协定", "cop31", "预算")):
+    if any(k in joined_low for k in ("战", "袭击", "导弹", "封锁", "峰会", "会晤", "外交", "协定", "cop31", "预算")):
         domain_tag = "地缘与外交"
-    elif any(k in low for k in ("美联储", "ipo", "利率", "黄金", "金价", "美元", "比特币", "纳指", "稀土")):
+    elif any(k in joined_low for k in ("美联储", "ipo", "利率", "黄金", "金价", "美元", "比特币", "纳指", "稀土")):
         domain_tag = "宏观与金融"
-    elif any(k in low for k in ("神舟", "航天", "发射", "卫星", "星舰")):
+    elif any(k in joined_low for k in ("神舟", "航天", "发射", "卫星", "星舰")):
         domain_tag = "航空航天"
-    elif category == "tech" or any(k in low for k in ("ai", "模型", "gpu", "fsd", "lean", "算力", "芯片")):
+    elif category == "tech" or any(k in joined_low for k in ("ai", "模型", "gpu", "fsd", "lean", "算力", "芯片", "gta")):
         domain_tag = "AI 与科技"
     else:
         domain_tag = "全球焦点"
@@ -682,6 +735,7 @@ def _compute_lifecycle(
     *,
     has_upcoming_catalyst: bool = False,
     topic_title: str = "",
+    topic_id: str = "",
 ) -> Tuple[str, str, Optional[str]]:
     pub_dts = [parse_iso_datetime(n.get("time")) for n in nodes if n.get("time") and n.get("time_source") != "estimated"]
     pub_dts = [d for d in pub_dts if d is not None]
@@ -700,13 +754,21 @@ def _compute_lifecycle(
 
     recent_titles = f"{topic_title} " + " ".join(str(n.get("title") or "") for n in nodes[:5])
     has_upcoming_active = bool(_ACTIVE_UPCOMING_SIGNAL_RE.search(recent_titles))
+    has_winding_down = bool(_WINDING_DOWN_SIGNAL_RE.search(recent_titles))
     has_concluded = bool(_CONCLUDED_SIGNAL_RE.search(recent_titles)) and not (has_upcoming_active and idle_hours < 24.0)
+
+    if (
+        topic_id == "topic_apec_trump_china"
+        and age_hours >= 42.0
+        and any(k in recent_titles for k in ("闭幕", "落幕", "照片", "三大象征意义", "赞扬", "峰会成果", "返美"))
+    ):
+        return "ended", LIFECYCLE_LABELS["ended"], to_iso_shanghai(last_dt)
 
     if idle_hours >= 36.0 or (has_concluded and idle_hours >= 6.0 and not has_upcoming_catalyst) or (has_concluded and idle_hours >= 12.0):
         return "ended", LIFECYCLE_LABELS["ended"], to_iso_shanghai(last_dt)
-    if idle_hours >= 10.0 or (has_concluded and idle_hours >= 1.5):
+    if has_winding_down or idle_hours >= 10.0 or (has_concluded and idle_hours >= 1.5):
         return "ending_soon", LIFECYCLE_LABELS["ending_soon"], None
-    if age_hours <= 12.0 and span_hours < 6.0 and len(nodes) < 6:
+    if age_hours <= 24.0 and span_hours <= 14.0 and len(nodes) <= 8:
         return "starting", LIFECYCLE_LABELS["starting"], None
     return "ongoing", LIFECYCLE_LABELS["ongoing"], None
 
@@ -785,6 +847,23 @@ def _filter_coherent_auto_nodes(tp_title: str, nodes: List[dict]) -> List[dict]:
         ):
             coherent.append(n)
     return coherent
+
+
+def _count_recent_nodes(nodes: List[dict], now_dt: datetime) -> Tuple[int, int]:
+    """Count (recent_6h_count, today_count) for frontend topic delta badges."""
+    recent_6h = 0
+    today_cnt = 0
+    today_date = now_dt.date()
+    for nd in nodes:
+        dt = parse_iso_datetime(nd.get("time"))
+        if dt is None:
+            continue
+        age_sec = (now_dt - dt).total_seconds()
+        if 0 <= age_sec <= 6 * 3600:
+            recent_6h += 1
+        if dt.date() == today_date or (0 <= age_sec <= 24 * 3600):
+            today_cnt += 1
+    return recent_6h, today_cnt
 
 
 def _topic_heat_score(tp: dict) -> Tuple[int, str, int]:
@@ -911,7 +990,7 @@ def build_dynamic_topics(
             not atp.get("is_curated")
             and at_upd
             and (now_dt - at_upd).total_seconds() < 24 * 3600
-            and (_ACTIVE_UPCOMING_SIGNAL_RE.search(at_blob) or not _CONCLUDED_SIGNAL_RE.search(at_blob))
+            and _ACTIVE_UPCOMING_SIGNAL_RE.search(at_blob)
         ):
             prev_active.append(archived_by_id.pop(arch_tid_k))
 
@@ -922,12 +1001,17 @@ def build_dynamic_topics(
             continue
         is_curated = bool(tp.get("is_curated") or not tp.get("is_auto_clustered", True))
         clean_old_nodes = _clean_stored_nodes(tp.get("timeline") or [], keep_hotlist_if_scarce=is_curated)
-        # Strip contaminated nodes (e.g. CENTCOM Iran blockade out of Fed topic, or US-Iran out of RU-UA)
-        clean_old_nodes = [
-            n for n in clean_old_nodes
-            if not _is_minor_quake(str(n.get("title") or ""))
-            and not (tp_title_raw and _subtopic_conflict(tp_title_raw, str(n.get("title") or "")))
-        ]
+        # Strip contaminated nodes (e.g. Iran blockade out of Fed topic, or stray NVIDIA out of APEC) & re-route them
+        kept_old_nodes: List[dict] = []
+        for n in clean_old_nodes:
+            nt_s = str(n.get("title") or "")
+            if _is_minor_quake(nt_s) or _FLUFF_NOISE_RE.search(nt_s):
+                continue
+            if tp_title_raw and _subtopic_conflict(tp_title_raw, nt_s):
+                unmatched.append(n)
+                continue
+            kept_old_nodes.append(n)
+        clean_old_nodes = kept_old_nodes
         if not clean_old_nodes:
             continue
         if not is_curated:
@@ -1138,7 +1222,9 @@ def build_dynamic_topics(
             now_dt,
             has_upcoming_catalyst=has_cat_win,
             topic_title=final_title,
+            topic_id=tid,
         )
+        recent_6h, today_cnt = _count_recent_nodes(deduped_tl, now_dt)
         latest_ts = str(deduped_tl[0].get("time") or generated_at_iso)
         earliest_ts = str(deduped_tl[-1].get("time") or latest_ts)
         started_at = str(tb.get("started_at") or earliest_ts)
@@ -1163,6 +1249,8 @@ def build_dynamic_topics(
             "updated_at": latest_ts,
             "total_mentions": len(deduped_tl),
             "source_count": max(1, len(pub_set)),
+            "recent_6h_count": recent_6h,
+            "today_count": today_cnt,
             "entity_ids": clean_eids,
             "event_ids": list(dict.fromkeys(tb.get("event_ids") or [])),
             "is_auto_clustered": not is_curated,
@@ -1314,14 +1402,6 @@ def build_dynamic_topics(
         if any(title_similarity(arch_title, at) >= 0.42 for at in active_titles if at):
             del archived_by_id[tid_k]
             continue
-        if (
-            arch_upd
-            and (now_dt - arch_upd).total_seconds() < 12 * 3600
-            and str(arch_tp.get("lifecycle_status") or "") == "ended"
-            and not arch_tp.get("is_curated")
-            and not _CONCLUDED_SIGNAL_RE.search(arch_title + " " + " ".join(str(n.get("title") or "") for n in (arch_tp.get("timeline") or [])[:5]))
-        ):
-            del archived_by_id[tid_k]
 
     # Second pass inside archived_by_id: collapse near-duplicate archived topics by title similarity or shared nodes
     sorted_arch_raw = sorted(

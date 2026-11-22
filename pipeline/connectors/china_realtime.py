@@ -84,6 +84,14 @@ _DISASTER_FOREIGN_RE = re.compile(
     r"(?:\bUSGS\b|日本|印尼|印度尼西亚|菲律宾|土耳其|智利|希腊|意大利|加州|阿拉斯加|堪察加|Timor|Chile|Indonesia|Japan|Greece|Turkey|Alaska|California)",
     re.I,
 )
+_GAMING_ENT_RE = re.compile(
+    r"(?:《?gta\s*6》?|gta\s*v|gta6|侠盗猎车手|xbox|ps5|playstation|任天堂|nintendo|switch\s*2?|steam|帧率|\d+\s*fps|主机游戏|电子游戏|rockstar|r\s*星|电竞|黑神话|原神|王者荣耀)",
+    re.I,
+)
+_STOCK_CORP_TITLE_RE = re.compile(
+    r"(?:股价|财报|市值|ipo|上市|收购|融资|涨停|跌停|美股|a股|港股)",
+    re.I,
+)
 _MACRO_STRATEGIST_RE = re.compile(
     r"(?:(?:首席)?(?:投资|市场|宏观|财富)?策略师|经济学家|财富管理|财富经理|彭博经济研究|Bloomberg Economics|交易热潮|IPO.*交易)",
     re.I,
@@ -91,9 +99,12 @@ _MACRO_STRATEGIST_RE = re.compile(
 
 
 def _classify_wire_item(title: str, content: str, default_cat: str) -> str:
-    text = f"{title} {content}"
+    cleaned_content = re.sub(r"[（(][^）)]*现汇率约合[^）)]*[）)]", "", str(content or ""))
+    text = f"{title} {cleaned_content}"
     if _NON_TECH_CONSUMER_OR_CRIME_RE.search(title):
         return "general"
+    if _GAMING_ENT_RE.search(title) and not _STOCK_CORP_TITLE_RE.search(title):
+        return "tech"
     if _DISASTER_SOCIETY_RE.search(title):
         return "global" if _DISASTER_FOREIGN_RE.search(title) else "general"
     if _MACRO_STRATEGIST_RE.search(title):
@@ -152,15 +163,31 @@ def _extract_wire_image(row: Dict[str, Any]) -> Optional[str]:
 
 
 def _fetch_wallstreetcn_channel(channel: str, label: str, default_cat: str, fetched_iso: str) -> Dict[str, Any]:
-    url = f"https://api-one.wallstcn.com/apiv1/content/lives?channel={channel}&limit=25"
+    endpoints = (
+        f"https://api-one.wallstcn.com/apiv1/content/lives?channel={channel}&limit=25",
+        f"https://api-one-wscn.awtmt.com/apiv1/content/lives?channel={channel}&limit=25",
+    )
     items: List[dict] = []
     err: Optional[str] = None
+    resp_ok: Optional[requests.Response] = None
     try:
-        r = requests.get(url, headers=_HEADERS, timeout=(4, 7))
-        if r.status_code != 200:
-            err = f"HTTP {r.status_code}"
-        else:
-            data = r.json()
+        for url in endpoints:
+            try:
+                r = requests.get(
+                    url,
+                    headers={**_HEADERS, "Referer": "https://wallstreetcn.com/"},
+                    timeout=(6, 10),
+                )
+                if r.status_code == 200:
+                    resp_ok = r
+                    err = None
+                    break
+                err = f"HTTP {r.status_code}"
+            except Exception as exc_one:
+                err = f"{type(exc_one).__name__}: {str(exc_one)[:80]}"
+                continue
+        if resp_ok is not None:
+            data = resp_ok.json()
             rows = (data.get("data") or {}).get("items") or []
             for row in rows:
                 content = _clean(row.get("content_text") or row.get("content"), max_len=280)
@@ -267,6 +294,85 @@ def _fetch_cls_telegraph(fetched_iso: str) -> Dict[str, Any]:
     }
 
 
+def _fetch_sina_7x24_telegraph(fetched_iso: str) -> Dict[str, Any]:
+    url = "https://zhibo.sina.com.cn/api/zhibo/feed?zhibo_id=152&tag_id=0&page=1&page_size=25&type=0"
+    items: List[dict] = []
+    err: Optional[str] = None
+    try:
+        import json as _json
+
+        r = requests.get(
+            url,
+            headers={**_HEADERS, "Referer": "https://finance.sina.com.cn/7x24/"},
+            timeout=(6, 10),
+        )
+        if r.status_code != 200:
+            err = f"HTTP {r.status_code}"
+        else:
+            data = r.json()
+            rows = (((data.get("result") or {}).get("data") or {}).get("feed") or {}).get("list") or []
+            for row in rows:
+                if not isinstance(row, dict) or int(row.get("is_delete") or 0) == 1:
+                    continue
+                content = _clean(row.get("rich_text"), max_len=280)
+                if not content or len(content) < 6 or _PURE_WIRE_FLUFF_RE.search(content):
+                    continue
+                m = re.match(r"【([^】]{4,80})】", content)
+                title = m.group(1) if m else _clean(content, 88)
+                if not title or len(title) < 4 or _PURE_WIRE_FLUFF_RE.search(title):
+                    continue
+                ext_doc = None
+                try:
+                    ext_raw = row.get("ext")
+                    if isinstance(ext_raw, str) and ext_raw.strip().startswith("{"):
+                        ext_doc = _json.loads(ext_raw).get("docurl")
+                except Exception:
+                    ext_doc = None
+                rid = str(row.get("id") or "")
+                raw_url = row.get("docurl") or ext_doc or f"https://finance.sina.com.cn/7x24/?id={rid}"
+                canon = canonicalize_url(raw_url) or f"https://finance.sina.com.cn/7x24/?id={rid}"
+                ct_raw = str(row.get("create_time") or "").strip()
+                pub_iso = fetched_iso
+                if ct_raw:
+                    try:
+                        pub_iso = to_iso_shanghai(datetime.strptime(ct_raw[:19], "%Y-%m-%d %H:%M:%S").replace(tzinfo=SHANGHAI_TZ))
+                    except Exception:
+                        pub_iso = fetched_iso
+                is_high = int(row.get("is_focus") or 0) == 1
+                cat = _classify_wire_item(title, content, "finance")
+                items.append(
+                    {
+                        "item_id": make_raw_item_id("sina-7x24", canon, title),
+                        "source_id": "sina-7x24",
+                        "source_name": "新浪财经 7×24 电报",
+                        "category": cat,
+                        "source_kind": "news",
+                        "source_tier": "direct_media",
+                        "publisher_family": "sina",
+                        "citable_as_news": True,
+                        "title": title,
+                        "url": canon,
+                        "canonical_url": canon,
+                        "published_at": pub_iso,
+                        "published_at_source": "upstream_api",
+                        "fetched_at": fetched_iso,
+                        "excerpt": content if content != title else None,
+                        "thumbnail_url": _extract_wire_image(row),
+                        "metric_label": "焦点快讯" if is_high else None,
+                        "importance": "high" if is_high else "normal",
+                    }
+                )
+    except Exception as exc:
+        err = f"{type(exc).__name__}: {str(exc)[:80]}"
+    return {
+        "id": "sina-7x24",
+        "name": "新浪财经 7×24 电报",
+        "category": "finance",
+        "items": items,
+        "error": err,
+    }
+
+
 def _fetch_rss_flash(feed_id: str, label: str, default_cat: str, url: str, family: str, fetched_iso: str) -> Dict[str, Any]:
     items: List[dict] = []
     err: Optional[str] = None
@@ -342,6 +448,7 @@ def fetch_china_realtime_wires(cache: Optional[HttpCacheStore] = None) -> Dict[s
         lambda: _fetch_wallstreetcn_channel("a-stock-channel", "华尔街见闻 A股快讯", "finance", fetched_iso),
         lambda: _fetch_wallstreetcn_channel("us-stock-channel", "华尔街见闻 美股快讯", "finance", fetched_iso),
         lambda: _fetch_wallstreetcn_channel("tech-channel", "华尔街见闻 科技/AI快讯", "tech", fetched_iso),
+        lambda: _fetch_sina_7x24_telegraph(fetched_iso),
         lambda: _fetch_rss_flash("ithome-rss", "IT之家 实时快讯", "tech", "https://www.ithome.com/rss/", "ithome", fetched_iso),
     ]
 
@@ -352,7 +459,7 @@ def fetch_china_realtime_wires(cache: Optional[HttpCacheStore] = None) -> Dict[s
     ok_cnt = 0
     errors: List[str] = []
 
-    with ThreadPoolExecutor(max_workers=5) as pool:
+    with ThreadPoolExecutor(max_workers=6) as pool:
         futs = [pool.submit(fn) for fn in tasks]
         for fut in as_completed(futs):
             res = fut.result()

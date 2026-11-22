@@ -147,8 +147,12 @@ def _infer_domain_next_catalyst(event: dict, matched_primary_ent: Optional[dict]
         return "关注应用后续版本更新日志及跨平台安全特性适配进展"
     if any(k in combined for k in ("宕机", "故障", "瘫痪", "掉线", "停飞", "服务中断")) or ("恢复" in combined and any(k in combined for k in ("服务", "系统", "网络", "供电", "运行", "机场", "航班"))):
         return "等待官方服务状态页发布事故根因复盘 (Postmortem) 与全面恢复确认"
-    if any(k in title_l for k in ("资金短缺", "缺钱", "烧钱", "资本开支")) and any(k in combined for k in ("ai", "算力", "数据中心", "马斯克", "xai", "openai")):
+    if any(k in title_l for k in ("资金短缺", "资金缺口", "算力变现", "融资缺口", "资金危机", "缺钱", "烧钱", "资本开支")) and any(k in combined for k in ("ai", "算力", "数据中心", "马斯克", "xai", "openai")):
         return "跟踪头部大模型厂商股权/债权融资落地及云巨头下季 Capex 指引"
+    if any(k in title_l for k in ("汽车贸易", "进口车", "电动车", "新能源车", "汽车销量", "乘用车", "比亚迪", "特斯拉", "整车")) and not any(k in combined for k in ("spacex", "星舰", "starship", "starshield", "火箭发射")):
+        return "跟踪车企月度交付销量、区域汽车关税政策及整车业务毛利率披露"
+    if any(k in title_l for k in ("回购", "增资", "定增", "高管辞职", "总经理辞职", "董事长")):
+        return "关注上市公司回购实施进展公告、增资审批节点及新任高管提名公告"
     if any(k in title_l for k in ("开源", "github", "hugging face", "hugging", "benchmark", "基准测试", "framework", "bttf", "longcat", "openpangu", "llama.cpp", "黎曼", "lean")) or (
         any(k in title_l for k in ("大模型", "模型发布", "参数")) and not any(k in title_l for k in ("资金", "融资", "ipo", "股价", "股", "投资"))
     ):
@@ -159,6 +163,10 @@ def _infer_domain_next_catalyst(event: dict, matched_primary_ent: Optional[dict]
         return "关注官方联合声明全文或相关外交/经贸部门正式通告"
     if _is_financial_corporate_event(event) and matched_primary_ent:
         val_list = _as_str_list(matched_primary_ent.get("validation_milestones"))
+        if matched_primary_ent.get("entity_id") == "ent_spacex_tesla" and not any(
+            k in combined for k in ("spacex", "星舰", "starship", "starlink", "starshield", "火箭", "发射")
+        ):
+            val_list = [v for v in val_list if not any(sk in v.lower() for sk in ("spacex", "faa", "星舰"))]
         if val_list:
             return val_list[0]
     if event.get("speculation_or_outlook"):
@@ -170,8 +178,12 @@ def _infer_domain_operating_variables(event: dict, combined: str) -> List[str]:
     low = combined.lower()
     if any(k in low for k in ("比特币", "bitcoin", "btc", "以太坊", "eth", "加密货币")):
         return ["现货 BTC ETF 日度净申购与 CME 期货未平仓合约", "美债实际利率与美元指数对加密风险偏好影响", "永续合约资金费率与 24h 全网爆仓规模"]
-    if any(k in low for k in ("资金短缺", "缺钱", "烧钱", "资本开支")) and any(k in low for k in ("ai", "算力", "数据中心", "马斯克", "xai")):
+    if any(k in low for k in ("资金短缺", "资金缺口", "算力变现", "融资缺口", "资金危机", "缺钱", "烧钱", "资本开支")) and any(k in low for k in ("ai", "算力", "数据中心", "马斯克", "xai")):
         return ["头部大模型厂商股权/债券融资落地进展", "云巨头 (MSFT/AMZN/GOOG/META) 下季 Capex 占自由现金流比重", "高收益科技信贷利差与算力租户违约率"]
+    if any(k in low for k in ("回购", "增资", "定增", "高管辞职", "总经理辞职", "股份回购")):
+        return ["回购实施进度与注销/股权激励方案落地", "增资/扩产项目资本回报率与每股收益影响", "核心管理层变动后的战略连续性与订单表现"]
+    if any(k in low for k in ("汽车贸易", "进口车", "电动车", "新能源车", "上海产特斯拉")) and not any(k in low for k in ("spacex", "星舰", "starship", "starshield")):
+        return ["单月终端交付量与区域进出口贸易结构", "海外工厂产能利用率与整车单车毛利率", "主要进口国新能源补贴与关税政策变动"]
     if any(k in low for k in ("预算", "欧洲", "欧盟", "财政", "政府", "公共开支")):
         return ["欧盟多年期财政框架拨款与研发/防务预算分配比例", "欧元区主权债利差与核心成员国财政赤字约束", "绿色转型与科研基金实际支出节奏"]
     if any(k in low for k in ("稀土", "矿产", "草酸", "冶炼", "泰国", "缅甸")):
@@ -205,6 +217,7 @@ def _build_investment_card(event: dict, entities_map: Dict[str, dict]) -> Option
     downstream: List[str] = []
     milestones: List[str] = []
 
+    has_spacex_mention = any(k in combined_str.lower() for k in ("spacex", "星舰", "starship", "starlink", "starshield", "火箭", "发射"))
     for eid in ([] if (is_domain_special and not title_eids) else matched_eids[:4]):
         ed = entities_map.get(eid)
         if not ed:
@@ -218,11 +231,16 @@ def _build_investment_card(event: dict, entities_map: Dict[str, dict]) -> Option
                     "basis": f"匹配规范实体：{ed['canonical_name']}",
                 }
             )
-        op_vars.extend(_as_str_list(ed.get("operating_variables"))[:3])
+        eid_op = _as_str_list(ed.get("operating_variables"))[:3]
+        eid_ms = _as_str_list(ed.get("validation_milestones"))[:2] if is_fin else []
+        if eid == "ent_spacex_tesla" and not has_spacex_mention:
+            eid_op = [v for v in eid_op if not any(sk in v.lower() for sk in ("星舰", "spacex", "发射"))]
+            eid_ms = [v for v in eid_ms if not any(sk in v.lower() for sk in ("spacex", "faa", "星舰"))]
+        op_vars.extend(eid_op)
         upstream.extend(_as_str_list(ed.get("supply_chain_upstream"))[:3])
         downstream.extend(_as_str_list(ed.get("supply_chain_downstream"))[:3])
-        if is_fin:
-            milestones.extend(_as_str_list(ed.get("validation_milestones"))[:2])
+        if eid_ms:
+            milestones.extend(eid_ms)
 
     domain_vars = _infer_domain_operating_variables(event, combined_str)
     if domain_vars:
@@ -236,18 +254,30 @@ def _build_investment_card(event: dict, entities_map: Dict[str, dict]) -> Option
         if is_fin
         else ["相关政策细则落地节奏、资金流向及产业链现货指标"]
     )
+    final_op_vars = list(dict.fromkeys(op_vars))[:5] or fallback_vars
+    final_milestones = list(dict.fromkeys(milestones))[:4] or [domain_node]
     return {
         "fact_change": event.get("fact_summary") or event.get("title"),
-        "operating_variables": list(dict.fromkeys(op_vars))[:5] or fallback_vars,
+        "operating_variables": final_op_vars,
         "supply_chain_links": {
             "upstream": list(dict.fromkeys(upstream))[:4],
             "downstream": list(dict.fromkeys(downstream))[:4],
         },
         "related_assets": assets[:6],
-        "validation_nodes": list(dict.fromkeys(milestones))[:4],
+        "validation_nodes": final_milestones,
         "financial_actuals_preview": (primary_ent.get("financial_actuals") or [])[:4] if (primary_ent and (title_eids or not is_domain_special)) else [],
         "market_data_disclosure": "当前静态版本暂未接入付费实时行情、估值倍数及华尔街一致预期接口；相关资产仅呈现可验证业务关联与 SEC/交易所历史公开披露事实。",
     }
+
+
+def _clamp_storyline_timestamps(st: Dict[str, Any]) -> None:
+    """Ensure first_discovered_at <= latest_fact_update_at so discovery never appears newer than update."""
+    disc_dt = parse_iso_datetime(st.get("first_discovered_at"))
+    upd_dt = parse_iso_datetime(st.get("latest_fact_update_at"))
+    rep_dt = parse_iso_datetime(st.get("first_reported_at"))
+    if disc_dt and upd_dt and disc_dt > upd_dt:
+        earliest_dt = min(d for d in (rep_dt, upd_dt) if d is not None)
+        st["first_discovered_at"] = to_iso_shanghai(earliest_dt)
 
 
 def _compute_fact_diff(curr_event: dict, prev_event: Optional[dict]) -> Dict[str, Any]:
@@ -752,6 +782,7 @@ def build_v3_artifacts(
             "ai_analysis": ev.get("ai_analysis"),
             "unverified_claims": ev.get("unverified_claims") or [],
         }
+        _clamp_storyline_timestamps(storylines[st_id])
 
         # Populate tech_tools entry ONLY for genuinely distinct new AI model/tool announcements (never omnibus/rumor/duplicate HF rows)
         ev_title = ev["title"].strip()
@@ -997,21 +1028,27 @@ def build_v3_artifacts(
         if "美元首" in old_title and "美联储 FOMC 与全球流动性" in (clean_old.get("entities") or []):
             clean_old["entities"] = [e for e in clean_old["entities"] if e != "美联储 FOMC 与全球流动性"]
             clean_old["entity_ids"] = [eid for eid in (clean_old.get("entity_ids") or []) if eid != "ent_macro_fomc"]
+        old_title_low = old_title.lower()
         ent_ids_old = clean_old.get("entity_ids") or []
         prim_old = entities_map.get(ent_ids_old[0]) if ent_ids_old else None
         domain_cat = _infer_domain_next_catalyst(clean_old, prim_old)
         nc_old = str(clean_old.get("next_catalyst") or "")
         is_genuine_vuln = bool(re.search(r"(?:0day|cve-\d+|安全漏洞|严重漏洞|勒索软件|木马|黑客入侵)", old_title, re.I))
         has_stale_cve_tpl = ("补丁编号" in nc_old or "安全响应中心" in nc_old) and not is_genuine_vuln
+        has_stale_entity_tpl = (
+            ("Anthropic" in nc_old and "anthropic" not in old_title_low and "claude" not in old_title_low)
+            or ("SpaceX" in nc_old and not any(k in old_title_low for k in ("spacex", "星舰", "starship", "starlink", "starshield")))
+        )
         has_stale_domain_tpl = (
             ("Postmortem" in nc_old and not any(k in old_title for k in ("宕机", "故障", "瘫痪", "停飞", "服务中断")))
             or ("GitHub / Hugging Face" in nc_old and "GitHub / Hugging Face" not in domain_cat)
             or ("BIS" in nc_old and "BIS" not in domain_cat)
         )
-        if not nc_old or len(nc_old) <= 2 or has_stale_cve_tpl or has_stale_domain_tpl or (not _is_financial_corporate_event(clean_old) and "SEC" in nc_old):
+        if not nc_old or len(nc_old) <= 2 or has_stale_cve_tpl or has_stale_entity_tpl or has_stale_domain_tpl or (not _is_financial_corporate_event(clean_old) and "SEC" in nc_old):
             clean_old["next_catalyst"] = domain_cat
-        if isinstance(clean_old.get("investment_card"), dict):
-            clean_old["investment_card"] = _build_investment_card(clean_old, entities_map) or clean_old["investment_card"]
+        if isinstance(clean_old.get("investment_card"), dict) or clean_old.get("category") in {"finance", "tech"}:
+            clean_old["investment_card"] = _build_investment_card(clean_old, entities_map) or clean_old.get("investment_card")
+        _clamp_storyline_timestamps(clean_old)
         storylines[st_id] = clean_old
         seen_storyline_titles.append((st_id, old_title, set(ent_ids_old)))
         if old_bucket:
