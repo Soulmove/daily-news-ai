@@ -1,148 +1,146 @@
 {
   "schema_version": "4.1",
-  "site_published_at": "2026-11-23T02:29:17+08:00",
+  "site_published_at": "2026-11-23T07:46:41+08:00",
   "smart": {
-    "latest_batch_id": "smart-20261123-012646",
-    "latest_path": "archives/smart/2026-11-23/01-26/",
-    "meta_path": "archives/smart/2026-11-23/01-26/batch_meta.json",
-    "input_batch_id": "raw-20261123-010616",
-    "input_raw_path": "archives/raw/2026-11-23/01-06/",
-    "input_cutoff_at": "2026-11-23T01:06:16+08:00",
-    "generated_at": "2026-11-23T01:26:46+08:00",
-    "published_at": "2026-11-23T01:32:58+08:00",
+    "latest_batch_id": "smart-20261123-074200",
+    "latest_path": "archives/smart/2026-11-23/07-42/",
+    "meta_path": "archives/smart/2026-11-23/07-42/batch_meta.json",
+    "input_batch_id": "raw-20261123-074121",
+    "input_raw_path": "archives/raw/2026-11-23/07-41/",
+    "input_cutoff_at": "2026-11-23T07:41:21+08:00",
+    "generated_at": "2026-11-23T07:42:00+08:00",
+    "published_at": "2026-11-23T07:46:41+08:00",
     "target_cadence_hours": 3,
-    "status": "partial",
+    "status": "complete",
     "generation_mode": "mode_ai",
-    "quality_flags": [
-      "partial_category_fallback"
-    ],
+    "quality_flags": [],
     "model_name": "gemini-2.5-flash",
     "configured_primary_model": "gemini-4-hydrogen",
     "has_comments": false,
     "categories": {
       "finance": {
-        "batch_id": "smart-20261122-230616",
-        "path": "archives/smart/2026-11-22/23-06/analysis_finance.json",
-        "comments_path": "archives/smart/2026-11-22/23-06/comments_finance.json",
-        "input_batch_id": "raw-20261122-230420",
-        "input_cutoff_at": "2026-11-22T23:04:20+08:00",
-        "generated_at": "2026-11-22T23:08:16+08:00",
-        "status": "fallback",
-        "is_fallback": true,
-        "fallback_reason": "本轮生成失败（All Gemini attempts failed: ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'The request timed out. Please try again.', 'status': 'DEADLIN），已保留该分类上次成功批次数据",
+        "batch_id": "smart-20261123-074200",
+        "path": "archives/smart/2026-11-23/07-42/analysis_finance.json",
+        "comments_path": "archives/smart/2026-11-23/07-42/comments_finance.json",
+        "input_batch_id": "raw-20261123-074121",
+        "input_cutoff_at": "2026-11-23T07:41:21+08:00",
+        "generated_at": "2026-11-23T07:42:52+08:00",
+        "status": "ok",
+        "is_fallback": false,
+        "fallback_reason": null,
         "item_count": 10,
         "verified_count": 10,
         "needs_verification_count": 0,
         "has_comments": false
       },
       "global": {
-        "batch_id": "smart-20261123-002602",
-        "path": "archives/smart/2026-11-23/00-26/analysis_global.json",
-        "comments_path": "archives/smart/2026-11-23/00-26/comments_global.json",
-        "input_batch_id": "raw-20261123-002357",
-        "input_cutoff_at": "2026-11-23T00:23:57+08:00",
-        "generated_at": "2026-11-23T00:28:07+08:00",
-        "status": "fallback",
-        "is_fallback": true,
-        "fallback_reason": "本轮生成失败（All Gemini attempts failed: ReadTimeout: The read operation timed out），已保留该分类上次成功批次数据",
-        "item_count": 7,
-        "verified_count": 7,
+        "batch_id": "smart-20261123-074200",
+        "path": "archives/smart/2026-11-23/07-42/analysis_global.json",
+        "comments_path": "archives/smart/2026-11-23/07-42/comments_global.json",
+        "input_batch_id": "raw-20261123-074121",
+        "input_cutoff_at": "2026-11-23T07:41:21+08:00",
+        "generated_at": "2026-11-23T07:44:10+08:00",
+        "status": "ok",
+        "is_fallback": false,
+        "fallback_reason": null,
+        "item_count": 8,
+        "verified_count": 8,
         "needs_verification_count": 0,
         "has_comments": false
       },
       "tech": {
-        "batch_id": "smart-20261123-012646",
-        "path": "archives/smart/2026-11-23/01-26/analysis_tech.json",
-        "comments_path": "archives/smart/2026-11-23/01-26/comments_tech.json",
-        "input_batch_id": "raw-20261123-010616",
-        "input_cutoff_at": "2026-11-23T01:06:16+08:00",
-        "generated_at": "2026-11-23T01:30:41+08:00",
+        "batch_id": "smart-20261123-074200",
+        "path": "archives/smart/2026-11-23/07-42/analysis_tech.json",
+        "comments_path": "archives/smart/2026-11-23/07-42/comments_tech.json",
+        "input_batch_id": "raw-20261123-074121",
+        "input_cutoff_at": "2026-11-23T07:41:21+08:00",
+        "generated_at": "2026-11-23T07:46:18+08:00",
         "status": "ok",
         "is_fallback": false,
         "fallback_reason": null,
-        "item_count": 12,
-        "verified_count": 12,
+        "item_count": 11,
+        "verified_count": 11,
         "needs_verification_count": 0,
         "has_comments": false
       },
       "general": {
-        "batch_id": "smart-20261123-010749",
-        "path": "archives/smart/2026-11-23/01-07/analysis_general.json",
-        "comments_path": "archives/smart/2026-11-23/01-07/comments_general.json",
-        "input_batch_id": "raw-20261123-010616",
-        "input_cutoff_at": "2026-11-23T01:06:16+08:00",
-        "generated_at": "2026-11-23T01:15:12+08:00",
-        "status": "fallback",
-        "is_fallback": true,
-        "fallback_reason": "本轮生成失败（Validation failed: ['No verified events with valid primary URLs in briefing']），已保留该分类上次成功批次数据",
-        "item_count": 12,
-        "verified_count": 12,
+        "batch_id": "smart-20261123-074200",
+        "path": "archives/smart/2026-11-23/07-42/analysis_general.json",
+        "comments_path": "archives/smart/2026-11-23/07-42/comments_general.json",
+        "input_batch_id": "raw-20261123-074121",
+        "input_cutoff_at": "2026-11-23T07:41:21+08:00",
+        "generated_at": "2026-11-23T07:45:01+08:00",
+        "status": "ok",
+        "is_fallback": false,
+        "fallback_reason": null,
+        "item_count": 11,
+        "verified_count": 11,
         "needs_verification_count": 0,
         "has_comments": false
       }
     }
   },
   "raw": {
-    "latest_batch_id": "raw-20261123-022854",
-    "latest_path": "archives/raw/2026-11-23/02-28/",
-    "meta_path": "archives/raw/2026-11-23/02-28/meta.json",
-    "connectors_path": "archives/raw/2026-11-23/02-28/connectors.json",
-    "fetched_at": "2026-11-23T02:28:54+08:00",
-    "published_at": "2026-11-23T02:29:17+08:00",
+    "latest_batch_id": "raw-20261123-074121",
+    "latest_path": "archives/raw/2026-11-23/07-41/",
+    "meta_path": "archives/raw/2026-11-23/07-41/meta.json",
+    "connectors_path": "archives/raw/2026-11-23/07-41/connectors.json",
+    "fetched_at": "2026-11-23T07:41:21+08:00",
+    "published_at": "2026-11-23T07:42:00+08:00",
     "target_cadence_minutes": 60,
-    "schedule_source": "schedule",
+    "schedule_source": "ai_compensation_schedule",
     "status": "partial",
     "summary": {
       "configured_sources": 77,
-      "ok_sources": 74,
-      "empty_sources": 2,
+      "ok_sources": 73,
+      "empty_sources": 3,
       "error_sources": 1,
       "stale_sources": 0,
       "retired_sources": 5,
-      "total_raw_items": 1437,
+      "total_raw_items": 1435,
       "first_party_items": 22,
       "healthy_connectors": 7,
       "total_connectors": 7,
       "deep_fetched_enriched": 14,
-      "deduped_events": 1232
+      "deduped_events": 1200
     },
     "categories": {
       "finance": {
         "file": "data_finance.json",
-        "path": "archives/raw/2026-11-23/02-28/data_finance.json",
+        "path": "archives/raw/2026-11-23/07-41/data_finance.json",
         "status": "ok",
         "source_count": 19,
         "ok_sources": 19,
         "error_sources": 0,
         "empty_sources": 0,
         "stale_sources": 0,
-        "item_count": 377
+        "item_count": 376
       },
       "global": {
         "file": "data_global.json",
-        "path": "archives/raw/2026-11-23/02-28/data_global.json",
+        "path": "archives/raw/2026-11-23/07-41/data_global.json",
         "status": "ok",
         "source_count": 13,
         "ok_sources": 13,
         "error_sources": 0,
         "empty_sources": 0,
         "stale_sources": 0,
-        "item_count": 252
+        "item_count": 259
       },
       "tech": {
         "file": "data_tech.json",
-        "path": "archives/raw/2026-11-23/02-28/data_tech.json",
+        "path": "archives/raw/2026-11-23/07-41/data_tech.json",
         "status": "partial",
         "source_count": 30,
-        "ok_sources": 27,
+        "ok_sources": 26,
         "error_sources": 1,
-        "empty_sources": 2,
+        "empty_sources": 3,
         "stale_sources": 0,
-        "item_count": 467
+        "item_count": 459
       },
       "general": {
         "file": "data_general.json",
-        "path": "archives/raw/2026-11-23/02-28/data_general.json",
+        "path": "archives/raw/2026-11-23/07-41/data_general.json",
         "status": "ok",
         "source_count": 15,
         "ok_sources": 15,
@@ -161,19 +159,19 @@
   },
   "connectors": {
     "latest_path": "data/connectors_latest.json",
-    "fetched_at": "2026-11-23T02:28:54+08:00",
+    "fetched_at": "2026-11-23T07:41:21+08:00",
     "summary": {
       "total_connectors": 7,
       "healthy_connectors": 7,
-      "total_first_party_items": 479,
+      "total_first_party_items": 477,
       "tech_tools_count": 21,
       "calendar_events_count": 5
     }
   },
   "v3": {
     "schema_version": "4.0",
-    "generated_at": "2026-11-23T01:32:58+08:00",
-    "batch_id": "smart-20261123-012646",
+    "generated_at": "2026-11-23T07:46:41+08:00",
+    "batch_id": "smart-20261123-074200",
     "entities_path": "data/entities_index.json",
     "storylines_path": "data/storylines_index.json",
     "topics_path": "data/topics.json",
@@ -188,12 +186,12 @@
     "entities_count": 28,
     "storylines_count": 75,
     "topics_count": 10,
-    "ai_progress_count": 68,
+    "ai_progress_count": 69,
     "finance_impact_count": 16,
     "market_quotes_path": "data/market_quotes.json",
-    "calendar_count": 50,
+    "calendar_count": 51,
     "calendar_ics_path": "data/calendar.ics",
-    "calendar_ics_count": 50,
+    "calendar_ics_count": 51,
     "calendar_tbd_skipped": 0,
     "feed_path": "data/feed.xml",
     "feeds_by_category": {
@@ -203,24 +201,18 @@
       "general": "data/feed_general.xml"
     },
     "tech_tools_count": 20,
-    "radar_count": 41
+    "radar_count": 40
   },
   "degraded": true,
-  "alerts": [
-    {
-      "code": "raw_crawl_degraded",
-      "severity": "warning",
-      "message": "原始抓取状态：partial（错误源 1 个）"
-    }
-  ],
+  "alerts": [],
   "gemini_quota": {
     "total_configured_keys": 12,
     "healthy_keys": 12,
     "cooled_down_keys": 0,
     "exhausted_keys": 0,
-    "daily_calls_total": 215,
+    "daily_calls_total": 230,
     "date_utc": "2026-11-22",
-    "updated_at": "2026-11-22T18:29:06Z",
+    "updated_at": "2026-11-22T23:46:41Z",
     "keys": [
       {
         "slot": "KEY_TECH",
@@ -245,12 +237,12 @@
       {
         "slot": "KEY_FINANCE",
         "status": "healthy",
-        "daily_calls": 16,
+        "daily_calls": 17,
         "cooldown_until": null,
         "exhausted_until": null,
-        "last_error_code": "TRANSIENT_ERROR",
-        "last_error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status':",
-        "last_success_at": "2026-11-22T16:32:09Z"
+        "last_error_code": null,
+        "last_error": null,
+        "last_success_at": "2026-11-22T23:45:01Z"
       },
       {
         "slot": "KEY_GENERAL",
@@ -275,81 +267,81 @@
       {
         "slot": "KEY_2",
         "status": "healthy",
-        "daily_calls": 17,
+        "daily_calls": 18,
         "cooldown_until": null,
         "exhausted_until": null,
         "last_error_code": null,
         "last_error": null,
-        "last_success_at": "2026-11-22T17:32:58Z"
+        "last_success_at": "2026-11-22T23:46:24Z"
       },
       {
         "slot": "KEY_3",
         "status": "healthy",
-        "daily_calls": 16,
-        "cooldown_until": null,
-        "exhausted_until": null,
-        "last_error_code": "TRANSIENT_ERROR",
-        "last_error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status':",
-        "last_success_at": "2026-11-22T16:28:07Z"
-      },
-      {
-        "slot": "KEY_4",
-        "status": "healthy",
-        "daily_calls": 16,
-        "cooldown_until": null,
-        "exhausted_until": null,
-        "last_error_code": "TRANSIENT_ERROR",
-        "last_error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status':",
-        "last_success_at": "2026-11-22T16:32:11Z"
-      },
-      {
-        "slot": "KEY_5",
-        "status": "healthy",
-        "daily_calls": 16,
-        "cooldown_until": null,
-        "exhausted_until": null,
-        "last_error_code": "TRANSIENT_ERROR",
-        "last_error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'The request timed out. Please try again.', 'status': 'DEADLIN",
-        "last_success_at": "2026-11-22T13:38:06Z"
-      },
-      {
-        "slot": "KEY_6",
-        "status": "healthy",
-        "daily_calls": 17,
-        "cooldown_until": null,
-        "exhausted_until": null,
-        "last_error_code": "TRANSIENT_ERROR",
-        "last_error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status':",
-        "last_success_at": "2026-11-22T16:32:57Z"
-      },
-      {
-        "slot": "KEY_7",
-        "status": "healthy",
-        "daily_calls": 16,
+        "daily_calls": 20,
         "cooldown_until": null,
         "exhausted_until": null,
         "last_error_code": null,
         "last_error": null,
+        "last_success_at": "2026-11-22T23:44:10Z"
+      },
+      {
+        "slot": "KEY_4",
+        "status": "healthy",
+        "daily_calls": 18,
+        "cooldown_until": null,
+        "exhausted_until": null,
+        "last_error_code": null,
+        "last_error": null,
+        "last_success_at": "2026-11-22T23:46:32Z"
+      },
+      {
+        "slot": "KEY_5",
+        "status": "healthy",
+        "daily_calls": 18,
+        "cooldown_until": null,
+        "exhausted_until": null,
+        "last_error_code": null,
+        "last_error": null,
+        "last_success_at": "2026-11-22T23:46:18Z"
+      },
+      {
+        "slot": "KEY_6",
+        "status": "healthy",
+        "daily_calls": 18,
+        "cooldown_until": null,
+        "exhausted_until": null,
+        "last_error_code": null,
+        "last_error": null,
+        "last_success_at": "2026-11-22T23:46:35Z"
+      },
+      {
+        "slot": "KEY_7",
+        "status": "healthy",
+        "daily_calls": 18,
+        "cooldown_until": null,
+        "exhausted_until": null,
+        "last_error_code": "TRANSIENT_ERROR",
+        "last_error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status':",
         "last_success_at": "2026-11-22T16:32:04Z"
       },
       {
         "slot": "KEY_8",
         "status": "healthy",
-        "daily_calls": 17,
+        "daily_calls": 18,
         "cooldown_until": null,
         "exhausted_until": null,
         "last_error_code": null,
         "last_error": null,
-        "last_success_at": "2026-11-22T17:32:52Z"
+        "last_success_at": "2026-11-22T23:46:41Z"
       },
       {
         "slot": "GOOGLE_API_KEY",
         "status": "unconfigured",
-        "daily_calls": 16,
+        "daily_calls": 17,
         "cooldown_until": null,
         "exhausted_until": null,
         "last_error_code": "TRANSIENT_ERROR",
-        "last_error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status':",
+        "last_error": "ServerError: 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand ",
         "last_success_at": "2026-11-22T13:39:24Z"
       }
     ]
@@ -359,9 +351,9 @@
     "healthy_keys": 12,
     "cooled_down_keys": 0,
     "exhausted_keys": 0,
-    "daily_calls_total": 215,
+    "daily_calls_total": 230,
     "date_utc": "2026-11-22",
-    "updated_at": "2026-11-22T18:29:06Z",
+    "updated_at": "2026-11-22T23:46:41Z",
     "keys": [
       {
         "slot": "KEY_TECH",
@@ -386,12 +378,12 @@
       {
         "slot": "KEY_FINANCE",
         "status": "healthy",
-        "daily_calls": 16,
+        "daily_calls": 17,
         "cooldown_until": null,
         "exhausted_until": null,
-        "last_error_code": "TRANSIENT_ERROR",
-        "last_error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status':",
-        "last_success_at": "2026-11-22T16:32:09Z"
+        "last_error_code": null,
+        "last_error": null,
+        "last_success_at": "2026-11-22T23:45:01Z"
       },
       {
         "slot": "KEY_GENERAL",
@@ -416,81 +408,81 @@
       {
         "slot": "KEY_2",
         "status": "healthy",
-        "daily_calls": 17,
+        "daily_calls": 18,
         "cooldown_until": null,
         "exhausted_until": null,
         "last_error_code": null,
         "last_error": null,
-        "last_success_at": "2026-11-22T17:32:58Z"
+        "last_success_at": "2026-11-22T23:46:24Z"
       },
       {
         "slot": "KEY_3",
         "status": "healthy",
-        "daily_calls": 16,
-        "cooldown_until": null,
-        "exhausted_until": null,
-        "last_error_code": "TRANSIENT_ERROR",
-        "last_error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status':",
-        "last_success_at": "2026-11-22T16:28:07Z"
-      },
-      {
-        "slot": "KEY_4",
-        "status": "healthy",
-        "daily_calls": 16,
-        "cooldown_until": null,
-        "exhausted_until": null,
-        "last_error_code": "TRANSIENT_ERROR",
-        "last_error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status':",
-        "last_success_at": "2026-11-22T16:32:11Z"
-      },
-      {
-        "slot": "KEY_5",
-        "status": "healthy",
-        "daily_calls": 16,
-        "cooldown_until": null,
-        "exhausted_until": null,
-        "last_error_code": "TRANSIENT_ERROR",
-        "last_error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'The request timed out. Please try again.', 'status': 'DEADLIN",
-        "last_success_at": "2026-11-22T13:38:06Z"
-      },
-      {
-        "slot": "KEY_6",
-        "status": "healthy",
-        "daily_calls": 17,
-        "cooldown_until": null,
-        "exhausted_until": null,
-        "last_error_code": "TRANSIENT_ERROR",
-        "last_error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status':",
-        "last_success_at": "2026-11-22T16:32:57Z"
-      },
-      {
-        "slot": "KEY_7",
-        "status": "healthy",
-        "daily_calls": 16,
+        "daily_calls": 20,
         "cooldown_until": null,
         "exhausted_until": null,
         "last_error_code": null,
         "last_error": null,
+        "last_success_at": "2026-11-22T23:44:10Z"
+      },
+      {
+        "slot": "KEY_4",
+        "status": "healthy",
+        "daily_calls": 18,
+        "cooldown_until": null,
+        "exhausted_until": null,
+        "last_error_code": null,
+        "last_error": null,
+        "last_success_at": "2026-11-22T23:46:32Z"
+      },
+      {
+        "slot": "KEY_5",
+        "status": "healthy",
+        "daily_calls": 18,
+        "cooldown_until": null,
+        "exhausted_until": null,
+        "last_error_code": null,
+        "last_error": null,
+        "last_success_at": "2026-11-22T23:46:18Z"
+      },
+      {
+        "slot": "KEY_6",
+        "status": "healthy",
+        "daily_calls": 18,
+        "cooldown_until": null,
+        "exhausted_until": null,
+        "last_error_code": null,
+        "last_error": null,
+        "last_success_at": "2026-11-22T23:46:35Z"
+      },
+      {
+        "slot": "KEY_7",
+        "status": "healthy",
+        "daily_calls": 18,
+        "cooldown_until": null,
+        "exhausted_until": null,
+        "last_error_code": "TRANSIENT_ERROR",
+        "last_error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status':",
         "last_success_at": "2026-11-22T16:32:04Z"
       },
       {
         "slot": "KEY_8",
         "status": "healthy",
-        "daily_calls": 17,
+        "daily_calls": 18,
         "cooldown_until": null,
         "exhausted_until": null,
         "last_error_code": null,
         "last_error": null,
-        "last_success_at": "2026-11-22T17:32:52Z"
+        "last_success_at": "2026-11-22T23:46:41Z"
       },
       {
         "slot": "GOOGLE_API_KEY",
         "status": "unconfigured",
-        "daily_calls": 16,
+        "daily_calls": 17,
         "cooldown_until": null,
         "exhausted_until": null,
         "last_error_code": "TRANSIENT_ERROR",
-        "last_error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status':",
+        "last_error": "ServerError: 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand ",
         "last_success_at": "2026-11-22T13:39:24Z"
       }
     ]
