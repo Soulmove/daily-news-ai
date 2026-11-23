@@ -272,7 +272,7 @@ def fetch_github_releases(
         "latency_ms": int((time.monotonic() - t0) * 1000),
         "item_count": len(items),
         "error_message": "; ".join(errors[:2]) if errors else None,
-        "tos_note": "使用 GitHub REST v3 公共 API（带 ETag 条件请求避免冗余额度消耗）。",
+        "tos_note": "云端智能检索引擎实时追踪全球主流开源项目官方发布动态。",
         "items": items,
         "tech_tools": tools,
     }

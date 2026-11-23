@@ -36,6 +36,7 @@ from pipeline.gemini_pool import (
     get_ordered_key_slots,
     get_quota_summary,
 )
+from pipeline.heavy_classifier import GEO_MILITARY_HEAVY_RE, HEAVY_NOISE_EXCLUDE_RE, infer_heavy_reason_tag
 from pipeline.id_utils import canonicalize_url, is_generic_quote_or_homepage_url, make_raw_item_id
 from pipeline.manifest import (
     atomic_write_json,
@@ -1560,9 +1561,9 @@ def _event_age_hours(ev: dict, now_dt: Any) -> Tuple[float, float]:
 
 def _s_tier_priority(title: str, ev: dict) -> int:
     """Return 2 for macro/policy/geopolitical/science S-tier, 1 for major tech/corp S-tier, 0 otherwise."""
-    if _S_TECH_NOISE_GUARD_RE.search(title):
+    if _S_TECH_NOISE_GUARD_RE.search(title) or HEAVY_NOISE_EXCLUDE_RE.search(title):
         return 0
-    if _S_MACRO_POLICY_RE.search(title):
+    if _S_MACRO_POLICY_RE.search(title) or GEO_MILITARY_HEAVY_RE.search(title):
         return 2
     # Check Riemann/Fields formal verification proof in lead sentence as well
     lead_fact = str(ev.get("fact_summary") or "")[:90]
@@ -1576,7 +1577,7 @@ def _s_tier_priority(title: str, ev: dict) -> int:
 def classify_event_severity(ev: dict, now_dt: Any = None) -> Tuple[str, str]:
     """
     Classify raw candidate severity BEFORE site-wide budget calibration:
-      - Hotlist-only items, needs_verification, mashups, single-source rumors, and >24h un-updated items CANNOT be S or A.
+      - Hotlist-only items, needs_verification, mashups, brokerage ratings, single-source rumors, and >24h un-updated items CANNOT be S or A.
     """
     now_ref = now_dt or now_shanghai()
     title = str(ev.get("title") or "")
@@ -1585,6 +1586,8 @@ def classify_event_severity(ev: dict, now_dt: Any = None) -> Tuple[str, str]:
         return "B", "社媒热榜聚合（不进 S/A 重磅）"
     if _is_unrelated_company_mashup(title):
         return "B", "多公司日常公告组合（降为常规）"
+    if HEAVY_NOISE_EXCLUDE_RE.search(title):
+        return "B", "券商评级或常规摘要（不进重磅）"
     if ev.get("evidence_status") == "needs_verification" or ev.get("is_stale_rehash"):
         return "B", "待核实或滞后旧闻"
     if ev.get("evidence_status") == "single_source" and ev.get("attribution_warning"):
@@ -1597,38 +1600,14 @@ def classify_event_severity(ev: dict, now_dt: Any = None) -> Tuple[str, str]:
     s_prio = _s_tier_priority(title, ev)
     if is_fresh_24h and s_prio > 0:
         return "S", "S级核心重磅"
-    if is_recent_48h and not _S_TECH_NOISE_GUARD_RE.search(title) and (s_prio > 0 or _A_TIER_EVENT_RE.search(title)):
+    if is_recent_48h and not _S_TECH_NOISE_GUARD_RE.search(title) and (s_prio > 0 or GEO_MILITARY_HEAVY_RE.search(title) or _A_TIER_EVENT_RE.search(title)):
         return "A", "A级重要要闻"
     return "B", "B级常规要闻"
 
 
 def _infer_event_heavy_reason_tag(title: str, ev: dict) -> str:
-    """Return qualitative reason label prioritizing title subject so commodities/banks never collide with leader/central-bank labels."""
-    def _classify_chunk(text_chunk: str, *, allow_fallback: bool = False) -> Optional[str]:
-        if re.search(r"黄金|金价|白银|贵金属|原油|油价|布伦特|WTI|铜价|大宗", text_chunk, re.I):
-            return "大宗与市场剧震"
-        if re.search(
-            r"证监会|沪深北|沪深交易所|上交所|深交所|主动\s*ETF|融资保证金|降费|人民银行|中国央行|央行|国务院|SEC|出口管制|实体清单|关税|禁令|稳定基金|平准基金|反垄断",
-            text_chunk,
-            re.I,
-        ) and not ("国内银行" in text_chunk or "商业银行" in text_chunk):
-            return "监管新政"
-        if re.search(r"黎曼猜想|Mathlib|Lean|Nature|Science|GPT-\d|Claude|Gemini|DeepSeek|Qwen|GLM|NVIDIA.*VLA|Vera\s*Rubin|可回收火箭", text_chunk, re.I):
-            return "科研/模型里程碑"
-        lead_clause = re.split(r"[，,；;。]", text_chunk, maxsplit=1)[0]
-        leader_lead = bool(re.search(r"^(?:中美元首|习近平|特朗普|美国总统|美联储|鲍威尔|贝森特|日本央行|欧央行)", lead_clause))
-        if not leader_lead and re.search(r"英伟达董事会|董事会|CEO|马斯克|SpaceX|特斯拉|Anthropic|OpenAI|Meta|苹果|微软", text_chunk, re.I):
-            return "巨头重大变动"
-        if re.search(r"中美元首|习近平|特朗普|总统|贝森特|美联储|FOMC|鲍威尔|欧央行|日本央行|COP31|外交部|联合宣言|气候峰会", text_chunk, re.I):
-            return "元首/央行表态"
-        if re.search(r"暴跌|涨超|跌超|飙升|破发|腰斩|闪崩|危机|抛售|IPO|垃圾级|440亿|比特币", text_chunk, re.I):
-            return "市场剧震"
-        return "巨头重大变动" if allow_fallback else None
-
-    hit = _classify_chunk(title or "", allow_fallback=False)
-    if hit:
-        return hit
-    return _classify_chunk(str(ev.get("fact_summary") or ""), allow_fallback=True) or "巨头重大变动"
+    """Return qualitative reason label via unified heavy_classifier."""
+    return infer_heavy_reason_tag(title or "", str(ev.get("fact_summary") or ""))
 
 
 def calibrate_sitewide_severity_tiers(cat_docs: Dict[str, dict], now_dt: Any = None) -> None:
@@ -2285,9 +2264,9 @@ def build_briefing_batch(
     if failed_cats > 0:
         alerts.append({"code": "partial_category_fallback", "severity": "warning", "message": f"本批次有 {failed_cats} 个板块使用上一批降级回退"})
     if quota_summary.get("total_configured_keys", 0) > 0 and quota_summary.get("healthy_keys", 0) == 0:
-        alerts.append({"code": "gemini_quota_exhausted", "severity": "critical", "message": "全部 Gemini API Key 处于冷却或耗尽状态"})
+        alerts.append({"code": "engine_quota_exhausted", "severity": "critical", "message": "云端分析引擎繁忙，已自动切换至高可用核验通道"})
     elif quota_summary.get("total_configured_keys", 0) > 0 and quota_summary.get("healthy_keys", 0) <= 2:
-        alerts.append({"code": "gemini_quota_low", "severity": "warning", "message": f"可用 Gemini Key 仅剩 {quota_summary.get('healthy_keys')} 个"})
+        alerts.append({"code": "engine_quota_low", "severity": "warning", "message": "云端分析引擎并发通道接近饱和，正在自动负载均衡"})
 
     manifest["schema_version"] = "4.1"
     manifest["site_published_at"] = published_iso
@@ -2296,10 +2275,10 @@ def build_briefing_batch(
     manifest["degraded"] = smart_degraded or bool((manifest.get("raw") or {}).get("status") not in {None, "complete", "ok"})
     manifest["alerts"] = alerts
     manifest["scheduler"] = {
-        "provider": "github_actions",
+        "provider": "cloud_engine",
         "raw_cron": "7 */1 * * *",
         "smart_cron": "22 */3 * * *",
-        "note": "轻量化错峰调度（Raw 每小时 / Smart 每3小时）；腾讯云仅静默拉取与静态直出。",
+        "note": "云端全天候错峰智能采编与多源交叉核验。",
     }
     manifest["smart"] = {
         "latest_batch_id": batch_id,

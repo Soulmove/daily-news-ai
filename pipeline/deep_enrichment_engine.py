@@ -741,7 +741,7 @@ def _build_deterministic_event_qa(ev: Dict[str, Any], cat: str) -> List[Dict[str
     if _is_precious_metal_or_commodity_event(title) and not _is_a_share_policy_event(title, cat):
         return [
             {
-                "question": "这波贵金属/大宗商品波动对普通配置与市场有何影响？",
+                "question": "这件事对普通投资者与全球市场有何影响？",
                 "answer": _clip_complete_sentence(f"聚焦{ent_str}避险溢价与美元实际利率再定价：{summary}", 120),
                 "historical_parallel": "参考历次 COMEX 金价高位急跌去杠杆窗口，通常需重点观察 10 年期美债实际利率 (TIPS) 企稳、商业银行风控提示与亚盘实物金买盘承接力度。",
             },

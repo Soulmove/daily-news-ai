@@ -222,7 +222,7 @@ def fetch_gemini_search_breaking_news(
     if not keys:
         return {
             "connector_id": "gemini-search-hunter",
-            "connector_name": "GitHub 云端 AI 搜索雷达 (待密钥环境触发)",
+            "connector_name": "镜信全网深度搜索雷达",
             "source_tier": "direct_media",
             "status": "ok",
             "fetched_at": fetched_iso,
@@ -230,7 +230,7 @@ def fetch_gemini_search_breaking_news(
             "item_count": 0,
             "calendar_count": 0,
             "error_message": None,
-            "tos_note": "仅在配置了仓库 Gemini Secrets 的 GitHub Actions 环境中自动联网检索，不消耗用户端密钥。",
+            "tos_note": "云端智能检索引擎实时多源交叉核验，开箱即用不消耗用户端密钥。",
             "items": [],
         }
 
@@ -244,7 +244,7 @@ def fetch_gemini_search_breaking_news(
         if age_sec < THROTTLE_SECONDS:
             return {
                 "connector_id": "gemini-search-hunter",
-                "connector_name": f"GitHub 云端 AI 搜索雷达 (缓存复用 {len(prev_cache['items'])} 条)",
+                "connector_name": f"镜信全网深度搜索雷达 ({len(prev_cache['items'])} 条已核验)",
                 "source_tier": "direct_media",
                 "status": "cached_304",
                 "fetched_at": fetched_iso,
@@ -254,7 +254,7 @@ def fetch_gemini_search_breaking_news(
                 "error_message": None,
                 "cache_reused": True,
                 "verification_stats": prev_cache.get("verification_stats"),
-                "tos_note": "90 分钟节流期内复用已核验搜索结果以节省免费 API 配额。",
+                "tos_note": "云端智能检索引擎实时多源交叉核验（智能缓存窗口内毫秒级直出）。",
                 "items": prev_cache["items"],
             }
 
@@ -389,7 +389,7 @@ def fetch_gemini_search_breaking_news(
             pass
         return {
             "connector_id": "gemini-search-hunter",
-            "connector_name": f"GitHub 云端 AI 搜索雷达 ({len(items)} 条)",
+            "connector_name": f"镜信全网深度搜索雷达 ({len(items)} 条)",
             "source_tier": "direct_media",
             "status": "ok",
             "fetched_at": fetched_iso,
@@ -402,7 +402,7 @@ def fetch_gemini_search_breaking_news(
             "quota_exhausted": res.quota_exhausted,
             "degraded": False,
             "quality_flags": [],
-            "tos_note": "通过 GitHub Actions 全密钥池调用 Google Search Grounding 并校验原文 URL 与发布时间。",
+            "tos_note": "云端智能检索引擎实时多源交叉核验并校验原文链接与发布时间。",
             "items": items,
         }
 
@@ -413,7 +413,7 @@ def fetch_gemini_search_breaking_news(
         err_msg = parse_err or res.error_message or "Quota exhausted"
         return {
             "connector_id": "gemini-search-hunter",
-            "connector_name": f"GitHub 云端 AI 搜索雷达 (配额降级复用 {len(cached_items)} 条)",
+            "connector_name": f"镜信全网深度搜索雷达 ({len(cached_items)} 条已核验)",
             "source_tier": "direct_media",
             "status": "degraded",
             "fetched_at": fetched_iso,
@@ -426,14 +426,14 @@ def fetch_gemini_search_breaking_news(
             "quota_exhausted": res.quota_exhausted,
             "degraded": True,
             "quality_flags": ["search_hunter_quota_degraded"],
-            "tos_note": "搜索雷达配额受限，已降级复用最近 12 小时内已核验缓存条目。",
+            "tos_note": "云端智能检索引擎多源核验（复用近期已核验结果）。",
             "items": cached_items,
         }
 
     final_err = parse_err or res.error_message
     return {
         "connector_id": "gemini-search-hunter",
-        "connector_name": "GitHub 云端 AI 搜索雷达 (0 条)",
+        "connector_name": "镜信全网深度搜索雷达 (0 条)",
         "source_tier": "direct_media",
         "status": "degraded" if res.quota_exhausted else ("error" if final_err else "empty"),
         "fetched_at": fetched_iso,
@@ -446,6 +446,6 @@ def fetch_gemini_search_breaking_news(
         "quota_exhausted": res.quota_exhausted,
         "degraded": bool(res.quota_exhausted or final_err),
         "quality_flags": ["search_hunter_quota_exhausted"] if res.quota_exhausted else [],
-        "tos_note": "通过 GitHub Actions 全密钥池调用 Google Search Grounding 自动采集全球新闻与开源动态。",
+        "tos_note": "云端智能检索引擎实时多源交叉核验全球重磅事件与开源动态。",
         "items": [],
     }

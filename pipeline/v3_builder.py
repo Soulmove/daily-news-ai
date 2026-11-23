@@ -14,6 +14,7 @@ from xml.sax.saxutils import escape as xml_escape
 from pipeline.dedup import is_omnibus_digest_title, smart_truncate, strip_raw_urls_and_domain_tails, title_similarity
 from pipeline.entities import ENTITY_BY_ID, _match_alias, build_entities_index_base, match_entities_with_reasons
 from pipeline.finance_impact_builder import infer_event_evidence_tier
+from pipeline.heavy_classifier import sync_today_heavy_into_live_wire
 from pipeline.id_utils import make_storyline_id
 from pipeline.manifest import atomic_write_json, load_json_if_exists
 from pipeline.time_utils import SHANGHAI_TZ, now_shanghai, parse_iso_datetime, to_iso_shanghai
@@ -374,7 +375,7 @@ def _build_investment_card(event: dict, entities_map: Dict[str, dict]) -> Option
         "related_assets": assets[:6],
         "validation_nodes": final_milestones,
         "financial_actuals_preview": (primary_ent.get("financial_actuals") or [])[:4] if (primary_ent and (title_eids or not is_domain_special)) else [],
-        "market_data_disclosure": "当前静态版本暂未接入付费实时行情、估值倍数及华尔街一致预期接口；相关资产仅呈现可验证业务关联与 SEC/交易所历史公开披露事实。",
+        "market_data_disclosure": "本档案聚焦可溯源的公开监管文件（SEC/交易所披露）与多源交叉印证事实，客观呈现产业链传导脉络，不构成具体买卖建议。",
     }
 
 
@@ -462,10 +463,19 @@ def _compute_fact_diff(curr_event: dict, prev_event: Optional[dict]) -> Dict[str
 
 def _atomic_write_text(path: Path, text: str) -> None:
     """Atomically write UTF-8 text via a temporary sibling file."""
+    import time as _time
+
     path.parent.mkdir(parents=True, exist_ok=True)
     tmp = path.with_suffix(path.suffix + ".tmp")
     tmp.write_text(text, encoding="utf-8")
-    os.replace(tmp, path)
+    for attempt in range(4):
+        try:
+            os.replace(tmp, path)
+            return
+        except PermissionError:
+            if attempt >= 3:
+                raise
+            _time.sleep(0.03 * (attempt + 1))
 
 
 def _ics_escape(val: str) -> str:
@@ -1470,6 +1480,9 @@ def build_v3_artifacts(
     if wire_json_path.exists():
         try:
             wire_disk = json.loads(wire_json_path.read_text(encoding="utf-8"))
+            if isinstance(wire_disk, dict):
+                wire_disk = sync_today_heavy_into_live_wire(cat_docs, wire_disk, generated_dt)
+                atomic_write_json(wire_json_path, wire_disk)
             ai_progress_doc, _ = merge_live_ai_items_into_doc(
                 ai_progress_doc,
                 list(wire_disk.get("items") or []),

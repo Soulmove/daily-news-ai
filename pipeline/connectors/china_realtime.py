@@ -19,6 +19,7 @@ import requests
 
 from pipeline.connectors.base import HttpCacheStore
 from pipeline.dedup import is_consumer_promo_or_fluff, is_hotlist_aggregator_source, smart_truncate, strip_raw_urls_and_domain_tails
+from pipeline.heavy_classifier import GEO_MILITARY_HEAVY_RE, HEAVY_NOISE_EXCLUDE_RE, heavy_topic_key, infer_heavy_reason_tag
 from pipeline.id_utils import canonicalize_url, make_raw_item_id
 from pipeline.manifest import atomic_write_json, load_json_if_exists
 from pipeline.time_utils import SHANGHAI_TZ, now_shanghai, parse_iso_datetime, parse_published_at, to_iso_shanghai
@@ -559,30 +560,9 @@ _WIRE_A_TIER_RE = re.compile(
 
 
 def _infer_wire_heavy_reason_tag(title: str, excerpt: str = "", category: str = "") -> str:
-    """Return concise human-readable category reason explaining WHY a wire earned Heavy tier, prioritizing title subject."""
-    def _classify(chunk: str, *, allow_fallback: bool = False) -> str | None:
-        if not chunk:
-            return None
-        if re.search(r"黄金|金价|白银|贵金属|原油|油价|布伦特|WTI|铜价|大宗", chunk, re.I):
-            return "大宗与市场剧震"
-        if re.search(
-            r"证监会|沪深北|沪深交易所|上交所|深交所|主动\s*ETF|两融|保证金|降费|央行|国务院|税务|反垄断|SEC|出口管制|实体清单|关税|禁令|稳市基金|稳定基金|平准基金",
-            chunk,
-            re.I,
-        ) and not ("国内银行" in chunk or "商业银行" in chunk):
-            return "监管新政"
-        if re.search(r"黎曼猜想|Mathlib|Lean|Nature|Science|发布.{0,12}(?:GPT|Claude|Gemini|DeepSeek|Qwen|GLM|Kimi|VLA)|开源.{0,10}模型|芯片架构|可回收火箭", chunk, re.I):
-            return "科研/模型里程碑"
-        if re.search(r"中美元首|习近平|特朗普|总统|总理|财长|贝森特|美联储|FOMC|鲍威尔|欧央行|日本央行|外交部|联合声明", chunk, re.I):
-            return "元首/央行表态"
-        if re.search(r"暴跌|涨超|跌超|飙升|破发|腰斩|熔断|闪崩|危机|抛售|比特币|市值", chunk, re.I):
-            return "市场剧震"
-        return "巨头重大变动" if allow_fallback else None
-
-    hit = _classify(title or "", allow_fallback=False)
-    if hit:
-        return hit
-    return _classify(excerpt or "", allow_fallback=True) or "巨头重大变动"
+    """Return concise human-readable category reason via unified heavy_classifier."""
+    del category
+    return infer_heavy_reason_tag(title, excerpt)
 _EXCHANGE_REFORM_CLUSTER_RE = re.compile(
     r"(?:沪深北交易所|沪深交易所|上交所.{0,10}(?:做市|降费)|深交所.{0,10}(?:做市|征求意见)|中国结算.{0,10}债券)",
     re.I,
@@ -596,13 +576,20 @@ def _classify_wire_severity(
     source_name: str,
 ) -> tuple[str, str]:
     """Classify wire item severity into S / A / B using authoritative sources + substantive impact."""
-    if is_hotlist_aggregator_source(source_id, source_name) or is_consumer_promo_or_fluff(title, excerpt) or _WIRE_NOISE_HEAVY_RE.search(title):
+    if (
+        is_hotlist_aggregator_source(source_id, source_name)
+        or is_consumer_promo_or_fluff(title, excerpt)
+        or _WIRE_NOISE_HEAVY_RE.search(title)
+        or HEAVY_NOISE_EXCLUDE_RE.search(title)
+    ):
         return "B", "常规动态"
     if _WIRE_S_EXCLUDE_RE.search(title):
         return "A" if _WIRE_A_TIER_RE.search(title) else "B", "常规动态"
     blob = f"{title} {excerpt}"
     if _WIRE_S_TIER_RE.search(title) or (_EXCHANGE_REFORM_CLUSTER_RE.search(title) and not _WIRE_S_EXCLUDE_RE.search(blob)):
         return "S", "S级突发重磅"
+    if GEO_MILITARY_HEAVY_RE.search(title):
+        return "A", "A级突发重磅"
     if _WIRE_A_TIER_RE.search(blob):
         return "A", "A级要闻"
     return "B", "常规动态"
@@ -746,15 +733,6 @@ def refresh_live_wire_file(base_dir: Path | str = ".", extra_items: Optional[Lis
     merged = merged[:120]
 
     # Calibrate 7x24 wire heavy alerts (<= 15, zero semantic duplicates or multi-post topic clones among heavy picks)
-    def _wire_heavy_topic_key(norm_t: str) -> Optional[str]:
-        if "韩国" in norm_t and any(k in norm_t for k in ("稳", "平准", "股市", "财长")):
-            return "korea_stab"
-        if "主动etf" in norm_t:
-            return "cn_active_etf"
-        if "黄仁勋" in norm_t and "英伟达" in norm_t:
-            return "nvda_jensen"
-        return None
-
     high_indices = [idx for idx, it in enumerate(merged) if it.get("importance") == "high"]
     selected_high: List[int] = []
     heavy_norms: List[str] = []
@@ -764,12 +742,12 @@ def refresh_live_wire_file(base_dir: Path | str = ".", extra_items: Optional[Lis
     ]
     for idx in s_first:
         n_cur = re.sub(r"[\s\-_·:：,，.。!！?？()（）\[\]【】'\"]+", "", str(merged[idx].get("title") or "").lower())
-        tkey = _wire_heavy_topic_key(n_cur)
+        tkey = heavy_topic_key(n_cur)
         if tkey and tkey in seen_topic_keys:
             continue
         if any(_wire_titles_similar(n_cur, prev_n) for prev_n in heavy_norms):
             continue
-        if len(selected_high) < 15:
+        if len(selected_high) < 12:
             selected_high.append(idx)
             heavy_norms.append(n_cur)
             if tkey:
