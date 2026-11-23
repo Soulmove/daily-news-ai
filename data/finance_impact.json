@@ -2,11 +2,11 @@
   "schema_version": "4.2",
   "generation_mode": "deterministic_deep_research_v9",
   "quality_flags": [],
-  "generated_at": "2026-11-23T13:31:23+08:00",
-  "batch_id": "smart-20261123-133123",
+  "generated_at": "2026-11-23T14:16:30+08:00",
+  "batch_id": "smart-20261123-141630",
   "disclaimer": "模型边界提示：以下板块敏感区间基于结构化事件极性与 20 日实现波动率校准推演，并附跨市场计价状态、三阶个股暴露与历史同类回放，仅为研究参考，不构成任何投资买卖建议。",
   "disclaimer_en": "Model Notice: Sensitivity intervals combine structured event polarity, realized volatility calibration, priced-in session checks, and historical replays for research only — not investment advice.",
-  "quotes_updated_at": "2026-11-23T13:41:14+08:00",
+  "quotes_updated_at": "2026-11-23T14:20:38+08:00",
   "index_quotes": [
     {
       "symbol": "sh000001",
@@ -15,10 +15,10 @@
       "name_en": "SSE Composite",
       "market": "A股",
       "role": "index",
-      "price": 3523.66,
-      "change": -10.13,
-      "pct_change": -0.29,
-      "atr_20d_pct": 1.39,
+      "price": 3525.03,
+      "change": -8.76,
+      "pct_change": -0.25,
+      "atr_20d_pct": 1.41,
       "source": "Tencent Finance (Delayed / Close)"
     },
     {
@@ -28,10 +28,10 @@
       "name_en": "SZSE Component",
       "market": "A股",
       "role": "index",
-      "price": 10411.7,
-      "change": 155.31,
-      "pct_change": 1.51,
-      "atr_20d_pct": 2.7,
+      "price": 10432.08,
+      "change": 175.69,
+      "pct_change": 1.71,
+      "atr_20d_pct": 2.74,
       "source": "Tencent Finance (Delayed / Close)"
     },
     {
@@ -41,9 +41,9 @@
       "name_en": "Hang Seng Index",
       "market": "港股",
       "role": "index",
-      "price": 22355.77,
-      "change": -55.03,
-      "pct_change": -0.25,
+      "price": 22410.63,
+      "change": -0.17,
+      "pct_change": 0.0,
       "atr_20d_pct": 1.1,
       "source": "Tencent Finance (Delayed / Close)"
     },
@@ -54,9 +54,9 @@
       "name_en": "Hang Seng Tech",
       "market": "港股",
       "role": "index",
-      "price": 3501.06,
-      "change": -10.08,
-      "pct_change": -0.29,
+      "price": 3519.06,
+      "change": 7.92,
+      "pct_change": 0.23,
       "atr_20d_pct": 1.1,
       "source": "Tencent Finance (Delayed / Close)"
     },
@@ -90,8 +90,8 @@
   "total_mapped_events": 16,
   "event_impacts": [
     {
-      "id": "imp_evt_6289b2158064",
-      "event_id": "evt_6289b2158064",
+      "id": "imp_evt_54f9331f9d0e",
+      "event_id": "evt_54f9331f9d0e",
       "rule_id": "a_share_capital_market_reform",
       "validation_status": "verified",
       "validation_note": "结构化方向与资产敏感区间一致性校验通过",
@@ -99,18 +99,22 @@
       "evidence_tier_label": "官方公告 / 监管披露",
       "effective_date_label": "11月30日起正式生效",
       "qualifier_badge": null,
-      "event_title": "沪深北交易所下调融资保证金比例至80%并推进创业板做市与降费",
-      "event_title_en": "沪深北交易所下调融资保证金比例至80%并推进创业板做市与降费",
-      "event_summary": "2026年11月22日，经中国证监会批准，上交所、深交所、北交所发布通知，将投资者融资买入证券的最低保证金比例由100%调低至80%，自11月30日起施行；此前三所曾于2026年1月将该比例由80%调高至100%。对于调整前尚未了结的融资合约，证券公司可按新规计算投资者保证金可用余额。同日，深交所就《创业板股票做市交易业务细则》公开征求意见，拟引入做市商制度；",
-      "event_summary_en": "2026年11月22日，经中国证监会批准，上交所、深交所、北交所发布通知，将投资者融资买入证券的最低保证金比例由100%调低至80%，自11月30日起施行；此前三所曾于2026年1月将该比例由80%调高至100%。对于调整前尚未了结的融资合约，证券公司可按新规计算投资者保证金可用余额。同日，深交所就《创业板股票做市交易业务细则》公开征求意见，拟引入做市商制度；",
+      "event_title": "沪深北交易所推出稳股市三项新政：融资保证金比例降至80%",
+      "event_title_en": "沪深北交易所推出稳股市三项新政：融资保证金比例降至80%",
+      "event_summary": "11月22日，经中国证监会批准，上交所、深交所、北交所将融资买入证券最低保证金比例由100%调低至80%，自11月30日起施行。同日，深交所就《创业板股票做市交易业务细则》公开征求意见，拟引入做市商制度；沪深交易所及中国结算将免收上市费等降费措施有效期延长两年至2028年，报道预计此轮举措可带来4000亿元增量资金及今年超46亿元市场让利。",
+      "event_summary_en": "11月22日，经中国证监会批准，上交所、深交所、北交所将融资买入证券最低保证金比例由100%调低至80%，自11月30日起施行。同日，深交所就《创业板股票做市交易业务细则》公开征求意见，拟引入做市商制度；沪深交易所及中国结算将免收上市费等降费措施有效期延长两年至2028年，报道预计此轮举措可带来4000亿元增量资金及今年超46亿元市场让利。",
       "category": "general",
-      "published_at": "2026-11-23T13:21:05+08:00",
+      "published_at": "2026-11-23T14:14:28+08:00",
       "source_name": "腾讯新闻综合早报",
       "source_url": "https://view.inews.qq.com/a/20261122A0AXFB00",
       "sources": [
         {
           "source_name": "腾讯新闻综合早报",
           "url": "https://view.inews.qq.com/a/20261122A0AXFB00"
+        },
+        {
+          "source_name": "澎湃新闻",
+          "url": "https://www.thepaper.cn/newsDetail_forward_34535221"
         },
         {
           "source_name": "澎湃新闻",
@@ -123,10 +127,6 @@
         {
           "source_name": "澎湃新闻",
           "url": "https://www.thepaper.cn/newsDetail_forward_34535102"
-        },
-        {
-          "source_name": "知乎热榜",
-          "url": "https://www.zhihu.com/question/2107926753717007819"
         }
       ],
       "tag": "A股两融松绑与资本市场稳市组合拳",
@@ -157,24 +157,24 @@
           "name": "上证指数",
           "name_en": "SSE Composite",
           "market": "A股",
-          "price": 3523.66,
-          "pct_change": -0.29
+          "price": 3525.03,
+          "pct_change": -0.25
         },
         {
           "ticker": "HSTECH.HK",
           "name": "恒生科指",
           "name_en": "Hang Seng Tech",
           "market": "港股",
-          "price": 3501.06,
-          "pct_change": -0.29
+          "price": 3519.06,
+          "pct_change": 0.23
         },
         {
           "ticker": "HSI.HK",
           "name": "恒生指数",
           "name_en": "Hang Seng Index",
           "market": "港股",
-          "price": 22355.77,
-          "pct_change": -0.25
+          "price": 22410.63,
+          "pct_change": 0.0
         }
       ],
       "bars": [
@@ -246,8 +246,8 @@
         "status_code": "partially_priced",
         "status_label": "部分计价（博弈二次预期差）",
         "status_label_en": "Partially Priced",
-        "session_context": "「沪深北交易所下调融资保证金比例至80%并推进」于交易时段内释放，资金正逐步消化量价反馈",
-        "expectation_gap": "【11月30日起正式生效】针对「沪深北交易所下调融资保证金比例至80%并推进创业板做」，首波情绪已在盘面初步计价中显现，真正的预期差取决于后续核心标的成交额能否放量印证及二阶产业链订单/细则跟进。"
+        "session_context": "「沪深北交易所推出稳股市三项新政：融资保证金比」于交易时段内释放，资金正逐步消化量价反馈",
+        "expectation_gap": "【11月30日起正式生效】针对「沪深北交易所推出稳股市三项新政：融资保证金比例降至8」，首波情绪已在盘面初步计价中显现，真正的预期差取决于后续核心标的成交额能否放量印证及二阶产业链订单/细则跟进。"
       },
       "transmission_layers": [
         {
@@ -684,8 +684,8 @@
           "name": "恒生指数",
           "name_en": "Hang Seng Index",
           "market": "港股",
-          "price": 22355.77,
-          "pct_change": -0.25
+          "price": 22410.63,
+          "pct_change": 0.0
         },
         {
           "ticker": "GLD",
@@ -700,8 +700,8 @@
           "name": "黄金ETF(A股)",
           "name_en": "CN Gold ETF",
           "market": "A股",
-          "price": 7.404,
-          "pct_change": 1.68
+          "price": 7.39,
+          "pct_change": 1.48
         }
       ],
       "bars": [
@@ -930,16 +930,16 @@
           "name": "黄金ETF(A股)",
           "name_en": "CN Gold ETF",
           "market": "A股",
-          "price": 7.404,
-          "pct_change": 1.68
+          "price": 7.39,
+          "pct_change": 1.48
         },
         {
           "ticker": "02899.HK",
           "name": "紫金矿业",
           "name_en": "Zijin Mining",
           "market": "港股",
-          "price": 24.0,
-          "pct_change": 4.08
+          "price": 24.04,
+          "pct_change": 4.25
         }
       ],
       "bars": [
@@ -1167,8 +1167,8 @@
           "name": "恒生科指",
           "name_en": "Hang Seng Tech",
           "market": "港股",
-          "price": 3501.06,
-          "pct_change": -0.29
+          "price": 3519.06,
+          "pct_change": 0.23
         }
       ],
       "bars": [
@@ -1409,8 +1409,8 @@
           "name": "上证指数",
           "name_en": "SSE Composite",
           "market": "A股",
-          "price": 3523.66,
-          "pct_change": -0.29
+          "price": 3525.03,
+          "pct_change": -0.25
         }
       ],
       "bars": [
@@ -2057,6 +2057,213 @@
       ]
     },
     {
+      "id": "imp_evt_95f1d6dc993c",
+      "event_id": "evt_95f1d6dc993c",
+      "rule_id": "korea_market_stabilization",
+      "validation_status": "verified",
+      "validation_note": "结构化方向与资产敏感区间一致性校验通过",
+      "evidence_tier": "single_source",
+      "evidence_tier_label": "单一信源线索",
+      "effective_date_label": null,
+      "qualifier_badge": null,
+      "event_title": "韩国拟时隔18年再启股市稳定基金，放宽回购并监控卖空三个月",
+      "event_title_en": "韩国拟时隔18年再启股市稳定基金，放宽回购并监控卖空三个月",
+      "event_summary": "在KOSPI指数此前单日暴跌逾5%的背景下，韩国副总理兼财政部长于11月22日主持召开金融市场紧急会议，宣布立即启动股市稳定基金激活机制准备工作（或为2008年以来首次），决定自24日起放宽上市公司自有股票回购每日申报量上限三个月，并同步启动为期三个月的非法卖空专项监控期。",
+      "event_summary_en": "在KOSPI指数此前单日暴跌逾5%的背景下，韩国副总理兼财政部长于11月22日主持召开金融市场紧急会议，宣布立即启动股市稳定基金激活机制准备工作（或为2008年以来首次），决定自24日起放宽上市公司自有股票回购每日申报量上限三个月，并同步启动为期三个月的非法卖空专项监控期。",
+      "category": "general",
+      "published_at": "2026-11-23T14:14:28+08:00",
+      "source_name": "腾讯新闻综合早报",
+      "source_url": "https://view.inews.qq.com/a/20261122A0B4RA00",
+      "sources": [
+        {
+          "source_name": "腾讯新闻综合早报",
+          "url": "https://view.inews.qq.com/a/20261122A0B4RA00"
+        }
+      ],
+      "tag": "亚太/韩国股市去杠杆与政府平准基金稳市干预",
+      "tag_en": "Korea Equity Deleveraging & Stabilization Fund Intervention",
+      "polarity": "bullish",
+      "intensity": 4,
+      "one_liner": "韩国股市融资余额回落后，韩国政府拟评估启动股市稳定/平准基金以托底筹码与流动性，优先缓和韩国半导体与科技权重股被动抛压并改善亚太风险偏好（聚焦本次事件关键量化幅度：18年）。",
+      "one_liner_en": "Korea evaluates activating equity stabilization funds after margin contraction, cushioning local semiconductor weights and APAC risk sentiment.",
+      "sample_basis": {
+        "sample_n": 10,
+        "volatility_pct": 2.37,
+        "volatility_source": "韩国政府历次股市稳定基金与限制卖空干预窗口表现样本",
+        "horizon": "1~5 个交易日",
+        "confidence_label": "官方稳市政策预期（托底亚太杠杆筹码与流动性）",
+        "confidence_label_en": "Official Stabilization Fund Policy Support"
+      },
+      "affected_tickers": {
+        "EWY": 0.72,
+        "000660.KS": 0.78,
+        "005930.KS": 0.7,
+        "HSTECH.HK": 0.25
+      },
+      "realized_quotes": [
+        {
+          "ticker": "QQQ",
+          "name": "纳指100ETF",
+          "name_en": "Invesco QQQ",
+          "market": "美股",
+          "price": 608.45,
+          "pct_change": -5.67
+        },
+        {
+          "ticker": "HSTECH.HK",
+          "name": "恒生科指",
+          "name_en": "Hang Seng Tech",
+          "market": "港股",
+          "price": 3519.06,
+          "pct_change": 0.23
+        }
+      ],
+      "bars": [
+        {
+          "market": "亚太",
+          "sector": "韩国科技与半导体权重 (KOSPI / 海力士 / 三星)",
+          "sector_en": "Korea Tech & Semi Weights (KOSPI / Hynix / Samsung)",
+          "pct_low": 1.0,
+          "pct_high": 3.2,
+          "direction": "positive",
+          "proxy_ticker": "EWY",
+          "logic": "稳定基金托底流动性预期缓解融资强平链条，对高权重存储芯片与韩国宽基构成直接支撑。",
+          "logic_en": "Stabilization fund liquidity eases forced margin unwinding in flagship Korean memory and index weights."
+        },
+        {
+          "market": "亚太",
+          "sector": "韩国大盘宽基与外资风险偏好映射 (EWY)",
+          "sector_en": "MSCI South Korea Proxy & Foreign Flows (EWY)",
+          "pct_low": 0.6,
+          "pct_high": 2.0,
+          "direction": "positive",
+          "proxy_ticker": "EWY",
+          "logic": "官方政策介入信号有助于抑制韩元贬值与外资连续净流出斜率。",
+          "logic_en": "Policy intervention signal moderates FX pressure and foreign equity outflow velocity."
+        },
+        {
+          "market": "港股",
+          "sector": "港股/A股亚太科技情绪外溢 (HSTECH)",
+          "sector_en": "APAC Tech Risk-On Spillover (HSTECH)",
+          "pct_low": 0.3,
+          "pct_high": 1.1,
+          "direction": "positive",
+          "proxy_ticker": "HSTECH.HK",
+          "logic": "东亚邻近市场企稳温和降低亚太成长股的联动抛压，属跨境情绪外溢传导。",
+          "logic_en": "Steadier East Asian risk sentiment mildly dampens cross-market tech derating pressure."
+        }
+      ],
+      "if_then": [
+        {
+          "cond": "[顺向催化兑现阈值] 若相关催化在 3 个交易日内落地具体数据/公告，带动 EWY 放量上行 1.9%~3.2%",
+          "result": "韩国科技与半导体权重 (KOSPI / 海力士 / 三星)核心受益标的获增量机构资金加仓，可沿一阶直接标的顺势跟踪。",
+          "tone": "bullish"
+        },
+        {
+          "cond": "[预期差证伪回吐阈值] 若首个交易日冲高后无法维持换手，次日回撤幅度 ≥ 1.5% 且未见实质订单/政策跟进",
+          "result": "属于一次性主题情绪脉冲，避免在二阶段接盘弱势滞涨概念股。",
+          "tone": "bearish"
+        }
+      ],
+      "milestones": [
+        {
+          "date": "1 周内",
+          "status": "current",
+          "label": "盯紧韩国金融委员会稳市细则发布与 KOSPI 融资余额止跌信号"
+        }
+      ],
+      "priced_in_analysis": {
+        "status_code": "partially_priced",
+        "status_label": "部分计价（博弈二次预期差）",
+        "status_label_en": "Partially Priced",
+        "session_context": "「韩国拟时隔18年再启股市稳定基金，放宽回购并」于交易时段内释放，资金正逐步消化量价反馈",
+        "expectation_gap": "针对「韩国拟时隔18年再启股市稳定基金，放宽回购并监控卖空」，首波情绪已在盘面初步计价中显现，真正的预期差取决于后续核心标的成交额能否放量印证及二阶产业链订单/细则跟进。"
+      },
+      "transmission_layers": [
+        {
+          "tier": 1,
+          "tier_label": "一阶直接冲击（直接定价核心标的）",
+          "summary": "紧扣「韩国拟时隔18年再启股市稳定基金，放宽回购并监控卖空」最直接的营收与估值敞口：韩国科技与半导体权重 / 韩国大盘宽基与外资风险偏好映 等首当其冲。",
+          "stocks": [
+            {
+              "name": "韩国科技与半导体权重",
+              "code": "EWY",
+              "market": "亚太",
+              "exposure_logic": "稳定基金托底流动性预期缓解融资强平链条，对高权重存储芯片与韩国宽基构成直接支撑。",
+              "direction": "positive"
+            },
+            {
+              "name": "韩国大盘宽基与外资风险偏好映",
+              "code": "EWY",
+              "market": "亚太",
+              "exposure_logic": "官方政策介入信号有助于抑制韩元贬值与外资连续净流出斜率。",
+              "direction": "positive"
+            }
+          ]
+        },
+        {
+          "tier": 2,
+          "tier_label": "二阶产业链传导 / 替代对冲",
+          "summary": "向产业链上下游、跨市场同业映射或自主替代环节进行二阶定价传导。",
+          "stocks": [
+            {
+              "name": "恒生科技指数",
+              "code": "HSTECH.HK",
+              "market": "港股",
+              "exposure_logic": "东亚邻近市场企稳温和降低亚太成长股的联动抛压，属跨境情绪外溢传导。",
+              "direction": "positive"
+            }
+          ]
+        },
+        {
+          "tier": 3,
+          "tier_label": "三阶资金面与风格跷跷板效应",
+          "summary": "风险偏好变化驱动机构仓位在高弹性成长与低波高股息防御资产间再平衡。",
+          "stocks": [
+            {
+              "name": "红利低波ETF",
+              "code": "512890.SH",
+              "market": "A股",
+              "exposure_logic": "当主线高波动分化时承接防御与避险资金切换",
+              "direction": "positive"
+            }
+          ]
+        }
+      ],
+      "historical_precedents": [
+        {
+          "date": "2024-09-24",
+          "event_title": "国内跨市场重大催化发布于闭市窗口并伴随跨资产联动",
+          "t1_reaction": "首个开盘日竞价集中释放预期差，前 60 分钟成交额放大验证资金承接度。",
+          "t5_reaction": "T+5 主线标的围绕产业链业绩兑现与后续政策细则完成筹码分化。",
+          "lesson": "重点核对事件是否发生在交易所休市后（未计价窗口）及首小时量能持续性。"
+        },
+        {
+          "date": "2023-10-18",
+          "event_title": "跨境政策/产业催化剂落地后中美港三地市场分时异步重估",
+          "t1_reaction": "率先开盘的市场计价 60%~75% 首波弹性，后开盘市场易现高开/低开缺口收敛。",
+          "t5_reaction": "T+5 脱离纯情绪扰动后，基本面直接受益龙头跑赢二三线跟风概念。",
+          "lesson": "避免在外盘已充分交易 5%+ 涨幅后再追高滞后映射股。"
+        }
+      ],
+      "quant_if_then": [
+        {
+          "case": "bull",
+          "label": "顺向催化兑现阈值",
+          "trigger_metric": "EWY 量价突破强度",
+          "threshold": "若相关催化在 3 个交易日内落地具体数据/公告，带动 EWY 放量上行 1.9%~3.2%",
+          "action_implication": "韩国科技与半导体权重 (KOSPI / 海力士 / 三星)核心受益标的获增量机构资金加仓，可沿一阶直接标的顺势跟踪。"
+        },
+        {
+          "case": "bear",
+          "label": "预期差证伪回吐阈值",
+          "trigger_metric": "冲高回落幅度 & 量能衰减",
+          "threshold": "若首个交易日冲高后无法维持换手，次日回撤幅度 ≥ 1.5% 且未见实质订单/政策跟进",
+          "action_implication": "属于一次性主题情绪脉冲，避免在二阶段接盘弱势滞涨概念股。"
+        }
+      ]
+    },
+    {
       "id": "imp_evt_13806215cf9c",
       "event_id": "evt_13806215cf9c",
       "rule_id": "geopolitics_energy_escalation",
@@ -2134,8 +2341,8 @@
           "name": "紫金矿业",
           "name_en": "Zijin Mining",
           "market": "港股",
-          "price": 24.0,
-          "pct_change": 4.08
+          "price": 24.04,
+          "pct_change": 4.25
         }
       ],
       "bars": [
@@ -2394,8 +2601,8 @@
           "name": "紫金矿业",
           "name_en": "Zijin Mining",
           "market": "港股",
-          "price": 24.0,
-          "pct_change": 4.08
+          "price": 24.04,
+          "pct_change": 4.25
         }
       ],
       "bars": [
@@ -2567,6 +2774,450 @@
           "action_implication": "属于纯地缘嘴炮脉冲突发，油运高开追涨极易被套，逢高减仓兑现。"
         }
       ]
+    },
+    {
+      "id": "imp_evt_6144e8cc692b",
+      "event_id": "evt_6144e8cc692b",
+      "rule_id": "autonomous_driving_fsd",
+      "validation_status": "verified",
+      "validation_note": "结构化方向与资产敏感区间一致性校验通过",
+      "evidence_tier": "single_source",
+      "evidence_tier_label": "单一信源线索",
+      "effective_date_label": null,
+      "qualifier_badge": null,
+      "event_title": "特斯拉北美启动FSD V15监督版推送，中国市场正依法推进准备工作",
+      "event_title_en": "特斯拉北美启动FSD V15监督版推送，中国市场正依法推进准备工作",
+      "event_summary": "当地时间11月21日，特斯拉正式启动FSD V15监督版推送，推出驾驶可视化界面Tesla Reality View，并单方宣称新版本通过升级视觉编码器使安全关键场景处理能力提升25倍。11月22日，特斯拉中国客服回应称，正根据国家法规积极推进中国市场准备工作。",
+      "event_summary_en": "当地时间11月21日，特斯拉正式启动FSD V15监督版推送，推出驾驶可视化界面Tesla Reality View，并单方宣称新版本通过升级视觉编码器使安全关键场景处理能力提升25倍。11月22日，特斯拉中国客服回应称，正根据国家法规积极推进中国市场准备工作。",
+      "category": "general",
+      "published_at": "2026-11-23T14:14:28+08:00",
+      "source_name": "腾讯新闻综合早报",
+      "source_url": "https://view.inews.qq.com/a/20261122A09HDK00",
+      "sources": [
+        {
+          "source_name": "腾讯新闻综合早报",
+          "url": "https://view.inews.qq.com/a/20261122A09HDK00"
+        }
+      ],
+      "tag": "端到端智驾商业化 / FSD 落地",
+      "tag_en": "Autonomous Driving & FSD Rollout",
+      "polarity": "divergent",
+      "intensity": 4,
+      "one_liner": "端到端智驾高版本推进强化头部整车软件订阅与 Robotaxi 预期，带动高算力域控及传感器渗透率上行，传统低阶网约车承压。",
+      "one_liner_en": "End-to-end ADAS and FSD deployment lifts smart-driving compute/chassis demand while pressuring legacy ride-hailing.",
+      "sample_basis": {
+        "sample_n": 14,
+        "volatility_pct": 3.2,
+        "volatility_source": "TSLA / 智能驾驶链历史催化窗口",
+        "horizon": "2~7 个交易日",
+        "confidence_label": "高置信（直接产业落地催化）",
+        "confidence_label_en": "High (Direct ADAS Catalyst)"
+      },
+      "affected_tickers": {
+        "TSLA": 0.85,
+        "002920.SZ": 0.7,
+        "09868.HK": 0.55,
+        "UBER": -0.45
+      },
+      "realized_quotes": [
+        {
+          "ticker": "QQQ",
+          "name": "纳指100ETF",
+          "name_en": "Invesco QQQ",
+          "market": "美股",
+          "price": 608.45,
+          "pct_change": -5.67
+        },
+        {
+          "ticker": "HSTECH.HK",
+          "name": "恒生科指",
+          "name_en": "Hang Seng Tech",
+          "market": "港股",
+          "price": 3519.06,
+          "pct_change": 0.23
+        }
+      ],
+      "bars": [
+        {
+          "market": "美股",
+          "sector": "特斯拉 FSD 与整车软件估值 (TSLA)",
+          "sector_en": "Tesla FSD & Software Valuation (TSLA)",
+          "pct_low": 2.1,
+          "pct_high": 5.2,
+          "direction": "positive",
+          "proxy_ticker": "TSLA",
+          "logic": "FSD 高版本落地与订阅渗透率提升，强化整车软件及 Robotaxi 远期现金流定价。",
+          "logic_en": "New FSD rollout and subscription adoption strengthen automotive software valuation."
+        },
+        {
+          "market": "A股",
+          "sector": "智能驾驶域控制器 / 激光雷达",
+          "sector_en": "A-Share ADAS Domain Controller & LiDAR",
+          "pct_low": 1.4,
+          "pct_high": 3.6,
+          "direction": "positive",
+          "proxy_ticker": "002920.SZ",
+          "logic": "头部车企智驾节奏加快，倒逼国内车企跟进高算力域控、线控制动与传感器配置。",
+          "logic_en": "Accelerated flagship ADAS rollout drives domestic controller and sensor upgrades."
+        },
+        {
+          "market": "港股",
+          "sector": "头部新势力智驾领先车企",
+          "sector_en": "HKEX Leading Smart-EV OEMs",
+          "pct_low": 0.9,
+          "pct_high": 2.8,
+          "direction": "positive",
+          "proxy_ticker": "09868.HK",
+          "logic": "端到端智驾模型迭代领先的港股整车厂受益于销量结构上移与估值重估。",
+          "logic_en": "Smart-EV leaders in Hong Kong benefit from mix upgrade and ADAS differentiation."
+        },
+        {
+          "market": "美股",
+          "sector": "传统纯人工网约车平台 (UBER)",
+          "sector_en": "Legacy Ride-Hailing Platforms (UBER)",
+          "pct_low": -1.6,
+          "pct_high": -0.4,
+          "direction": "negative",
+          "proxy_ticker": "UBER",
+          "logic": "若 Robotaxi 商业化时间表前移，纯人工运力撮合平台的中长期抽成空间面临估值折价。",
+          "logic_en": "Faster Robotaxi commercialization compresses terminal multiples for legacy ride-hailing."
+        }
+      ],
+      "if_then": [
+        {
+          "cond": "[顺向催化兑现阈值] 若相关催化在 3 个交易日内落地具体数据/公告，带动 TSLA 放量上行 3.1%~5.2%",
+          "result": "特斯拉 FSD 与整车软件估值 (TSLA)核心受益标的获增量机构资金加仓，可沿一阶直接标的顺势跟踪。",
+          "tone": "bullish"
+        },
+        {
+          "cond": "[预期差证伪回吐阈值] 若首个交易日冲高后无法维持换手，次日回撤幅度 ≥ 1.5% 且未见实质订单/政策跟进",
+          "result": "属于一次性主题情绪脉冲，避免在二阶段接盘弱势滞涨概念股。",
+          "tone": "bearish"
+        }
+      ],
+      "milestones": [
+        {
+          "date": "推送后 2 周",
+          "status": "current",
+          "label": "跟踪首批车型 OTA 推送比例及无干预接管里程实测"
+        },
+        {
+          "date": "未来 1 季度",
+          "status": "upcoming",
+          "label": "观察 FSD 订阅选装率与中美监管准入批复"
+        }
+      ],
+      "priced_in_analysis": {
+        "status_code": "partially_priced",
+        "status_label": "部分计价（博弈二次预期差）",
+        "status_label_en": "Partially Priced",
+        "session_context": "「特斯拉北美启动FSD V15监督版推送，中国」于交易时段内释放，资金正逐步消化量价反馈",
+        "expectation_gap": "针对「特斯拉北美启动FSD V15监督版推送，中国市场正依」，首波情绪已在盘面初步计价中显现，真正的预期差取决于后续核心标的成交额能否放量印证及二阶产业链订单/细则跟进。"
+      },
+      "transmission_layers": [
+        {
+          "tier": 1,
+          "tier_label": "一阶直接冲击（直接定价核心标的）",
+          "summary": "紧扣「特斯拉北美启动FSD V15监督版推送，中国市场正依」最直接的营收与估值敞口：特斯拉 / 德赛西威 等首当其冲。",
+          "stocks": [
+            {
+              "name": "特斯拉",
+              "code": "TSLA",
+              "market": "美股",
+              "exposure_logic": "FSD 高版本落地与订阅渗透率提升，强化整车软件及 Robotaxi 远期现金流定价。",
+              "direction": "positive"
+            },
+            {
+              "name": "德赛西威",
+              "code": "002920.SZ",
+              "market": "A股",
+              "exposure_logic": "头部车企智驾节奏加快，倒逼国内车企跟进高算力域控、线控制动与传感器配置。",
+              "direction": "positive"
+            }
+          ]
+        },
+        {
+          "tier": 2,
+          "tier_label": "二阶产业链传导 / 替代对冲",
+          "summary": "向产业链上下游、跨市场同业映射或自主替代环节进行二阶定价传导。",
+          "stocks": [
+            {
+              "name": "小鹏汽车",
+              "code": "09868.HK",
+              "market": "港股",
+              "exposure_logic": "端到端智驾模型迭代领先的港股整车厂受益于销量结构上移与估值重估。",
+              "direction": "positive"
+            }
+          ]
+        },
+        {
+          "tier": 3,
+          "tier_label": "三阶资金面与风格跷跷板效应",
+          "summary": "风险偏好变化驱动机构仓位在高弹性成长与低波高股息防御资产间再平衡。",
+          "stocks": [
+            {
+              "name": "优步",
+              "code": "UBER",
+              "market": "美股",
+              "exposure_logic": "若 Robotaxi 商业化时间表前移，纯人工运力撮合平台的中长期抽成空间面临估值折价。",
+              "direction": "negative"
+            }
+          ]
+        }
+      ],
+      "historical_precedents": [
+        {
+          "date": "2024-09-24",
+          "event_title": "国内跨市场重大催化发布于闭市窗口并伴随跨资产联动",
+          "t1_reaction": "首个开盘日竞价集中释放预期差，前 60 分钟成交额放大验证资金承接度。",
+          "t5_reaction": "T+5 主线标的围绕产业链业绩兑现与后续政策细则完成筹码分化。",
+          "lesson": "重点核对事件是否发生在交易所休市后（未计价窗口）及首小时量能持续性。"
+        },
+        {
+          "date": "2023-10-18",
+          "event_title": "跨境政策/产业催化剂落地后中美港三地市场分时异步重估",
+          "t1_reaction": "率先开盘的市场计价 60%~75% 首波弹性，后开盘市场易现高开/低开缺口收敛。",
+          "t5_reaction": "T+5 脱离纯情绪扰动后，基本面直接受益龙头跑赢二三线跟风概念。",
+          "lesson": "避免在外盘已充分交易 5%+ 涨幅后再追高滞后映射股。"
+        }
+      ],
+      "quant_if_then": [
+        {
+          "case": "bull",
+          "label": "顺向催化兑现阈值",
+          "trigger_metric": "TSLA 量价突破强度",
+          "threshold": "若相关催化在 3 个交易日内落地具体数据/公告，带动 TSLA 放量上行 3.1%~5.2%",
+          "action_implication": "特斯拉 FSD 与整车软件估值 (TSLA)核心受益标的获增量机构资金加仓，可沿一阶直接标的顺势跟踪。"
+        },
+        {
+          "case": "bear",
+          "label": "预期差证伪回吐阈值",
+          "trigger_metric": "冲高回落幅度 & 量能衰减",
+          "threshold": "若首个交易日冲高后无法维持换手，次日回撤幅度 ≥ 1.5% 且未见实质订单/政策跟进",
+          "action_implication": "属于一次性主题情绪脉冲，避免在二阶段接盘弱势滞涨概念股。"
+        }
+      ]
+    },
+    {
+      "id": "imp_evt_72197cdf0869",
+      "event_id": "evt_72197cdf0869",
+      "rule_id": "ai_model_launch_catalyst",
+      "validation_status": "verified",
+      "validation_note": "结构化方向与资产敏感区间一致性校验通过",
+      "evidence_tier": "single_source",
+      "evidence_tier_label": "单一信源线索",
+      "effective_date_label": null,
+      "qualifier_badge": null,
+      "event_title": "华为云发布DeepSeek-V4.1-Flash-1017降价通知",
+      "event_title_en": "华为云发布DeepSeek-V4.1-Flash-1017降价通知",
+      "event_summary": "华为云发布了DeepSeek-V4.1-Flash-1017模型的降价通知。",
+      "event_summary_en": "华为云发布了DeepSeek-V4.1-Flash-1017模型的降价通知。",
+      "category": "tech",
+      "published_at": "2026-11-23T10:35:10+08:00",
+      "source_name": "新闻电讯",
+      "source_url": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE5HX3VpbjhDMllrYmtISlBxRG5VZWttRVkxSE5zMHdCTlVxa1FBZXRnUl9XV3Q3TXNzaWJqZnRaUTNCSVVEcGI3d3JtQkltSHVWbVVNV2xVb0E?oc=5",
+      "sources": [
+        {
+          "source_name": "新闻电讯",
+          "url": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE5HX3VpbjhDMllrYmtISlBxRG5VZWttRVkxSE5zMHdCTlVxa1FBZXRnUl9XV3Q3TXNzaWJqZnRaUTNCSVVEcGI3d3JtQkltSHVWbVVNV2xVb0E?oc=5"
+        }
+      ],
+      "tag": "国产与开源大模型性能追赶催化",
+      "tag_en": "China & Open-Weight Model Catch-Up",
+      "polarity": "bullish",
+      "intensity": 3,
+      "one_liner": "华为云DeepSeek-V4.1-Flash-1017模型贵阳区域缓存输入价格下调80%，加剧AI模型服务局部竞争，利好特定AI应用开发者，短期压制云服务商利润。",
+      "one_liner_en": "China & Open-Weight Model Catch-Up expands enterprise cloud consumption and AI developer monetization.",
+      "sample_basis": {
+        "sample_n": 15,
+        "volatility_pct": 2.01,
+        "volatility_source": "主流大模型与软件应用催化样本",
+        "horizon": "2~5 个交易日",
+        "confidence_label": "中高置信（生态应用催化）",
+        "confidence_label_en": "Moderate-High (Model Ecosystem Catalyst)"
+      },
+      "affected_tickers": {
+        "09988.HK": 0.45,
+        "00700.HK": 0.42,
+        "HSTECH.HK": 0.4
+      },
+      "realized_quotes": [
+        {
+          "ticker": "00700.HK",
+          "name": "腾讯控股",
+          "name_en": "Tencent",
+          "market": "港股",
+          "price": 343.0,
+          "pct_change": -0.29
+        },
+        {
+          "ticker": "HSTECH.HK",
+          "name": "恒生科指",
+          "name_en": "Hang Seng Tech",
+          "market": "港股",
+          "price": 3519.06,
+          "pct_change": 0.23
+        }
+      ],
+      "bars": [
+        {
+          "market": "美股",
+          "sector": "全球推理芯片与云基准估值 (NVDA / QQQ)",
+          "sector_en": "Global Inference Compute & Cloud Benchmarks",
+          "pct_low": 0.9,
+          "pct_high": 2.7,
+          "direction": "positive",
+          "proxy_ticker": "09988.HK",
+          "logic": "低成本高性价比开源模型持续拉低每百万 Token 推理价格，刺激终端调用总量并检验海外高溢价闭源模型壁垒。",
+          "logic_en": "Model ecosystem upgrades expand enterprise cloud consumption."
+        },
+        {
+          "market": "港股",
+          "sector": "国内开源模型底座与云平台 (09988 / 00700)",
+          "sector_en": "HKEX AI Ecosystem & Cloud Platforms",
+          "pct_low": 0.8,
+          "pct_high": 2.5,
+          "direction": "positive",
+          "proxy_ticker": "HSTECH.HK",
+          "logic": "国产与开源大模型能力追平海外一线梯队，直接提升阿里云百炼/腾讯云等港股 MaaS 平台调用粘性。",
+          "logic_en": "Model performance progress supports platform ecosystem monetization."
+        },
+        {
+          "market": "A股",
+          "sector": "A股国产算力卡 / 推理服务器与本地部署软件",
+          "sector_en": "A-Share AI Apps & Local Compute",
+          "pct_low": 1.1,
+          "pct_high": 3.1,
+          "direction": "positive",
+          "proxy_ticker": "510300.SH",
+          "logic": "开源权重轻量化加速政企与金融机构本地化部署落地，带动国产推理一体机与算力卡需求。",
+          "logic_en": "Expanded capabilities accelerate domestic enterprise adoption."
+        }
+      ],
+      "if_then": [
+        {
+          "cond": "[正向验证阈值] 环比增长超50%",
+          "result": "关注AI应用层公司，评估其成本节约与业务增长潜力。",
+          "tone": "bullish"
+        },
+        {
+          "cond": "[证伪退出阈值] 宣布涨价或未跟进降价",
+          "result": "重新评估AI模型服务价格战持续性与范围，规避纯模型提供商风险。",
+          "tone": "bearish"
+        }
+      ],
+      "milestones": [
+        {
+          "date": "未来 2~4 周",
+          "status": "upcoming",
+          "label": "关注 Hugging Face 下载排名及云厂商企业微调调用增长"
+        }
+      ],
+      "priced_in_analysis": {
+        "status_code": "partially_priced",
+        "status_label": "部分计价（博弈二次预期差）",
+        "status_label_en": "Partially Priced",
+        "session_context": "「华为云发布DeepSeek-V4.1-Fla」于交易时段内释放，资金正逐步消化量价反馈",
+        "expectation_gap": "市场对AI模型价格战已趋于理性，甚至有回升预期。此次华为云局部大幅降价，或引发A股AI应用公司短期乐观情绪，但对云服务商形成二次预期差博弈，关注是否会蔓延至其他区域或模型。"
+      },
+      "transmission_layers": [
+        {
+          "tier": 1,
+          "tier_label": "一阶直接冲击（核心受益或受损主体）",
+          "summary": "华为云特定模型服务降价，直接降低AI应用开发者成本，但对云服务商自身利润构成压力。",
+          "stocks": [
+            {
+              "name": "科大讯飞",
+              "code": "002230.SZ",
+              "market": "A股",
+              "exposure_logic": "AI模型服务成本降低，提升应用开发利润空间。",
+              "direction": "positive"
+            },
+            {
+              "name": "腾讯控股",
+              "code": "00700.HK",
+              "market": "港股",
+              "exposure_logic": "作为云服务商，面临竞争加剧及潜在降价压力。",
+              "direction": "negative"
+            }
+          ]
+        },
+        {
+          "tier": 2,
+          "tier_label": "二阶产业链传导",
+          "summary": "模型服务降价利于AI应用普及，长期或带动算力需求增长，但短期价格战可能影响上游盈利。",
+          "stocks": [
+            {
+              "name": "寒武纪",
+              "code": "688256.SH",
+              "market": "A股",
+              "exposure_logic": "AI模型普及长期利好算力需求，短期价格战或压制。",
+              "direction": "mixed"
+            },
+            {
+              "name": "拓尔思",
+              "code": "300229.SZ",
+              "market": "A股",
+              "exposure_logic": "AI基础模型成本下降，利于其软件产品集成与推广。",
+              "direction": "positive"
+            }
+          ]
+        },
+        {
+          "tier": 3,
+          "tier_label": "三阶宏观或避险跷跷板",
+          "summary": "AI模型成本下降加速行业应用渗透，推动数字经济发展，但价格战可能引发市场对盈利模式担忧。",
+          "stocks": [
+            {
+              "name": "中国云计算ETF",
+              "code": "515880.SH",
+              "market": "A股",
+              "exposure_logic": "云服务商竞争加剧，短期承压；长期AI普及利好基础设施。",
+              "direction": "mixed"
+            },
+            {
+              "name": "数字经济ETF",
+              "code": "560800.SH",
+              "market": "A股",
+              "exposure_logic": "AI应用成本降低，加速数字经济各领域渗透与发展。",
+              "direction": "positive"
+            }
+          ]
+        }
+      ],
+      "historical_precedents": [
+        {
+          "date": "2024-05-21",
+          "event_title": "中国大模型价格战爆发",
+          "t1_reaction": "阿里云通义千问降价97%，百度文心一言免费，相关概念股短期震荡。",
+          "t5_reaction": "价格战加速模型普及，但盈利模式承压，厂商转向差异化竞争。",
+          "lesson": "价格战促普及，但需关注技术壁垒与应用落地能力。"
+        },
+        {
+          "date": "2025-04-01",
+          "event_title": "中国云计算厂商集体降价",
+          "t1_reaction": "阿里云、腾讯云等最高降幅60%，云计算板块承压。",
+          "t5_reaction": "市场转向关注算力供需失衡，2026年3月部分核心AI算力服务价格反弹。",
+          "lesson": "价格战后市场重估供需，核心资源稀缺性决定长期价值。"
+        }
+      ],
+      "quant_if_then": [
+        {
+          "case": "bull",
+          "label": "正向验证阈值",
+          "trigger_metric": "DeepSeek-V4.1-Flash-1017模型在华为云贵阳区域调用量",
+          "threshold": "环比增长超50%",
+          "action_implication": "关注AI应用层公司，评估其成本节约与业务增长潜力。"
+        },
+        {
+          "case": "bear",
+          "label": "证伪退出阈值",
+          "trigger_metric": "其他头部云厂商或DeepSeek模型其他区域定价策略",
+          "threshold": "宣布涨价或未跟进降价",
+          "action_implication": "重新评估AI模型服务价格战持续性与范围，规避纯模型提供商风险。"
+        }
+      ],
+      "ai_grounded": true
     },
     {
       "id": "imp_evt_2c24066d343c",
@@ -2773,451 +3424,8 @@
           "threshold": "若首个交易日冲高后无法维持换手，次日回撤幅度 ≥ 1.5% 且未见实质订单/政策跟进",
           "action_implication": "属于一次性主题情绪脉冲，避免在二阶段接盘弱势滞涨概念股。"
         }
-      ]
-    },
-    {
-      "id": "imp_evt_640a22a1243f",
-      "event_id": "evt_640a22a1243f",
-      "rule_id": "autonomous_driving_fsd",
-      "validation_status": "verified",
-      "validation_note": "结构化方向与资产敏感区间一致性校验通过",
-      "evidence_tier": "single_source",
-      "evidence_tier_label": "单一信源线索",
-      "effective_date_label": null,
-      "qualifier_badge": null,
-      "event_title": "报道称：特斯拉启动FSD V15监督版推送并推进中国市场合规准备",
-      "event_title_en": "报道称：特斯拉启动FSD V15监督版推送并推进中国市场合规准备",
-      "event_summary": "【据关联报道/尚未见官方披露确认】当地时间11月21日，特斯拉正式启动FSD V15监督版系统推送。该版本通过升级视觉编码器使安全关键场景处理能力提升25倍，并同步推出驾驶可视化界面Tesla Reality View。11月22日，特斯拉中国客服回应称，目前正根据国家法规积极推进相关准备工作。",
-      "event_summary_en": "【据关联报道/尚未见官方披露确认】当地时间11月21日，特斯拉正式启动FSD V15监督版系统推送。该版本通过升级视觉编码器使安全关键场景处理能力提升25倍，并同步推出驾驶可视化界面Tesla Reality View。11月22日，特斯拉中国客服回应称，目前正根据国家法规积极推进相关准备工作。",
-      "category": "general",
-      "published_at": "2026-11-23T13:21:05+08:00",
-      "source_name": "腾讯新闻综合早报",
-      "source_url": "https://view.inews.qq.com/a/20261122A09HDK00",
-      "sources": [
-        {
-          "source_name": "腾讯新闻综合早报",
-          "url": "https://view.inews.qq.com/a/20261122A09HDK00"
-        }
       ],
-      "tag": "端到端智驾商业化 / FSD 落地",
-      "tag_en": "Autonomous Driving & FSD Rollout",
-      "polarity": "divergent",
-      "intensity": 4,
-      "one_liner": "端到端智驾高版本推进强化头部整车软件订阅与 Robotaxi 预期，带动高算力域控及传感器渗透率上行，传统低阶网约车承压。",
-      "one_liner_en": "End-to-end ADAS and FSD deployment lifts smart-driving compute/chassis demand while pressuring legacy ride-hailing.",
-      "sample_basis": {
-        "sample_n": 14,
-        "volatility_pct": 3.2,
-        "volatility_source": "TSLA / 智能驾驶链历史催化窗口",
-        "horizon": "2~7 个交易日",
-        "confidence_label": "高置信（直接产业落地催化）",
-        "confidence_label_en": "High (Direct ADAS Catalyst)"
-      },
-      "affected_tickers": {
-        "TSLA": 0.85,
-        "002920.SZ": 0.7,
-        "09868.HK": 0.55,
-        "UBER": -0.45
-      },
-      "realized_quotes": [
-        {
-          "ticker": "QQQ",
-          "name": "纳指100ETF",
-          "name_en": "Invesco QQQ",
-          "market": "美股",
-          "price": 608.45,
-          "pct_change": -5.67
-        },
-        {
-          "ticker": "HSTECH.HK",
-          "name": "恒生科指",
-          "name_en": "Hang Seng Tech",
-          "market": "港股",
-          "price": 3501.06,
-          "pct_change": -0.29
-        }
-      ],
-      "bars": [
-        {
-          "market": "美股",
-          "sector": "特斯拉 FSD 与整车软件估值 (TSLA)",
-          "sector_en": "Tesla FSD & Software Valuation (TSLA)",
-          "pct_low": 2.1,
-          "pct_high": 5.2,
-          "direction": "positive",
-          "proxy_ticker": "TSLA",
-          "logic": "FSD 高版本落地与订阅渗透率提升，强化整车软件及 Robotaxi 远期现金流定价。",
-          "logic_en": "New FSD rollout and subscription adoption strengthen automotive software valuation."
-        },
-        {
-          "market": "A股",
-          "sector": "智能驾驶域控制器 / 激光雷达",
-          "sector_en": "A-Share ADAS Domain Controller & LiDAR",
-          "pct_low": 1.4,
-          "pct_high": 3.6,
-          "direction": "positive",
-          "proxy_ticker": "002920.SZ",
-          "logic": "头部车企智驾节奏加快，倒逼国内车企跟进高算力域控、线控制动与传感器配置。",
-          "logic_en": "Accelerated flagship ADAS rollout drives domestic controller and sensor upgrades."
-        },
-        {
-          "market": "港股",
-          "sector": "头部新势力智驾领先车企",
-          "sector_en": "HKEX Leading Smart-EV OEMs",
-          "pct_low": 0.9,
-          "pct_high": 2.8,
-          "direction": "positive",
-          "proxy_ticker": "09868.HK",
-          "logic": "端到端智驾模型迭代领先的港股整车厂受益于销量结构上移与估值重估。",
-          "logic_en": "Smart-EV leaders in Hong Kong benefit from mix upgrade and ADAS differentiation."
-        },
-        {
-          "market": "美股",
-          "sector": "传统纯人工网约车平台 (UBER)",
-          "sector_en": "Legacy Ride-Hailing Platforms (UBER)",
-          "pct_low": -1.6,
-          "pct_high": -0.4,
-          "direction": "negative",
-          "proxy_ticker": "UBER",
-          "logic": "若 Robotaxi 商业化时间表前移，纯人工运力撮合平台的中长期抽成空间面临估值折价。",
-          "logic_en": "Faster Robotaxi commercialization compresses terminal multiples for legacy ride-hailing."
-        }
-      ],
-      "if_then": [
-        {
-          "cond": "[顺向催化兑现阈值] 若相关催化在 3 个交易日内落地具体数据/公告，带动 TSLA 放量上行 3.1%~5.2%",
-          "result": "特斯拉 FSD 与整车软件估值 (TSLA)核心受益标的获增量机构资金加仓，可沿一阶直接标的顺势跟踪。",
-          "tone": "bullish"
-        },
-        {
-          "cond": "[预期差证伪回吐阈值] 若首个交易日冲高后无法维持换手，次日回撤幅度 ≥ 1.5% 且未见实质订单/政策跟进",
-          "result": "属于一次性主题情绪脉冲，避免在二阶段接盘弱势滞涨概念股。",
-          "tone": "bearish"
-        }
-      ],
-      "milestones": [
-        {
-          "date": "推送后 2 周",
-          "status": "current",
-          "label": "跟踪首批车型 OTA 推送比例及无干预接管里程实测"
-        },
-        {
-          "date": "未来 1 季度",
-          "status": "upcoming",
-          "label": "观察 FSD 订阅选装率与中美监管准入批复"
-        }
-      ],
-      "priced_in_analysis": {
-        "status_code": "partially_priced",
-        "status_label": "部分计价（博弈二次预期差）",
-        "status_label_en": "Partially Priced",
-        "session_context": "「报道称：特斯拉启动FSD V15监督版推送并」于交易时段内释放，资金正逐步消化量价反馈",
-        "expectation_gap": "针对「报道称：特斯拉启动FSD V15监督版推送并推进中国」，首波情绪已在盘面初步计价中显现，真正的预期差取决于后续核心标的成交额能否放量印证及二阶产业链订单/细则跟进。"
-      },
-      "transmission_layers": [
-        {
-          "tier": 1,
-          "tier_label": "一阶直接冲击（直接定价核心标的）",
-          "summary": "紧扣「报道称：特斯拉启动FSD V15监督版推送并推进中国」最直接的营收与估值敞口：特斯拉 / 德赛西威 等首当其冲。",
-          "stocks": [
-            {
-              "name": "特斯拉",
-              "code": "TSLA",
-              "market": "美股",
-              "exposure_logic": "FSD 高版本落地与订阅渗透率提升，强化整车软件及 Robotaxi 远期现金流定价。",
-              "direction": "positive"
-            },
-            {
-              "name": "德赛西威",
-              "code": "002920.SZ",
-              "market": "A股",
-              "exposure_logic": "头部车企智驾节奏加快，倒逼国内车企跟进高算力域控、线控制动与传感器配置。",
-              "direction": "positive"
-            }
-          ]
-        },
-        {
-          "tier": 2,
-          "tier_label": "二阶产业链传导 / 替代对冲",
-          "summary": "向产业链上下游、跨市场同业映射或自主替代环节进行二阶定价传导。",
-          "stocks": [
-            {
-              "name": "小鹏汽车",
-              "code": "09868.HK",
-              "market": "港股",
-              "exposure_logic": "端到端智驾模型迭代领先的港股整车厂受益于销量结构上移与估值重估。",
-              "direction": "positive"
-            }
-          ]
-        },
-        {
-          "tier": 3,
-          "tier_label": "三阶资金面与风格跷跷板效应",
-          "summary": "风险偏好变化驱动机构仓位在高弹性成长与低波高股息防御资产间再平衡。",
-          "stocks": [
-            {
-              "name": "优步",
-              "code": "UBER",
-              "market": "美股",
-              "exposure_logic": "若 Robotaxi 商业化时间表前移，纯人工运力撮合平台的中长期抽成空间面临估值折价。",
-              "direction": "negative"
-            }
-          ]
-        }
-      ],
-      "historical_precedents": [
-        {
-          "date": "2024-09-24",
-          "event_title": "国内跨市场重大催化发布于闭市窗口并伴随跨资产联动",
-          "t1_reaction": "首个开盘日竞价集中释放预期差，前 60 分钟成交额放大验证资金承接度。",
-          "t5_reaction": "T+5 主线标的围绕产业链业绩兑现与后续政策细则完成筹码分化。",
-          "lesson": "重点核对事件是否发生在交易所休市后（未计价窗口）及首小时量能持续性。"
-        },
-        {
-          "date": "2023-10-18",
-          "event_title": "跨境政策/产业催化剂落地后中美港三地市场分时异步重估",
-          "t1_reaction": "率先开盘的市场计价 60%~75% 首波弹性，后开盘市场易现高开/低开缺口收敛。",
-          "t5_reaction": "T+5 脱离纯情绪扰动后，基本面直接受益龙头跑赢二三线跟风概念。",
-          "lesson": "避免在外盘已充分交易 5%+ 涨幅后再追高滞后映射股。"
-        }
-      ],
-      "quant_if_then": [
-        {
-          "case": "bull",
-          "label": "顺向催化兑现阈值",
-          "trigger_metric": "TSLA 量价突破强度",
-          "threshold": "若相关催化在 3 个交易日内落地具体数据/公告，带动 TSLA 放量上行 3.1%~5.2%",
-          "action_implication": "特斯拉 FSD 与整车软件估值 (TSLA)核心受益标的获增量机构资金加仓，可沿一阶直接标的顺势跟踪。"
-        },
-        {
-          "case": "bear",
-          "label": "预期差证伪回吐阈值",
-          "trigger_metric": "冲高回落幅度 & 量能衰减",
-          "threshold": "若首个交易日冲高后无法维持换手，次日回撤幅度 ≥ 1.5% 且未见实质订单/政策跟进",
-          "action_implication": "属于一次性主题情绪脉冲，避免在二阶段接盘弱势滞涨概念股。"
-        }
-      ]
-    },
-    {
-      "id": "imp_evt_72197cdf0869",
-      "event_id": "evt_72197cdf0869",
-      "rule_id": "ai_model_launch_catalyst",
-      "validation_status": "verified",
-      "validation_note": "结构化方向与资产敏感区间一致性校验通过",
-      "evidence_tier": "single_source",
-      "evidence_tier_label": "单一信源线索",
-      "effective_date_label": null,
-      "qualifier_badge": null,
-      "event_title": "华为云发布DeepSeek-V4.1-Flash-1017降价通知",
-      "event_title_en": "华为云发布DeepSeek-V4.1-Flash-1017降价通知",
-      "event_summary": "华为云发布了DeepSeek-V4.1-Flash-1017模型的降价通知。",
-      "event_summary_en": "华为云发布了DeepSeek-V4.1-Flash-1017模型的降价通知。",
-      "category": "tech",
-      "published_at": "2026-11-23T10:35:10+08:00",
-      "source_name": "新闻电讯",
-      "source_url": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE5HX3VpbjhDMllrYmtISlBxRG5VZWttRVkxSE5zMHdCTlVxa1FBZXRnUl9XV3Q3TXNzaWJqZnRaUTNCSVVEcGI3d3JtQkltSHVWbVVNV2xVb0E?oc=5",
-      "sources": [
-        {
-          "source_name": "新闻电讯",
-          "url": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE5HX3VpbjhDMllrYmtISlBxRG5VZWttRVkxSE5zMHdCTlVxa1FBZXRnUl9XV3Q3TXNzaWJqZnRaUTNCSVVEcGI3d3JtQkltSHVWbVVNV2xVb0E?oc=5"
-        }
-      ],
-      "tag": "国产与开源大模型性能追赶催化",
-      "tag_en": "China & Open-Weight Model Catch-Up",
-      "polarity": "bullish",
-      "intensity": 3,
-      "one_liner": "华为云DeepSeek-V4.1-Flash-1017模型贵阳区域缓存输入价格下调80%，加剧AI模型服务局部竞争，利好特定AI应用开发者，短期压制云服务商利润。",
-      "one_liner_en": "China & Open-Weight Model Catch-Up expands enterprise cloud consumption and AI developer monetization.",
-      "sample_basis": {
-        "sample_n": 15,
-        "volatility_pct": 2.01,
-        "volatility_source": "主流大模型与软件应用催化样本",
-        "horizon": "2~5 个交易日",
-        "confidence_label": "中高置信（生态应用催化）",
-        "confidence_label_en": "Moderate-High (Model Ecosystem Catalyst)"
-      },
-      "affected_tickers": {
-        "09988.HK": 0.45,
-        "00700.HK": 0.42,
-        "HSTECH.HK": 0.4
-      },
-      "realized_quotes": [
-        {
-          "ticker": "00700.HK",
-          "name": "腾讯控股",
-          "name_en": "Tencent",
-          "market": "港股",
-          "price": 342.8,
-          "pct_change": -0.35
-        },
-        {
-          "ticker": "HSTECH.HK",
-          "name": "恒生科指",
-          "name_en": "Hang Seng Tech",
-          "market": "港股",
-          "price": 3501.06,
-          "pct_change": -0.29
-        }
-      ],
-      "bars": [
-        {
-          "market": "美股",
-          "sector": "全球推理芯片与云基准估值 (NVDA / QQQ)",
-          "sector_en": "Global Inference Compute & Cloud Benchmarks",
-          "pct_low": 0.9,
-          "pct_high": 2.7,
-          "direction": "positive",
-          "proxy_ticker": "09988.HK",
-          "logic": "低成本高性价比开源模型持续拉低每百万 Token 推理价格，刺激终端调用总量并检验海外高溢价闭源模型壁垒。",
-          "logic_en": "Model ecosystem upgrades expand enterprise cloud consumption."
-        },
-        {
-          "market": "港股",
-          "sector": "国内开源模型底座与云平台 (09988 / 00700)",
-          "sector_en": "HKEX AI Ecosystem & Cloud Platforms",
-          "pct_low": 0.8,
-          "pct_high": 2.5,
-          "direction": "positive",
-          "proxy_ticker": "HSTECH.HK",
-          "logic": "国产与开源大模型能力追平海外一线梯队，直接提升阿里云百炼/腾讯云等港股 MaaS 平台调用粘性。",
-          "logic_en": "Model performance progress supports platform ecosystem monetization."
-        },
-        {
-          "market": "A股",
-          "sector": "A股国产算力卡 / 推理服务器与本地部署软件",
-          "sector_en": "A-Share AI Apps & Local Compute",
-          "pct_low": 1.1,
-          "pct_high": 3.1,
-          "direction": "positive",
-          "proxy_ticker": "510300.SH",
-          "logic": "开源权重轻量化加速政企与金融机构本地化部署落地，带动国产推理一体机与算力卡需求。",
-          "logic_en": "Expanded capabilities accelerate domestic enterprise adoption."
-        }
-      ],
-      "if_then": [
-        {
-          "cond": "[正向验证阈值] 环比增长超50%",
-          "result": "关注AI应用层公司，评估其成本节约与业务增长潜力。",
-          "tone": "bullish"
-        },
-        {
-          "cond": "[证伪退出阈值] 宣布涨价或未跟进降价",
-          "result": "重新评估AI模型服务价格战持续性与范围，规避纯模型提供商风险。",
-          "tone": "bearish"
-        }
-      ],
-      "milestones": [
-        {
-          "date": "未来 2~4 周",
-          "status": "upcoming",
-          "label": "关注 Hugging Face 下载排名及云厂商企业微调调用增长"
-        }
-      ],
-      "priced_in_analysis": {
-        "status_code": "partially_priced",
-        "status_label": "部分计价（博弈二次预期差）",
-        "status_label_en": "Partially Priced",
-        "session_context": "「华为云发布DeepSeek-V4.1-Fla」于交易时段内释放，资金正逐步消化量价反馈",
-        "expectation_gap": "市场对AI模型价格战已趋于理性，甚至有回升预期。此次华为云局部大幅降价，或引发A股AI应用公司短期乐观情绪，但对云服务商形成二次预期差博弈，关注是否会蔓延至其他区域或模型。"
-      },
-      "transmission_layers": [
-        {
-          "tier": 1,
-          "tier_label": "一阶直接冲击（核心受益或受损主体）",
-          "summary": "华为云特定模型服务降价，直接降低AI应用开发者成本，但对云服务商自身利润构成压力。",
-          "stocks": [
-            {
-              "name": "科大讯飞",
-              "code": "002230.SZ",
-              "market": "A股",
-              "exposure_logic": "AI模型服务成本降低，提升应用开发利润空间。",
-              "direction": "positive"
-            },
-            {
-              "name": "腾讯控股",
-              "code": "00700.HK",
-              "market": "港股",
-              "exposure_logic": "作为云服务商，面临竞争加剧及潜在降价压力。",
-              "direction": "negative"
-            }
-          ]
-        },
-        {
-          "tier": 2,
-          "tier_label": "二阶产业链传导",
-          "summary": "模型服务降价利于AI应用普及，长期或带动算力需求增长，但短期价格战可能影响上游盈利。",
-          "stocks": [
-            {
-              "name": "寒武纪",
-              "code": "688256.SH",
-              "market": "A股",
-              "exposure_logic": "AI模型普及长期利好算力需求，短期价格战或压制。",
-              "direction": "mixed"
-            },
-            {
-              "name": "拓尔思",
-              "code": "300229.SZ",
-              "market": "A股",
-              "exposure_logic": "AI基础模型成本下降，利于其软件产品集成与推广。",
-              "direction": "positive"
-            }
-          ]
-        },
-        {
-          "tier": 3,
-          "tier_label": "三阶宏观或避险跷跷板",
-          "summary": "AI模型成本下降加速行业应用渗透，推动数字经济发展，但价格战可能引发市场对盈利模式担忧。",
-          "stocks": [
-            {
-              "name": "中国云计算ETF",
-              "code": "515880.SH",
-              "market": "A股",
-              "exposure_logic": "云服务商竞争加剧，短期承压；长期AI普及利好基础设施。",
-              "direction": "mixed"
-            },
-            {
-              "name": "数字经济ETF",
-              "code": "560800.SH",
-              "market": "A股",
-              "exposure_logic": "AI应用成本降低，加速数字经济各领域渗透与发展。",
-              "direction": "positive"
-            }
-          ]
-        }
-      ],
-      "historical_precedents": [
-        {
-          "date": "2024-05-21",
-          "event_title": "中国大模型价格战爆发",
-          "t1_reaction": "阿里云通义千问降价97%，百度文心一言免费，相关概念股短期震荡。",
-          "t5_reaction": "价格战加速模型普及，但盈利模式承压，厂商转向差异化竞争。",
-          "lesson": "价格战促普及，但需关注技术壁垒与应用落地能力。"
-        },
-        {
-          "date": "2025-04-01",
-          "event_title": "中国云计算厂商集体降价",
-          "t1_reaction": "阿里云、腾讯云等最高降幅60%，云计算板块承压。",
-          "t5_reaction": "市场转向关注算力供需失衡，2026年3月部分核心AI算力服务价格反弹。",
-          "lesson": "价格战后市场重估供需，核心资源稀缺性决定长期价值。"
-        }
-      ],
-      "quant_if_then": [
-        {
-          "case": "bull",
-          "label": "正向验证阈值",
-          "trigger_metric": "DeepSeek-V4.1-Flash-1017模型在华为云贵阳区域调用量",
-          "threshold": "环比增长超50%",
-          "action_implication": "关注AI应用层公司，评估其成本节约与业务增长潜力。"
-        },
-        {
-          "case": "bear",
-          "label": "证伪退出阈值",
-          "trigger_metric": "其他头部云厂商或DeepSeek模型其他区域定价策略",
-          "threshold": "宣布涨价或未跟进降价",
-          "action_implication": "重新评估AI模型服务价格战持续性与范围，规避纯模型提供商风险。"
-        }
-      ],
-      "ai_grounded": true
+      "carried_over": true
     },
     {
       "id": "imp_evt_cd2cfa71d76c",
@@ -3781,248 +3989,11 @@
       ],
       "ai_grounded": true,
       "carried_over": true
-    },
-    {
-      "id": "imp_evt_003273e10aeb",
-      "event_id": "evt_003273e10aeb",
-      "rule_id": "ai_server_price_hike",
-      "validation_status": "verified",
-      "validation_note": "结构化方向与资产敏感区间一致性校验通过",
-      "evidence_tier": "single_source",
-      "evidence_tier_label": "单一信源线索",
-      "effective_date_label": null,
-      "qualifier_badge": "要价上限 45% · 关注客户实际接受率",
-      "event_title": "AI服务器厂商戴尔、慧与科技、联想和超微电脑涨价最高达45%",
-      "event_title_en": "AI服务器厂商戴尔、慧与科技、联想和超微电脑涨价最高达45%",
-      "event_summary": "据媒体报道，戴尔、慧与科技（HPE）、联想和超微电脑正在要求提高AI服务器的价格，涨幅最高达45%，即使是几个月前已签署的协议也不例外。这些更高的成本正在影响交易公司及其他客户。",
-      "event_summary_en": "据媒体报道，戴尔、慧与科技（HPE）、联想和超微电脑正在要求提高AI服务器的价格，涨幅最高达45%，即使是几个月前已签署的协议也不例外。这些更高的成本正在影响交易公司及其他客户。",
-      "category": "tech",
-      "published_at": "2026-11-22T21:30:42+08:00",
-      "source_name": "华尔街见闻 美股快讯",
-      "source_url": "https://wallstreetcn.com/livenews/3203759",
-      "sources": [
-        {
-          "source_name": "华尔街见闻 美股快讯",
-          "url": "https://wallstreetcn.com/livenews/3203759"
-        }
-      ],
-      "tag": "AI 服务器硬件涨价与算力基建景气",
-      "tag_en": "AI Server Price Hike & Supply Tightness",
-      "polarity": "bullish",
-      "intensity": 4,
-      "one_liner": "AI服务器厂商戴尔、慧与、联想、超微因内存等成本飙升提价25-45%，冲击下游客户利润，利好上游核心零部件。",
-      "one_liner_en": "Sharp AI server price hikes signal tight supply and expand revenue elasticity for OEMs, liquid cooling, and optical links.",
-      "sample_basis": {
-        "sample_n": 11,
-        "volatility_pct": 2.93,
-        "volatility_source": "算力硬件提价与机柜订单样本",
-        "horizon": "2~7 个交易日",
-        "confidence_label": "高置信（直指硬件景气定价权）",
-        "confidence_label_en": "High (Direct Hardware Pricing Power)"
-      },
-      "affected_tickers": {
-        "601138.SH": 0.85,
-        "000977.SZ": 0.8,
-        "300308.SZ": 0.75,
-        "SMCI": 0.65
-      },
-      "realized_quotes": [
-        {
-          "ticker": "QQQ",
-          "name": "纳指100ETF",
-          "name_en": "Invesco QQQ",
-          "market": "美股",
-          "price": 608.45,
-          "pct_change": -5.67
-        },
-        {
-          "ticker": "515880.SH",
-          "name": "A股通信ETF",
-          "name_en": "CN Telecom ETF",
-          "market": "A股",
-          "price": 0.372,
-          "pct_change": 2.76
-        }
-      ],
-      "bars": [
-        {
-          "market": "A股",
-          "sector": "AI 服务器整机与代工龙头 (工业富联/浪潮)",
-          "sector_en": "A-Share AI Server Leaders (601138/000977)",
-          "pct_low": 1.8,
-          "pct_high": 4.6,
-          "direction": "positive",
-          "proxy_ticker": "601138.SH",
-          "logic": "整机供给紧缺带来最高 45% 涨价，具备配额与规模优势的整机龙头直接受益单机价值量提升。",
-          "logic_en": "Acute GPU-rack shortages drive higher ASP and revenue leverage for leading server OEMs."
-        },
-        {
-          "market": "A股",
-          "sector": "液冷散热 / 800G 光模块与高速连接",
-          "sector_en": "A-Share Liquid Cooling & Optical Links",
-          "pct_low": 1.4,
-          "pct_high": 3.8,
-          "direction": "positive",
-          "proxy_ticker": "300308.SZ",
-          "logic": "高功耗 AI 机柜成本上升同步拉高液冷、电源及光互连组件配置单价。",
-          "logic_en": "Higher rack power density accelerates adoption of liquid cooling and high-speed optics."
-        },
-        {
-          "market": "美股",
-          "sector": "北美算力机柜与 GPU 基建链 (SMCI / DELL)",
-          "sector_en": "US AI Rack Builders (SMCI / DELL)",
-          "pct_low": 1.0,
-          "pct_high": 3.2,
-          "direction": "positive",
-          "proxy_ticker": "SMCI",
-          "logic": "整机报价上行凸显基础设施产能紧俏，但需观察上游器件转嫁后实际毛利率。",
-          "logic_en": "Tight rack pricing supports top-line demand while highlighting component-cost pass-through."
-        }
-      ],
-      "if_then": [
-        {
-          "cond": "[正向验证阈值] 环比提升2%以上",
-          "result": "确认成本有效转嫁，可增配上游核心组件。",
-          "tone": "bullish"
-        },
-        {
-          "cond": "[证伪退出阈值] AI相关开支下调10%以上",
-          "result": "警惕需求放缓，减持AI基础设施相关标的。",
-          "tone": "bearish"
-        }
-      ],
-      "milestones": [
-        {
-          "date": "2 周内",
-          "status": "current",
-          "label": "核查云厂季度 Capex 指引及整机厂商毛利率反馈"
-        }
-      ],
-      "priced_in_analysis": {
-        "status_code": "partially_priced",
-        "status_label": "部分计价（博弈二次预期差）",
-        "status_label_en": "Partially Priced (2nd-Order Gap)",
-        "session_context": "事件伴随跨市场供应链/大宗商品先行异动，但产业链二阶渗透与实质订单落地仍存预期差",
-        "expectation_gap": "【要价上限 45% · 关注客户实际接受率】美股AI服务器厂商短期或因成本转嫁预期上涨，但长期需观察客户接受度与需求弹性。A股/港股相关内存及AI芯片概念股可能存在二次预期差，关注成本传导链条。"
-      },
-      "transmission_layers": [
-        {
-          "tier": 1,
-          "tier_label": "一阶直接冲击（核心受益或受损主体）",
-          "summary": "AI服务器厂商直接提价，短期利好营收毛利，但客户成本剧增。",
-          "stocks": [
-            {
-              "name": "Dell Technologies",
-              "code": "DELL",
-              "market": "美股",
-              "exposure_logic": "AI服务器提价直接增厚营收与毛利，但面临客户流失风险。",
-              "direction": "mixed"
-            },
-            {
-              "name": "Hewlett Packard En",
-              "code": "HPE",
-              "market": "美股",
-              "exposure_logic": "AI服务器提价直接增厚营收与毛利，但面临客户流失风险。",
-              "direction": "mixed"
-            },
-            {
-              "name": "Super Micro Comput",
-              "code": "SMCI",
-              "market": "美股",
-              "exposure_logic": "AI服务器提价直接增厚营收与毛利，但面临客户流失风险。",
-              "direction": "mixed"
-            },
-            {
-              "name": "联想集团",
-              "code": "00992.HK",
-              "market": "港股",
-              "exposure_logic": "AI服务器提价直接增厚营收与毛利，但面临客户流失风险。",
-              "direction": "mixed"
-            }
-          ]
-        },
-        {
-          "tier": 2,
-          "tier_label": "二阶产业链传导",
-          "summary": "上游核心组件供应商受益，下游云服务商及AI应用客户成本承压。",
-          "stocks": [
-            {
-              "name": "英伟达",
-              "code": "NVDA",
-              "market": "美股",
-              "exposure_logic": "AI服务器核心GPU供应商，涨价或影响下游出货，但议价权强。",
-              "direction": "mixed"
-            },
-            {
-              "name": "浪潮信息",
-              "code": "000977.SZ",
-              "market": "A股",
-              "exposure_logic": "国内AI服务器主要厂商，或跟随涨价，受益于行业成本传导。",
-              "direction": "positive"
-            },
-            {
-              "name": "亚马逊",
-              "code": "AMZN",
-              "market": "美股",
-              "exposure_logic": "AWS等云服务商，AI服务器采购成本上升，可能转嫁或压缩利润。",
-              "direction": "negative"
-            }
-          ]
-        },
-        {
-          "tier": 3,
-          "tier_label": "三阶宏观或避险跷跷板",
-          "summary": "AI基础设施成本上升可能影响科技股整体估值，资金或寻求避险。",
-          "stocks": [
-            {
-              "name": "纳斯达克100指数ETF",
-              "code": "QQQ",
-              "market": "美股",
-              "exposure_logic": "科技股整体情绪受AI基础设施成本影响，短期或承压。",
-              "direction": "negative"
-            },
-            {
-              "name": "黄金ETF",
-              "code": "GLD",
-              "market": "美股",
-              "exposure_logic": "宏观不确定性增加，资金或寻求避险。",
-              "direction": "positive"
-            }
-          ]
-        }
-      ],
-      "historical_precedents": [
-        {
-          "date": "2017-2018",
-          "event_title": "DRAM内存价格飙升周期",
-          "t1_reaction": "内存厂商股价大涨，服务器/手机厂商成本压力显现。",
-          "t5_reaction": "下游厂商利润受挤压，部分产品价格上涨，市场份额分化。",
-          "lesson": "核心组件稀缺性驱动利润向上游集中，下游议价能力受考验。"
-        }
-      ],
-      "quant_if_then": [
-        {
-          "case": "bull",
-          "label": "正向验证阈值",
-          "trigger_metric": "AI服务器厂商毛利率",
-          "threshold": "环比提升2%以上",
-          "action_implication": "确认成本有效转嫁，可增配上游核心组件。"
-        },
-        {
-          "case": "bear",
-          "label": "证伪退出阈值",
-          "trigger_metric": "下游云厂商资本开支指引",
-          "threshold": "AI相关开支下调10%以上",
-          "action_implication": "警惕需求放缓，减持AI基础设施相关标的。"
-        }
-      ],
-      "ai_grounded": true,
-      "carried_over": true
     }
   ],
   "event_impact_map": {
-    "evt_6289b2158064": {
-      "event_id": "evt_6289b2158064",
+    "evt_54f9331f9d0e": {
+      "event_id": "evt_54f9331f9d0e",
       "tag": "A股两融松绑与资本市场稳市组合拳",
       "tag_en": "A-Share Margin Ratio Cut & Market Stabilization",
       "polarity": "bullish",
@@ -4145,32 +4116,32 @@
           "name": "上证指数",
           "name_en": "SSE Composite",
           "market": "A股",
-          "price": 3523.66,
-          "pct_change": -0.29
+          "price": 3525.03,
+          "pct_change": -0.25
         },
         {
           "ticker": "HSTECH.HK",
           "name": "恒生科指",
           "name_en": "Hang Seng Tech",
           "market": "港股",
-          "price": 3501.06,
-          "pct_change": -0.29
+          "price": 3519.06,
+          "pct_change": 0.23
         },
         {
           "ticker": "HSI.HK",
           "name": "恒生指数",
           "name_en": "Hang Seng Index",
           "market": "港股",
-          "price": 22355.77,
-          "pct_change": -0.25
+          "price": 22410.63,
+          "pct_change": 0.0
         }
       ],
       "priced_in_analysis": {
         "status_code": "partially_priced",
         "status_label": "部分计价（博弈二次预期差）",
         "status_label_en": "Partially Priced",
-        "session_context": "「沪深北交易所下调融资保证金比例至80%并推进」于交易时段内释放，资金正逐步消化量价反馈",
-        "expectation_gap": "【11月30日起正式生效】针对「沪深北交易所下调融资保证金比例至80%并推进创业板做」，首波情绪已在盘面初步计价中显现，真正的预期差取决于后续核心标的成交额能否放量印证及二阶产业链订单/细则跟进。"
+        "session_context": "「沪深北交易所推出稳股市三项新政：融资保证金比」于交易时段内释放，资金正逐步消化量价反馈",
+        "expectation_gap": "【11月30日起正式生效】针对「沪深北交易所推出稳股市三项新政：融资保证金比例降至8」，首波情绪已在盘面初步计价中显现，真正的预期差取决于后续核心标的成交额能否放量印证及二阶产业链订单/细则跟进。"
       },
       "transmission_layers": [
         {
@@ -4655,8 +4626,8 @@
           "name": "恒生指数",
           "name_en": "Hang Seng Index",
           "market": "港股",
-          "price": 22355.77,
-          "pct_change": -0.25
+          "price": 22410.63,
+          "pct_change": 0.0
         },
         {
           "ticker": "GLD",
@@ -4671,8 +4642,8 @@
           "name": "黄金ETF(A股)",
           "name_en": "CN Gold ETF",
           "market": "A股",
-          "price": 7.404,
-          "pct_change": 1.68
+          "price": 7.39,
+          "pct_change": 1.48
         }
       ],
       "priced_in_analysis": {
@@ -4887,16 +4858,16 @@
           "name": "黄金ETF(A股)",
           "name_en": "CN Gold ETF",
           "market": "A股",
-          "price": 7.404,
-          "pct_change": 1.68
+          "price": 7.39,
+          "pct_change": 1.48
         },
         {
           "ticker": "02899.HK",
           "name": "紫金矿业",
           "name_en": "Zijin Mining",
           "market": "港股",
-          "price": 24.0,
-          "pct_change": 4.08
+          "price": 24.04,
+          "pct_change": 4.25
         }
       ],
       "priced_in_analysis": {
@@ -5135,8 +5106,8 @@
           "name": "恒生科指",
           "name_en": "Hang Seng Tech",
           "market": "港股",
-          "price": 3501.06,
-          "pct_change": -0.29
+          "price": 3519.06,
+          "pct_change": 0.23
         }
       ],
       "priced_in_analysis": {
@@ -5363,8 +5334,8 @@
           "name": "上证指数",
           "name_en": "SSE Composite",
           "market": "A股",
-          "price": 3523.66,
-          "pct_change": -0.29
+          "price": 3525.03,
+          "pct_change": -0.25
         }
       ],
       "priced_in_analysis": {
@@ -5931,6 +5902,222 @@
         }
       ]
     },
+    "evt_95f1d6dc993c": {
+      "event_id": "evt_95f1d6dc993c",
+      "tag": "亚太/韩国股市去杠杆与政府平准基金稳市干预",
+      "tag_en": "Korea Equity Deleveraging & Stabilization Fund Intervention",
+      "polarity": "bullish",
+      "intensity": 4,
+      "validation_status": "verified",
+      "evidence_tier": "single_source",
+      "evidence_tier_label": "单一信源线索",
+      "effective_date_label": null,
+      "qualifier_badge": null,
+      "one_liner": "韩国股市融资余额回落后，韩国政府拟评估启动股市稳定/平准基金以托底筹码与流动性，优先缓和韩国半导体与科技权重股被动抛压并改善亚太风险偏好（聚焦本次事件关键量化幅度：18年）。",
+      "top_a": {
+        "market": "亚太",
+        "sector": "韩国科技与半导体权重 (KOSPI / 海力士 / 三星)",
+        "sector_en": "Korea Tech & Semi Weights (KOSPI / Hynix / Samsung)",
+        "pct_low": 1.0,
+        "pct_high": 3.2,
+        "direction": "positive",
+        "proxy_ticker": "EWY",
+        "logic": "稳定基金托底流动性预期缓解融资强平链条，对高权重存储芯片与韩国宽基构成直接支撑。",
+        "logic_en": "Stabilization fund liquidity eases forced margin unwinding in flagship Korean memory and index weights."
+      },
+      "top_us": {
+        "market": "港股",
+        "sector": "港股/A股亚太科技情绪外溢 (HSTECH)",
+        "sector_en": "APAC Tech Risk-On Spillover (HSTECH)",
+        "pct_low": 0.3,
+        "pct_high": 1.1,
+        "direction": "positive",
+        "proxy_ticker": "HSTECH.HK",
+        "logic": "东亚邻近市场企稳温和降低亚太成长股的联动抛压，属跨境情绪外溢传导。",
+        "logic_en": "Steadier East Asian risk sentiment mildly dampens cross-market tech derating pressure."
+      },
+      "top_hk": {
+        "market": "港股",
+        "sector": "港股/A股亚太科技情绪外溢 (HSTECH)",
+        "sector_en": "APAC Tech Risk-On Spillover (HSTECH)",
+        "pct_low": 0.3,
+        "pct_high": 1.1,
+        "direction": "positive",
+        "proxy_ticker": "HSTECH.HK",
+        "logic": "东亚邻近市场企稳温和降低亚太成长股的联动抛压，属跨境情绪外溢传导。",
+        "logic_en": "Steadier East Asian risk sentiment mildly dampens cross-market tech derating pressure."
+      },
+      "bars": [
+        {
+          "market": "亚太",
+          "sector": "韩国科技与半导体权重 (KOSPI / 海力士 / 三星)",
+          "sector_en": "Korea Tech & Semi Weights (KOSPI / Hynix / Samsung)",
+          "pct_low": 1.0,
+          "pct_high": 3.2,
+          "direction": "positive",
+          "proxy_ticker": "EWY",
+          "logic": "稳定基金托底流动性预期缓解融资强平链条，对高权重存储芯片与韩国宽基构成直接支撑。",
+          "logic_en": "Stabilization fund liquidity eases forced margin unwinding in flagship Korean memory and index weights."
+        },
+        {
+          "market": "亚太",
+          "sector": "韩国大盘宽基与外资风险偏好映射 (EWY)",
+          "sector_en": "MSCI South Korea Proxy & Foreign Flows (EWY)",
+          "pct_low": 0.6,
+          "pct_high": 2.0,
+          "direction": "positive",
+          "proxy_ticker": "EWY",
+          "logic": "官方政策介入信号有助于抑制韩元贬值与外资连续净流出斜率。",
+          "logic_en": "Policy intervention signal moderates FX pressure and foreign equity outflow velocity."
+        },
+        {
+          "market": "港股",
+          "sector": "港股/A股亚太科技情绪外溢 (HSTECH)",
+          "sector_en": "APAC Tech Risk-On Spillover (HSTECH)",
+          "pct_low": 0.3,
+          "pct_high": 1.1,
+          "direction": "positive",
+          "proxy_ticker": "HSTECH.HK",
+          "logic": "东亚邻近市场企稳温和降低亚太成长股的联动抛压，属跨境情绪外溢传导。",
+          "logic_en": "Steadier East Asian risk sentiment mildly dampens cross-market tech derating pressure."
+        }
+      ],
+      "if_then": [
+        {
+          "cond": "[顺向催化兑现阈值] 若相关催化在 3 个交易日内落地具体数据/公告，带动 EWY 放量上行 1.9%~3.2%",
+          "result": "韩国科技与半导体权重 (KOSPI / 海力士 / 三星)核心受益标的获增量机构资金加仓，可沿一阶直接标的顺势跟踪。",
+          "tone": "bullish"
+        },
+        {
+          "cond": "[预期差证伪回吐阈值] 若首个交易日冲高后无法维持换手，次日回撤幅度 ≥ 1.5% 且未见实质订单/政策跟进",
+          "result": "属于一次性主题情绪脉冲，避免在二阶段接盘弱势滞涨概念股。",
+          "tone": "bearish"
+        }
+      ],
+      "milestones": [
+        {
+          "date": "1 周内",
+          "status": "current",
+          "label": "盯紧韩国金融委员会稳市细则发布与 KOSPI 融资余额止跌信号"
+        }
+      ],
+      "sample_basis": {
+        "sample_n": 10,
+        "volatility_pct": 2.37,
+        "volatility_source": "韩国政府历次股市稳定基金与限制卖空干预窗口表现样本",
+        "horizon": "1~5 个交易日",
+        "confidence_label": "官方稳市政策预期（托底亚太杠杆筹码与流动性）",
+        "confidence_label_en": "Official Stabilization Fund Policy Support"
+      },
+      "realized_quotes": [
+        {
+          "ticker": "QQQ",
+          "name": "纳指100ETF",
+          "name_en": "Invesco QQQ",
+          "market": "美股",
+          "price": 608.45,
+          "pct_change": -5.67
+        },
+        {
+          "ticker": "HSTECH.HK",
+          "name": "恒生科指",
+          "name_en": "Hang Seng Tech",
+          "market": "港股",
+          "price": 3519.06,
+          "pct_change": 0.23
+        }
+      ],
+      "priced_in_analysis": {
+        "status_code": "partially_priced",
+        "status_label": "部分计价（博弈二次预期差）",
+        "status_label_en": "Partially Priced",
+        "session_context": "「韩国拟时隔18年再启股市稳定基金，放宽回购并」于交易时段内释放，资金正逐步消化量价反馈",
+        "expectation_gap": "针对「韩国拟时隔18年再启股市稳定基金，放宽回购并监控卖空」，首波情绪已在盘面初步计价中显现，真正的预期差取决于后续核心标的成交额能否放量印证及二阶产业链订单/细则跟进。"
+      },
+      "transmission_layers": [
+        {
+          "tier": 1,
+          "tier_label": "一阶直接冲击（直接定价核心标的）",
+          "summary": "紧扣「韩国拟时隔18年再启股市稳定基金，放宽回购并监控卖空」最直接的营收与估值敞口：韩国科技与半导体权重 / 韩国大盘宽基与外资风险偏好映 等首当其冲。",
+          "stocks": [
+            {
+              "name": "韩国科技与半导体权重",
+              "code": "EWY",
+              "market": "亚太",
+              "exposure_logic": "稳定基金托底流动性预期缓解融资强平链条，对高权重存储芯片与韩国宽基构成直接支撑。",
+              "direction": "positive"
+            },
+            {
+              "name": "韩国大盘宽基与外资风险偏好映",
+              "code": "EWY",
+              "market": "亚太",
+              "exposure_logic": "官方政策介入信号有助于抑制韩元贬值与外资连续净流出斜率。",
+              "direction": "positive"
+            }
+          ]
+        },
+        {
+          "tier": 2,
+          "tier_label": "二阶产业链传导 / 替代对冲",
+          "summary": "向产业链上下游、跨市场同业映射或自主替代环节进行二阶定价传导。",
+          "stocks": [
+            {
+              "name": "恒生科技指数",
+              "code": "HSTECH.HK",
+              "market": "港股",
+              "exposure_logic": "东亚邻近市场企稳温和降低亚太成长股的联动抛压，属跨境情绪外溢传导。",
+              "direction": "positive"
+            }
+          ]
+        },
+        {
+          "tier": 3,
+          "tier_label": "三阶资金面与风格跷跷板效应",
+          "summary": "风险偏好变化驱动机构仓位在高弹性成长与低波高股息防御资产间再平衡。",
+          "stocks": [
+            {
+              "name": "红利低波ETF",
+              "code": "512890.SH",
+              "market": "A股",
+              "exposure_logic": "当主线高波动分化时承接防御与避险资金切换",
+              "direction": "positive"
+            }
+          ]
+        }
+      ],
+      "historical_precedents": [
+        {
+          "date": "2024-09-24",
+          "event_title": "国内跨市场重大催化发布于闭市窗口并伴随跨资产联动",
+          "t1_reaction": "首个开盘日竞价集中释放预期差，前 60 分钟成交额放大验证资金承接度。",
+          "t5_reaction": "T+5 主线标的围绕产业链业绩兑现与后续政策细则完成筹码分化。",
+          "lesson": "重点核对事件是否发生在交易所休市后（未计价窗口）及首小时量能持续性。"
+        },
+        {
+          "date": "2023-10-18",
+          "event_title": "跨境政策/产业催化剂落地后中美港三地市场分时异步重估",
+          "t1_reaction": "率先开盘的市场计价 60%~75% 首波弹性，后开盘市场易现高开/低开缺口收敛。",
+          "t5_reaction": "T+5 脱离纯情绪扰动后，基本面直接受益龙头跑赢二三线跟风概念。",
+          "lesson": "避免在外盘已充分交易 5%+ 涨幅后再追高滞后映射股。"
+        }
+      ],
+      "quant_if_then": [
+        {
+          "case": "bull",
+          "label": "顺向催化兑现阈值",
+          "trigger_metric": "EWY 量价突破强度",
+          "threshold": "若相关催化在 3 个交易日内落地具体数据/公告，带动 EWY 放量上行 1.9%~3.2%",
+          "action_implication": "韩国科技与半导体权重 (KOSPI / 海力士 / 三星)核心受益标的获增量机构资金加仓，可沿一阶直接标的顺势跟踪。"
+        },
+        {
+          "case": "bear",
+          "label": "预期差证伪回吐阈值",
+          "trigger_metric": "冲高回落幅度 & 量能衰减",
+          "threshold": "若首个交易日冲高后无法维持换手，次日回撤幅度 ≥ 1.5% 且未见实质订单/政策跟进",
+          "action_implication": "属于一次性主题情绪脉冲，避免在二阶段接盘弱势滞涨概念股。"
+        }
+      ]
+    },
     "evt_13806215cf9c": {
       "event_id": "evt_13806215cf9c",
       "tag": "东欧/中东武装冲突与军工避险",
@@ -6079,8 +6266,8 @@
           "name": "紫金矿业",
           "name_en": "Zijin Mining",
           "market": "港股",
-          "price": 24.0,
-          "pct_change": 4.08
+          "price": 24.04,
+          "pct_change": 4.25
         }
       ],
       "priced_in_analysis": {
@@ -6336,8 +6523,8 @@
           "name": "紫金矿业",
           "name_en": "Zijin Mining",
           "market": "港股",
-          "price": 24.0,
-          "pct_change": 4.08
+          "price": 24.04,
+          "pct_change": 4.25
         }
       ],
       "priced_in_analysis": {
@@ -6442,6 +6629,468 @@
           "trigger_metric": "外交表态后 72 小时原油回撤率",
           "threshold": "若 72 小时内未现真实油轮停航且布伦特原油冲高回落吐出涨幅 > 60%",
           "action_implication": "属于纯地缘嘴炮脉冲突发，油运高开追涨极易被套，逢高减仓兑现。"
+        }
+      ]
+    },
+    "evt_6144e8cc692b": {
+      "event_id": "evt_6144e8cc692b",
+      "tag": "端到端智驾商业化 / FSD 落地",
+      "tag_en": "Autonomous Driving & FSD Rollout",
+      "polarity": "divergent",
+      "intensity": 4,
+      "validation_status": "verified",
+      "evidence_tier": "single_source",
+      "evidence_tier_label": "单一信源线索",
+      "effective_date_label": null,
+      "qualifier_badge": null,
+      "one_liner": "端到端智驾高版本推进强化头部整车软件订阅与 Robotaxi 预期，带动高算力域控及传感器渗透率上行，传统低阶网约车承压。",
+      "top_a": {
+        "market": "A股",
+        "sector": "智能驾驶域控制器 / 激光雷达",
+        "sector_en": "A-Share ADAS Domain Controller & LiDAR",
+        "pct_low": 1.4,
+        "pct_high": 3.6,
+        "direction": "positive",
+        "proxy_ticker": "002920.SZ",
+        "logic": "头部车企智驾节奏加快，倒逼国内车企跟进高算力域控、线控制动与传感器配置。",
+        "logic_en": "Accelerated flagship ADAS rollout drives domestic controller and sensor upgrades."
+      },
+      "top_us": {
+        "market": "美股",
+        "sector": "特斯拉 FSD 与整车软件估值 (TSLA)",
+        "sector_en": "Tesla FSD & Software Valuation (TSLA)",
+        "pct_low": 2.1,
+        "pct_high": 5.2,
+        "direction": "positive",
+        "proxy_ticker": "TSLA",
+        "logic": "FSD 高版本落地与订阅渗透率提升，强化整车软件及 Robotaxi 远期现金流定价。",
+        "logic_en": "New FSD rollout and subscription adoption strengthen automotive software valuation."
+      },
+      "top_hk": {
+        "market": "港股",
+        "sector": "头部新势力智驾领先车企",
+        "sector_en": "HKEX Leading Smart-EV OEMs",
+        "pct_low": 0.9,
+        "pct_high": 2.8,
+        "direction": "positive",
+        "proxy_ticker": "09868.HK",
+        "logic": "端到端智驾模型迭代领先的港股整车厂受益于销量结构上移与估值重估。",
+        "logic_en": "Smart-EV leaders in Hong Kong benefit from mix upgrade and ADAS differentiation."
+      },
+      "bars": [
+        {
+          "market": "美股",
+          "sector": "特斯拉 FSD 与整车软件估值 (TSLA)",
+          "sector_en": "Tesla FSD & Software Valuation (TSLA)",
+          "pct_low": 2.1,
+          "pct_high": 5.2,
+          "direction": "positive",
+          "proxy_ticker": "TSLA",
+          "logic": "FSD 高版本落地与订阅渗透率提升，强化整车软件及 Robotaxi 远期现金流定价。",
+          "logic_en": "New FSD rollout and subscription adoption strengthen automotive software valuation."
+        },
+        {
+          "market": "A股",
+          "sector": "智能驾驶域控制器 / 激光雷达",
+          "sector_en": "A-Share ADAS Domain Controller & LiDAR",
+          "pct_low": 1.4,
+          "pct_high": 3.6,
+          "direction": "positive",
+          "proxy_ticker": "002920.SZ",
+          "logic": "头部车企智驾节奏加快，倒逼国内车企跟进高算力域控、线控制动与传感器配置。",
+          "logic_en": "Accelerated flagship ADAS rollout drives domestic controller and sensor upgrades."
+        },
+        {
+          "market": "港股",
+          "sector": "头部新势力智驾领先车企",
+          "sector_en": "HKEX Leading Smart-EV OEMs",
+          "pct_low": 0.9,
+          "pct_high": 2.8,
+          "direction": "positive",
+          "proxy_ticker": "09868.HK",
+          "logic": "端到端智驾模型迭代领先的港股整车厂受益于销量结构上移与估值重估。",
+          "logic_en": "Smart-EV leaders in Hong Kong benefit from mix upgrade and ADAS differentiation."
+        },
+        {
+          "market": "美股",
+          "sector": "传统纯人工网约车平台 (UBER)",
+          "sector_en": "Legacy Ride-Hailing Platforms (UBER)",
+          "pct_low": -1.6,
+          "pct_high": -0.4,
+          "direction": "negative",
+          "proxy_ticker": "UBER",
+          "logic": "若 Robotaxi 商业化时间表前移，纯人工运力撮合平台的中长期抽成空间面临估值折价。",
+          "logic_en": "Faster Robotaxi commercialization compresses terminal multiples for legacy ride-hailing."
+        }
+      ],
+      "if_then": [
+        {
+          "cond": "[顺向催化兑现阈值] 若相关催化在 3 个交易日内落地具体数据/公告，带动 TSLA 放量上行 3.1%~5.2%",
+          "result": "特斯拉 FSD 与整车软件估值 (TSLA)核心受益标的获增量机构资金加仓，可沿一阶直接标的顺势跟踪。",
+          "tone": "bullish"
+        },
+        {
+          "cond": "[预期差证伪回吐阈值] 若首个交易日冲高后无法维持换手，次日回撤幅度 ≥ 1.5% 且未见实质订单/政策跟进",
+          "result": "属于一次性主题情绪脉冲，避免在二阶段接盘弱势滞涨概念股。",
+          "tone": "bearish"
+        }
+      ],
+      "milestones": [
+        {
+          "date": "推送后 2 周",
+          "status": "current",
+          "label": "跟踪首批车型 OTA 推送比例及无干预接管里程实测"
+        },
+        {
+          "date": "未来 1 季度",
+          "status": "upcoming",
+          "label": "观察 FSD 订阅选装率与中美监管准入批复"
+        }
+      ],
+      "sample_basis": {
+        "sample_n": 14,
+        "volatility_pct": 3.2,
+        "volatility_source": "TSLA / 智能驾驶链历史催化窗口",
+        "horizon": "2~7 个交易日",
+        "confidence_label": "高置信（直接产业落地催化）",
+        "confidence_label_en": "High (Direct ADAS Catalyst)"
+      },
+      "realized_quotes": [
+        {
+          "ticker": "QQQ",
+          "name": "纳指100ETF",
+          "name_en": "Invesco QQQ",
+          "market": "美股",
+          "price": 608.45,
+          "pct_change": -5.67
+        },
+        {
+          "ticker": "HSTECH.HK",
+          "name": "恒生科指",
+          "name_en": "Hang Seng Tech",
+          "market": "港股",
+          "price": 3519.06,
+          "pct_change": 0.23
+        }
+      ],
+      "priced_in_analysis": {
+        "status_code": "partially_priced",
+        "status_label": "部分计价（博弈二次预期差）",
+        "status_label_en": "Partially Priced",
+        "session_context": "「特斯拉北美启动FSD V15监督版推送，中国」于交易时段内释放，资金正逐步消化量价反馈",
+        "expectation_gap": "针对「特斯拉北美启动FSD V15监督版推送，中国市场正依」，首波情绪已在盘面初步计价中显现，真正的预期差取决于后续核心标的成交额能否放量印证及二阶产业链订单/细则跟进。"
+      },
+      "transmission_layers": [
+        {
+          "tier": 1,
+          "tier_label": "一阶直接冲击（直接定价核心标的）",
+          "summary": "紧扣「特斯拉北美启动FSD V15监督版推送，中国市场正依」最直接的营收与估值敞口：特斯拉 / 德赛西威 等首当其冲。",
+          "stocks": [
+            {
+              "name": "特斯拉",
+              "code": "TSLA",
+              "market": "美股",
+              "exposure_logic": "FSD 高版本落地与订阅渗透率提升，强化整车软件及 Robotaxi 远期现金流定价。",
+              "direction": "positive"
+            },
+            {
+              "name": "德赛西威",
+              "code": "002920.SZ",
+              "market": "A股",
+              "exposure_logic": "头部车企智驾节奏加快，倒逼国内车企跟进高算力域控、线控制动与传感器配置。",
+              "direction": "positive"
+            }
+          ]
+        },
+        {
+          "tier": 2,
+          "tier_label": "二阶产业链传导 / 替代对冲",
+          "summary": "向产业链上下游、跨市场同业映射或自主替代环节进行二阶定价传导。",
+          "stocks": [
+            {
+              "name": "小鹏汽车",
+              "code": "09868.HK",
+              "market": "港股",
+              "exposure_logic": "端到端智驾模型迭代领先的港股整车厂受益于销量结构上移与估值重估。",
+              "direction": "positive"
+            }
+          ]
+        },
+        {
+          "tier": 3,
+          "tier_label": "三阶资金面与风格跷跷板效应",
+          "summary": "风险偏好变化驱动机构仓位在高弹性成长与低波高股息防御资产间再平衡。",
+          "stocks": [
+            {
+              "name": "优步",
+              "code": "UBER",
+              "market": "美股",
+              "exposure_logic": "若 Robotaxi 商业化时间表前移，纯人工运力撮合平台的中长期抽成空间面临估值折价。",
+              "direction": "negative"
+            }
+          ]
+        }
+      ],
+      "historical_precedents": [
+        {
+          "date": "2024-09-24",
+          "event_title": "国内跨市场重大催化发布于闭市窗口并伴随跨资产联动",
+          "t1_reaction": "首个开盘日竞价集中释放预期差，前 60 分钟成交额放大验证资金承接度。",
+          "t5_reaction": "T+5 主线标的围绕产业链业绩兑现与后续政策细则完成筹码分化。",
+          "lesson": "重点核对事件是否发生在交易所休市后（未计价窗口）及首小时量能持续性。"
+        },
+        {
+          "date": "2023-10-18",
+          "event_title": "跨境政策/产业催化剂落地后中美港三地市场分时异步重估",
+          "t1_reaction": "率先开盘的市场计价 60%~75% 首波弹性，后开盘市场易现高开/低开缺口收敛。",
+          "t5_reaction": "T+5 脱离纯情绪扰动后，基本面直接受益龙头跑赢二三线跟风概念。",
+          "lesson": "避免在外盘已充分交易 5%+ 涨幅后再追高滞后映射股。"
+        }
+      ],
+      "quant_if_then": [
+        {
+          "case": "bull",
+          "label": "顺向催化兑现阈值",
+          "trigger_metric": "TSLA 量价突破强度",
+          "threshold": "若相关催化在 3 个交易日内落地具体数据/公告，带动 TSLA 放量上行 3.1%~5.2%",
+          "action_implication": "特斯拉 FSD 与整车软件估值 (TSLA)核心受益标的获增量机构资金加仓，可沿一阶直接标的顺势跟踪。"
+        },
+        {
+          "case": "bear",
+          "label": "预期差证伪回吐阈值",
+          "trigger_metric": "冲高回落幅度 & 量能衰减",
+          "threshold": "若首个交易日冲高后无法维持换手，次日回撤幅度 ≥ 1.5% 且未见实质订单/政策跟进",
+          "action_implication": "属于一次性主题情绪脉冲，避免在二阶段接盘弱势滞涨概念股。"
+        }
+      ]
+    },
+    "evt_72197cdf0869": {
+      "event_id": "evt_72197cdf0869",
+      "tag": "国产与开源大模型性能追赶催化",
+      "tag_en": "China & Open-Weight Model Catch-Up",
+      "polarity": "bullish",
+      "intensity": 3,
+      "validation_status": "verified",
+      "evidence_tier": "single_source",
+      "evidence_tier_label": "单一信源线索",
+      "effective_date_label": null,
+      "qualifier_badge": null,
+      "one_liner": "华为云DeepSeek-V4.1-Flash-1017模型贵阳区域缓存输入价格下调80%，加剧AI模型服务局部竞争，利好特定AI应用开发者，短期压制云服务商利润。",
+      "top_a": {
+        "market": "A股",
+        "sector": "A股国产算力卡 / 推理服务器与本地部署软件",
+        "sector_en": "A-Share AI Apps & Local Compute",
+        "pct_low": 1.1,
+        "pct_high": 3.1,
+        "direction": "positive",
+        "proxy_ticker": "510300.SH",
+        "logic": "开源权重轻量化加速政企与金融机构本地化部署落地，带动国产推理一体机与算力卡需求。",
+        "logic_en": "Expanded capabilities accelerate domestic enterprise adoption."
+      },
+      "top_us": {
+        "market": "美股",
+        "sector": "全球推理芯片与云基准估值 (NVDA / QQQ)",
+        "sector_en": "Global Inference Compute & Cloud Benchmarks",
+        "pct_low": 0.9,
+        "pct_high": 2.7,
+        "direction": "positive",
+        "proxy_ticker": "09988.HK",
+        "logic": "低成本高性价比开源模型持续拉低每百万 Token 推理价格，刺激终端调用总量并检验海外高溢价闭源模型壁垒。",
+        "logic_en": "Model ecosystem upgrades expand enterprise cloud consumption."
+      },
+      "top_hk": {
+        "market": "港股",
+        "sector": "国内开源模型底座与云平台 (09988 / 00700)",
+        "sector_en": "HKEX AI Ecosystem & Cloud Platforms",
+        "pct_low": 0.8,
+        "pct_high": 2.5,
+        "direction": "positive",
+        "proxy_ticker": "HSTECH.HK",
+        "logic": "国产与开源大模型能力追平海外一线梯队，直接提升阿里云百炼/腾讯云等港股 MaaS 平台调用粘性。",
+        "logic_en": "Model performance progress supports platform ecosystem monetization."
+      },
+      "bars": [
+        {
+          "market": "美股",
+          "sector": "全球推理芯片与云基准估值 (NVDA / QQQ)",
+          "sector_en": "Global Inference Compute & Cloud Benchmarks",
+          "pct_low": 0.9,
+          "pct_high": 2.7,
+          "direction": "positive",
+          "proxy_ticker": "09988.HK",
+          "logic": "低成本高性价比开源模型持续拉低每百万 Token 推理价格，刺激终端调用总量并检验海外高溢价闭源模型壁垒。",
+          "logic_en": "Model ecosystem upgrades expand enterprise cloud consumption."
+        },
+        {
+          "market": "港股",
+          "sector": "国内开源模型底座与云平台 (09988 / 00700)",
+          "sector_en": "HKEX AI Ecosystem & Cloud Platforms",
+          "pct_low": 0.8,
+          "pct_high": 2.5,
+          "direction": "positive",
+          "proxy_ticker": "HSTECH.HK",
+          "logic": "国产与开源大模型能力追平海外一线梯队，直接提升阿里云百炼/腾讯云等港股 MaaS 平台调用粘性。",
+          "logic_en": "Model performance progress supports platform ecosystem monetization."
+        },
+        {
+          "market": "A股",
+          "sector": "A股国产算力卡 / 推理服务器与本地部署软件",
+          "sector_en": "A-Share AI Apps & Local Compute",
+          "pct_low": 1.1,
+          "pct_high": 3.1,
+          "direction": "positive",
+          "proxy_ticker": "510300.SH",
+          "logic": "开源权重轻量化加速政企与金融机构本地化部署落地，带动国产推理一体机与算力卡需求。",
+          "logic_en": "Expanded capabilities accelerate domestic enterprise adoption."
+        }
+      ],
+      "if_then": [
+        {
+          "cond": "[正向验证阈值] 环比增长超50%",
+          "result": "关注AI应用层公司，评估其成本节约与业务增长潜力。",
+          "tone": "bullish"
+        },
+        {
+          "cond": "[证伪退出阈值] 宣布涨价或未跟进降价",
+          "result": "重新评估AI模型服务价格战持续性与范围，规避纯模型提供商风险。",
+          "tone": "bearish"
+        }
+      ],
+      "milestones": [
+        {
+          "date": "未来 2~4 周",
+          "status": "upcoming",
+          "label": "关注 Hugging Face 下载排名及云厂商企业微调调用增长"
+        }
+      ],
+      "sample_basis": {
+        "sample_n": 15,
+        "volatility_pct": 2.01,
+        "volatility_source": "主流大模型与软件应用催化样本",
+        "horizon": "2~5 个交易日",
+        "confidence_label": "中高置信（生态应用催化）",
+        "confidence_label_en": "Moderate-High (Model Ecosystem Catalyst)"
+      },
+      "realized_quotes": [
+        {
+          "ticker": "00700.HK",
+          "name": "腾讯控股",
+          "name_en": "Tencent",
+          "market": "港股",
+          "price": 343.0,
+          "pct_change": -0.29
+        },
+        {
+          "ticker": "HSTECH.HK",
+          "name": "恒生科指",
+          "name_en": "Hang Seng Tech",
+          "market": "港股",
+          "price": 3519.06,
+          "pct_change": 0.23
+        }
+      ],
+      "priced_in_analysis": {
+        "status_code": "partially_priced",
+        "status_label": "部分计价（博弈二次预期差）",
+        "status_label_en": "Partially Priced",
+        "session_context": "「华为云发布DeepSeek-V4.1-Fla」于交易时段内释放，资金正逐步消化量价反馈",
+        "expectation_gap": "市场对AI模型价格战已趋于理性，甚至有回升预期。此次华为云局部大幅降价，或引发A股AI应用公司短期乐观情绪，但对云服务商形成二次预期差博弈，关注是否会蔓延至其他区域或模型。"
+      },
+      "transmission_layers": [
+        {
+          "tier": 1,
+          "tier_label": "一阶直接冲击（核心受益或受损主体）",
+          "summary": "华为云特定模型服务降价，直接降低AI应用开发者成本，但对云服务商自身利润构成压力。",
+          "stocks": [
+            {
+              "name": "科大讯飞",
+              "code": "002230.SZ",
+              "market": "A股",
+              "exposure_logic": "AI模型服务成本降低，提升应用开发利润空间。",
+              "direction": "positive"
+            },
+            {
+              "name": "腾讯控股",
+              "code": "00700.HK",
+              "market": "港股",
+              "exposure_logic": "作为云服务商，面临竞争加剧及潜在降价压力。",
+              "direction": "negative"
+            }
+          ]
+        },
+        {
+          "tier": 2,
+          "tier_label": "二阶产业链传导",
+          "summary": "模型服务降价利于AI应用普及，长期或带动算力需求增长，但短期价格战可能影响上游盈利。",
+          "stocks": [
+            {
+              "name": "寒武纪",
+              "code": "688256.SH",
+              "market": "A股",
+              "exposure_logic": "AI模型普及长期利好算力需求，短期价格战或压制。",
+              "direction": "mixed"
+            },
+            {
+              "name": "拓尔思",
+              "code": "300229.SZ",
+              "market": "A股",
+              "exposure_logic": "AI基础模型成本下降，利于其软件产品集成与推广。",
+              "direction": "positive"
+            }
+          ]
+        },
+        {
+          "tier": 3,
+          "tier_label": "三阶宏观或避险跷跷板",
+          "summary": "AI模型成本下降加速行业应用渗透，推动数字经济发展，但价格战可能引发市场对盈利模式担忧。",
+          "stocks": [
+            {
+              "name": "中国云计算ETF",
+              "code": "515880.SH",
+              "market": "A股",
+              "exposure_logic": "云服务商竞争加剧，短期承压；长期AI普及利好基础设施。",
+              "direction": "mixed"
+            },
+            {
+              "name": "数字经济ETF",
+              "code": "560800.SH",
+              "market": "A股",
+              "exposure_logic": "AI应用成本降低，加速数字经济各领域渗透与发展。",
+              "direction": "positive"
+            }
+          ]
+        }
+      ],
+      "historical_precedents": [
+        {
+          "date": "2024-05-21",
+          "event_title": "中国大模型价格战爆发",
+          "t1_reaction": "阿里云通义千问降价97%，百度文心一言免费，相关概念股短期震荡。",
+          "t5_reaction": "价格战加速模型普及，但盈利模式承压，厂商转向差异化竞争。",
+          "lesson": "价格战促普及，但需关注技术壁垒与应用落地能力。"
+        },
+        {
+          "date": "2025-04-01",
+          "event_title": "中国云计算厂商集体降价",
+          "t1_reaction": "阿里云、腾讯云等最高降幅60%，云计算板块承压。",
+          "t5_reaction": "市场转向关注算力供需失衡，2026年3月部分核心AI算力服务价格反弹。",
+          "lesson": "价格战后市场重估供需，核心资源稀缺性决定长期价值。"
+        }
+      ],
+      "quant_if_then": [
+        {
+          "case": "bull",
+          "label": "正向验证阈值",
+          "trigger_metric": "DeepSeek-V4.1-Flash-1017模型在华为云贵阳区域调用量",
+          "threshold": "环比增长超50%",
+          "action_implication": "关注AI应用层公司，评估其成本节约与业务增长潜力。"
+        },
+        {
+          "case": "bear",
+          "label": "证伪退出阈值",
+          "trigger_metric": "其他头部云厂商或DeepSeek模型其他区域定价策略",
+          "threshold": "宣布涨价或未跟进降价",
+          "action_implication": "重新评估AI模型服务价格战持续性与范围，规避纯模型提供商风险。"
         }
       ]
     },
@@ -6658,468 +7307,6 @@
           "trigger_metric": "冲高回落幅度 & 量能衰减",
           "threshold": "若首个交易日冲高后无法维持换手，次日回撤幅度 ≥ 1.5% 且未见实质订单/政策跟进",
           "action_implication": "属于一次性主题情绪脉冲，避免在二阶段接盘弱势滞涨概念股。"
-        }
-      ]
-    },
-    "evt_640a22a1243f": {
-      "event_id": "evt_640a22a1243f",
-      "tag": "端到端智驾商业化 / FSD 落地",
-      "tag_en": "Autonomous Driving & FSD Rollout",
-      "polarity": "divergent",
-      "intensity": 4,
-      "validation_status": "verified",
-      "evidence_tier": "single_source",
-      "evidence_tier_label": "单一信源线索",
-      "effective_date_label": null,
-      "qualifier_badge": null,
-      "one_liner": "端到端智驾高版本推进强化头部整车软件订阅与 Robotaxi 预期，带动高算力域控及传感器渗透率上行，传统低阶网约车承压。",
-      "top_a": {
-        "market": "A股",
-        "sector": "智能驾驶域控制器 / 激光雷达",
-        "sector_en": "A-Share ADAS Domain Controller & LiDAR",
-        "pct_low": 1.4,
-        "pct_high": 3.6,
-        "direction": "positive",
-        "proxy_ticker": "002920.SZ",
-        "logic": "头部车企智驾节奏加快，倒逼国内车企跟进高算力域控、线控制动与传感器配置。",
-        "logic_en": "Accelerated flagship ADAS rollout drives domestic controller and sensor upgrades."
-      },
-      "top_us": {
-        "market": "美股",
-        "sector": "特斯拉 FSD 与整车软件估值 (TSLA)",
-        "sector_en": "Tesla FSD & Software Valuation (TSLA)",
-        "pct_low": 2.1,
-        "pct_high": 5.2,
-        "direction": "positive",
-        "proxy_ticker": "TSLA",
-        "logic": "FSD 高版本落地与订阅渗透率提升，强化整车软件及 Robotaxi 远期现金流定价。",
-        "logic_en": "New FSD rollout and subscription adoption strengthen automotive software valuation."
-      },
-      "top_hk": {
-        "market": "港股",
-        "sector": "头部新势力智驾领先车企",
-        "sector_en": "HKEX Leading Smart-EV OEMs",
-        "pct_low": 0.9,
-        "pct_high": 2.8,
-        "direction": "positive",
-        "proxy_ticker": "09868.HK",
-        "logic": "端到端智驾模型迭代领先的港股整车厂受益于销量结构上移与估值重估。",
-        "logic_en": "Smart-EV leaders in Hong Kong benefit from mix upgrade and ADAS differentiation."
-      },
-      "bars": [
-        {
-          "market": "美股",
-          "sector": "特斯拉 FSD 与整车软件估值 (TSLA)",
-          "sector_en": "Tesla FSD & Software Valuation (TSLA)",
-          "pct_low": 2.1,
-          "pct_high": 5.2,
-          "direction": "positive",
-          "proxy_ticker": "TSLA",
-          "logic": "FSD 高版本落地与订阅渗透率提升，强化整车软件及 Robotaxi 远期现金流定价。",
-          "logic_en": "New FSD rollout and subscription adoption strengthen automotive software valuation."
-        },
-        {
-          "market": "A股",
-          "sector": "智能驾驶域控制器 / 激光雷达",
-          "sector_en": "A-Share ADAS Domain Controller & LiDAR",
-          "pct_low": 1.4,
-          "pct_high": 3.6,
-          "direction": "positive",
-          "proxy_ticker": "002920.SZ",
-          "logic": "头部车企智驾节奏加快，倒逼国内车企跟进高算力域控、线控制动与传感器配置。",
-          "logic_en": "Accelerated flagship ADAS rollout drives domestic controller and sensor upgrades."
-        },
-        {
-          "market": "港股",
-          "sector": "头部新势力智驾领先车企",
-          "sector_en": "HKEX Leading Smart-EV OEMs",
-          "pct_low": 0.9,
-          "pct_high": 2.8,
-          "direction": "positive",
-          "proxy_ticker": "09868.HK",
-          "logic": "端到端智驾模型迭代领先的港股整车厂受益于销量结构上移与估值重估。",
-          "logic_en": "Smart-EV leaders in Hong Kong benefit from mix upgrade and ADAS differentiation."
-        },
-        {
-          "market": "美股",
-          "sector": "传统纯人工网约车平台 (UBER)",
-          "sector_en": "Legacy Ride-Hailing Platforms (UBER)",
-          "pct_low": -1.6,
-          "pct_high": -0.4,
-          "direction": "negative",
-          "proxy_ticker": "UBER",
-          "logic": "若 Robotaxi 商业化时间表前移，纯人工运力撮合平台的中长期抽成空间面临估值折价。",
-          "logic_en": "Faster Robotaxi commercialization compresses terminal multiples for legacy ride-hailing."
-        }
-      ],
-      "if_then": [
-        {
-          "cond": "[顺向催化兑现阈值] 若相关催化在 3 个交易日内落地具体数据/公告，带动 TSLA 放量上行 3.1%~5.2%",
-          "result": "特斯拉 FSD 与整车软件估值 (TSLA)核心受益标的获增量机构资金加仓，可沿一阶直接标的顺势跟踪。",
-          "tone": "bullish"
-        },
-        {
-          "cond": "[预期差证伪回吐阈值] 若首个交易日冲高后无法维持换手，次日回撤幅度 ≥ 1.5% 且未见实质订单/政策跟进",
-          "result": "属于一次性主题情绪脉冲，避免在二阶段接盘弱势滞涨概念股。",
-          "tone": "bearish"
-        }
-      ],
-      "milestones": [
-        {
-          "date": "推送后 2 周",
-          "status": "current",
-          "label": "跟踪首批车型 OTA 推送比例及无干预接管里程实测"
-        },
-        {
-          "date": "未来 1 季度",
-          "status": "upcoming",
-          "label": "观察 FSD 订阅选装率与中美监管准入批复"
-        }
-      ],
-      "sample_basis": {
-        "sample_n": 14,
-        "volatility_pct": 3.2,
-        "volatility_source": "TSLA / 智能驾驶链历史催化窗口",
-        "horizon": "2~7 个交易日",
-        "confidence_label": "高置信（直接产业落地催化）",
-        "confidence_label_en": "High (Direct ADAS Catalyst)"
-      },
-      "realized_quotes": [
-        {
-          "ticker": "QQQ",
-          "name": "纳指100ETF",
-          "name_en": "Invesco QQQ",
-          "market": "美股",
-          "price": 608.45,
-          "pct_change": -5.67
-        },
-        {
-          "ticker": "HSTECH.HK",
-          "name": "恒生科指",
-          "name_en": "Hang Seng Tech",
-          "market": "港股",
-          "price": 3501.06,
-          "pct_change": -0.29
-        }
-      ],
-      "priced_in_analysis": {
-        "status_code": "partially_priced",
-        "status_label": "部分计价（博弈二次预期差）",
-        "status_label_en": "Partially Priced",
-        "session_context": "「报道称：特斯拉启动FSD V15监督版推送并」于交易时段内释放，资金正逐步消化量价反馈",
-        "expectation_gap": "针对「报道称：特斯拉启动FSD V15监督版推送并推进中国」，首波情绪已在盘面初步计价中显现，真正的预期差取决于后续核心标的成交额能否放量印证及二阶产业链订单/细则跟进。"
-      },
-      "transmission_layers": [
-        {
-          "tier": 1,
-          "tier_label": "一阶直接冲击（直接定价核心标的）",
-          "summary": "紧扣「报道称：特斯拉启动FSD V15监督版推送并推进中国」最直接的营收与估值敞口：特斯拉 / 德赛西威 等首当其冲。",
-          "stocks": [
-            {
-              "name": "特斯拉",
-              "code": "TSLA",
-              "market": "美股",
-              "exposure_logic": "FSD 高版本落地与订阅渗透率提升，强化整车软件及 Robotaxi 远期现金流定价。",
-              "direction": "positive"
-            },
-            {
-              "name": "德赛西威",
-              "code": "002920.SZ",
-              "market": "A股",
-              "exposure_logic": "头部车企智驾节奏加快，倒逼国内车企跟进高算力域控、线控制动与传感器配置。",
-              "direction": "positive"
-            }
-          ]
-        },
-        {
-          "tier": 2,
-          "tier_label": "二阶产业链传导 / 替代对冲",
-          "summary": "向产业链上下游、跨市场同业映射或自主替代环节进行二阶定价传导。",
-          "stocks": [
-            {
-              "name": "小鹏汽车",
-              "code": "09868.HK",
-              "market": "港股",
-              "exposure_logic": "端到端智驾模型迭代领先的港股整车厂受益于销量结构上移与估值重估。",
-              "direction": "positive"
-            }
-          ]
-        },
-        {
-          "tier": 3,
-          "tier_label": "三阶资金面与风格跷跷板效应",
-          "summary": "风险偏好变化驱动机构仓位在高弹性成长与低波高股息防御资产间再平衡。",
-          "stocks": [
-            {
-              "name": "优步",
-              "code": "UBER",
-              "market": "美股",
-              "exposure_logic": "若 Robotaxi 商业化时间表前移，纯人工运力撮合平台的中长期抽成空间面临估值折价。",
-              "direction": "negative"
-            }
-          ]
-        }
-      ],
-      "historical_precedents": [
-        {
-          "date": "2024-09-24",
-          "event_title": "国内跨市场重大催化发布于闭市窗口并伴随跨资产联动",
-          "t1_reaction": "首个开盘日竞价集中释放预期差，前 60 分钟成交额放大验证资金承接度。",
-          "t5_reaction": "T+5 主线标的围绕产业链业绩兑现与后续政策细则完成筹码分化。",
-          "lesson": "重点核对事件是否发生在交易所休市后（未计价窗口）及首小时量能持续性。"
-        },
-        {
-          "date": "2023-10-18",
-          "event_title": "跨境政策/产业催化剂落地后中美港三地市场分时异步重估",
-          "t1_reaction": "率先开盘的市场计价 60%~75% 首波弹性，后开盘市场易现高开/低开缺口收敛。",
-          "t5_reaction": "T+5 脱离纯情绪扰动后，基本面直接受益龙头跑赢二三线跟风概念。",
-          "lesson": "避免在外盘已充分交易 5%+ 涨幅后再追高滞后映射股。"
-        }
-      ],
-      "quant_if_then": [
-        {
-          "case": "bull",
-          "label": "顺向催化兑现阈值",
-          "trigger_metric": "TSLA 量价突破强度",
-          "threshold": "若相关催化在 3 个交易日内落地具体数据/公告，带动 TSLA 放量上行 3.1%~5.2%",
-          "action_implication": "特斯拉 FSD 与整车软件估值 (TSLA)核心受益标的获增量机构资金加仓，可沿一阶直接标的顺势跟踪。"
-        },
-        {
-          "case": "bear",
-          "label": "预期差证伪回吐阈值",
-          "trigger_metric": "冲高回落幅度 & 量能衰减",
-          "threshold": "若首个交易日冲高后无法维持换手，次日回撤幅度 ≥ 1.5% 且未见实质订单/政策跟进",
-          "action_implication": "属于一次性主题情绪脉冲，避免在二阶段接盘弱势滞涨概念股。"
-        }
-      ]
-    },
-    "evt_72197cdf0869": {
-      "event_id": "evt_72197cdf0869",
-      "tag": "国产与开源大模型性能追赶催化",
-      "tag_en": "China & Open-Weight Model Catch-Up",
-      "polarity": "bullish",
-      "intensity": 3,
-      "validation_status": "verified",
-      "evidence_tier": "single_source",
-      "evidence_tier_label": "单一信源线索",
-      "effective_date_label": null,
-      "qualifier_badge": null,
-      "one_liner": "华为云DeepSeek-V4.1-Flash-1017模型贵阳区域缓存输入价格下调80%，加剧AI模型服务局部竞争，利好特定AI应用开发者，短期压制云服务商利润。",
-      "top_a": {
-        "market": "A股",
-        "sector": "A股国产算力卡 / 推理服务器与本地部署软件",
-        "sector_en": "A-Share AI Apps & Local Compute",
-        "pct_low": 1.1,
-        "pct_high": 3.1,
-        "direction": "positive",
-        "proxy_ticker": "510300.SH",
-        "logic": "开源权重轻量化加速政企与金融机构本地化部署落地，带动国产推理一体机与算力卡需求。",
-        "logic_en": "Expanded capabilities accelerate domestic enterprise adoption."
-      },
-      "top_us": {
-        "market": "美股",
-        "sector": "全球推理芯片与云基准估值 (NVDA / QQQ)",
-        "sector_en": "Global Inference Compute & Cloud Benchmarks",
-        "pct_low": 0.9,
-        "pct_high": 2.7,
-        "direction": "positive",
-        "proxy_ticker": "09988.HK",
-        "logic": "低成本高性价比开源模型持续拉低每百万 Token 推理价格，刺激终端调用总量并检验海外高溢价闭源模型壁垒。",
-        "logic_en": "Model ecosystem upgrades expand enterprise cloud consumption."
-      },
-      "top_hk": {
-        "market": "港股",
-        "sector": "国内开源模型底座与云平台 (09988 / 00700)",
-        "sector_en": "HKEX AI Ecosystem & Cloud Platforms",
-        "pct_low": 0.8,
-        "pct_high": 2.5,
-        "direction": "positive",
-        "proxy_ticker": "HSTECH.HK",
-        "logic": "国产与开源大模型能力追平海外一线梯队，直接提升阿里云百炼/腾讯云等港股 MaaS 平台调用粘性。",
-        "logic_en": "Model performance progress supports platform ecosystem monetization."
-      },
-      "bars": [
-        {
-          "market": "美股",
-          "sector": "全球推理芯片与云基准估值 (NVDA / QQQ)",
-          "sector_en": "Global Inference Compute & Cloud Benchmarks",
-          "pct_low": 0.9,
-          "pct_high": 2.7,
-          "direction": "positive",
-          "proxy_ticker": "09988.HK",
-          "logic": "低成本高性价比开源模型持续拉低每百万 Token 推理价格，刺激终端调用总量并检验海外高溢价闭源模型壁垒。",
-          "logic_en": "Model ecosystem upgrades expand enterprise cloud consumption."
-        },
-        {
-          "market": "港股",
-          "sector": "国内开源模型底座与云平台 (09988 / 00700)",
-          "sector_en": "HKEX AI Ecosystem & Cloud Platforms",
-          "pct_low": 0.8,
-          "pct_high": 2.5,
-          "direction": "positive",
-          "proxy_ticker": "HSTECH.HK",
-          "logic": "国产与开源大模型能力追平海外一线梯队，直接提升阿里云百炼/腾讯云等港股 MaaS 平台调用粘性。",
-          "logic_en": "Model performance progress supports platform ecosystem monetization."
-        },
-        {
-          "market": "A股",
-          "sector": "A股国产算力卡 / 推理服务器与本地部署软件",
-          "sector_en": "A-Share AI Apps & Local Compute",
-          "pct_low": 1.1,
-          "pct_high": 3.1,
-          "direction": "positive",
-          "proxy_ticker": "510300.SH",
-          "logic": "开源权重轻量化加速政企与金融机构本地化部署落地，带动国产推理一体机与算力卡需求。",
-          "logic_en": "Expanded capabilities accelerate domestic enterprise adoption."
-        }
-      ],
-      "if_then": [
-        {
-          "cond": "[正向验证阈值] 环比增长超50%",
-          "result": "关注AI应用层公司，评估其成本节约与业务增长潜力。",
-          "tone": "bullish"
-        },
-        {
-          "cond": "[证伪退出阈值] 宣布涨价或未跟进降价",
-          "result": "重新评估AI模型服务价格战持续性与范围，规避纯模型提供商风险。",
-          "tone": "bearish"
-        }
-      ],
-      "milestones": [
-        {
-          "date": "未来 2~4 周",
-          "status": "upcoming",
-          "label": "关注 Hugging Face 下载排名及云厂商企业微调调用增长"
-        }
-      ],
-      "sample_basis": {
-        "sample_n": 15,
-        "volatility_pct": 2.01,
-        "volatility_source": "主流大模型与软件应用催化样本",
-        "horizon": "2~5 个交易日",
-        "confidence_label": "中高置信（生态应用催化）",
-        "confidence_label_en": "Moderate-High (Model Ecosystem Catalyst)"
-      },
-      "realized_quotes": [
-        {
-          "ticker": "00700.HK",
-          "name": "腾讯控股",
-          "name_en": "Tencent",
-          "market": "港股",
-          "price": 342.8,
-          "pct_change": -0.35
-        },
-        {
-          "ticker": "HSTECH.HK",
-          "name": "恒生科指",
-          "name_en": "Hang Seng Tech",
-          "market": "港股",
-          "price": 3501.06,
-          "pct_change": -0.29
-        }
-      ],
-      "priced_in_analysis": {
-        "status_code": "partially_priced",
-        "status_label": "部分计价（博弈二次预期差）",
-        "status_label_en": "Partially Priced",
-        "session_context": "「华为云发布DeepSeek-V4.1-Fla」于交易时段内释放，资金正逐步消化量价反馈",
-        "expectation_gap": "市场对AI模型价格战已趋于理性，甚至有回升预期。此次华为云局部大幅降价，或引发A股AI应用公司短期乐观情绪，但对云服务商形成二次预期差博弈，关注是否会蔓延至其他区域或模型。"
-      },
-      "transmission_layers": [
-        {
-          "tier": 1,
-          "tier_label": "一阶直接冲击（核心受益或受损主体）",
-          "summary": "华为云特定模型服务降价，直接降低AI应用开发者成本，但对云服务商自身利润构成压力。",
-          "stocks": [
-            {
-              "name": "科大讯飞",
-              "code": "002230.SZ",
-              "market": "A股",
-              "exposure_logic": "AI模型服务成本降低，提升应用开发利润空间。",
-              "direction": "positive"
-            },
-            {
-              "name": "腾讯控股",
-              "code": "00700.HK",
-              "market": "港股",
-              "exposure_logic": "作为云服务商，面临竞争加剧及潜在降价压力。",
-              "direction": "negative"
-            }
-          ]
-        },
-        {
-          "tier": 2,
-          "tier_label": "二阶产业链传导",
-          "summary": "模型服务降价利于AI应用普及，长期或带动算力需求增长，但短期价格战可能影响上游盈利。",
-          "stocks": [
-            {
-              "name": "寒武纪",
-              "code": "688256.SH",
-              "market": "A股",
-              "exposure_logic": "AI模型普及长期利好算力需求，短期价格战或压制。",
-              "direction": "mixed"
-            },
-            {
-              "name": "拓尔思",
-              "code": "300229.SZ",
-              "market": "A股",
-              "exposure_logic": "AI基础模型成本下降，利于其软件产品集成与推广。",
-              "direction": "positive"
-            }
-          ]
-        },
-        {
-          "tier": 3,
-          "tier_label": "三阶宏观或避险跷跷板",
-          "summary": "AI模型成本下降加速行业应用渗透，推动数字经济发展，但价格战可能引发市场对盈利模式担忧。",
-          "stocks": [
-            {
-              "name": "中国云计算ETF",
-              "code": "515880.SH",
-              "market": "A股",
-              "exposure_logic": "云服务商竞争加剧，短期承压；长期AI普及利好基础设施。",
-              "direction": "mixed"
-            },
-            {
-              "name": "数字经济ETF",
-              "code": "560800.SH",
-              "market": "A股",
-              "exposure_logic": "AI应用成本降低，加速数字经济各领域渗透与发展。",
-              "direction": "positive"
-            }
-          ]
-        }
-      ],
-      "historical_precedents": [
-        {
-          "date": "2024-05-21",
-          "event_title": "中国大模型价格战爆发",
-          "t1_reaction": "阿里云通义千问降价97%，百度文心一言免费，相关概念股短期震荡。",
-          "t5_reaction": "价格战加速模型普及，但盈利模式承压，厂商转向差异化竞争。",
-          "lesson": "价格战促普及，但需关注技术壁垒与应用落地能力。"
-        },
-        {
-          "date": "2025-04-01",
-          "event_title": "中国云计算厂商集体降价",
-          "t1_reaction": "阿里云、腾讯云等最高降幅60%，云计算板块承压。",
-          "t5_reaction": "市场转向关注算力供需失衡，2026年3月部分核心AI算力服务价格反弹。",
-          "lesson": "价格战后市场重估供需，核心资源稀缺性决定长期价值。"
-        }
-      ],
-      "quant_if_then": [
-        {
-          "case": "bull",
-          "label": "正向验证阈值",
-          "trigger_metric": "DeepSeek-V4.1-Flash-1017模型在华为云贵阳区域调用量",
-          "threshold": "环比增长超50%",
-          "action_implication": "关注AI应用层公司，评估其成本节约与业务增长潜力。"
-        },
-        {
-          "case": "bear",
-          "label": "证伪退出阈值",
-          "trigger_metric": "其他头部云厂商或DeepSeek模型其他区域定价策略",
-          "threshold": "宣布涨价或未跟进降价",
-          "action_implication": "重新评估AI模型服务价格战持续性与范围，规避纯模型提供商风险。"
         }
       ]
     },
@@ -7662,240 +7849,6 @@
           "trigger_metric": "海外数据中心相关公司股价",
           "threshold": "盘前跌幅 > 5% 或政策细节明确严厉",
           "action_implication": "减持海外业务高占比公司。"
-        }
-      ]
-    },
-    "evt_003273e10aeb": {
-      "event_id": "evt_003273e10aeb",
-      "tag": "AI 服务器硬件涨价与算力基建景气",
-      "tag_en": "AI Server Price Hike & Supply Tightness",
-      "polarity": "bullish",
-      "intensity": 4,
-      "validation_status": "verified",
-      "evidence_tier": "single_source",
-      "evidence_tier_label": "单一信源线索",
-      "effective_date_label": null,
-      "qualifier_badge": "要价上限 45% · 关注客户实际接受率",
-      "one_liner": "AI服务器厂商戴尔、慧与、联想、超微因内存等成本飙升提价25-45%，冲击下游客户利润，利好上游核心零部件。",
-      "top_a": {
-        "market": "A股",
-        "sector": "AI 服务器整机与代工龙头 (工业富联/浪潮)",
-        "sector_en": "A-Share AI Server Leaders (601138/000977)",
-        "pct_low": 1.8,
-        "pct_high": 4.6,
-        "direction": "positive",
-        "proxy_ticker": "601138.SH",
-        "logic": "整机供给紧缺带来最高 45% 涨价，具备配额与规模优势的整机龙头直接受益单机价值量提升。",
-        "logic_en": "Acute GPU-rack shortages drive higher ASP and revenue leverage for leading server OEMs."
-      },
-      "top_us": {
-        "market": "美股",
-        "sector": "北美算力机柜与 GPU 基建链 (SMCI / DELL)",
-        "sector_en": "US AI Rack Builders (SMCI / DELL)",
-        "pct_low": 1.0,
-        "pct_high": 3.2,
-        "direction": "positive",
-        "proxy_ticker": "SMCI",
-        "logic": "整机报价上行凸显基础设施产能紧俏，但需观察上游器件转嫁后实际毛利率。",
-        "logic_en": "Tight rack pricing supports top-line demand while highlighting component-cost pass-through."
-      },
-      "top_hk": null,
-      "bars": [
-        {
-          "market": "A股",
-          "sector": "AI 服务器整机与代工龙头 (工业富联/浪潮)",
-          "sector_en": "A-Share AI Server Leaders (601138/000977)",
-          "pct_low": 1.8,
-          "pct_high": 4.6,
-          "direction": "positive",
-          "proxy_ticker": "601138.SH",
-          "logic": "整机供给紧缺带来最高 45% 涨价，具备配额与规模优势的整机龙头直接受益单机价值量提升。",
-          "logic_en": "Acute GPU-rack shortages drive higher ASP and revenue leverage for leading server OEMs."
-        },
-        {
-          "market": "A股",
-          "sector": "液冷散热 / 800G 光模块与高速连接",
-          "sector_en": "A-Share Liquid Cooling & Optical Links",
-          "pct_low": 1.4,
-          "pct_high": 3.8,
-          "direction": "positive",
-          "proxy_ticker": "300308.SZ",
-          "logic": "高功耗 AI 机柜成本上升同步拉高液冷、电源及光互连组件配置单价。",
-          "logic_en": "Higher rack power density accelerates adoption of liquid cooling and high-speed optics."
-        },
-        {
-          "market": "美股",
-          "sector": "北美算力机柜与 GPU 基建链 (SMCI / DELL)",
-          "sector_en": "US AI Rack Builders (SMCI / DELL)",
-          "pct_low": 1.0,
-          "pct_high": 3.2,
-          "direction": "positive",
-          "proxy_ticker": "SMCI",
-          "logic": "整机报价上行凸显基础设施产能紧俏，但需观察上游器件转嫁后实际毛利率。",
-          "logic_en": "Tight rack pricing supports top-line demand while highlighting component-cost pass-through."
-        }
-      ],
-      "if_then": [
-        {
-          "cond": "[正向验证阈值] 环比提升2%以上",
-          "result": "确认成本有效转嫁，可增配上游核心组件。",
-          "tone": "bullish"
-        },
-        {
-          "cond": "[证伪退出阈值] AI相关开支下调10%以上",
-          "result": "警惕需求放缓，减持AI基础设施相关标的。",
-          "tone": "bearish"
-        }
-      ],
-      "milestones": [
-        {
-          "date": "2 周内",
-          "status": "current",
-          "label": "核查云厂季度 Capex 指引及整机厂商毛利率反馈"
-        }
-      ],
-      "sample_basis": {
-        "sample_n": 11,
-        "volatility_pct": 2.93,
-        "volatility_source": "算力硬件提价与机柜订单样本",
-        "horizon": "2~7 个交易日",
-        "confidence_label": "高置信（直指硬件景气定价权）",
-        "confidence_label_en": "High (Direct Hardware Pricing Power)"
-      },
-      "realized_quotes": [
-        {
-          "ticker": "QQQ",
-          "name": "纳指100ETF",
-          "name_en": "Invesco QQQ",
-          "market": "美股",
-          "price": 608.45,
-          "pct_change": -5.67
-        },
-        {
-          "ticker": "515880.SH",
-          "name": "A股通信ETF",
-          "name_en": "CN Telecom ETF",
-          "market": "A股",
-          "price": 0.372,
-          "pct_change": 2.76
-        }
-      ],
-      "priced_in_analysis": {
-        "status_code": "partially_priced",
-        "status_label": "部分计价（博弈二次预期差）",
-        "status_label_en": "Partially Priced (2nd-Order Gap)",
-        "session_context": "事件伴随跨市场供应链/大宗商品先行异动，但产业链二阶渗透与实质订单落地仍存预期差",
-        "expectation_gap": "【要价上限 45% · 关注客户实际接受率】美股AI服务器厂商短期或因成本转嫁预期上涨，但长期需观察客户接受度与需求弹性。A股/港股相关内存及AI芯片概念股可能存在二次预期差，关注成本传导链条。"
-      },
-      "transmission_layers": [
-        {
-          "tier": 1,
-          "tier_label": "一阶直接冲击（核心受益或受损主体）",
-          "summary": "AI服务器厂商直接提价，短期利好营收毛利，但客户成本剧增。",
-          "stocks": [
-            {
-              "name": "Dell Technologies",
-              "code": "DELL",
-              "market": "美股",
-              "exposure_logic": "AI服务器提价直接增厚营收与毛利，但面临客户流失风险。",
-              "direction": "mixed"
-            },
-            {
-              "name": "Hewlett Packard En",
-              "code": "HPE",
-              "market": "美股",
-              "exposure_logic": "AI服务器提价直接增厚营收与毛利，但面临客户流失风险。",
-              "direction": "mixed"
-            },
-            {
-              "name": "Super Micro Comput",
-              "code": "SMCI",
-              "market": "美股",
-              "exposure_logic": "AI服务器提价直接增厚营收与毛利，但面临客户流失风险。",
-              "direction": "mixed"
-            },
-            {
-              "name": "联想集团",
-              "code": "00992.HK",
-              "market": "港股",
-              "exposure_logic": "AI服务器提价直接增厚营收与毛利，但面临客户流失风险。",
-              "direction": "mixed"
-            }
-          ]
-        },
-        {
-          "tier": 2,
-          "tier_label": "二阶产业链传导",
-          "summary": "上游核心组件供应商受益，下游云服务商及AI应用客户成本承压。",
-          "stocks": [
-            {
-              "name": "英伟达",
-              "code": "NVDA",
-              "market": "美股",
-              "exposure_logic": "AI服务器核心GPU供应商，涨价或影响下游出货，但议价权强。",
-              "direction": "mixed"
-            },
-            {
-              "name": "浪潮信息",
-              "code": "000977.SZ",
-              "market": "A股",
-              "exposure_logic": "国内AI服务器主要厂商，或跟随涨价，受益于行业成本传导。",
-              "direction": "positive"
-            },
-            {
-              "name": "亚马逊",
-              "code": "AMZN",
-              "market": "美股",
-              "exposure_logic": "AWS等云服务商，AI服务器采购成本上升，可能转嫁或压缩利润。",
-              "direction": "negative"
-            }
-          ]
-        },
-        {
-          "tier": 3,
-          "tier_label": "三阶宏观或避险跷跷板",
-          "summary": "AI基础设施成本上升可能影响科技股整体估值，资金或寻求避险。",
-          "stocks": [
-            {
-              "name": "纳斯达克100指数ETF",
-              "code": "QQQ",
-              "market": "美股",
-              "exposure_logic": "科技股整体情绪受AI基础设施成本影响，短期或承压。",
-              "direction": "negative"
-            },
-            {
-              "name": "黄金ETF",
-              "code": "GLD",
-              "market": "美股",
-              "exposure_logic": "宏观不确定性增加，资金或寻求避险。",
-              "direction": "positive"
-            }
-          ]
-        }
-      ],
-      "historical_precedents": [
-        {
-          "date": "2017-2018",
-          "event_title": "DRAM内存价格飙升周期",
-          "t1_reaction": "内存厂商股价大涨，服务器/手机厂商成本压力显现。",
-          "t5_reaction": "下游厂商利润受挤压，部分产品价格上涨，市场份额分化。",
-          "lesson": "核心组件稀缺性驱动利润向上游集中，下游议价能力受考验。"
-        }
-      ],
-      "quant_if_then": [
-        {
-          "case": "bull",
-          "label": "正向验证阈值",
-          "trigger_metric": "AI服务器厂商毛利率",
-          "threshold": "环比提升2%以上",
-          "action_implication": "确认成本有效转嫁，可增配上游核心组件。"
-        },
-        {
-          "case": "bear",
-          "label": "证伪退出阈值",
-          "trigger_metric": "下游云厂商资本开支指引",
-          "threshold": "AI相关开支下调10%以上",
-          "action_implication": "警惕需求放缓，减持AI基础设施相关标的。"
         }
       ]
     }

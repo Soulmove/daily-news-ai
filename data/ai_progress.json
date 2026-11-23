@@ -1,15 +1,15 @@
 {
   "schema_version": "4.3",
-  "generated_at": "2026-11-23T13:31:23+08:00",
-  "batch_id": "smart-20261123-133123",
+  "generated_at": "2026-11-23T14:16:30+08:00",
+  "batch_id": "smart-20261123-141630",
   "search_grounded": false,
   "archive_path": "data/ai_progress_archive.json",
-  "archive_total": 111,
+  "archive_total": 114,
   "weekly_digest": {
     "period_label": "近 7 日全球 AI 大事周报（截至 2026-11-23）",
     "period_label_en": "Weekly Global AI Digest (as of 2026-11-23)",
-    "summary": "实时追踪 75 项国内外 AI 关键进展（海外 47 · 国内 20 · 开源 27 · 一手官方 40）。自动聚合官方博客、Hugging Face、GitHub Releases 与 7×24 突发快讯，重大发布秒级入榜。",
-    "summary_en": "Tracking 75 AI milestones (47 global, 20 China, 27 open-source, 40 first-hand official) from lab blogs, Hugging Face, GitHub Releases & 7×24 live wires.",
+    "summary": "实时追踪 77 项国内外 AI 关键进展（海外 47 · 国内 22 · 开源 26 · 一手官方 40）。自动聚合官方博客、Hugging Face、GitHub Releases 与 7×24 突发快讯，重大发布秒级入榜。",
+    "summary_en": "Tracking 77 AI milestones (47 global, 22 China, 26 open-source, 40 first-hand official) from lab blogs, Hugging Face, GitHub Releases & 7×24 live wires.",
     "highlights": [
       {
         "id": "ai_ev_evt_2a5dad790561",
@@ -297,70 +297,77 @@
         ]
       },
       {
-        "id": "ai_raw_rss-gnews-ai-models-zh_4e715fd7f6ab",
-        "date": "2026-11-23T13:08:44+08:00",
-        "company_id": "nvidia",
-        "company_name": "英伟达 (NVIDIA)",
+        "id": "ai_ev_evt_ef818217ea5e",
+        "date": "2026-11-23T14:16:30+08:00",
+        "company_id": "openai",
+        "company_name": "OpenAI",
         "region": "海外",
-        "category": "开源突破",
-        "category_en": "Open Source",
-        "title": "记忆张量联合英伟达开源MemT-1.0-Pro大模型",
-        "title_en": "记忆张量联合英伟达开源MemT-1.0-Pro大模型",
-        "what_it_does": "",
-        "what_it_does_en": "",
+        "category": "模型与产品",
+        "category_en": "Model & Product",
+        "title": "OpenAI首席科学家首次公开内部对数困惑度数据，量化GPT-3.5至下一代临界区间",
+        "title_en": "OpenAI首席科学家首次公开内部对数困惑度数据，量化GPT-3.5至下一代临界区间",
+        "what_it_does": "2026年11月22日，OpenAI首席科学家Jakub Pachocki发表文章《Perplexity and Intelligence》，首次公开多代模型在固定内部留出集上的预训练对数困惑度（log-perplexity）数据及对应…",
+        "what_it_does_en": "2026年11月22日，OpenAI首席科学家Jakub Pachocki发表文章《Perplexity and Intelligence》，首次公开多代模型在固定内部留出集上的预训练对数困惑度（log-perplexity）数据及对应能力节点：GPT-3.5时期约0.99、GPT-4时期约0.91、GPT-5后期至G",
         "who_cares": "",
         "limitations": "",
         "limitations_en": "",
-        "source_id": "rss-gnews-ai-models-zh",
-        "source_name": "itsdw.cn",
-        "source_url": "https://news.google.com/rss/articles/CBMiTEFVX3lxTE0xRUpTeVE1aFdHUTM1TVJxdTRsQkU0Y0thMDl1dXNrTXFQUkJUam9INm1zX2twWTNVWXFkb2pSMnpLcGFCaGdLWk1rYVo?oc=5",
+        "source_id": "zhihu",
+        "source_name": "知乎热榜",
+        "source_url": "https://www.zhihu.com/question/2108089769834065923",
         "is_first_hand": false,
         "source_tier": "wire_media",
-        "is_open_source": true,
-        "milestone_dim": "open_source_eco",
-        "milestone_dim_label": "开源权重与生态",
-        "milestone_dim_label_en": "Open Source",
-        "is_recent_72h": true,
+        "event_id": "evt_ef818217ea5e",
+        "is_open_source": false,
         "related_sources": [
           {
-            "source_name": "itsdw.cn",
-            "url": "https://news.google.com/rss/articles/CBMiTEFVX3lxTE0xRUpTeVE1aFdHUTM1TVJxdTRsQkU0Y0thMDl1dXNrTXFQUkJUam9INm1zX2twWTNVWXFkb2pSMnpLcGFCaGdLWk1rYVo?oc=5",
+            "source_name": "知乎热榜",
+            "url": "https://www.zhihu.com/question/2108089769834065923",
             "is_first_hand": false
           }
-        ]
-      },
-      {
-        "id": "ai_raw_sina-7x24_3af0077bdeb3",
-        "date": "2026-11-23T13:05:28+08:00",
-        "company_id": "indie_opensource",
-        "company_name": "独立实验室 & 开源黑马",
-        "region": "全球开源",
-        "category": "最新动态",
-        "category_en": "Latest Release",
-        "title": "自变量发布新一代具身基础模型 WALL-OSS-1.0，多种真机测试中零样本成功率高达55.1%",
-        "title_en": "自变量发布新一代具身基础模型 WALL-OSS-1.0，多种真机测试中零样本成功率高达55.1%",
-        "what_it_does": "今日，自变量发布新一代具身基础模型WALL-OSS-1.0，将预训练本身当作智能的来源，而非后续任务微调的起点。这使得模型面对全新场景、环境和指令，能够零样本执行任务，真正在预训练中产生了通用智能。本次新的WALL-OSS-1.0将以W…",
-        "what_it_does_en": "",
-        "who_cares": "",
-        "limitations": "",
-        "limitations_en": "",
-        "source_id": "sina-7x24",
-        "source_name": "新浪财经 7×24 电",
-        "source_url": "https://finance.sina.cn/7x24/2026-11-23/detail-inizszeh8325209.d.html",
-        "is_first_hand": false,
-        "source_tier": "wire_media",
-        "is_open_source": false,
+        ],
         "milestone_dim": "flagship_release",
         "milestone_dim_label": "旗舰模型发布",
         "milestone_dim_label_en": "Flagship Model",
-        "is_recent_72h": true,
+        "is_recent_72h": true
+      },
+      {
+        "id": "ai_ev_evt_236c41c26f67",
+        "date": "2026-11-23T14:16:30+08:00",
+        "company_id": "deepseek",
+        "company_name": "DeepSeek",
+        "region": "国内",
+        "category": "模型与产品",
+        "category_en": "Model & Product",
+        "title": "中国AI大模型周调用量达111.16万亿Token，DeepSeek推行对话限额引付费诉求",
+        "title_en": "中国AI大模型周调用量达111.16万亿Token，DeepSeek推行对话限额引付费诉求",
+        "what_it_does": "11月16日至22日统计数据显示，中国AI大模型周调用量达111.16万亿Token，连续30周超越美国居全球首位，其中DeepSeek连续五周位居第一，小米MiMo单周大涨461%重回第七。与此同时，DeepSeek近期推出对话限额及…",
+        "what_it_does_en": "11月16日至22日统计数据显示，中国AI大模型周调用量达111.16万亿Token，连续30周超越美国居全球首位，其中DeepSeek连续五周位居第一，小米MiMo单周大涨461%重回第七。与此同时，DeepSeek近期推出对话限额及7天不活跃即断开等规则，引发大批依赖超长上下文对话的免费用户呼吁开放付费渠道以保留对",
+        "who_cares": "",
+        "limitations": "",
+        "limitations_en": "",
+        "source_id": "baidu",
+        "source_name": "百度热搜",
+        "source_url": "https://www.baidu.com/s?wd=DeepSeek%E8%BF%9E%E7%BB%AD%E4%BA%94%E5%91%A8%E9%9C%B8%E6%A6%9C%E5%85%A8%E7%90%83%E7%AC%AC%E4%B8%80",
+        "is_first_hand": false,
+        "source_tier": "wire_media",
+        "event_id": "evt_236c41c26f67",
+        "is_open_source": false,
         "related_sources": [
           {
-            "source_name": "新浪财经 7×24 电",
-            "url": "https://finance.sina.cn/7x24/2026-11-23/detail-inizszeh8325209.d.html",
+            "source_name": "百度热搜",
+            "url": "https://www.baidu.com/s?wd=DeepSeek%E8%BF%9E%E7%BB%AD%E4%BA%94%E5%91%A8%E9%9C%B8%E6%A6%9C%E5%85%A8%E7%90%83%E7%AC%AC%E4%B8%80",
+            "is_first_hand": false
+          },
+          {
+            "source_name": "知乎热榜",
+            "url": "https://www.zhihu.com/question/2107183345205626254",
             "is_first_hand": false
           }
-        ]
+        ],
+        "milestone_dim": "flagship_release",
+        "milestone_dim_label": "旗舰模型发布",
+        "milestone_dim_label_en": "Flagship Model",
+        "is_recent_72h": true
       }
     ]
   },
@@ -1256,10 +1263,44 @@
         }
       ],
       "recent_count": 8,
-      "archive_count": 23,
-      "latest_date": "2026-11-23T12:41:32+08:00",
-      "latest_headline": "加利福尼亚州总检察长就模型安全问题起诉OpenAI",
+      "archive_count": 24,
+      "latest_date": "2026-11-23T14:16:30+08:00",
+      "latest_headline": "OpenAI首席科学家首次公开内部对数困惑度数据，量化GPT-3.5至下一代临界区间",
       "items": [
+        {
+          "id": "ai_ev_evt_ef818217ea5e",
+          "date": "2026-11-23T14:16:30+08:00",
+          "company_id": "openai",
+          "company_name": "OpenAI",
+          "region": "海外",
+          "category": "模型与产品",
+          "category_en": "Model & Product",
+          "title": "OpenAI首席科学家首次公开内部对数困惑度数据，量化GPT-3.5至下一代临界区间",
+          "title_en": "OpenAI首席科学家首次公开内部对数困惑度数据，量化GPT-3.5至下一代临界区间",
+          "what_it_does": "2026年11月22日，OpenAI首席科学家Jakub Pachocki发表文章《Perplexity and Intelligence》，首次公开多代模型在固定内部留出集上的预训练对数困惑度（log-perplexity）数据及对应…",
+          "what_it_does_en": "2026年11月22日，OpenAI首席科学家Jakub Pachocki发表文章《Perplexity and Intelligence》，首次公开多代模型在固定内部留出集上的预训练对数困惑度（log-perplexity）数据及对应能力节点：GPT-3.5时期约0.99、GPT-4时期约0.91、GPT-5后期至G",
+          "who_cares": "",
+          "limitations": "",
+          "limitations_en": "",
+          "source_id": "zhihu",
+          "source_name": "知乎热榜",
+          "source_url": "https://www.zhihu.com/question/2108089769834065923",
+          "is_first_hand": false,
+          "source_tier": "wire_media",
+          "event_id": "evt_ef818217ea5e",
+          "is_open_source": false,
+          "related_sources": [
+            {
+              "source_name": "知乎热榜",
+              "url": "https://www.zhihu.com/question/2108089769834065923",
+              "is_first_hand": false
+            }
+          ],
+          "milestone_dim": "flagship_release",
+          "milestone_dim_label": "旗舰模型发布",
+          "milestone_dim_label_en": "Flagship Model",
+          "is_recent_72h": true
+        },
         {
           "id": "ai_ev_evt_7ad71fe53265",
           "date": "2026-11-23T12:41:32+08:00",
@@ -1549,40 +1590,6 @@
           "milestone_dim_label": "API 与 Agent 工程",
           "milestone_dim_label_en": "API & Agent Eng",
           "is_recent_72h": true
-        },
-        {
-          "id": "ai_ev_evt_e1a945db5ab5",
-          "date": "2026-11-22T22:32:52+08:00",
-          "company_id": "openai",
-          "company_name": "OpenAI",
-          "region": "海外",
-          "category": "开源突破",
-          "category_en": "Open Source",
-          "title": "OpenAI解散机器人团队，称通用模型已可直接用于机器人技术",
-          "title_en": "OpenAI解散机器人团队，称通用模型已可直接用于机器人技术",
-          "what_it_does": "据报道，OpenAI已解散旗下独立机器人团队，原机器人研究团队并入核心研究团队，应用机器人与硬件团队划入应用事业部。公司称机器人技术仍是长期愿景核心，此举旨在加快研发而非战略收缩，因为GPT-6 Astra等通用模型已证明可直接用于机器…",
-          "what_it_does_en": "据报道，OpenAI已解散旗下独立机器人团队，原机器人研究团队并入核心研究团队，应用机器人与硬件团队划入应用事业部。公司称机器人技术仍是长期愿景核心，此举旨在加快研发而非战略收缩，因为GPT-6 Astra等通用模型已证明可直接用于机器人技术。",
-          "who_cares": "",
-          "limitations": "",
-          "limitations_en": "",
-          "source_id": "tencent-hot",
-          "source_name": "腾讯新闻综合早",
-          "source_url": "https://view.inews.qq.com/a/20261121A0DHUT00",
-          "is_first_hand": false,
-          "source_tier": "wire_media",
-          "event_id": "evt_e1a945db5ab5",
-          "is_open_source": false,
-          "milestone_dim": "flagship_release",
-          "milestone_dim_label": "旗舰模型发布",
-          "milestone_dim_label_en": "Flagship Model",
-          "is_recent_72h": true,
-          "related_sources": [
-            {
-              "source_name": "腾讯新闻综合早",
-              "url": "https://view.inews.qq.com/a/20261121A0DHUT00",
-              "is_first_hand": false
-            }
-          ]
         }
       ]
     },
@@ -2065,11 +2072,50 @@
           "highlight": "兼顾 Agent 高频工具调用延迟与国产云厂商规模化低成本服务"
         }
       ],
-      "recent_count": 6,
-      "archive_count": 6,
-      "latest_date": "2026-11-23T12:11:03+08:00",
-      "latest_headline": "DeepSeek推出限额规则引用户不满，重度免费用户求付费保留长对话",
+      "recent_count": 7,
+      "archive_count": 7,
+      "latest_date": "2026-11-23T14:16:30+08:00",
+      "latest_headline": "中国AI大模型周调用量达111.16万亿Token，DeepSeek推行对话限额引付费诉求",
       "items": [
+        {
+          "id": "ai_ev_evt_236c41c26f67",
+          "date": "2026-11-23T14:16:30+08:00",
+          "company_id": "deepseek",
+          "company_name": "DeepSeek",
+          "region": "国内",
+          "category": "模型与产品",
+          "category_en": "Model & Product",
+          "title": "中国AI大模型周调用量达111.16万亿Token，DeepSeek推行对话限额引付费诉求",
+          "title_en": "中国AI大模型周调用量达111.16万亿Token，DeepSeek推行对话限额引付费诉求",
+          "what_it_does": "11月16日至22日统计数据显示，中国AI大模型周调用量达111.16万亿Token，连续30周超越美国居全球首位，其中DeepSeek连续五周位居第一，小米MiMo单周大涨461%重回第七。与此同时，DeepSeek近期推出对话限额及…",
+          "what_it_does_en": "11月16日至22日统计数据显示，中国AI大模型周调用量达111.16万亿Token，连续30周超越美国居全球首位，其中DeepSeek连续五周位居第一，小米MiMo单周大涨461%重回第七。与此同时，DeepSeek近期推出对话限额及7天不活跃即断开等规则，引发大批依赖超长上下文对话的免费用户呼吁开放付费渠道以保留对",
+          "who_cares": "",
+          "limitations": "",
+          "limitations_en": "",
+          "source_id": "baidu",
+          "source_name": "百度热搜",
+          "source_url": "https://www.baidu.com/s?wd=DeepSeek%E8%BF%9E%E7%BB%AD%E4%BA%94%E5%91%A8%E9%9C%B8%E6%A6%9C%E5%85%A8%E7%90%83%E7%AC%AC%E4%B8%80",
+          "is_first_hand": false,
+          "source_tier": "wire_media",
+          "event_id": "evt_236c41c26f67",
+          "is_open_source": false,
+          "related_sources": [
+            {
+              "source_name": "百度热搜",
+              "url": "https://www.baidu.com/s?wd=DeepSeek%E8%BF%9E%E7%BB%AD%E4%BA%94%E5%91%A8%E9%9C%B8%E6%A6%9C%E5%85%A8%E7%90%83%E7%AC%AC%E4%B8%80",
+              "is_first_hand": false
+            },
+            {
+              "source_name": "知乎热榜",
+              "url": "https://www.zhihu.com/question/2107183345205626254",
+              "is_first_hand": false
+            }
+          ],
+          "milestone_dim": "flagship_release",
+          "milestone_dim_label": "旗舰模型发布",
+          "milestone_dim_label_en": "Flagship Model",
+          "is_recent_72h": true
+        },
         {
           "id": "ai_ev_evt_05ca0e60d7b9",
           "date": "2026-11-23T12:11:03+08:00",
@@ -3125,11 +3171,44 @@
           "highlight": "对标国际顶级闭源旗舰的跨文件仓库重构与自主规划表现"
         }
       ],
-      "recent_count": 1,
-      "archive_count": 1,
-      "latest_date": "2026-11-23T13:10:32+08:00",
-      "latest_headline": "智谱 AI 推进「GLM-5.4 与 GLM-5.5」旗舰及「GLM-5.3-Flash」，持续开放 THUDM 与 zai-org 开源权重",
+      "recent_count": 2,
+      "archive_count": 2,
+      "latest_date": "2026-11-23T13:57:09+08:00",
+      "latest_headline": "智谱GLM5.4发布",
       "items": [
+        {
+          "id": "ai_raw_rss-gnews-ai-models-zh_8b8bf74326ab",
+          "date": "2026-11-23T13:57:09+08:00",
+          "company_id": "zhipu_glm",
+          "company_name": "智谱 AI (GLM)",
+          "region": "国内",
+          "category": "最新动态",
+          "category_en": "Latest Release",
+          "title": "智谱GLM5.4发布",
+          "title_en": "智谱GLM5.4发布",
+          "what_it_does": "",
+          "what_it_does_en": "",
+          "who_cares": "",
+          "limitations": "",
+          "limitations_en": "",
+          "source_id": "rss-gnews-ai-models-zh",
+          "source_name": "手机新浪",
+          "source_url": "https://news.google.com/rss/articles/CBMiS0FVX3lxTE40RkVKcUhrM2tHbnktMllMN1FLcmVwajdMZm5rNEwyWm1BOFNPSW9fRkhKbFBvUmNyS191OXM1Ylc5c2V1RlFrcm1ydw?oc=5",
+          "is_first_hand": false,
+          "source_tier": "wire_media",
+          "is_open_source": false,
+          "milestone_dim": "flagship_release",
+          "milestone_dim_label": "旗舰模型发布",
+          "milestone_dim_label_en": "Flagship Model",
+          "is_recent_72h": true,
+          "related_sources": [
+            {
+              "source_name": "手机新浪",
+              "url": "https://news.google.com/rss/articles/CBMiS0FVX3lxTE40RkVKcUhrM2tHbnktMllMN1FLcmVwajdMZm5rNEwyWm1BOFNPSW9fRkhKbFBvUmNyS191OXM1Ylc5c2V1RlFrcm1ydw?oc=5",
+              "is_first_hand": false
+            }
+          ]
+        },
         {
           "id": "ai_ev_evt_2a5dad790561",
           "date": "2026-11-23T13:10:32+08:00",
@@ -4402,7 +4481,7 @@
           "who_cares": "",
           "limitations": "",
           "limitations_en": "",
-          "source_id": "sina-7x24",
+          "source_id": "",
           "source_name": "新浪财经 7×24 电",
           "source_url": "https://finance.sina.cn/7x24/2026-11-23/detail-inizszeh8325209.d.html",
           "is_first_hand": false,
@@ -4536,6 +4615,49 @@
             {
               "source_name": "电子工程专辑EE Times China",
               "url": "https://news.google.com/rss/articles/CBMiU0FVX3lxTE1zX2duUl9fV2NRVHBwRFlEVFRMVnFDV3NWdFZ4djlsYjc1YXcxeV9WYzhNR0ZzLU1ENHZSd25ZU3dJQWJ5NjE1cTFSX0loTGMtOFNF?oc=5",
+              "is_first_hand": false
+            }
+          ]
+        },
+        {
+          "id": "ai_raw_rss-gnews-ai-models-zh_969770da6c5a",
+          "date": "2026-11-23T12:01:45+08:00",
+          "company_id": "indie_opensource",
+          "company_name": "独立实验室 & 开源黑马",
+          "region": "全球开源",
+          "category": "最新动态",
+          "category_en": "Latest Release",
+          "title": "新一代“文鳐”海洋原生多模态大模型在厦门发布",
+          "title_en": "新一代“文鳐”海洋原生多模态大模型在厦门发布",
+          "what_it_does": "",
+          "what_it_does_en": "",
+          "who_cares": "",
+          "limitations": "",
+          "limitations_en": "",
+          "source_id": "rss-gnews-ai-models-zh",
+          "source_name": "中新网福建",
+          "source_url": "https://news.google.com/rss/articles/CBMickFVX3lxTE1xbnpsR1pQS3V0dkVXTDlmQldJLWFiTXpObHZlTzlEaTV3S0FhWUVWcEZKVGU4X19ndFZaYXNxLVBua3ZoRTRKS0t0azlvRVRVOWN2YmYxS29kS1JGODdBZldjOXdxNm5adHJ5Qlh0d3pCQQ?oc=5",
+          "is_first_hand": false,
+          "source_tier": "wire_media",
+          "is_open_source": false,
+          "milestone_dim": "flagship_release",
+          "milestone_dim_label": "旗舰模型发布",
+          "milestone_dim_label_en": "Flagship Model",
+          "is_recent_72h": true,
+          "related_sources": [
+            {
+              "source_name": "中新网福建",
+              "url": "https://news.google.com/rss/articles/CBMickFVX3lxTE1xbnpsR1pQS3V0dkVXTDlmQldJLWFiTXpObHZlTzlEaTV3S0FhWUVWcEZKVGU4X19ndFZaYXNxLVBua3ZoRTRKS0t0azlvRVRVOWN2YmYxS29kS1JGODdBZldjOXdxNm5adHJ5Qlh0d3pCQQ?oc=5",
+              "is_first_hand": false
+            },
+            {
+              "source_name": "人民网-福建频道",
+              "url": "https://news.google.com/rss/articles/CBMiakFVX3lxTE9zT1Q2SzRMVzBOVVpidE9YelJOX0RIakpTY2swSmc0cWVNeFdKdnpsWlhlNU5aMWxGS1ZZMXhoTFF4bzhKT1lyWi1UX3V4X3RpSjB6cTh2N3lORWF1b3p5T2xPZlI4UHFGUVE?oc=5",
+              "is_first_hand": false
+            },
+            {
+              "source_name": "Sohu",
+              "url": "https://news.google.com/rss/articles/CBMijAFBVV95cUxPRWwwY25OaEYyVUNNVUJrMndTaEt3VVVaZm9ieHY4T1hIZDd1aU00Z2paRExsNEtYbDlHcGIxZXRBUGx6UGh5MzVNSFhHSHl0Um9iam0xa3NtSzA4VWp2Vko4Y1VuRmNCWkRQbGlTc3lLLWZEbHJQSzFMZlNGMkUwY2xHWXlJV1RYWUJyQQ?oc=5",
               "is_first_hand": false
             }
           ]
@@ -4678,44 +4800,117 @@
               "is_first_hand": true
             }
           ]
-        },
-        {
-          "id": "ai_raw_rss-gnews-opensource-ai_8f7e0aa91244",
-          "date": "2026-11-23T10:05:00+08:00",
-          "company_id": "indie_opensource",
-          "company_name": "独立实验室 & 开源黑马",
-          "region": "全球开源",
-          "category": "开源突破",
-          "category_en": "Open Source",
-          "title": "中国开源AI模型全球下载量突破100亿次，衍生模型数量成衡量生态黏性新指标",
-          "title_en": "Chinese Open-Source AI Models Surpass 10 Billion Global Downloads; Derivative Model Count Emerges as New Gauge of Ecosystem Stickiness",
-          "what_it_does": "",
-          "what_it_does_en": "",
-          "who_cares": "",
-          "limitations": "",
-          "limitations_en": "",
-          "source_id": "rss-gnews-opensource-ai",
-          "source_name": "BigGo Finance",
-          "source_url": "https://news.google.com/rss/articles/CBMidkFVX3lxTE5McTZuSHZlRk5LRUdSM0pNM05SQ0FDenNGSTQ3c1JmNnZoOFRXTXcySEdIWDBTRmJ2MFFwb3E1RlRtT2pDLWEtRjF4a0I2c2VTa19BQVVWWUM4M253dHdjaVZVUlUwQWtaRC03N0lKLTM4OUNxa1E?oc=5",
-          "is_first_hand": false,
-          "source_tier": "wire_media",
-          "is_open_source": true,
-          "milestone_dim": "open_source_eco",
-          "milestone_dim_label": "开源权重与生态",
-          "milestone_dim_label_en": "Open Source",
-          "is_recent_72h": true,
-          "related_sources": [
-            {
-              "source_name": "BigGo Finance",
-              "url": "https://news.google.com/rss/articles/CBMidkFVX3lxTE5McTZuSHZlRk5LRUdSM0pNM05SQ0FDenNGSTQ3c1JmNnZoOFRXTXcySEdIWDBTRmJ2MFFwb3E1RlRtT2pDLWEtRjF4a0I2c2VTa19BQVVWWUM4M253dHdjaVZVUlUwQWtaRC03N0lKLTM4OUNxa1E?oc=5",
-              "is_first_hand": false
-            }
-          ]
         }
       ]
     }
   ],
   "timeline": [
+    {
+      "id": "ai_ev_evt_ef818217ea5e",
+      "date": "2026-11-23T14:16:30+08:00",
+      "company_id": "openai",
+      "company_name": "OpenAI",
+      "region": "海外",
+      "category": "模型与产品",
+      "category_en": "Model & Product",
+      "title": "OpenAI首席科学家首次公开内部对数困惑度数据，量化GPT-3.5至下一代临界区间",
+      "title_en": "OpenAI首席科学家首次公开内部对数困惑度数据，量化GPT-3.5至下一代临界区间",
+      "what_it_does": "2026年11月22日，OpenAI首席科学家Jakub Pachocki发表文章《Perplexity and Intelligence》，首次公开多代模型在固定内部留出集上的预训练对数困惑度（log-perplexity）数据及对应…",
+      "what_it_does_en": "2026年11月22日，OpenAI首席科学家Jakub Pachocki发表文章《Perplexity and Intelligence》，首次公开多代模型在固定内部留出集上的预训练对数困惑度（log-perplexity）数据及对应能力节点：GPT-3.5时期约0.99、GPT-4时期约0.91、GPT-5后期至G",
+      "who_cares": "",
+      "limitations": "",
+      "limitations_en": "",
+      "source_id": "zhihu",
+      "source_name": "知乎热榜",
+      "source_url": "https://www.zhihu.com/question/2108089769834065923",
+      "is_first_hand": false,
+      "source_tier": "wire_media",
+      "event_id": "evt_ef818217ea5e",
+      "is_open_source": false,
+      "related_sources": [
+        {
+          "source_name": "知乎热榜",
+          "url": "https://www.zhihu.com/question/2108089769834065923",
+          "is_first_hand": false
+        }
+      ],
+      "milestone_dim": "flagship_release",
+      "milestone_dim_label": "旗舰模型发布",
+      "milestone_dim_label_en": "Flagship Model",
+      "is_recent_72h": true
+    },
+    {
+      "id": "ai_ev_evt_236c41c26f67",
+      "date": "2026-11-23T14:16:30+08:00",
+      "company_id": "deepseek",
+      "company_name": "DeepSeek",
+      "region": "国内",
+      "category": "模型与产品",
+      "category_en": "Model & Product",
+      "title": "中国AI大模型周调用量达111.16万亿Token，DeepSeek推行对话限额引付费诉求",
+      "title_en": "中国AI大模型周调用量达111.16万亿Token，DeepSeek推行对话限额引付费诉求",
+      "what_it_does": "11月16日至22日统计数据显示，中国AI大模型周调用量达111.16万亿Token，连续30周超越美国居全球首位，其中DeepSeek连续五周位居第一，小米MiMo单周大涨461%重回第七。与此同时，DeepSeek近期推出对话限额及…",
+      "what_it_does_en": "11月16日至22日统计数据显示，中国AI大模型周调用量达111.16万亿Token，连续30周超越美国居全球首位，其中DeepSeek连续五周位居第一，小米MiMo单周大涨461%重回第七。与此同时，DeepSeek近期推出对话限额及7天不活跃即断开等规则，引发大批依赖超长上下文对话的免费用户呼吁开放付费渠道以保留对",
+      "who_cares": "",
+      "limitations": "",
+      "limitations_en": "",
+      "source_id": "baidu",
+      "source_name": "百度热搜",
+      "source_url": "https://www.baidu.com/s?wd=DeepSeek%E8%BF%9E%E7%BB%AD%E4%BA%94%E5%91%A8%E9%9C%B8%E6%A6%9C%E5%85%A8%E7%90%83%E7%AC%AC%E4%B8%80",
+      "is_first_hand": false,
+      "source_tier": "wire_media",
+      "event_id": "evt_236c41c26f67",
+      "is_open_source": false,
+      "related_sources": [
+        {
+          "source_name": "百度热搜",
+          "url": "https://www.baidu.com/s?wd=DeepSeek%E8%BF%9E%E7%BB%AD%E4%BA%94%E5%91%A8%E9%9C%B8%E6%A6%9C%E5%85%A8%E7%90%83%E7%AC%AC%E4%B8%80",
+          "is_first_hand": false
+        },
+        {
+          "source_name": "知乎热榜",
+          "url": "https://www.zhihu.com/question/2107183345205626254",
+          "is_first_hand": false
+        }
+      ],
+      "milestone_dim": "flagship_release",
+      "milestone_dim_label": "旗舰模型发布",
+      "milestone_dim_label_en": "Flagship Model",
+      "is_recent_72h": true
+    },
+    {
+      "id": "ai_raw_rss-gnews-ai-models-zh_8b8bf74326ab",
+      "date": "2026-11-23T13:57:09+08:00",
+      "company_id": "zhipu_glm",
+      "company_name": "智谱 AI (GLM)",
+      "region": "国内",
+      "category": "最新动态",
+      "category_en": "Latest Release",
+      "title": "智谱GLM5.4发布",
+      "title_en": "智谱GLM5.4发布",
+      "what_it_does": "",
+      "what_it_does_en": "",
+      "who_cares": "",
+      "limitations": "",
+      "limitations_en": "",
+      "source_id": "rss-gnews-ai-models-zh",
+      "source_name": "手机新浪",
+      "source_url": "https://news.google.com/rss/articles/CBMiS0FVX3lxTE40RkVKcUhrM2tHbnktMllMN1FLcmVwajdMZm5rNEwyWm1BOFNPSW9fRkhKbFBvUmNyS191OXM1Ylc5c2V1RlFrcm1ydw?oc=5",
+      "is_first_hand": false,
+      "source_tier": "wire_media",
+      "is_open_source": false,
+      "milestone_dim": "flagship_release",
+      "milestone_dim_label": "旗舰模型发布",
+      "milestone_dim_label_en": "Flagship Model",
+      "is_recent_72h": true,
+      "related_sources": [
+        {
+          "source_name": "手机新浪",
+          "url": "https://news.google.com/rss/articles/CBMiS0FVX3lxTE40RkVKcUhrM2tHbnktMllMN1FLcmVwajdMZm5rNEwyWm1BOFNPSW9fRkhKbFBvUmNyS191OXM1Ylc5c2V1RlFrcm1ydw?oc=5",
+          "is_first_hand": false
+        }
+      ]
+    },
     {
       "id": "ai_ev_evt_2a5dad790561",
       "date": "2026-11-23T13:10:32+08:00",
@@ -4833,7 +5028,7 @@
       "who_cares": "",
       "limitations": "",
       "limitations_en": "",
-      "source_id": "sina-7x24",
+      "source_id": "",
       "source_name": "新浪财经 7×24 电",
       "source_url": "https://finance.sina.cn/7x24/2026-11-23/detail-inizszeh8325209.d.html",
       "is_first_hand": false,
@@ -5114,6 +5309,49 @@
       ]
     },
     {
+      "id": "ai_raw_rss-gnews-ai-models-zh_969770da6c5a",
+      "date": "2026-11-23T12:01:45+08:00",
+      "company_id": "indie_opensource",
+      "company_name": "独立实验室 & 开源黑马",
+      "region": "全球开源",
+      "category": "最新动态",
+      "category_en": "Latest Release",
+      "title": "新一代“文鳐”海洋原生多模态大模型在厦门发布",
+      "title_en": "新一代“文鳐”海洋原生多模态大模型在厦门发布",
+      "what_it_does": "",
+      "what_it_does_en": "",
+      "who_cares": "",
+      "limitations": "",
+      "limitations_en": "",
+      "source_id": "rss-gnews-ai-models-zh",
+      "source_name": "中新网福建",
+      "source_url": "https://news.google.com/rss/articles/CBMickFVX3lxTE1xbnpsR1pQS3V0dkVXTDlmQldJLWFiTXpObHZlTzlEaTV3S0FhWUVWcEZKVGU4X19ndFZaYXNxLVBua3ZoRTRKS0t0azlvRVRVOWN2YmYxS29kS1JGODdBZldjOXdxNm5adHJ5Qlh0d3pCQQ?oc=5",
+      "is_first_hand": false,
+      "source_tier": "wire_media",
+      "is_open_source": false,
+      "milestone_dim": "flagship_release",
+      "milestone_dim_label": "旗舰模型发布",
+      "milestone_dim_label_en": "Flagship Model",
+      "is_recent_72h": true,
+      "related_sources": [
+        {
+          "source_name": "中新网福建",
+          "url": "https://news.google.com/rss/articles/CBMickFVX3lxTE1xbnpsR1pQS3V0dkVXTDlmQldJLWFiTXpObHZlTzlEaTV3S0FhWUVWcEZKVGU4X19ndFZaYXNxLVBua3ZoRTRKS0t0azlvRVRVOWN2YmYxS29kS1JGODdBZldjOXdxNm5adHJ5Qlh0d3pCQQ?oc=5",
+          "is_first_hand": false
+        },
+        {
+          "source_name": "人民网-福建频道",
+          "url": "https://news.google.com/rss/articles/CBMiakFVX3lxTE9zT1Q2SzRMVzBOVVpidE9YelJOX0RIakpTY2swSmc0cWVNeFdKdnpsWlhlNU5aMWxGS1ZZMXhoTFF4bzhKT1lyWi1UX3V4X3RpSjB6cTh2N3lORWF1b3p5T2xPZlI4UHFGUVE?oc=5",
+          "is_first_hand": false
+        },
+        {
+          "source_name": "Sohu",
+          "url": "https://news.google.com/rss/articles/CBMijAFBVV95cUxPRWwwY25OaEYyVUNNVUJrMndTaEt3VVVaZm9ieHY4T1hIZDd1aU00Z2paRExsNEtYbDlHcGIxZXRBUGx6UGh5MzVNSFhHSHl0Um9iam0xa3NtSzA4VWp2Vko4Y1VuRmNCWkRQbGlTc3lLLWZEbHJQSzFMZlNGMkUwY2xHWXlJV1RYWUJyQQ?oc=5",
+          "is_first_hand": false
+        }
+      ]
+    },
+    {
       "id": "ai_tool_tool_gh_morluto_rea",
       "date": "2026-11-23T11:02:13+08:00",
       "company_id": "indie_opensource",
@@ -5339,39 +5577,6 @@
       "milestone_dim_label": "开源权重与生态",
       "milestone_dim_label_en": "Open Source",
       "is_recent_72h": true
-    },
-    {
-      "id": "ai_raw_rss-gnews-opensource-ai_8f7e0aa91244",
-      "date": "2026-11-23T10:05:00+08:00",
-      "company_id": "indie_opensource",
-      "company_name": "独立实验室 & 开源黑马",
-      "region": "全球开源",
-      "category": "开源突破",
-      "category_en": "Open Source",
-      "title": "中国开源AI模型全球下载量突破100亿次，衍生模型数量成衡量生态黏性新指标",
-      "title_en": "Chinese Open-Source AI Models Surpass 10 Billion Global Downloads; Derivative Model Count Emerges as New Gauge of Ecosystem Stickiness",
-      "what_it_does": "",
-      "what_it_does_en": "",
-      "who_cares": "",
-      "limitations": "",
-      "limitations_en": "",
-      "source_id": "rss-gnews-opensource-ai",
-      "source_name": "BigGo Finance",
-      "source_url": "https://news.google.com/rss/articles/CBMidkFVX3lxTE5McTZuSHZlRk5LRUdSM0pNM05SQ0FDenNGSTQ3c1JmNnZoOFRXTXcySEdIWDBTRmJ2MFFwb3E1RlRtT2pDLWEtRjF4a0I2c2VTa19BQVVWWUM4M253dHdjaVZVUlUwQWtaRC03N0lKLTM4OUNxa1E?oc=5",
-      "is_first_hand": false,
-      "source_tier": "wire_media",
-      "is_open_source": true,
-      "milestone_dim": "open_source_eco",
-      "milestone_dim_label": "开源权重与生态",
-      "milestone_dim_label_en": "Open Source",
-      "is_recent_72h": true,
-      "related_sources": [
-        {
-          "source_name": "BigGo Finance",
-          "url": "https://news.google.com/rss/articles/CBMidkFVX3lxTE5McTZuSHZlRk5LRUdSM0pNM05SQ0FDenNGSTQ3c1JmNnZoOFRXTXcySEdIWDBTRmJ2MFFwb3E1RlRtT2pDLWEtRjF4a0I2c2VTa19BQVVWWUM4M253dHdjaVZVUlUwQWtaRC03N0lKLTM4OUNxa1E?oc=5",
-          "is_first_hand": false
-        }
-      ]
     },
     {
       "id": "ai_ev_evt_068ce6263201",
@@ -5739,40 +5944,6 @@
       "milestone_dim_label": "API 与 Agent 工程",
       "milestone_dim_label_en": "API & Agent Eng",
       "is_recent_72h": true
-    },
-    {
-      "id": "ai_ev_evt_e1a945db5ab5",
-      "date": "2026-11-22T22:32:52+08:00",
-      "company_id": "openai",
-      "company_name": "OpenAI",
-      "region": "海外",
-      "category": "开源突破",
-      "category_en": "Open Source",
-      "title": "OpenAI解散机器人团队，称通用模型已可直接用于机器人技术",
-      "title_en": "OpenAI解散机器人团队，称通用模型已可直接用于机器人技术",
-      "what_it_does": "据报道，OpenAI已解散旗下独立机器人团队，原机器人研究团队并入核心研究团队，应用机器人与硬件团队划入应用事业部。公司称机器人技术仍是长期愿景核心，此举旨在加快研发而非战略收缩，因为GPT-6 Astra等通用模型已证明可直接用于机器…",
-      "what_it_does_en": "据报道，OpenAI已解散旗下独立机器人团队，原机器人研究团队并入核心研究团队，应用机器人与硬件团队划入应用事业部。公司称机器人技术仍是长期愿景核心，此举旨在加快研发而非战略收缩，因为GPT-6 Astra等通用模型已证明可直接用于机器人技术。",
-      "who_cares": "",
-      "limitations": "",
-      "limitations_en": "",
-      "source_id": "tencent-hot",
-      "source_name": "腾讯新闻综合早",
-      "source_url": "https://view.inews.qq.com/a/20261121A0DHUT00",
-      "is_first_hand": false,
-      "source_tier": "wire_media",
-      "event_id": "evt_e1a945db5ab5",
-      "is_open_source": false,
-      "milestone_dim": "flagship_release",
-      "milestone_dim_label": "旗舰模型发布",
-      "milestone_dim_label_en": "Flagship Model",
-      "is_recent_72h": true,
-      "related_sources": [
-        {
-          "source_name": "腾讯新闻综合早",
-          "url": "https://view.inews.qq.com/a/20261121A0DHUT00",
-          "is_first_hand": false
-        }
-      ]
     },
     {
       "id": "ai_live_sina-7x24_8ab830047623",
@@ -7687,5 +7858,5 @@
       "weaknesses": "仅支持文本（M3系列支持多模态）。"
     }
   ],
-  "live_updated_at": "2026-11-23T13:31:23+08:00"
+  "live_updated_at": "2026-11-23T14:16:30+08:00"
 }
