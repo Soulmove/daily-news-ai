@@ -1070,7 +1070,7 @@ def enrich_zh_storylines(storylines: Dict[str, Dict[str, Any]], *, base_dir: Pat
     if not refs:
         return
 
-    unique_texts = list(seen_texts)[:60]
+    unique_texts = list(seen_texts)[:140]
     translated, _, _ = _translate_texts_with_pipeline(
         unique_texts,
         "zh",

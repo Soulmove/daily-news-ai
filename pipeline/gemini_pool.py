@@ -432,13 +432,15 @@ def call_gemini_raw(
     failed_slots_by_model: Dict[str, set[str]] = {}
     per_key_errors: List[Dict[str, str]] = []
     attempts = 0
-    max_attempts = min(14, max(8, len(slots)))
-    deadline = time.monotonic() + 150.0
+    max_attempts = min(18, max(10, len(slots) + 4))
+    deadline = time.monotonic() + 210.0
     saw_quota_exhaustion = False
 
-    for model_name in unique_models:
+    for model_idx, model_name in enumerate(unique_models):
         if model_name in unavailable_models or attempts >= max_attempts or time.monotonic() >= deadline:
             continue
+        has_fallback_after = model_idx < len(unique_models) - 1
+        timeout_ms = 45_000 if has_fallback_after else 70_000
         failed_for_model = failed_slots_by_model.setdefault(model_name, set())
         transient_errors_for_model = 0
         for slot in slots:
@@ -454,7 +456,7 @@ def call_gemini_raw(
             for _try_idx in range(max_transient_tries):
                 attempts += 1
                 try:
-                    http_opts = types.HttpOptions(timeout=75_000) if hasattr(types, "HttpOptions") else None
+                    http_opts = types.HttpOptions(timeout=timeout_ms) if hasattr(types, "HttpOptions") else None
                     client = (
                         genai.Client(api_key=slot.secret, http_options=http_opts)
                         if http_opts is not None
@@ -537,7 +539,8 @@ def call_gemini_raw(
                     )
                     if err_code == "TRANSIENT_ERROR":
                         transient_errors_for_model += 1
-                        if transient_errors_for_model >= 2:
+                        is_timeout_504 = any(k in short_msg.lower() for k in ("504", "deadline", "timeout", "timed out"))
+                        if transient_errors_for_model >= (1 if (has_fallback_after and is_timeout_504) else 2):
                             unavailable_models.add(model_name)
                     break
 

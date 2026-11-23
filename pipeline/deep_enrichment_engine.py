@@ -720,12 +720,38 @@ def _build_deterministic_event_qa(ev: Dict[str, Any], cat: str) -> List[Dict[str
                 "historical_parallel": "2024 年 9 月增量政策落地后，具备基本面印证的核心板块持续跑赢纯概念题材。",
             },
         ]
-    if any(k in title.lower() for k in ("ipo", "上市", "募资", "评级", "债务", "纳斯达克", "美股", "美联储", "加息", "降息", "金价", "黄金")):
+    if any(k in title.lower() for k in ("黄金", "金价", "白银", "贵金属", "原油", "油价", "布伦特", "wti", "铜价", "大宗")):
+        return [
+            {
+                "question": "这波贵金属/大宗商品波动对普通配置与市场有何影响？",
+                "answer": _clip_complete_sentence(f"聚焦{ent_str}避险溢价与美元实际利率再定价：{summary}", 120),
+                "historical_parallel": "参考 2013 年及 2020~2024 年贵金属急跌反弹窗口，实际利率 (TIPS) 拐点与商业银行风控提示常对应短期高波震荡区间。",
+            },
+            {
+                "question": "后续判断企稳与趋势的核心观测指标是什么？",
+                "answer": "重点关注 COMEX 现货/期货仓位变化、10 年期美债实际利率走势、银行积存金风控节奏以及全球央行季度购金动向。",
+                "historical_parallel": "历史商品急跌后的首周反弹往往伴随多空筹码换手，需观察央行购金节奏与美元指数是否同步配合。",
+            },
+        ]
+    if any(k in title.lower() for k in ("美联储", "fomc", "加息", "降息", "通胀", "财政", "贝森特", "美债", "纳斯达克", "标普", "美股")):
+        return [
+            {
+                "question": "这项宏观与利率信号对全球资产定价有何实质影响？",
+                "answer": _clip_complete_sentence(f"直接作用于美元流动性预期与跨市场估值折现率：{summary}", 120),
+                "historical_parallel": "参考 2022~2024 年多轮美联储利率预期重定价周期，美债长端收益率与科技股估值在议息窗口前通常先行波动。",
+            },
+            {
+                "question": "市场正反分歧核心在哪里？",
+                "answer": "宽松派期待政策提前纠偏以缓释金融脆弱性；谨慎派关注通胀黏性与长期国债供给压力，等待核心 PCE 与非农确认。",
+                "historical_parallel": "历史紧缩与降息预期博弈期显示，核心 PCE 与非农数据落地后市场分歧才会逐步收敛。",
+            },
+        ]
+    if any(k in title.lower() for k in ("ipo", "上市", "募资", "发行价", "独角兽", "信用评级", "垃圾级")):
         return [
             {
                 "question": "这件事对普通投资者与全球市场有何影响？",
                 "answer": _clip_complete_sentence(f"聚焦{ent_str}定价与跨境流动性重估：{summary}", 120),
-                "historical_parallel": "历史高估值科创 IPO 波动及海外利率预期重估窗口，通常需 5~10 个交易日观察二级市场换手企稳与信贷利差收敛。",
+                "historical_parallel": "历史高估值科创 IPO 波动及海外信用重估窗口，通常需 5~10 个交易日观察二级市场换手企稳与信贷利差收敛。",
             },
             {
                 "question": "市场正反分歧核心在哪里？",
@@ -978,9 +1004,20 @@ def run_v12_deep_enrichment(
             title_s = str(ev.get("title") or "")
             cached_qa = qa_cache.get(eid) if eid else None
             if isinstance(cached_qa, list) and cached_qa:
+                is_ipo_story = bool(re.search(r"ipo|上市|募资|发行价|独角兽", title_s, re.I))
                 has_bad_tpl = (
-                    not _is_a_share_policy_event(title_s, cat)
-                    and any("同类政策落地窗" in str(q.get("historical_parallel") or "") for q in cached_qa if isinstance(q, dict))
+                    (
+                        not _is_a_share_policy_event(title_s, cat)
+                        and any("同类政策落地窗" in str(q.get("historical_parallel") or "") for q in cached_qa if isinstance(q, dict))
+                    )
+                    or (
+                        not is_ipo_story
+                        and any(
+                            any(bad in str(q.get("historical_parallel") or "") for bad in ("科创 IPO", "高估值独角兽"))
+                            for q in cached_qa
+                            if isinstance(q, dict)
+                        )
+                    )
                 )
                 has_chop = any(
                     str(q.get("answer") or "").strip() and str(q.get("answer") or "").strip()[-1] not in "。！？.!?)）\"'"

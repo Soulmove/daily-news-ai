@@ -259,15 +259,14 @@ def _build_domain_scenario(
             "milestones": [{"date": "上市首周", "status": "upcoming", "label": "观察首批主动 ETF 场内日均成交额、折溢价率与做市换手放量节奏"}],
         }
 
-    # 0b. A-Share Mainland Capital-Market Reform (split Fee-Cut 46B vs Margin Ratio 80% Cut)
+    # 0b. A-Share Mainland Capital-Market Reform (split Fee-Cut 46B vs Margin Ratio 80% Cut; exclude Korea/Taiwan/Japan/US)
     if (
         re.search(
             r"沪深北交易所|沪深交易所|上交所.*降费|深交所.*降费|融资保证金比例|下调.*保证金|两融.*保证金|做市商规则|免收.*上市.*费|减免费用|降费让利|印花税|平准基金|稳市组合拳",
             text,
             re.I,
         )
-        and "台湾" not in tl
-        and "台湾地区" not in tl
+        and not re.search(r"台湾|台湾地区|韩国|韩股|kospi|日本|日经|日股|美股|纳斯达克|标普", tl, re.I)
     ):
         is_margin_4000 = "保证金" in text or "4000亿" in text or "80%" in text
         is_fee_cut = bool(re.search(r"降费|免收.*费|减免费用|让利|下调.*经手费", text)) and not is_margin_4000
@@ -351,6 +350,37 @@ def _build_domain_scenario(
             ],
             "if_then": [],
             "milestones": [{"date": "1 周内", "status": "current", "label": "关注台股外资净买超与融券余额变化"}],
+        }
+
+    # 0d. Regional South Korea Margin Deleveraging & Government Stabilization Fund (NEVER map to A-Share STAR/ChiNext)
+    if re.search(r"韩国|韩股|kospi", tl, re.I) and any(
+        k in tl for k in ("平准基金", "稳定基金", "稳市", "融资余额", "限空", "救市", "股市")
+    ):
+        return {
+            "rule_id": "korea_market_stabilization",
+            "tag": "亚太/韩国股市去杠杆与政府平准基金稳市干预",
+            "tag_en": "Korea Equity Deleveraging & Stabilization Fund Intervention",
+            "polarity": "bullish",
+            "intensity": 4,
+            "one_liner": "韩国股市融资余额回落后，韩国政府拟评估启动股市稳定/平准基金以托底筹码与流动性，优先缓和韩国半导体与科技权重股被动抛压并改善亚太风险偏好。",
+            "one_liner_en": "Korea evaluates activating equity stabilization funds after margin contraction, cushioning local semiconductor weights and APAC risk sentiment.",
+            "sample_basis": {
+                "sample_n": 10,
+                "volatility_pct": 2.9,
+                "volatility_source": "韩国政府历次股市稳定基金与限制卖空干预窗口表现样本",
+                "horizon": "1~5 个交易日",
+                "confidence_label": "官方稳市政策预期（托底亚太杠杆筹码与流动性）",
+                "confidence_label_en": "Official Stabilization Fund Policy Support",
+            },
+            "affected_tickers": {"EWY": 0.72, "000660.KS": 0.78, "005930.KS": 0.70, "HSTECH.HK": 0.25},
+            "realized_quotes": _quote_snapshot(["EWY", "QQQ", "HSTECH.HK"]),
+            "bars": [
+                _bar("亚太", "韩国科技与半导体权重 (KOSPI / 海力士 / 三星)", "Korea Tech & Semi Weights (KOSPI / Hynix / Samsung)", 1.0, 3.2, "稳定基金托底流动性预期缓解融资强平链条，对高权重存储芯片与韩国宽基构成直接支撑。", "Stabilization fund liquidity eases forced margin unwinding in flagship Korean memory and index weights.", 1.0, "EWY"),
+                _bar("亚太", "韩国大盘宽基与外资风险偏好映射 (EWY)", "MSCI South Korea Proxy & Foreign Flows (EWY)", 0.6, 2.1, "官方政策介入信号有助于抑制韩元贬值与外资连续净流出斜率。", "Policy intervention signal moderates FX pressure and foreign equity outflow velocity.", 0.95, "EWY"),
+                _bar("港股", "港股/A股亚太科技情绪外溢 (HSTECH)", "APAC Tech Risk-On Spillover (HSTECH)", 0.3, 1.3, "东亚邻近市场企稳温和降低亚太成长股的联动抛压，属跨境情绪外溢传导。", "Steadier East Asian risk sentiment mildly dampens cross-market tech derating pressure.", 0.85, "HSTECH.HK"),
+            ],
+            "if_then": [],
+            "milestones": [{"date": "1 周内", "status": "current", "label": "盯紧韩国金融委员会稳市细则发布与 KOSPI 融资余额止跌信号"}],
         }
 
     # 0d. Domestic A-Share Brokerage Bottoming / Valuation Signal (NEVER misroute to Fed hawkish!)

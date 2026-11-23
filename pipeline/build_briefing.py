@@ -1603,17 +1603,32 @@ def classify_event_severity(ev: dict, now_dt: Any = None) -> Tuple[str, str]:
 
 
 def _infer_event_heavy_reason_tag(title: str, ev: dict) -> str:
-    """Return qualitative reason label explaining why an event earned S/A Heavy status."""
-    blob = f"{title} {ev.get('fact_summary') or ''}"
-    if re.search(r"证监会|沪深北|沪深交易所|上交所|深交所|主动\s*ETF|融资保证金|降费|央行|国务院|SEC|出口管制|实体清单|关税|禁令|稳定基金|平准基金|反垄断", blob, re.I):
-        return "监管新政"
-    if re.search(r"中美元首|习近平|特朗普|总统|贝森特|美联储|FOMC|鲍威尔|欧央行|日本央行|COP31|外交部|联合宣言", blob, re.I):
-        return "元首/央行表态"
-    if re.search(r"黎曼猜想|Mathlib|Lean|Nature|Science|GPT-\d|Claude|Gemini|DeepSeek|Qwen|GLM|NVIDIA|Vera\s*Rubin|可回收火箭", blob, re.I):
-        return "科研/模型里程碑"
-    if re.search(r"暴跌|涨超|跌超|飙升|破发|腰斩|闪崩|危机|抛售|IPO|黄金|原油|比特币|440亿", blob, re.I):
-        return "市场剧震"
-    return "巨头重大变动"
+    """Return qualitative reason label prioritizing title subject so commodities/banks never collide with leader/central-bank labels."""
+    def _classify_chunk(text_chunk: str, *, allow_fallback: bool = False) -> Optional[str]:
+        if re.search(r"黄金|金价|白银|贵金属|原油|油价|布伦特|WTI|铜价|大宗", text_chunk, re.I):
+            return "大宗与市场剧震"
+        if re.search(
+            r"证监会|沪深北|沪深交易所|上交所|深交所|主动\s*ETF|融资保证金|降费|人民银行|中国央行|央行|国务院|SEC|出口管制|实体清单|关税|禁令|稳定基金|平准基金|反垄断",
+            text_chunk,
+            re.I,
+        ) and not ("国内银行" in text_chunk or "商业银行" in text_chunk):
+            return "监管新政"
+        if re.search(r"黎曼猜想|Mathlib|Lean|Nature|Science|GPT-\d|Claude|Gemini|DeepSeek|Qwen|GLM|NVIDIA.*VLA|Vera\s*Rubin|可回收火箭", text_chunk, re.I):
+            return "科研/模型里程碑"
+        lead_clause = re.split(r"[，,；;。]", text_chunk, maxsplit=1)[0]
+        leader_lead = bool(re.search(r"^(?:中美元首|习近平|特朗普|美国总统|美联储|鲍威尔|贝森特|日本央行|欧央行)", lead_clause))
+        if not leader_lead and re.search(r"英伟达董事会|董事会|CEO|马斯克|SpaceX|特斯拉|Anthropic|OpenAI|Meta|苹果|微软", text_chunk, re.I):
+            return "巨头重大变动"
+        if re.search(r"中美元首|习近平|特朗普|总统|贝森特|美联储|FOMC|鲍威尔|欧央行|日本央行|COP31|外交部|联合宣言|气候峰会", text_chunk, re.I):
+            return "元首/央行表态"
+        if re.search(r"暴跌|涨超|跌超|飙升|破发|腰斩|闪崩|危机|抛售|IPO|垃圾级|440亿|比特币", text_chunk, re.I):
+            return "市场剧震"
+        return "巨头重大变动" if allow_fallback else None
+
+    hit = _classify_chunk(title or "", allow_fallback=False)
+    if hit:
+        return hit
+    return _classify_chunk(str(ev.get("fact_summary") or ""), allow_fallback=True) or "巨头重大变动"
 
 
 def calibrate_sitewide_severity_tiers(cat_docs: Dict[str, dict], now_dt: Any = None) -> None:

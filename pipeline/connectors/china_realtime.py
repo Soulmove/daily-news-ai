@@ -544,6 +544,7 @@ _WIRE_S_TIER_RE = re.compile(
 _WIRE_S_EXCLUDE_RE = re.compile(r"(?:台湾|台湾地区|只要.*诉求|立场明确|呼吁对话|传递想法|保持密切对话)")
 _WIRE_NOISE_HEAVY_RE = re.compile(
     r"(?:降价通知|api\s*降价|限时降价|促销|优惠|夜盘普遍|夜盘微涨|夜盘涨|夜盘跌|盘前微涨|盘前涨|盘前跌|"
+    r"早间要闻|要闻汇总|盘前必读|早报汇总|午间公告|复盘汇总|联盟.{0,8}成立|协会.{0,8}成立|发展联盟|正式成立|行业论坛|"
     r"中间价|上海钢联|现货报价|提议设|提议(?:将|用).{0,24}限制|呼吁限制|涨停|持续活跃|短剧|影视股|概念股拉升|盘中拉升|探底回升|重仓股曝光)",
     re.I,
 )
@@ -619,9 +620,13 @@ def refresh_live_wire_file(base_dir: Path | str = ".", extra_items: Optional[Lis
         ("黄仁勋", "董事会"),
         ("英伟达", "sec"),
         ("主动etf", "上市"),
+        ("主动etf", "申赎"),
         ("主动etf", "建仓"),
+        ("主动etf", "18只"),
         ("韩国", "稳定基金"),
         ("韩国", "稳市"),
+        ("韩国", "稳定股市"),
+        ("韩国", "平准"),
         ("融资保证金", "80%"),
         ("融资保证金", "沪深"),
         ("美股", "期货"),
@@ -727,20 +732,35 @@ def refresh_live_wire_file(base_dir: Path | str = ".", extra_items: Optional[Lis
     merged.sort(key=lambda x: str(x.get("published_at") or ""), reverse=True)
     merged = merged[:120]
 
-    # Calibrate 7x24 wire heavy alerts (<= 15, zero semantic duplicates among heavy picks)
+    # Calibrate 7x24 wire heavy alerts (<= 15, zero semantic duplicates or multi-post topic clones among heavy picks)
+    def _wire_heavy_topic_key(norm_t: str) -> Optional[str]:
+        if "韩国" in norm_t and any(k in norm_t for k in ("稳", "平准", "股市", "财长")):
+            return "korea_stab"
+        if "主动etf" in norm_t:
+            return "cn_active_etf"
+        if "黄仁勋" in norm_t and "英伟达" in norm_t:
+            return "nvda_jensen"
+        return None
+
     high_indices = [idx for idx, it in enumerate(merged) if it.get("importance") == "high"]
     selected_high: List[int] = []
     heavy_norms: List[str] = []
+    seen_topic_keys: set[str] = set()
     s_first = [idx for idx in high_indices if merged[idx].get("severity_tier") == "S"] + [
         idx for idx in high_indices if merged[idx].get("severity_tier") != "S"
     ]
     for idx in s_first:
         n_cur = re.sub(r"[\s\-_·:：,，.。!！?？()（）\[\]【】'\"]+", "", str(merged[idx].get("title") or "").lower())
+        tkey = _wire_heavy_topic_key(n_cur)
+        if tkey and tkey in seen_topic_keys:
+            continue
         if any(_wire_titles_similar(n_cur, prev_n) for prev_n in heavy_norms):
             continue
         if len(selected_high) < 15:
             selected_high.append(idx)
             heavy_norms.append(n_cur)
+            if tkey:
+                seen_topic_keys.add(tkey)
     keep_high = set(selected_high)
     for idx in high_indices:
         if idx not in keep_high:
