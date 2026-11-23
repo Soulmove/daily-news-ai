@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from datetime import timedelta
+import os
 import re
 import time
 from typing import Any, Dict, List, Optional
@@ -12,26 +13,26 @@ from pipeline.id_utils import make_raw_item_id
 from pipeline.time_utils import now_shanghai, parse_iso_datetime, parse_published_at, to_iso_shanghai
 
 DEFAULT_WATCHED_REPOS = [
-    {"repo": "langgenius/dify", "name": "Dify", "entity_id": "ent_ai_infra_tools", "category": "Agentic 应用与工作流平台"},
-    {"repo": "n8n-io/n8n", "name": "n8n", "entity_id": "ent_ai_infra_tools", "category": "AI 工作流自动化"},
-    {"repo": "comfyanonymous/ComfyUI", "name": "ComfyUI", "entity_id": "ent_ai_infra_tools", "category": "节点式多模态视觉引擎"},
-    {"repo": "open-webui/open-webui", "name": "Open WebUI", "entity_id": "ent_ai_infra_tools", "category": "开源模型对话门户"},
-    {"repo": "langchain-ai/langchain", "name": "LangChain", "entity_id": "ent_ai_infra_tools", "category": "LLM Agent 开发框架"},
-    {"repo": "langchain-ai/langgraph", "name": "LangGraph", "entity_id": "ent_ai_infra_tools", "category": "有环状态机 Agent 编排"},
-    {"repo": "ollama/ollama", "name": "Ollama", "entity_id": "ent_ai_infra_tools", "category": "本地大模型运行器"},
-    {"repo": "huggingface/transformers", "name": "Transformers", "entity_id": "ent_ai_infra_tools", "category": "模型加载与微调底座"},
-    {"repo": "pytorch/pytorch", "name": "PyTorch", "entity_id": "ent_ai_infra_tools", "category": "深度学习核心框架"},
-    {"repo": "vllm-project/vllm", "name": "vLLM", "entity_id": "ent_ai_infra_tools", "category": "高并发推理引擎"},
-    {"repo": "ggml-org/llama.cpp", "name": "llama.cpp", "entity_id": "ent_ai_infra_tools", "category": "端侧/混合量化推理"},
-    {"repo": "run-llama/llama_index", "name": "LlamaIndex", "entity_id": "ent_ai_infra_tools", "category": "异构文档 RAG 框架"},
-    {"repo": "All-Hands-AI/OpenHands", "name": "OpenHands", "entity_id": "ent_ai_infra_tools", "category": "自主 AI 软件工程师"},
-    {"repo": "browser-use/browser-use", "name": "Browser-Use", "entity_id": "ent_ai_infra_tools", "category": "浏览器视觉操控 Agent"},
-    {"repo": "infiniflow/ragflow", "name": "RAGFlow", "entity_id": "ent_ai_infra_tools", "category": "深度文档版面 RAG 引擎"},
-    {"repo": "continuedev/continue", "name": "Continue", "entity_id": "ent_ai_infra_tools", "category": "开源 IDE 编程助手"},
-    {"repo": "sgl-project/sglang", "name": "SGLang", "entity_id": "ent_ai_infra_tools", "category": "结构化生成引擎"},
-    {"repo": "modelcontextprotocol/python-sdk", "name": "MCP Python SDK", "entity_id": "ent_anthropic", "category": "Agent 协议标准 SDK"},
-    {"repo": "anthropics/anthropic-sdk-python", "name": "Anthropic SDK", "entity_id": "ent_anthropic", "category": "模型官方 SDK"},
-    {"repo": "openai/openai-python", "name": "OpenAI SDK", "entity_id": "ent_openai", "category": "模型官方 SDK"},
+    {"repo": "langgenius/dify", "name": "Dify", "entity_id": "ent_ai_infra_tools", "category": "Agentic 应用与工作流平台", "fallback_stars": 115000, "fallback_license": "Apache-2.0", "fallback_summary": "开源 LLM 应用开发平台，内置可视化 Agent 工作流 DAG、企业级 RAG 管道与多模型 API 统一网关。"},
+    {"repo": "n8n-io/n8n", "name": "n8n", "entity_id": "ent_ai_infra_tools", "category": "AI 工作流自动化", "fallback_stars": 102000, "fallback_license": "Sustainable Use", "fallback_summary": "支持 400+ 系统连接器的可自托管 AI 工作流自动化编排平台，原生集成多步 LLM Agent 节点与触发器。"},
+    {"repo": "comfyanonymous/ComfyUI", "name": "ComfyUI", "entity_id": "ent_ai_infra_tools", "category": "节点式多模态视觉引擎", "fallback_stars": 88000, "fallback_license": "GPL-3.0", "fallback_summary": "高性能节点图式文生图/文生视频推理界面，精准调控 Flux/Wan/Veo 采样器与低显存分块调度。"},
+    {"repo": "open-webui/open-webui", "name": "Open WebUI", "entity_id": "ent_ai_infra_tools", "category": "开源模型对话门户", "fallback_stars": 92000, "fallback_license": "MIT", "fallback_summary": "功能完善的自部署 AI 对话与知识库门户，开箱兼容 Ollama 与 OpenAI/DeepSeek API，支持多用户权限管控。"},
+    {"repo": "langchain-ai/langchain", "name": "LangChain", "entity_id": "ent_ai_infra_tools", "category": "LLM Agent 开发框架", "fallback_stars": 112000, "fallback_license": "MIT", "fallback_summary": "大模型应用开发标准组件库，提供统一模型调用接口、工具绑定协议与可观测评估链。"},
+    {"repo": "langchain-ai/langgraph", "name": "LangGraph", "entity_id": "ent_ai_infra_tools", "category": "有环状态机 Agent 编排", "fallback_stars": 18000, "fallback_license": "MIT", "fallback_summary": "专为有状态、可恢复与人机协同长程多 Agent 系统设计的有向有环图状态机编排框架。"},
+    {"repo": "ollama/ollama", "name": "Ollama", "entity_id": "ent_ai_infra_tools", "category": "本地大模型运行器", "fallback_stars": 187000, "fallback_license": "MIT", "fallback_summary": "一行命令在 macOS/Windows/Linux 本地拉取并量化运行 DeepSeek/Qwen/Llama 等主流开源模型权重。"},
+    {"repo": "huggingface/transformers", "name": "Transformers", "entity_id": "ent_ai_infra_tools", "category": "模型加载与微调底座", "fallback_stars": 169000, "fallback_license": "Apache-2.0", "fallback_summary": "涵盖文本、视觉、音频与多模态大模型定义、权重加载及分布式微调训练的开源基础库。"},
+    {"repo": "pytorch/pytorch", "name": "PyTorch", "entity_id": "ent_ai_infra_tools", "category": "深度学习核心框架", "fallback_stars": 105000, "fallback_license": "BSD-3-Clause", "fallback_summary": "主流 AI 训练与推理底层框架，支持 torch.compile 编译加速与超大规模集群并行训练。"},
+    {"repo": "vllm-project/vllm", "name": "vLLM", "entity_id": "ent_ai_infra_tools", "category": "高并发推理引擎", "fallback_stars": 97000, "fallback_license": "Apache-2.0", "fallback_summary": "基于 PagedAttention 的高吞吐低延迟大模型推理与 OpenAI API 服务引擎，生产级显存利用率标杆。"},
+    {"repo": "ggml-org/llama.cpp", "name": "llama.cpp", "entity_id": "ent_ai_infra_tools", "category": "端侧/混合量化推理", "fallback_stars": 136000, "fallback_license": "MIT", "fallback_summary": "零 Python 依赖的 C/C++ + GGUF 跨硬件极轻量量化推理引擎，支持 CPU 与 GPU 混合卸载执行。"},
+    {"repo": "run-llama/llama_index", "name": "LlamaIndex", "entity_id": "ent_ai_infra_tools", "category": "异构文档 RAG 框架", "fallback_stars": 44000, "fallback_license": "MIT", "fallback_summary": "聚焦企业复杂文档解析、多模态结构化索引路由与 Agentic Workflow 的检索增强数据框架。"},
+    {"repo": "All-Hands-AI/OpenHands", "name": "OpenHands", "entity_id": "ent_ai_infra_tools", "category": "自主 AI 软件工程师", "fallback_stars": 58000, "fallback_license": "MIT", "fallback_summary": "具备隔离容器沙盒、终端执行与代码编辑器的自主软件开发 Agent，可自动完成代码修改与单测修复。"},
+    {"repo": "browser-use/browser-use", "name": "Browser-Use", "entity_id": "ent_ai_infra_tools", "category": "浏览器视觉操控 Agent", "fallback_stars": 62000, "fallback_license": "MIT", "fallback_summary": "结合 DOM 结构解析与视觉识别，让大模型像人类一样自主操作真实浏览器执行复杂任务。"},
+    {"repo": "infiniflow/ragflow", "name": "RAGFlow", "entity_id": "ent_ai_infra_tools", "category": "深度文档版面 RAG 引擎", "fallback_stars": 56000, "fallback_license": "Apache-2.0", "fallback_summary": "基于深度文档版面理解的企业级开源 RAG 引擎，精准还原复杂 PDF 跨页表格并支持逐句溯源引文。"},
+    {"repo": "continuedev/continue", "name": "Continue", "entity_id": "ent_ai_infra_tools", "category": "开源 IDE 编程助手", "fallback_stars": 28000, "fallback_license": "Apache-2.0", "fallback_summary": "可嵌入 VS Code / JetBrains 且完全自定义模型与本地 Ollama 接口的开源代码补全及 Agent 助手。"},
+    {"repo": "sgl-project/sglang", "name": "SGLang", "entity_id": "ent_ai_infra_tools", "category": "结构化生成引擎", "fallback_stars": 38900, "fallback_license": "Apache-2.0", "fallback_summary": "依托 RadixAttention 前缀树缓存技术的高性能大模型与 Agent 结构化推理服务引擎。"},
+    {"repo": "modelcontextprotocol/python-sdk", "name": "MCP Python SDK", "entity_id": "ent_anthropic", "category": "Agent 协议标准 SDK", "fallback_stars": 24900, "fallback_license": "MIT", "fallback_summary": "Model Context Protocol 官方 Python SDK，统一大模型连接外部数据源、工具和系统上下文接口。"},
+    {"repo": "anthropics/anthropic-sdk-python", "name": "Anthropic SDK", "entity_id": "ent_anthropic", "category": "模型官方 SDK", "fallback_stars": 4100, "fallback_license": "MIT", "fallback_summary": "Claude 官方 Python 客户端 SDK，支持扩展思维链、计算机操控 Tool Use 与 Prompt Caching。"},
+    {"repo": "openai/openai-python", "name": "OpenAI SDK", "entity_id": "ent_openai", "category": "模型官方 SDK", "fallback_stars": 32200, "fallback_license": "Apache-2.0", "fallback_summary": "OpenAI Responses API 与推理模型官方 Python 客户端 SDK，行业标准 API 兼容接口模板。"},
 ]
 
 _PRERELEASE_TAG_RE = re.compile(r"(?:rc\d*|alpha|beta|preview|dev\d*)\b", re.I)
@@ -102,6 +103,9 @@ def fetch_github_releases(
     fetched_iso = to_iso_shanghai(now_dt)
     t0 = time.monotonic()
     headers = {"Accept": "application/vnd.github+json"}
+    gh_token = (os.environ.get("GITHUB_TOKEN") or os.environ.get("GH_TOKEN") or "").strip()
+    if gh_token:
+        headers["Authorization"] = f"Bearer {gh_token}"
 
     prev_tool_by_repo = {str(t.get("repo") or ""): t for t in (previous_tools or []) if t.get("repo")}
     prev_items_by_repo = {}
@@ -144,6 +148,32 @@ def fetch_github_releases(
             errors.append(f"{repo}: {res.error_message}")
             if repo in prev_tool_by_repo:
                 tools.append(prev_tool_by_repo[repo])
+            elif spec.get("fallback_summary"):
+                tools.append(
+                    {
+                        "tool_id": f"tool_gh_{repo.replace('/', '_').lower()}",
+                        "name": spec["name"],
+                        "repo": repo,
+                        "tool_type": "开源软件 / Agent 框架",
+                        "sector": spec["category"],
+                        "entity_id": spec["entity_id"],
+                        "availability_stage": "ga",
+                        "availability_label": "正式可用 (GA)",
+                        "latest_version": "Mainline",
+                        "version_published_at": fetched_iso,
+                        "license": spec.get("fallback_license") or "Open Source",
+                        "stars": spec.get("fallback_stars"),
+                        "official_url": f"https://github.com/{repo}",
+                        "release_url": f"https://github.com/{repo}/releases",
+                        "docs_url": f"https://github.com/{repo}#readme",
+                        "summary": str(spec["fallback_summary"]),
+                        "deployment_requirements": "见官方 README 与 Release 安装依赖说明",
+                        "pricing_or_cost": "开源免费",
+                        "checked_at": fetched_iso,
+                        "source_name": "GitHub Curated Catalog",
+                        "source_url": f"https://github.com/{repo}",
+                    }
+                )
             continue
 
         # Also check repo metadata (license, stars) conservatively

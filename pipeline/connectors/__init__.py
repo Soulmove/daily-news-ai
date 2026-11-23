@@ -87,6 +87,11 @@ def _try_reuse_cached_connector(
         return None
     if cid in {"github-releases", "huggingface-hub"} and not cached_items and not cached_tools:
         return None
+    if cid == "github-releases":
+        from .github_releases import DEFAULT_WATCHED_REPOS
+
+        if len(cached_tools) >= 5 and len(cached_tools) < len(DEFAULT_WATCHED_REPOS):
+            return None
 
     return {
         "connector_id": cid,

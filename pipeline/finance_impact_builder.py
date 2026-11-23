@@ -1902,6 +1902,8 @@ def build_finance_impact_artifact(
                 continue
             if p_rid == "nvda_senate_sec_governance" and re.search(r"遴选|接班|继任", p_title):
                 continue
+            if "降费" in p_title and "4000" in str(prev_card.get("one_liner") or ""):
+                continue
             p_pub = str(prev_card.get("published_at") or "")
             p_dt = parse_iso_datetime(p_pub)
             if p_dt is not None and (now_dt - p_dt).total_seconds() > 72 * 3600:
@@ -1917,20 +1919,21 @@ def build_finance_impact_artifact(
 
             card_copy = dict(prev_card)
             card_copy["carried_over"] = True
-            if not card_copy.get("evidence_tier"):
-                ev_t, ev_l = infer_event_evidence_tier(
-                    {"sources": card_copy.get("sources") or []}, p_title, p_summary
-                )
-                card_copy["evidence_tier"] = ev_t
-                card_copy["evidence_tier_label"] = ev_l
-            if not card_copy.get("effective_date_label"):
-                eff = extract_effective_date_label(p_title, p_summary)
-                if eff:
-                    card_copy["effective_date_label"] = eff
-            if not card_copy.get("qualifier_badge"):
-                qual = extract_qualifier_badge(p_title, p_summary)
-                if qual:
-                    card_copy["qualifier_badge"] = qual
+            ev_t, ev_l = infer_event_evidence_tier(
+                {"sources": card_copy.get("sources") or []}, p_title, p_summary
+            )
+            card_copy["evidence_tier"] = ev_t
+            card_copy["evidence_tier_label"] = ev_l
+            eff = extract_effective_date_label(p_title, p_summary)
+            if eff:
+                card_copy["effective_date_label"] = eff
+            elif card_copy.get("effective_date_label"):
+                card_copy["effective_date_label"] = re.sub(r"[\U0001F300-\U0001FAFF\u2600-\u27BF\uFE0F]", "", str(card_copy["effective_date_label"])).strip()
+            qual = extract_qualifier_badge(p_title, p_summary)
+            if qual:
+                card_copy["qualifier_badge"] = qual
+            elif card_copy.get("qualifier_badge"):
+                card_copy["qualifier_badge"] = re.sub(r"[\U0001F300-\U0001FAFF\u2600-\u27BF\uFE0F]", "", str(card_copy["qualifier_badge"])).strip()
 
             seen_titles.add(p_tkey)
             if p_eid:
@@ -1942,7 +1945,14 @@ def build_finance_impact_artifact(
             used_rule_counts[p_rid] = used_rule_counts.get(p_rid, 0) + 1
             impacts.append(card_copy)
             if p_eid and isinstance(prev_doc.get("event_impact_map"), dict) and p_eid in prev_doc["event_impact_map"]:
-                event_impact_map[p_eid] = dict(prev_doc["event_impact_map"][p_eid])
+                m_entry = dict(prev_doc["event_impact_map"][p_eid])
+                m_entry["evidence_tier"] = ev_t
+                m_entry["evidence_tier_label"] = ev_l
+                if card_copy.get("effective_date_label"):
+                    m_entry["effective_date_label"] = card_copy["effective_date_label"]
+                if card_copy.get("qualifier_badge"):
+                    m_entry["qualifier_badge"] = card_copy["qualifier_badge"]
+                event_impact_map[p_eid] = m_entry
 
     return {
         "schema_version": "4.2",
