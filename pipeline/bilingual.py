@@ -1036,3 +1036,56 @@ def enrich_zh_tech_tools(tools: List[Dict[str, Any]], *, base_dir: Path | str = 
             t["summary"] = f"{tname}{vtag} 官方版本更新，包含核心接口特性增强、性能优化与稳定性修复。"
     if cache_dirty:
         _save_translation_cache(cache_map, cache_path)
+
+
+def enrich_zh_storylines(storylines: Dict[str, Dict[str, Any]], *, base_dir: Path | str = ".") -> None:
+    """Translate mostly-English storyline timeline summaries & fact_diff bullets into Chinese with cache."""
+    if not isinstance(storylines, dict) or not storylines:
+        return
+    refs: List[Tuple[str, Any, Any, str]] = []
+    seen_texts: set[str] = set()
+
+    for st in storylines.values():
+        if not isinstance(st, dict):
+            continue
+        fd = st.get("fact_diff")
+        if isinstance(fd, dict):
+            for key in ("new_facts", "unchanged_background"):
+                arr = fd.get(key)
+                if isinstance(arr, list):
+                    for idx, val in enumerate(arr):
+                        sval = _STRIP_TAG_PREFIX_RE.sub("", str(val or "").strip()).strip()
+                        if sval and is_mostly_english(sval):
+                            refs.append(("list", arr, idx, sval[:240]))
+                            seen_texts.add(sval[:240])
+        for tn in st.get("timeline") or []:
+            if not isinstance(tn, dict):
+                continue
+            fs = _STRIP_TAG_PREFIX_RE.sub("", str(tn.get("fact_summary") or "").strip()).strip()
+            if fs and is_mostly_english(fs):
+                tn.setdefault("fact_summary_en", fs)
+                refs.append(("dict", tn, "fact_summary", fs[:240]))
+                seen_texts.add(fs[:240])
+
+    if not refs:
+        return
+
+    unique_texts = list(seen_texts)[:60]
+    translated, _, _ = _translate_texts_with_pipeline(
+        unique_texts,
+        "zh",
+        max_retries=1,
+        backoff_base=0.3,
+        chunk_size=20,
+        base_dir=base_dir,
+    )
+    trans_map: Dict[str, str] = {}
+    if translated:
+        for orig, zh in zip(unique_texts, translated):
+            if zh and not is_mostly_english(zh):
+                trans_map[orig] = zh
+
+    for kind, holder, slot, orig in refs:
+        zh = trans_map.get(orig) or _lookup_offline_phrase(orig) or ""
+        if zh:
+            holder[slot] = zh

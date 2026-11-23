@@ -1533,6 +1533,7 @@ _S_MAJOR_TECH_CORP_RE = re.compile(
 _S_TECH_NOISE_GUARD_RE = re.compile(
     r"(?:招聘|回答更简短|透明度|反蒸馏|渠道价|遭证监会立案|信息披露违法违规|专利侵权|控股股东|台湾|台湾地区|"
     r"降价通知|api\s*降价|调用降价|限时降价|优惠活动|促销|夜盘普遍|夜盘微涨|盘前微涨|盘前涨跌不一|"
+    r"涨停|持续活跃|短剧|影视股|概念股拉升|"
     r"提议(?:设|将|用).{0,28}(?:限制|开发限制|挂钩|门槛)|呼吁限制|建议设立.*限制|建议限制)",
     re.I,
 )
@@ -1599,6 +1600,20 @@ def classify_event_severity(ev: dict, now_dt: Any = None) -> Tuple[str, str]:
     if is_recent_48h and not _S_TECH_NOISE_GUARD_RE.search(title) and (s_prio > 0 or _A_TIER_EVENT_RE.search(title)):
         return "A", "A级重要要闻"
     return "B", "B级常规要闻"
+
+
+def _infer_event_heavy_reason_tag(title: str, ev: dict) -> str:
+    """Return qualitative reason label explaining why an event earned S/A Heavy status."""
+    blob = f"{title} {ev.get('fact_summary') or ''}"
+    if re.search(r"证监会|沪深北|沪深交易所|上交所|深交所|主动\s*ETF|融资保证金|降费|央行|国务院|SEC|出口管制|实体清单|关税|禁令|稳定基金|平准基金|反垄断", blob, re.I):
+        return "监管新政"
+    if re.search(r"中美元首|习近平|特朗普|总统|贝森特|美联储|FOMC|鲍威尔|欧央行|日本央行|COP31|外交部|联合宣言", blob, re.I):
+        return "元首/央行表态"
+    if re.search(r"黎曼猜想|Mathlib|Lean|Nature|Science|GPT-\d|Claude|Gemini|DeepSeek|Qwen|GLM|NVIDIA|Vera\s*Rubin|可回收火箭", blob, re.I):
+        return "科研/模型里程碑"
+    if re.search(r"暴跌|涨超|跌超|飙升|破发|腰斩|闪崩|危机|抛售|IPO|黄金|原油|比特币|440亿", blob, re.I):
+        return "市场剧震"
+    return "巨头重大变动"
 
 
 def calibrate_sitewide_severity_tiers(cat_docs: Dict[str, dict], now_dt: Any = None) -> None:
@@ -1673,7 +1688,16 @@ def calibrate_sitewide_severity_tiers(cat_docs: Dict[str, dict], now_dt: Any = N
             if title_similarity(t_cur, prev_t) >= 0.36:
                 return True
             low_p = prev_t.lower()
-            for a, b in (("jakub", "openai"), ("cop31", "气候"), ("融资保证金", "80%"), ("融资保证金", "融资保证金")):
+            for a, b in (
+                ("jakub", "openai"),
+                ("cop31", "气候"),
+                ("融资保证金", "80%"),
+                ("融资保证金", "融资保证金"),
+                ("英伟达", "sec"),
+                ("黄仁勋", "英伟达"),
+                ("主动etf", "etf"),
+                ("韩国", "稳"),
+            ):
                 if a in low_cur and b in low_cur and a in low_p and b in low_p:
                     return True
         return False
@@ -1696,6 +1720,7 @@ def calibrate_sitewide_severity_tiers(cat_docs: Dict[str, dict], now_dt: Any = N
         if s_count < 4 and s_count < max_sa_budget:
             ev["severity_tier"] = "S"
             ev["severity_label"] = "S级重磅"
+            ev["heavy_reason_tag"] = _infer_event_heavy_reason_tag(str(ev.get("title") or ""), ev)
             ev["importance"] = "high"
             _record_heavy(ev)
             s_count += 1
@@ -1714,6 +1739,7 @@ def calibrate_sitewide_severity_tiers(cat_docs: Dict[str, dict], now_dt: Any = N
         if a_count < remaining_a and not _S_TECH_NOISE_GUARD_RE.search(str(ev.get("title") or "")):
             ev["severity_tier"] = "A"
             ev["severity_label"] = "A级要闻"
+            ev["heavy_reason_tag"] = _infer_event_heavy_reason_tag(str(ev.get("title") or ""), ev)
             ev["importance"] = "high"
             _record_heavy(ev)
             a_count += 1
@@ -1721,12 +1747,14 @@ def calibrate_sitewide_severity_tiers(cat_docs: Dict[str, dict], now_dt: Any = N
             radar = int(ev.get("radar_score") or 0)
             ev["severity_tier"] = "B"
             ev["severity_label"] = "B级常规"
+            ev.pop("heavy_reason_tag", None)
             ev["importance"] = "medium" if radar >= 50 else "normal"
 
     for ev in demoted_dups:
         radar = int(ev.get("radar_score") or 0)
         ev["severity_tier"] = "B"
         ev["severity_label"] = "B级常规"
+        ev.pop("heavy_reason_tag", None)
         ev["importance"] = "medium" if radar >= 50 else "normal"
 
 

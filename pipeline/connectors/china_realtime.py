@@ -21,7 +21,7 @@ from pipeline.connectors.base import HttpCacheStore
 from pipeline.dedup import is_consumer_promo_or_fluff, is_hotlist_aggregator_source, smart_truncate, strip_raw_urls_and_domain_tails
 from pipeline.id_utils import canonicalize_url, make_raw_item_id
 from pipeline.manifest import atomic_write_json, load_json_if_exists
-from pipeline.time_utils import SHANGHAI_TZ, now_shanghai, parse_published_at, to_iso_shanghai
+from pipeline.time_utils import SHANGHAI_TZ, now_shanghai, parse_iso_datetime, parse_published_at, to_iso_shanghai
 
 _HEADERS = {
     "User-Agent": (
@@ -543,17 +543,32 @@ _WIRE_S_TIER_RE = re.compile(
 )
 _WIRE_S_EXCLUDE_RE = re.compile(r"(?:台湾|台湾地区|只要.*诉求|立场明确|呼吁对话|传递想法|保持密切对话)")
 _WIRE_NOISE_HEAVY_RE = re.compile(
-    r"(?:降价通知|api\s*降价|限时降价|促销|优惠|夜盘普遍|夜盘微涨|盘前微涨|中间价|上海钢联|现货报价|提议设|呼吁限制)",
+    r"(?:降价通知|api\s*降价|限时降价|促销|优惠|夜盘普遍|夜盘微涨|夜盘涨|夜盘跌|盘前微涨|盘前涨|盘前跌|"
+    r"中间价|上海钢联|现货报价|提议设|提议(?:将|用).{0,24}限制|呼吁限制|涨停|持续活跃|短剧|影视股|概念股拉升|盘中拉升|探底回升|重仓股曝光)",
     re.I,
 )
 _WIRE_A_TIER_RE = re.compile(
     r"(?:自贸协定|百亿美元并购|法院禁售|出口管制|实体清单|重大漏洞|CVE|IPO.*(?:首日|募资)|"
     r"主动ETF|股市稳定基金|平准基金|440亿|黎曼猜想|Mathlib|(?:涨价|提价).{0,8}45%|"
     r"央行.*(?:降准|降息|利率|货币政策|LPR|纪要)|国务院.*印发|证监会|美联储|FOMC|中美元首|关税|"
-    r"(?:涨超|跌超|暴跌|飙升)\s*[2-9](?:\.\d+)?%|"
+    r"(?:暴跌|飙升|重挫)\s*[4-9](?:\.\d+)?%|"
     r"(?:发布|上线|推出|开源).{0,14}(?:GPT-?\d|Claude|Gemini\s*\d|DeepSeek|Qwen|GLM-\d|Kimi)|英伟达|SpaceX)",
     re.I,
 )
+
+
+def _infer_wire_heavy_reason_tag(title: str, excerpt: str = "", category: str = "") -> str:
+    """Return concise human-readable category reason explaining WHY a wire earned Heavy tier."""
+    blob = f"{title} {excerpt}"
+    if re.search(r"证监会|沪深北|沪深交易所|上交所|深交所|主动\s*ETF|两融|保证金|降费|央行|国务院|税务|反垄断|SEC|出口管制|实体清单|关税|禁令|稳市基金|稳定基金", blob, re.I):
+        return "监管新政"
+    if re.search(r"中美元首|习近平|特朗普|总统|总理|财长|贝森特|美联储|FOMC|鲍威尔|欧央行|日本央行|外交部|联合声明", blob, re.I):
+        return "元首/央行表态"
+    if re.search(r"黎曼猜想|Mathlib|Lean|Nature|Science|发布.{0,12}(?:GPT|Claude|Gemini|DeepSeek|Qwen|GLM|Kimi|VLA)|开源.{0,10}模型|芯片架构|可回收火箭", blob, re.I):
+        return "科研/模型里程碑"
+    if re.search(r"暴跌|涨超|跌超|飙升|破发|腰斩|熔断|闪崩|危机|抛售|黄金|原油|比特币|市值", blob, re.I):
+        return "市场剧震"
+    return "巨头重大变动"
 _EXCHANGE_REFORM_CLUSTER_RE = re.compile(
     r"(?:沪深北交易所|沪深交易所|上交所.{0,10}(?:做市|降费)|深交所.{0,10}(?:做市|征求意见)|中国结算.{0,10}债券)",
     re.I,
@@ -592,7 +607,26 @@ def refresh_live_wire_file(base_dir: Path | str = ".", extra_items: Optional[Lis
     merged: List[dict] = []
     seen_keys: set[str] = set()
     seen_urls: set[str] = set()
-    seen_norms: List[str] = []
+    seen_entries: List[Tuple[str, str, int]] = []  # (norm_title, pub_iso, merged_idx)
+
+    _WIRE_CLUSTERS = (
+        ("孙正义", "海力士"),
+        ("软银", "海力士"),
+        ("openai", "蒸馏"),
+        ("apec", "深圳"),
+        ("美伊", "谈判"),
+        ("黄仁勋", "聘用"),
+        ("黄仁勋", "董事会"),
+        ("英伟达", "sec"),
+        ("主动etf", "上市"),
+        ("主动etf", "建仓"),
+        ("韩国", "稳定基金"),
+        ("韩国", "稳市"),
+        ("融资保证金", "80%"),
+        ("融资保证金", "沪深"),
+        ("美股", "期货"),
+        ("纳指", "英伟达"),
+    )
 
     def _wire_titles_similar(norm_a: str, norm_b: str) -> bool:
         if not norm_a or not norm_b:
@@ -601,15 +635,7 @@ def refresh_live_wire_file(base_dir: Path | str = ".", extra_items: Optional[Lis
             return True
         if len(norm_a) >= 12 and len(norm_b) >= 12 and (norm_a.startswith(norm_b[:16]) or norm_b.startswith(norm_a[:16])):
             return True
-        # Known wire multi-source cluster signatures
-        wire_clusters = (
-            ("孙正义", "海力士"),
-            ("软银", "海力士"),
-            ("openai", "蒸馏"),
-            ("apec", "深圳"),
-            ("美伊", "谈判"),
-        )
-        for a, b in wire_clusters:
+        for a, b in _WIRE_CLUSTERS:
             if a in norm_a and b in norm_a and a in norm_b and b in norm_b:
                 return True
         if len(norm_a) >= 10 and len(norm_b) >= 10:
@@ -619,6 +645,23 @@ def refresh_live_wire_file(base_dir: Path | str = ".", extra_items: Optional[Lis
             if union and (len(bg_a & bg_b) / len(union)) >= 0.44:
                 return True
         return False
+
+    def _within_two_hours(iso_a: str, iso_b: str) -> bool:
+        dt_a = parse_iso_datetime(iso_a)
+        dt_b = parse_iso_datetime(iso_b)
+        if dt_a is None or dt_b is None:
+            return True
+        return abs((dt_a - dt_b).total_seconds()) <= 7200
+
+    def _format_merged_sources(src_list: List[str]) -> str:
+        clean_s = list(dict.fromkeys([s.strip() for s in src_list if s and s.strip()]))
+        if not clean_s:
+            return "实时快讯"
+        if len(clean_s) == 1:
+            return clean_s[0]
+        if len(clean_s) == 2:
+            return f"{clean_s[0]} / {clean_s[1]} · 2 源合并"
+        return f"{clean_s[0]} / {clean_s[1]} 等 {len(clean_s)} 源合并"
 
     def _add(it: dict) -> None:
         title = str(it.get("title") or "").strip()
@@ -632,28 +675,40 @@ def refresh_live_wire_file(base_dir: Path | str = ".", extra_items: Optional[Lis
         k = norm_full[:28]
         if not k or k in seen_keys:
             return
-        if any(_wire_titles_similar(norm_full, prev) for prev in seen_norms):
-            return
+        pub = str(it.get("published_at") or it.get("fetched_at") or fetched_iso)
+        src_id = str(it.get("source_id") or "")
+        src_name = str(it.get("source_name") or "实时快讯")
+        for prev_norm, prev_pub, prev_idx in seen_entries:
+            if _within_two_hours(pub, prev_pub) and _wire_titles_similar(norm_full, prev_norm):
+                # Coalesce duplicate cross-source wire into existing cluster item
+                target = merged[prev_idx]
+                base_srcs = target.setdefault("_merged_sources", [target.get("source_name") or "实时快讯"])
+                raw_short = src_name.split(" · ")[0].split(" 等 ")[0]
+                if raw_short and raw_short not in base_srcs:
+                    base_srcs.append(raw_short)
+                    target["source_name"] = _format_merged_sources(base_srcs)
+                return
         if canon_u:
             seen_urls.add(canon_u)
         seen_keys.add(k)
-        seen_norms.append(norm_full)
-        pub = str(it.get("published_at") or it.get("fetched_at") or fetched_iso)
         cat_norm = _classify_wire_item(title, excerpt_clean, str(it.get("category") or "general"))
-        src_id = str(it.get("source_id") or "")
-        src_name = str(it.get("source_name") or "实时快讯")
         sev_tier, _ = _classify_wire_severity(title, excerpt_clean, src_id, src_name)
+        reason_tag = _infer_wire_heavy_reason_tag(title, excerpt_clean, cat_norm) if sev_tier in {"S", "A"} else None
+        idx_new = len(merged)
+        seen_entries.append((norm_full, pub, idx_new))
         merged.append(
             {
-                "id": str(it.get("item_id") or it.get("id") or f"lw_{len(merged)}"),
+                "id": str(it.get("item_id") or it.get("id") or f"lw_{idx_new}"),
                 "title": title,
                 "excerpt": excerpt_clean,
                 "category": cat_norm,
                 "source_name": src_name,
+                "_merged_sources": [s.strip() for s in str(it.get("source_name") or "实时快讯").split(" · ")[0].split(" 等 ")[0].split("/") if s.strip()],
                 "url": canon_u or str(it.get("url") or it.get("canonical_url") or ""),
                 "published_at": pub,
                 "thumbnail_url": it.get("thumbnail_url"),
                 "severity_tier": sev_tier,
+                "heavy_reason_tag": reason_tag,
                 "importance": "high" if sev_tier in {"S", "A"} else "normal",
                 "tag": str(it.get("metric_label") or it.get("tag") or ""),
             }
@@ -667,21 +722,37 @@ def refresh_live_wire_file(base_dir: Path | str = ".", extra_items: Optional[Lis
         if isinstance(it, dict):
             _add(it)
 
+    for item in merged:
+        item.pop("_merged_sources", None)
     merged.sort(key=lambda x: str(x.get("published_at") or ""), reverse=True)
     merged = merged[:120]
 
-    # Calibrate 7x24 wire heavy alerts (~10-15 out of 120, S first then newest authoritative A, cap 15)
+    # Calibrate 7x24 wire heavy alerts (<= 15, zero semantic duplicates among heavy picks)
     high_indices = [idx for idx, it in enumerate(merged) if it.get("importance") == "high"]
-    if len(high_indices) > 15:
-        keep_high = {idx for idx in high_indices if merged[idx].get("severity_tier") == "S"}
-        for idx in high_indices:
-            if len(keep_high) >= 15:
-                break
-            keep_high.add(idx)
-        for idx in high_indices:
-            if idx not in keep_high:
-                merged[idx]["severity_tier"] = "B"
-                merged[idx]["importance"] = "normal"
+    selected_high: List[int] = []
+    heavy_norms: List[str] = []
+    s_first = [idx for idx in high_indices if merged[idx].get("severity_tier") == "S"] + [
+        idx for idx in high_indices if merged[idx].get("severity_tier") != "S"
+    ]
+    for idx in s_first:
+        n_cur = re.sub(r"[\s\-_·:：,，.。!！?？()（）\[\]【】'\"]+", "", str(merged[idx].get("title") or "").lower())
+        if any(_wire_titles_similar(n_cur, prev_n) for prev_n in heavy_norms):
+            continue
+        if len(selected_high) < 15:
+            selected_high.append(idx)
+            heavy_norms.append(n_cur)
+    keep_high = set(selected_high)
+    for idx in high_indices:
+        if idx not in keep_high:
+            merged[idx]["severity_tier"] = "B"
+            merged[idx]["importance"] = "normal"
+            merged[idx]["heavy_reason_tag"] = None
+        elif not merged[idx].get("heavy_reason_tag"):
+            merged[idx]["heavy_reason_tag"] = _infer_wire_heavy_reason_tag(
+                str(merged[idx].get("title") or ""),
+                str(merged[idx].get("excerpt") or ""),
+                str(merged[idx].get("category") or ""),
+            )
 
     # Fast-Track Promotion: cluster <12h authoritative S-tier wires into breaking_highlights for immediate homepage surfacing
     breaking_highlights: List[Dict[str, Any]] = []

@@ -897,6 +897,7 @@ def classify_ai_milestone_dim(
     *,
     is_open_source: bool = False,
     category: str = "",
+    company_id: str = "",
 ) -> Tuple[str, str, str]:
     """Classify any AI milestone into the 5 canonical evolution dimensions."""
     blob = f"{title} {summary} {category}".lower()
@@ -904,9 +905,20 @@ def classify_ai_milestone_dim(
         dim = "commercial_governance"
     elif any(k in blob for k in ("黎曼", "形式化", "lean", "密码分析", "nist", "medchembench", "基准", "benchmark", "论文", "arxiv", "世界模型", "genie 4", "nwm 3.0", "科研", "算法")):
         dim = "research_breakthrough"
-    elif any(k in blob for k in ("tool retrieval", "工具检索", "agent", "智能体", "sdk", "api", "copilot", "ide", "composer", "claude code", "mcp", "rag", "bedrock", "sonar", "工作流", "ui-tars")):
+    elif any(k in blob for k in ("tool retrieval", "工具检索", "agent", "智能体", "sdk", "api", "copilot", "ide", "composer", "claude code", "mcp", "rag", "bedrock", "sonar", "工作流", "ui-tars", "攻击", "漏洞")):
         dim = "api_agent_eng"
-    elif is_open_source or any(k in blob for k in ("开源", "open-source", "open weights", "apache", "mit", "vllm", "llama.cpp", "sglang", "ollama", "hugging face", "github", "权重")):
+    elif (
+        is_open_source
+        or (
+            company_id not in {"openai", "anthropic"}
+            and bool(
+                re.search(
+                    r"(?:开源权重|开源模型|开源生态|open[- ]source|open[- ]weights|\bapache[- ]2\.0\b|\bmit\s+license\b|\bvllm\b|llama\.cpp|\bsglang\b|\bollama\b)",
+                    blob,
+                )
+            )
+        )
+    ):
         dim = "open_source_eco"
     else:
         dim = "flagship_release"
@@ -1049,7 +1061,14 @@ def _match_lab_signature(txt_low: str, xai_aliases: Tuple[str, ...]) -> Optional
         return "huawei_pangu"
     if any(k in txt_low for k in ("mistral", "codestral", "pixtral", "mixtral")):
         return "mistral"
-    if "perplexity" in txt_low:
+    if (
+        re.search(
+            r"perplexity\.ai|perplexity\s+ai|perplexity\s+sonar|perplexity\s*(?:推出|发布|宣布|融资|搜索|浏览器|ceo)",
+            txt_low,
+        )
+        and "困惑度" not in txt_low
+        and "openai" not in txt_low
+    ):
         return "perplexity"
     if re.search(r"(?<![a-z0-9])cursor(?![a-z0-9])|anysphere", txt_low):
         return "cursor"
@@ -1537,7 +1556,13 @@ def build_ai_progress_artifact(
             or is_first_hand_ai_source(str(raw_it.get("source_id") or ""), src_name, url)
         )
         is_os = detect_is_open_source(title, what, url=url, company_id=cid, source_id=str(raw_it.get("source_id") or ""))
-        dim_id, dim_zh, dim_en = classify_ai_milestone_dim(title, what, is_open_source=is_os, category=str(raw_it.get("category") or ""))
+        dim_id, dim_zh, dim_en = classify_ai_milestone_dim(
+            title,
+            what,
+            is_open_source=is_os,
+            category=str(raw_it.get("category") or ""),
+            company_id=cid,
+        )
         pub_date = normalize_ai_timestamp(raw_it.get("date") or generated_at_iso, generated_at_iso)
 
         # Keep archive bounded cleanly (baselines always kept; news items kept for 180d)
@@ -1623,6 +1648,16 @@ def build_ai_progress_artifact(
             match["is_open_source"] = bool(match.get("is_open_source") or is_os) if match.get("company_id") not in {"openai", "anthropic"} else detect_is_open_source(
                 str(match.get("title") or ""), str(match.get("what_it_does") or ""), url=str(match.get("source_url") or ""), company_id=str(match.get("company_id") or "")
             )
+            m_dim, m_zh, m_en = classify_ai_milestone_dim(
+                str(match.get("title") or ""),
+                str(match.get("what_it_does") or ""),
+                is_open_source=bool(match.get("is_open_source")),
+                category=str(match.get("category") or ""),
+                company_id=str(match.get("company_id") or ""),
+            )
+            match["milestone_dim"] = m_dim
+            match["milestone_dim_label"] = m_zh
+            match["milestone_dim_label_en"] = m_en
             return
 
         seen_title_map[key] = cand

@@ -641,12 +641,40 @@ def _build_deterministic_storyline_fallback(st: Dict[str, Any]) -> Tuple[List[Di
     return nodes, stances
 
 
+def _clip_complete_sentence(text: Optional[str], max_len: int = 120) -> str:
+    """Clip text cleanly at a complete sentence boundary — never cut mid-word or mid-name."""
+    clean = strip_colored_emojis(str(text or "")).strip()
+    if not clean:
+        return ""
+    if len(clean) <= max_len:
+        return clean if clean[-1] in "。！？.!?）\"'" else f"{clean}。"
+    cut = clean[:max_len]
+    for punct in ("。", "！", "？", "；", ".", "!", "?"):
+        idx = cut.rfind(punct)
+        if idx >= int(max_len * 0.42):
+            return cut[: idx + 1].strip()
+    # Second try up to +35 chars so we don't chop right before a period
+    ext = clean[: max_len + 35]
+    for punct in ("。", "！", "？", ".", "!", "?"):
+        idx = ext.find(punct, int(max_len * 0.42))
+        if idx != -1:
+            return ext[: idx + 1].strip()
+    comma_idx = max(cut.rfind("，"), cut.rfind(","))
+    if comma_idx >= int(max_len * 0.45):
+        return f"{cut[:comma_idx].strip()}。"
+    return f"{clean}。" if len(clean) <= max_len + 45 else f"{cut.rstrip()}。"
+
+
+def _is_a_share_policy_event(title: str, cat: str = "") -> bool:
+    return bool(re.search(r"A股|沪深|两融|保证金|降费|证监会|央行|国务院|深交所|上交所|北交所|主动ETF|医保|公积金", title))
+
+
 def _build_event_deep_qa_via_gemini(ev: Dict[str, Any], root: Path) -> Optional[List[Dict[str, str]]]:
     title = str(ev.get("title") or "")
     prompt = (
-        f"新闻事件：「{title}」\n摘要：「{str(ev.get('fact_summary') or '')[:160]}」\n"
-        "请用联网检索核实背景，为读者生成 3 个最核心的深度追问与直白解答（禁止空话、禁止 Emoji），必须覆盖：1) 对普通人或国内产业影响；2) 历史类似事件如何收场；3) 正反核心分歧。\n"
-        '输出严格 JSON 数组：[{"question":"20字内提问","answer":"90字内联网核实解答","historical_parallel":"50字内真实历史参照"}]'
+        f"新闻事件：「{title}」\n摘要：「{str(ev.get('fact_summary') or '')[:180]}」\n"
+        "请用联网检索核实背景，为读者生成 3 个最核心的深度追问与直白完整解答（严禁半截残句、禁止乱套不相干模板、禁止 Emoji），必须覆盖：1) 对普通人或国内产业影响；2) 历史类似事件如何收场；3) 正反核心分歧。\n"
+        '输出严格 JSON 数组：[{"question":"20字内提问","answer":"100字内完整句子解答","historical_parallel":"55字内贴合本事件的真实历史参照"}]'
     )
     res = call_gemini_raw(
         scope="deep_event_qa",
@@ -667,8 +695,8 @@ def _build_event_deep_qa_via_gemini(ev: Dict[str, Any], root: Path) -> Optional[
             out.append(
                 {
                     "question": strip_colored_emojis(str(row["question"])),
-                    "answer": strip_colored_emojis(str(row["answer"])),
-                    "historical_parallel": strip_colored_emojis(str(row.get("historical_parallel") or "")),
+                    "answer": _clip_complete_sentence(str(row["answer"]), 125),
+                    "historical_parallel": _clip_complete_sentence(str(row.get("historical_parallel") or ""), 80) if row.get("historical_parallel") else "",
                 }
             )
     return out or None
@@ -676,45 +704,58 @@ def _build_event_deep_qa_via_gemini(ev: Dict[str, Any], root: Path) -> Optional[
 
 def _build_deterministic_event_qa(ev: Dict[str, Any], cat: str) -> List[Dict[str, str]]:
     title = str(ev.get("title") or "")
-    summary = strip_colored_emojis(str(ev.get("fact_summary") or title))
+    summary = _clip_complete_sentence(str(ev.get("fact_summary") or title), 115)
     ents = [str(e) for e in (ev.get("entities") or [])[:2] if str(e).strip()]
     ent_str = " / ".join(ents) if ents else "相关产业链"
-    if cat == "finance" or any(k in title for k in ("股", "两融", "央行", "美联储", "降费", "关税", "金价")):
+    if _is_a_share_policy_event(title, cat):
         return [
             {
-                "question": "这件事对普通投资者和国内行业有何实质影响？",
-                "answer": f"核心作用于{ent_str}流动性与估值预期：{summary[:85]}",
-                "historical_parallel": "参考 2023 年以来同类政策落地窗，需重点盯紧次日成交量承接而非单日情绪跳空。",
+                "question": "这项政策对普通投资者与 A 股行业有何实质影响？",
+                "answer": _clip_complete_sentence(f"核心作用于{ent_str}流动性与估值预期：{summary}", 120),
+                "historical_parallel": "参考 2023 年以来同类境内资本市场政策窗口，次日成交额承接强度是判断行情持续性的关键。",
             },
             {
                 "question": "市场正反分歧核心在哪里？",
-                "answer": "看多逻辑看重制度与成本边际改善；谨慎派关注基本面盈利兑现与后续政策衔接连续性。",
-                "historical_parallel": "2024 年 9 月增量政策落地后，基本面验证板块持续跑赢纯概念题材。",
+                "answer": "看多逻辑看重制度与成本边际改善；谨慎派关注基本面盈利兑现与后续配套细则衔接连续性。",
+                "historical_parallel": "2024 年 9 月增量政策落地后，具备基本面印证的核心板块持续跑赢纯概念题材。",
+            },
+        ]
+    if any(k in title.lower() for k in ("ipo", "上市", "募资", "评级", "债务", "纳斯达克", "美股", "美联储", "加息", "降息", "金价", "黄金")):
+        return [
+            {
+                "question": "这件事对普通投资者与全球市场有何影响？",
+                "answer": _clip_complete_sentence(f"聚焦{ent_str}定价与跨境流动性重估：{summary}", 120),
+                "historical_parallel": "历史高估值科创 IPO 波动及海外利率预期重估窗口，通常需 5~10 个交易日观察二级市场换手企稳与信贷利差收敛。",
+            },
+            {
+                "question": "市场正反分歧核心在哪里？",
+                "answer": "乐观派关注长期营收增速与核心技术壁垒；谨慎派警惕短期资本开支压力、信用评级下修与估值消化窗口。",
+                "historical_parallel": "参考 2019~2023 年多轮高估值独角兽上市初期走势，资金往往在首周冲高消化后回归自由现金流主线。",
             },
         ]
     if cat == "tech" or any(k in title.lower() for k in ("ai", "gpt", "gemini", "claude", "芯片", "模型", "开源")):
         return [
             {
                 "question": "这次技术变化对普通开发者或用户意味着什么？",
-                "answer": f"聚焦{ent_str}能力边界与成本变化：{summary[:85]}",
-                "historical_parallel": "历次大模型/算力节点演进中，推理单价下探常在 1~2 季度内显著拉动应用渗透。",
+                "answer": _clip_complete_sentence(f"聚焦{ent_str}能力边界与使用成本变化：{summary}", 120),
+                "historical_parallel": "历次大模型与算力架构迭代中，推理单价下探与生态开放通常在 1~2 个季度内显著拉动应用渗透率。",
             },
             {
                 "question": "该进展目前处于什么验证阶段？",
-                "answer": "需结合官方技术文档、独立第三方复现基准以及下游云厂接入节奏交叉确认。",
-                "historical_parallel": "2025 年初 DeepSeek/Qwen 开源潮验证了开放复现对社区快速采用的关键作用。",
+                "answer": "需结合官方技术报告、独立第三方复现基准以及下游云厂与终端真实接入节奏交叉确认。",
+                "historical_parallel": "2025 年以来主流开源/闭源大模型竞赛证明，公开基准与真实开发者采用率决定商业化天花板。",
             },
         ]
     return [
         {
             "question": "事件对大宗物价、出行或外贸订单有何影响？",
-            "answer": f"重点关注{ent_str}引发的跨区域供应链、汇率与大宗品风险溢价变动：{summary[:75]}",
-            "historical_parallel": "历次地缘与国际规则博弈多呈“首轮情绪脉冲—看物理实质落地决定持续性”轨迹。",
+            "answer": _clip_complete_sentence(f"重点关注{ent_str}引发的跨区域供应链、汇率与大宗品风险溢价变动：{summary}", 120),
+            "historical_parallel": "历次跨区域地缘与贸易规则博弈多呈“首轮情绪脉冲，随后看实际封锁或关税文本落地决定持续性”轨迹。",
         },
         {
             "question": "下一步决定走向的关键观测点是什么？",
-            "answer": strip_colored_emojis(str(ev.get("speculation_or_outlook") or "盯紧涉事官方下一轮正式公报与约束性细则落地。")),
-            "historical_parallel": "若各方在后续窗口重回务实谈判，避险溢价通常较快收敛。",
+            "answer": _clip_complete_sentence(str(ev.get("speculation_or_outlook") or "盯紧涉事官方下一轮正式公报与约束性细则落地。"), 115),
+            "historical_parallel": "若各方在后续窗口重回务实谈判，避险溢价与航运附加费通常较快收敛。",
         },
     ]
 
@@ -927,15 +968,29 @@ def run_v12_deep_enrichment(
         if len(st["timeline"]) >= 3:
             st_enriched_count += 1
 
-    # Apply deep_qa onto cat_docs events (cached or crisp deterministic domain Q&A)
+    # Apply deep_qa onto cat_docs events (purge cached mid-sentence chops or bogus A-share boilerplate)
     qa_enriched_count = 0
     for cat in ("finance", "global", "tech", "general"):
         for ev in (cat_docs.get(cat) or {}).get("events") or []:
             if not isinstance(ev, dict):
                 continue
             eid = str(ev.get("event_id") or "")
-            if eid and eid in qa_cache:
-                ev["deep_qa"] = qa_cache[eid]
+            title_s = str(ev.get("title") or "")
+            cached_qa = qa_cache.get(eid) if eid else None
+            if isinstance(cached_qa, list) and cached_qa:
+                has_bad_tpl = (
+                    not _is_a_share_policy_event(title_s, cat)
+                    and any("同类政策落地窗" in str(q.get("historical_parallel") or "") for q in cached_qa if isinstance(q, dict))
+                )
+                has_chop = any(
+                    str(q.get("answer") or "").strip() and str(q.get("answer") or "").strip()[-1] not in "。！？.!?)）\"'"
+                    for q in cached_qa
+                    if isinstance(q, dict)
+                )
+                if has_bad_tpl or has_chop:
+                    cached_qa = None
+            if cached_qa:
+                ev["deep_qa"] = cached_qa
             elif ev.get("severity_tier") in {"S", "A"} or ev.get("importance") == "high" or len(ev.get("sources") or []) >= 2:
                 ev["deep_qa"] = _build_deterministic_event_qa(ev, cat)
             if ev.get("deep_qa"):

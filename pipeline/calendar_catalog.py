@@ -987,7 +987,17 @@ _BREAKING_NOISE_RE = re.compile(
     r"(?:围巾|座驾|同框|开了个玩笑|花絮|是否将举行|没有这方面的信息|美方代表有哪些|发言人回应|外交部回应|"
     r"邀请.{0,12}组阁|呼吁.{0,10}停火|考虑.{0,10}征税|传闻称|或将讨论|股市表现|股价表现|涨停|跌停|大跌|大涨|"
     r"上海钢联|早盘中间价|现货报价|中间价报|均价报|报\d+.*元/吨|碳酸锂.*(?:报价|中间价|均价)|电池级.*价|生猪价格|猪价|报价持平|较上一交易日|"
+    r"探底回升|放量上涨|完成建仓|重仓股曝光|平稳上市|上线.*功能|进入.*产线|望闻问切|持续活跃|短剧|"
     r"IPO后|上市后|复盘|盘点|回顾|闭幕|落幕|已于|此前|上周|昨日|昨天|after\s+ipo|post-?ipo)",
+    re.I,
+)
+
+_ALREADY_HAPPENED_NEWS_RE = re.compile(
+    r"(?:已正式|已于今日|今日早盘|今日收盘|盘中|探底回升|放量上涨|完成建仓|平稳上市|正式挂牌上市|上线实时|进入.{0,10}产线|正式推出|正式上线|正式开源)",
+    re.I,
+)
+_EXPLICIT_FUTURE_CUE_RE = re.compile(
+    r"(?:将于|定于|拟于|预计于|计划于|起施行|起生效|起实施|月\d{1,2}日(?:起|召开|举办|开幕|举行|生效|施行|实施|发射|表决|截止|发布|公布)|明日|明天|后天|下周|下月|next\s+week|tomorrow)",
     re.I,
 )
 
@@ -1274,6 +1284,8 @@ def extract_breaking_calendar_items(
         combined = f"{title} {cand['body']}"
         if _BREAKING_NOISE_RE.search(combined):
             continue
+        if _ALREADY_HAPPENED_NEWS_RE.search(combined) and not _EXPLICIT_FUTURE_CUE_RE.search(combined):
+            continue
         if not _BREAKING_ACTION_RE.search(combined):
             continue
 
@@ -1282,7 +1294,11 @@ def extract_breaking_calendar_items(
         if not parsed:
             continue
         sched_dt, orig_note, is_clock_tbd = parsed
+        # Strict Future-Only Gate: same-day intraday news already past/happened is excluded unless explicit future cue/hour
+        is_explicit_future = bool(_EXPLICIT_FUTURE_CUE_RE.search(combined))
         if sched_dt.date() < generated_dt.date() or (sched_dt.date() - generated_dt.date()).days > 120:
+            continue
+        if sched_dt.date() == generated_dt.date() and not is_explicit_future:
             continue
 
         if any(title_similarity(title, kt) >= 0.45 for kt in known_titles + seen_new_titles):
@@ -1370,6 +1386,7 @@ def _infer_location(item: Dict[str, Any], blob: str) -> Tuple[str, str, str]:
         ("蚂蚁|阿里|杭州", "china", "中国", "杭州"),
         ("智元|长电科技|国产算力|创业板", "china", "中国", "上海/深圳"),
         ("国内首个|我国|中科院|清华|北大|zhu·ge|四部门", "china", "中国", "北京"),
+        ("华为|盘古|昇腾|腾讯|混元|百度|文心|字节|豆包|智谱|kimi|宇树|深度求索|deepseek|千问|通义|a股|中芯|寒武纪", "china", "中国", "北京/上海/深圳"),
         ("深圳", "china", "中国", "深圳"),
         ("广州", "china", "中国", "广州"),
         ("上海", "china", "中国", "上海"),

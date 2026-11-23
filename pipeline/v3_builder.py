@@ -131,11 +131,101 @@ def _is_financial_corporate_event(event: dict) -> bool:
     )
 
 
+_SPAM_REPO_RE = re.compile(r"(?:morluto/rea|openclaw|obra/superpowers|hermes-agent)", re.I)
+
+
+def balance_tech_tools(tools_raw: List[dict]) -> List[dict]:
+    """Separate GitHub SDKs (<=20) and Hugging Face Open Model Weights (ALL <=12 preserved; zero truncation)."""
+    sdk_list: List[dict] = []
+    hf_list: List[dict] = []
+    seen_tids: set[str] = set()
+    for t in tools_raw:
+        if not isinstance(t, dict):
+            continue
+        ident = f"{t.get('repo') or ''} {t.get('name') or ''} {t.get('tool_id') or ''}"
+        if _SPAM_REPO_RE.search(ident):
+            continue
+        tid = str(t.get("tool_id") or t.get("repo") or t.get("name") or "").lower()
+        if not tid or tid in seen_tids:
+            continue
+        seen_tids.add(tid)
+        if (
+            str(t.get("tool_id") or "").startswith("tool_hf_")
+            or "Hugging Face" in str(t.get("source_name") or "")
+            or "权重" in str(t.get("tool_type") or "")
+        ):
+            hf_list.append(t)
+        else:
+            sdk_list.append(t)
+    sdk_kept = sdk_list[:20]
+    hf_kept = hf_list[:12]
+    combined = sdk_kept + hf_kept
+    if len(combined) > 2 and len(combined) % 2 == 1:
+        # Never trim HF open model weights — only pop 1 SDK item if needed to keep 2-col symmetry
+        if len(sdk_kept) > 12:
+            sdk_kept.pop()
+            combined = sdk_kept + hf_kept
+    return combined
+
+
+def _ground_storyline_entities(
+    title: str,
+    summary: str,
+    cur_entities: Any,
+    cur_entity_ids: Any,
+    entities_map: Dict[str, dict],
+) -> tuple[List[str], List[str]]:
+    """Keep ONLY entities genuinely grounded in the storyline's own title/summary text."""
+    text = f"{title or ''} {(summary or '')[:240]}"
+    text_low = text.lower()
+    matches = match_entities_with_reasons(text)
+    matched_ids = [str(m.get("entity_id") or "") for m in matches if m.get("entity_id")]
+    matched_names = [str(m.get("canonical_name") or "") for m in matches if m.get("canonical_name")]
+    matched_id_set = set(matched_ids)
+    matched_name_set = set(matched_names)
+
+    out_ids: List[str] = list(matched_ids)
+    for eid in cur_entity_ids or []:
+        seid = str(eid or "").strip()
+        if not seid or seid in out_ids or seid in matched_id_set:
+            continue
+        ent_obj = entities_map.get(seid) or ENTITY_BY_ID.get(seid)
+        if not ent_obj:
+            continue
+        aliases = ent_obj.get("aliases") if isinstance(ent_obj, dict) else getattr(ent_obj, "aliases", ())
+        cname = (ent_obj.get("canonical_name") if isinstance(ent_obj, dict) else getattr(ent_obj, "canonical_name", "")) or ""
+        if any(str(a).lower() in text_low for a in (aliases or ()) if len(str(a)) >= 2) or (
+            cname and cname.lower() in text_low
+        ):
+            out_ids.append(seid)
+
+    out_names: List[str] = list(matched_names)
+    for name in cur_entities or []:
+        sname = str(name or "").strip()
+        if not sname or sname in out_names or sname in matched_name_set:
+            continue
+        # Only retain non-matched/freeform entity tags when explicitly mentioned in title/summary
+        if sname.lower() in text_low or any(
+            len(tok) >= 3 and tok.lower() in text_low
+            for tok in re.split(r"[\s/·()（）]+", sname)
+            if tok.lower() not in {"the", "and", "with", "ai", "model"}
+        ):
+            out_names.append(sname)
+
+    return out_names[:5], out_ids[:5]
+
+
 def _infer_domain_next_catalyst(event: dict, matched_primary_ent: Optional[dict]) -> str:
     title_l = str(event.get("title") or "").lower()
     combined = f"{title_l} {str(event.get('fact_summary') or '').lower()}"
     if any(k in combined for k in ("比特币", "bitcoin", "btc", "以太坊", "eth", "加密货币", "虚拟货币")):
         return "跟踪现货 BTC/ETH ETF 净流入、期货持仓量及关键整数关口得失"
+    if any(k in combined for k in ("黄金", "金价", "白银", "贵金属", "菜百", "金饰", "comex")):
+        return "跟踪 COMEX 现货金价、10 年期美债实际利率 (TIPS) 及全球央行季度购金节奏"
+    if any(k in combined for k in ("医疗", "健康大模型", "医学", "临床", "问诊", "医疗ai", "蚂蚁阿福")) and not any(
+        k in combined for k in ("车企", "自动驾驶", "智驾")
+    ):
+        return "跟踪权威医学评测基准表现、三甲医院临床试点及医疗 AI 合规审批进展"
     if any(k in combined for k in ("霍尔木兹", "油轮", "触雷", "海峡", "航运", "导弹", "空袭", "无人机", "停火", "和平协议", "北约", "美伊", "伊朗", "俄乌", "波兰", "红海", "克里米亚", "黑海")):
         return "关注国际海事与军政安全通报、各方外交斡旋进展及航运/油价波动"
     if any(k in title_l for k in ("黎曼", "猜想", "定理", "lean", "mathlib", "形式化", "开源", "github", "hugging face", "hugging", "benchmark", "基准测试", "framework", "bttf", "longcat", "openpangu", "llama.cpp")) or (
@@ -146,7 +236,9 @@ def _infer_domain_next_catalyst(event: dict, matched_primary_ent: Optional[dict]
         return "关注涉事经济体财政/贸易主管部门正式公报、执行细则与产业链现货价"
     if any(k in combined for k in ("漏洞", "cve", "零日", "0day", "rce", "sql注入", "代码执行", "勒索软件", "数据泄露", "黑客攻击", "安全补丁")):
         return "等待官方安全响应中心发布补丁编号、受影响版本清单与安全整改指南"
-    if any(k in combined for k in ("fsd", "自动驾驶", "智驾", "ota", "无人驾驶", "robotaxi")):
+    if any(k in combined for k in ("fsd", "自动驾驶", "智驾", "无人驾驶", "robotaxi")) or bool(
+        re.search(r"(?<![a-z0-9])ota(?![a-z0-9])|整车\s*ota|车机\s*ota", combined)
+    ):
         return "关注车企后续软件推送说明、实际开放范围与监管合规反馈"
     if any(k in combined for k in ("signal", "截屏", "端到端加密", "隐私保护")):
         return "关注应用后续版本更新日志及跨平台安全特性适配进展"
@@ -767,13 +859,20 @@ def build_v3_artifacts(
                 tn["fact_summary"] = _scrub_ph(str(tn["fact_summary"]))
 
         st_tier, st_tier_label = infer_event_evidence_tier(ev)
+        grounded_ents, grounded_eids = _ground_storyline_entities(
+            ev["title"],
+            str(ev.get("fact_summary") or ""),
+            ev.get("entities", []),
+            ev.get("entity_ids", []),
+            entities_map,
+        )
         storylines[st_id] = {
             "storyline_id": st_id,
             "current_event_id": ev["event_id"],
             "title": ev["title"],
             "category": ev["category"],
-            "entities": ev.get("entities", []),
-            "entity_ids": ev.get("entity_ids", []),
+            "entities": grounded_ents,
+            "entity_ids": grounded_eids,
             "current_stage": diff["change_type_label"],
             "evidence_status": ev.get("evidence_status", "single_source"),
             "evidence_label": ev.get("evidence_label") or "单一信源",
@@ -945,9 +1044,16 @@ def build_v3_artifacts(
         for tn in clean_old.get("timeline") or []:
             if isinstance(tn, dict) and tn.get("fact_summary"):
                 tn["fact_summary"] = _scrub_old_ph(str(tn["fact_summary"]))
-        if "美元首" in old_title and "美联储 FOMC 与全球流动性" in (clean_old.get("entities") or []):
-            clean_old["entities"] = [e for e in clean_old["entities"] if e != "美联储 FOMC 与全球流动性"]
-            clean_old["entity_ids"] = [eid for eid in (clean_old.get("entity_ids") or []) if eid != "ent_macro_fomc"]
+        old_sum_txt = str((clean_old.get("timeline") or [{}])[0].get("fact_summary") or clean_old.get("fact_summary") or "")
+        grounded_old_ents, grounded_old_eids = _ground_storyline_entities(
+            old_title,
+            old_sum_txt,
+            clean_old.get("entities") or [],
+            clean_old.get("entity_ids") or [],
+            entities_map,
+        )
+        clean_old["entities"] = grounded_old_ents
+        clean_old["entity_ids"] = grounded_old_eids
         old_title_low = old_title.lower()
         ent_ids_old = clean_old.get("entity_ids") or []
         prim_old = entities_map.get(ent_ids_old[0]) if ent_ids_old else None
@@ -970,6 +1076,8 @@ def build_v3_artifacts(
             ("Postmortem" in nc_old and not any(k in old_title for k in ("宕机", "故障", "瘫痪", "停飞", "服务中断")))
             or ("GitHub / Hugging Face" in nc_old and "GitHub / Hugging Face" not in domain_cat)
             or ("BIS" in nc_old and "BIS" not in domain_cat)
+            or ("OPEC+" in nc_old and "OPEC+" not in domain_cat)
+            or ("车企" in nc_old and "车企" not in domain_cat)
         )
         if not nc_old or len(nc_old) <= 2 or has_stale_cve_tpl or has_stale_entity_tpl or has_stale_domain_tpl or (not _is_financial_corporate_event(clean_old) and "SEC" in nc_old):
             clean_old["next_catalyst"] = domain_cat
@@ -1641,14 +1749,7 @@ def build_v3_artifacts(
                             txt = pat.sub(rep, txt)
                         ver[vf] = txt
 
-    # Guarantee an even tool count (<= 28) so desktop 2-column grid has zero orphan single card
-    final_tools = list(tech_tools[:28])
-    if len(final_tools) > 2 and len(final_tools) % 2 == 1:
-        drop_idx = next(
-            (i for i in range(len(final_tools) - 1, -1, -1) if str(final_tools[i].get("tool_id") or "").startswith("tool_hf_")),
-            len(final_tools) - 1,
-        )
-        final_tools.pop(drop_idx)
+    final_tools = balance_tech_tools(tech_tools)
 
     # V12 Concurrent 13-Key Grounded AI Enrichment across Storylines, Events deep_qa, Topics & Tools
     try:
@@ -1663,9 +1764,7 @@ def build_v3_artifacts(
             tech_tools=final_tools,
         )
         if isinstance(enrich_res, dict) and isinstance(enrich_res.get("tools"), list):
-            final_tools = list(enrich_res["tools"][:28])
-            if len(final_tools) > 2 and len(final_tools) % 2 == 1:
-                final_tools.pop()
+            final_tools = balance_tech_tools(list(enrich_res["tools"]))
     except Exception as exc:
         print(f"[v3_builder] V12 enrichment warning: {exc}", flush=True)
 
@@ -1709,6 +1808,12 @@ def build_v3_artifacts(
             "entities": list(entities_map.values()),
         },
     )
+    try:
+        from .bilingual import enrich_zh_storylines
+
+        enrich_zh_storylines(storylines, base_dir=root)
+    except Exception:
+        pass
     atomic_write_json(
         root / "data/storylines_index.json",
         {

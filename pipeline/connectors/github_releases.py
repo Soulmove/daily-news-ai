@@ -248,53 +248,12 @@ def fetch_github_releases(
                     }
                 )
 
-    # Dynamic discovery: fetch trending high-star AI/Agent repositories (>30k stars)
-    seen_repos = {str(t.get("repo") or "").lower() for t in tools if t.get("repo")}
-    search_url = "https://api.github.com/search/repositories?q=ai+agent+OR+llm+stars:%3E30000&sort=stars&order=desc&per_page=8"
-    s_res = polite_get(search_url, headers=headers, cache=cache, timeout=(4, 8), expect_json=True)
-    if s_res.ok and isinstance(s_res.json_data, dict):
-        added_extra = 0
-        for item in s_res.json_data.get("items") or []:
-            if added_extra >= 6 or len(tools) >= 24:
-                break
-            if not isinstance(item, dict):
-                continue
-            full_name = str(item.get("full_name") or "").strip()
-            if not full_name or full_name.lower() in seen_repos:
-                continue
-            seen_repos.add(full_name.lower())
-            lic_obj = item.get("license") if isinstance(item.get("license"), dict) else {}
-            stars_val = int(item.get("stargazers_count") or 0)
-            if stars_val < 30000:
-                continue
-            desc = re.sub(r"\s+", " ", str(item.get("description") or "")).strip()[:220]
-            pushed_iso, _ = parse_published_at(item.get("pushed_at"), "github-releases")
-            tools.append(
-                {
-                    "tool_id": f"tool_gh_{full_name.replace('/', '_').lower()}",
-                    "name": str(item.get("name") or full_name.split("/")[-1]),
-                    "repo": full_name,
-                    "tool_type": "高星 AI 开源框架",
-                    "sector": "高星 AI 基础设施与 Agent",
-                    "entity_id": "ent_ai_infra_tools",
-                    "availability_stage": "ga",
-                    "availability_label": "正式可用 (GA)",
-                    "latest_version": "Mainline GA",
-                    "version_published_at": pushed_iso or fetched_iso,
-                    "license": _normalize_gh_license(lic_obj.get("spdx_id") or lic_obj.get("name")),
-                    "stars": stars_val,
-                    "official_url": str(item.get("html_url") or f"https://github.com/{full_name}"),
-                    "release_url": str(item.get("html_url") or f"https://github.com/{full_name}"),
-                    "docs_url": f"https://github.com/{full_name}#readme",
-                    "summary": desc or "GitHub 高星开源 AI 基础设施与 Agent 工程项目。",
-                    "deployment_requirements": "见官方 README 安装说明",
-                    "pricing_or_cost": "开源免费",
-                    "checked_at": fetched_iso,
-                    "source_name": "GitHub Stars Discovery",
-                    "source_url": str(item.get("html_url") or f"https://github.com/{full_name}"),
-                }
-            )
-            added_extra += 1
+    # Keep strictly vetted canonical AI SDK & runtime repositories (purge star-farmed noise repos)
+    tools = [
+        t
+        for t in tools
+        if not re.search(r"morluto/rea|openclaw|obra/superpowers|hermes-agent", f"{t.get('repo') or ''} {t.get('name') or ''}", re.I)
+    ]
 
     status = "ok"
     if not items and errors and not_modified_hits == 0:
