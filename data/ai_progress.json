@@ -1,16 +1,155 @@
 {
   "schema_version": "4.3",
-  "generated_at": "2026-11-23T10:47:01+08:00",
-  "batch_id": "smart-20261123-104701",
+  "generated_at": "2026-11-23T11:04:46+08:00",
+  "batch_id": "smart-20261123-110446",
   "search_grounded": false,
   "archive_path": "data/ai_progress_archive.json",
-  "archive_total": 101,
+  "archive_total": 104,
   "weekly_digest": {
     "period_label": "近 7 日全球 AI 大事周报（截至 2026-11-23）",
     "period_label_en": "Weekly Global AI Digest (as of 2026-11-23)",
-    "summary": "实时追踪 72 项国内外 AI 关键进展（海外 45 · 国内 19 · 开源 25 · 一手官方 40）。自动聚合官方博客、Hugging Face、GitHub Releases 与 7×24 突发快讯，重大发布秒级入榜。",
-    "summary_en": "Tracking 72 AI milestones (45 global, 19 China, 25 open-source, 40 first-hand official) from lab blogs, Hugging Face, GitHub Releases & 7×24 live wires.",
+    "summary": "实时追踪 73 项国内外 AI 关键进展（海外 46 · 国内 19 · 开源 26 · 一手官方 42）。自动聚合官方博客、Hugging Face、GitHub Releases 与 7×24 突发快讯，重大发布秒级入榜。",
+    "summary_en": "Tracking 73 AI milestones (46 global, 19 China, 26 open-source, 42 first-hand official) from lab blogs, Hugging Face, GitHub Releases & 7×24 live wires.",
     "highlights": [
+      {
+        "id": "ai_tool_tool_gh_morluto_rea",
+        "date": "2026-11-23T11:02:13+08:00",
+        "company_id": "indie_opensource",
+        "company_name": "独立实验室 & 开源黑马",
+        "region": "全球开源",
+        "category": "开源工具/仓库",
+        "category_en": "Open-Source Repo",
+        "title": "开源工具更新：rea Mainline GA",
+        "title_en": "Open-source release: rea Mainline GA",
+        "what_it_does": "这是一个由代理驱动的逆向工程工具，能够分析从应用行为到原生二进制文件的任何内容。",
+        "what_it_does_en": "这是一个由代理驱动的逆向工程工具，能够分析从应用行为到原生二进制文件的任何内容。",
+        "who_cares": "",
+        "limitations": "许可证：MIT",
+        "limitations_en": "License: MIT",
+        "source_id": "github-releases",
+        "source_name": "GitHub Stars Discovery",
+        "source_url": "https://github.com/morluto/rea",
+        "is_first_hand": true,
+        "source_tier": "first_party",
+        "is_open_source": true,
+        "milestone_dim": "open_source_eco",
+        "milestone_dim_label": "开源权重与生态",
+        "milestone_dim_label_en": "Open Source",
+        "is_recent_72h": true,
+        "related_sources": [
+          {
+            "source_name": "GitHub Stars Discovery",
+            "url": "https://github.com/morluto/rea",
+            "is_first_hand": true
+          },
+          {
+            "source_name": "GitHub Stars Discovery",
+            "url": "https://github.com/openclaw/openclaw",
+            "is_first_hand": true
+          },
+          {
+            "source_name": "GitHub Stars Discovery",
+            "url": "https://github.com/obra/superpowers",
+            "is_first_hand": true
+          },
+          {
+            "source_name": "GitHub Stars Discovery",
+            "url": "https://github.com/NousResearch/hermes-agent",
+            "is_first_hand": true
+          }
+        ]
+      },
+      {
+        "id": "ai_raw_github-releases_3b176b1d33cc",
+        "date": "2026-11-23T11:00:02+08:00",
+        "company_id": "indie_opensource",
+        "company_name": "独立实验室 & 开源黑马",
+        "region": "全球开源",
+        "category": "开源突破",
+        "category_en": "Open Source",
+        "title": "[GitHub Release] vLLM 发布 v0.34.0",
+        "title_en": "[GitHub Release] vLLM 发布 v0.34.0",
+        "what_it_does": "版本 b12631（预发布/RC | 许可证: MIT）。webgpu：更新GDN supports_op检查；macOS Apple Silicon (arm64)；macOS Apple Silicon (arm64, 启用Klei…",
+        "what_it_does_en": "版本 v0.34.0（正式版 | 许可: Apache-2.0）。10 new models (Mistral Large 4, MiniMax-M3.1-Flash, Nemotron-3.5-Transcribe, and more!)；Extensible KV cache is on by default: v",
+        "who_cares": "",
+        "limitations": "",
+        "limitations_en": "",
+        "source_id": "github-releases",
+        "source_name": "GitHub Releases 官方版本",
+        "source_url": "https://github.com/vllm-project/vllm/releases/tag/v0.34.0",
+        "is_first_hand": true,
+        "source_tier": "first_party",
+        "is_open_source": true,
+        "milestone_dim": "open_source_eco",
+        "milestone_dim_label": "开源权重与生态",
+        "milestone_dim_label_en": "Open Source",
+        "is_recent_72h": true,
+        "related_sources": [
+          {
+            "source_name": "GitHub Releases 官方版本",
+            "url": "https://github.com/vllm-project/vllm/releases/tag/v0.34.0",
+            "is_first_hand": true
+          },
+          {
+            "source_name": "GitHub Releases 官方版本",
+            "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12646",
+            "is_first_hand": true
+          },
+          {
+            "source_name": "GitHub Releases 官方版本",
+            "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12633",
+            "is_first_hand": true
+          },
+          {
+            "source_name": "GitHub Releases 官方版本",
+            "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12631",
+            "is_first_hand": true
+          }
+        ]
+      },
+      {
+        "id": "ai_tool_tool_gh_ggml-org_llama.cpp",
+        "date": "2026-11-23T11:00:02+08:00",
+        "company_id": "indie_opensource",
+        "company_name": "独立实验室 & 开源黑马",
+        "region": "全球开源",
+        "category": "开源工具/仓库",
+        "category_en": "Open-Source Repo",
+        "title": "开源工具更新：llama.cpp b12646",
+        "title_en": "Open-source release: llama.cpp b12646",
+        "what_it_does": "提供了macOS Apple Silicon (arm64) 和 Intel (x64) 版本支持；同时发布了iOS XCFramework，但Apple Silicon上的KleidiAI功能暂时禁用。",
+        "what_it_does_en": "提供了macOS Apple Silicon (arm64) 和 Intel (x64) 版本支持；同时发布了iOS XCFramework，但Apple Silicon上的KleidiAI功能暂时禁用。",
+        "who_cares": "",
+        "limitations": "许可证：MIT",
+        "limitations_en": "License: MIT",
+        "source_id": "github-releases",
+        "source_name": "GitHub Releases API",
+        "source_url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12646",
+        "is_first_hand": true,
+        "source_tier": "first_party",
+        "is_open_source": true,
+        "milestone_dim": "open_source_eco",
+        "milestone_dim_label": "开源权重与生态",
+        "milestone_dim_label_en": "Open Source",
+        "is_recent_72h": true,
+        "related_sources": [
+          {
+            "source_name": "GitHub Releases API",
+            "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12646",
+            "is_first_hand": true
+          },
+          {
+            "source_name": "GitHub Releases API",
+            "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12633",
+            "is_first_hand": true
+          },
+          {
+            "source_name": "GitHub Releases API",
+            "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12631",
+            "is_first_hand": true
+          }
+        ]
+      },
       {
         "id": "ai_ev_evt_72197cdf0869",
         "date": "2026-11-23T10:35:10+08:00",
@@ -51,6 +190,44 @@
         "is_recent_72h": true
       },
       {
+        "id": "ai_raw_rss-openai-news_ae5a95c57ad9",
+        "date": "2026-11-23T03:12:41+08:00",
+        "company_id": "perplexity",
+        "company_name": "Perplexity AI",
+        "region": "海外",
+        "category": "官方一手",
+        "category_en": "First-Hand Official",
+        "title": "困惑度与智能",
+        "title_en": "Perplexity and Intelligence",
+        "what_it_does": "困惑度如何衡量AI模型进展，以及它为何能帮助开发者建立共享方法来评估新兴能力。",
+        "what_it_does_en": "How perplexity measures progress in AI models, and why it could help developers establish a shared approach to evaluating emerging capabilities.",
+        "who_cares": "",
+        "limitations": "",
+        "limitations_en": "",
+        "source_id": "rss-openai-news",
+        "source_name": "OpenAI 官方动态",
+        "source_url": "https://openai.com/index/perplexity-and-intelligence",
+        "is_first_hand": true,
+        "source_tier": "first_party",
+        "is_open_source": false,
+        "milestone_dim": "flagship_release",
+        "milestone_dim_label": "旗舰模型发布",
+        "milestone_dim_label_en": "Flagship Model",
+        "is_recent_72h": true,
+        "related_sources": [
+          {
+            "source_name": "OpenAI 官方动态",
+            "url": "https://openai.com/index/perplexity-and-intelligence",
+            "is_first_hand": true
+          },
+          {
+            "source_name": "OpenAI",
+            "url": "https://news.google.com/rss/articles/CBMiY0FVX3lxTE96Sm1EaVlsMHctNGtBMDBYdVRreWpySVdVS1RhSVZCUzk3enZHQmlIS3lWY2Rmajh2Q3RNZWU2RDEwc3ZEX2tONEpsbEN6RXowZk1ySVdaWXVVR09jX21aelV6UQ?oc=5",
+            "is_first_hand": true
+          }
+        ]
+      },
+      {
         "id": "ai_ev_evt_d17a59daf8f9",
         "date": "2026-11-23T09:56:35+08:00",
         "company_id": "indie_opensource",
@@ -83,6 +260,39 @@
         "milestone_dim_label": "API 与 Agent 工程",
         "milestone_dim_label_en": "API & Agent Eng",
         "is_recent_72h": true
+      },
+      {
+        "id": "ai_raw_rss-gnews-ai-models-en_7760560af67c",
+        "date": "2026-11-23T08:38:00+08:00",
+        "company_id": "xai",
+        "company_name": "xAI / Grok",
+        "region": "海外",
+        "category": "最新动态",
+        "category_en": "Latest Release",
+        "title": "Grok Bot 是什么？1.0 版本价格、Mac 应用及安全性",
+        "title_en": "What Is Grok Bot? 1.0 Price, Mac App and Safety",
+        "what_it_does": "",
+        "what_it_does_en": "",
+        "who_cares": "",
+        "limitations": "",
+        "limitations_en": "",
+        "source_id": "rss-gnews-ai-models-en",
+        "source_name": "Fello AI",
+        "source_url": "https://news.google.com/rss/articles/CBMiQ0FVX3lxTFBZQnJBMjY3QzFLVE9maWVjaDB3SXNlSlFpQmIwdTJrMG9HemE4ZEdfcnhlbjhDb0syMmh2MkVLd2R0Z0k?oc=5",
+        "is_first_hand": false,
+        "source_tier": "wire_media",
+        "is_open_source": false,
+        "milestone_dim": "flagship_release",
+        "milestone_dim_label": "旗舰模型发布",
+        "milestone_dim_label_en": "Flagship Model",
+        "is_recent_72h": true,
+        "related_sources": [
+          {
+            "source_name": "Fello AI",
+            "url": "https://news.google.com/rss/articles/CBMiQ0FVX3lxTFBZQnJBMjY3QzFLVE9maWVjaDB3SXNlSlFpQmIwdTJrMG9HemE4ZEdfcnhlbjhDb0syMmh2MkVLd2R0Z0k?oc=5",
+            "is_first_hand": false
+          }
+        ]
       },
       {
         "id": "ai_ev_evt_3aad9a7d7f54",
@@ -147,224 +357,6 @@
         "milestone_dim_label": "旗舰模型发布",
         "milestone_dim_label_en": "Flagship Model",
         "is_recent_72h": true
-      },
-      {
-        "id": "ai_ev_evt_cea37e34a080",
-        "date": "2026-11-23T08:10:21+08:00",
-        "company_id": "anthropic",
-        "company_name": "Anthropic",
-        "region": "海外",
-        "category": "模型与产品",
-        "category_en": "Model & Product",
-        "title": "微软CEO纳德拉坦言Claude Code仅半年动摇VS Code地位",
-        "title_en": "微软CEO纳德拉坦言Claude Code仅半年动摇VS Code地位",
-        "what_it_does": "微软CEO萨提亚·纳德拉表示，Anthropic推出Claude Code后，开发者开始接受命令行形态，传统IDE（如VS Code）大约六个月就失去了存在感，微软并未立刻拿出应对方案。",
-        "what_it_does_en": "微软CEO萨提亚·纳德拉表示，Anthropic推出Claude Code后，开发者开始接受命令行形态，传统IDE（如VS Code）大约六个月就失去了存在感，微软并未立刻拿出应对方案。",
-        "who_cares": "",
-        "limitations": "",
-        "limitations_en": "",
-        "source_id": "aihot",
-        "source_name": "AIHOT 前沿",
-        "source_url": "https://aihot.news/items/rxwc1x34tzdkksi1jd57gsbfd",
-        "is_first_hand": false,
-        "source_tier": "wire_media",
-        "event_id": "evt_cea37e34a080",
-        "is_open_source": false,
-        "related_sources": [
-          {
-            "source_name": "AIHOT 前沿",
-            "url": "https://aihot.news/items/rxwc1x34tzdkksi1jd57gsbfd",
-            "is_first_hand": false
-          }
-        ],
-        "milestone_dim": "api_agent_eng",
-        "milestone_dim_label": "API 与 Agent 工程",
-        "milestone_dim_label_en": "API & Agent Eng",
-        "is_recent_72h": true
-      },
-      {
-        "id": "ai_ev_evt_bbe3f649fad8",
-        "date": "2026-11-23T07:09:00+08:00",
-        "company_id": "openai",
-        "company_name": "OpenAI",
-        "region": "海外",
-        "category": "模型与产品",
-        "category_en": "Model & Product",
-        "title": "OpenAI科学家提议将行业AI限制与模型智能指标挂钩",
-        "title_en": "OpenAI scientist proposes industry AI limits tied to model intelligence metric",
-        "what_it_does": "",
-        "what_it_does_en": "",
-        "who_cares": "",
-        "limitations": "",
-        "limitations_en": "",
-        "source_id": "rss-gnews-reuters-bloomberg",
-        "source_name": "路透/彭博突发全球雷达",
-        "source_url": "https://news.google.com/rss/articles/CBMivAFBVV95cUxPa0ZQb0xtalJ5djRmZmkwQnhmdDBlMEtncDUtUEJsUFBtWmptbkdVQ3c5QjY2TzhKN0NFT2ZzYnZmenQxY1lrUWFFYjJsdS1KazdRUkJINEJRemQ1alh6TGtnNW1nRE92bTF3RW9FMTIyODB3UmpBaW5oSzFDWDFVT3FXdjZDVzQ0TVNVd29nQzZvY3ByWVpBLUlhRVg0bFZiRHUxVjhqclptLUMycDJlYVBsQXQ4a28tRnFnbQ?oc=5",
-        "is_first_hand": false,
-        "source_tier": "wire_media",
-        "event_id": "evt_bbe3f649fad8",
-        "is_open_source": false,
-        "related_sources": [
-          {
-            "source_name": "路透/彭博突发全球雷达",
-            "url": "https://news.google.com/rss/articles/CBMivAFBVV95cUxPa0ZQb0xtalJ5djRmZmkwQnhmdDBlMEtncDUtUEJsUFBtWmptbkdVQ3c5QjY2TzhKN0NFT2ZzYnZmenQxY1lrUWFFYjJsdS1KazdRUkJINEJRemQ1alh6TGtnNW1nRE92bTF3RW9FMTIyODB3UmpBaW5oSzFDWDFVT3FXdjZDVzQ0TVNVd29nQzZvY3ByWVpBLUlhRVg0bFZiRHUxVjhqclptLUMycDJlYVBsQXQ4a28tRnFnbQ?oc=5",
-            "is_first_hand": false
-          },
-          {
-            "source_name": "路透/彭博突发全球雷达",
-            "url": "https://news.google.com/rss/articles/CBMiswFBVV95cUxQMjVTYVIwT3huVU8teHdXRHdnWGxOUTI5d1J6elZhWktVMVpSZDhhRmk5eV82c0JuRDBSUWNHdl84Z253WDJDbmd6SXhiNlFsdkxhM2gxWTVoTnY2ZkdrZ0dVam1OVXNSZWIwUnBQaTU4bEhJNTZValFSQ1Naam1xb1FkTklSZXI2Ums4d19sUjVheGtLNGhUWjFPcEVyd0ZIRmJlX0FqNXF5cHpCR2pjczF5WQ?oc=5",
-            "is_first_hand": false
-          }
-        ],
-        "milestone_dim": "flagship_release",
-        "milestone_dim_label": "旗舰模型发布",
-        "milestone_dim_label_en": "Flagship Model",
-        "is_recent_72h": true
-      },
-      {
-        "id": "ai_ev_evt_4bbe68f43dea",
-        "date": "2026-11-23T02:37:02+08:00",
-        "company_id": "anthropic",
-        "company_name": "Anthropic",
-        "region": "海外",
-        "category": "模型与产品",
-        "category_en": "Model & Product",
-        "title": "Claude辅助证明广义黎曼猜想获Lean官方与Mathlib社区认证",
-        "title_en": "Hours after Anthropic claims a Claude proof of the Riemann hypothesis, Stanford releases an all-human competing draft",
-        "what_it_does": "Lean官方和Mathlib连夜发布联合声明，确认由Claude辅助生成的1740万行黎曼猜想证明完全正确，多个不同语言的独立验证器均已跑通，排除了“AI钻漏洞作弊”的可能性。人类数学家Levent Alpöge匆忙发布了广义黎曼猜想的…",
-        "what_it_does_en": "",
-        "who_cares": "",
-        "limitations": "",
-        "limitations_en": "",
-        "source_id": "rss-gnews-ai-models-en",
-        "source_name": "国际媒体",
-        "source_url": "https://news.google.com/rss/articles/CBMi2AFBVV95cUxQUGJqSjZWaXNISk8tTE9CM0d4czdubmlPOW4zQjNBTG51X0drbzlBSGl2Mkx4NHdCS0RtWmhNSERHdm4yMkk1bGJZZnhlMzZRMVMzaGZMZTlMekJaVFNQdkpDUDMyUERoQWhhWW9QSVJIQk53eFVUa1EwdUpQUFZTSFVuemIwcWFmWlRyRl8xdm5KUDd6V2Qza3ZPM1IzbHVTRl91TFNDNDNxUnhzdXZXWk1teGcyN2RORU5xTTdHYzJZUkZLaE1ySEpraWljMFlJQV9ZR2JXcDU?oc=5",
-        "is_first_hand": false,
-        "source_tier": "wire_media",
-        "event_id": "evt_4bbe68f43dea",
-        "is_open_source": false,
-        "related_sources": [
-          {
-            "source_name": "国际媒体",
-            "url": "https://news.google.com/rss/articles/CBMi2AFBVV95cUxQUGJqSjZWaXNISk8tTE9CM0d4czdubmlPOW4zQjNBTG51X0drbzlBSGl2Mkx4NHdCS0RtWmhNSERHdm4yMkk1bGJZZnhlMzZRMVMzaGZMZTlMekJaVFNQdkpDUDMyUERoQWhhWW9QSVJIQk53eFVUa1EwdUpQUFZTSFVuemIwcWFmWlRyRl8xdm5KUDd6V2Qza3ZPM1IzbHVTRl91TFNDNDNxUnhzdXZXWk1teGcyN2RORU5xTTdHYzJZUkZLaE1ySEpraWljMFlJQV9ZR2JXcDU?oc=5",
-            "is_first_hand": false
-          },
-          {
-            "source_name": "The Decoder (AI前沿)",
-            "url": "https://the-decoder.com/lean-and-mathlib-community-officially-confirms-levent-alpoges-proof-of-the-riemann-hypothesis-is-correct",
-            "is_first_hand": false
-          },
-          {
-            "source_name": "新闻电讯",
-            "url": "https://news.google.com/rss/articles/CBMiQ0FVX3lxTE9fX1BYY2syMjRrMjFQSGlhcnd0Unk2VnIxWS1MZW1SVy1nMlRsWlRHYVdWSHVST0RZQzNiejJkZW9HSWM?oc=5",
-            "is_first_hand": false
-          },
-          {
-            "source_name": "新闻电讯",
-            "url": "https://news.google.com/rss/articles/CBMiTkFVX3lxTE9LalFndmNSYXIxVDBGTGVsRDdHZjVLemZMSE9RNnRiSjRGU19kTGFPVmIzWW83LXhVSGxJeU5hZnBZSGJKTWp2MkxUQmQ1dw?oc=5",
-            "is_first_hand": false
-          },
-          {
-            "source_name": "Simon Willison AI 追踪",
-            "url": "https://simonwillison.net/2026/Nov/20/levent-alpoge",
-            "is_first_hand": false
-          },
-          {
-            "source_name": "CASRAI",
-            "url": "https://news.google.com/rss/articles/CBMikwFBVV95cUxQSjloLVl0ZFM0UU9rUFB2aWdqMjZLM2ZONkg1Z0JWcDZCQkxDQjZDdy1SUGlsRmQ3NXZidHhkVUlzVlBFUUo0b2hObHBrbDh1ODdyT01COS1uU0ZiSnN2cmxZbFdUWXptSHgwd0w2SFlyT0lXV3hZM1VhN2VNUERzQ0NwT20xLVlxOVBzZmZySUlOamc?oc=5",
-            "is_first_hand": false
-          },
-          {
-            "source_name": "The Decoder (AI前沿)",
-            "url": "https://the-decoder.com/hours-after-anthropic-claims-a-claude-proof-of-the-riemann-hypothesis-stanford-releases-an-all-human-competing-draft",
-            "is_first_hand": false
-          },
-          {
-            "source_name": "华尔街见闻 美股快讯",
-            "url": "https://wallstreetcn.com/livenews/3203699",
-            "is_first_hand": false
-          }
-        ],
-        "milestone_dim": "research_breakthrough",
-        "milestone_dim_label": "算法与科研突破",
-        "milestone_dim_label_en": "Research & Math",
-        "is_recent_72h": true
-      },
-      {
-        "id": "ai_raw_sina-7x24_4e58326f03f9",
-        "date": "2026-11-23T01:16:17+08:00",
-        "company_id": "openai",
-        "company_name": "OpenAI",
-        "region": "海外",
-        "category": "最新动态",
-        "category_en": "Latest Release",
-        "title": "OpenAI：预计2027年前AI预训练领域将迎来大量技术突破。",
-        "title_en": "OpenAI：预计2027年前AI预训练领域将迎来大量技术突破。",
-        "what_it_does": "",
-        "what_it_does_en": "",
-        "who_cares": "",
-        "limitations": "",
-        "limitations_en": "",
-        "source_id": "",
-        "source_name": "新浪财经 7×24 电",
-        "source_url": "https://finance.sina.cn/7x24/2026-11-23/detail-inizrxsq5717059.d.html",
-        "is_first_hand": false,
-        "source_tier": "wire_media",
-        "is_open_source": false,
-        "milestone_dim": "flagship_release",
-        "milestone_dim_label": "旗舰模型发布",
-        "milestone_dim_label_en": "Flagship Model",
-        "is_recent_72h": true,
-        "related_sources": [
-          {
-            "source_name": "新浪财经 7×24 电",
-            "url": "https://finance.sina.cn/7x24/2026-11-23/detail-inizrxsq5717059.d.html",
-            "is_first_hand": false
-          }
-        ]
-      },
-      {
-        "id": "ai_raw_github-releases_3b176b1d33cc",
-        "date": "2026-11-22T22:53:42+08:00",
-        "company_id": "indie_opensource",
-        "company_name": "独立实验室 & 开源黑马",
-        "region": "全球开源",
-        "category": "开源突破",
-        "category_en": "Open Source",
-        "title": "[GitHub Release] vLLM 发布 v0.34.0",
-        "title_en": "[GitHub Release] vLLM 发布 v0.34.0",
-        "what_it_does": "版本 b12631（预发布/RC | 许可证: MIT）。webgpu：更新GDN supports_op检查；macOS Apple Silicon (arm64)；macOS Apple Silicon (arm64, 启用Klei…",
-        "what_it_does_en": "版本 v0.34.0（正式版 | 许可: Apache-2.0）。10 new models (Mistral Large 4, MiniMax-M3.1-Flash, Nemotron-3.5-Transcribe, and more!)；Extensible KV cache is on by default: v",
-        "who_cares": "",
-        "limitations": "",
-        "limitations_en": "",
-        "source_id": "github-releases",
-        "source_name": "GitHub Releases 官方版本",
-        "source_url": "https://github.com/vllm-project/vllm/releases/tag/v0.34.0",
-        "is_first_hand": true,
-        "source_tier": "first_party",
-        "is_open_source": true,
-        "milestone_dim": "open_source_eco",
-        "milestone_dim_label": "开源权重与生态",
-        "milestone_dim_label_en": "Open Source",
-        "is_recent_72h": true,
-        "related_sources": [
-          {
-            "source_name": "GitHub Releases 官方版本",
-            "url": "https://github.com/vllm-project/vllm/releases/tag/v0.34.0",
-            "is_first_hand": true
-          },
-          {
-            "source_name": "GitHub Releases 官方版本",
-            "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12633",
-            "is_first_hand": true
-          },
-          {
-            "source_name": "GitHub Releases 官方版本",
-            "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12631",
-            "is_first_hand": true
-          }
-        ]
       }
     ]
   },
@@ -463,8 +455,7 @@
               "url": "https://news.google.com/rss/articles/CBMiiAFBVV95cUxPeWp2QVJNRlI0N0gycVJ4OU0wX3Z1ZFZ6RV9DYmF1UkIzeGdlOUR4ZnB4b2M1UnEwMHBnM0VUeWhsZVRwYzY4NGhMUncxRmpOVTYxckY0UjROVWJzQ1NvOGw3S0ZrcnFqV203Sm5DN0xoQk8yM1ZCdGE4NTQwUHh0dzdGVjBRYXJ6?oc=5",
               "is_first_hand": false
             }
-          ],
-          "event_id": "evt_450719579a78"
+          ]
         },
         {
           "id": "ai_raw_rss-marktechpost_e5e0aaf156ac",
@@ -2071,8 +2062,8 @@
           "highlight": "强化 Meta AI 跨平台个人助手与开放科研生态"
         }
       ],
-      "recent_count": 2,
-      "archive_count": 2,
+      "recent_count": 3,
+      "archive_count": 3,
       "latest_date": "2026-11-21T14:08:40+08:00",
       "latest_headline": "【外媒快讯】Llama 5: Is There Even a Llama 5? Release Date Rumors, Checked",
       "items": [
@@ -2106,6 +2097,39 @@
               "source_name": "Fello AI",
               "url": "https://news.google.com/rss/articles/CBMiQkFVX3lxTE1JUG1QdFBETkhsVFpTZTdJUE9aQ3p5cjhRLUlGa0J6RW1pelBEa0ZxV2x3VnBhd1JEbGlabDFLeENsQQ?oc=5",
               "is_first_hand": false
+            }
+          ]
+        },
+        {
+          "id": "ai_tool_tool_gh_run-llama_llama_index",
+          "date": "2026-11-14T06:38:15+08:00",
+          "company_id": "meta",
+          "company_name": "Meta AI",
+          "region": "海外",
+          "category": "开源工具/仓库",
+          "category_en": "Open-Source Repo",
+          "title": "开源工具更新：LlamaIndex v0.14.26",
+          "title_en": "Open-source release: LlamaIndex v0.14.26",
+          "what_it_does": "为解决安全漏洞，提升了Python的最低版本要求；更新了llama-index-agent-agentmesh至0.3.0版本，并对所有集成uv.lock文件进行了安全重锁定。",
+          "what_it_does_en": "为解决安全漏洞，提升了Python的最低版本要求；更新了llama-index-agent-agentmesh至0.3.0版本，并对所有集成uv.lock文件进行了安全重锁定。",
+          "who_cares": "",
+          "limitations": "许可证：MIT",
+          "limitations_en": "License: MIT",
+          "source_id": "github-releases",
+          "source_name": "GitHub Releases API",
+          "source_url": "https://github.com/run-llama/llama_index/releases/tag/v0.14.26",
+          "is_first_hand": true,
+          "source_tier": "first_party",
+          "is_open_source": true,
+          "milestone_dim": "api_agent_eng",
+          "milestone_dim_label": "API 与 Agent 工程",
+          "milestone_dim_label_en": "API & Agent Eng",
+          "is_recent_72h": false,
+          "related_sources": [
+            {
+              "source_name": "GitHub Releases API",
+              "url": "https://github.com/run-llama/llama_index/releases/tag/v0.14.26",
+              "is_first_hand": true
             }
           ]
         },
@@ -2379,12 +2403,12 @@
       ],
       "recent_count": 3,
       "archive_count": 3,
-      "latest_date": "2026-11-22T23:02:47+08:00",
+      "latest_date": "2026-11-23T08:38:00+08:00",
       "latest_headline": "【外媒快讯】What Is Grok Bot? 1.0 Price, Mac App and Safety",
       "items": [
         {
           "id": "ai_raw_rss-gnews-ai-models-en_7760560af67c",
-          "date": "2026-11-22T23:02:47+08:00",
+          "date": "2026-11-23T08:38:00+08:00",
           "company_id": "xai",
           "company_name": "xAI / Grok",
           "region": "海外",
@@ -3298,12 +3322,12 @@
       ],
       "recent_count": 3,
       "archive_count": 3,
-      "latest_date": "2026-11-22T08:00:00+08:00",
+      "latest_date": "2026-11-23T03:12:41+08:00",
       "latest_headline": "【国际外交动态】Perplexity and Intelligence",
       "items": [
         {
           "id": "ai_raw_rss-openai-news_ae5a95c57ad9",
-          "date": "2026-11-22T08:00:00+08:00",
+          "date": "2026-11-23T03:12:41+08:00",
           "company_id": "perplexity",
           "company_name": "Perplexity AI",
           "region": "海外",
@@ -3330,6 +3354,11 @@
             {
               "source_name": "OpenAI 官方动态",
               "url": "https://openai.com/index/perplexity-and-intelligence",
+              "is_first_hand": true
+            },
+            {
+              "source_name": "OpenAI",
+              "url": "https://news.google.com/rss/articles/CBMiY0FVX3lxTE96Sm1EaVlsMHctNGtBMDBYdVRreWpySVdVS1RhSVZCUzk3enZHQmlIS3lWY2Rmajh2Q3RNZWU2RDEwc3ZEX2tONEpsbEN6RXowZk1ySVdaWXVVR09jX21aelV6UQ?oc=5",
               "is_first_hand": true
             }
           ]
@@ -3606,10 +3635,149 @@
         }
       ],
       "recent_count": 8,
-      "archive_count": 22,
-      "latest_date": "2026-11-23T09:56:35+08:00",
-      "latest_headline": "中国四部门鼓励发展养老场景人工智能体和智能设备",
+      "archive_count": 32,
+      "latest_date": "2026-11-23T11:02:13+08:00",
+      "latest_headline": "开源工具更新：rea Mainline GA",
       "items": [
+        {
+          "id": "ai_tool_tool_gh_morluto_rea",
+          "date": "2026-11-23T11:02:13+08:00",
+          "company_id": "indie_opensource",
+          "company_name": "独立实验室 & 开源黑马",
+          "region": "全球开源",
+          "category": "开源工具/仓库",
+          "category_en": "Open-Source Repo",
+          "title": "开源工具更新：rea Mainline GA",
+          "title_en": "Open-source release: rea Mainline GA",
+          "what_it_does": "这是一个由代理驱动的逆向工程工具，能够分析从应用行为到原生二进制文件的任何内容。",
+          "what_it_does_en": "这是一个由代理驱动的逆向工程工具，能够分析从应用行为到原生二进制文件的任何内容。",
+          "who_cares": "",
+          "limitations": "许可证：MIT",
+          "limitations_en": "License: MIT",
+          "source_id": "github-releases",
+          "source_name": "GitHub Stars Discovery",
+          "source_url": "https://github.com/morluto/rea",
+          "is_first_hand": true,
+          "source_tier": "first_party",
+          "is_open_source": true,
+          "milestone_dim": "open_source_eco",
+          "milestone_dim_label": "开源权重与生态",
+          "milestone_dim_label_en": "Open Source",
+          "is_recent_72h": true,
+          "related_sources": [
+            {
+              "source_name": "GitHub Stars Discovery",
+              "url": "https://github.com/morluto/rea",
+              "is_first_hand": true
+            },
+            {
+              "source_name": "GitHub Stars Discovery",
+              "url": "https://github.com/openclaw/openclaw",
+              "is_first_hand": true
+            },
+            {
+              "source_name": "GitHub Stars Discovery",
+              "url": "https://github.com/obra/superpowers",
+              "is_first_hand": true
+            },
+            {
+              "source_name": "GitHub Stars Discovery",
+              "url": "https://github.com/NousResearch/hermes-agent",
+              "is_first_hand": true
+            }
+          ]
+        },
+        {
+          "id": "ai_raw_github-releases_3b176b1d33cc",
+          "date": "2026-11-23T11:00:02+08:00",
+          "company_id": "indie_opensource",
+          "company_name": "独立实验室 & 开源黑马",
+          "region": "全球开源",
+          "category": "开源突破",
+          "category_en": "Open Source",
+          "title": "[GitHub Release] vLLM 发布 v0.34.0",
+          "title_en": "[GitHub Release] vLLM 发布 v0.34.0",
+          "what_it_does": "版本 b12631（预发布/RC | 许可证: MIT）。webgpu：更新GDN supports_op检查；macOS Apple Silicon (arm64)；macOS Apple Silicon (arm64, 启用Klei…",
+          "what_it_does_en": "版本 v0.34.0（正式版 | 许可: Apache-2.0）。10 new models (Mistral Large 4, MiniMax-M3.1-Flash, Nemotron-3.5-Transcribe, and more!)；Extensible KV cache is on by default: v",
+          "who_cares": "",
+          "limitations": "",
+          "limitations_en": "",
+          "source_id": "github-releases",
+          "source_name": "GitHub Releases 官方版本",
+          "source_url": "https://github.com/vllm-project/vllm/releases/tag/v0.34.0",
+          "is_first_hand": true,
+          "source_tier": "first_party",
+          "is_open_source": true,
+          "milestone_dim": "open_source_eco",
+          "milestone_dim_label": "开源权重与生态",
+          "milestone_dim_label_en": "Open Source",
+          "is_recent_72h": true,
+          "related_sources": [
+            {
+              "source_name": "GitHub Releases 官方版本",
+              "url": "https://github.com/vllm-project/vllm/releases/tag/v0.34.0",
+              "is_first_hand": true
+            },
+            {
+              "source_name": "GitHub Releases 官方版本",
+              "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12646",
+              "is_first_hand": true
+            },
+            {
+              "source_name": "GitHub Releases 官方版本",
+              "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12633",
+              "is_first_hand": true
+            },
+            {
+              "source_name": "GitHub Releases 官方版本",
+              "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12631",
+              "is_first_hand": true
+            }
+          ]
+        },
+        {
+          "id": "ai_tool_tool_gh_ggml-org_llama.cpp",
+          "date": "2026-11-23T11:00:02+08:00",
+          "company_id": "indie_opensource",
+          "company_name": "独立实验室 & 开源黑马",
+          "region": "全球开源",
+          "category": "开源工具/仓库",
+          "category_en": "Open-Source Repo",
+          "title": "开源工具更新：llama.cpp b12646",
+          "title_en": "Open-source release: llama.cpp b12646",
+          "what_it_does": "提供了macOS Apple Silicon (arm64) 和 Intel (x64) 版本支持；同时发布了iOS XCFramework，但Apple Silicon上的KleidiAI功能暂时禁用。",
+          "what_it_does_en": "提供了macOS Apple Silicon (arm64) 和 Intel (x64) 版本支持；同时发布了iOS XCFramework，但Apple Silicon上的KleidiAI功能暂时禁用。",
+          "who_cares": "",
+          "limitations": "许可证：MIT",
+          "limitations_en": "License: MIT",
+          "source_id": "github-releases",
+          "source_name": "GitHub Releases API",
+          "source_url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12646",
+          "is_first_hand": true,
+          "source_tier": "first_party",
+          "is_open_source": true,
+          "milestone_dim": "open_source_eco",
+          "milestone_dim_label": "开源权重与生态",
+          "milestone_dim_label_en": "Open Source",
+          "is_recent_72h": true,
+          "related_sources": [
+            {
+              "source_name": "GitHub Releases API",
+              "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12646",
+              "is_first_hand": true
+            },
+            {
+              "source_name": "GitHub Releases API",
+              "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12633",
+              "is_first_hand": true
+            },
+            {
+              "source_name": "GitHub Releases API",
+              "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12631",
+              "is_first_hand": true
+            }
+          ]
+        },
         {
           "id": "ai_ev_evt_d17a59daf8f9",
           "date": "2026-11-23T09:56:35+08:00",
@@ -3682,87 +3850,6 @@
           "milestone_dim_label": "API 与 Agent 工程",
           "milestone_dim_label_en": "API & Agent Eng",
           "is_recent_72h": true
-        },
-        {
-          "id": "ai_raw_github-releases_3b176b1d33cc",
-          "date": "2026-11-22T22:53:42+08:00",
-          "company_id": "indie_opensource",
-          "company_name": "独立实验室 & 开源黑马",
-          "region": "全球开源",
-          "category": "开源突破",
-          "category_en": "Open Source",
-          "title": "[GitHub Release] vLLM 发布 v0.34.0",
-          "title_en": "[GitHub Release] vLLM 发布 v0.34.0",
-          "what_it_does": "版本 b12631（预发布/RC | 许可证: MIT）。webgpu：更新GDN supports_op检查；macOS Apple Silicon (arm64)；macOS Apple Silicon (arm64, 启用Klei…",
-          "what_it_does_en": "版本 v0.34.0（正式版 | 许可: Apache-2.0）。10 new models (Mistral Large 4, MiniMax-M3.1-Flash, Nemotron-3.5-Transcribe, and more!)；Extensible KV cache is on by default: v",
-          "who_cares": "",
-          "limitations": "",
-          "limitations_en": "",
-          "source_id": "github-releases",
-          "source_name": "GitHub Releases 官方版本",
-          "source_url": "https://github.com/vllm-project/vllm/releases/tag/v0.34.0",
-          "is_first_hand": true,
-          "source_tier": "first_party",
-          "is_open_source": true,
-          "milestone_dim": "open_source_eco",
-          "milestone_dim_label": "开源权重与生态",
-          "milestone_dim_label_en": "Open Source",
-          "is_recent_72h": true,
-          "related_sources": [
-            {
-              "source_name": "GitHub Releases 官方版本",
-              "url": "https://github.com/vllm-project/vllm/releases/tag/v0.34.0",
-              "is_first_hand": true
-            },
-            {
-              "source_name": "GitHub Releases 官方版本",
-              "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12633",
-              "is_first_hand": true
-            },
-            {
-              "source_name": "GitHub Releases 官方版本",
-              "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12631",
-              "is_first_hand": true
-            }
-          ]
-        },
-        {
-          "id": "ai_tool_tool_gh_ggml-org_llama.cpp",
-          "date": "2026-11-22T22:53:42+08:00",
-          "company_id": "indie_opensource",
-          "company_name": "独立实验室 & 开源黑马",
-          "region": "全球开源",
-          "category": "开源工具/仓库",
-          "category_en": "Open-Source Repo",
-          "title": "开源工具更新：llama.cpp b12633",
-          "title_en": "Open-source release: llama.cpp b12633",
-          "what_it_does": "主要更新了对macOS Apple Silicon (arm64) 和 Intel (x64) 架构的支持；同时提供了 iOS XCFramework，但禁用了 KleidiAI 的 Apple Silicon 支持。",
-          "what_it_does_en": "主要更新了对macOS Apple Silicon (arm64) 和 Intel (x64) 架构的支持；同时提供了 iOS XCFramework，但禁用了 KleidiAI 的 Apple Silicon 支持。",
-          "who_cares": "",
-          "limitations": "许可证：MIT",
-          "limitations_en": "License: MIT",
-          "source_id": "github-releases",
-          "source_name": "GitHub Releases API",
-          "source_url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12633",
-          "is_first_hand": true,
-          "source_tier": "first_party",
-          "is_open_source": true,
-          "milestone_dim": "open_source_eco",
-          "milestone_dim_label": "开源权重与生态",
-          "milestone_dim_label_en": "Open Source",
-          "is_recent_72h": true,
-          "related_sources": [
-            {
-              "source_name": "GitHub Releases API",
-              "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12633",
-              "is_first_hand": true
-            },
-            {
-              "source_name": "GitHub Releases API",
-              "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12631",
-              "is_first_hand": true
-            }
-          ]
         },
         {
           "id": "ai_ev_evt_22c1fc575032",
@@ -3863,44 +3950,150 @@
               "is_first_hand": false
             }
           ]
-        },
-        {
-          "id": "ai_raw_rss-gnews-ai-models-en_4eaa1d2bd839",
-          "date": "2026-11-22T15:59:24+08:00",
-          "company_id": "indie_opensource",
-          "company_name": "独立实验室 & 开源黑马",
-          "region": "全球开源",
-          "category": "开源突破",
-          "category_en": "Open Source",
-          "title": "开放权重AI对比开源AI：4款模型，4种许可协议",
-          "title_en": "Open Weight vs Open Source AI: 4 Models, 4 Licenses",
-          "what_it_does": "",
-          "what_it_does_en": "",
-          "who_cares": "",
-          "limitations": "",
-          "limitations_en": "",
-          "source_id": "rss-gnews-ai-models-en",
-          "source_name": "shattered.io",
-          "source_url": "https://news.google.com/rss/articles/CBMipgFBVV95cUxQOFpEbl9nS2VrdFRVYmxrTXlpelFIY2RTcGpiSDB0OWxLSkJNaFBfWHhieFR5M21oaUhJcERENWN0ZTN3Ni00ME1HZEwzUE81MFozQTVrRDY4NU9nbE5rSExiSTh4a2ozcUNsVzZnMmtNdTlTTlhWa2RmcHFXLWVNQm9FWXJtemR0RVQ2RzlkQ3JKTHY1cFZjNVpwWHVnTEhJbF8ydm1B?oc=5",
-          "is_first_hand": false,
-          "source_tier": "wire_media",
-          "is_open_source": true,
-          "milestone_dim": "open_source_eco",
-          "milestone_dim_label": "开源权重与生态",
-          "milestone_dim_label_en": "Open Source",
-          "is_recent_72h": true,
-          "related_sources": [
-            {
-              "source_name": "shattered.io",
-              "url": "https://news.google.com/rss/articles/CBMipgFBVV95cUxQOFpEbl9nS2VrdFRVYmxrTXlpelFIY2RTcGpiSDB0OWxLSkJNaFBfWHhieFR5M21oaUhJcERENWN0ZTN3Ni00ME1HZEwzUE81MFozQTVrRDY4NU9nbE5rSExiSTh4a2ozcUNsVzZnMmtNdTlTTlhWa2RmcHFXLWVNQm9FWXJtemR0RVQ2RzlkQ3JKTHY1cFZjNVpwWHVnTEhJbF8ydm1B?oc=5",
-              "is_first_hand": false
-            }
-          ]
         }
       ]
     }
   ],
   "timeline": [
+    {
+      "id": "ai_tool_tool_gh_morluto_rea",
+      "date": "2026-11-23T11:02:13+08:00",
+      "company_id": "indie_opensource",
+      "company_name": "独立实验室 & 开源黑马",
+      "region": "全球开源",
+      "category": "开源工具/仓库",
+      "category_en": "Open-Source Repo",
+      "title": "开源工具更新：rea Mainline GA",
+      "title_en": "Open-source release: rea Mainline GA",
+      "what_it_does": "这是一个由代理驱动的逆向工程工具，能够分析从应用行为到原生二进制文件的任何内容。",
+      "what_it_does_en": "这是一个由代理驱动的逆向工程工具，能够分析从应用行为到原生二进制文件的任何内容。",
+      "who_cares": "",
+      "limitations": "许可证：MIT",
+      "limitations_en": "License: MIT",
+      "source_id": "github-releases",
+      "source_name": "GitHub Stars Discovery",
+      "source_url": "https://github.com/morluto/rea",
+      "is_first_hand": true,
+      "source_tier": "first_party",
+      "is_open_source": true,
+      "milestone_dim": "open_source_eco",
+      "milestone_dim_label": "开源权重与生态",
+      "milestone_dim_label_en": "Open Source",
+      "is_recent_72h": true,
+      "related_sources": [
+        {
+          "source_name": "GitHub Stars Discovery",
+          "url": "https://github.com/morluto/rea",
+          "is_first_hand": true
+        },
+        {
+          "source_name": "GitHub Stars Discovery",
+          "url": "https://github.com/openclaw/openclaw",
+          "is_first_hand": true
+        },
+        {
+          "source_name": "GitHub Stars Discovery",
+          "url": "https://github.com/obra/superpowers",
+          "is_first_hand": true
+        },
+        {
+          "source_name": "GitHub Stars Discovery",
+          "url": "https://github.com/NousResearch/hermes-agent",
+          "is_first_hand": true
+        }
+      ]
+    },
+    {
+      "id": "ai_raw_github-releases_3b176b1d33cc",
+      "date": "2026-11-23T11:00:02+08:00",
+      "company_id": "indie_opensource",
+      "company_name": "独立实验室 & 开源黑马",
+      "region": "全球开源",
+      "category": "开源突破",
+      "category_en": "Open Source",
+      "title": "[GitHub Release] vLLM 发布 v0.34.0",
+      "title_en": "[GitHub Release] vLLM 发布 v0.34.0",
+      "what_it_does": "版本 b12631（预发布/RC | 许可证: MIT）。webgpu：更新GDN supports_op检查；macOS Apple Silicon (arm64)；macOS Apple Silicon (arm64, 启用Klei…",
+      "what_it_does_en": "版本 v0.34.0（正式版 | 许可: Apache-2.0）。10 new models (Mistral Large 4, MiniMax-M3.1-Flash, Nemotron-3.5-Transcribe, and more!)；Extensible KV cache is on by default: v",
+      "who_cares": "",
+      "limitations": "",
+      "limitations_en": "",
+      "source_id": "github-releases",
+      "source_name": "GitHub Releases 官方版本",
+      "source_url": "https://github.com/vllm-project/vllm/releases/tag/v0.34.0",
+      "is_first_hand": true,
+      "source_tier": "first_party",
+      "is_open_source": true,
+      "milestone_dim": "open_source_eco",
+      "milestone_dim_label": "开源权重与生态",
+      "milestone_dim_label_en": "Open Source",
+      "is_recent_72h": true,
+      "related_sources": [
+        {
+          "source_name": "GitHub Releases 官方版本",
+          "url": "https://github.com/vllm-project/vllm/releases/tag/v0.34.0",
+          "is_first_hand": true
+        },
+        {
+          "source_name": "GitHub Releases 官方版本",
+          "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12646",
+          "is_first_hand": true
+        },
+        {
+          "source_name": "GitHub Releases 官方版本",
+          "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12633",
+          "is_first_hand": true
+        },
+        {
+          "source_name": "GitHub Releases 官方版本",
+          "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12631",
+          "is_first_hand": true
+        }
+      ]
+    },
+    {
+      "id": "ai_tool_tool_gh_ggml-org_llama.cpp",
+      "date": "2026-11-23T11:00:02+08:00",
+      "company_id": "indie_opensource",
+      "company_name": "独立实验室 & 开源黑马",
+      "region": "全球开源",
+      "category": "开源工具/仓库",
+      "category_en": "Open-Source Repo",
+      "title": "开源工具更新：llama.cpp b12646",
+      "title_en": "Open-source release: llama.cpp b12646",
+      "what_it_does": "提供了macOS Apple Silicon (arm64) 和 Intel (x64) 版本支持；同时发布了iOS XCFramework，但Apple Silicon上的KleidiAI功能暂时禁用。",
+      "what_it_does_en": "提供了macOS Apple Silicon (arm64) 和 Intel (x64) 版本支持；同时发布了iOS XCFramework，但Apple Silicon上的KleidiAI功能暂时禁用。",
+      "who_cares": "",
+      "limitations": "许可证：MIT",
+      "limitations_en": "License: MIT",
+      "source_id": "github-releases",
+      "source_name": "GitHub Releases API",
+      "source_url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12646",
+      "is_first_hand": true,
+      "source_tier": "first_party",
+      "is_open_source": true,
+      "milestone_dim": "open_source_eco",
+      "milestone_dim_label": "开源权重与生态",
+      "milestone_dim_label_en": "Open Source",
+      "is_recent_72h": true,
+      "related_sources": [
+        {
+          "source_name": "GitHub Releases API",
+          "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12646",
+          "is_first_hand": true
+        },
+        {
+          "source_name": "GitHub Releases API",
+          "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12633",
+          "is_first_hand": true
+        },
+        {
+          "source_name": "GitHub Releases API",
+          "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12631",
+          "is_first_hand": true
+        }
+      ]
+    },
     {
       "id": "ai_ev_evt_72197cdf0869",
       "date": "2026-11-23T10:35:10+08:00",
@@ -3973,6 +4166,39 @@
       "milestone_dim_label": "API 与 Agent 工程",
       "milestone_dim_label_en": "API & Agent Eng",
       "is_recent_72h": true
+    },
+    {
+      "id": "ai_raw_rss-gnews-ai-models-en_7760560af67c",
+      "date": "2026-11-23T08:38:00+08:00",
+      "company_id": "xai",
+      "company_name": "xAI / Grok",
+      "region": "海外",
+      "category": "最新动态",
+      "category_en": "Latest Release",
+      "title": "Grok Bot 是什么？1.0 版本价格、Mac 应用及安全性",
+      "title_en": "What Is Grok Bot? 1.0 Price, Mac App and Safety",
+      "what_it_does": "",
+      "what_it_does_en": "",
+      "who_cares": "",
+      "limitations": "",
+      "limitations_en": "",
+      "source_id": "rss-gnews-ai-models-en",
+      "source_name": "Fello AI",
+      "source_url": "https://news.google.com/rss/articles/CBMiQ0FVX3lxTFBZQnJBMjY3QzFLVE9maWVjaDB3SXNlSlFpQmIwdTJrMG9HemE4ZEdfcnhlbjhDb0syMmh2MkVLd2R0Z0k?oc=5",
+      "is_first_hand": false,
+      "source_tier": "wire_media",
+      "is_open_source": false,
+      "milestone_dim": "flagship_release",
+      "milestone_dim_label": "旗舰模型发布",
+      "milestone_dim_label_en": "Flagship Model",
+      "is_recent_72h": true,
+      "related_sources": [
+        {
+          "source_name": "Fello AI",
+          "url": "https://news.google.com/rss/articles/CBMiQ0FVX3lxTFBZQnJBMjY3QzFLVE9maWVjaDB3SXNlSlFpQmIwdTJrMG9HemE4ZEdfcnhlbjhDb0syMmh2MkVLd2R0Z0k?oc=5",
+          "is_first_hand": false
+        }
+      ]
     },
     {
       "id": "ai_ev_evt_3aad9a7d7f54",
@@ -4110,6 +4336,44 @@
       "milestone_dim_label": "旗舰模型发布",
       "milestone_dim_label_en": "Flagship Model",
       "is_recent_72h": true
+    },
+    {
+      "id": "ai_raw_rss-openai-news_ae5a95c57ad9",
+      "date": "2026-11-23T03:12:41+08:00",
+      "company_id": "perplexity",
+      "company_name": "Perplexity AI",
+      "region": "海外",
+      "category": "官方一手",
+      "category_en": "First-Hand Official",
+      "title": "困惑度与智能",
+      "title_en": "Perplexity and Intelligence",
+      "what_it_does": "困惑度如何衡量AI模型进展，以及它为何能帮助开发者建立共享方法来评估新兴能力。",
+      "what_it_does_en": "How perplexity measures progress in AI models, and why it could help developers establish a shared approach to evaluating emerging capabilities.",
+      "who_cares": "",
+      "limitations": "",
+      "limitations_en": "",
+      "source_id": "rss-openai-news",
+      "source_name": "OpenAI 官方动态",
+      "source_url": "https://openai.com/index/perplexity-and-intelligence",
+      "is_first_hand": true,
+      "source_tier": "first_party",
+      "is_open_source": false,
+      "milestone_dim": "flagship_release",
+      "milestone_dim_label": "旗舰模型发布",
+      "milestone_dim_label_en": "Flagship Model",
+      "is_recent_72h": true,
+      "related_sources": [
+        {
+          "source_name": "OpenAI 官方动态",
+          "url": "https://openai.com/index/perplexity-and-intelligence",
+          "is_first_hand": true
+        },
+        {
+          "source_name": "OpenAI",
+          "url": "https://news.google.com/rss/articles/CBMiY0FVX3lxTE96Sm1EaVlsMHctNGtBMDBYdVRreWpySVdVS1RhSVZCUzk3enZHQmlIS3lWY2Rmajh2Q3RNZWU2RDEwc3ZEX2tONEpsbEN6RXowZk1ySVdaWXVVR09jX21aelV6UQ?oc=5",
+          "is_first_hand": true
+        }
+      ]
     },
     {
       "id": "ai_ev_evt_4bbe68f43dea",
@@ -4292,120 +4556,6 @@
       "is_recent_72h": true
     },
     {
-      "id": "ai_raw_rss-gnews-ai-models-en_7760560af67c",
-      "date": "2026-11-22T23:02:47+08:00",
-      "company_id": "xai",
-      "company_name": "xAI / Grok",
-      "region": "海外",
-      "category": "最新动态",
-      "category_en": "Latest Release",
-      "title": "Grok Bot 是什么？1.0 版本价格、Mac 应用及安全性",
-      "title_en": "What Is Grok Bot? 1.0 Price, Mac App and Safety",
-      "what_it_does": "",
-      "what_it_does_en": "",
-      "who_cares": "",
-      "limitations": "",
-      "limitations_en": "",
-      "source_id": "rss-gnews-ai-models-en",
-      "source_name": "Fello AI",
-      "source_url": "https://news.google.com/rss/articles/CBMiQ0FVX3lxTFBZQnJBMjY3QzFLVE9maWVjaDB3SXNlSlFpQmIwdTJrMG9HemE4ZEdfcnhlbjhDb0syMmh2MkVLd2R0Z0k?oc=5",
-      "is_first_hand": false,
-      "source_tier": "wire_media",
-      "is_open_source": false,
-      "milestone_dim": "flagship_release",
-      "milestone_dim_label": "旗舰模型发布",
-      "milestone_dim_label_en": "Flagship Model",
-      "is_recent_72h": true,
-      "related_sources": [
-        {
-          "source_name": "Fello AI",
-          "url": "https://news.google.com/rss/articles/CBMiQ0FVX3lxTFBZQnJBMjY3QzFLVE9maWVjaDB3SXNlSlFpQmIwdTJrMG9HemE4ZEdfcnhlbjhDb0syMmh2MkVLd2R0Z0k?oc=5",
-          "is_first_hand": false
-        }
-      ]
-    },
-    {
-      "id": "ai_raw_github-releases_3b176b1d33cc",
-      "date": "2026-11-22T22:53:42+08:00",
-      "company_id": "indie_opensource",
-      "company_name": "独立实验室 & 开源黑马",
-      "region": "全球开源",
-      "category": "开源突破",
-      "category_en": "Open Source",
-      "title": "[GitHub Release] vLLM 发布 v0.34.0",
-      "title_en": "[GitHub Release] vLLM 发布 v0.34.0",
-      "what_it_does": "版本 b12631（预发布/RC | 许可证: MIT）。webgpu：更新GDN supports_op检查；macOS Apple Silicon (arm64)；macOS Apple Silicon (arm64, 启用Klei…",
-      "what_it_does_en": "版本 v0.34.0（正式版 | 许可: Apache-2.0）。10 new models (Mistral Large 4, MiniMax-M3.1-Flash, Nemotron-3.5-Transcribe, and more!)；Extensible KV cache is on by default: v",
-      "who_cares": "",
-      "limitations": "",
-      "limitations_en": "",
-      "source_id": "github-releases",
-      "source_name": "GitHub Releases 官方版本",
-      "source_url": "https://github.com/vllm-project/vllm/releases/tag/v0.34.0",
-      "is_first_hand": true,
-      "source_tier": "first_party",
-      "is_open_source": true,
-      "milestone_dim": "open_source_eco",
-      "milestone_dim_label": "开源权重与生态",
-      "milestone_dim_label_en": "Open Source",
-      "is_recent_72h": true,
-      "related_sources": [
-        {
-          "source_name": "GitHub Releases 官方版本",
-          "url": "https://github.com/vllm-project/vllm/releases/tag/v0.34.0",
-          "is_first_hand": true
-        },
-        {
-          "source_name": "GitHub Releases 官方版本",
-          "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12633",
-          "is_first_hand": true
-        },
-        {
-          "source_name": "GitHub Releases 官方版本",
-          "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12631",
-          "is_first_hand": true
-        }
-      ]
-    },
-    {
-      "id": "ai_tool_tool_gh_ggml-org_llama.cpp",
-      "date": "2026-11-22T22:53:42+08:00",
-      "company_id": "indie_opensource",
-      "company_name": "独立实验室 & 开源黑马",
-      "region": "全球开源",
-      "category": "开源工具/仓库",
-      "category_en": "Open-Source Repo",
-      "title": "开源工具更新：llama.cpp b12633",
-      "title_en": "Open-source release: llama.cpp b12633",
-      "what_it_does": "主要更新了对macOS Apple Silicon (arm64) 和 Intel (x64) 架构的支持；同时提供了 iOS XCFramework，但禁用了 KleidiAI 的 Apple Silicon 支持。",
-      "what_it_does_en": "主要更新了对macOS Apple Silicon (arm64) 和 Intel (x64) 架构的支持；同时提供了 iOS XCFramework，但禁用了 KleidiAI 的 Apple Silicon 支持。",
-      "who_cares": "",
-      "limitations": "许可证：MIT",
-      "limitations_en": "License: MIT",
-      "source_id": "github-releases",
-      "source_name": "GitHub Releases API",
-      "source_url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12633",
-      "is_first_hand": true,
-      "source_tier": "first_party",
-      "is_open_source": true,
-      "milestone_dim": "open_source_eco",
-      "milestone_dim_label": "开源权重与生态",
-      "milestone_dim_label_en": "Open Source",
-      "is_recent_72h": true,
-      "related_sources": [
-        {
-          "source_name": "GitHub Releases API",
-          "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12633",
-          "is_first_hand": true
-        },
-        {
-          "source_name": "GitHub Releases API",
-          "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12631",
-          "is_first_hand": true
-        }
-      ]
-    },
-    {
       "id": "ai_ev_evt_e1a945db5ab5",
       "date": "2026-11-22T22:32:52+08:00",
       "company_id": "openai",
@@ -4513,8 +4663,7 @@
           "url": "https://news.google.com/rss/articles/CBMiiAFBVV95cUxPeWp2QVJNRlI0N0gycVJ4OU0wX3Z1ZFZ6RV9DYmF1UkIzeGdlOUR4ZnB4b2M1UnEwMHBnM0VUeWhsZVRwYzY4NGhMUncxRmpOVTYxckY0UjROVWJzQ1NvOGw3S0ZrcnFqV203Sm5DN0xoQk8yM1ZCdGE4NTQwUHh0dzdGVjBRYXJ6?oc=5",
           "is_first_hand": false
         }
-      ],
-      "event_id": "evt_450719579a78"
+      ]
     },
     {
       "id": "ai_raw_rss-gnews-ai-models-en_f4d403633536",
@@ -4950,39 +5099,6 @@
       "is_recent_72h": true
     },
     {
-      "id": "ai_raw_rss-gnews-ai-models-en_4eaa1d2bd839",
-      "date": "2026-11-22T15:59:24+08:00",
-      "company_id": "indie_opensource",
-      "company_name": "独立实验室 & 开源黑马",
-      "region": "全球开源",
-      "category": "开源突破",
-      "category_en": "Open Source",
-      "title": "开放权重AI对比开源AI：4款模型，4种许可协议",
-      "title_en": "Open Weight vs Open Source AI: 4 Models, 4 Licenses",
-      "what_it_does": "",
-      "what_it_does_en": "",
-      "who_cares": "",
-      "limitations": "",
-      "limitations_en": "",
-      "source_id": "rss-gnews-ai-models-en",
-      "source_name": "shattered.io",
-      "source_url": "https://news.google.com/rss/articles/CBMipgFBVV95cUxQOFpEbl9nS2VrdFRVYmxrTXlpelFIY2RTcGpiSDB0OWxLSkJNaFBfWHhieFR5M21oaUhJcERENWN0ZTN3Ni00ME1HZEwzUE81MFozQTVrRDY4NU9nbE5rSExiSTh4a2ozcUNsVzZnMmtNdTlTTlhWa2RmcHFXLWVNQm9FWXJtemR0RVQ2RzlkQ3JKTHY1cFZjNVpwWHVnTEhJbF8ydm1B?oc=5",
-      "is_first_hand": false,
-      "source_tier": "wire_media",
-      "is_open_source": true,
-      "milestone_dim": "open_source_eco",
-      "milestone_dim_label": "开源权重与生态",
-      "milestone_dim_label_en": "Open Source",
-      "is_recent_72h": true,
-      "related_sources": [
-        {
-          "source_name": "shattered.io",
-          "url": "https://news.google.com/rss/articles/CBMipgFBVV95cUxQOFpEbl9nS2VrdFRVYmxrTXlpelFIY2RTcGpiSDB0OWxLSkJNaFBfWHhieFR5M21oaUhJcERENWN0ZTN3Ni00ME1HZEwzUE81MFozQTVrRDY4NU9nbE5rSExiSTh4a2ozcUNsVzZnMmtNdTlTTlhWa2RmcHFXLWVNQm9FWXJtemR0RVQ2RzlkQ3JKTHY1cFZjNVpwWHVnTEhJbF8ydm1B?oc=5",
-          "is_first_hand": false
-        }
-      ]
-    },
-    {
       "id": "ai_base_openai_anti_distillation",
       "date": "2026-11-22T09:40:00+08:00",
       "company_id": "openai",
@@ -5027,39 +5143,6 @@
           "source_name": "新闻电讯",
           "url": "https://news.google.com/rss/articles/CBMijAFBVV95cUxOeFlIOVlFSXlTemttVFdiUmdCR1BJREFqMXpYenJCVUswSk9DZU1EUEd1YjZpZGh6SkNrdFFYVlZnM01UblJiOHlyMGFVOXRQMDJ3MzczTkk4SHh2SmJubk1uaWxkN2JzXzFidnV3SXptNTYwbjBPWUU2dlNjVUVfNWRtdjlaSGYzUWJyRA?oc=5",
           "is_first_hand": false
-        }
-      ]
-    },
-    {
-      "id": "ai_raw_rss-openai-news_ae5a95c57ad9",
-      "date": "2026-11-22T08:00:00+08:00",
-      "company_id": "perplexity",
-      "company_name": "Perplexity AI",
-      "region": "海外",
-      "category": "官方一手",
-      "category_en": "First-Hand Official",
-      "title": "困惑度与智能",
-      "title_en": "Perplexity and Intelligence",
-      "what_it_does": "困惑度如何衡量AI模型进展，以及它为何能帮助开发者建立共享方法来评估新兴能力。",
-      "what_it_does_en": "How perplexity measures progress in AI models, and why it could help developers establish a shared approach to evaluating emerging capabilities.",
-      "who_cares": "",
-      "limitations": "",
-      "limitations_en": "",
-      "source_id": "rss-openai-news",
-      "source_name": "OpenAI 官方动态",
-      "source_url": "https://openai.com/index/perplexity-and-intelligence",
-      "is_first_hand": true,
-      "source_tier": "first_party",
-      "is_open_source": false,
-      "milestone_dim": "flagship_release",
-      "milestone_dim_label": "旗舰模型发布",
-      "milestone_dim_label_en": "Flagship Model",
-      "is_recent_72h": true,
-      "related_sources": [
-        {
-          "source_name": "OpenAI 官方动态",
-          "url": "https://openai.com/index/perplexity-and-intelligence",
-          "is_first_hand": true
         }
       ]
     },
@@ -5909,6 +5992,39 @@
       ]
     },
     {
+      "id": "ai_tool_tool_gh_run-llama_llama_index",
+      "date": "2026-11-14T06:38:15+08:00",
+      "company_id": "meta",
+      "company_name": "Meta AI",
+      "region": "海外",
+      "category": "开源工具/仓库",
+      "category_en": "Open-Source Repo",
+      "title": "开源工具更新：LlamaIndex v0.14.26",
+      "title_en": "Open-source release: LlamaIndex v0.14.26",
+      "what_it_does": "为解决安全漏洞，提升了Python的最低版本要求；更新了llama-index-agent-agentmesh至0.3.0版本，并对所有集成uv.lock文件进行了安全重锁定。",
+      "what_it_does_en": "为解决安全漏洞，提升了Python的最低版本要求；更新了llama-index-agent-agentmesh至0.3.0版本，并对所有集成uv.lock文件进行了安全重锁定。",
+      "who_cares": "",
+      "limitations": "许可证：MIT",
+      "limitations_en": "License: MIT",
+      "source_id": "github-releases",
+      "source_name": "GitHub Releases API",
+      "source_url": "https://github.com/run-llama/llama_index/releases/tag/v0.14.26",
+      "is_first_hand": true,
+      "source_tier": "first_party",
+      "is_open_source": true,
+      "milestone_dim": "api_agent_eng",
+      "milestone_dim_label": "API 与 Agent 工程",
+      "milestone_dim_label_en": "API & Agent Eng",
+      "is_recent_72h": false,
+      "related_sources": [
+        {
+          "source_name": "GitHub Releases API",
+          "url": "https://github.com/run-llama/llama_index/releases/tag/v0.14.26",
+          "is_first_hand": true
+        }
+      ]
+    },
+    {
       "id": "ai_base_minimax_m2_hailuo",
       "date": "2026-11-12T10:00:00+08:00",
       "company_id": "minimax",
@@ -6687,5 +6803,5 @@
       "weaknesses": "核心旗舰文本底座尚未全面开放原始权重"
     }
   ],
-  "live_updated_at": "2026-11-23T10:47:01+08:00"
+  "live_updated_at": "2026-11-23T11:04:46+08:00"
 }
