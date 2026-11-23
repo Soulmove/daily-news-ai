@@ -1,15 +1,15 @@
 {
   "schema_version": "4.3",
-  "generated_at": "2026-11-23T14:16:30+08:00",
-  "batch_id": "smart-20261123-141630",
+  "generated_at": "2026-11-23T15:06:11+08:00",
+  "batch_id": "smart-20261123-150611",
   "search_grounded": false,
   "archive_path": "data/ai_progress_archive.json",
   "archive_total": 114,
   "weekly_digest": {
     "period_label": "近 7 日全球 AI 大事周报（截至 2026-11-23）",
     "period_label_en": "Weekly Global AI Digest (as of 2026-11-23)",
-    "summary": "实时追踪 77 项国内外 AI 关键进展（海外 47 · 国内 22 · 开源 26 · 一手官方 40）。自动聚合官方博客、Hugging Face、GitHub Releases 与 7×24 突发快讯，重大发布秒级入榜。",
-    "summary_en": "Tracking 77 AI milestones (47 global, 22 China, 26 open-source, 40 first-hand official) from lab blogs, Hugging Face, GitHub Releases & 7×24 live wires.",
+    "summary": "实时追踪 77 项国内外 AI 关键进展（海外 47 · 国内 22 · 开源 25 · 一手官方 39）。自动聚合官方博客、Hugging Face、GitHub Releases 与 7×24 突发快讯，重大发布秒级入榜。",
+    "summary_en": "Tracking 77 AI milestones (47 global, 22 China, 25 open-source, 39 first-hand official) from lab blogs, Hugging Face, GitHub Releases & 7×24 live wires.",
     "highlights": [
       {
         "id": "ai_ev_evt_2a5dad790561",
@@ -55,6 +55,16 @@
             "is_first_hand": false
           },
           {
+            "source_name": "BlockBeats",
+            "url": "https://news.google.com/rss/articles/CBMiVkFVX3lxTFA3Q1dHR1ZkNlJIVi1HVW16NVBaaUNDVUV2d29OdWxyc2M5b19XR04tZkV3azBfaGJZTkxRNDhrUkhZUzJKeDBMOXZyVjl2ODVqZnlMM25n?oc=5",
+            "is_first_hand": false
+          },
+          {
+            "source_name": "itsdw.cn",
+            "url": "https://news.google.com/rss/articles/CBMiTEFVX3lxTE41R1NXeDZ4ajB2bEhBNm9YcmZkV2V2bW10Z3Jwb21KU1VlQld3ZFNRX3o0RWxZRERQYW1PbHhvTjQyRnlBLWFpNmJEQmQ?oc=5",
+            "is_first_hand": false
+          },
+          {
             "source_name": "Zhipu AI 官方",
             "url": "https://bigmodel.cn/",
             "is_first_hand": true
@@ -62,16 +72,6 @@
           {
             "source_name": "itsdw.cn",
             "url": "https://news.google.com/rss/articles/CBMiTEFVX3lxTE5SWThaNVUzYmNWal94bFZhWmc5dlJnaFc5UnE2R2tqSm9IZlhRLVpGMEF1MTJwSm1jcFdRXzlOR21wMnJtWW5yYkFCNUY?oc=5",
-            "is_first_hand": false
-          },
-          {
-            "source_name": "新闻电讯",
-            "url": "https://news.google.com/rss/articles/CBMiWEFVX3lxTFBEX2xGSnY1WTRJYVdGUUJVS1BqQm1QRVpKSjFyTm5rTXowb3hxY0s3ZUdrQUdEWjlTWHh1cThSTENQa2tzdWp5WEhaOE9ZX3FNS0ZoRDVOWU4?oc=5",
-            "is_first_hand": false
-          },
-          {
-            "source_name": "新闻电讯",
-            "url": "https://news.google.com/rss/articles/CBMiSEFVX3lxTE4wd0JWNXNkT3NmUy1UV09ldm1iSXY3dTllQ1o1ZFg5MFZPS1BRY3RCTUJLc05UYWJTb1R6VHhoT0NXM3hJQU5xLQ?oc=5",
             "is_first_hand": false
           }
         ],
@@ -177,49 +177,6 @@
         ]
       },
       {
-        "id": "ai_tool_tool_gh_ggml-org_llama.cpp",
-        "date": "2026-11-23T11:00:02+08:00",
-        "company_id": "indie_opensource",
-        "company_name": "独立实验室 & 开源黑马",
-        "region": "全球开源",
-        "category": "开源工具/仓库",
-        "category_en": "Open-Source Repo",
-        "title": "开源工具更新：llama.cpp b12646",
-        "title_en": "Open-source release: llama.cpp b12646",
-        "what_it_does": "提供了macOS Apple Silicon (arm64) 和 Intel (x64) 版本支持；同时发布了iOS XCFramework，但Apple Silicon上的KleidiAI功能暂时禁用。",
-        "what_it_does_en": "提供了macOS Apple Silicon (arm64) 和 Intel (x64) 版本支持；同时发布了iOS XCFramework，但Apple Silicon上的KleidiAI功能暂时禁用。",
-        "who_cares": "",
-        "limitations": "许可证：MIT",
-        "limitations_en": "License: MIT",
-        "source_id": "github-releases",
-        "source_name": "GitHub Releases API",
-        "source_url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12646",
-        "is_first_hand": true,
-        "source_tier": "first_party",
-        "is_open_source": true,
-        "milestone_dim": "open_source_eco",
-        "milestone_dim_label": "开源权重与生态",
-        "milestone_dim_label_en": "Open Source",
-        "is_recent_72h": true,
-        "related_sources": [
-          {
-            "source_name": "GitHub Releases API",
-            "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12646",
-            "is_first_hand": true
-          },
-          {
-            "source_name": "GitHub Releases API",
-            "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12633",
-            "is_first_hand": true
-          },
-          {
-            "source_name": "GitHub Releases API",
-            "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12631",
-            "is_first_hand": true
-          }
-        ]
-      },
-      {
         "id": "ai_ev_evt_72197cdf0869",
         "date": "2026-11-23T10:35:10+08:00",
         "company_id": "deepseek",
@@ -298,7 +255,7 @@
       },
       {
         "id": "ai_ev_evt_ef818217ea5e",
-        "date": "2026-11-23T14:16:30+08:00",
+        "date": "2026-11-23T15:06:11+08:00",
         "company_id": "openai",
         "company_name": "OpenAI",
         "region": "海外",
@@ -332,7 +289,7 @@
       },
       {
         "id": "ai_ev_evt_236c41c26f67",
-        "date": "2026-11-23T14:16:30+08:00",
+        "date": "2026-11-23T15:06:11+08:00",
         "company_id": "deepseek",
         "company_name": "DeepSeek",
         "region": "国内",
@@ -368,6 +325,38 @@
         "milestone_dim_label": "旗舰模型发布",
         "milestone_dim_label_en": "Flagship Model",
         "is_recent_72h": true
+      },
+      {
+        "id": "ai_live_sina-7x24_294b68398e36",
+        "date": "2026-11-23T14:50:46+08:00",
+        "company_id": "indie_opensource",
+        "company_name": "独立实验室 & 开源黑马",
+        "region": "全球开源",
+        "category": "模型与产品",
+        "category_en": "Model & Product",
+        "title": "机构：AI、电动车驱动电源管理芯片市场重构 将保持两位数增长",
+        "title_en": "",
+        "what_it_does": "机构预测称，原本以智能手机、家电为核心的电源管理芯片（PMIC）市场，正围绕人工智能（AI）基础设施迎来格局重构，将持续保持两位数增长。 根据市场调研机构Yole Group 23日发布的数据，全球PMIC市场规模预计将从2025年的3…",
+        "what_it_does_en": "",
+        "who_cares": "",
+        "limitations": "",
+        "limitations_en": "",
+        "source_name": "新浪财经 7×24 电报",
+        "source_url": "https://finance.sina.cn/7x24/2026-11-23/detail-iniztfnh0585244.d.html",
+        "event_id": null,
+        "is_open_source": false,
+        "is_first_hand": false,
+        "source_tier": "realtime_wire",
+        "milestone_dim": "flagship_release",
+        "milestone_dim_label": "旗舰模型发布",
+        "milestone_dim_label_en": "Flagship Model",
+        "related_sources": [
+          {
+            "source_name": "新浪财经 7×24 电报",
+            "url": "https://finance.sina.cn/7x24/2026-11-23/detail-iniztfnh0585244.d.html",
+            "is_first_hand": false
+          }
+        ]
       }
     ]
   },
@@ -1264,12 +1253,12 @@
       ],
       "recent_count": 8,
       "archive_count": 24,
-      "latest_date": "2026-11-23T14:16:30+08:00",
+      "latest_date": "2026-11-23T15:06:11+08:00",
       "latest_headline": "OpenAI首席科学家首次公开内部对数困惑度数据，量化GPT-3.5至下一代临界区间",
       "items": [
         {
           "id": "ai_ev_evt_ef818217ea5e",
-          "date": "2026-11-23T14:16:30+08:00",
+          "date": "2026-11-23T15:06:11+08:00",
           "company_id": "openai",
           "company_name": "OpenAI",
           "region": "海外",
@@ -1688,7 +1677,7 @@
           "milestone_dim": "open_source_eco",
           "milestone_dim_label": "开源权重与生态",
           "milestone_dim_label_en": "Open Source",
-          "is_recent_72h": true,
+          "is_recent_72h": false,
           "related_sources": [
             {
               "source_name": "Hugging Face 官方模型库",
@@ -2074,12 +2063,12 @@
       ],
       "recent_count": 7,
       "archive_count": 7,
-      "latest_date": "2026-11-23T14:16:30+08:00",
+      "latest_date": "2026-11-23T15:06:11+08:00",
       "latest_headline": "中国AI大模型周调用量达111.16万亿Token，DeepSeek推行对话限额引付费诉求",
       "items": [
         {
           "id": "ai_ev_evt_236c41c26f67",
-          "date": "2026-11-23T14:16:30+08:00",
+          "date": "2026-11-23T15:06:11+08:00",
           "company_id": "deepseek",
           "company_name": "DeepSeek",
           "region": "国内",
@@ -3173,12 +3162,12 @@
       ],
       "recent_count": 2,
       "archive_count": 2,
-      "latest_date": "2026-11-23T13:57:09+08:00",
+      "latest_date": "2026-11-23T14:04:43+08:00",
       "latest_headline": "智谱GLM5.4发布",
       "items": [
         {
           "id": "ai_raw_rss-gnews-ai-models-zh_8b8bf74326ab",
-          "date": "2026-11-23T13:57:09+08:00",
+          "date": "2026-11-23T14:04:43+08:00",
           "company_id": "zhipu_glm",
           "company_name": "智谱 AI (GLM)",
           "region": "国内",
@@ -3253,6 +3242,16 @@
               "is_first_hand": false
             },
             {
+              "source_name": "BlockBeats",
+              "url": "https://news.google.com/rss/articles/CBMiVkFVX3lxTFA3Q1dHR1ZkNlJIVi1HVW16NVBaaUNDVUV2d29OdWxyc2M5b19XR04tZkV3azBfaGJZTkxRNDhrUkhZUzJKeDBMOXZyVjl2ODVqZnlMM25n?oc=5",
+              "is_first_hand": false
+            },
+            {
+              "source_name": "itsdw.cn",
+              "url": "https://news.google.com/rss/articles/CBMiTEFVX3lxTE41R1NXeDZ4ajB2bEhBNm9YcmZkV2V2bW10Z3Jwb21KU1VlQld3ZFNRX3o0RWxZRERQYW1PbHhvTjQyRnlBLWFpNmJEQmQ?oc=5",
+              "is_first_hand": false
+            },
+            {
               "source_name": "Zhipu AI 官方",
               "url": "https://bigmodel.cn/",
               "is_first_hand": true
@@ -3260,16 +3259,6 @@
             {
               "source_name": "itsdw.cn",
               "url": "https://news.google.com/rss/articles/CBMiTEFVX3lxTE5SWThaNVUzYmNWal94bFZhWmc5dlJnaFc5UnE2R2tqSm9IZlhRLVpGMEF1MTJwSm1jcFdRXzlOR21wMnJtWW5yYkFCNUY?oc=5",
-              "is_first_hand": false
-            },
-            {
-              "source_name": "新闻电讯",
-              "url": "https://news.google.com/rss/articles/CBMiWEFVX3lxTFBEX2xGSnY1WTRJYVdGUUJVS1BqQm1QRVpKSjFyTm5rTXowb3hxY0s3ZUdrQUdEWjlTWHh1cThSTENQa2tzdWp5WEhaOE9ZX3FNS0ZoRDVOWU4?oc=5",
-              "is_first_hand": false
-            },
-            {
-              "source_name": "新闻电讯",
-              "url": "https://news.google.com/rss/articles/CBMiSEFVX3lxTE4wd0JWNXNkT3NmUy1UV09ldm1iSXY3dTllQ1o1ZFg5MFZPS1BRY3RCTUJLc05UYWJTb1R6VHhoT0NXM3hJQU5xLQ?oc=5",
               "is_first_hand": false
             }
           ],
@@ -4463,9 +4452,41 @@
       ],
       "recent_count": 8,
       "archive_count": 38,
-      "latest_date": "2026-11-23T13:05:28+08:00",
-      "latest_headline": "自变量发布新一代具身基础模型 WALL-OSS-1.0，多种真机测试中零样本成功率高达55.1%",
+      "latest_date": "2026-11-23T14:50:46+08:00",
+      "latest_headline": "机构：AI、电动车驱动电源管理芯片市场重构 将保持两位数增长",
       "items": [
+        {
+          "id": "ai_live_sina-7x24_294b68398e36",
+          "date": "2026-11-23T14:50:46+08:00",
+          "company_id": "indie_opensource",
+          "company_name": "独立实验室 & 开源黑马",
+          "region": "全球开源",
+          "category": "模型与产品",
+          "category_en": "Model & Product",
+          "title": "机构：AI、电动车驱动电源管理芯片市场重构 将保持两位数增长",
+          "title_en": "",
+          "what_it_does": "机构预测称，原本以智能手机、家电为核心的电源管理芯片（PMIC）市场，正围绕人工智能（AI）基础设施迎来格局重构，将持续保持两位数增长。 根据市场调研机构Yole Group 23日发布的数据，全球PMIC市场规模预计将从2025年的3…",
+          "what_it_does_en": "",
+          "who_cares": "",
+          "limitations": "",
+          "limitations_en": "",
+          "source_name": "新浪财经 7×24 电报",
+          "source_url": "https://finance.sina.cn/7x24/2026-11-23/detail-iniztfnh0585244.d.html",
+          "event_id": null,
+          "is_open_source": false,
+          "is_first_hand": false,
+          "source_tier": "realtime_wire",
+          "milestone_dim": "flagship_release",
+          "milestone_dim_label": "旗舰模型发布",
+          "milestone_dim_label_en": "Flagship Model",
+          "related_sources": [
+            {
+              "source_name": "新浪财经 7×24 电报",
+              "url": "https://finance.sina.cn/7x24/2026-11-23/detail-iniztfnh0585244.d.html",
+              "is_first_hand": false
+            }
+          ]
+        },
         {
           "id": "ai_raw_sina-7x24_3af0077bdeb3",
           "date": "2026-11-23T13:05:28+08:00",
@@ -4757,49 +4778,6 @@
               "is_first_hand": true
             }
           ]
-        },
-        {
-          "id": "ai_tool_tool_gh_ggml-org_llama.cpp",
-          "date": "2026-11-23T11:00:02+08:00",
-          "company_id": "indie_opensource",
-          "company_name": "独立实验室 & 开源黑马",
-          "region": "全球开源",
-          "category": "开源工具/仓库",
-          "category_en": "Open-Source Repo",
-          "title": "开源工具更新：llama.cpp b12646",
-          "title_en": "Open-source release: llama.cpp b12646",
-          "what_it_does": "提供了macOS Apple Silicon (arm64) 和 Intel (x64) 版本支持；同时发布了iOS XCFramework，但Apple Silicon上的KleidiAI功能暂时禁用。",
-          "what_it_does_en": "提供了macOS Apple Silicon (arm64) 和 Intel (x64) 版本支持；同时发布了iOS XCFramework，但Apple Silicon上的KleidiAI功能暂时禁用。",
-          "who_cares": "",
-          "limitations": "许可证：MIT",
-          "limitations_en": "License: MIT",
-          "source_id": "github-releases",
-          "source_name": "GitHub Releases API",
-          "source_url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12646",
-          "is_first_hand": true,
-          "source_tier": "first_party",
-          "is_open_source": true,
-          "milestone_dim": "open_source_eco",
-          "milestone_dim_label": "开源权重与生态",
-          "milestone_dim_label_en": "Open Source",
-          "is_recent_72h": true,
-          "related_sources": [
-            {
-              "source_name": "GitHub Releases API",
-              "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12646",
-              "is_first_hand": true
-            },
-            {
-              "source_name": "GitHub Releases API",
-              "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12633",
-              "is_first_hand": true
-            },
-            {
-              "source_name": "GitHub Releases API",
-              "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12631",
-              "is_first_hand": true
-            }
-          ]
         }
       ]
     }
@@ -4807,7 +4785,7 @@
   "timeline": [
     {
       "id": "ai_ev_evt_ef818217ea5e",
-      "date": "2026-11-23T14:16:30+08:00",
+      "date": "2026-11-23T15:06:11+08:00",
       "company_id": "openai",
       "company_name": "OpenAI",
       "region": "海外",
@@ -4841,7 +4819,7 @@
     },
     {
       "id": "ai_ev_evt_236c41c26f67",
-      "date": "2026-11-23T14:16:30+08:00",
+      "date": "2026-11-23T15:06:11+08:00",
       "company_id": "deepseek",
       "company_name": "DeepSeek",
       "region": "国内",
@@ -4879,8 +4857,40 @@
       "is_recent_72h": true
     },
     {
+      "id": "ai_live_sina-7x24_294b68398e36",
+      "date": "2026-11-23T14:50:46+08:00",
+      "company_id": "indie_opensource",
+      "company_name": "独立实验室 & 开源黑马",
+      "region": "全球开源",
+      "category": "模型与产品",
+      "category_en": "Model & Product",
+      "title": "机构：AI、电动车驱动电源管理芯片市场重构 将保持两位数增长",
+      "title_en": "",
+      "what_it_does": "机构预测称，原本以智能手机、家电为核心的电源管理芯片（PMIC）市场，正围绕人工智能（AI）基础设施迎来格局重构，将持续保持两位数增长。 根据市场调研机构Yole Group 23日发布的数据，全球PMIC市场规模预计将从2025年的3…",
+      "what_it_does_en": "",
+      "who_cares": "",
+      "limitations": "",
+      "limitations_en": "",
+      "source_name": "新浪财经 7×24 电报",
+      "source_url": "https://finance.sina.cn/7x24/2026-11-23/detail-iniztfnh0585244.d.html",
+      "event_id": null,
+      "is_open_source": false,
+      "is_first_hand": false,
+      "source_tier": "realtime_wire",
+      "milestone_dim": "flagship_release",
+      "milestone_dim_label": "旗舰模型发布",
+      "milestone_dim_label_en": "Flagship Model",
+      "related_sources": [
+        {
+          "source_name": "新浪财经 7×24 电报",
+          "url": "https://finance.sina.cn/7x24/2026-11-23/detail-iniztfnh0585244.d.html",
+          "is_first_hand": false
+        }
+      ]
+    },
+    {
       "id": "ai_raw_rss-gnews-ai-models-zh_8b8bf74326ab",
-      "date": "2026-11-23T13:57:09+08:00",
+      "date": "2026-11-23T14:04:43+08:00",
       "company_id": "zhipu_glm",
       "company_name": "智谱 AI (GLM)",
       "region": "国内",
@@ -4955,6 +4965,16 @@
           "is_first_hand": false
         },
         {
+          "source_name": "BlockBeats",
+          "url": "https://news.google.com/rss/articles/CBMiVkFVX3lxTFA3Q1dHR1ZkNlJIVi1HVW16NVBaaUNDVUV2d29OdWxyc2M5b19XR04tZkV3azBfaGJZTkxRNDhrUkhZUzJKeDBMOXZyVjl2ODVqZnlMM25n?oc=5",
+          "is_first_hand": false
+        },
+        {
+          "source_name": "itsdw.cn",
+          "url": "https://news.google.com/rss/articles/CBMiTEFVX3lxTE41R1NXeDZ4ajB2bEhBNm9YcmZkV2V2bW10Z3Jwb21KU1VlQld3ZFNRX3o0RWxZRERQYW1PbHhvTjQyRnlBLWFpNmJEQmQ?oc=5",
+          "is_first_hand": false
+        },
+        {
           "source_name": "Zhipu AI 官方",
           "url": "https://bigmodel.cn/",
           "is_first_hand": true
@@ -4962,16 +4982,6 @@
         {
           "source_name": "itsdw.cn",
           "url": "https://news.google.com/rss/articles/CBMiTEFVX3lxTE5SWThaNVUzYmNWal94bFZhWmc5dlJnaFc5UnE2R2tqSm9IZlhRLVpGMEF1MTJwSm1jcFdRXzlOR21wMnJtWW5yYkFCNUY?oc=5",
-          "is_first_hand": false
-        },
-        {
-          "source_name": "新闻电讯",
-          "url": "https://news.google.com/rss/articles/CBMiWEFVX3lxTFBEX2xGSnY1WTRJYVdGUUJVS1BqQm1QRVpKSjFyTm5rTXowb3hxY0s3ZUdrQUdEWjlTWHh1cThSTENQa2tzdWp5WEhaOE9ZX3FNS0ZoRDVOWU4?oc=5",
-          "is_first_hand": false
-        },
-        {
-          "source_name": "新闻电讯",
-          "url": "https://news.google.com/rss/articles/CBMiSEFVX3lxTE4wd0JWNXNkT3NmUy1UV09ldm1iSXY3dTllQ1o1ZFg5MFZPS1BRY3RCTUJLc05UYWJTb1R6VHhoT0NXM3hJQU5xLQ?oc=5",
           "is_first_hand": false
         }
       ],
@@ -5442,49 +5452,6 @@
         },
         {
           "source_name": "GitHub Releases 官方版本",
-          "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12631",
-          "is_first_hand": true
-        }
-      ]
-    },
-    {
-      "id": "ai_tool_tool_gh_ggml-org_llama.cpp",
-      "date": "2026-11-23T11:00:02+08:00",
-      "company_id": "indie_opensource",
-      "company_name": "独立实验室 & 开源黑马",
-      "region": "全球开源",
-      "category": "开源工具/仓库",
-      "category_en": "Open-Source Repo",
-      "title": "开源工具更新：llama.cpp b12646",
-      "title_en": "Open-source release: llama.cpp b12646",
-      "what_it_does": "提供了macOS Apple Silicon (arm64) 和 Intel (x64) 版本支持；同时发布了iOS XCFramework，但Apple Silicon上的KleidiAI功能暂时禁用。",
-      "what_it_does_en": "提供了macOS Apple Silicon (arm64) 和 Intel (x64) 版本支持；同时发布了iOS XCFramework，但Apple Silicon上的KleidiAI功能暂时禁用。",
-      "who_cares": "",
-      "limitations": "许可证：MIT",
-      "limitations_en": "License: MIT",
-      "source_id": "github-releases",
-      "source_name": "GitHub Releases API",
-      "source_url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12646",
-      "is_first_hand": true,
-      "source_tier": "first_party",
-      "is_open_source": true,
-      "milestone_dim": "open_source_eco",
-      "milestone_dim_label": "开源权重与生态",
-      "milestone_dim_label_en": "Open Source",
-      "is_recent_72h": true,
-      "related_sources": [
-        {
-          "source_name": "GitHub Releases API",
-          "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12646",
-          "is_first_hand": true
-        },
-        {
-          "source_name": "GitHub Releases API",
-          "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12633",
-          "is_first_hand": true
-        },
-        {
-          "source_name": "GitHub Releases API",
           "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12631",
           "is_first_hand": true
         }
@@ -6616,7 +6583,7 @@
       "milestone_dim": "open_source_eco",
       "milestone_dim_label": "开源权重与生态",
       "milestone_dim_label_en": "Open Source",
-      "is_recent_72h": true,
+      "is_recent_72h": false,
       "related_sources": [
         {
           "source_name": "Hugging Face 官方模型库",
@@ -7858,5 +7825,5 @@
       "weaknesses": "仅支持文本（M3系列支持多模态）。"
     }
   ],
-  "live_updated_at": "2026-11-23T14:16:30+08:00"
+  "live_updated_at": "2026-11-23T15:06:11+08:00"
 }
