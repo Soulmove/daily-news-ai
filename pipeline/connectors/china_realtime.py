@@ -19,7 +19,13 @@ import requests
 
 from pipeline.connectors.base import HttpCacheStore
 from pipeline.dedup import is_consumer_promo_or_fluff, is_hotlist_aggregator_source, smart_truncate, strip_raw_urls_and_domain_tails
-from pipeline.heavy_classifier import GEO_MILITARY_HEAVY_RE, HEAVY_NOISE_EXCLUDE_RE, heavy_topic_key, infer_heavy_reason_tag
+from pipeline.heavy_classifier import (
+    GEO_MILITARY_HEAVY_RE,
+    HEAVY_NOISE_EXCLUDE_RE,
+    heavy_topic_key,
+    infer_heavy_reason_tag,
+    sync_today_heavy_into_live_wire,
+)
 from pipeline.id_utils import canonicalize_url, make_raw_item_id
 from pipeline.manifest import atomic_write_json, load_json_if_exists
 from pipeline.time_utils import SHANGHAI_TZ, now_shanghai, parse_iso_datetime, parse_published_at, to_iso_shanghai
@@ -697,27 +703,32 @@ def refresh_live_wire_file(base_dir: Path | str = ".", extra_items: Optional[Lis
             seen_urls.add(canon_u)
         seen_keys.add(k)
         cat_norm = _classify_wire_item(title, excerpt_clean, str(it.get("category") or "general"))
-        sev_tier, _ = _classify_wire_severity(title, excerpt_clean, src_id, src_name)
-        reason_tag = _infer_wire_heavy_reason_tag(title, excerpt_clean, cat_norm) if sev_tier in {"S", "A"} else None
+        if it.get("synced_from_today") and not HEAVY_NOISE_EXCLUDE_RE.search(title):
+            sev_tier = "S" if it.get("severity_tier") == "S" else "A"
+            reason_tag = str(it.get("heavy_reason_tag") or "").strip() or _infer_wire_heavy_reason_tag(title, excerpt_clean, cat_norm)
+        else:
+            sev_tier, _ = _classify_wire_severity(title, excerpt_clean, src_id, src_name)
+            reason_tag = _infer_wire_heavy_reason_tag(title, excerpt_clean, cat_norm) if sev_tier in {"S", "A"} else None
         idx_new = len(merged)
         seen_entries.append((norm_full, pub, idx_new))
-        merged.append(
-            {
-                "id": str(it.get("item_id") or it.get("id") or f"lw_{idx_new}"),
-                "title": title,
-                "excerpt": excerpt_clean,
-                "category": cat_norm,
-                "source_name": src_name,
-                "_merged_sources": [s.strip() for s in str(it.get("source_name") or "实时快讯").split(" · ")[0].split(" 等 ")[0].split("/") if s.strip()],
-                "url": canon_u or str(it.get("url") or it.get("canonical_url") or ""),
-                "published_at": pub,
-                "thumbnail_url": it.get("thumbnail_url"),
-                "severity_tier": sev_tier,
-                "heavy_reason_tag": reason_tag,
-                "importance": "high" if sev_tier in {"S", "A"} else "normal",
-                "tag": str(it.get("metric_label") or it.get("tag") or ""),
-            }
-        )
+        entry_obj = {
+            "id": str(it.get("item_id") or it.get("id") or f"lw_{idx_new}"),
+            "title": title,
+            "excerpt": excerpt_clean,
+            "category": cat_norm,
+            "source_name": src_name,
+            "_merged_sources": [s.strip() for s in str(it.get("source_name") or "实时快讯").split(" · ")[0].split(" 等 ")[0].split("/") if s.strip()],
+            "url": canon_u or str(it.get("url") or it.get("canonical_url") or ""),
+            "published_at": pub,
+            "thumbnail_url": it.get("thumbnail_url"),
+            "severity_tier": sev_tier,
+            "heavy_reason_tag": reason_tag,
+            "importance": "high" if sev_tier in {"S", "A"} else "normal",
+            "tag": str(it.get("metric_label") or it.get("tag") or ""),
+        }
+        if it.get("synced_from_today"):
+            entry_obj["synced_from_today"] = True
+        merged.append(entry_obj)
 
     for it in res.get("items") or []:
         _add(it)
@@ -847,6 +858,33 @@ def refresh_live_wire_file(base_dir: Path | str = ".", extra_items: Optional[Lis
         "breaking_highlights": breaking_highlights,
         "items": merged,
     }
+    try:
+        manifest_disk = load_json_if_exists(root / "data/manifest.json", default={}) or {}
+        smart_cats = (manifest_disk.get("smart") or {}).get("categories") if isinstance(manifest_disk, dict) else {}
+        cat_docs: Dict[str, dict] = {}
+        has_any_events = False
+        for c in ("finance", "global", "tech", "general"):
+            c_rel = ""
+            if isinstance(smart_cats, dict) and isinstance(smart_cats.get(c), dict):
+                c_rel = str(smart_cats[c].get("path") or "").lstrip("./")
+            cand_paths = [root / c_rel] if c_rel else []
+            cand_paths.append(root / f"analysis_{c}.json")
+            c_doc = None
+            for cp in cand_paths:
+                if cp.exists():
+                    loaded = load_json_if_exists(cp, default={})
+                    if isinstance(loaded, dict) and loaded.get("events"):
+                        c_doc = loaded
+                        break
+            if isinstance(c_doc, dict) and c_doc.get("events"):
+                cat_docs[c] = c_doc
+                has_any_events = True
+            else:
+                cat_docs[c] = {"events": []}
+        if has_any_events:
+            doc = sync_today_heavy_into_live_wire(cat_docs, doc, now_dt)
+    except Exception:
+        pass
     atomic_write_json(root / "data/live_wire.json", doc)
     return doc
 
