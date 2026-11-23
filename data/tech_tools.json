@@ -1,7 +1,7 @@
 {
   "schema_version": "4.1",
-  "generated_at": "2026-11-23T07:42:00+08:00",
-  "batch_id": "smart-20261123-074200",
+  "generated_at": "2026-11-23T10:47:01+08:00",
+  "batch_id": "smart-20261123-104701",
   "tools": [
     {
       "tool_id": "tool_gh_vllm-project_vllm",
@@ -25,7 +25,10 @@
       "checked_at": "2026-11-23T07:41:32+08:00",
       "source_name": "GitHub Releases API",
       "source_url": "https://github.com/vllm-project/vllm/releases/tag/v0.34.0",
-      "summary_en": "10 new models (Mistral Large 4, MiniMax-M3.1-Flash, Nemotron-3.5-Transcribe, and more!)；Extensible KV cache is on by default: vLLM sizes the KV cache from memory actually free after warmup, so most models get a bigger cache and more throughput - in most cases you should now remove gpu_memory_utilization from your conf…"
+      "summary_en": "10 new models (Mistral Large 4, MiniMax-M3.1-Flash, Nemotron-3.5-Transcribe, and more!)；Extensible KV cache is on by default: vLLM sizes the KV cache from memory actually free after warmup, so most models get a bigger cache and more throughput - in most cases you should now remove gpu_memory_utilization from your conf…",
+      "pain_point": "PagedAttention 与连续批处理解决多用户高并发 GPU 显存碎片化与推理吞吐瓶颈。",
+      "best_for": "生产环境多卡 GPU 集群部署 OpenAI 兼容 API 服务（DeepSeek/Qwen 企业级线上推理）。",
+      "comparison_note": "与 SGLang 并列企业推理双雄；高并发显存利用率显著领先 Ollama，但配置偏服务端工程化。"
     },
     {
       "tool_id": "tool_gh_ggml-org_llama.cpp",
@@ -49,7 +52,10 @@
       "checked_at": "2026-11-23T07:41:32+08:00",
       "source_name": "GitHub Releases API",
       "source_url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12633",
-      "summary_en": "macOS Apple Silicon (arm64)；macOS Apple Silicon (arm64, KleidiAI enabled) DISABLED；macOS Intel (x64)；iOS XCFramework"
+      "summary_en": "macOS Apple Silicon (arm64)；macOS Apple Silicon (arm64, KleidiAI enabled) DISABLED；macOS Intel (x64)；iOS XCFramework",
+      "pain_point": "零 Python 重依赖、纯 C/C++ + GGUF 跨架构量化引擎，解决 CPU/核显/混合显存跑大模型难题。",
+      "best_for": "嵌入式端侧、Windows/Linux 无独立大显存主机 CPU+GPU 混合卸载运行。",
+      "comparison_note": "Ollama 的底层核心引擎；最轻量便携，可定制底层算子与端侧极致量化。"
     },
     {
       "tool_id": "tool_gh_huggingface_transformers",
@@ -73,7 +79,10 @@
       "checked_at": "2026-11-22T01:22:19+08:00",
       "source_name": "GitHub Releases API",
       "source_url": "https://github.com/huggingface/transformers/releases/tag/v5.24.0",
-      "summary_en": "Release v5.24.0；New Model additions；Inkling 2 Mini；Inkling 2 Mini is a multimodal model from Thinking Machines Lab that accepts text and image inputs and generates text outputs. It is a smaller sibling of Inkling 2 Small, added in v5.23.0. It has 24 decoder layers instead of 48, and compensates with a looping mechanis…"
+      "summary_en": "Release v5.24.0；New Model additions；Inkling 2 Mini；Inkling 2 Mini is a multimodal model from Thinking Machines Lab that accepts text and image inputs and generates text outputs. It is a smaller sibling of Inkling 2 Small, added in v5.23.0. It has 24 decoder layers instead of 48, and compensates with a looping mechanis…",
+      "pain_point": "统一数万开源模型结构定义、权重加载、微调与推理接口的事实标准底座。",
+      "best_for": "科研实验、自定义 LoRA/SFT 微调、Hugging Face Hub 新架构 Day-0 复现。",
+      "comparison_note": "生态覆盖最全最深，直接推理吞吐不如专用引擎 vLLM/SGLang。"
     },
     {
       "tool_id": "tool_gh_pytorch_pytorch",
@@ -97,7 +106,10 @@
       "checked_at": "2026-11-23T07:41:32+08:00",
       "source_name": "GitHub Releases API",
       "source_url": "https://github.com/pytorch/pytorch/releases/tag/v2.15.0",
-      "summary_en": "PyTorch 2.15.0 Release Notes；Performance；Documentation；Security"
+      "summary_en": "PyTorch 2.15.0 Release Notes；Performance；Documentation；Security",
+      "pain_point": "动态计算图、torch.compile 编译加速与分布式 FSDP 训练的现代深度学习根基框架。",
+      "best_for": "底层算子研发、大规模预训练/后训练集群、科学计算与视觉语音模型训练。",
+      "comparison_note": "AI 研究底层基础设施，高于 JAX 的开发者生态渗透率。"
     },
     {
       "tool_id": "tool_gh_sgl-project_sglang",
@@ -121,7 +133,10 @@
       "checked_at": "2026-11-22T01:22:19+08:00",
       "source_name": "GitHub Releases API",
       "source_url": "https://github.com/sgl-project/sglang/releases/tag/v0.5.23",
-      "summary_en": "What's new；DeepSeek-V4.1 on GB300 gets up to 1.5x more prefill throughput under load and about 28% lower first-token latency on 32K to 64K prompts ( 44403, 45059, 45107).；SGLang low-latency mode: the opt-in NVIDIA megakernel and AMD monokernel plugins run DeepSeek-V4.1-Flash decode as fused persistent kernels, for u…"
+      "summary_en": "What's new；DeepSeek-V4.1 on GB300 gets up to 1.5x more prefill throughput under load and about 28% lower first-token latency on 32K to 64K prompts ( 44403, 45059, 45107).；SGLang low-latency mode: the opt-in NVIDIA megakernel and AMD monokernel plugins run DeepSeek-V4.1-Flash decode as fused persistent kernels, for u…",
+      "pain_point": "RadixAttention 前缀树缓存大幅削减多轮对话、复杂 Agent 系统与 JSON 结构化输出的首字延迟。",
+      "best_for": "高频多轮 Agent 系统、多分支思维链 (CoT) 复用公共前缀、高 QPS 结构化输出。",
+      "comparison_note": "在重前缀复用与结构化约束场景吞吐常优于 vLLM，两者均为生产部署核心选择。"
     },
     {
       "tool_id": "tool_gh_ollama_ollama",
@@ -145,7 +160,10 @@
       "checked_at": "2026-11-23T07:41:32+08:00",
       "source_name": "GitHub Releases API",
       "source_url": "https://github.com/ollama/ollama/releases/tag/v0.40.17",
-      "summary_en": "Inkling 2 Mini；Inkling 2 Mini from Thinking Machines is a 26B parameter model with 5.4B active.；Its looped layers give it more computation per token than its size suggests, and it still fits on a Mac at about 20GB. It handles text and images, tool calls, and thinking, and scores 79.2% on SWE-Bench Verified；ollama run…"
+      "summary_en": "Inkling 2 Mini；Inkling 2 Mini from Thinking Machines is a 26B parameter model with 5.4B active.；Its looped layers give it more computation per token than its size suggests, and it still fits on a Mac at about 20GB. It handles text and images, tool calls, and thinking, and scores 79.2% on SWE-Bench Verified；ollama run…",
+      "pain_point": "解决个人电脑/Mac 与边缘服务器命令行一键拉取、量化运行大模型及统一本地 OpenAI 兼容端口痛点。",
+      "best_for": "个人本地离线隐私推理、MacBook 统一内存运行中小权重、快速接入本地 IDE 补全。",
+      "comparison_note": "比 llama.cpp 开箱管理更简单；吞吐并发低于 vLLM/SGLang，适合单机 1~4 并发。"
     },
     {
       "tool_id": "tool_gh_modelcontextprotocol_python-sdk",
@@ -169,7 +187,10 @@
       "checked_at": "2026-11-23T00:24:05+08:00",
       "source_name": "GitHub Releases API",
       "source_url": "https://github.com/modelcontextprotocol/python-sdk/releases/tag/v2.3.0",
-      "summary_en": "pip install -U mcp. Docs:；Mostly fixes, plus three new options. A few things behave differently, so skim these first:；Behaviour changes；httpx2>=2.10.0 is now required"
+      "summary_en": "pip install -U mcp. Docs:；Mostly fixes, plus three new options. A few things behave differently, so skim these first:；Behaviour changes；httpx2>=2.10.0 is now required",
+      "pain_point": "制定大模型连接本地文件系统、数据库与第三方 API 的统一标准化上下文协议 (USB-C for AI)。",
+      "best_for": "构建跨 Claude/Cursor/IDE/Agent 复用的标准化数据连接器 Server。",
+      "comparison_note": "行业事实协议标准，减少每换一个 Agent 框架就要重写一遍工具胶水的重复劳动。"
     },
     {
       "tool_id": "tool_gh_anthropics_anthropic-sdk-python",
@@ -193,7 +214,10 @@
       "checked_at": "2026-11-21T05:40:12+08:00",
       "source_name": "GitHub Releases API",
       "source_url": "https://github.com/anthropics/anthropic-sdk-python/releases/tag/v2.12.0",
-      "summary_en": "api: add the image_dimensions_too_large error code；bedrock: send the user profile ID in the request body"
+      "summary_en": "api: add the image_dimensions_too_large error code；bedrock: send the user profile ID in the request body",
+      "pain_point": "简化与Claude API集成，处理复杂请求与错误。",
+      "best_for": "Python应用开发者，需稳定、功能丰富的Claude API接口。",
+      "comparison_note": "官方SDK，支持多云集成，提供流式响应与工具抽象。"
     },
     {
       "tool_id": "tool_gh_openai_openai-python",
@@ -217,7 +241,10 @@
       "checked_at": "2026-11-20T11:14:05+08:00",
       "source_name": "GitHub Releases API",
       "source_url": "https://github.com/openai/openai-python/releases/tag/v3.57.0",
-      "summary_en": "api: support Live WebRTC standby ( 4296) (18d10c3)"
+      "summary_en": "api: support Live WebRTC standby ( 4296) (18d10c3)",
+      "pain_point": "高效访问OpenAI模型，集成实时WebRTC功能。",
+      "best_for": "需实时音频交互、集成OpenAI模型的应用开发。",
+      "comparison_note": "官方SDK，特别强调对Live WebRTC待机功能的支持。"
     },
     {
       "tool_id": "tool_hf_qwen_qwen2-vl-2b-instruct",
@@ -255,7 +282,10 @@
       "pricing_or_cost": "开源权重自部署（许可证：apache-2.0）",
       "checked_at": "2026-11-23T07:41:37+08:00",
       "source_name": "Hugging Face Hub API",
-      "source_url": "https://huggingface.co/Qwen/Qwen2-VL-2B-Instruct"
+      "source_url": "https://huggingface.co/Qwen/Qwen2-VL-2B-Instruct",
+      "pain_point": "在轻量级模型中实现高质量图文理解与对话。",
+      "best_for": "视觉问答、图像分析、视频内容理解及移动机器人代理。",
+      "comparison_note": "2B参数，支持任意分辨率图像，擅长长视频理解与代理。"
     },
     {
       "tool_id": "tool_hf_deepseek-ai_deepseek-v4_1-flash-1017",
@@ -293,7 +323,10 @@
       "pricing_or_cost": "开源权重自部署（许可证：mit）",
       "checked_at": "2026-11-23T07:41:37+08:00",
       "source_name": "Hugging Face Hub API",
-      "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash-1017"
+      "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash-1017",
+      "pain_point": "追求高效率、低成本的多模态理解与代理任务。",
+      "best_for": "资源敏感型视觉问答、图表解析及代码/代理任务。",
+      "comparison_note": "强调FP8量化，提升推理效率，并优化代码与代理能力。"
     },
     {
       "tool_id": "tool_hf_tencent_wemm-video-9b",
@@ -331,7 +364,10 @@
       "pricing_or_cost": "开源权重自部署（许可证：apache-2.0）",
       "checked_at": "2026-11-23T07:41:37+08:00",
       "source_name": "Hugging Face Hub API",
-      "source_url": "https://huggingface.co/tencent/WeMM-Video-9B"
+      "source_url": "https://huggingface.co/tencent/WeMM-Video-9B",
+      "pain_point": "从复杂视频内容中提取语义，理解动作与长时序事件。",
+      "best_for": "视频内容总结、行为识别、长时序检索及代码工程应用。",
+      "comparison_note": "9B参数，代码工程优化，专精视频多模态语义理解。"
     },
     {
       "tool_id": "tool_hf_moonshotai_kimi-k3",
@@ -369,7 +405,10 @@
       "pricing_or_cost": "开源权重自部署（许可证：自定义开源许可 (详见模型卡)）",
       "checked_at": "2026-11-23T07:41:37+08:00",
       "source_name": "Hugging Face Hub API",
-      "source_url": "https://huggingface.co/moonshotai/Kimi-K3"
+      "source_url": "https://huggingface.co/moonshotai/Kimi-K3",
+      "pain_point": "自动化视觉数据解析，构建智能多模态代理系统。",
+      "best_for": "高级视觉问答、图表智能分析及多模态代理开发。",
+      "comparison_note": "代码工程专项，擅长图表解析与多模态代理任务。"
     },
     {
       "tool_id": "tool_hf_zai-org_glm-5_3-flash-bf16",
@@ -406,7 +445,10 @@
       "pricing_or_cost": "开源权重自部署（许可证：mit）",
       "checked_at": "2026-11-23T07:41:37+08:00",
       "source_name": "Hugging Face Hub API",
-      "source_url": "https://huggingface.co/zai-org/GLM-5.3-Flash-BF16"
+      "source_url": "https://huggingface.co/zai-org/GLM-5.3-Flash-BF16",
+      "pain_point": "追求极高效率与成本效益的多模态理解与对话。",
+      "best_for": "实时视觉问答、图表解析、代码生成及代理工作流。",
+      "comparison_note": "320B总参数，18B活跃，混合稀疏注意力，成本效益高。"
     },
     {
       "tool_id": "tool_hf_bytedance-seed_cross-layer-topk-clt",
@@ -442,7 +484,10 @@
       "pricing_or_cost": "开源权重自部署（许可证：apache-2.0）",
       "checked_at": "2026-11-23T07:41:37+08:00",
       "source_name": "Hugging Face Hub API",
-      "source_url": "https://huggingface.co/ByteDance-Seed/Cross-Layer-TopK-CLT"
+      "source_url": "https://huggingface.co/ByteDance-Seed/Cross-Layer-TopK-CLT",
+      "pain_point": "优化大模型内部特征的可解释性与高维检索。",
+      "best_for": "语义向量编码、稀疏自编码器分析及RAG知识库检索。",
+      "comparison_note": "独创跨层TopK机制，动态分配稀疏性，提升特征检索。"
     },
     {
       "tool_id": "tool_hf_minimaxai_minimax-h3",
@@ -480,7 +525,10 @@
       "pricing_or_cost": "开源权重自部署（许可证：自定义开源许可 (详见模型卡)）",
       "checked_at": "2026-11-23T07:41:37+08:00",
       "source_name": "Hugging Face Hub API",
-      "source_url": "https://huggingface.co/MiniMaxAI/MiniMax-H3"
+      "source_url": "https://huggingface.co/MiniMaxAI/MiniMax-H3",
+      "pain_point": "从多模态输入生成高质量、连贯的视频与音频。",
+      "best_for": "数字内容创作、电影镜头合成、广告制作及UI/UX设计。",
+      "comparison_note": "全模态理解，生成2K高清视频，支持原生立体音频。"
     },
     {
       "tool_id": "tool_hf_mistralai_mistral-large-4-1t-a52b",
@@ -518,7 +566,10 @@
       "pricing_or_cost": "开源权重自部署（许可证：自定义开源许可 (详见模型卡)）",
       "checked_at": "2026-11-23T07:41:37+08:00",
       "source_name": "Hugging Face Hub API",
-      "source_url": "https://huggingface.co/mistralai/Mistral-Large-4-1T-A52B"
+      "source_url": "https://huggingface.co/mistralai/Mistral-Large-4-1T-A52B",
+      "pain_point": "应对复杂多模态指令，实现高精度推理与代码生成。",
+      "best_for": "企业级多模态对话、高级代码生成、金融法律分析。",
+      "comparison_note": "1T总参数MoE稀疏激活，擅长代码、推理及视觉接地。"
     },
     {
       "tool_id": "tool_hf_nvidia_nvidia-nemotron-3_5-transcribe-30b-a4b-gguf",
@@ -556,7 +607,10 @@
       "pricing_or_cost": "开源权重自部署（许可证：自定义开源许可 (详见模型卡)）",
       "checked_at": "2026-11-23T07:41:37+08:00",
       "source_name": "Hugging Face Hub API",
-      "source_url": "https://huggingface.co/nvidia/NVIDIA-Nemotron-3.5-Transcribe-30B-A4B-GGUF"
+      "source_url": "https://huggingface.co/nvidia/NVIDIA-Nemotron-3.5-Transcribe-30B-A4B-GGUF",
+      "pain_point": "在本地设备上实现多语言、长时音频的高效转录。",
+      "best_for": "离线语音转录、多语言翻译、会议记录及本地部署。",
+      "comparison_note": "30B参数MoE，GGUF量化，支持40种语言，长时音频转录。"
     },
     {
       "tool_id": "tool_hf_microsoft_aion-1_0-instruct-2_3b",
@@ -594,7 +648,10 @@
       "pricing_or_cost": "开源权重自部署（许可证：mit）",
       "checked_at": "2026-11-23T07:41:37+08:00",
       "source_name": "Hugging Face Hub API",
-      "source_url": "https://huggingface.co/microsoft/Aion-1.0-Instruct-2.3B"
+      "source_url": "https://huggingface.co/microsoft/Aion-1.0-Instruct-2.3B",
+      "pain_point": "在本地设备上高效执行通用文本生成与代码任务。",
+      "best_for": "离线代码辅助、文档理解、长文本摘要及多轮对话。",
+      "comparison_note": "2.3B参数，专为Windows设备优化，支持32K上下文。"
     },
     {
       "tool_id": "tool_hf_google_diffusiongemma-26b-a4b-it",
@@ -630,7 +687,10 @@
       "pricing_or_cost": "开源权重自部署（许可证：apache-2.0）",
       "checked_at": "2026-11-23T07:41:37+08:00",
       "source_name": "Hugging Face Hub API",
-      "source_url": "https://huggingface.co/google/diffusiongemma-26B-A4B-it"
+      "source_url": "https://huggingface.co/google/diffusiongemma-26B-A4B-it",
+      "pain_point": "快速生成高质量、多模态驱动的文本内容。",
+      "best_for": "创意内容生成、多模态对话系统、图像视频内容分析。",
+      "comparison_note": "26B参数MoE，采用离散扩散生成，实现高速文本输出。"
     }
   ]
 }
