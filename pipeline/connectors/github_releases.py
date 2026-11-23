@@ -12,13 +12,24 @@ from pipeline.id_utils import make_raw_item_id
 from pipeline.time_utils import now_shanghai, parse_iso_datetime, parse_published_at, to_iso_shanghai
 
 DEFAULT_WATCHED_REPOS = [
-    {"repo": "vllm-project/vllm", "name": "vLLM", "entity_id": "ent_ai_infra_tools", "category": "AI 推理引擎"},
-    {"repo": "ggml-org/llama.cpp", "name": "llama.cpp", "entity_id": "ent_ai_infra_tools", "category": "端侧/本地推理"},
-    {"repo": "huggingface/transformers", "name": "Transformers", "entity_id": "ent_ai_infra_tools", "category": "模型加载框架"},
-    {"repo": "pytorch/pytorch", "name": "PyTorch", "entity_id": "ent_ai_infra_tools", "category": "深度学习框架"},
-    {"repo": "sgl-project/sglang", "name": "SGLang", "entity_id": "ent_ai_infra_tools", "category": "结构化生成引擎"},
+    {"repo": "langgenius/dify", "name": "Dify", "entity_id": "ent_ai_infra_tools", "category": "Agentic 应用与工作流平台"},
+    {"repo": "n8n-io/n8n", "name": "n8n", "entity_id": "ent_ai_infra_tools", "category": "AI 工作流自动化"},
+    {"repo": "comfyanonymous/ComfyUI", "name": "ComfyUI", "entity_id": "ent_ai_infra_tools", "category": "节点式多模态视觉引擎"},
+    {"repo": "open-webui/open-webui", "name": "Open WebUI", "entity_id": "ent_ai_infra_tools", "category": "开源模型对话门户"},
+    {"repo": "langchain-ai/langchain", "name": "LangChain", "entity_id": "ent_ai_infra_tools", "category": "LLM Agent 开发框架"},
+    {"repo": "langchain-ai/langgraph", "name": "LangGraph", "entity_id": "ent_ai_infra_tools", "category": "有环状态机 Agent 编排"},
     {"repo": "ollama/ollama", "name": "Ollama", "entity_id": "ent_ai_infra_tools", "category": "本地大模型运行器"},
-    {"repo": "modelcontextprotocol/python-sdk", "name": "MCP Python SDK", "entity_id": "ent_anthropic", "category": "Agent 协议 SDK"},
+    {"repo": "huggingface/transformers", "name": "Transformers", "entity_id": "ent_ai_infra_tools", "category": "模型加载与微调底座"},
+    {"repo": "pytorch/pytorch", "name": "PyTorch", "entity_id": "ent_ai_infra_tools", "category": "深度学习核心框架"},
+    {"repo": "vllm-project/vllm", "name": "vLLM", "entity_id": "ent_ai_infra_tools", "category": "高并发推理引擎"},
+    {"repo": "ggml-org/llama.cpp", "name": "llama.cpp", "entity_id": "ent_ai_infra_tools", "category": "端侧/混合量化推理"},
+    {"repo": "run-llama/llama_index", "name": "LlamaIndex", "entity_id": "ent_ai_infra_tools", "category": "异构文档 RAG 框架"},
+    {"repo": "All-Hands-AI/OpenHands", "name": "OpenHands", "entity_id": "ent_ai_infra_tools", "category": "自主 AI 软件工程师"},
+    {"repo": "browser-use/browser-use", "name": "Browser-Use", "entity_id": "ent_ai_infra_tools", "category": "浏览器视觉操控 Agent"},
+    {"repo": "infiniflow/ragflow", "name": "RAGFlow", "entity_id": "ent_ai_infra_tools", "category": "深度文档版面 RAG 引擎"},
+    {"repo": "continuedev/continue", "name": "Continue", "entity_id": "ent_ai_infra_tools", "category": "开源 IDE 编程助手"},
+    {"repo": "sgl-project/sglang", "name": "SGLang", "entity_id": "ent_ai_infra_tools", "category": "结构化生成引擎"},
+    {"repo": "modelcontextprotocol/python-sdk", "name": "MCP Python SDK", "entity_id": "ent_anthropic", "category": "Agent 协议标准 SDK"},
     {"repo": "anthropics/anthropic-sdk-python", "name": "Anthropic SDK", "entity_id": "ent_anthropic", "category": "模型官方 SDK"},
     {"repo": "openai/openai-python", "name": "OpenAI SDK", "entity_id": "ent_openai", "category": "模型官方 SDK"},
 ]
@@ -116,6 +127,13 @@ def fetch_github_releases(
                 prev_t = dict(prev_tool_by_repo[repo])
                 if prev_t.get("summary"):
                     prev_t["summary"] = _clean_notes(str(prev_t["summary"])) or "详见官方 Release 说明。"
+                if not prev_t.get("stars"):
+                    m_res = polite_get(repo_meta_url, headers=headers, cache=cache, timeout=(4, 8), expect_json=True)
+                    if m_res.ok and isinstance(m_res.json_data, dict):
+                        prev_t["stars"] = m_res.json_data.get("stargazers_count")
+                        if not prev_t.get("license") and isinstance(m_res.json_data.get("license"), dict):
+                            lic = m_res.json_data["license"]
+                            prev_t["license"] = _normalize_gh_license(lic.get("spdx_id") or lic.get("name"))
                 tools.append(prev_t)
             for pit in prev_items_by_repo.get(repo, []):
                 pub_dt = parse_iso_datetime(pit.get("published_at")) if pit.get("published_at") else None
@@ -199,6 +217,54 @@ def fetch_github_releases(
                         "entity_ids": [spec["entity_id"]],
                     }
                 )
+
+    # Dynamic discovery: fetch trending high-star AI/Agent repositories (>30k stars)
+    seen_repos = {str(t.get("repo") or "").lower() for t in tools if t.get("repo")}
+    search_url = "https://api.github.com/search/repositories?q=ai+agent+OR+llm+stars:%3E30000&sort=stars&order=desc&per_page=8"
+    s_res = polite_get(search_url, headers=headers, cache=cache, timeout=(4, 8), expect_json=True)
+    if s_res.ok and isinstance(s_res.json_data, dict):
+        added_extra = 0
+        for item in s_res.json_data.get("items") or []:
+            if added_extra >= 6 or len(tools) >= 24:
+                break
+            if not isinstance(item, dict):
+                continue
+            full_name = str(item.get("full_name") or "").strip()
+            if not full_name or full_name.lower() in seen_repos:
+                continue
+            seen_repos.add(full_name.lower())
+            lic_obj = item.get("license") if isinstance(item.get("license"), dict) else {}
+            stars_val = int(item.get("stargazers_count") or 0)
+            if stars_val < 30000:
+                continue
+            desc = re.sub(r"\s+", " ", str(item.get("description") or "")).strip()[:220]
+            pushed_iso, _ = parse_published_at(item.get("pushed_at"), "github-releases")
+            tools.append(
+                {
+                    "tool_id": f"tool_gh_{full_name.replace('/', '_').lower()}",
+                    "name": str(item.get("name") or full_name.split("/")[-1]),
+                    "repo": full_name,
+                    "tool_type": "高星 AI 开源框架",
+                    "sector": "高星 AI 基础设施与 Agent",
+                    "entity_id": "ent_ai_infra_tools",
+                    "availability_stage": "ga",
+                    "availability_label": "正式可用 (GA)",
+                    "latest_version": "Mainline GA",
+                    "version_published_at": pushed_iso or fetched_iso,
+                    "license": _normalize_gh_license(lic_obj.get("spdx_id") or lic_obj.get("name")),
+                    "stars": stars_val,
+                    "official_url": str(item.get("html_url") or f"https://github.com/{full_name}"),
+                    "release_url": str(item.get("html_url") or f"https://github.com/{full_name}"),
+                    "docs_url": f"https://github.com/{full_name}#readme",
+                    "summary": desc or "GitHub 高星开源 AI 基础设施与 Agent 工程项目。",
+                    "deployment_requirements": "见官方 README 安装说明",
+                    "pricing_or_cost": "开源免费",
+                    "checked_at": fetched_iso,
+                    "source_name": "GitHub Stars Discovery",
+                    "source_url": str(item.get("html_url") or f"https://github.com/{full_name}"),
+                }
+            )
+            added_extra += 1
 
     status = "ok"
     if not items and errors and not_modified_hits == 0:

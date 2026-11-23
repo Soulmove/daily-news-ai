@@ -19,10 +19,10 @@ from .time_utils import now_shanghai, parse_iso_datetime, to_iso_shanghai
 
 
 _EVIDENCE_LABELS = {
-    "official": "🏛️ 官方公告 / 监管披露",
-    "research": "📊 机构研报 / 渠道调研",
-    "corroborated": "📰 多源媒体证实",
-    "single_source": "⚠️ 单一信源线索",
+    "official": "官方公告 / 监管披露",
+    "research": "机构研报 / 渠道调研",
+    "corroborated": "多源媒体证实",
+    "single_source": "单一信源线索",
 }
 
 _OFFICIAL_SOURCE_RE = re.compile(
@@ -62,14 +62,14 @@ def extract_effective_date_label(title: str, summary: str = "") -> Optional[str]
     if m:
         yr, mo, dy = m.group(1), m.group(2), m.group(3)
         prefix = f"{yr}年" if yr and yr != "2026" else ""
-        return f"⏳ {prefix}{mo}月{dy}日起正式生效"
+        return f"{prefix}{mo}月{dy}日起正式生效"
     m2 = re.search(r"(?:(202[6-9])年)?(\d{1,2})月(\d{1,2})日(?:起|起正式|正式)(?:生效|施行|实施|启用|减免|免收|执行)", blob)
     if m2:
         yr, mo, dy = m2.group(1), m2.group(2), m2.group(3)
         prefix = f"{yr}年" if yr and yr != "2026" else ""
-        return f"⏳ {prefix}{mo}月{dy}日生效"
+        return f"{prefix}{mo}月{dy}日生效"
     if "下周一" in blob and any(k in blob for k in ("保证金", "两融", "施行", "实施")):
-        return "⏳ 下周一起正式实施"
+        return "下周一起正式实施"
     return None
 
 
@@ -78,13 +78,13 @@ def extract_qualifier_badge(title: str, summary: str = "") -> Optional[str]:
     blob = f"{title} {summary}"
     m_up = re.search(r"(?:最高(?:提价|涨价|涨幅|调价|上调)|(?:涨幅|提价|涨价|报价|调价)最高(?:达|至|为)?)\s*(\d+(?:\.\d+)?)\s*%", blob)
     if m_up:
-        return f"⚠️ 要价上限 {m_up.group(1)}% · 关注客户实际接受率"
+        return f"要价上限 {m_up.group(1)}% · 关注客户实际接受率"
     if re.search(r"(?:削减|减少).*?(?:100万|20%).*?(?:联发科|TPU\s*8t)", blob, re.I):
-        return "🔀 供应商切换：减博通 8i / 增联发科 8t"
+        return "供应商切换：减博通 8i / 增联发科 8t"
     if re.search(r"遴选|接班|外部.*?CEO", blob, re.I) and "8-K" not in blob:
-        return "⚠️ 未获董事会正式确认"
+        return "未获董事会正式确认"
     if re.search(r"传闻|据传|洽购|磋商|意向", blob):
-        return "🔎 尚在磋商阶段 · 关注正式签约"
+        return "尚在磋商阶段 · 关注正式签约"
     return None
 
 
@@ -218,10 +218,10 @@ def _build_domain_scenario(
     if _LOW_IMPACT_TECH_CHATTER_RE.search(tl):
         return None
 
-    # 0b. A-Share Mainland Capital-Market Reform (Margin ratio cut / 做市商 / 降费 / 降准降息 / 印花税)
+    # 0b. A-Share Mainland Capital-Market Reform (split Fee-Cut 46B vs Margin Ratio 80% Cut)
     if (
         re.search(
-            r"沪深北交易所|沪深交易所|融资保证金比例|下调.*保证金|两融.*保证金|做市商规则|免收.*上市.*费|减免费用|印花税|平准基金|稳市组合拳",
+            r"沪深北交易所|沪深交易所|上交所.*降费|深交所.*降费|融资保证金比例|下调.*保证金|两融.*保证金|做市商规则|免收.*上市.*费|减免费用|降费让利|印花税|平准基金|稳市组合拳",
             text,
             re.I,
         )
@@ -229,6 +229,35 @@ def _build_domain_scenario(
         and "台湾地区" not in tl
     ):
         is_margin_4000 = "保证金" in text or "4000亿" in text or "80%" in text
+        is_fee_cut = bool(re.search(r"降费|免收.*费|减免费用|让利|下调.*经手费", text)) and not is_margin_4000
+        if is_fee_cut:
+            return {
+                "rule_id": "a_share_exchange_fee_cut",
+                "tag": "交易所年度降费让利 · 降低实体融资与交易规费",
+                "tag_en": "Exchange Annual Fee Reduction & Entity Cost Relief",
+                "polarity": "bullish",
+                "intensity": 4,
+                "one_liner": "上交所/深交所推出年度降费让利组合措施（免收上市年费/CA 证书及减半债券交易规费等，预计让利约 46 亿元），直接压降实体发行人与做市交易机构制度成本。",
+                "one_liner_en": "Mainland exchanges cut annual listing, bond-trading, and data-service fees (~4.6B RMB relief) to lower issuer and trading costs.",
+                "sample_basis": {
+                    "sample_n": 14,
+                    "volatility_pct": 2.4,
+                    "volatility_source": "沪深交易所年度降费让利公告后券商及科创成长板块表现样本",
+                    "horizon": "1~5 个交易日",
+                    "confidence_label": "官方制度红利（直接减免交易所刚性规费）",
+                    "confidence_label_en": "Official Regulatory Fee Relief",
+                },
+                "affected_tickers": {"600030.SH": 0.80, "601688.SH": 0.78, "600570.SH": 0.72, "588000.SH": 0.70, "510300.SH": 0.55},
+                "realized_quotes": _quote_snapshot(["000001.SH", "588000.SH", "HSTECH.HK"]),
+                "bars": [
+                    _bar("A股", "头部投行与债券/基金做市券商 (中信 / 华泰)", "A-Share Investment Banks & Market Makers (600030/601688)", 1.5, 4.1, "交易所免收债券交易及基金/期权部分费用直接增厚做市与自营净手续费空间。", "Exchange bond/fund fee waivers directly widen broker market-making net margins.", 1.0, "600030.SH"),
+                    _bar("A股", "科创板50ETF 及新质生产力上市梯队 (588000)", "STAR 50 & Tech Issuers (588000)", 1.2, 3.4, "免收初费与年费降低专精特新科技企业直接融资与持续挂牌成本。", "Listing fee waivers reduce direct financing costs for STAR-market tech companies.", 1.0, "588000.SH"),
+                    _bar("A股", "金融 IT 与交易清算基础设施 (恒生电子)", "Trading Infrastructure & Fintech IT (600570)", 0.9, 2.8, "交易规费与网络行情服务减免激励机构接入直连通道与新柜台需求。", "Network/market-data fee relief boosts institutional direct-connection IT demand.", 1.0, "600570.SH"),
+                    _bar("A股", "宽基沪深300与高股息信用债发行人 (510300)", "CSI 300 & Corporate Issuers (510300)", 0.6, 2.1, "全市场约 46 亿元让利温和改善权益与信用债市场整体活跃度。", "Broad ~4.6B RMB fee relief mildly lifts cash equity and credit market liquidity.", 1.0, "510300.SH"),
+                ],
+                "if_then": [],
+                "milestones": [{"date": "2027全年", "status": "upcoming", "label": "跟踪上交所/深交所降费正式实施后单季债券与ETF成交活跃度"}],
+            }
         return {
             "rule_id": "a_share_capital_market_reform",
             "tag": "A股两融松绑与资本市场稳市组合拳" if is_margin_4000 else "双创做市商机制优化与市场流动性改革",

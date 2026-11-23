@@ -286,6 +286,44 @@ def _static_global_schedule() -> List[Dict[str, Any]]:
             "source_url": "https://www.hainanexpo.org.cn/",
         },
         {
+            "calendar_id": "cal_expo_canton_fair_140_review",
+            "title": "第 140 届中国进出口商品交易会（广交会秋交会成果结算与机电新能源订单追踪）",
+            "title_en": "140th Canton Fair Autumn Session Outcomes & Export Order Settlement",
+            "scheduled_at": "2026-11-28T10:00:00+08:00",
+            "original_time_note": "2026 年 11 月下旬 中国广州 · 外贸成交复盘与跨境备货窗口",
+            "event_type": "expo_summit",
+            "region": "china",
+            "country": "中国",
+            "city": "广州",
+            "certainty": "confirmed_official",
+            "certainty_label": "广交会外贸追踪窗口",
+            "category": "finance",
+            "entity_ids": ["ent_china_macro", "ent_tariffs_trade"],
+            "watch_variable": "机电/新能源/储能外贸意向成交兑现率及广交会线上平台续单转化",
+            "pre_expectation": "中国外贸风向标秋交会收官后的实单排产与汇率结算验证",
+            "source_name": "中国对外贸易中心 / 广交会",
+            "source_url": "https://www.cantonfair.org.cn/",
+        },
+        {
+            "calendar_id": "cal_expo_gz_autoshow_2026",
+            "title": "第二十四届广州国际汽车展览会（智能驾驶、800V 高压架构与整车年末交付冲刺）",
+            "title_en": "24th Guangzhou International Automobile Exhibition (Auto Guangzhou 2026)",
+            "scheduled_at": "2026-11-26T09:30:00+08:00",
+            "original_time_note": "2026-11-20 ~ 11-29 中国广州广交会展馆",
+            "event_type": "expo_summit",
+            "region": "china",
+            "country": "中国",
+            "city": "广州",
+            "certainty": "confirmed_official",
+            "certainty_label": "官方车展排期",
+            "category": "tech",
+            "entity_ids": ["ent_china_macro", "ent_huawei"],
+            "watch_variable": "车端 VLA 端到端智驾上车进展、固态电池装车时间表与年末促销政策",
+            "pre_expectation": "年末国内新能源智能化整车与供应链定价权核心大展",
+            "source_name": "广州国际车展组委会",
+            "source_url": "https://www.autoshows.cn/",
+        },
+        {
             "calendar_id": "cal_expo_canton_fair_141_2027",
             "title": "第 141 届中国进出口商品交易会（广交会春季展 · 中国外贸第一展）",
             "title_en": "141st Canton Fair Spring Session (China Import & Export Fair)",
@@ -1263,7 +1301,7 @@ def extract_breaking_calendar_items(
                 "original_time_note": orig_note,
                 "timezone": "Asia/Shanghai",
                 "certainty": "reported_tbd",
-                "certainty_label": "⚡ 突发排期预告",
+                "certainty_label": "突发排期预告",
                 "is_breaking_schedule": True,
                 "source_channel": cand["channel"],
                 "is_past": False,
@@ -1302,7 +1340,7 @@ def _infer_event_type(item: Dict[str, Any], blob_low: str) -> str:
         return cur
     if any(k in blob_low for k in ("fomc", "美联储", "欧洲央行", "ecb", "boe", "英国央行", "boj", "日本央行", "cpi", "非农", "pce", "opec+", "议息", "利率")):
         return "central_bank"
-    if any(k in blob_low for k in ("证监会", "沪深北交易所", "沪深交易所", "融资保证金", "稳股市", "减免费用", "人代会", "政协", "两会", "中央经济", "统计局", "pmi", "gdp", "lpr", "外交部", "预算", "政府工作", "神舟", "载人飞船", "空间站", "航天工程", "卫星发射", "探月", "火箭发射")):
+    if any(k in blob_low for k in ("证监会", "沪深北交易所", "沪深交易所", "融资保证金", "稳股市", "减免费用", "人代会", "政协", "两会", "中央经济", "统计局", "pmi", "gdp", "lpr", "外交部", "预算", "政府工作", "两部门", "三部门", "多部门", "部委", "国家数据局", "人社部", "培养计划", "实施方案", "行动计划", "高技能人才", "专项规划", "神舟", "载人飞船", "空间站", "航天工程", "卫星发射", "探月", "火箭发射")):
         return "politics_macro"
     if any(k in blob_low for k in ("apec", "g20", "cop31", "气候大会", "广交会", "高交会", "进博会", "消博会", "文博会", "航展", "达沃斯", "waic", "ces", "mwc", "峰会", "会晤", "博览会")):
         return "expo_summit"

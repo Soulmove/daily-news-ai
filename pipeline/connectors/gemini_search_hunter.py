@@ -26,7 +26,7 @@ from pipeline.id_utils import canonicalize_url, is_generic_quote_or_homepage_url
 from pipeline.manifest import atomic_write_json, load_json_if_exists
 from pipeline.time_utils import now_shanghai, parse_iso_datetime, parse_published_at, to_iso_shanghai
 
-THROTTLE_SECONDS = 5400  # 90 minutes -> max ~16 search grounding cycles/day
+THROTTLE_SECONDS = 1800  # 30 minutes -> keep 13-key search grounding active
 DEGRADED_FALLBACK_MAX_AGE_SECONDS = 12 * 3600  # up to 12h fallback cache on 429/exhaustion
 STALE_AGE_HOURS = 168.0  # reject search results older than 7 days
 

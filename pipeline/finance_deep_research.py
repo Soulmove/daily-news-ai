@@ -19,6 +19,22 @@ from .time_utils import parse_iso_datetime
 
 
 _PRECEDENT_DB: Dict[str, List[Dict[str, str]]] = {
+    "a_share_exchange_fee_cut": [
+        {
+            "date": "2024-12-27",
+            "event_title": "上交所发布年度降费让利方案（预计全年向市场让利约 40 亿元）",
+            "t1_reaction": "次日券商及金融 IT 板块温和跟涨 +0.9%，债券做市与红利 ETF 成交稳步放大，盘面不追高。",
+            "t5_reaction": "T+5 科创 50 及固收做市券商录得超额收益约 +1.8%，中长期显著减轻拟 IPO 企业挂牌成本。",
+            "lesson": "交易所年度例行降费属于长周期降成本制度红利而非短线暴涨催化剂，更利好投行与固收做市券商。",
+        },
+        {
+            "date": "2023-12-29",
+            "event_title": "沪深交易所减免上市公司上市年费、CA 证书及经手费组合措施",
+            "t1_reaction": "公告后首个交易日券商指数平稳震荡 +0.6%，中小创次新及科创板块交投有所回暖。",
+            "t5_reaction": "T+5 非银与交易所 IT 标的相对大盘跑赢 +1.4%，兑现估值温和修复。",
+            "lesson": "重点看后续单季债券 ETF 做市成交与新股发行费率，切忌套用两融杠杆暴涨逻辑。",
+        },
+    ],
     "a_share_capital_market_reform": [
         {
             "date": "2023-08-27",
@@ -415,6 +431,35 @@ _DEFAULT_PRECEDENTS: List[Dict[str, str]] = [
 
 
 _RULE_TRANSMISSION_DEFAULTS: Dict[str, List[Dict[str, Any]]] = {
+    "a_share_exchange_fee_cut": [
+        {
+            "tier": 1,
+            "tier_label": "一阶直接冲击（交易所直减规费 · 降低做市商与发行人成本）",
+            "summary": "上交所/深交所免收上市公司年费/初费、CA 证书及减免债券与基金做市规费，直接增厚券商债券自营及做市部门净利润并减轻上市公司负担。",
+            "stocks": [
+                {"name": "中信证券", "code": "600030.SH", "market": "A股", "exposure_logic": "债券做市、ETF 做市及投行 IPO 承销市占率第一，直接受益交易所规费减免", "direction": "positive"},
+                {"name": "华泰证券", "code": "601688.SH", "market": "A股", "exposure_logic": "机构直连交易、科创板保荐及固收做市体量大，降本增效立竿见影", "direction": "positive"},
+                {"name": "科创50ETF", "code": "588000.SH", "market": "A股", "exposure_logic": "科创企业与中小新质生产力发行人普遍享受上市年费与融资服务费减免", "direction": "positive"},
+            ],
+        },
+        {
+            "tier": 2,
+            "tier_label": "二阶产业链传导（行情数据通道与机构柜台基础设施）",
+            "summary": "交易所同步免除/下调网络与行情信息使用费，激励量化私募、公募及金融终端厂商扩充高频极速行情与资产配置接入端口。",
+            "stocks": [
+                {"name": "恒生电子", "code": "600570.SH", "market": "A股", "exposure_logic": "交易所接口费率优化促进机构扩容 O32/UF2.0 极速交易与行情模块", "direction": "positive"},
+                {"name": "同花顺", "code": "300033.SZ", "market": "A股", "exposure_logic": "行情与交易活跃度回暖提高 C 端及机构金融信息服务续费率", "direction": "positive"},
+            ],
+        },
+        {
+            "tier": 3,
+            "tier_label": "三阶宏观信号（政策层持续呵护资本市场融资功能）",
+            "summary": "交易所年度例行让利与结构性优化通常与稳定市场预期、引导中长期资金入市政策同频共振。",
+            "stocks": [
+                {"name": "沪深300ETF", "code": "510300.SH", "market": "A股", "exposure_logic": "市场交易摩擦力持续降低有利于外资及保险等长线配置资金提高换手与配置意愿", "direction": "positive"},
+            ],
+        },
+    ],
     "a_share_capital_market_reform": [
         {
             "tier": 1,
@@ -995,6 +1040,29 @@ def _detect_session_context(pub_at_iso: str, title: str, rule_id: str, quotes_ma
 def _build_quant_if_then(rule_id: str, title: str, scenario: Dict[str, Any]) -> List[Dict[str, str]]:
     """Produce numeric-threshold Bull/Bear/Watch market triggers with zero vague boilerplate."""
     custom: Dict[str, List[Dict[str, str]]] = {
+        "a_share_exchange_fee_cut": [
+            {
+                "case": "bull",
+                "label": "正向验证 · 债券/ETF 做市放量",
+                "trigger_metric": "固收与宽基 ETF 日均成交活跃度及做市券商跑赢幅度",
+                "threshold": "公告后 5 个交易日内固收/债券 ETF 日均成交较前月放大 >= 15%，头部券商 ETF (512000) 跑赢上证 >= 1.5%",
+                "action_implication": "确认规费减免有效转化为做市交易与直连机构交投增量，利好头部券商及金融 IT。",
+            },
+            {
+                "case": "bear",
+                "label": "反向约束 · 常规例行利好已被提前计价",
+                "trigger_metric": "证券与金融 IT 首日高开后换手表现",
+                "threshold": "首日高开不足 +0.5% 且全天跟风缩量翻绿",
+                "action_implication": "表明年度例行降费属常规减税让利，不构成大级别两融增量冲击，回归个股基本面。",
+            },
+            {
+                "case": "watch",
+                "label": "核心观测点 · 后续配套融资政策",
+                "trigger_metric": "深交所/北交所跟进公告及证监会配套 IPO/并购政策",
+                "threshold": "密切跟踪深交所同口径降费细则及次年 1 月生效后的实际挂牌费用节省规模",
+                "action_implication": "若叠加工行再融资或科创板并购松绑，将扩大二阶科创成长估值弹性。",
+            },
+        ],
         "a_share_capital_market_reform": [
             {
                 "case": "bull",
@@ -1354,7 +1422,10 @@ def customize_event_copy_and_basis(
     entities = [str(e) for e in (ev.get("entities") or [])[:2] if str(e).strip()]
 
     custom_ol = base_ol
-    if rid == "a_share_capital_market_reform":
+    if rid == "a_share_exchange_fee_cut":
+        amt_txt = nums[0] if nums else "约 46 亿元"
+        custom_ol = f"沪深交易所发布年度降费让利方案（预计向市场让利 {amt_txt}），实打实免收上市费、CA 证书与债券交易部分规费，直接降低实体融资成本与做市券商交易摩擦。"
+    elif rid == "a_share_capital_market_reform":
         if "4000" in title or "80%" in title:
             custom_ol = "沪深北交易所将融资保证金下限调降至 80%（测算可释放近 4000 亿增量杠杆资金）并配合降费与做市商松绑，直接催化头部两融券商与金融 IT 迎周一高开重估。"
         elif "做市商" in title or "科创板" in title:

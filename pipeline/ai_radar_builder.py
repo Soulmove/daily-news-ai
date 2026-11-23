@@ -815,6 +815,7 @@ AI_NOISE_RE = re.compile(
     r"套餐|买赠|优惠券|代金券|促销|折扣|限免|会员价|小米\s*mimo.*套餐|mimo.*套餐|学生教师优惠|9\.9元|元/月|优惠上线|"
     r"调查问卷|大肥鱼|chatterfly|neonclipping|youtube\s*shorts.*剪辑|输入法.*内测|艺术中心.*抗议|抗议.*ai|提示词技巧|回答更简短|透明度评分低于|透明度低于|score\s+lower\s+on\s+transparency|get\s+to\s+the\s+point\s+faster|"
     r"演唱会|剧场版|小雪节气|长城坦克|坦克\d+|"
+    r"沃尔特·艾萨克森|walter\s+isaacson|播客访谈|podcast\s+interview|专访节目|人物专访|名人对话|访谈节目|"
     r"国家中医药管理局|中医药|认证中心|未与任何.{0,6}合作|亦未开展测评|辟谣通告|严正声明|"
     r"投资者是否应|是否值得购买|值得买入吗|\bspcx\b|目标价|股价表现|空头机构|估值泡沫|"
     r"微信香港钱包|微信支付|支付宝|信用卡|消费券|手游|主机游戏|steam|帮信罪|刑事拘留)",
@@ -882,11 +883,11 @@ def detect_is_open_source(
 
 
 _DIM_LABELS: Dict[str, Tuple[str, str]] = {
-    "flagship_release": ("🚀 旗舰模型发布", "Flagship Model"),
-    "research_breakthrough": ("🧠 算法与科研突破", "Research & Math"),
-    "api_agent_eng": ("🛠️ API 与 Agent 工程", "API & Agent Eng"),
-    "open_source_eco": ("🔓 开源权重与生态", "Open Source"),
-    "commercial_governance": ("⚖️ 商业化与安全治理", "Governance & Commercial"),
+    "flagship_release": ("旗舰模型发布", "Flagship Model"),
+    "research_breakthrough": ("算法与科研突破", "Research & Math"),
+    "api_agent_eng": ("API 与 Agent 工程", "API & Agent Eng"),
+    "open_source_eco": ("开源权重与生态", "Open Source"),
+    "commercial_governance": ("商业化与安全治理", "Governance & Commercial"),
 }
 
 
@@ -1792,7 +1793,7 @@ def build_ai_progress_artifact(
         lab_all = sorted([it for it in items if it.get("company_id") == cid], key=_ai_item_sort_key, reverse=True)
 
         lab_arch = lab_all[:24]
-        lab_active = lab_all[:8]
+        lab_active = lab_all[:24]
 
         archive_companies.append(
             {
@@ -1882,14 +1883,23 @@ def build_ai_progress_artifact(
     except Exception:
         pass
 
+    model_matrix: List[Dict[str, Any]] = []
+    try:
+        from .deep_enrichment_engine import build_model_comparison_matrix
+
+        model_matrix = build_model_comparison_matrix(root_p, generated_at_iso=generated_at_iso)
+    except Exception:
+        model_matrix = []
+
     return {
-        "schema_version": "4.2",
+        "schema_version": "4.3",
         "generated_at": generated_at_iso,
         "batch_id": batch_id,
         "search_grounded": bool(grounded),
         "archive_path": "data/ai_progress_archive.json",
         "archive_total": len(archive_union),
-        "weekly_digest": _build_digest_block(active_union, "近 7 日全球 AI 大事与机构演进榜"),
+        "weekly_digest": _build_digest_block(active_union, "全球 AI 机构演进榜"),
         "companies": active_companies,
         "timeline": active_union,
+        "model_comparison_matrix": model_matrix,
     }

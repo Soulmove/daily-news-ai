@@ -458,7 +458,8 @@ def merge_live_ai_items_into_doc(
             if bool(it.get("is_open_source")) != cur_os:
                 it["is_open_source"] = cur_os
                 mutated = True
-            if not it.get("milestone_dim"):
+            cur_dim_label = str(it.get("milestone_dim_label") or "")
+            if not it.get("milestone_dim") or not cur_dim_label or any(ord(c) >= 0x2600 for c in cur_dim_label):
                 dim_id, dim_zh, dim_en = classify_ai_milestone_dim(it_title, str(it.get("what_it_does") or ""), is_open_source=cur_os, category=str(it.get("category") or ""))
                 it["milestone_dim"] = dim_id
                 it["milestone_dim_label"] = dim_zh

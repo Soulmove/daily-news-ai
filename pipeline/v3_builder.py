@@ -138,6 +138,10 @@ def _infer_domain_next_catalyst(event: dict, matched_primary_ent: Optional[dict]
         return "跟踪现货 BTC/ETH ETF 净流入、期货持仓量及关键整数关口得失"
     if any(k in combined for k in ("霍尔木兹", "油轮", "触雷", "海峡", "航运", "导弹", "空袭", "无人机", "停火", "和平协议", "北约", "美伊", "伊朗", "俄乌", "波兰", "红海", "克里米亚", "黑海")):
         return "关注国际海事与军政安全通报、各方外交斡旋进展及航运/油价波动"
+    if any(k in title_l for k in ("黎曼", "猜想", "定理", "lean", "mathlib", "形式化", "开源", "github", "hugging face", "hugging", "benchmark", "基准测试", "framework", "bttf", "longcat", "openpangu", "llama.cpp")) or (
+        any(k in title_l for k in ("大模型", "模型发布", "参数")) and not any(k in title_l for k in ("资金", "融资", "ipo", "股价", "股", "投资"))
+    ):
+        return "跟踪 GitHub / Hugging Face 官方仓库权重、许可及第三方独立评测基准（或形式化证明/论文同行复现）"
     if any(k in title_l for k in ("预算", "拨款", "欧盟", "欧洲议会", "政府停摆", "关税", "稀土", "泰国", "缅甸")):
         return "关注涉事经济体财政/贸易主管部门正式公报、执行细则与产业链现货价"
     if any(k in combined for k in ("漏洞", "cve", "零日", "0day", "rce", "sql注入", "代码执行", "勒索软件", "数据泄露", "黑客攻击", "安全补丁")):
@@ -154,10 +158,6 @@ def _infer_domain_next_catalyst(event: dict, matched_primary_ent: Optional[dict]
         return "跟踪车企月度交付销量、区域汽车关税政策及整车业务毛利率披露"
     if any(k in title_l for k in ("回购", "增资", "定增", "高管辞职", "总经理辞职", "董事长")):
         return "关注上市公司回购实施进展公告、增资审批节点及新任高管提名公告"
-    if any(k in title_l for k in ("开源", "github", "hugging face", "hugging", "benchmark", "基准测试", "framework", "bttf", "longcat", "openpangu", "llama.cpp", "黎曼", "lean")) or (
-        any(k in title_l for k in ("大模型", "模型发布", "参数")) and not any(k in title_l for k in ("资金", "融资", "ipo", "股价", "股", "投资"))
-    ):
-        return "跟踪 GitHub / Hugging Face 官方仓库权重、许可及第三方独立评测基准"
     if any(k in combined for k in ("统计局", "宏观", "利率", "fomc", "央行", "净回笼", "gdp", "cpi", "进出口", "房地产")):
         return "关注国家统计局 / 央行下期官方公报或 FOMC 决议声明"
     if any(k in combined for k in ("会晤", "峰会", "外长", "apec", "声明", "边界", "cop31")):
@@ -953,7 +953,14 @@ def build_v3_artifacts(
         domain_cat = _infer_domain_next_catalyst(clean_old, prim_old)
         nc_old = str(clean_old.get("next_catalyst") or "")
         is_genuine_vuln = bool(re.search(r"(?:0day|cve-\d+|安全漏洞|严重漏洞|勒索软件|木马|黑客入侵)", old_title, re.I))
-        has_stale_cve_tpl = ("补丁编号" in nc_old or "安全响应中心" in nc_old) and not is_genuine_vuln
+        has_stale_cve_tpl = (
+            "补丁编号" in nc_old
+            or "补丁版本" in nc_old
+            or "热修" in nc_old
+            or "CVE" in nc_old
+            or "安全响应中心" in nc_old
+            or ("黎曼" in old_title and "GitHub" not in nc_old and "形式化" not in nc_old)
+        ) and not is_genuine_vuln
         has_stale_entity_tpl = (
             ("Anthropic" in nc_old and "anthropic" not in old_title_low and "claude" not in old_title_low)
             or ("SpaceX" in nc_old and not any(k in old_title_low for k in ("spacex", "星舰", "starship", "starlink", "starshield")))
@@ -1632,10 +1639,47 @@ def build_v3_artifacts(
                             txt = pat.sub(rep, txt)
                         ver[vf] = txt
 
+    # Guarantee an even tool count (<= 28) so desktop 2-column grid has zero orphan single card
+    final_tools = list(tech_tools[:28])
+    if len(final_tools) > 2 and len(final_tools) % 2 == 1:
+        drop_idx = next(
+            (i for i in range(len(final_tools) - 1, -1, -1) if str(final_tools[i].get("tool_id") or "").startswith("tool_hf_")),
+            len(final_tools) - 1,
+        )
+        final_tools.pop(drop_idx)
+
+    # V12 Concurrent 13-Key Grounded AI Enrichment across Storylines, Events deep_qa, Topics & Tools
+    try:
+        from .deep_enrichment_engine import run_v12_deep_enrichment
+
+        enrich_res = run_v12_deep_enrichment(
+            root,
+            generated_at_iso=generated_at_iso,
+            cat_docs=cat_docs,
+            storylines=storylines,
+            major_topics=major_topics,
+            tech_tools=final_tools,
+        )
+        if isinstance(enrich_res, dict) and isinstance(enrich_res.get("tools"), list):
+            final_tools = list(enrich_res["tools"][:28])
+            if len(final_tools) > 2 and len(final_tools) % 2 == 1:
+                final_tools.pop()
+    except Exception as exc:
+        print(f"[v3_builder] V12 enrichment warning: {exc}", flush=True)
+
+    # Re-persist cat_docs so event-level deep_qa enriches both root analysis_*.json and active batch archive
+    batch_smart_dirs = list((root / "archives/smart").glob(f"*/{batch_id}"))
+    for cat_key, cdoc in cat_docs.items():
+        if isinstance(cdoc, dict):
+            atomic_write_json(root / f"analysis_{cat_key}.json", cdoc)
+            for bdir in batch_smart_dirs:
+                if (bdir / f"analysis_{cat_key}.json").exists():
+                    atomic_write_json(bdir / f"analysis_{cat_key}.json", cdoc)
+
     atomic_write_json(
         root / "data/topics.json",
         {
-            "schema_version": "4.1",
+            "schema_version": "4.2",
             "generated_at": generated_at_iso,
             "batch_id": batch_id,
             "topics": major_topics,
@@ -1645,7 +1689,7 @@ def build_v3_artifacts(
     atomic_write_json(
         root / "data/topics_history.json",
         {
-            "schema_version": "4.1",
+            "schema_version": "4.2",
             "generated_at": generated_at_iso,
             "batch_id": batch_id,
             "archived_topics": archived_topics,
@@ -1666,21 +1710,12 @@ def build_v3_artifacts(
     atomic_write_json(
         root / "data/storylines_index.json",
         {
-            "schema_version": "4.1",
+            "schema_version": "4.2",
             "generated_at": generated_at_iso,
             "batch_id": batch_id,
             "storylines": storylines,
         },
     )
-    # Guarantee an even tool count (<= 20) so desktop 2-column grid has zero orphan single card
-    final_tools = list(tech_tools[:20])
-    if len(final_tools) > 2 and len(final_tools) % 2 == 1:
-        # Prefer trimming the last HF weight card so all GitHub SDK/framework cards stay intact
-        drop_idx = next(
-            (i for i in range(len(final_tools) - 1, -1, -1) if str(final_tools[i].get("tool_id") or "").startswith("tool_hf_")),
-            len(final_tools) - 1,
-        )
-        final_tools.pop(drop_idx)
 
     atomic_write_json(
         root / "data/calendar.json",
