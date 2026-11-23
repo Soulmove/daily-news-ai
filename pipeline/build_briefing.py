@@ -2276,8 +2276,8 @@ def build_briefing_batch(
     manifest["alerts"] = alerts
     manifest["scheduler"] = {
         "provider": "cloud_engine",
-        "raw_cron": "7 */1 * * *",
-        "smart_cron": "22 */3 * * *",
+        "raw_cron": "*/15 * * * *",
+        "smart_cron": "15 */1 * * *",
         "note": "云端全天候错峰智能采编与多源交叉核验。",
     }
     manifest["smart"] = {
@@ -2289,7 +2289,7 @@ def build_briefing_batch(
         "input_cutoff_at": input_cutoff_at,
         "generated_at": generated_at_iso,
         "published_at": published_iso,
-        "target_cadence_hours": 3,
+        "target_cadence_hours": 1,
         "status": batch_status,
         "generation_mode": batch_meta["generation_mode"],
         "quality_flags": quality_flags,

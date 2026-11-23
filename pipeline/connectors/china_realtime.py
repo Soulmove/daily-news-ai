@@ -472,9 +472,15 @@ def _fetch_rss_flash(
             for node in nodes[:20]:
                 if is_atom:
                     t_el = node.find(f"{_ATOM_NS}title")
-                    l_el = node.find(f"{_ATOM_NS}link[@rel='alternate']") or node.find(f"{_ATOM_NS}link")
-                    p_el = node.find(f"{_ATOM_NS}published") or node.find(f"{_ATOM_NS}updated")
-                    d_el = node.find(f"{_ATOM_NS}summary") or node.find(f"{_ATOM_NS}content")
+                    l_el = node.find(f"{_ATOM_NS}link[@rel='alternate']")
+                    if l_el is None:
+                        l_el = node.find(f"{_ATOM_NS}link")
+                    p_el = node.find(f"{_ATOM_NS}published")
+                    if p_el is None:
+                        p_el = node.find(f"{_ATOM_NS}updated")
+                    d_el = node.find(f"{_ATOM_NS}summary")
+                    if d_el is None:
+                        d_el = node.find(f"{_ATOM_NS}content")
                     link = (l_el.attrib.get("href") or l_el.text or "").strip() if l_el is not None else ""
                 else:
                     t_el = node.find("title")
@@ -852,6 +858,20 @@ def refresh_live_wire_file(base_dir: Path | str = ".", extra_items: Optional[Lis
             return True
         return abs((dt_a - dt_b).total_seconds()) <= 10800
 
+    def _split_clean_sources(raw_src: str) -> tuple[List[str], int]:
+        txt = str(raw_src or "").strip()
+        prior_cnt = 1
+        m_cnt = re.search(r"(?:·|等)\s*(\d+)\s*源合并\s*$", txt)
+        if m_cnt:
+            try:
+                prior_cnt = max(1, int(m_cnt.group(1)))
+            except ValueError:
+                prior_cnt = 1
+            txt = txt[: m_cnt.start()].strip()
+        parts = [p.strip() for p in re.split(r"\s*/\s*", txt) if p.strip()]
+        dedup_parts = list(dict.fromkeys(parts))
+        return dedup_parts, max(prior_cnt, len(dedup_parts) or 1)
+
     def _format_merged_sources(src_list: List[str], merged_cnt: int) -> str:
         clean_s = list(dict.fromkeys([s.strip() for s in src_list if s and s.strip()]))
         if not clean_s:
@@ -886,6 +906,7 @@ def refresh_live_wire_file(base_dir: Path | str = ".", extra_items: Optional[Lis
         pub = str(it.get("published_at") or it.get("fetched_at") or fetched_iso)
         src_id = str(it.get("source_id") or "")
         src_name = str(it.get("source_name") or "实时快讯")
+        in_srcs, in_cnt = _split_clean_sources(src_name)
         cluster_key = _wire_subject_action_cluster(title, excerpt_clean)
         cat_norm = _classify_wire_item(title, excerpt_clean, str(it.get("category") or "general"))
         if it.get("synced_from_today") and not HEAVY_NOISE_EXCLUDE_RE.search(title):
@@ -901,11 +922,11 @@ def refresh_live_wire_file(base_dir: Path | str = ".", extra_items: Optional[Lis
             if _within_three_hours(pub, prev_pub) and (same_cluster or _wire_titles_similar(norm_full, prev_norm)):
                 # Coalesce multi-post burst or cross-source duplicate into the richest / latest wire item
                 target = merged[prev_idx]
-                base_srcs = target.setdefault("_merged_sources", [target.get("source_name") or "实时快讯"])
-                raw_short = src_name.split(" · ")[0].split(" 等 ")[0].strip()
-                if raw_short and raw_short not in base_srcs:
-                    base_srcs.append(raw_short)
-                target["_merged_count"] = int(target.get("_merged_count") or 1) + 1
+                base_srcs = target.setdefault("_merged_sources", _split_clean_sources(target.get("source_name") or "实时快讯")[0])
+                for s in in_srcs:
+                    if s and s not in base_srcs:
+                        base_srcs.append(s)
+                target["_merged_count"] = max(int(target.get("_merged_count") or 1) + 1, len(base_srcs))
                 cur_richness = len(str(target.get("title") or "")) + len(str(target.get("excerpt") or ""))
                 if (in_richness > cur_richness + 4) or (in_richness >= cur_richness - 4 and pub > str(target.get("published_at") or "")):
                     target["title"] = title
@@ -925,14 +946,15 @@ def refresh_live_wire_file(base_dir: Path | str = ".", extra_items: Optional[Lis
         seen_keys.add(k)
         idx_new = len(merged)
         seen_entries.append((norm_full, pub, cluster_key, idx_new))
+        init_srcs = list(in_srcs) if in_srcs else ["实时快讯"]
         entry_obj = {
             "id": str(it.get("item_id") or it.get("id") or f"lw_{idx_new}"),
             "title": title,
             "excerpt": excerpt_clean,
             "category": cat_norm,
-            "source_name": src_name,
-            "_merged_sources": [s.strip() for s in str(it.get("source_name") or "实时快讯").split(" · ")[0].split(" 等 ")[0].split("/") if s.strip()],
-            "_merged_count": 1,
+            "source_name": _format_merged_sources(init_srcs, in_cnt),
+            "_merged_sources": init_srcs,
+            "_merged_count": in_cnt,
             "url": canon_u or str(it.get("url") or it.get("canonical_url") or ""),
             "published_at": pub,
             "thumbnail_url": it.get("thumbnail_url"),
