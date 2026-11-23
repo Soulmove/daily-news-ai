@@ -665,8 +665,39 @@ def _clip_complete_sentence(text: Optional[str], max_len: int = 120) -> str:
     return f"{clean}。" if len(clean) <= max_len + 45 else f"{cut.rstrip()}。"
 
 
+def _is_precious_metal_or_commodity_event(title: str) -> bool:
+    return bool(re.search(r"黄金|金价|白银|贵金属|原油|油价|布伦特|WTI|铜价|大宗", title or "", re.I))
+
+
 def _is_a_share_policy_event(title: str, cat: str = "") -> bool:
-    return bool(re.search(r"A股|沪深|两融|保证金|降费|证监会|央行|国务院|深交所|上交所|北交所|主动ETF|医保|公积金", title))
+    t = title or ""
+    explicit_policy = bool(re.search(r"沪深北|沪深交易所|上交所|深交所|北交所|两融|融资保证金|降费|证监会|央行|国务院|主动\s*ETF|医保|公积金|平准基金|稳市", t, re.I))
+    if _is_precious_metal_or_commodity_event(t) and not explicit_policy:
+        return False
+    return explicit_policy or bool(re.search(r"A股.{0,10}(?:政策|新规|改革|制度|监管|减持|回购|分红)", t, re.I))
+
+
+def _is_bad_cached_event_qa(title_s: str, cat: str, cached_qa: Any) -> bool:
+    """Detect stale, mid-sentence chopped, or mismatched boilerplate Q&A cache entries."""
+    if not isinstance(cached_qa, list) or not cached_qa:
+        return True
+    is_ipo_story = bool(re.search(r"ipo|上市|募资|发行价|独角兽", title_s or "", re.I))
+    is_commodity = _is_precious_metal_or_commodity_event(title_s)
+    is_a_policy = _is_a_share_policy_event(title_s, cat)
+    for q in cached_qa:
+        if not isinstance(q, dict):
+            continue
+        blob = f"{q.get('question') or ''} {q.get('answer') or ''} {q.get('historical_parallel') or ''}"
+        if (not is_a_policy or is_commodity) and any(
+            bad in blob for bad in ("同类政策落地窗", "同类境内资本市场政策", "这项政策对普通投资者与 A 股行业")
+        ):
+            return True
+        if (not is_ipo_story or is_commodity) and any(bad in blob for bad in ("科创 IPO", "高估值独角兽")):
+            return True
+        ans = str(q.get("answer") or "").strip()
+        if ans and ans[-1] not in "。！？.!?)）\"'":
+            return True
+    return False
 
 
 def _build_event_deep_qa_via_gemini(ev: Dict[str, Any], root: Path) -> Optional[List[Dict[str, str]]]:
@@ -707,6 +738,19 @@ def _build_deterministic_event_qa(ev: Dict[str, Any], cat: str) -> List[Dict[str
     summary = _clip_complete_sentence(str(ev.get("fact_summary") or title), 115)
     ents = [str(e) for e in (ev.get("entities") or [])[:2] if str(e).strip()]
     ent_str = " / ".join(ents) if ents else "相关产业链"
+    if _is_precious_metal_or_commodity_event(title) and not _is_a_share_policy_event(title, cat):
+        return [
+            {
+                "question": "这波贵金属/大宗商品波动对普通配置与市场有何影响？",
+                "answer": _clip_complete_sentence(f"聚焦{ent_str}避险溢价与美元实际利率再定价：{summary}", 120),
+                "historical_parallel": "参考历次 COMEX 金价高位急跌去杠杆窗口，通常需重点观察 10 年期美债实际利率 (TIPS) 企稳、商业银行风控提示与亚盘实物金买盘承接力度。",
+            },
+            {
+                "question": "后续判断企稳与趋势的核心观测指标是什么？",
+                "answer": "重点关注 COMEX 现货/期货仓位变化、10 年期美债实际利率 (TIPS) 走势、银行积存金风控节奏以及全球央行季度购金动向。",
+                "historical_parallel": "历史商品急跌后的首周反弹往往伴随多空筹码换手，需观察央行购金节奏与美元指数是否同步配合。",
+            },
+        ]
     if _is_a_share_policy_event(title, cat):
         return [
             {
@@ -718,19 +762,6 @@ def _build_deterministic_event_qa(ev: Dict[str, Any], cat: str) -> List[Dict[str
                 "question": "市场正反分歧核心在哪里？",
                 "answer": "看多逻辑看重制度与成本边际改善；谨慎派关注基本面盈利兑现与后续配套细则衔接连续性。",
                 "historical_parallel": "2024 年 9 月增量政策落地后，具备基本面印证的核心板块持续跑赢纯概念题材。",
-            },
-        ]
-    if any(k in title.lower() for k in ("黄金", "金价", "白银", "贵金属", "原油", "油价", "布伦特", "wti", "铜价", "大宗")):
-        return [
-            {
-                "question": "这波贵金属/大宗商品波动对普通配置与市场有何影响？",
-                "answer": _clip_complete_sentence(f"聚焦{ent_str}避险溢价与美元实际利率再定价：{summary}", 120),
-                "historical_parallel": "参考 2013 年及 2020~2024 年贵金属急跌反弹窗口，实际利率 (TIPS) 拐点与商业银行风控提示常对应短期高波震荡区间。",
-            },
-            {
-                "question": "后续判断企稳与趋势的核心观测指标是什么？",
-                "answer": "重点关注 COMEX 现货/期货仓位变化、10 年期美债实际利率走势、银行积存金风控节奏以及全球央行季度购金动向。",
-                "historical_parallel": "历史商品急跌后的首周反弹往往伴随多空筹码换手，需观察央行购金节奏与美元指数是否同步配合。",
             },
         ]
     if any(k in title.lower() for k in ("美联储", "fomc", "加息", "降息", "通胀", "财政", "贝森特", "美债", "纳斯达克", "标普", "美股")):
@@ -867,10 +898,16 @@ def run_v12_deep_enrichment(
         if isinstance(st, dict) and (len(st.get("timeline") or []) < 3 or not st.get("stance_comparison"))
     ][:18]
 
-    # 2. Select top S/A/high events across cat_docs needing deep_qa
+    # 2. Select top S/A/high events across cat_docs needing deep_qa (purge stale/mismatched cache entries upfront)
     top_events: List[Tuple[str, Dict[str, Any]]] = []
     for cat in ("finance", "global", "tech", "general"):
         evs = (cat_docs.get(cat) or {}).get("events") or []
+        for e in evs:
+            if not isinstance(e, dict):
+                continue
+            eid_c = str(e.get("event_id") or "")
+            if eid_c and eid_c in qa_cache and _is_bad_cached_event_qa(str(e.get("title") or ""), cat, qa_cache.get(eid_c)):
+                qa_cache.pop(eid_c, None)
         ranked = sorted(
             [e for e in evs if isinstance(e, dict)],
             key=lambda e: (1 if e.get("severity_tier") == "S" else (1 if e.get("importance") == "high" else 0), len(e.get("sources") or [])),
@@ -892,8 +929,8 @@ def run_v12_deep_enrichment(
                 if sid not in st_cache
             }
             qa_futures = {
-                pool.submit(_build_event_deep_qa_via_gemini, ev, root): str(ev.get("event_id") or "")
-                for _, ev in top_events[:10]
+                pool.submit(_build_event_deep_qa_via_gemini, ev, root): (cat_q, ev)
+                for cat_q, ev in top_events[:10]
                 if str(ev.get("event_id") or "") and str(ev.get("event_id") or "") not in qa_cache
             }
             tp_futures = {
@@ -917,10 +954,11 @@ def run_v12_deep_enrichment(
                     pass
 
             for fut in as_completed(qa_futures):
-                eid = qa_futures[fut]
+                cat_q, ev_q = qa_futures[fut]
+                eid = str(ev_q.get("event_id") or "")
                 try:
                     val = fut.result(timeout=45)
-                    if val:
+                    if val and not _is_bad_cached_event_qa(str(ev_q.get("title") or ""), cat_q, val):
                         qa_cache[eid] = val
                 except Exception:
                     pass
@@ -994,7 +1032,7 @@ def run_v12_deep_enrichment(
         if len(st["timeline"]) >= 3:
             st_enriched_count += 1
 
-    # Apply deep_qa onto cat_docs events (purge cached mid-sentence chops or bogus A-share boilerplate)
+    # Apply deep_qa onto cat_docs events (purge cached mid-sentence chops or bogus A-share/commodity boilerplate)
     qa_enriched_count = 0
     for cat in ("finance", "global", "tech", "general"):
         for ev in (cat_docs.get(cat) or {}).get("events") or []:
@@ -1003,32 +1041,12 @@ def run_v12_deep_enrichment(
             eid = str(ev.get("event_id") or "")
             title_s = str(ev.get("title") or "")
             cached_qa = qa_cache.get(eid) if eid else None
-            if isinstance(cached_qa, list) and cached_qa:
-                is_ipo_story = bool(re.search(r"ipo|上市|募资|发行价|独角兽", title_s, re.I))
-                has_bad_tpl = (
-                    (
-                        not _is_a_share_policy_event(title_s, cat)
-                        and any("同类政策落地窗" in str(q.get("historical_parallel") or "") for q in cached_qa if isinstance(q, dict))
-                    )
-                    or (
-                        not is_ipo_story
-                        and any(
-                            any(bad in str(q.get("historical_parallel") or "") for bad in ("科创 IPO", "高估值独角兽"))
-                            for q in cached_qa
-                            if isinstance(q, dict)
-                        )
-                    )
-                )
-                has_chop = any(
-                    str(q.get("answer") or "").strip() and str(q.get("answer") or "").strip()[-1] not in "。！？.!?)）\"'"
-                    for q in cached_qa
-                    if isinstance(q, dict)
-                )
-                if has_bad_tpl or has_chop:
-                    cached_qa = None
+            if cached_qa is not None and _is_bad_cached_event_qa(title_s, cat, cached_qa):
+                qa_cache.pop(eid, None)
+                cached_qa = None
             if cached_qa:
                 ev["deep_qa"] = cached_qa
-            elif ev.get("severity_tier") in {"S", "A"} or ev.get("importance") == "high" or len(ev.get("sources") or []) >= 2:
+            elif ev.get("severity_tier") in {"S", "A"} or ev.get("importance") == "high" or len(ev.get("sources") or []) >= 2 or ev.get("deep_qa"):
                 ev["deep_qa"] = _build_deterministic_event_qa(ev, cat)
             if ev.get("deep_qa"):
                 qa_enriched_count += 1

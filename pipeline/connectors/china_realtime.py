@@ -559,17 +559,30 @@ _WIRE_A_TIER_RE = re.compile(
 
 
 def _infer_wire_heavy_reason_tag(title: str, excerpt: str = "", category: str = "") -> str:
-    """Return concise human-readable category reason explaining WHY a wire earned Heavy tier."""
-    blob = f"{title} {excerpt}"
-    if re.search(r"证监会|沪深北|沪深交易所|上交所|深交所|主动\s*ETF|两融|保证金|降费|央行|国务院|税务|反垄断|SEC|出口管制|实体清单|关税|禁令|稳市基金|稳定基金", blob, re.I):
-        return "监管新政"
-    if re.search(r"中美元首|习近平|特朗普|总统|总理|财长|贝森特|美联储|FOMC|鲍威尔|欧央行|日本央行|外交部|联合声明", blob, re.I):
-        return "元首/央行表态"
-    if re.search(r"黎曼猜想|Mathlib|Lean|Nature|Science|发布.{0,12}(?:GPT|Claude|Gemini|DeepSeek|Qwen|GLM|Kimi|VLA)|开源.{0,10}模型|芯片架构|可回收火箭", blob, re.I):
-        return "科研/模型里程碑"
-    if re.search(r"暴跌|涨超|跌超|飙升|破发|腰斩|熔断|闪崩|危机|抛售|黄金|原油|比特币|市值", blob, re.I):
-        return "市场剧震"
-    return "巨头重大变动"
+    """Return concise human-readable category reason explaining WHY a wire earned Heavy tier, prioritizing title subject."""
+    def _classify(chunk: str, *, allow_fallback: bool = False) -> str | None:
+        if not chunk:
+            return None
+        if re.search(r"黄金|金价|白银|贵金属|原油|油价|布伦特|WTI|铜价|大宗", chunk, re.I):
+            return "大宗与市场剧震"
+        if re.search(
+            r"证监会|沪深北|沪深交易所|上交所|深交所|主动\s*ETF|两融|保证金|降费|央行|国务院|税务|反垄断|SEC|出口管制|实体清单|关税|禁令|稳市基金|稳定基金|平准基金",
+            chunk,
+            re.I,
+        ) and not ("国内银行" in chunk or "商业银行" in chunk):
+            return "监管新政"
+        if re.search(r"黎曼猜想|Mathlib|Lean|Nature|Science|发布.{0,12}(?:GPT|Claude|Gemini|DeepSeek|Qwen|GLM|Kimi|VLA)|开源.{0,10}模型|芯片架构|可回收火箭", chunk, re.I):
+            return "科研/模型里程碑"
+        if re.search(r"中美元首|习近平|特朗普|总统|总理|财长|贝森特|美联储|FOMC|鲍威尔|欧央行|日本央行|外交部|联合声明", chunk, re.I):
+            return "元首/央行表态"
+        if re.search(r"暴跌|涨超|跌超|飙升|破发|腰斩|熔断|闪崩|危机|抛售|比特币|市值", chunk, re.I):
+            return "市场剧震"
+        return "巨头重大变动" if allow_fallback else None
+
+    hit = _classify(title or "", allow_fallback=False)
+    if hit:
+        return hit
+    return _classify(excerpt or "", allow_fallback=True) or "巨头重大变动"
 _EXCHANGE_REFORM_CLUSTER_RE = re.compile(
     r"(?:沪深北交易所|沪深交易所|上交所.{0,10}(?:做市|降费)|深交所.{0,10}(?:做市|征求意见)|中国结算.{0,10}债券)",
     re.I,

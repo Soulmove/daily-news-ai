@@ -64,6 +64,21 @@ def normalize_simplified_zh(text: str) -> str:
     return text.translate(_TRAD_TO_SIMP_TRANS)
 
 
+def _has_cjk(text: str) -> bool:
+    return bool(re.search(r"[\u4e00-\u9fff]", text or ""))
+
+
+def _pick_zh_timeline_summary(timeline: List[dict], fallback_summary: str = "") -> str:
+    """Return the first non-placeholder Chinese summary from fallback or timeline nodes."""
+    for cand in [fallback_summary, *[str((tn or {}).get("fact_summary") or "") for tn in (timeline or []) if isinstance(tn, dict)]]:
+        s = str(cand or "").strip()
+        if not s or "该条为海外主流媒体英文原报" in s or "云端 AI 批次将自动" in s:
+            continue
+        if _has_cjk(s):
+            return normalize_simplified_zh(s)
+    return ""
+
+
 def _clean_bullet_items(items: Any) -> List[str]:
     out: List[str] = []
     for raw in _as_str_list(items):
@@ -848,7 +863,7 @@ def build_v3_artifacts(
 
         def _scrub_ph(txt: str) -> str:
             if not txt or "该条为海外主流媒体英文原报" in txt or "云端 AI 批次将自动" in txt:
-                return ev.get("fact_summary") or ev.get("summary_en") or ev.get("title") or ""
+                return _pick_zh_timeline_summary(timeline, str(ev.get("fact_summary") or "")) or ev.get("summary_en") or ev.get("title") or ""
             return txt
 
         diff["new_facts"] = _clean_bullet_items([_scrub_ph(x) for x in (diff.get("new_facts") or [])])
@@ -857,6 +872,9 @@ def build_v3_artifacts(
         for tn in timeline:
             if isinstance(tn, dict) and tn.get("fact_summary"):
                 tn["fact_summary"] = _scrub_ph(str(tn["fact_summary"]))
+        zh_sum_fresh = _pick_zh_timeline_summary(timeline, str(ev.get("fact_summary") or ""))
+        if zh_sum_fresh and not any(_has_cjk(x) for x in diff["new_facts"] + diff["unchanged_background"]):
+            diff["unchanged_background"] = [smart_truncate(zh_sum_fresh, 180)]
 
         st_tier, st_tier_label = infer_event_evidence_tier(ev)
         grounded_ents, grounded_eids = _ground_storyline_entities(
@@ -1031,20 +1049,32 @@ def build_v3_artifacts(
         ):
             continue
         clean_old = dict(old_st)
+        zh_sum_old = _pick_zh_timeline_summary(clean_old.get("timeline") or [], str(clean_old.get("fact_summary") or ""))
+
         def _scrub_old_ph(txt: str) -> str:
             if not txt or "该条为海外主流媒体英文原报" in txt or "云端 AI 批次将自动" in txt:
+                if zh_sum_old:
+                    return smart_truncate(zh_sum_old, 180)
                 src0_t = ((clean_old.get("sources") or [{}])[0]).get("excerpt") or ((clean_old.get("sources") or [{}])[0]).get("title") or clean_old.get("summary_en") or clean_old.get("title_en") or clean_old.get("title") or ""
                 return smart_truncate(str(src0_t), 120)
             return txt
+
         fd_old = clean_old.get("fact_diff")
         if isinstance(fd_old, dict):
             fd_old["new_facts"] = _clean_bullet_items([_scrub_old_ph(str(x)) for x in (fd_old.get("new_facts") or [])])
             fd_old["unchanged_background"] = _clean_bullet_items([_scrub_old_ph(str(x)) for x in (fd_old.get("unchanged_background") or [])])
             fd_old["corrections"] = _clean_bullet_items(fd_old.get("corrections") or [])
+            if zh_sum_old and not any(_has_cjk(x) for x in fd_old["new_facts"] + fd_old["unchanged_background"]):
+                src0_title = str(((clean_old.get("sources") or [{}])[0]).get("title") or "").strip().lower()
+                fd_old["new_facts"] = [
+                    x for x in fd_old["new_facts"]
+                    if _has_cjk(x) or (src0_title and x.strip().lower() != src0_title)
+                ]
+                fd_old["unchanged_background"] = [smart_truncate(zh_sum_old, 180)]
         for tn in clean_old.get("timeline") or []:
             if isinstance(tn, dict) and tn.get("fact_summary"):
                 tn["fact_summary"] = _scrub_old_ph(str(tn["fact_summary"]))
-        old_sum_txt = str((clean_old.get("timeline") or [{}])[0].get("fact_summary") or clean_old.get("fact_summary") or "")
+        old_sum_txt = zh_sum_old or str((clean_old.get("timeline") or [{}])[0].get("fact_summary") or clean_old.get("fact_summary") or "")
         grounded_old_ents, grounded_old_eids = _ground_storyline_entities(
             old_title,
             old_sum_txt,
