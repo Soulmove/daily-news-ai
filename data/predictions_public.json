@@ -1,7 +1,7 @@
 {
   "schema_version": "4.1",
-  "generated_at": "2026-11-23T15:55:57+08:00",
-  "batch_id": "smart-20261123-155557",
+  "generated_at": "2026-11-23T17:07:49+08:00",
+  "batch_id": "smart-20261123-170749",
   "note": "基于公开官方催化剂与权威报道建立的客观验证观察题；个人自建与修订记录保存在本地浏览器，支持导入导出。",
   "predictions": [
     {
@@ -190,6 +190,155 @@
           "judgment": "本批美联储官员表态及市场通胀预期延续博弈，12 月点阵图对 2027 路径至关重要",
           "probability_pct": 66,
           "reason": "本批纳入 1 条美联储利率路径最新报道（含：美财长贝森特警告美联储过度收紧风险 交易员下调12月加息押注）"
+        }
+      ],
+      "settlement": null
+    },
+    {
+      "prediction_id": "pred_live_shenzhou24_launch",
+      "mode": "live",
+      "status": "open",
+      "title": "神舟二十四号载人飞船是否在预定窗口期顺利发射入轨并完成空间站对接",
+      "title_en": "Will Shenzhou-24 launch and dock successfully within its scheduled window?",
+      "target_entity_id": "ent_spacex_tesla",
+      "target_entity": "中国载人航天工程 (CMSA)",
+      "question": "截至 2026-11-26，新华社或中国载人航天工程办公室是否发布神舟二十四号发射圆满成功并完成对接官方通报？",
+      "question_en": "By Nov 26, 2026, will CMSA/Xinhua confirm successful launch and Tiangong docking of Shenzhou-24?",
+      "created_at": "2026-11-23T17:07:49+08:00",
+      "due_at": "2026-11-26T22:00:00+08:00",
+      "win_rule": "新华社或 CMSA 官网公布“发射取得圆满成功”且神舟二十四号顺利入轨对接",
+      "lose_rule": "官方宣布推迟发射窗口或发生任务异常中止",
+      "indeterminate_rule": "任务尚处于待命推迟且未发布明确新窗口通告",
+      "supporting_evidence": [
+        "催化日历与官方报道确认神舟二十四号近期发射窗口临近"
+      ],
+      "opposing_evidence": [
+        "航天发射受高空风切变等气象条件临时调整影响较大"
+      ],
+      "core_assumption": "以载人航天工程办公室及新华社正式公告为唯一核验标准",
+      "invalidation_trigger": "发射任务明确取消",
+      "probability_pct": 88,
+      "probability_note": "结合当前催化排期自动生成，到期日依据官方发射通报结算",
+      "current_judgment": "酒泉发射窗口临近，历史高可靠性支撑高概率如期顺利发射",
+      "versions": [
+        {
+          "version": 1,
+          "updated_at": "2026-11-23T17:07:49+08:00",
+          "judgment": "等待发射窗口官方倒计时与新华社通报",
+          "probability_pct": 88,
+          "reason": "由近期航天发射催化节点自动立项"
+        }
+      ],
+      "settlement": null
+    },
+    {
+      "prediction_id": "pred_live_margin80_turnover",
+      "mode": "live",
+      "status": "open",
+      "title": "11月30日两融融资保证金降至80%施行首日，沪深两市成交额能否突破1.8万亿",
+      "title_en": "Will A-share daily turnover exceed RMB 1.8T on Nov 30 margin-ratio cut effective day?",
+      "target_entity_id": "ent_cn_brokers",
+      "target_entity": "中信证券 / A股券商与资本市场",
+      "question": "2026-11-30 沪深北交易所融资保证金下调至 80% 正式生效当日，沪深两市全日成交总额是否突破 1.8 万亿元？",
+      "question_en": "On Nov 30, 2026 when the 80% margin cut takes effect, will combined SH+SZ turnover exceed RMB 1.8 trillion?",
+      "created_at": "2026-11-23T17:07:49+08:00",
+      "due_at": "2026-11-30T16:00:00+08:00",
+      "win_rule": "11 月 30 日沪深两市收盘合计成交额 >= 1.8 万亿元人民币",
+      "lose_rule": "当日沪深两市收盘合计成交额低于 1.8 万亿元",
+      "indeterminate_rule": "交易所临时公告延后施行日期或休市",
+      "supporting_evidence": [
+        "沪深北交易所官方发布融资保证金下调至 80% 并定档 11 月 30 日正式施行",
+        "政策预计显著提升两融杠杆可用空间与券商交投活跃度"
+      ],
+      "opposing_evidence": [
+        "前期利好消息公告后已有部分资金提前抢跑，生效当日或存兑现分化"
+      ],
+      "core_assumption": "以 11 月 30 日 A 股收盘官方成交额统计为准",
+      "invalidation_trigger": "生效时间变更",
+      "probability_pct": 64,
+      "probability_note": "基于两融新政生效日期与当前成交基数自动构建观察",
+      "current_judgment": "杠杆资金空间打开利好交投放量，重点跟踪中信/东财等券商龙头量能表现",
+      "versions": [
+        {
+          "version": 1,
+          "updated_at": "2026-11-23T17:07:49+08:00",
+          "judgment": "锚定 11 月 30 日正式生效日成交额放量验证",
+          "probability_pct": 64,
+          "reason": "由两融 80% 重大监管新政自动立项"
+        }
+      ],
+      "settlement": null
+    },
+    {
+      "prediction_id": "pred_live_korea_stab_fund",
+      "mode": "live",
+      "status": "open",
+      "title": "韩国股市平准基金本周是否正式宣布启动实质性入场买盘护盘",
+      "title_en": "Will South Korea activate its equity stabilization fund for actual market buying this week?",
+      "target_entity_id": "ent_memory_chips",
+      "target_entity": "存储芯片 / 韩国资本市场",
+      "question": "截至本观察期末，韩国企划财政部或金融委员会 (FSC) 是否正式发布股市平准基金实质入场买盘公告？",
+      "question_en": "Within the observation window, will South Korea's MOEF/FSC announce actual deployment of its stock stabilization fund?",
+      "created_at": "2026-11-23T17:07:49+08:00",
+      "due_at": "2026-11-29T20:00:00+08:00",
+      "win_rule": "韩国监管当局公告股市平准基金已拨款入场或启动首笔实质买入操作",
+      "lose_rule": "仅维持“审查/准备启动”口头表态而未动用平准基金实际资金",
+      "indeterminate_rule": "韩国市场连续休市",
+      "supporting_evidence": [
+        "韩国财长及金融监管部门近期针对 KOSPI 波动公开表示将审查动用股市平准基金"
+      ],
+      "opposing_evidence": [
+        "历史上韩方多次以口头表态+融资限额管控优先，实际动用平准基金门槛较高"
+      ],
+      "core_assumption": "以韩国政府及权威财经通讯社（韩联社/路透）实锤公告为准",
+      "invalidation_trigger": "KOSPI 快速收复失地导致监管撤回动议",
+      "probability_pct": 42,
+      "probability_note": "由韩国股市平准基金动向自动生成",
+      "current_judgment": "韩国监管口头稳市信号明确，但是否真金白银入场仍取决于本周 KOSPI 指数守位情况",
+      "versions": [
+        {
+          "version": 1,
+          "updated_at": "2026-11-23T17:07:49+08:00",
+          "judgment": "持续跟踪韩国 FSC 公告与 KOSPI 止跌表现",
+          "probability_pct": 42,
+          "reason": "由韩国股市波动与平准基金重磅动态自动立项"
+        }
+      ],
+      "settlement": null
+    },
+    {
+      "prediction_id": "pred_live_gold_rebound_window",
+      "mode": "live",
+      "status": "open",
+      "title": "国际金价剧烈回调后，未来 7 天能否重新站稳 3600 美元/盎司上方",
+      "title_en": "Can spot gold reclaim and hold above $3,600/oz within 7 days after sharp volatility?",
+      "target_entity_id": "ent_gold_metals",
+      "target_entity": "黄金 / 贵金属与避险资产",
+      "question": "截至 7 天观察窗口到期前，伦敦现货黄金 / COMEX 主力期金任意交易日收盘价是否重新站上 3600 美元/盎司？",
+      "question_en": "Before the 7-day window expires, will spot/COMEX gold close back above $3,600/oz?",
+      "created_at": "2026-11-23T17:07:49+08:00",
+      "due_at": "2026-11-30T20:00:00+08:00",
+      "win_rule": "到期前国际现货或主力期金官方日收盘价 >= 3600 美元/盎司",
+      "lose_rule": "观察窗口全程收盘价格始终低于 3600 美元/盎司",
+      "indeterminate_rule": "数据源行情缺失",
+      "supporting_evidence": [
+        "机构报告及实物买盘在金价急跌后开始逢低介入支撑反弹"
+      ],
+      "opposing_evidence": [
+        "多头获利回吐叠加美联储偏鹰预期仍压制无息黄金短线估值"
+      ],
+      "core_assumption": "直接依据大宗商品行情收盘价格核验结算",
+      "invalidation_trigger": "突发超级央行流动性干预",
+      "probability_pct": 52,
+      "probability_note": "基于当前黄金剧震行情自动生成观察",
+      "current_judgment": "金价在强震去杠杆后多空博弈激烈，观察实物买盘与利率预期对 3600 关口的修复力度",
+      "versions": [
+        {
+          "version": 1,
+          "updated_at": "2026-11-23T17:07:49+08:00",
+          "judgment": "跟踪黄金期现反弹强度与美元实际利率走势",
+          "probability_pct": 52,
+          "reason": "由大宗金属剧震事件自动立项"
         }
       ],
       "settlement": null

@@ -1,29 +1,30 @@
 {
   "schema_version": "4.1",
-  "site_published_at": "2026-11-23T17:06:34+08:00",
+  "site_published_at": "2026-11-23T17:11:54+08:00",
   "smart": {
-    "latest_batch_id": "smart-20261123-155557",
-    "latest_path": "archives/smart/2026-11-23/15-55/",
-    "meta_path": "archives/smart/2026-11-23/15-55/batch_meta.json",
-    "input_batch_id": "raw-20261123-155513",
-    "input_raw_path": "archives/raw/2026-11-23/15-55/",
-    "input_cutoff_at": "2026-11-23T15:55:13+08:00",
-    "generated_at": "2026-11-23T15:55:57+08:00",
-    "published_at": "2026-11-23T15:59:20+08:00",
+    "latest_batch_id": "smart-20261123-170749",
+    "latest_path": "archives/smart/2026-11-23/17-07/",
+    "meta_path": "archives/smart/2026-11-23/17-07/batch_meta.json",
+    "input_batch_id": "raw-20261123-170607",
+    "input_raw_path": "archives/raw/2026-11-23/17-06/",
+    "input_cutoff_at": "2026-11-23T17:06:07+08:00",
+    "generated_at": "2026-11-23T17:07:49+08:00",
+    "published_at": "2026-11-23T17:11:54+08:00",
     "target_cadence_hours": 3,
     "status": "partial",
     "generation_mode": "mode_ai",
     "quality_flags": [
-      "partial_category_fallback"
+      "partial_category_fallback",
+      "gemini_quota_exhausted"
     ],
-    "model_name": "gemini-2.5-flash",
+    "model_name": "gemini-4-hydrogen",
     "configured_primary_model": "gemini-4-hydrogen",
     "has_comments": false,
     "categories": {
       "finance": {
         "batch_id": "smart-20261123-133123",
-        "path": "archives/smart/2026-11-23/15-55/analysis_finance.json",
-        "comments_path": "archives/smart/2026-11-23/15-55/comments_finance.json",
+        "path": "archives/smart/2026-11-23/17-07/analysis_finance.json",
+        "comments_path": "archives/smart/2026-11-23/17-07/comments_finance.json",
         "input_batch_id": "raw-20261123-132105",
         "input_cutoff_at": "2026-11-23T13:21:05+08:00",
         "generated_at": "2026-11-23T13:33:40+08:00",
@@ -37,8 +38,8 @@
       },
       "global": {
         "batch_id": "smart-20261123-133123",
-        "path": "archives/smart/2026-11-23/15-55/analysis_global.json",
-        "comments_path": "archives/smart/2026-11-23/15-55/comments_global.json",
+        "path": "archives/smart/2026-11-23/17-07/analysis_global.json",
+        "comments_path": "archives/smart/2026-11-23/17-07/comments_global.json",
         "input_batch_id": "raw-20261123-132105",
         "input_cutoff_at": "2026-11-23T13:21:05+08:00",
         "generated_at": "2026-11-23T13:35:34+08:00",
@@ -52,31 +53,31 @@
       },
       "tech": {
         "batch_id": "smart-20261123-155557",
-        "path": "archives/smart/2026-11-23/15-55/analysis_tech.json",
-        "comments_path": "archives/smart/2026-11-23/15-55/comments_tech.json",
+        "path": "archives/smart/2026-11-23/17-07/analysis_tech.json",
+        "comments_path": "archives/smart/2026-11-23/17-07/comments_tech.json",
         "input_batch_id": "raw-20261123-155513",
         "input_cutoff_at": "2026-11-23T15:55:13+08:00",
         "generated_at": "2026-11-23T15:58:44+08:00",
-        "status": "ok",
-        "is_fallback": false,
-        "fallback_reason": null,
+        "status": "fallback",
+        "is_fallback": true,
+        "fallback_reason": "本轮生成失败（All Gemini attempts failed: ServerError: 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand ），已保留该分类上次成功批次数据",
         "item_count": 12,
         "verified_count": 12,
         "needs_verification_count": 0,
         "has_comments": false
       },
       "general": {
-        "batch_id": "smart-20261123-141630",
-        "path": "archives/smart/2026-11-23/15-55/analysis_general.json",
-        "comments_path": "archives/smart/2026-11-23/15-55/comments_general.json",
-        "input_batch_id": "raw-20261123-141428",
-        "input_cutoff_at": "2026-11-23T14:14:28+08:00",
-        "generated_at": "2026-11-23T14:19:51+08:00",
-        "status": "fallback",
-        "is_fallback": true,
-        "fallback_reason": "本轮生成失败（All Gemini attempts failed: ServerError: 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand ），已保留该分类上次成功批次数据",
-        "item_count": 11,
-        "verified_count": 11,
+        "batch_id": "smart-20261123-170749",
+        "path": "archives/smart/2026-11-23/17-07/analysis_general.json",
+        "comments_path": "archives/smart/2026-11-23/17-07/comments_general.json",
+        "input_batch_id": "raw-20261123-170607",
+        "input_cutoff_at": "2026-11-23T17:06:07+08:00",
+        "generated_at": "2026-11-23T17:11:54+08:00",
+        "status": "ok",
+        "is_fallback": false,
+        "fallback_reason": null,
+        "item_count": 10,
+        "verified_count": 10,
         "needs_verification_count": 0,
         "has_comments": false
       }
@@ -154,10 +155,10 @@
     }
   },
   "scheduler": {
-    "provider": "cloud_runner",
-    "raw_cron": "*/15 * * * *",
-    "smart_cron": "15 */1 * * *",
-    "note": "高频错峰调度（原始抓取每 15 分钟 / 深度研报每小时）；服务端静默增量同步。"
+    "provider": "cloud_engine",
+    "raw_cron": "7 */1 * * *",
+    "smart_cron": "22 */3 * * *",
+    "note": "云端全天候错峰智能采编与多源交叉核验。"
   },
   "connectors": {
     "latest_path": "data/connectors_latest.json",
@@ -172,8 +173,8 @@
   },
   "v3": {
     "schema_version": "4.0",
-    "generated_at": "2026-11-23T15:59:20+08:00",
-    "batch_id": "smart-20261123-155557",
+    "generated_at": "2026-11-23T17:11:54+08:00",
+    "batch_id": "smart-20261123-170749",
     "entities_path": "data/entities_index.json",
     "storylines_path": "data/storylines_index.json",
     "topics_path": "data/topics.json",
@@ -185,10 +186,10 @@
     "radar_path": "data/radar.json",
     "predictions_path": "data/predictions_public.json",
     "connectors_path": "data/connectors_latest.json",
-    "entities_count": 28,
+    "entities_count": 30,
     "storylines_count": 75,
     "topics_count": 10,
-    "ai_progress_count": 77,
+    "ai_progress_count": 78,
     "finance_impact_count": 16,
     "market_quotes_path": "data/market_quotes.json",
     "calendar_count": 52,
@@ -203,43 +204,48 @@
       "general": "data/feed_general.xml"
     },
     "tech_tools_count": 30,
-    "radar_count": 40
+    "radar_count": 39
   },
   "degraded": true,
   "alerts": [
     {
-      "code": "raw_crawl_degraded",
+      "code": "partial_category_fallback",
       "severity": "warning",
-      "message": "原始抓取状态：partial（错误源 4 个）"
+      "message": "本批次有 3 个板块使用上一批降级回退"
+    },
+    {
+      "code": "engine_quota_exhausted",
+      "severity": "critical",
+      "message": "云端分析引擎繁忙，已自动切换至高可用核验通道"
     }
   ],
   "gemini_quota": {
     "total_configured_keys": 12,
-    "healthy_keys": 1,
-    "cooled_down_keys": 0,
+    "healthy_keys": 0,
+    "cooled_down_keys": 1,
     "exhausted_keys": 12,
-    "daily_calls_total": 780,
+    "daily_calls_total": 795,
     "date_utc": "2026-11-23",
-    "updated_at": "2026-11-23T09:06:18Z",
+    "updated_at": "2026-11-23T09:11:54Z",
     "keys": [
       {
         "slot": "KEY_TECH",
-        "status": "healthy",
-        "daily_calls": 31,
+        "status": "cooldown",
+        "daily_calls": 34,
         "cooldown_until": null,
         "exhausted_until": null,
-        "last_error_code": null,
-        "last_error": null,
+        "last_error_code": "TRANSIENT_ERROR",
+        "last_error": "ServerError: 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand ",
         "last_success_at": "2026-11-23T08:04:18Z"
       },
       {
         "slot": "KEY_GLOBAL",
         "status": "exhausted",
-        "daily_calls": 60,
+        "daily_calls": 61,
         "cooldown_until": null,
         "exhausted_until": null,
-        "last_error_code": "RATE_LIMIT_429",
-        "last_error": "ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and ",
+        "last_error_code": "TRANSIENT_ERROR",
+        "last_error": "ServerError: 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand ",
         "last_success_at": "2026-11-23T05:39:31Z"
       },
       {
@@ -285,12 +291,12 @@
       {
         "slot": "KEY_3",
         "status": "exhausted",
-        "daily_calls": 60,
+        "daily_calls": 61,
         "cooldown_until": null,
         "exhausted_until": null,
-        "last_error_code": "RATE_LIMIT_429",
-        "last_error": "ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and ",
-        "last_success_at": "2026-11-23T04:50:20Z"
+        "last_error_code": null,
+        "last_error": null,
+        "last_success_at": "2026-11-23T09:11:54Z"
       },
       {
         "slot": "KEY_4",
@@ -315,27 +321,27 @@
       {
         "slot": "KEY_6",
         "status": "exhausted",
-        "daily_calls": 59,
+        "daily_calls": 61,
         "cooldown_until": null,
         "exhausted_until": null,
         "last_error_code": "TRANSIENT_ERROR",
-        "last_error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status':",
+        "last_error": "ServerError: 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand ",
         "last_success_at": "2026-11-23T04:14:27Z"
       },
       {
         "slot": "KEY_7",
         "status": "exhausted",
-        "daily_calls": 58,
+        "daily_calls": 62,
         "cooldown_until": null,
         "exhausted_until": null,
-        "last_error_code": "RATE_LIMIT_429",
-        "last_error": "ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and ",
+        "last_error_code": "TRANSIENT_ERROR",
+        "last_error": "ServerError: 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand ",
         "last_success_at": "2026-11-23T07:59:20Z"
       },
       {
         "slot": "KEY_8",
         "status": "exhausted",
-        "daily_calls": 58,
+        "daily_calls": 62,
         "cooldown_until": null,
         "exhausted_until": null,
         "last_error_code": "TRANSIENT_ERROR",
@@ -356,31 +362,31 @@
   },
   "quota": {
     "total_configured_keys": 12,
-    "healthy_keys": 1,
-    "cooled_down_keys": 0,
+    "healthy_keys": 0,
+    "cooled_down_keys": 1,
     "exhausted_keys": 12,
-    "daily_calls_total": 780,
+    "daily_calls_total": 795,
     "date_utc": "2026-11-23",
-    "updated_at": "2026-11-23T09:06:18Z",
+    "updated_at": "2026-11-23T09:11:54Z",
     "keys": [
       {
         "slot": "KEY_TECH",
-        "status": "healthy",
-        "daily_calls": 31,
+        "status": "cooldown",
+        "daily_calls": 34,
         "cooldown_until": null,
         "exhausted_until": null,
-        "last_error_code": null,
-        "last_error": null,
+        "last_error_code": "TRANSIENT_ERROR",
+        "last_error": "ServerError: 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand ",
         "last_success_at": "2026-11-23T08:04:18Z"
       },
       {
         "slot": "KEY_GLOBAL",
         "status": "exhausted",
-        "daily_calls": 60,
+        "daily_calls": 61,
         "cooldown_until": null,
         "exhausted_until": null,
-        "last_error_code": "RATE_LIMIT_429",
-        "last_error": "ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and ",
+        "last_error_code": "TRANSIENT_ERROR",
+        "last_error": "ServerError: 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand ",
         "last_success_at": "2026-11-23T05:39:31Z"
       },
       {
@@ -426,12 +432,12 @@
       {
         "slot": "KEY_3",
         "status": "exhausted",
-        "daily_calls": 60,
+        "daily_calls": 61,
         "cooldown_until": null,
         "exhausted_until": null,
-        "last_error_code": "RATE_LIMIT_429",
-        "last_error": "ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and ",
-        "last_success_at": "2026-11-23T04:50:20Z"
+        "last_error_code": null,
+        "last_error": null,
+        "last_success_at": "2026-11-23T09:11:54Z"
       },
       {
         "slot": "KEY_4",
@@ -456,27 +462,27 @@
       {
         "slot": "KEY_6",
         "status": "exhausted",
-        "daily_calls": 59,
+        "daily_calls": 61,
         "cooldown_until": null,
         "exhausted_until": null,
         "last_error_code": "TRANSIENT_ERROR",
-        "last_error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status':",
+        "last_error": "ServerError: 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand ",
         "last_success_at": "2026-11-23T04:14:27Z"
       },
       {
         "slot": "KEY_7",
         "status": "exhausted",
-        "daily_calls": 58,
+        "daily_calls": 62,
         "cooldown_until": null,
         "exhausted_until": null,
-        "last_error_code": "RATE_LIMIT_429",
-        "last_error": "ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and ",
+        "last_error_code": "TRANSIENT_ERROR",
+        "last_error": "ServerError: 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand ",
         "last_success_at": "2026-11-23T07:59:20Z"
       },
       {
         "slot": "KEY_8",
         "status": "exhausted",
-        "daily_calls": 58,
+        "daily_calls": 62,
         "cooldown_until": null,
         "exhausted_until": null,
         "last_error_code": "TRANSIENT_ERROR",

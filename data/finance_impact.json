@@ -2,11 +2,11 @@
   "schema_version": "4.2",
   "generation_mode": "deterministic_deep_research_v9",
   "quality_flags": [],
-  "generated_at": "2026-11-23T15:55:57+08:00",
-  "batch_id": "smart-20261123-155557",
+  "generated_at": "2026-11-23T17:07:49+08:00",
+  "batch_id": "smart-20261123-170749",
   "disclaimer": "模型边界提示：以下板块敏感区间基于结构化事件极性与 20 日实现波动率校准推演，并附跨市场计价状态、三阶个股暴露与历史同类回放，仅为研究参考，不构成任何投资买卖建议。",
   "disclaimer_en": "Model Notice: Sensitivity intervals combine structured event polarity, realized volatility calibration, priced-in session checks, and historical replays for research only — not investment advice.",
-  "quotes_updated_at": "2026-11-23T16:03:40+08:00",
+  "quotes_updated_at": "2026-11-23T17:16:08+08:00",
   "index_quotes": [
     {
       "symbol": "sh000001",
@@ -41,9 +41,9 @@
       "name_en": "Hang Seng Index",
       "market": "港股",
       "role": "index",
-      "price": 22374.25,
-      "change": -36.55,
-      "pct_change": -0.16,
+      "price": 22383.74,
+      "change": -27.06,
+      "pct_change": -0.12,
       "atr_20d_pct": 1.1,
       "source": "Tencent Finance (Delayed / Close)"
     },
@@ -54,9 +54,9 @@
       "name_en": "Hang Seng Tech",
       "market": "港股",
       "role": "index",
-      "price": 3509.08,
-      "change": -2.06,
-      "pct_change": -0.06,
+      "price": 3508.0,
+      "change": -3.14,
+      "pct_change": -0.09,
       "atr_20d_pct": 1.1,
       "source": "Tencent Finance (Delayed / Close)"
     },
@@ -90,8 +90,8 @@
   "total_mapped_events": 16,
   "event_impacts": [
     {
-      "id": "imp_evt_54f9331f9d0e",
-      "event_id": "evt_54f9331f9d0e",
+      "id": "imp_brk_w_ev_evt_54f9331f9d0e",
+      "event_id": "brk_w_ev_evt_54f9331f9d0e",
       "rule_id": "a_share_capital_market_reform",
       "validation_status": "verified",
       "validation_note": "结构化方向与资产敏感区间一致性校验通过",
@@ -103,18 +103,14 @@
       "event_title_en": "沪深北交易所推出稳股市三项新政：融资保证金比例降至80%",
       "event_summary": "11月22日，经中国证监会批准，上交所、深交所、北交所将融资买入证券最低保证金比例由100%调低至80%，自11月30日起施行。同日，深交所就《创业板股票做市交易业务细则》公开征求意见，拟引入做市商制度；沪深交易所及中国结算将免收上市费等降费措施有效期延长两年至2028年，报道预计此轮举措可带来4000亿元增量资金及今年超46亿元市场让利。",
       "event_summary_en": "11月22日，经中国证监会批准，上交所、深交所、北交所将融资买入证券最低保证金比例由100%调低至80%，自11月30日起施行。同日，深交所就《创业板股票做市交易业务细则》公开征求意见，拟引入做市商制度；沪深交易所及中国结算将免收上市费等降费措施有效期延长两年至2028年，报道预计此轮举措可带来4000亿元增量资金及今年超46亿元市场让利。",
-      "category": "general",
-      "published_at": "2026-11-23T14:14:28+08:00",
+      "category": "finance",
+      "published_at": "2026-11-23T17:06:17+08:00",
       "source_name": "腾讯新闻综合早报",
       "source_url": "https://view.inews.qq.com/a/20261122A0AXFB00",
       "sources": [
         {
           "source_name": "腾讯新闻综合早报",
           "url": "https://view.inews.qq.com/a/20261122A0AXFB00"
-        },
-        {
-          "source_name": "澎湃新闻",
-          "url": "https://www.thepaper.cn/newsDetail_forward_34535221"
         },
         {
           "source_name": "澎湃新闻",
@@ -127,6 +123,10 @@
         {
           "source_name": "澎湃新闻",
           "url": "https://www.thepaper.cn/newsDetail_forward_34535102"
+        },
+        {
+          "source_name": "抖音热点",
+          "url": "https://www.douyin.com/hot/2759127"
         }
       ],
       "tag": "A股两融松绑与资本市场稳市组合拳",
@@ -165,16 +165,16 @@
           "name": "恒生科指",
           "name_en": "Hang Seng Tech",
           "market": "港股",
-          "price": 3509.08,
-          "pct_change": -0.06
+          "price": 3508.0,
+          "pct_change": -0.09
         },
         {
           "ticker": "HSI.HK",
           "name": "恒生指数",
           "name_en": "Hang Seng Index",
           "market": "港股",
-          "price": 22374.25,
-          "pct_change": -0.16
+          "price": 22383.74,
+          "pct_change": -0.12
         }
       ],
       "bars": [
@@ -243,11 +243,11 @@
         }
       ],
       "priced_in_analysis": {
-        "status_code": "partially_priced",
-        "status_label": "部分计价（博弈二次预期差）",
-        "status_label_en": "Partially Priced",
-        "session_context": "「沪深北交易所推出稳股市三项新政：融资保证金比」于交易时段内释放，资金正逐步消化量价反馈",
-        "expectation_gap": "【11月30日起正式生效】针对「沪深北交易所推出稳股市三项新政：融资保证金比例降至8」，首波情绪已在盘面初步计价中显现，真正的预期差取决于后续核心标的成交额能否放量印证及二阶产业链订单/细则跟进。"
+        "status_code": "unpriced",
+        "status_label": "未计价（周一早盘增量催化）",
+        "status_label_en": "Unpriced (Monday Open Catalyst)",
+        "session_context": "发布于休市/周末非交易时段，沪深北交易所与港股均尚未开盘定价",
+        "expectation_gap": "【11月30日起正式生效】周末重磅稳市与降两融组合拳尚未在任何盘面交易，周一早盘 09:15 集合竞价存在明显增量重估缺口；警惕仅靠消息脉冲一次性高开透支，重点跟踪两市首小时成交额能否站稳 5500 亿元验证增量资金真实入场。"
       },
       "transmission_layers": [
         {
@@ -369,6 +369,213 @@
       ]
     },
     {
+      "id": "imp_brk_w_ev_evt_95f1d6dc993c",
+      "event_id": "brk_w_ev_evt_95f1d6dc993c",
+      "rule_id": "korea_market_stabilization",
+      "validation_status": "verified",
+      "validation_note": "结构化方向与资产敏感区间一致性校验通过",
+      "evidence_tier": "single_source",
+      "evidence_tier_label": "单一信源线索",
+      "effective_date_label": null,
+      "qualifier_badge": null,
+      "event_title": "韩国拟时隔18年再启股市稳定基金，放宽回购并监控卖空三个月",
+      "event_title_en": "韩国拟时隔18年再启股市稳定基金，放宽回购并监控卖空三个月",
+      "event_summary": "在KOSPI指数此前单日暴跌逾5%的背景下，韩国副总理兼财政部长于11月22日主持召开金融市场紧急会议，宣布立即启动股市稳定基金激活机制准备工作（或为2008年以来首次），决定自24日起放宽上市公司自有股票回购每日申报量上限三个月，并同步启动为期三个月的非法卖空专项监控期。",
+      "event_summary_en": "在KOSPI指数此前单日暴跌逾5%的背景下，韩国副总理兼财政部长于11月22日主持召开金融市场紧急会议，宣布立即启动股市稳定基金激活机制准备工作（或为2008年以来首次），决定自24日起放宽上市公司自有股票回购每日申报量上限三个月，并同步启动为期三个月的非法卖空专项监控期。",
+      "category": "finance",
+      "published_at": "2026-11-23T17:06:17+08:00",
+      "source_name": "腾讯新闻综合早报",
+      "source_url": "https://view.inews.qq.com/a/20261122A0B4RA00",
+      "sources": [
+        {
+          "source_name": "腾讯新闻综合早报",
+          "url": "https://view.inews.qq.com/a/20261122A0B4RA00"
+        }
+      ],
+      "tag": "亚太/韩国股市去杠杆与政府平准基金稳市干预",
+      "tag_en": "Korea Equity Deleveraging & Stabilization Fund Intervention",
+      "polarity": "bullish",
+      "intensity": 4,
+      "one_liner": "韩国股市融资余额回落后，韩国政府拟评估启动股市稳定/平准基金以托底筹码与流动性，优先缓和韩国半导体与科技权重股被动抛压并改善亚太风险偏好（聚焦本次事件关键量化幅度：18年）。",
+      "one_liner_en": "Korea evaluates activating equity stabilization funds after margin contraction, cushioning local semiconductor weights and APAC risk sentiment.",
+      "sample_basis": {
+        "sample_n": 10,
+        "volatility_pct": 2.37,
+        "volatility_source": "韩国政府历次股市稳定基金与限制卖空干预窗口表现样本",
+        "horizon": "1~5 个交易日",
+        "confidence_label": "官方稳市政策预期（托底亚太杠杆筹码与流动性）",
+        "confidence_label_en": "Official Stabilization Fund Policy Support"
+      },
+      "affected_tickers": {
+        "EWY": 0.72,
+        "000660.KS": 0.78,
+        "005930.KS": 0.7,
+        "HSTECH.HK": 0.25
+      },
+      "realized_quotes": [
+        {
+          "ticker": "QQQ",
+          "name": "纳指100ETF",
+          "name_en": "Invesco QQQ",
+          "market": "美股",
+          "price": 608.45,
+          "pct_change": -5.67
+        },
+        {
+          "ticker": "HSTECH.HK",
+          "name": "恒生科指",
+          "name_en": "Hang Seng Tech",
+          "market": "港股",
+          "price": 3508.0,
+          "pct_change": -0.09
+        }
+      ],
+      "bars": [
+        {
+          "market": "亚太",
+          "sector": "韩国科技与半导体权重 (KOSPI / 海力士 / 三星)",
+          "sector_en": "Korea Tech & Semi Weights (KOSPI / Hynix / Samsung)",
+          "pct_low": 1.0,
+          "pct_high": 3.2,
+          "direction": "positive",
+          "proxy_ticker": "EWY",
+          "logic": "稳定基金托底流动性预期缓解融资强平链条，对高权重存储芯片与韩国宽基构成直接支撑。",
+          "logic_en": "Stabilization fund liquidity eases forced margin unwinding in flagship Korean memory and index weights."
+        },
+        {
+          "market": "亚太",
+          "sector": "韩国大盘宽基与外资风险偏好映射 (EWY)",
+          "sector_en": "MSCI South Korea Proxy & Foreign Flows (EWY)",
+          "pct_low": 0.6,
+          "pct_high": 2.0,
+          "direction": "positive",
+          "proxy_ticker": "EWY",
+          "logic": "官方政策介入信号有助于抑制韩元贬值与外资连续净流出斜率。",
+          "logic_en": "Policy intervention signal moderates FX pressure and foreign equity outflow velocity."
+        },
+        {
+          "market": "港股",
+          "sector": "港股/A股亚太科技情绪外溢 (HSTECH)",
+          "sector_en": "APAC Tech Risk-On Spillover (HSTECH)",
+          "pct_low": 0.3,
+          "pct_high": 1.1,
+          "direction": "positive",
+          "proxy_ticker": "HSTECH.HK",
+          "logic": "东亚邻近市场企稳温和降低亚太成长股的联动抛压，属跨境情绪外溢传导。",
+          "logic_en": "Steadier East Asian risk sentiment mildly dampens cross-market tech derating pressure."
+        }
+      ],
+      "if_then": [
+        {
+          "cond": "[顺向催化兑现阈值] 若相关催化在 3 个交易日内落地具体数据/公告，带动 EWY 放量上行 1.9%~3.2%",
+          "result": "韩国科技与半导体权重 (KOSPI / 海力士 / 三星)核心受益标的获增量机构资金加仓，可沿一阶直接标的顺势跟踪。",
+          "tone": "bullish"
+        },
+        {
+          "cond": "[预期差证伪回吐阈值] 若首个交易日冲高后无法维持换手，次日回撤幅度 ≥ 1.5% 且未见实质订单/政策跟进",
+          "result": "属于一次性主题情绪脉冲，避免在二阶段接盘弱势滞涨概念股。",
+          "tone": "bearish"
+        }
+      ],
+      "milestones": [
+        {
+          "date": "1 周内",
+          "status": "current",
+          "label": "盯紧韩国金融委员会稳市细则发布与 KOSPI 融资余额止跌信号"
+        }
+      ],
+      "priced_in_analysis": {
+        "status_code": "unpriced",
+        "status_label": "未计价（开盘增量催化）",
+        "status_label_en": "Unpriced (Open Catalyst)",
+        "session_context": "「韩国拟时隔18年再启股市稳定基金，放宽回购并」落于休市/跨时区窗口，开盘将集中兑现首次定价比差",
+        "expectation_gap": "针对「韩国拟时隔18年再启股市稳定基金，放宽回购并监控卖空」，首波情绪已在休市缺口预期中显现，真正的预期差取决于后续核心标的成交额能否放量印证及二阶产业链订单/细则跟进。"
+      },
+      "transmission_layers": [
+        {
+          "tier": 1,
+          "tier_label": "一阶直接冲击（直接定价核心标的）",
+          "summary": "紧扣「韩国拟时隔18年再启股市稳定基金，放宽回购并监控卖空」最直接的营收与估值敞口：韩国科技与半导体权重 / 韩国大盘宽基与外资风险偏好映 等首当其冲。",
+          "stocks": [
+            {
+              "name": "韩国科技与半导体权重",
+              "code": "EWY",
+              "market": "亚太",
+              "exposure_logic": "稳定基金托底流动性预期缓解融资强平链条，对高权重存储芯片与韩国宽基构成直接支撑。",
+              "direction": "positive"
+            },
+            {
+              "name": "韩国大盘宽基与外资风险偏好映",
+              "code": "EWY",
+              "market": "亚太",
+              "exposure_logic": "官方政策介入信号有助于抑制韩元贬值与外资连续净流出斜率。",
+              "direction": "positive"
+            }
+          ]
+        },
+        {
+          "tier": 2,
+          "tier_label": "二阶产业链传导 / 替代对冲",
+          "summary": "向产业链上下游、跨市场同业映射或自主替代环节进行二阶定价传导。",
+          "stocks": [
+            {
+              "name": "恒生科技指数",
+              "code": "HSTECH.HK",
+              "market": "港股",
+              "exposure_logic": "东亚邻近市场企稳温和降低亚太成长股的联动抛压，属跨境情绪外溢传导。",
+              "direction": "positive"
+            }
+          ]
+        },
+        {
+          "tier": 3,
+          "tier_label": "三阶资金面与风格跷跷板效应",
+          "summary": "风险偏好变化驱动机构仓位在高弹性成长与低波高股息防御资产间再平衡。",
+          "stocks": [
+            {
+              "name": "红利低波ETF",
+              "code": "512890.SH",
+              "market": "A股",
+              "exposure_logic": "当主线高波动分化时承接防御与避险资金切换",
+              "direction": "positive"
+            }
+          ]
+        }
+      ],
+      "historical_precedents": [
+        {
+          "date": "2024-09-24",
+          "event_title": "国内跨市场重大催化发布于闭市窗口并伴随跨资产联动",
+          "t1_reaction": "首个开盘日竞价集中释放预期差，前 60 分钟成交额放大验证资金承接度。",
+          "t5_reaction": "T+5 主线标的围绕产业链业绩兑现与后续政策细则完成筹码分化。",
+          "lesson": "重点核对事件是否发生在交易所休市后（未计价窗口）及首小时量能持续性。"
+        },
+        {
+          "date": "2023-10-18",
+          "event_title": "跨境政策/产业催化剂落地后中美港三地市场分时异步重估",
+          "t1_reaction": "率先开盘的市场计价 60%~75% 首波弹性，后开盘市场易现高开/低开缺口收敛。",
+          "t5_reaction": "T+5 脱离纯情绪扰动后，基本面直接受益龙头跑赢二三线跟风概念。",
+          "lesson": "避免在外盘已充分交易 5%+ 涨幅后再追高滞后映射股。"
+        }
+      ],
+      "quant_if_then": [
+        {
+          "case": "bull",
+          "label": "顺向催化兑现阈值",
+          "trigger_metric": "EWY 量价突破强度",
+          "threshold": "若相关催化在 3 个交易日内落地具体数据/公告，带动 EWY 放量上行 1.9%~3.2%",
+          "action_implication": "韩国科技与半导体权重 (KOSPI / 海力士 / 三星)核心受益标的获增量机构资金加仓，可沿一阶直接标的顺势跟踪。"
+        },
+        {
+          "case": "bear",
+          "label": "预期差证伪回吐阈值",
+          "trigger_metric": "冲高回落幅度 & 量能衰减",
+          "threshold": "若首个交易日冲高后无法维持换手，次日回撤幅度 ≥ 1.5% 且未见实质订单/政策跟进",
+          "action_implication": "属于一次性主题情绪脉冲，避免在二阶段接盘弱势滞涨概念股。"
+        }
+      ]
+    },
+    {
       "id": "imp_evt_7692115e06bb",
       "event_id": "evt_7692115e06bb",
       "rule_id": "nvda_senate_sec_governance",
@@ -451,8 +658,8 @@
           "name": "中芯国际",
           "name_en": "SMIC",
           "market": "港股",
-          "price": 48.8,
-          "pct_change": -0.65
+          "price": 48.74,
+          "pct_change": -0.77
         },
         {
           "ticker": "512480.SH",
@@ -632,10 +839,6 @@
           "url": "https://news.google.com/rss/articles/CBMiXkFVX3lxTE41bHM5VW1VQnpCbU02UXpBYVBwd29PWG9DWE9oNzBpUkxHaHE3UkNpcDc4a3ZpdC1WYWtRUmMzaXcwOTFzd3VDWTNDZ0dob2VQQ3hpLWQ3Ti1nMFp2NXc?oc=5"
         },
         {
-          "source_name": "新闻电讯",
-          "url": "https://news.google.com/rss/articles/CBMickFVX3lxTE9YMEc0TkxqR3YzRng5eVFydGo3M0F6c3FCQ01leDh1bk5MWldRQlhOck5rblVIZWxQNEh0ODRMZXpwTWRfOVFJTXhQb0h2YkNoODh0TjFqYUcxbGlqTExLczVFbVdkZWlJREpEb3hlOGZVQQ?oc=5"
-        },
-        {
           "source_name": "华尔街见闻 美股快讯",
           "url": "https://wallstreetcn.com/livenews/3203774"
         },
@@ -684,8 +887,8 @@
           "name": "恒生指数",
           "name_en": "Hang Seng Index",
           "market": "港股",
-          "price": 22374.25,
-          "pct_change": -0.16
+          "price": 22383.74,
+          "pct_change": -0.12
         },
         {
           "ticker": "GLD",
@@ -938,8 +1141,8 @@
           "name": "紫金矿业",
           "name_en": "Zijin Mining",
           "market": "港股",
-          "price": 24.0,
-          "pct_change": 4.08
+          "price": 24.02,
+          "pct_change": 4.16
         }
       ],
       "bars": [
@@ -1167,8 +1370,8 @@
           "name": "恒生科指",
           "name_en": "Hang Seng Tech",
           "market": "港股",
-          "price": 3509.08,
-          "pct_change": -0.06
+          "price": 3508.0,
+          "pct_change": -0.09
         }
       ],
       "bars": [
@@ -1662,8 +1865,8 @@
           "name": "中芯国际",
           "name_en": "SMIC",
           "market": "港股",
-          "price": 48.8,
-          "pct_change": -0.65
+          "price": 48.74,
+          "pct_change": -0.77
         },
         {
           "ticker": "512480.SH",
@@ -1893,8 +2096,8 @@
           "name": "中国海油",
           "name_en": "CNOOC",
           "market": "港股",
-          "price": 21.22,
-          "pct_change": -2.21
+          "price": 21.28,
+          "pct_change": -1.94
         }
       ],
       "bars": [
@@ -2057,213 +2260,6 @@
       ]
     },
     {
-      "id": "imp_evt_95f1d6dc993c",
-      "event_id": "evt_95f1d6dc993c",
-      "rule_id": "korea_market_stabilization",
-      "validation_status": "verified",
-      "validation_note": "结构化方向与资产敏感区间一致性校验通过",
-      "evidence_tier": "single_source",
-      "evidence_tier_label": "单一信源线索",
-      "effective_date_label": null,
-      "qualifier_badge": null,
-      "event_title": "韩国拟时隔18年再启股市稳定基金，放宽回购并监控卖空三个月",
-      "event_title_en": "韩国拟时隔18年再启股市稳定基金，放宽回购并监控卖空三个月",
-      "event_summary": "在KOSPI指数此前单日暴跌逾5%的背景下，韩国副总理兼财政部长于11月22日主持召开金融市场紧急会议，宣布立即启动股市稳定基金激活机制准备工作（或为2008年以来首次），决定自24日起放宽上市公司自有股票回购每日申报量上限三个月，并同步启动为期三个月的非法卖空专项监控期。",
-      "event_summary_en": "在KOSPI指数此前单日暴跌逾5%的背景下，韩国副总理兼财政部长于11月22日主持召开金融市场紧急会议，宣布立即启动股市稳定基金激活机制准备工作（或为2008年以来首次），决定自24日起放宽上市公司自有股票回购每日申报量上限三个月，并同步启动为期三个月的非法卖空专项监控期。",
-      "category": "general",
-      "published_at": "2026-11-23T14:14:28+08:00",
-      "source_name": "腾讯新闻综合早报",
-      "source_url": "https://view.inews.qq.com/a/20261122A0B4RA00",
-      "sources": [
-        {
-          "source_name": "腾讯新闻综合早报",
-          "url": "https://view.inews.qq.com/a/20261122A0B4RA00"
-        }
-      ],
-      "tag": "亚太/韩国股市去杠杆与政府平准基金稳市干预",
-      "tag_en": "Korea Equity Deleveraging & Stabilization Fund Intervention",
-      "polarity": "bullish",
-      "intensity": 4,
-      "one_liner": "韩国股市融资余额回落后，韩国政府拟评估启动股市稳定/平准基金以托底筹码与流动性，优先缓和韩国半导体与科技权重股被动抛压并改善亚太风险偏好（聚焦本次事件关键量化幅度：18年）。",
-      "one_liner_en": "Korea evaluates activating equity stabilization funds after margin contraction, cushioning local semiconductor weights and APAC risk sentiment.",
-      "sample_basis": {
-        "sample_n": 10,
-        "volatility_pct": 2.37,
-        "volatility_source": "韩国政府历次股市稳定基金与限制卖空干预窗口表现样本",
-        "horizon": "1~5 个交易日",
-        "confidence_label": "官方稳市政策预期（托底亚太杠杆筹码与流动性）",
-        "confidence_label_en": "Official Stabilization Fund Policy Support"
-      },
-      "affected_tickers": {
-        "EWY": 0.72,
-        "000660.KS": 0.78,
-        "005930.KS": 0.7,
-        "HSTECH.HK": 0.25
-      },
-      "realized_quotes": [
-        {
-          "ticker": "QQQ",
-          "name": "纳指100ETF",
-          "name_en": "Invesco QQQ",
-          "market": "美股",
-          "price": 608.45,
-          "pct_change": -5.67
-        },
-        {
-          "ticker": "HSTECH.HK",
-          "name": "恒生科指",
-          "name_en": "Hang Seng Tech",
-          "market": "港股",
-          "price": 3509.08,
-          "pct_change": -0.06
-        }
-      ],
-      "bars": [
-        {
-          "market": "亚太",
-          "sector": "韩国科技与半导体权重 (KOSPI / 海力士 / 三星)",
-          "sector_en": "Korea Tech & Semi Weights (KOSPI / Hynix / Samsung)",
-          "pct_low": 1.0,
-          "pct_high": 3.2,
-          "direction": "positive",
-          "proxy_ticker": "EWY",
-          "logic": "稳定基金托底流动性预期缓解融资强平链条，对高权重存储芯片与韩国宽基构成直接支撑。",
-          "logic_en": "Stabilization fund liquidity eases forced margin unwinding in flagship Korean memory and index weights."
-        },
-        {
-          "market": "亚太",
-          "sector": "韩国大盘宽基与外资风险偏好映射 (EWY)",
-          "sector_en": "MSCI South Korea Proxy & Foreign Flows (EWY)",
-          "pct_low": 0.6,
-          "pct_high": 2.0,
-          "direction": "positive",
-          "proxy_ticker": "EWY",
-          "logic": "官方政策介入信号有助于抑制韩元贬值与外资连续净流出斜率。",
-          "logic_en": "Policy intervention signal moderates FX pressure and foreign equity outflow velocity."
-        },
-        {
-          "market": "港股",
-          "sector": "港股/A股亚太科技情绪外溢 (HSTECH)",
-          "sector_en": "APAC Tech Risk-On Spillover (HSTECH)",
-          "pct_low": 0.3,
-          "pct_high": 1.1,
-          "direction": "positive",
-          "proxy_ticker": "HSTECH.HK",
-          "logic": "东亚邻近市场企稳温和降低亚太成长股的联动抛压，属跨境情绪外溢传导。",
-          "logic_en": "Steadier East Asian risk sentiment mildly dampens cross-market tech derating pressure."
-        }
-      ],
-      "if_then": [
-        {
-          "cond": "[顺向催化兑现阈值] 若相关催化在 3 个交易日内落地具体数据/公告，带动 EWY 放量上行 1.9%~3.2%",
-          "result": "韩国科技与半导体权重 (KOSPI / 海力士 / 三星)核心受益标的获增量机构资金加仓，可沿一阶直接标的顺势跟踪。",
-          "tone": "bullish"
-        },
-        {
-          "cond": "[预期差证伪回吐阈值] 若首个交易日冲高后无法维持换手，次日回撤幅度 ≥ 1.5% 且未见实质订单/政策跟进",
-          "result": "属于一次性主题情绪脉冲，避免在二阶段接盘弱势滞涨概念股。",
-          "tone": "bearish"
-        }
-      ],
-      "milestones": [
-        {
-          "date": "1 周内",
-          "status": "current",
-          "label": "盯紧韩国金融委员会稳市细则发布与 KOSPI 融资余额止跌信号"
-        }
-      ],
-      "priced_in_analysis": {
-        "status_code": "partially_priced",
-        "status_label": "部分计价（博弈二次预期差）",
-        "status_label_en": "Partially Priced",
-        "session_context": "「韩国拟时隔18年再启股市稳定基金，放宽回购并」于交易时段内释放，资金正逐步消化量价反馈",
-        "expectation_gap": "针对「韩国拟时隔18年再启股市稳定基金，放宽回购并监控卖空」，首波情绪已在盘面初步计价中显现，真正的预期差取决于后续核心标的成交额能否放量印证及二阶产业链订单/细则跟进。"
-      },
-      "transmission_layers": [
-        {
-          "tier": 1,
-          "tier_label": "一阶直接冲击（直接定价核心标的）",
-          "summary": "紧扣「韩国拟时隔18年再启股市稳定基金，放宽回购并监控卖空」最直接的营收与估值敞口：韩国科技与半导体权重 / 韩国大盘宽基与外资风险偏好映 等首当其冲。",
-          "stocks": [
-            {
-              "name": "韩国科技与半导体权重",
-              "code": "EWY",
-              "market": "亚太",
-              "exposure_logic": "稳定基金托底流动性预期缓解融资强平链条，对高权重存储芯片与韩国宽基构成直接支撑。",
-              "direction": "positive"
-            },
-            {
-              "name": "韩国大盘宽基与外资风险偏好映",
-              "code": "EWY",
-              "market": "亚太",
-              "exposure_logic": "官方政策介入信号有助于抑制韩元贬值与外资连续净流出斜率。",
-              "direction": "positive"
-            }
-          ]
-        },
-        {
-          "tier": 2,
-          "tier_label": "二阶产业链传导 / 替代对冲",
-          "summary": "向产业链上下游、跨市场同业映射或自主替代环节进行二阶定价传导。",
-          "stocks": [
-            {
-              "name": "恒生科技指数",
-              "code": "HSTECH.HK",
-              "market": "港股",
-              "exposure_logic": "东亚邻近市场企稳温和降低亚太成长股的联动抛压，属跨境情绪外溢传导。",
-              "direction": "positive"
-            }
-          ]
-        },
-        {
-          "tier": 3,
-          "tier_label": "三阶资金面与风格跷跷板效应",
-          "summary": "风险偏好变化驱动机构仓位在高弹性成长与低波高股息防御资产间再平衡。",
-          "stocks": [
-            {
-              "name": "红利低波ETF",
-              "code": "512890.SH",
-              "market": "A股",
-              "exposure_logic": "当主线高波动分化时承接防御与避险资金切换",
-              "direction": "positive"
-            }
-          ]
-        }
-      ],
-      "historical_precedents": [
-        {
-          "date": "2024-09-24",
-          "event_title": "国内跨市场重大催化发布于闭市窗口并伴随跨资产联动",
-          "t1_reaction": "首个开盘日竞价集中释放预期差，前 60 分钟成交额放大验证资金承接度。",
-          "t5_reaction": "T+5 主线标的围绕产业链业绩兑现与后续政策细则完成筹码分化。",
-          "lesson": "重点核对事件是否发生在交易所休市后（未计价窗口）及首小时量能持续性。"
-        },
-        {
-          "date": "2023-10-18",
-          "event_title": "跨境政策/产业催化剂落地后中美港三地市场分时异步重估",
-          "t1_reaction": "率先开盘的市场计价 60%~75% 首波弹性，后开盘市场易现高开/低开缺口收敛。",
-          "t5_reaction": "T+5 脱离纯情绪扰动后，基本面直接受益龙头跑赢二三线跟风概念。",
-          "lesson": "避免在外盘已充分交易 5%+ 涨幅后再追高滞后映射股。"
-        }
-      ],
-      "quant_if_then": [
-        {
-          "case": "bull",
-          "label": "顺向催化兑现阈值",
-          "trigger_metric": "EWY 量价突破强度",
-          "threshold": "若相关催化在 3 个交易日内落地具体数据/公告，带动 EWY 放量上行 1.9%~3.2%",
-          "action_implication": "韩国科技与半导体权重 (KOSPI / 海力士 / 三星)核心受益标的获增量机构资金加仓，可沿一阶直接标的顺势跟踪。"
-        },
-        {
-          "case": "bear",
-          "label": "预期差证伪回吐阈值",
-          "trigger_metric": "冲高回落幅度 & 量能衰减",
-          "threshold": "若首个交易日冲高后无法维持换手，次日回撤幅度 ≥ 1.5% 且未见实质订单/政策跟进",
-          "action_implication": "属于一次性主题情绪脉冲，避免在二阶段接盘弱势滞涨概念股。"
-        }
-      ]
-    },
-    {
       "id": "imp_evt_13806215cf9c",
       "event_id": "evt_13806215cf9c",
       "rule_id": "geopolitics_energy_escalation",
@@ -2333,16 +2329,16 @@
           "name": "中国海油",
           "name_en": "CNOOC",
           "market": "港股",
-          "price": 21.22,
-          "pct_change": -2.21
+          "price": 21.28,
+          "pct_change": -1.94
         },
         {
           "ticker": "02899.HK",
           "name": "紫金矿业",
           "name_en": "Zijin Mining",
           "market": "港股",
-          "price": 24.0,
-          "pct_change": 4.08
+          "price": 24.02,
+          "pct_change": 4.16
         }
       ],
       "bars": [
@@ -2593,16 +2589,16 @@
           "name": "中国海油",
           "name_en": "CNOOC",
           "market": "港股",
-          "price": 21.22,
-          "pct_change": -2.21
+          "price": 21.28,
+          "pct_change": -1.94
         },
         {
           "ticker": "02899.HK",
           "name": "紫金矿业",
           "name_en": "Zijin Mining",
           "market": "港股",
-          "price": 24.0,
-          "pct_change": 4.08
+          "price": 24.02,
+          "pct_change": 4.16
         }
       ],
       "bars": [
@@ -2982,27 +2978,238 @@
       ]
     },
     {
-      "id": "imp_evt_6144e8cc692b",
-      "event_id": "evt_6144e8cc692b",
-      "rule_id": "autonomous_driving_fsd",
+      "id": "imp_evt_70cd02bc18d9",
+      "event_id": "evt_70cd02bc18d9",
+      "rule_id": "korea_market_stabilization",
       "validation_status": "verified",
       "validation_note": "结构化方向与资产敏感区间一致性校验通过",
       "evidence_tier": "single_source",
       "evidence_tier_label": "单一信源线索",
       "effective_date_label": null,
       "qualifier_badge": null,
-      "event_title": "特斯拉北美启动FSD V15监督版推送，中国市场正依法推进准备工作",
-      "event_title_en": "特斯拉北美启动FSD V15监督版推送，中国市场正依法推进准备工作",
-      "event_summary": "当地时间11月21日，特斯拉正式启动FSD V15监督版推送，推出驾驶可视化界面Tesla Reality View，并单方宣称新版本通过升级视觉编码器使安全关键场景处理能力提升25倍。11月22日，特斯拉中国客服回应称，正根据国家法规积极推进中国市场准备工作。",
-      "event_summary_en": "当地时间11月21日，特斯拉正式启动FSD V15监督版推送，推出驾驶可视化界面Tesla Reality View，并单方宣称新版本通过升级视觉编码器使安全关键场景处理能力提升25倍。11月22日，特斯拉中国客服回应称，正根据国家法规积极推进中国市场准备工作。",
+      "event_title": "报道称：韩国启动股市稳定基金激活准备工作，放宽回购上限并严查非法卖空",
+      "event_title_en": "报道称：韩国启动股市稳定基金激活准备工作，放宽回购上限并严查非法卖空",
+      "event_summary": "【据关联报道/尚未见官方披露确认】在KOSPI指数此前单日暴跌逾5%的背景下，韩国副总理兼财政部长于11月22日主持召开金融市场紧急会议，宣布立即启动股市稳定基金激活机制准备工作（或为2008年以来首次）。同时，韩国决定自11月24日起放宽上市公司自有股票回购每日申报量上限三个月，并启动为期三个月的非法卖空专项监控期。",
+      "event_summary_en": "【据关联报道/尚未见官方披露确认】在KOSPI指数此前单日暴跌逾5%的背景下，韩国副总理兼财政部长于11月22日主持召开金融市场紧急会议，宣布立即启动股市稳定基金激活机制准备工作（或为2008年以来首次）。同时，韩国决定自11月24日起放宽上市公司自有股票回购每日申报量上限三个月，并启动为期三个月的非法卖空专项监控期。",
       "category": "general",
-      "published_at": "2026-11-23T14:14:28+08:00",
+      "published_at": "2026-11-23T17:06:07+08:00",
+      "source_name": "腾讯新闻综合早报",
+      "source_url": "https://view.inews.qq.com/a/20261122A0B4RA00",
+      "sources": [
+        {
+          "source_name": "腾讯新闻综合早报",
+          "url": "https://view.inews.qq.com/a/20261122A0B4RA00"
+        }
+      ],
+      "tag": "亚太/韩国股市去杠杆与政府平准基金稳市干预",
+      "tag_en": "Korea Equity Deleveraging & Stabilization Fund Intervention",
+      "polarity": "bullish",
+      "intensity": 4,
+      "one_liner": "韩国股市融资余额回落后，韩国政府拟评估启动股市稳定/平准基金以托底筹码与流动性，优先缓和韩国半导体与科技权重股被动抛压并改善亚太风险偏好。",
+      "one_liner_en": "Korea evaluates activating equity stabilization funds after margin contraction, cushioning local semiconductor weights and APAC risk sentiment.",
+      "sample_basis": {
+        "sample_n": 10,
+        "volatility_pct": 2.37,
+        "volatility_source": "韩国政府历次股市稳定基金与限制卖空干预窗口表现样本",
+        "horizon": "1~5 个交易日",
+        "confidence_label": "官方稳市政策预期（托底亚太杠杆筹码与流动性）",
+        "confidence_label_en": "Official Stabilization Fund Policy Support"
+      },
+      "affected_tickers": {
+        "EWY": 0.72,
+        "000660.KS": 0.78,
+        "005930.KS": 0.7,
+        "HSTECH.HK": 0.25
+      },
+      "realized_quotes": [
+        {
+          "ticker": "QQQ",
+          "name": "纳指100ETF",
+          "name_en": "Invesco QQQ",
+          "market": "美股",
+          "price": 608.45,
+          "pct_change": -5.67
+        },
+        {
+          "ticker": "HSTECH.HK",
+          "name": "恒生科指",
+          "name_en": "Hang Seng Tech",
+          "market": "港股",
+          "price": 3508.0,
+          "pct_change": -0.09
+        }
+      ],
+      "bars": [
+        {
+          "market": "亚太",
+          "sector": "韩国科技与半导体权重 (KOSPI / 海力士 / 三星)",
+          "sector_en": "Korea Tech & Semi Weights (KOSPI / Hynix / Samsung)",
+          "pct_low": 0.9,
+          "pct_high": 2.8,
+          "direction": "positive",
+          "proxy_ticker": "EWY",
+          "logic": "稳定基金托底流动性预期缓解融资强平链条，对高权重存储芯片与韩国宽基构成直接支撑。",
+          "logic_en": "Stabilization fund liquidity eases forced margin unwinding in flagship Korean memory and index weights."
+        },
+        {
+          "market": "亚太",
+          "sector": "韩国大盘宽基与外资风险偏好映射 (EWY)",
+          "sector_en": "MSCI South Korea Proxy & Foreign Flows (EWY)",
+          "pct_low": 0.5,
+          "pct_high": 1.7,
+          "direction": "positive",
+          "proxy_ticker": "EWY",
+          "logic": "官方政策介入信号有助于抑制韩元贬值与外资连续净流出斜率。",
+          "logic_en": "Policy intervention signal moderates FX pressure and foreign equity outflow velocity."
+        },
+        {
+          "market": "港股",
+          "sector": "港股/A股亚太科技情绪外溢 (HSTECH)",
+          "sector_en": "APAC Tech Risk-On Spillover (HSTECH)",
+          "pct_low": 0.3,
+          "pct_high": 0.9,
+          "direction": "positive",
+          "proxy_ticker": "HSTECH.HK",
+          "logic": "东亚邻近市场企稳温和降低亚太成长股的联动抛压，属跨境情绪外溢传导。",
+          "logic_en": "Steadier East Asian risk sentiment mildly dampens cross-market tech derating pressure."
+        }
+      ],
+      "if_then": [
+        {
+          "cond": "[顺向催化兑现阈值] 若相关催化在 3 个交易日内落地具体数据/公告，带动 EWY 放量上行 1.9%~3.2%",
+          "result": "韩国科技与半导体权重 (KOSPI / 海力士 / 三星)核心受益标的获增量机构资金加仓，可沿一阶直接标的顺势跟踪。",
+          "tone": "bullish"
+        },
+        {
+          "cond": "[预期差证伪回吐阈值] 若首个交易日冲高后无法维持换手，次日回撤幅度 ≥ 1.5% 且未见实质订单/政策跟进",
+          "result": "属于一次性主题情绪脉冲，避免在二阶段接盘弱势滞涨概念股。",
+          "tone": "bearish"
+        }
+      ],
+      "milestones": [
+        {
+          "date": "1 周内",
+          "status": "current",
+          "label": "盯紧韩国金融委员会稳市细则发布与 KOSPI 融资余额止跌信号"
+        }
+      ],
+      "priced_in_analysis": {
+        "status_code": "unpriced",
+        "status_label": "未计价（开盘增量催化）",
+        "status_label_en": "Unpriced (Open Catalyst)",
+        "session_context": "「报道称：韩国启动股市稳定基金激活准备工作，放」落于休市/跨时区窗口，开盘将集中兑现首次定价比差",
+        "expectation_gap": "针对「报道称：韩国启动股市稳定基金激活准备工作，放宽回购上」，首波情绪已在休市缺口预期中显现，真正的预期差取决于后续核心标的成交额能否放量印证及二阶产业链订单/细则跟进。"
+      },
+      "transmission_layers": [
+        {
+          "tier": 1,
+          "tier_label": "一阶直接冲击（直接定价核心标的）",
+          "summary": "紧扣「报道称：韩国启动股市稳定基金激活准备工作，放宽回购上」最直接的营收与估值敞口：韩国科技与半导体权重 / 韩国大盘宽基与外资风险偏好映 等首当其冲。",
+          "stocks": [
+            {
+              "name": "韩国科技与半导体权重",
+              "code": "EWY",
+              "market": "亚太",
+              "exposure_logic": "稳定基金托底流动性预期缓解融资强平链条，对高权重存储芯片与韩国宽基构成直接支撑。",
+              "direction": "positive"
+            },
+            {
+              "name": "韩国大盘宽基与外资风险偏好映",
+              "code": "EWY",
+              "market": "亚太",
+              "exposure_logic": "官方政策介入信号有助于抑制韩元贬值与外资连续净流出斜率。",
+              "direction": "positive"
+            }
+          ]
+        },
+        {
+          "tier": 2,
+          "tier_label": "二阶产业链传导 / 替代对冲",
+          "summary": "向产业链上下游、跨市场同业映射或自主替代环节进行二阶定价传导。",
+          "stocks": [
+            {
+              "name": "恒生科技指数",
+              "code": "HSTECH.HK",
+              "market": "港股",
+              "exposure_logic": "东亚邻近市场企稳温和降低亚太成长股的联动抛压，属跨境情绪外溢传导。",
+              "direction": "positive"
+            }
+          ]
+        },
+        {
+          "tier": 3,
+          "tier_label": "三阶资金面与风格跷跷板效应",
+          "summary": "风险偏好变化驱动机构仓位在高弹性成长与低波高股息防御资产间再平衡。",
+          "stocks": [
+            {
+              "name": "红利低波ETF",
+              "code": "512890.SH",
+              "market": "A股",
+              "exposure_logic": "当主线高波动分化时承接防御与避险资金切换",
+              "direction": "positive"
+            }
+          ]
+        }
+      ],
+      "historical_precedents": [
+        {
+          "date": "2024-09-24",
+          "event_title": "国内跨市场重大催化发布于闭市窗口并伴随跨资产联动",
+          "t1_reaction": "首个开盘日竞价集中释放预期差，前 60 分钟成交额放大验证资金承接度。",
+          "t5_reaction": "T+5 主线标的围绕产业链业绩兑现与后续政策细则完成筹码分化。",
+          "lesson": "重点核对事件是否发生在交易所休市后（未计价窗口）及首小时量能持续性。"
+        },
+        {
+          "date": "2023-10-18",
+          "event_title": "跨境政策/产业催化剂落地后中美港三地市场分时异步重估",
+          "t1_reaction": "率先开盘的市场计价 60%~75% 首波弹性，后开盘市场易现高开/低开缺口收敛。",
+          "t5_reaction": "T+5 脱离纯情绪扰动后，基本面直接受益龙头跑赢二三线跟风概念。",
+          "lesson": "避免在外盘已充分交易 5%+ 涨幅后再追高滞后映射股。"
+        }
+      ],
+      "quant_if_then": [
+        {
+          "case": "bull",
+          "label": "顺向催化兑现阈值",
+          "trigger_metric": "EWY 量价突破强度",
+          "threshold": "若相关催化在 3 个交易日内落地具体数据/公告，带动 EWY 放量上行 1.9%~3.2%",
+          "action_implication": "韩国科技与半导体权重 (KOSPI / 海力士 / 三星)核心受益标的获增量机构资金加仓，可沿一阶直接标的顺势跟踪。"
+        },
+        {
+          "case": "bear",
+          "label": "预期差证伪回吐阈值",
+          "trigger_metric": "冲高回落幅度 & 量能衰减",
+          "threshold": "若首个交易日冲高后无法维持换手，次日回撤幅度 ≥ 1.5% 且未见实质订单/政策跟进",
+          "action_implication": "属于一次性主题情绪脉冲，避免在二阶段接盘弱势滞涨概念股。"
+        }
+      ]
+    },
+    {
+      "id": "imp_evt_b66e2e04836c",
+      "event_id": "evt_b66e2e04836c",
+      "rule_id": "autonomous_driving_fsd",
+      "validation_status": "verified",
+      "validation_note": "结构化方向与资产敏感区间一致性校验通过",
+      "evidence_tier": "corroborated",
+      "evidence_tier_label": "多源媒体证实",
+      "effective_date_label": null,
+      "qualifier_badge": null,
+      "event_title": "特斯拉推送FSD V15监督版并推出Tesla Reality View，中国市场准备推进中",
+      "event_title_en": "特斯拉推送FSD V15监督版并推出Tesla Reality View，中国市场准备推进中",
+      "event_summary": "当地时间11月21日，特斯拉正式启动FSD V15监督版推送，特斯拉方面宣称新版本通过升级视觉编码器使安全关键场景处理能力提升25倍，并推出驾驶可视化界面Tesla Reality View。11月22日，特斯拉中国客服表示，正根据国家法规积极推进相关准备工作。",
+      "event_summary_en": "当地时间11月21日，特斯拉正式启动FSD V15监督版推送，特斯拉方面宣称新版本通过升级视觉编码器使安全关键场景处理能力提升25倍，并推出驾驶可视化界面Tesla Reality View。11月22日，特斯拉中国客服表示，正根据国家法规积极推进相关准备工作。",
+      "category": "general",
+      "published_at": "2026-11-23T17:06:07+08:00",
       "source_name": "腾讯新闻综合早报",
       "source_url": "https://view.inews.qq.com/a/20261122A09HDK00",
       "sources": [
         {
           "source_name": "腾讯新闻综合早报",
           "url": "https://view.inews.qq.com/a/20261122A09HDK00"
+        },
+        {
+          "source_name": "微博热搜",
+          "url": "https://s.weibo.com/weibo?q=%23%E7%89%B9%E6%96%AF%E6%8B%89FSD%E5%AE%9E%E6%99%AF%E8%A2%AB%E8%AF%AF%E8%AE%A4%E6%88%90%E7%8E%A9%E6%B8%B8%E6%88%8F%23&t=31"
         }
       ],
       "tag": "端到端智驾商业化 / FSD 落地",
@@ -3039,8 +3246,8 @@
           "name": "恒生科指",
           "name_en": "Hang Seng Tech",
           "market": "港股",
-          "price": 3509.08,
-          "pct_change": -0.06
+          "price": 3508.0,
+          "pct_change": -0.09
         }
       ],
       "bars": [
@@ -3114,17 +3321,17 @@
         }
       ],
       "priced_in_analysis": {
-        "status_code": "partially_priced",
-        "status_label": "部分计价（博弈二次预期差）",
-        "status_label_en": "Partially Priced",
-        "session_context": "「特斯拉北美启动FSD V15监督版推送，中国」于交易时段内释放，资金正逐步消化量价反馈",
-        "expectation_gap": "针对「特斯拉北美启动FSD V15监督版推送，中国市场正依」，首波情绪已在盘面初步计价中显现，真正的预期差取决于后续核心标的成交额能否放量印证及二阶产业链订单/细则跟进。"
+        "status_code": "unpriced",
+        "status_label": "未计价（开盘增量催化）",
+        "status_label_en": "Unpriced (Open Catalyst)",
+        "session_context": "「特斯拉推送FSD V15监督版并推出Tesl」落于休市/跨时区窗口，开盘将集中兑现首次定价比差",
+        "expectation_gap": "针对「特斯拉推送FSD V15监督版并推出Tesla Re」，首波情绪已在休市缺口预期中显现，真正的预期差取决于后续核心标的成交额能否放量印证及二阶产业链订单/细则跟进。"
       },
       "transmission_layers": [
         {
           "tier": 1,
           "tier_label": "一阶直接冲击（直接定价核心标的）",
-          "summary": "紧扣「特斯拉北美启动FSD V15监督版推送，中国市场正依」最直接的营收与估值敞口：特斯拉 / 德赛西威 等首当其冲。",
+          "summary": "紧扣「特斯拉推送FSD V15监督版并推出Tesla Re」最直接的营收与估值敞口：特斯拉 / 德赛西威 等首当其冲。",
           "stocks": [
             {
               "name": "特斯拉",
@@ -3427,214 +3634,6 @@
       ]
     },
     {
-      "id": "imp_evt_2c24066d343c",
-      "event_id": "evt_2c24066d343c",
-      "rule_id": "korea_market_stabilization",
-      "validation_status": "verified",
-      "validation_note": "结构化方向与资产敏感区间一致性校验通过",
-      "evidence_tier": "single_source",
-      "evidence_tier_label": "单一信源线索",
-      "effective_date_label": null,
-      "qualifier_badge": null,
-      "event_title": "报道称：韩国财政部启动股市稳定基金激活准备并限制非法卖空",
-      "event_title_en": "报道称：韩国财政部启动股市稳定基金激活准备并限制非法卖空",
-      "event_summary": "【据关联报道/尚未见官方披露确认】韩国副总理兼财政部长于11月22日主持召开金融市场紧急会议，宣布立即启动股市稳定基金激活机制准备工作（或为2008年以来首次），同时宣布自11月24日起放宽上市公司自有股票回购每日申报量上限，为期三个月，并启动为期三个月的非法卖空专项监控期。此前，韩国KOSPI指数单日暴跌逾5%。",
-      "event_summary_en": "【据关联报道/尚未见官方披露确认】韩国副总理兼财政部长于11月22日主持召开金融市场紧急会议，宣布立即启动股市稳定基金激活机制准备工作（或为2008年以来首次），同时宣布自11月24日起放宽上市公司自有股票回购每日申报量上限，为期三个月，并启动为期三个月的非法卖空专项监控期。此前，韩国KOSPI指数单日暴跌逾5%。",
-      "category": "general",
-      "published_at": "2026-11-23T13:21:05+08:00",
-      "source_name": "腾讯新闻综合早报",
-      "source_url": "https://view.inews.qq.com/a/20261122A0B4RA00",
-      "sources": [
-        {
-          "source_name": "腾讯新闻综合早报",
-          "url": "https://view.inews.qq.com/a/20261122A0B4RA00"
-        }
-      ],
-      "tag": "亚太/韩国股市去杠杆与政府平准基金稳市干预",
-      "tag_en": "Korea Equity Deleveraging & Stabilization Fund Intervention",
-      "polarity": "bullish",
-      "intensity": 4,
-      "one_liner": "韩国股市融资余额回落后，韩国政府拟评估启动股市稳定/平准基金以托底筹码与流动性，优先缓和韩国半导体与科技权重股被动抛压并改善亚太风险偏好。",
-      "one_liner_en": "Korea evaluates activating equity stabilization funds after margin contraction, cushioning local semiconductor weights and APAC risk sentiment.",
-      "sample_basis": {
-        "sample_n": 10,
-        "volatility_pct": 2.37,
-        "volatility_source": "韩国政府历次股市稳定基金与限制卖空干预窗口表现样本",
-        "horizon": "1~5 个交易日",
-        "confidence_label": "官方稳市政策预期（托底亚太杠杆筹码与流动性）",
-        "confidence_label_en": "Official Stabilization Fund Policy Support"
-      },
-      "affected_tickers": {
-        "EWY": 0.72,
-        "000660.KS": 0.78,
-        "005930.KS": 0.7,
-        "HSTECH.HK": 0.25
-      },
-      "realized_quotes": [
-        {
-          "ticker": "QQQ",
-          "name": "纳指100ETF",
-          "name_en": "Invesco QQQ",
-          "market": "美股",
-          "price": 608.45,
-          "pct_change": -5.67
-        },
-        {
-          "ticker": "HSTECH.HK",
-          "name": "恒生科指",
-          "name_en": "Hang Seng Tech",
-          "market": "港股",
-          "price": 3501.06,
-          "pct_change": -0.29
-        }
-      ],
-      "bars": [
-        {
-          "market": "亚太",
-          "sector": "韩国科技与半导体权重 (KOSPI / 海力士 / 三星)",
-          "sector_en": "Korea Tech & Semi Weights (KOSPI / Hynix / Samsung)",
-          "pct_low": 1.0,
-          "pct_high": 3.2,
-          "direction": "positive",
-          "proxy_ticker": "EWY",
-          "logic": "稳定基金托底流动性预期缓解融资强平链条，对高权重存储芯片与韩国宽基构成直接支撑。",
-          "logic_en": "Stabilization fund liquidity eases forced margin unwinding in flagship Korean memory and index weights."
-        },
-        {
-          "market": "亚太",
-          "sector": "韩国大盘宽基与外资风险偏好映射 (EWY)",
-          "sector_en": "MSCI South Korea Proxy & Foreign Flows (EWY)",
-          "pct_low": 0.6,
-          "pct_high": 2.0,
-          "direction": "positive",
-          "proxy_ticker": "EWY",
-          "logic": "官方政策介入信号有助于抑制韩元贬值与外资连续净流出斜率。",
-          "logic_en": "Policy intervention signal moderates FX pressure and foreign equity outflow velocity."
-        },
-        {
-          "market": "港股",
-          "sector": "港股/A股亚太科技情绪外溢 (HSTECH)",
-          "sector_en": "APAC Tech Risk-On Spillover (HSTECH)",
-          "pct_low": 0.3,
-          "pct_high": 1.1,
-          "direction": "positive",
-          "proxy_ticker": "HSTECH.HK",
-          "logic": "东亚邻近市场企稳温和降低亚太成长股的联动抛压，属跨境情绪外溢传导。",
-          "logic_en": "Steadier East Asian risk sentiment mildly dampens cross-market tech derating pressure."
-        }
-      ],
-      "if_then": [
-        {
-          "cond": "[顺向催化兑现阈值] 若相关催化在 3 个交易日内落地具体数据/公告，带动 EWY 放量上行 1.9%~3.2%",
-          "result": "韩国科技与半导体权重 (KOSPI / 海力士 / 三星)核心受益标的获增量机构资金加仓，可沿一阶直接标的顺势跟踪。",
-          "tone": "bullish"
-        },
-        {
-          "cond": "[预期差证伪回吐阈值] 若首个交易日冲高后无法维持换手，次日回撤幅度 ≥ 1.5% 且未见实质订单/政策跟进",
-          "result": "属于一次性主题情绪脉冲，避免在二阶段接盘弱势滞涨概念股。",
-          "tone": "bearish"
-        }
-      ],
-      "milestones": [
-        {
-          "date": "1 周内",
-          "status": "current",
-          "label": "盯紧韩国金融委员会稳市细则发布与 KOSPI 融资余额止跌信号"
-        }
-      ],
-      "priced_in_analysis": {
-        "status_code": "partially_priced",
-        "status_label": "部分计价（博弈二次预期差）",
-        "status_label_en": "Partially Priced",
-        "session_context": "「报道称：韩国财政部启动股市稳定基金激活准备并」于交易时段内释放，资金正逐步消化量价反馈",
-        "expectation_gap": "针对「报道称：韩国财政部启动股市稳定基金激活准备并限制非法」，首波情绪已在盘面初步计价中显现，真正的预期差取决于后续核心标的成交额能否放量印证及二阶产业链订单/细则跟进。"
-      },
-      "transmission_layers": [
-        {
-          "tier": 1,
-          "tier_label": "一阶直接冲击（直接定价核心标的）",
-          "summary": "紧扣「报道称：韩国财政部启动股市稳定基金激活准备并限制非法」最直接的营收与估值敞口：韩国科技与半导体权重 / 韩国大盘宽基与外资风险偏好映 等首当其冲。",
-          "stocks": [
-            {
-              "name": "韩国科技与半导体权重",
-              "code": "EWY",
-              "market": "亚太",
-              "exposure_logic": "稳定基金托底流动性预期缓解融资强平链条，对高权重存储芯片与韩国宽基构成直接支撑。",
-              "direction": "positive"
-            },
-            {
-              "name": "韩国大盘宽基与外资风险偏好映",
-              "code": "EWY",
-              "market": "亚太",
-              "exposure_logic": "官方政策介入信号有助于抑制韩元贬值与外资连续净流出斜率。",
-              "direction": "positive"
-            }
-          ]
-        },
-        {
-          "tier": 2,
-          "tier_label": "二阶产业链传导 / 替代对冲",
-          "summary": "向产业链上下游、跨市场同业映射或自主替代环节进行二阶定价传导。",
-          "stocks": [
-            {
-              "name": "恒生科技指数",
-              "code": "HSTECH.HK",
-              "market": "港股",
-              "exposure_logic": "东亚邻近市场企稳温和降低亚太成长股的联动抛压，属跨境情绪外溢传导。",
-              "direction": "positive"
-            }
-          ]
-        },
-        {
-          "tier": 3,
-          "tier_label": "三阶资金面与风格跷跷板效应",
-          "summary": "风险偏好变化驱动机构仓位在高弹性成长与低波高股息防御资产间再平衡。",
-          "stocks": [
-            {
-              "name": "红利低波ETF",
-              "code": "512890.SH",
-              "market": "A股",
-              "exposure_logic": "当主线高波动分化时承接防御与避险资金切换",
-              "direction": "positive"
-            }
-          ]
-        }
-      ],
-      "historical_precedents": [
-        {
-          "date": "2024-09-24",
-          "event_title": "国内跨市场重大催化发布于闭市窗口并伴随跨资产联动",
-          "t1_reaction": "首个开盘日竞价集中释放预期差，前 60 分钟成交额放大验证资金承接度。",
-          "t5_reaction": "T+5 主线标的围绕产业链业绩兑现与后续政策细则完成筹码分化。",
-          "lesson": "重点核对事件是否发生在交易所休市后（未计价窗口）及首小时量能持续性。"
-        },
-        {
-          "date": "2023-10-18",
-          "event_title": "跨境政策/产业催化剂落地后中美港三地市场分时异步重估",
-          "t1_reaction": "率先开盘的市场计价 60%~75% 首波弹性，后开盘市场易现高开/低开缺口收敛。",
-          "t5_reaction": "T+5 脱离纯情绪扰动后，基本面直接受益龙头跑赢二三线跟风概念。",
-          "lesson": "避免在外盘已充分交易 5%+ 涨幅后再追高滞后映射股。"
-        }
-      ],
-      "quant_if_then": [
-        {
-          "case": "bull",
-          "label": "顺向催化兑现阈值",
-          "trigger_metric": "EWY 量价突破强度",
-          "threshold": "若相关催化在 3 个交易日内落地具体数据/公告，带动 EWY 放量上行 1.9%~3.2%",
-          "action_implication": "韩国科技与半导体权重 (KOSPI / 海力士 / 三星)核心受益标的获增量机构资金加仓，可沿一阶直接标的顺势跟踪。"
-        },
-        {
-          "case": "bear",
-          "label": "预期差证伪回吐阈值",
-          "trigger_metric": "冲高回落幅度 & 量能衰减",
-          "threshold": "若首个交易日冲高后无法维持换手，次日回撤幅度 ≥ 1.5% 且未见实质订单/政策跟进",
-          "action_implication": "属于一次性主题情绪脉冲，避免在二阶段接盘弱势滞涨概念股。"
-        }
-      ],
-      "carried_over": true
-    },
-    {
       "id": "imp_evt_cd2cfa71d76c",
       "event_id": "evt_cd2cfa71d76c",
       "rule_id": "ai_ipo_pullback",
@@ -3689,12 +3688,12 @@
         "confidence_label_en": "High (IPO Valuation Anchor)"
       },
       "affected_tickers": {
+        "ANT": -0.65,
+        "GOOGL": 0.45,
+        "AMZN": 0.45,
         "QQQ": -0.65,
         "IXIC": -0.6,
-        "HSTECH.HK": -0.6,
-        "00700.HK": -0.35,
-        "515880.SH": -0.4,
-        "601398.SH": 0.25
+        "HSTECH.HK": -0.6
       },
       "realized_quotes": [
         {
@@ -3915,8 +3914,8 @@
     }
   ],
   "event_impact_map": {
-    "evt_54f9331f9d0e": {
-      "event_id": "evt_54f9331f9d0e",
+    "brk_w_ev_evt_54f9331f9d0e": {
+      "event_id": "brk_w_ev_evt_54f9331f9d0e",
       "tag": "A股两融松绑与资本市场稳市组合拳",
       "tag_en": "A-Share Margin Ratio Cut & Market Stabilization",
       "polarity": "bullish",
@@ -4047,24 +4046,24 @@
           "name": "恒生科指",
           "name_en": "Hang Seng Tech",
           "market": "港股",
-          "price": 3509.08,
-          "pct_change": -0.06
+          "price": 3508.0,
+          "pct_change": -0.09
         },
         {
           "ticker": "HSI.HK",
           "name": "恒生指数",
           "name_en": "Hang Seng Index",
           "market": "港股",
-          "price": 22374.25,
-          "pct_change": -0.16
+          "price": 22383.74,
+          "pct_change": -0.12
         }
       ],
       "priced_in_analysis": {
-        "status_code": "partially_priced",
-        "status_label": "部分计价（博弈二次预期差）",
-        "status_label_en": "Partially Priced",
-        "session_context": "「沪深北交易所推出稳股市三项新政：融资保证金比」于交易时段内释放，资金正逐步消化量价反馈",
-        "expectation_gap": "【11月30日起正式生效】针对「沪深北交易所推出稳股市三项新政：融资保证金比例降至8」，首波情绪已在盘面初步计价中显现，真正的预期差取决于后续核心标的成交额能否放量印证及二阶产业链订单/细则跟进。"
+        "status_code": "unpriced",
+        "status_label": "未计价（周一早盘增量催化）",
+        "status_label_en": "Unpriced (Monday Open Catalyst)",
+        "session_context": "发布于休市/周末非交易时段，沪深北交易所与港股均尚未开盘定价",
+        "expectation_gap": "【11月30日起正式生效】周末重磅稳市与降两融组合拳尚未在任何盘面交易，周一早盘 09:15 集合竞价存在明显增量重估缺口；警惕仅靠消息脉冲一次性高开透支，重点跟踪两市首小时成交额能否站稳 5500 亿元验证增量资金真实入场。"
       },
       "transmission_layers": [
         {
@@ -4182,6 +4181,492 @@
           "trigger_metric": "集合竞价涨幅阈值 & 券商龙头封单率",
           "threshold": "若周一上证高开 > 4.0% 或券商板块早盘封板数回落 > 40% 且日内巨量滞涨",
           "action_implication": "极易重演 2023-08-28 高开低走剧本，切忌竞价追高，等待次日两融余额增量数据落地再低吸。"
+        }
+      ]
+    },
+    "evt_b24e1d4e4f7a": {
+      "event_id": "brk_w_ev_evt_54f9331f9d0e",
+      "tag": "A股两融松绑与资本市场稳市组合拳",
+      "tag_en": "A-Share Margin Ratio Cut & Market Stabilization",
+      "polarity": "bullish",
+      "intensity": 5,
+      "validation_status": "verified",
+      "evidence_tier": "official",
+      "evidence_tier_label": "官方公告 / 监管披露",
+      "effective_date_label": "11月30日起正式生效",
+      "qualifier_badge": null,
+      "one_liner": "沪深北交易所将融资保证金下限调降至 80%（测算可释放近 4000 亿增量杠杆资金）并配合降费与做市商松绑，直接催化头部两融券商与金融 IT 迎周一高开重估。",
+      "top_a": {
+        "market": "A股",
+        "sector": "头部两融券商与金融 IT (中信 / 东财 / 同花顺)",
+        "sector_en": "A-Share Brokers & Fintech (600030/300059)",
+        "pct_low": 2.8,
+        "pct_high": 6.4,
+        "direction": "positive",
+        "proxy_ticker": "600030.SH",
+        "logic": "融资保证金下调直接扩大存量保证金可买融资额度 25%，交投放大最利好券商与互联网交易端。",
+        "logic_en": "Lower margin collateral requirements expand leverage capacity by 25%, boosting brokers & fintech."
+      },
+      "top_us": {
+        "market": "A股",
+        "sector": "宽基权重沪深300与非银保险 (510300)",
+        "sector_en": "A-Share Broad Index & Insurers (510300)",
+        "pct_low": 1.0,
+        "pct_high": 2.8,
+        "direction": "positive",
+        "proxy_ticker": "510300.SH",
+        "logic": "权益市场成交中枢抬升直接增厚保险投资端弹性与宽基被动流入。",
+        "logic_en": "Higher turnover supports broad-index heavyweights and insurer equity books."
+      },
+      "top_hk": {
+        "market": "港股",
+        "sector": "港股中资券商与离岸中国宽基 (HSTECH)",
+        "sector_en": "HKEX China Brokers & HSTECH",
+        "pct_low": 1.1,
+        "pct_high": 3.1,
+        "direction": "positive",
+        "proxy_ticker": "HSTECH.HK",
+        "logic": "境内资本市场稳市政策组合拳同步提振离岸人民币风险偏好与中资券商比价。",
+        "logic_en": "Mainland market-stabilization policy improves offshore China equity risk appetite."
+      },
+      "bars": [
+        {
+          "market": "A股",
+          "sector": "头部两融券商与金融 IT (中信 / 东财 / 同花顺)",
+          "sector_en": "A-Share Brokers & Fintech (600030/300059)",
+          "pct_low": 2.8,
+          "pct_high": 6.4,
+          "direction": "positive",
+          "proxy_ticker": "600030.SH",
+          "logic": "融资保证金下调直接扩大存量保证金可买融资额度 25%，交投放大最利好券商与互联网交易端。",
+          "logic_en": "Lower margin collateral requirements expand leverage capacity by 25%, boosting brokers & fintech."
+        },
+        {
+          "market": "A股",
+          "sector": "科创板 / 创业板高弹性核心成长",
+          "sector_en": "A-Share STAR & ChiNext Growth",
+          "pct_low": 1.5,
+          "pct_high": 4.2,
+          "direction": "positive",
+          "proxy_ticker": "300059.SZ",
+          "logic": "两融活跃度提升与做市商门槛放宽优先改善双创科技板块成交深度。",
+          "logic_en": "Margin expansion & relaxed market-maker thresholds support STAR/ChiNext liquidity."
+        },
+        {
+          "market": "港股",
+          "sector": "港股中资券商与离岸中国宽基 (HSTECH)",
+          "sector_en": "HKEX China Brokers & HSTECH",
+          "pct_low": 1.1,
+          "pct_high": 3.1,
+          "direction": "positive",
+          "proxy_ticker": "HSTECH.HK",
+          "logic": "境内资本市场稳市政策组合拳同步提振离岸人民币风险偏好与中资券商比价。",
+          "logic_en": "Mainland market-stabilization policy improves offshore China equity risk appetite."
+        },
+        {
+          "market": "A股",
+          "sector": "宽基权重沪深300与非银保险 (510300)",
+          "sector_en": "A-Share Broad Index & Insurers (510300)",
+          "pct_low": 1.0,
+          "pct_high": 2.8,
+          "direction": "positive",
+          "proxy_ticker": "510300.SH",
+          "logic": "权益市场成交中枢抬升直接增厚保险投资端弹性与宽基被动流入。",
+          "logic_en": "Higher turnover supports broad-index heavyweights and insurer equity books."
+        }
+      ],
+      "if_then": [
+        {
+          "cond": "[正向验证 · 量价健康接力] 周一上证集合竞价高开 1.2%~2.8%，且开盘 60 分钟两市成交额 ≥ 5500 亿元",
+          "result": "温和放量高开说明场外资金积极认筹而不急于砸盘，中信/东方财富及科创板做市受益标的具备持续推升基础。",
+          "tone": "bullish"
+        },
+        {
+          "cond": "[反向风险 · 情绪透支高开低走] 若周一上证高开 > 4.0% 或券商板块早盘封板数回落 > 40% 且日内巨量滞涨",
+          "result": "极易重演 2023-08-28 高开低走剧本，切忌竞价追高，等待次日两融余额增量数据落地再低吸。",
+          "tone": "bearish"
+        }
+      ],
+      "milestones": [
+        {
+          "date": "下周一起",
+          "status": "current",
+          "label": "盯紧两市首小时成交额与中信/东财两融净增量"
+        }
+      ],
+      "sample_basis": {
+        "sample_n": 18,
+        "volatility_pct": 3.66,
+        "volatility_source": "A股券商/两融制度红利历史样本",
+        "horizon": "1~5 个交易日",
+        "confidence_label": "高置信（直接作用于场内两融与交易量）",
+        "confidence_label_en": "High (Direct Margin & Turnover Catalyst)"
+      },
+      "realized_quotes": [
+        {
+          "ticker": "000001.SH",
+          "name": "上证指数",
+          "name_en": "SSE Composite",
+          "market": "A股",
+          "price": 3538.95,
+          "pct_change": 0.15
+        },
+        {
+          "ticker": "HSTECH.HK",
+          "name": "恒生科指",
+          "name_en": "Hang Seng Tech",
+          "market": "港股",
+          "price": 3508.0,
+          "pct_change": -0.09
+        },
+        {
+          "ticker": "HSI.HK",
+          "name": "恒生指数",
+          "name_en": "Hang Seng Index",
+          "market": "港股",
+          "price": 22383.74,
+          "pct_change": -0.12
+        }
+      ],
+      "priced_in_analysis": {
+        "status_code": "unpriced",
+        "status_label": "未计价（周一早盘增量催化）",
+        "status_label_en": "Unpriced (Monday Open Catalyst)",
+        "session_context": "发布于休市/周末非交易时段，沪深北交易所与港股均尚未开盘定价",
+        "expectation_gap": "【11月30日起正式生效】周末重磅稳市与降两融组合拳尚未在任何盘面交易，周一早盘 09:15 集合竞价存在明显增量重估缺口；警惕仅靠消息脉冲一次性高开透支，重点跟踪两市首小时成交额能否站稳 5500 亿元验证增量资金真实入场。"
+      },
+      "transmission_layers": [
+        {
+          "tier": 1,
+          "tier_label": "一阶直接冲击（两融与交投放大最受益核心标的）",
+          "summary": "两融保证金下限由 100% 降至 80%（理论最大融资杠杆提升 25% 空间），叠加做市商降槛与费用减免，直接扩大券商两融利息收入与经纪佣金弹性。",
+          "stocks": [
+            {
+              "name": "中信证券",
+              "code": "600030.SH",
+              "market": "A股",
+              "exposure_logic": "行业两融余额及机构做市份额第一，最直接承接 4000 亿潜在增量杠杆资金",
+              "direction": "positive"
+            },
+            {
+              "name": "华泰证券",
+              "code": "601688.SH",
+              "market": "A股",
+              "exposure_logic": "融资融券与量化机构交易市占率居前，科创板/创业板做市业务放量直接受益",
+              "direction": "positive"
+            },
+            {
+              "name": "东方财富",
+              "code": "300059.SZ",
+              "market": "A股",
+              "exposure_logic": "零售两融高 Beta 标杆，活跃度与市场日均成交额上台阶呈正反馈",
+              "direction": "positive"
+            }
+          ]
+        },
+        {
+          "tier": 2,
+          "tier_label": "二阶产业链传导（金融 IT 交易端 / 高弹性科技赛道）",
+          "summary": "增量资金入场优先流向双创做市覆盖标的及高弹性科技主线，同步拉动券商柜台改造、智能投顾软件会员与行情订阅续费率。",
+          "stocks": [
+            {
+              "name": "同花顺",
+              "code": "300033.SZ",
+              "market": "A股",
+              "exposure_logic": "C 端证券软件与开户导流龙头，交投突破万亿级别时业绩弹性最高",
+              "direction": "positive"
+            },
+            {
+              "name": "指南针",
+              "code": "300803.SZ",
+              "market": "A股",
+              "exposure_logic": "麦高证券+软件获客双轮驱动，对市场增量开户与两融意愿极度敏感",
+              "direction": "positive"
+            },
+            {
+              "name": "恒生电子",
+              "code": "600570.SH",
+              "market": "A股",
+              "exposure_logic": "做市商规则与两融风控参数升级推动券商核心柜台系统改造订单",
+              "direction": "positive"
+            }
+          ]
+        },
+        {
+          "tier": 3,
+          "tier_label": "三阶资金面与风格跷跷板效应",
+          "summary": "场内风偏迅速抬升驱动资金从前期抱团的微盘纯防卫红利/银行部分外溢至非银券商、双创科技与高辨识度核心资产。",
+          "stocks": [
+            {
+              "name": "中国太保",
+              "code": "601601.SH",
+              "market": "A股",
+              "exposure_logic": "权益市场回暖直接增厚保险投资端浮盈（OCI/FVTPL 资产重估）",
+              "direction": "positive"
+            },
+            {
+              "name": "工商银行",
+              "code": "601398.SH",
+              "market": "A股",
+              "exposure_logic": "纯避险资金或短期分流向高 Beta 非银与成长赛道，短期相对弹性趋弱",
+              "direction": "mixed"
+            }
+          ]
+        }
+      ],
+      "historical_precedents": [
+        {
+          "date": "2023-08-27",
+          "event_title": "证监会下调融资保证金最低比例由100%降至80%并减半征收印花税",
+          "t1_reaction": "次日上证指数高开 +5.06%，证券板块集体涨停开盘，但全天高开低走收盘涨 +1.13%，两市成交 1.13 万亿元。",
+          "t5_reaction": "T+5 上证累计约 +2.2%；券商板块回吐部分高开溢价后分化，金融 IT 弹性优于传统头部券商。",
+          "lesson": "制度性降两融若早盘竞价高开超 4% 切忌盲目追高，重点观察次日换手承接与两融余额净增量。"
+        },
+        {
+          "date": "2024-09-24",
+          "event_title": "央行、证监会宣布降准降息、降存量房贷利率及创设互换便利等稳市组合拳",
+          "t1_reaction": "当日上证大涨 +4.15%，两市放量至 9713 亿元，非银金融与高权重蓝筹领涨。",
+          "t5_reaction": "T+5 上证累计飙升 +21.3%，东方财富、中信证券等两融核心标的走出一轮主升浪。",
+          "lesson": "当多项稳市与流动性工具组合落地且首小时成交放量超 5000 亿时，行情具备中期反转级别持续性。"
+        },
+        {
+          "date": "2015-11-13",
+          "event_title": "沪深交易所逆周期上调融资保证金最低比例至100%（历史反向对照）",
+          "t1_reaction": "次一交易日券商板块低开 -2.8%，高融资占比成长股短期波动加大。",
+          "t5_reaction": "T+5 市场融资余额增速明显放缓，风格短期切向低估值蓝筹。",
+          "lesson": "保证金比例反向调节直接决定场内 1:1.25 vs 1:1 杠杆上限，对高换手中小盘流动性高度敏感。"
+        }
+      ],
+      "quant_if_then": [
+        {
+          "case": "bull",
+          "label": "正向验证 · 量价健康接力",
+          "trigger_metric": "上证早盘高开幅度 & 两市首小时成交额",
+          "threshold": "周一上证集合竞价高开 1.2%~2.8%，且开盘 60 分钟两市成交额 ≥ 5500 亿元",
+          "action_implication": "温和放量高开说明场外资金积极认筹而不急于砸盘，中信/东方财富及科创板做市受益标的具备持续推升基础。"
+        },
+        {
+          "case": "bear",
+          "label": "反向风险 · 情绪透支高开低走",
+          "trigger_metric": "集合竞价涨幅阈值 & 券商龙头封单率",
+          "threshold": "若周一上证高开 > 4.0% 或券商板块早盘封板数回落 > 40% 且日内巨量滞涨",
+          "action_implication": "极易重演 2023-08-28 高开低走剧本，切忌竞价追高，等待次日两融余额增量数据落地再低吸。"
+        }
+      ]
+    },
+    "brk_w_ev_evt_95f1d6dc993c": {
+      "event_id": "brk_w_ev_evt_95f1d6dc993c",
+      "tag": "亚太/韩国股市去杠杆与政府平准基金稳市干预",
+      "tag_en": "Korea Equity Deleveraging & Stabilization Fund Intervention",
+      "polarity": "bullish",
+      "intensity": 4,
+      "validation_status": "verified",
+      "evidence_tier": "single_source",
+      "evidence_tier_label": "单一信源线索",
+      "effective_date_label": null,
+      "qualifier_badge": null,
+      "one_liner": "韩国股市融资余额回落后，韩国政府拟评估启动股市稳定/平准基金以托底筹码与流动性，优先缓和韩国半导体与科技权重股被动抛压并改善亚太风险偏好（聚焦本次事件关键量化幅度：18年）。",
+      "top_a": {
+        "market": "亚太",
+        "sector": "韩国科技与半导体权重 (KOSPI / 海力士 / 三星)",
+        "sector_en": "Korea Tech & Semi Weights (KOSPI / Hynix / Samsung)",
+        "pct_low": 1.0,
+        "pct_high": 3.2,
+        "direction": "positive",
+        "proxy_ticker": "EWY",
+        "logic": "稳定基金托底流动性预期缓解融资强平链条，对高权重存储芯片与韩国宽基构成直接支撑。",
+        "logic_en": "Stabilization fund liquidity eases forced margin unwinding in flagship Korean memory and index weights."
+      },
+      "top_us": {
+        "market": "港股",
+        "sector": "港股/A股亚太科技情绪外溢 (HSTECH)",
+        "sector_en": "APAC Tech Risk-On Spillover (HSTECH)",
+        "pct_low": 0.3,
+        "pct_high": 1.1,
+        "direction": "positive",
+        "proxy_ticker": "HSTECH.HK",
+        "logic": "东亚邻近市场企稳温和降低亚太成长股的联动抛压，属跨境情绪外溢传导。",
+        "logic_en": "Steadier East Asian risk sentiment mildly dampens cross-market tech derating pressure."
+      },
+      "top_hk": {
+        "market": "港股",
+        "sector": "港股/A股亚太科技情绪外溢 (HSTECH)",
+        "sector_en": "APAC Tech Risk-On Spillover (HSTECH)",
+        "pct_low": 0.3,
+        "pct_high": 1.1,
+        "direction": "positive",
+        "proxy_ticker": "HSTECH.HK",
+        "logic": "东亚邻近市场企稳温和降低亚太成长股的联动抛压，属跨境情绪外溢传导。",
+        "logic_en": "Steadier East Asian risk sentiment mildly dampens cross-market tech derating pressure."
+      },
+      "bars": [
+        {
+          "market": "亚太",
+          "sector": "韩国科技与半导体权重 (KOSPI / 海力士 / 三星)",
+          "sector_en": "Korea Tech & Semi Weights (KOSPI / Hynix / Samsung)",
+          "pct_low": 1.0,
+          "pct_high": 3.2,
+          "direction": "positive",
+          "proxy_ticker": "EWY",
+          "logic": "稳定基金托底流动性预期缓解融资强平链条，对高权重存储芯片与韩国宽基构成直接支撑。",
+          "logic_en": "Stabilization fund liquidity eases forced margin unwinding in flagship Korean memory and index weights."
+        },
+        {
+          "market": "亚太",
+          "sector": "韩国大盘宽基与外资风险偏好映射 (EWY)",
+          "sector_en": "MSCI South Korea Proxy & Foreign Flows (EWY)",
+          "pct_low": 0.6,
+          "pct_high": 2.0,
+          "direction": "positive",
+          "proxy_ticker": "EWY",
+          "logic": "官方政策介入信号有助于抑制韩元贬值与外资连续净流出斜率。",
+          "logic_en": "Policy intervention signal moderates FX pressure and foreign equity outflow velocity."
+        },
+        {
+          "market": "港股",
+          "sector": "港股/A股亚太科技情绪外溢 (HSTECH)",
+          "sector_en": "APAC Tech Risk-On Spillover (HSTECH)",
+          "pct_low": 0.3,
+          "pct_high": 1.1,
+          "direction": "positive",
+          "proxy_ticker": "HSTECH.HK",
+          "logic": "东亚邻近市场企稳温和降低亚太成长股的联动抛压，属跨境情绪外溢传导。",
+          "logic_en": "Steadier East Asian risk sentiment mildly dampens cross-market tech derating pressure."
+        }
+      ],
+      "if_then": [
+        {
+          "cond": "[顺向催化兑现阈值] 若相关催化在 3 个交易日内落地具体数据/公告，带动 EWY 放量上行 1.9%~3.2%",
+          "result": "韩国科技与半导体权重 (KOSPI / 海力士 / 三星)核心受益标的获增量机构资金加仓，可沿一阶直接标的顺势跟踪。",
+          "tone": "bullish"
+        },
+        {
+          "cond": "[预期差证伪回吐阈值] 若首个交易日冲高后无法维持换手，次日回撤幅度 ≥ 1.5% 且未见实质订单/政策跟进",
+          "result": "属于一次性主题情绪脉冲，避免在二阶段接盘弱势滞涨概念股。",
+          "tone": "bearish"
+        }
+      ],
+      "milestones": [
+        {
+          "date": "1 周内",
+          "status": "current",
+          "label": "盯紧韩国金融委员会稳市细则发布与 KOSPI 融资余额止跌信号"
+        }
+      ],
+      "sample_basis": {
+        "sample_n": 10,
+        "volatility_pct": 2.37,
+        "volatility_source": "韩国政府历次股市稳定基金与限制卖空干预窗口表现样本",
+        "horizon": "1~5 个交易日",
+        "confidence_label": "官方稳市政策预期（托底亚太杠杆筹码与流动性）",
+        "confidence_label_en": "Official Stabilization Fund Policy Support"
+      },
+      "realized_quotes": [
+        {
+          "ticker": "QQQ",
+          "name": "纳指100ETF",
+          "name_en": "Invesco QQQ",
+          "market": "美股",
+          "price": 608.45,
+          "pct_change": -5.67
+        },
+        {
+          "ticker": "HSTECH.HK",
+          "name": "恒生科指",
+          "name_en": "Hang Seng Tech",
+          "market": "港股",
+          "price": 3508.0,
+          "pct_change": -0.09
+        }
+      ],
+      "priced_in_analysis": {
+        "status_code": "unpriced",
+        "status_label": "未计价（开盘增量催化）",
+        "status_label_en": "Unpriced (Open Catalyst)",
+        "session_context": "「韩国拟时隔18年再启股市稳定基金，放宽回购并」落于休市/跨时区窗口，开盘将集中兑现首次定价比差",
+        "expectation_gap": "针对「韩国拟时隔18年再启股市稳定基金，放宽回购并监控卖空」，首波情绪已在休市缺口预期中显现，真正的预期差取决于后续核心标的成交额能否放量印证及二阶产业链订单/细则跟进。"
+      },
+      "transmission_layers": [
+        {
+          "tier": 1,
+          "tier_label": "一阶直接冲击（直接定价核心标的）",
+          "summary": "紧扣「韩国拟时隔18年再启股市稳定基金，放宽回购并监控卖空」最直接的营收与估值敞口：韩国科技与半导体权重 / 韩国大盘宽基与外资风险偏好映 等首当其冲。",
+          "stocks": [
+            {
+              "name": "韩国科技与半导体权重",
+              "code": "EWY",
+              "market": "亚太",
+              "exposure_logic": "稳定基金托底流动性预期缓解融资强平链条，对高权重存储芯片与韩国宽基构成直接支撑。",
+              "direction": "positive"
+            },
+            {
+              "name": "韩国大盘宽基与外资风险偏好映",
+              "code": "EWY",
+              "market": "亚太",
+              "exposure_logic": "官方政策介入信号有助于抑制韩元贬值与外资连续净流出斜率。",
+              "direction": "positive"
+            }
+          ]
+        },
+        {
+          "tier": 2,
+          "tier_label": "二阶产业链传导 / 替代对冲",
+          "summary": "向产业链上下游、跨市场同业映射或自主替代环节进行二阶定价传导。",
+          "stocks": [
+            {
+              "name": "恒生科技指数",
+              "code": "HSTECH.HK",
+              "market": "港股",
+              "exposure_logic": "东亚邻近市场企稳温和降低亚太成长股的联动抛压，属跨境情绪外溢传导。",
+              "direction": "positive"
+            }
+          ]
+        },
+        {
+          "tier": 3,
+          "tier_label": "三阶资金面与风格跷跷板效应",
+          "summary": "风险偏好变化驱动机构仓位在高弹性成长与低波高股息防御资产间再平衡。",
+          "stocks": [
+            {
+              "name": "红利低波ETF",
+              "code": "512890.SH",
+              "market": "A股",
+              "exposure_logic": "当主线高波动分化时承接防御与避险资金切换",
+              "direction": "positive"
+            }
+          ]
+        }
+      ],
+      "historical_precedents": [
+        {
+          "date": "2024-09-24",
+          "event_title": "国内跨市场重大催化发布于闭市窗口并伴随跨资产联动",
+          "t1_reaction": "首个开盘日竞价集中释放预期差，前 60 分钟成交额放大验证资金承接度。",
+          "t5_reaction": "T+5 主线标的围绕产业链业绩兑现与后续政策细则完成筹码分化。",
+          "lesson": "重点核对事件是否发生在交易所休市后（未计价窗口）及首小时量能持续性。"
+        },
+        {
+          "date": "2023-10-18",
+          "event_title": "跨境政策/产业催化剂落地后中美港三地市场分时异步重估",
+          "t1_reaction": "率先开盘的市场计价 60%~75% 首波弹性，后开盘市场易现高开/低开缺口收敛。",
+          "t5_reaction": "T+5 脱离纯情绪扰动后，基本面直接受益龙头跑赢二三线跟风概念。",
+          "lesson": "避免在外盘已充分交易 5%+ 涨幅后再追高滞后映射股。"
+        }
+      ],
+      "quant_if_then": [
+        {
+          "case": "bull",
+          "label": "顺向催化兑现阈值",
+          "trigger_metric": "EWY 量价突破强度",
+          "threshold": "若相关催化在 3 个交易日内落地具体数据/公告，带动 EWY 放量上行 1.9%~3.2%",
+          "action_implication": "韩国科技与半导体权重 (KOSPI / 海力士 / 三星)核心受益标的获增量机构资金加仓，可沿一阶直接标的顺势跟踪。"
+        },
+        {
+          "case": "bear",
+          "label": "预期差证伪回吐阈值",
+          "trigger_metric": "冲高回落幅度 & 量能衰减",
+          "threshold": "若首个交易日冲高后无法维持换手，次日回撤幅度 ≥ 1.5% 且未见实质订单/政策跟进",
+          "action_implication": "属于一次性主题情绪脉冲，避免在二阶段接盘弱势滞涨概念股。"
         }
       ]
     },
@@ -4314,8 +4799,8 @@
           "name": "中芯国际",
           "name_en": "SMIC",
           "market": "港股",
-          "price": 48.8,
-          "pct_change": -0.65
+          "price": 48.74,
+          "pct_change": -0.77
         },
         {
           "ticker": "512480.SH",
@@ -4549,8 +5034,8 @@
           "name": "恒生指数",
           "name_en": "Hang Seng Index",
           "market": "港股",
-          "price": 22374.25,
-          "pct_change": -0.16
+          "price": 22383.74,
+          "pct_change": -0.12
         },
         {
           "ticker": "GLD",
@@ -4789,8 +5274,8 @@
           "name": "紫金矿业",
           "name_en": "Zijin Mining",
           "market": "港股",
-          "price": 24.0,
-          "pct_change": 4.08
+          "price": 24.02,
+          "pct_change": 4.16
         }
       ],
       "priced_in_analysis": {
@@ -5029,8 +5514,8 @@
           "name": "恒生科指",
           "name_en": "Hang Seng Tech",
           "market": "港股",
-          "price": 3509.08,
-          "pct_change": -0.06
+          "price": 3508.0,
+          "pct_change": -0.09
         }
       ],
       "priced_in_analysis": {
@@ -5502,8 +5987,8 @@
           "name": "中芯国际",
           "name_en": "SMIC",
           "market": "港股",
-          "price": 48.8,
-          "pct_change": -0.65
+          "price": 48.74,
+          "pct_change": -0.77
         },
         {
           "ticker": "512480.SH",
@@ -5716,8 +6201,8 @@
           "name": "中国海油",
           "name_en": "CNOOC",
           "market": "港股",
-          "price": 21.22,
-          "pct_change": -2.21
+          "price": 21.28,
+          "pct_change": -1.94
         }
       ],
       "priced_in_analysis": {
@@ -5815,222 +6300,6 @@
           "trigger_metric": "600938.SH 量价突破强度",
           "threshold": "若相关催化在 3 个交易日内落地具体数据/公告，带动 600938.SH 放量上行 1.7%~2.9%",
           "action_implication": "高股息上游油气与动力煤 (海油/神华)核心受益标的获增量机构资金加仓，可沿一阶直接标的顺势跟踪。"
-        },
-        {
-          "case": "bear",
-          "label": "预期差证伪回吐阈值",
-          "trigger_metric": "冲高回落幅度 & 量能衰减",
-          "threshold": "若首个交易日冲高后无法维持换手，次日回撤幅度 ≥ 1.5% 且未见实质订单/政策跟进",
-          "action_implication": "属于一次性主题情绪脉冲，避免在二阶段接盘弱势滞涨概念股。"
-        }
-      ]
-    },
-    "evt_95f1d6dc993c": {
-      "event_id": "evt_95f1d6dc993c",
-      "tag": "亚太/韩国股市去杠杆与政府平准基金稳市干预",
-      "tag_en": "Korea Equity Deleveraging & Stabilization Fund Intervention",
-      "polarity": "bullish",
-      "intensity": 4,
-      "validation_status": "verified",
-      "evidence_tier": "single_source",
-      "evidence_tier_label": "单一信源线索",
-      "effective_date_label": null,
-      "qualifier_badge": null,
-      "one_liner": "韩国股市融资余额回落后，韩国政府拟评估启动股市稳定/平准基金以托底筹码与流动性，优先缓和韩国半导体与科技权重股被动抛压并改善亚太风险偏好（聚焦本次事件关键量化幅度：18年）。",
-      "top_a": {
-        "market": "亚太",
-        "sector": "韩国科技与半导体权重 (KOSPI / 海力士 / 三星)",
-        "sector_en": "Korea Tech & Semi Weights (KOSPI / Hynix / Samsung)",
-        "pct_low": 1.0,
-        "pct_high": 3.2,
-        "direction": "positive",
-        "proxy_ticker": "EWY",
-        "logic": "稳定基金托底流动性预期缓解融资强平链条，对高权重存储芯片与韩国宽基构成直接支撑。",
-        "logic_en": "Stabilization fund liquidity eases forced margin unwinding in flagship Korean memory and index weights."
-      },
-      "top_us": {
-        "market": "港股",
-        "sector": "港股/A股亚太科技情绪外溢 (HSTECH)",
-        "sector_en": "APAC Tech Risk-On Spillover (HSTECH)",
-        "pct_low": 0.3,
-        "pct_high": 1.1,
-        "direction": "positive",
-        "proxy_ticker": "HSTECH.HK",
-        "logic": "东亚邻近市场企稳温和降低亚太成长股的联动抛压，属跨境情绪外溢传导。",
-        "logic_en": "Steadier East Asian risk sentiment mildly dampens cross-market tech derating pressure."
-      },
-      "top_hk": {
-        "market": "港股",
-        "sector": "港股/A股亚太科技情绪外溢 (HSTECH)",
-        "sector_en": "APAC Tech Risk-On Spillover (HSTECH)",
-        "pct_low": 0.3,
-        "pct_high": 1.1,
-        "direction": "positive",
-        "proxy_ticker": "HSTECH.HK",
-        "logic": "东亚邻近市场企稳温和降低亚太成长股的联动抛压，属跨境情绪外溢传导。",
-        "logic_en": "Steadier East Asian risk sentiment mildly dampens cross-market tech derating pressure."
-      },
-      "bars": [
-        {
-          "market": "亚太",
-          "sector": "韩国科技与半导体权重 (KOSPI / 海力士 / 三星)",
-          "sector_en": "Korea Tech & Semi Weights (KOSPI / Hynix / Samsung)",
-          "pct_low": 1.0,
-          "pct_high": 3.2,
-          "direction": "positive",
-          "proxy_ticker": "EWY",
-          "logic": "稳定基金托底流动性预期缓解融资强平链条，对高权重存储芯片与韩国宽基构成直接支撑。",
-          "logic_en": "Stabilization fund liquidity eases forced margin unwinding in flagship Korean memory and index weights."
-        },
-        {
-          "market": "亚太",
-          "sector": "韩国大盘宽基与外资风险偏好映射 (EWY)",
-          "sector_en": "MSCI South Korea Proxy & Foreign Flows (EWY)",
-          "pct_low": 0.6,
-          "pct_high": 2.0,
-          "direction": "positive",
-          "proxy_ticker": "EWY",
-          "logic": "官方政策介入信号有助于抑制韩元贬值与外资连续净流出斜率。",
-          "logic_en": "Policy intervention signal moderates FX pressure and foreign equity outflow velocity."
-        },
-        {
-          "market": "港股",
-          "sector": "港股/A股亚太科技情绪外溢 (HSTECH)",
-          "sector_en": "APAC Tech Risk-On Spillover (HSTECH)",
-          "pct_low": 0.3,
-          "pct_high": 1.1,
-          "direction": "positive",
-          "proxy_ticker": "HSTECH.HK",
-          "logic": "东亚邻近市场企稳温和降低亚太成长股的联动抛压，属跨境情绪外溢传导。",
-          "logic_en": "Steadier East Asian risk sentiment mildly dampens cross-market tech derating pressure."
-        }
-      ],
-      "if_then": [
-        {
-          "cond": "[顺向催化兑现阈值] 若相关催化在 3 个交易日内落地具体数据/公告，带动 EWY 放量上行 1.9%~3.2%",
-          "result": "韩国科技与半导体权重 (KOSPI / 海力士 / 三星)核心受益标的获增量机构资金加仓，可沿一阶直接标的顺势跟踪。",
-          "tone": "bullish"
-        },
-        {
-          "cond": "[预期差证伪回吐阈值] 若首个交易日冲高后无法维持换手，次日回撤幅度 ≥ 1.5% 且未见实质订单/政策跟进",
-          "result": "属于一次性主题情绪脉冲，避免在二阶段接盘弱势滞涨概念股。",
-          "tone": "bearish"
-        }
-      ],
-      "milestones": [
-        {
-          "date": "1 周内",
-          "status": "current",
-          "label": "盯紧韩国金融委员会稳市细则发布与 KOSPI 融资余额止跌信号"
-        }
-      ],
-      "sample_basis": {
-        "sample_n": 10,
-        "volatility_pct": 2.37,
-        "volatility_source": "韩国政府历次股市稳定基金与限制卖空干预窗口表现样本",
-        "horizon": "1~5 个交易日",
-        "confidence_label": "官方稳市政策预期（托底亚太杠杆筹码与流动性）",
-        "confidence_label_en": "Official Stabilization Fund Policy Support"
-      },
-      "realized_quotes": [
-        {
-          "ticker": "QQQ",
-          "name": "纳指100ETF",
-          "name_en": "Invesco QQQ",
-          "market": "美股",
-          "price": 608.45,
-          "pct_change": -5.67
-        },
-        {
-          "ticker": "HSTECH.HK",
-          "name": "恒生科指",
-          "name_en": "Hang Seng Tech",
-          "market": "港股",
-          "price": 3509.08,
-          "pct_change": -0.06
-        }
-      ],
-      "priced_in_analysis": {
-        "status_code": "partially_priced",
-        "status_label": "部分计价（博弈二次预期差）",
-        "status_label_en": "Partially Priced",
-        "session_context": "「韩国拟时隔18年再启股市稳定基金，放宽回购并」于交易时段内释放，资金正逐步消化量价反馈",
-        "expectation_gap": "针对「韩国拟时隔18年再启股市稳定基金，放宽回购并监控卖空」，首波情绪已在盘面初步计价中显现，真正的预期差取决于后续核心标的成交额能否放量印证及二阶产业链订单/细则跟进。"
-      },
-      "transmission_layers": [
-        {
-          "tier": 1,
-          "tier_label": "一阶直接冲击（直接定价核心标的）",
-          "summary": "紧扣「韩国拟时隔18年再启股市稳定基金，放宽回购并监控卖空」最直接的营收与估值敞口：韩国科技与半导体权重 / 韩国大盘宽基与外资风险偏好映 等首当其冲。",
-          "stocks": [
-            {
-              "name": "韩国科技与半导体权重",
-              "code": "EWY",
-              "market": "亚太",
-              "exposure_logic": "稳定基金托底流动性预期缓解融资强平链条，对高权重存储芯片与韩国宽基构成直接支撑。",
-              "direction": "positive"
-            },
-            {
-              "name": "韩国大盘宽基与外资风险偏好映",
-              "code": "EWY",
-              "market": "亚太",
-              "exposure_logic": "官方政策介入信号有助于抑制韩元贬值与外资连续净流出斜率。",
-              "direction": "positive"
-            }
-          ]
-        },
-        {
-          "tier": 2,
-          "tier_label": "二阶产业链传导 / 替代对冲",
-          "summary": "向产业链上下游、跨市场同业映射或自主替代环节进行二阶定价传导。",
-          "stocks": [
-            {
-              "name": "恒生科技指数",
-              "code": "HSTECH.HK",
-              "market": "港股",
-              "exposure_logic": "东亚邻近市场企稳温和降低亚太成长股的联动抛压，属跨境情绪外溢传导。",
-              "direction": "positive"
-            }
-          ]
-        },
-        {
-          "tier": 3,
-          "tier_label": "三阶资金面与风格跷跷板效应",
-          "summary": "风险偏好变化驱动机构仓位在高弹性成长与低波高股息防御资产间再平衡。",
-          "stocks": [
-            {
-              "name": "红利低波ETF",
-              "code": "512890.SH",
-              "market": "A股",
-              "exposure_logic": "当主线高波动分化时承接防御与避险资金切换",
-              "direction": "positive"
-            }
-          ]
-        }
-      ],
-      "historical_precedents": [
-        {
-          "date": "2024-09-24",
-          "event_title": "国内跨市场重大催化发布于闭市窗口并伴随跨资产联动",
-          "t1_reaction": "首个开盘日竞价集中释放预期差，前 60 分钟成交额放大验证资金承接度。",
-          "t5_reaction": "T+5 主线标的围绕产业链业绩兑现与后续政策细则完成筹码分化。",
-          "lesson": "重点核对事件是否发生在交易所休市后（未计价窗口）及首小时量能持续性。"
-        },
-        {
-          "date": "2023-10-18",
-          "event_title": "跨境政策/产业催化剂落地后中美港三地市场分时异步重估",
-          "t1_reaction": "率先开盘的市场计价 60%~75% 首波弹性，后开盘市场易现高开/低开缺口收敛。",
-          "t5_reaction": "T+5 脱离纯情绪扰动后，基本面直接受益龙头跑赢二三线跟风概念。",
-          "lesson": "避免在外盘已充分交易 5%+ 涨幅后再追高滞后映射股。"
-        }
-      ],
-      "quant_if_then": [
-        {
-          "case": "bull",
-          "label": "顺向催化兑现阈值",
-          "trigger_metric": "EWY 量价突破强度",
-          "threshold": "若相关催化在 3 个交易日内落地具体数据/公告，带动 EWY 放量上行 1.9%~3.2%",
-          "action_implication": "韩国科技与半导体权重 (KOSPI / 海力士 / 三星)核心受益标的获增量机构资金加仓，可沿一阶直接标的顺势跟踪。"
         },
         {
           "case": "bear",
@@ -6181,16 +6450,16 @@
           "name": "中国海油",
           "name_en": "CNOOC",
           "market": "港股",
-          "price": 21.22,
-          "pct_change": -2.21
+          "price": 21.28,
+          "pct_change": -1.94
         },
         {
           "ticker": "02899.HK",
           "name": "紫金矿业",
           "name_en": "Zijin Mining",
           "market": "港股",
-          "price": 24.0,
-          "pct_change": 4.08
+          "price": 24.02,
+          "pct_change": 4.16
         }
       ],
       "priced_in_analysis": {
@@ -6438,16 +6707,16 @@
           "name": "中国海油",
           "name_en": "CNOOC",
           "market": "港股",
-          "price": 21.22,
-          "pct_change": -2.21
+          "price": 21.28,
+          "pct_change": -1.94
         },
         {
           "ticker": "02899.HK",
           "name": "紫金矿业",
           "name_en": "Zijin Mining",
           "market": "港股",
-          "price": 24.0,
-          "pct_change": 4.08
+          "price": 24.02,
+          "pct_change": 4.16
         }
       ],
       "priced_in_analysis": {
@@ -6771,15 +7040,231 @@
         }
       ]
     },
-    "evt_6144e8cc692b": {
-      "event_id": "evt_6144e8cc692b",
+    "evt_70cd02bc18d9": {
+      "event_id": "evt_70cd02bc18d9",
+      "tag": "亚太/韩国股市去杠杆与政府平准基金稳市干预",
+      "tag_en": "Korea Equity Deleveraging & Stabilization Fund Intervention",
+      "polarity": "bullish",
+      "intensity": 4,
+      "validation_status": "verified",
+      "evidence_tier": "single_source",
+      "evidence_tier_label": "单一信源线索",
+      "effective_date_label": null,
+      "qualifier_badge": null,
+      "one_liner": "韩国股市融资余额回落后，韩国政府拟评估启动股市稳定/平准基金以托底筹码与流动性，优先缓和韩国半导体与科技权重股被动抛压并改善亚太风险偏好。",
+      "top_a": {
+        "market": "亚太",
+        "sector": "韩国科技与半导体权重 (KOSPI / 海力士 / 三星)",
+        "sector_en": "Korea Tech & Semi Weights (KOSPI / Hynix / Samsung)",
+        "pct_low": 0.9,
+        "pct_high": 2.8,
+        "direction": "positive",
+        "proxy_ticker": "EWY",
+        "logic": "稳定基金托底流动性预期缓解融资强平链条，对高权重存储芯片与韩国宽基构成直接支撑。",
+        "logic_en": "Stabilization fund liquidity eases forced margin unwinding in flagship Korean memory and index weights."
+      },
+      "top_us": {
+        "market": "港股",
+        "sector": "港股/A股亚太科技情绪外溢 (HSTECH)",
+        "sector_en": "APAC Tech Risk-On Spillover (HSTECH)",
+        "pct_low": 0.3,
+        "pct_high": 0.9,
+        "direction": "positive",
+        "proxy_ticker": "HSTECH.HK",
+        "logic": "东亚邻近市场企稳温和降低亚太成长股的联动抛压，属跨境情绪外溢传导。",
+        "logic_en": "Steadier East Asian risk sentiment mildly dampens cross-market tech derating pressure."
+      },
+      "top_hk": {
+        "market": "港股",
+        "sector": "港股/A股亚太科技情绪外溢 (HSTECH)",
+        "sector_en": "APAC Tech Risk-On Spillover (HSTECH)",
+        "pct_low": 0.3,
+        "pct_high": 0.9,
+        "direction": "positive",
+        "proxy_ticker": "HSTECH.HK",
+        "logic": "东亚邻近市场企稳温和降低亚太成长股的联动抛压，属跨境情绪外溢传导。",
+        "logic_en": "Steadier East Asian risk sentiment mildly dampens cross-market tech derating pressure."
+      },
+      "bars": [
+        {
+          "market": "亚太",
+          "sector": "韩国科技与半导体权重 (KOSPI / 海力士 / 三星)",
+          "sector_en": "Korea Tech & Semi Weights (KOSPI / Hynix / Samsung)",
+          "pct_low": 0.9,
+          "pct_high": 2.8,
+          "direction": "positive",
+          "proxy_ticker": "EWY",
+          "logic": "稳定基金托底流动性预期缓解融资强平链条，对高权重存储芯片与韩国宽基构成直接支撑。",
+          "logic_en": "Stabilization fund liquidity eases forced margin unwinding in flagship Korean memory and index weights."
+        },
+        {
+          "market": "亚太",
+          "sector": "韩国大盘宽基与外资风险偏好映射 (EWY)",
+          "sector_en": "MSCI South Korea Proxy & Foreign Flows (EWY)",
+          "pct_low": 0.5,
+          "pct_high": 1.7,
+          "direction": "positive",
+          "proxy_ticker": "EWY",
+          "logic": "官方政策介入信号有助于抑制韩元贬值与外资连续净流出斜率。",
+          "logic_en": "Policy intervention signal moderates FX pressure and foreign equity outflow velocity."
+        },
+        {
+          "market": "港股",
+          "sector": "港股/A股亚太科技情绪外溢 (HSTECH)",
+          "sector_en": "APAC Tech Risk-On Spillover (HSTECH)",
+          "pct_low": 0.3,
+          "pct_high": 0.9,
+          "direction": "positive",
+          "proxy_ticker": "HSTECH.HK",
+          "logic": "东亚邻近市场企稳温和降低亚太成长股的联动抛压，属跨境情绪外溢传导。",
+          "logic_en": "Steadier East Asian risk sentiment mildly dampens cross-market tech derating pressure."
+        }
+      ],
+      "if_then": [
+        {
+          "cond": "[顺向催化兑现阈值] 若相关催化在 3 个交易日内落地具体数据/公告，带动 EWY 放量上行 1.9%~3.2%",
+          "result": "韩国科技与半导体权重 (KOSPI / 海力士 / 三星)核心受益标的获增量机构资金加仓，可沿一阶直接标的顺势跟踪。",
+          "tone": "bullish"
+        },
+        {
+          "cond": "[预期差证伪回吐阈值] 若首个交易日冲高后无法维持换手，次日回撤幅度 ≥ 1.5% 且未见实质订单/政策跟进",
+          "result": "属于一次性主题情绪脉冲，避免在二阶段接盘弱势滞涨概念股。",
+          "tone": "bearish"
+        }
+      ],
+      "milestones": [
+        {
+          "date": "1 周内",
+          "status": "current",
+          "label": "盯紧韩国金融委员会稳市细则发布与 KOSPI 融资余额止跌信号"
+        }
+      ],
+      "sample_basis": {
+        "sample_n": 10,
+        "volatility_pct": 2.37,
+        "volatility_source": "韩国政府历次股市稳定基金与限制卖空干预窗口表现样本",
+        "horizon": "1~5 个交易日",
+        "confidence_label": "官方稳市政策预期（托底亚太杠杆筹码与流动性）",
+        "confidence_label_en": "Official Stabilization Fund Policy Support"
+      },
+      "realized_quotes": [
+        {
+          "ticker": "QQQ",
+          "name": "纳指100ETF",
+          "name_en": "Invesco QQQ",
+          "market": "美股",
+          "price": 608.45,
+          "pct_change": -5.67
+        },
+        {
+          "ticker": "HSTECH.HK",
+          "name": "恒生科指",
+          "name_en": "Hang Seng Tech",
+          "market": "港股",
+          "price": 3508.0,
+          "pct_change": -0.09
+        }
+      ],
+      "priced_in_analysis": {
+        "status_code": "unpriced",
+        "status_label": "未计价（开盘增量催化）",
+        "status_label_en": "Unpriced (Open Catalyst)",
+        "session_context": "「报道称：韩国启动股市稳定基金激活准备工作，放」落于休市/跨时区窗口，开盘将集中兑现首次定价比差",
+        "expectation_gap": "针对「报道称：韩国启动股市稳定基金激活准备工作，放宽回购上」，首波情绪已在休市缺口预期中显现，真正的预期差取决于后续核心标的成交额能否放量印证及二阶产业链订单/细则跟进。"
+      },
+      "transmission_layers": [
+        {
+          "tier": 1,
+          "tier_label": "一阶直接冲击（直接定价核心标的）",
+          "summary": "紧扣「报道称：韩国启动股市稳定基金激活准备工作，放宽回购上」最直接的营收与估值敞口：韩国科技与半导体权重 / 韩国大盘宽基与外资风险偏好映 等首当其冲。",
+          "stocks": [
+            {
+              "name": "韩国科技与半导体权重",
+              "code": "EWY",
+              "market": "亚太",
+              "exposure_logic": "稳定基金托底流动性预期缓解融资强平链条，对高权重存储芯片与韩国宽基构成直接支撑。",
+              "direction": "positive"
+            },
+            {
+              "name": "韩国大盘宽基与外资风险偏好映",
+              "code": "EWY",
+              "market": "亚太",
+              "exposure_logic": "官方政策介入信号有助于抑制韩元贬值与外资连续净流出斜率。",
+              "direction": "positive"
+            }
+          ]
+        },
+        {
+          "tier": 2,
+          "tier_label": "二阶产业链传导 / 替代对冲",
+          "summary": "向产业链上下游、跨市场同业映射或自主替代环节进行二阶定价传导。",
+          "stocks": [
+            {
+              "name": "恒生科技指数",
+              "code": "HSTECH.HK",
+              "market": "港股",
+              "exposure_logic": "东亚邻近市场企稳温和降低亚太成长股的联动抛压，属跨境情绪外溢传导。",
+              "direction": "positive"
+            }
+          ]
+        },
+        {
+          "tier": 3,
+          "tier_label": "三阶资金面与风格跷跷板效应",
+          "summary": "风险偏好变化驱动机构仓位在高弹性成长与低波高股息防御资产间再平衡。",
+          "stocks": [
+            {
+              "name": "红利低波ETF",
+              "code": "512890.SH",
+              "market": "A股",
+              "exposure_logic": "当主线高波动分化时承接防御与避险资金切换",
+              "direction": "positive"
+            }
+          ]
+        }
+      ],
+      "historical_precedents": [
+        {
+          "date": "2024-09-24",
+          "event_title": "国内跨市场重大催化发布于闭市窗口并伴随跨资产联动",
+          "t1_reaction": "首个开盘日竞价集中释放预期差，前 60 分钟成交额放大验证资金承接度。",
+          "t5_reaction": "T+5 主线标的围绕产业链业绩兑现与后续政策细则完成筹码分化。",
+          "lesson": "重点核对事件是否发生在交易所休市后（未计价窗口）及首小时量能持续性。"
+        },
+        {
+          "date": "2023-10-18",
+          "event_title": "跨境政策/产业催化剂落地后中美港三地市场分时异步重估",
+          "t1_reaction": "率先开盘的市场计价 60%~75% 首波弹性，后开盘市场易现高开/低开缺口收敛。",
+          "t5_reaction": "T+5 脱离纯情绪扰动后，基本面直接受益龙头跑赢二三线跟风概念。",
+          "lesson": "避免在外盘已充分交易 5%+ 涨幅后再追高滞后映射股。"
+        }
+      ],
+      "quant_if_then": [
+        {
+          "case": "bull",
+          "label": "顺向催化兑现阈值",
+          "trigger_metric": "EWY 量价突破强度",
+          "threshold": "若相关催化在 3 个交易日内落地具体数据/公告，带动 EWY 放量上行 1.9%~3.2%",
+          "action_implication": "韩国科技与半导体权重 (KOSPI / 海力士 / 三星)核心受益标的获增量机构资金加仓，可沿一阶直接标的顺势跟踪。"
+        },
+        {
+          "case": "bear",
+          "label": "预期差证伪回吐阈值",
+          "trigger_metric": "冲高回落幅度 & 量能衰减",
+          "threshold": "若首个交易日冲高后无法维持换手，次日回撤幅度 ≥ 1.5% 且未见实质订单/政策跟进",
+          "action_implication": "属于一次性主题情绪脉冲，避免在二阶段接盘弱势滞涨概念股。"
+        }
+      ]
+    },
+    "evt_b66e2e04836c": {
+      "event_id": "evt_b66e2e04836c",
       "tag": "端到端智驾商业化 / FSD 落地",
       "tag_en": "Autonomous Driving & FSD Rollout",
       "polarity": "divergent",
       "intensity": 4,
       "validation_status": "verified",
-      "evidence_tier": "single_source",
-      "evidence_tier_label": "单一信源线索",
+      "evidence_tier": "corroborated",
+      "evidence_tier_label": "多源媒体证实",
       "effective_date_label": null,
       "qualifier_badge": null,
       "one_liner": "端到端智驾高版本推进强化头部整车软件订阅与 Robotaxi 预期，带动高算力域控及传感器渗透率上行，传统低阶网约车承压。",
@@ -6908,22 +7393,22 @@
           "name": "恒生科指",
           "name_en": "Hang Seng Tech",
           "market": "港股",
-          "price": 3509.08,
-          "pct_change": -0.06
+          "price": 3508.0,
+          "pct_change": -0.09
         }
       ],
       "priced_in_analysis": {
-        "status_code": "partially_priced",
-        "status_label": "部分计价（博弈二次预期差）",
-        "status_label_en": "Partially Priced",
-        "session_context": "「特斯拉北美启动FSD V15监督版推送，中国」于交易时段内释放，资金正逐步消化量价反馈",
-        "expectation_gap": "针对「特斯拉北美启动FSD V15监督版推送，中国市场正依」，首波情绪已在盘面初步计价中显现，真正的预期差取决于后续核心标的成交额能否放量印证及二阶产业链订单/细则跟进。"
+        "status_code": "unpriced",
+        "status_label": "未计价（开盘增量催化）",
+        "status_label_en": "Unpriced (Open Catalyst)",
+        "session_context": "「特斯拉推送FSD V15监督版并推出Tesl」落于休市/跨时区窗口，开盘将集中兑现首次定价比差",
+        "expectation_gap": "针对「特斯拉推送FSD V15监督版并推出Tesla Re」，首波情绪已在休市缺口预期中显现，真正的预期差取决于后续核心标的成交额能否放量印证及二阶产业链订单/细则跟进。"
       },
       "transmission_layers": [
         {
           "tier": 1,
           "tier_label": "一阶直接冲击（直接定价核心标的）",
-          "summary": "紧扣「特斯拉北美启动FSD V15监督版推送，中国市场正依」最直接的营收与估值敞口：特斯拉 / 德赛西威 等首当其冲。",
+          "summary": "紧扣「特斯拉推送FSD V15监督版并推出Tesla Re」最直接的营收与估值敞口：特斯拉 / 德赛西威 等首当其冲。",
           "stocks": [
             {
               "name": "特斯拉",
@@ -7219,222 +7704,6 @@
         }
       ]
     },
-    "evt_2c24066d343c": {
-      "event_id": "evt_2c24066d343c",
-      "tag": "亚太/韩国股市去杠杆与政府平准基金稳市干预",
-      "tag_en": "Korea Equity Deleveraging & Stabilization Fund Intervention",
-      "polarity": "bullish",
-      "intensity": 4,
-      "validation_status": "verified",
-      "evidence_tier": "single_source",
-      "evidence_tier_label": "单一信源线索",
-      "effective_date_label": null,
-      "qualifier_badge": null,
-      "one_liner": "韩国股市融资余额回落后，韩国政府拟评估启动股市稳定/平准基金以托底筹码与流动性，优先缓和韩国半导体与科技权重股被动抛压并改善亚太风险偏好。",
-      "top_a": {
-        "market": "亚太",
-        "sector": "韩国科技与半导体权重 (KOSPI / 海力士 / 三星)",
-        "sector_en": "Korea Tech & Semi Weights (KOSPI / Hynix / Samsung)",
-        "pct_low": 1.0,
-        "pct_high": 3.2,
-        "direction": "positive",
-        "proxy_ticker": "EWY",
-        "logic": "稳定基金托底流动性预期缓解融资强平链条，对高权重存储芯片与韩国宽基构成直接支撑。",
-        "logic_en": "Stabilization fund liquidity eases forced margin unwinding in flagship Korean memory and index weights."
-      },
-      "top_us": {
-        "market": "港股",
-        "sector": "港股/A股亚太科技情绪外溢 (HSTECH)",
-        "sector_en": "APAC Tech Risk-On Spillover (HSTECH)",
-        "pct_low": 0.3,
-        "pct_high": 1.1,
-        "direction": "positive",
-        "proxy_ticker": "HSTECH.HK",
-        "logic": "东亚邻近市场企稳温和降低亚太成长股的联动抛压，属跨境情绪外溢传导。",
-        "logic_en": "Steadier East Asian risk sentiment mildly dampens cross-market tech derating pressure."
-      },
-      "top_hk": {
-        "market": "港股",
-        "sector": "港股/A股亚太科技情绪外溢 (HSTECH)",
-        "sector_en": "APAC Tech Risk-On Spillover (HSTECH)",
-        "pct_low": 0.3,
-        "pct_high": 1.1,
-        "direction": "positive",
-        "proxy_ticker": "HSTECH.HK",
-        "logic": "东亚邻近市场企稳温和降低亚太成长股的联动抛压，属跨境情绪外溢传导。",
-        "logic_en": "Steadier East Asian risk sentiment mildly dampens cross-market tech derating pressure."
-      },
-      "bars": [
-        {
-          "market": "亚太",
-          "sector": "韩国科技与半导体权重 (KOSPI / 海力士 / 三星)",
-          "sector_en": "Korea Tech & Semi Weights (KOSPI / Hynix / Samsung)",
-          "pct_low": 1.0,
-          "pct_high": 3.2,
-          "direction": "positive",
-          "proxy_ticker": "EWY",
-          "logic": "稳定基金托底流动性预期缓解融资强平链条，对高权重存储芯片与韩国宽基构成直接支撑。",
-          "logic_en": "Stabilization fund liquidity eases forced margin unwinding in flagship Korean memory and index weights."
-        },
-        {
-          "market": "亚太",
-          "sector": "韩国大盘宽基与外资风险偏好映射 (EWY)",
-          "sector_en": "MSCI South Korea Proxy & Foreign Flows (EWY)",
-          "pct_low": 0.6,
-          "pct_high": 2.0,
-          "direction": "positive",
-          "proxy_ticker": "EWY",
-          "logic": "官方政策介入信号有助于抑制韩元贬值与外资连续净流出斜率。",
-          "logic_en": "Policy intervention signal moderates FX pressure and foreign equity outflow velocity."
-        },
-        {
-          "market": "港股",
-          "sector": "港股/A股亚太科技情绪外溢 (HSTECH)",
-          "sector_en": "APAC Tech Risk-On Spillover (HSTECH)",
-          "pct_low": 0.3,
-          "pct_high": 1.1,
-          "direction": "positive",
-          "proxy_ticker": "HSTECH.HK",
-          "logic": "东亚邻近市场企稳温和降低亚太成长股的联动抛压，属跨境情绪外溢传导。",
-          "logic_en": "Steadier East Asian risk sentiment mildly dampens cross-market tech derating pressure."
-        }
-      ],
-      "if_then": [
-        {
-          "cond": "[顺向催化兑现阈值] 若相关催化在 3 个交易日内落地具体数据/公告，带动 EWY 放量上行 1.9%~3.2%",
-          "result": "韩国科技与半导体权重 (KOSPI / 海力士 / 三星)核心受益标的获增量机构资金加仓，可沿一阶直接标的顺势跟踪。",
-          "tone": "bullish"
-        },
-        {
-          "cond": "[预期差证伪回吐阈值] 若首个交易日冲高后无法维持换手，次日回撤幅度 ≥ 1.5% 且未见实质订单/政策跟进",
-          "result": "属于一次性主题情绪脉冲，避免在二阶段接盘弱势滞涨概念股。",
-          "tone": "bearish"
-        }
-      ],
-      "milestones": [
-        {
-          "date": "1 周内",
-          "status": "current",
-          "label": "盯紧韩国金融委员会稳市细则发布与 KOSPI 融资余额止跌信号"
-        }
-      ],
-      "sample_basis": {
-        "sample_n": 10,
-        "volatility_pct": 2.37,
-        "volatility_source": "韩国政府历次股市稳定基金与限制卖空干预窗口表现样本",
-        "horizon": "1~5 个交易日",
-        "confidence_label": "官方稳市政策预期（托底亚太杠杆筹码与流动性）",
-        "confidence_label_en": "Official Stabilization Fund Policy Support"
-      },
-      "realized_quotes": [
-        {
-          "ticker": "QQQ",
-          "name": "纳指100ETF",
-          "name_en": "Invesco QQQ",
-          "market": "美股",
-          "price": 608.45,
-          "pct_change": -5.67
-        },
-        {
-          "ticker": "HSTECH.HK",
-          "name": "恒生科指",
-          "name_en": "Hang Seng Tech",
-          "market": "港股",
-          "price": 3501.06,
-          "pct_change": -0.29
-        }
-      ],
-      "priced_in_analysis": {
-        "status_code": "partially_priced",
-        "status_label": "部分计价（博弈二次预期差）",
-        "status_label_en": "Partially Priced",
-        "session_context": "「报道称：韩国财政部启动股市稳定基金激活准备并」于交易时段内释放，资金正逐步消化量价反馈",
-        "expectation_gap": "针对「报道称：韩国财政部启动股市稳定基金激活准备并限制非法」，首波情绪已在盘面初步计价中显现，真正的预期差取决于后续核心标的成交额能否放量印证及二阶产业链订单/细则跟进。"
-      },
-      "transmission_layers": [
-        {
-          "tier": 1,
-          "tier_label": "一阶直接冲击（直接定价核心标的）",
-          "summary": "紧扣「报道称：韩国财政部启动股市稳定基金激活准备并限制非法」最直接的营收与估值敞口：韩国科技与半导体权重 / 韩国大盘宽基与外资风险偏好映 等首当其冲。",
-          "stocks": [
-            {
-              "name": "韩国科技与半导体权重",
-              "code": "EWY",
-              "market": "亚太",
-              "exposure_logic": "稳定基金托底流动性预期缓解融资强平链条，对高权重存储芯片与韩国宽基构成直接支撑。",
-              "direction": "positive"
-            },
-            {
-              "name": "韩国大盘宽基与外资风险偏好映",
-              "code": "EWY",
-              "market": "亚太",
-              "exposure_logic": "官方政策介入信号有助于抑制韩元贬值与外资连续净流出斜率。",
-              "direction": "positive"
-            }
-          ]
-        },
-        {
-          "tier": 2,
-          "tier_label": "二阶产业链传导 / 替代对冲",
-          "summary": "向产业链上下游、跨市场同业映射或自主替代环节进行二阶定价传导。",
-          "stocks": [
-            {
-              "name": "恒生科技指数",
-              "code": "HSTECH.HK",
-              "market": "港股",
-              "exposure_logic": "东亚邻近市场企稳温和降低亚太成长股的联动抛压，属跨境情绪外溢传导。",
-              "direction": "positive"
-            }
-          ]
-        },
-        {
-          "tier": 3,
-          "tier_label": "三阶资金面与风格跷跷板效应",
-          "summary": "风险偏好变化驱动机构仓位在高弹性成长与低波高股息防御资产间再平衡。",
-          "stocks": [
-            {
-              "name": "红利低波ETF",
-              "code": "512890.SH",
-              "market": "A股",
-              "exposure_logic": "当主线高波动分化时承接防御与避险资金切换",
-              "direction": "positive"
-            }
-          ]
-        }
-      ],
-      "historical_precedents": [
-        {
-          "date": "2024-09-24",
-          "event_title": "国内跨市场重大催化发布于闭市窗口并伴随跨资产联动",
-          "t1_reaction": "首个开盘日竞价集中释放预期差，前 60 分钟成交额放大验证资金承接度。",
-          "t5_reaction": "T+5 主线标的围绕产业链业绩兑现与后续政策细则完成筹码分化。",
-          "lesson": "重点核对事件是否发生在交易所休市后（未计价窗口）及首小时量能持续性。"
-        },
-        {
-          "date": "2023-10-18",
-          "event_title": "跨境政策/产业催化剂落地后中美港三地市场分时异步重估",
-          "t1_reaction": "率先开盘的市场计价 60%~75% 首波弹性，后开盘市场易现高开/低开缺口收敛。",
-          "t5_reaction": "T+5 脱离纯情绪扰动后，基本面直接受益龙头跑赢二三线跟风概念。",
-          "lesson": "避免在外盘已充分交易 5%+ 涨幅后再追高滞后映射股。"
-        }
-      ],
-      "quant_if_then": [
-        {
-          "case": "bull",
-          "label": "顺向催化兑现阈值",
-          "trigger_metric": "EWY 量价突破强度",
-          "threshold": "若相关催化在 3 个交易日内落地具体数据/公告，带动 EWY 放量上行 1.9%~3.2%",
-          "action_implication": "韩国科技与半导体权重 (KOSPI / 海力士 / 三星)核心受益标的获增量机构资金加仓，可沿一阶直接标的顺势跟踪。"
-        },
-        {
-          "case": "bear",
-          "label": "预期差证伪回吐阈值",
-          "trigger_metric": "冲高回落幅度 & 量能衰减",
-          "threshold": "若首个交易日冲高后无法维持换手，次日回撤幅度 ≥ 1.5% 且未见实质订单/政策跟进",
-          "action_implication": "属于一次性主题情绪脉冲，避免在二阶段接盘弱势滞涨概念股。"
-        }
-      ]
-    },
     "evt_cd2cfa71d76c": {
       "event_id": "evt_cd2cfa71d76c",
       "tag": "头部大模型 IPO 破发 / 估值重锚",
@@ -7701,7 +7970,15 @@
           "threshold": "跌破IPO发行价83美元并持续一周",
           "action_implication": "削减AI基础设施及高估值AI概念股敞口，转向防御性资产。"
         }
-      ]
+      ],
+      "affected_tickers": {
+        "ANT": -0.65,
+        "GOOGL": 0.45,
+        "AMZN": 0.45,
+        "QQQ": -0.65,
+        "IXIC": -0.6,
+        "HSTECH.HK": -0.6
+      }
     }
   }
 }
