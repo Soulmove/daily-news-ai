@@ -22,6 +22,7 @@ from pipeline.dedup import is_consumer_promo_or_fluff, is_hotlist_aggregator_sou
 from pipeline.heavy_classifier import (
     GEO_MILITARY_HEAVY_RE,
     HEAVY_NOISE_EXCLUDE_RE,
+    MARKET_SEMI_HEAVY_RE,
     heavy_topic_key,
     infer_heavy_reason_tag,
     sync_today_heavy_into_live_wire,
@@ -65,12 +66,74 @@ _GLOBAL_KW_RE = re.compile(
 )
 
 
+def _dedup_repeated_sentences(raw: str) -> str:
+    """Remove duplicated consecutive sentences or repeated halves inside a single wire item."""
+    txt = str(raw or "").strip()
+    if not txt:
+        return ""
+    # Collapse exact or near-exact full-string double paste (e.g. "Foo。Foo。")
+    half = len(txt) // 2
+    if half >= 10:
+        first_h = re.sub(r"[\s。！!?.，,]+$", "", txt[:half].strip())
+        second_h = re.sub(r"[\s。！!?.，,]+$", "", txt[half:].strip())
+        if first_h and (first_h == second_h or txt[half:].strip().startswith(first_h[: max(8, len(first_h) - 2)])):
+            txt = txt[:half].strip()
+    parts = re.split(r"(?<=[。！？!?;；])|(?<=\.)(?=\s|$)", txt)
+    deduped: List[str] = []
+    prev_norm = ""
+    for part in parts:
+        p = part.strip()
+        if not p:
+            continue
+        p_norm = re.sub(r"[\s\-_·:：,，.。!！?？;；()（）\[\]【】'\"]+", "", p.lower())
+        if not p_norm:
+            continue
+        if prev_norm and (p_norm == prev_norm or (len(p_norm) >= 8 and p_norm in prev_norm)):
+            continue
+        deduped.append(p)
+        prev_norm = p_norm
+    if not deduped:
+        return txt
+    out = deduped[0]
+    for seg in deduped[1:]:
+        if out[-1] in "。！？；":
+            out += seg
+        else:
+            out += " " + seg
+    return out.strip()
+
+
 def _clean(raw: Any, max_len: int = 240) -> str:
     if not raw:
         return ""
     s = html.unescape(_HTML_RE.sub(" ", str(raw)))
     s = strip_raw_urls_and_domain_tails(s)
+    s = _dedup_repeated_sentences(s)
     return smart_truncate(s, max_len=max_len)
+
+
+def _is_empty_clock_wire(title: str, excerpt: str = "") -> bool:
+    """Reject ultra-short empty market clock ticks lacking numbers/concrete facts."""
+    t_clean = _dedup_repeated_sentences(str(title or "").strip())
+    e_clean = _dedup_repeated_sentences(str(excerpt or "").strip())
+    blob = t_clean if (not e_clean or e_clean == t_clean) else f"{t_clean} {e_clean}"
+    core = re.sub(r"[\s《》【】「」『』()（）\[\],，.。!！?？:：;；\-—·'\"]+", "", blob)
+    if not core:
+        return True
+    if not re.search(r"\d", blob):
+        if len(core) <= 8:
+            return True
+        if re.search(r"(?:商品期货|股指期货|国债期货|国内期货|期市|欧股|美股|A股|港股)(?:早盘|午盘|夜盘)?(?:开盘|收盘|休市)", core) and len(core) <= 18:
+            return True
+        if "投资者应保持理性" in core and len(core) <= 22:
+            return True
+        if len(core) < 14 and not re.search(
+            r"美联储|央行|降息|加息|通胀|证监会|交易所|发布|宣布|签署|批准|起诉|收购|裁员|停火|袭击|发射|上市|关税|制裁|总统|财长|英伟达|OpenAI|谷歌|华为|腾讯",
+            core,
+            re.I,
+        ):
+            return True
+    return False
 
 
 _PURE_WIRE_FLUFF_RE = re.compile(
@@ -380,28 +443,58 @@ def _fetch_sina_7x24_telegraph(fetched_iso: str) -> Dict[str, Any]:
     }
 
 
-def _fetch_rss_flash(feed_id: str, label: str, default_cat: str, url: str, family: str, fetched_iso: str) -> Dict[str, Any]:
+_ATOM_NS = "{http://www.w3.org/2005/Atom}"
+
+
+def _fetch_rss_flash(
+    feed_id: str,
+    label: str,
+    default_cat: str,
+    url: str,
+    family: str,
+    fetched_iso: str,
+    *,
+    timeout: tuple[float, float] = (3.5, 6.0),
+) -> Dict[str, Any]:
     items: List[dict] = []
     err: Optional[str] = None
     try:
-        r = requests.get(url, headers=_HEADERS, timeout=(4, 7))
+        r = requests.get(url, headers=_HEADERS, timeout=timeout)
         if r.status_code != 200:
             err = f"HTTP {r.status_code}"
         else:
             root = ET.fromstring(r.content)
-            for node in root.findall(".//item")[:20]:
-                t_el = node.find("title")
-                l_el = node.find("link")
-                p_el = node.find("pubDate")
-                d_el = node.find("description")
+            nodes = root.findall(".//item")
+            is_atom = False
+            if not nodes:
+                nodes = root.findall(f".//{_ATOM_NS}entry")
+                is_atom = bool(nodes)
+            for node in nodes[:20]:
+                if is_atom:
+                    t_el = node.find(f"{_ATOM_NS}title")
+                    l_el = node.find(f"{_ATOM_NS}link[@rel='alternate']") or node.find(f"{_ATOM_NS}link")
+                    p_el = node.find(f"{_ATOM_NS}published") or node.find(f"{_ATOM_NS}updated")
+                    d_el = node.find(f"{_ATOM_NS}summary") or node.find(f"{_ATOM_NS}content")
+                    link = (l_el.attrib.get("href") or l_el.text or "").strip() if l_el is not None else ""
+                else:
+                    t_el = node.find("title")
+                    l_el = node.find("link")
+                    p_el = node.find("pubDate")
+                    d_el = node.find("description")
+                    link = (l_el.text or "").strip() if l_el is not None else ""
                 title = _clean(t_el.text if t_el is not None else "", max_len=170)
-                link = (l_el.text or "").strip() if l_el is not None else ""
+                raw_desc = (d_el.text if d_el is not None else "") or ""
+                excerpt = _clean(raw_desc, max_len=240)
                 canon = canonicalize_url(link)
-                if not title or not canon or _PURE_WIRE_FLUFF_RE.search(title) or is_consumer_promo_or_fluff(title, raw_desc):
+                if (
+                    not title
+                    or not canon
+                    or _PURE_WIRE_FLUFF_RE.search(title)
+                    or is_consumer_promo_or_fluff(title, raw_desc)
+                    or _is_empty_clock_wire(title, excerpt)
+                ):
                     continue
                 pub_iso, pub_src = parse_published_at(p_el.text.strip() if (p_el is not None and p_el.text) else None, feed_id)
-                raw_desc = d_el.text if d_el is not None else ""
-                excerpt = _clean(raw_desc, max_len=240)
                 thumb_url: Optional[str] = None
                 enc = node.find("enclosure")
                 if enc is not None and (enc.attrib.get("type") or "").startswith("image/") and enc.attrib.get("url"):
@@ -445,7 +538,7 @@ def _fetch_rss_flash(feed_id: str, label: str, default_cat: str, url: str, famil
 
 
 def fetch_china_realtime_wires(cache: Optional[HttpCacheStore] = None) -> Dict[str, Any]:
-    """Concurrently fetch 7x24 Chinese real-time financial & tech flash wires."""
+    """Concurrently fetch 7x24 Chinese & global real-time financial, tech & geopolitical flash wires."""
     del cache
     t0 = time.monotonic()
     fetched_iso = to_iso_shanghai(now_shanghai())
@@ -456,7 +549,14 @@ def fetch_china_realtime_wires(cache: Optional[HttpCacheStore] = None) -> Dict[s
         lambda: _fetch_wallstreetcn_channel("us-stock-channel", "华尔街见闻 美股快讯", "finance", fetched_iso),
         lambda: _fetch_wallstreetcn_channel("tech-channel", "华尔街见闻 科技/AI快讯", "tech", fetched_iso),
         lambda: _fetch_sina_7x24_telegraph(fetched_iso),
+        lambda: _fetch_cls_telegraph(fetched_iso),
         lambda: _fetch_rss_flash("ithome-rss", "IT之家 实时快讯", "tech", "https://www.ithome.com/rss/", "ithome", fetched_iso),
+        lambda: _fetch_rss_flash("techcrunch-rss", "TechCrunch AI & Tech", "tech", "https://techcrunch.com/feed/", "techcrunch", fetched_iso),
+        lambda: _fetch_rss_flash("theverge-rss", "The Verge", "tech", "https://www.theverge.com/rss/index.xml", "theverge", fetched_iso),
+        lambda: _fetch_rss_flash("openai-news-rss", "OpenAI 官方动态", "tech", "https://openai.com/news/rss.xml", "openai", fetched_iso),
+        lambda: _fetch_rss_flash("google-ai-rss", "Google AI 官方博客", "tech", "https://blog.google/technology/ai/rss/", "google-blog", fetched_iso),
+        lambda: _fetch_rss_flash("bbc-world-rss", "BBC News World", "global", "https://feeds.bbci.co.uk/news/world/rss.xml", "bbc", fetched_iso),
+        lambda: _fetch_rss_flash("scmp-rss", "南华早报 SCMP", "global", "https://www.scmp.com/rss/4/feed", "scmp", fetched_iso),
     ]
 
     all_items: List[dict] = []
@@ -466,7 +566,7 @@ def fetch_china_realtime_wires(cache: Optional[HttpCacheStore] = None) -> Dict[s
     ok_cnt = 0
     errors: List[str] = []
 
-    with ThreadPoolExecutor(max_workers=6) as pool:
+    with ThreadPoolExecutor(max_workers=10) as pool:
         futs = [pool.submit(fn) for fn in tasks]
         for fut in as_completed(futs):
             res = fut.result()
@@ -596,9 +696,95 @@ def _classify_wire_severity(
         return "S", "S级突发重磅"
     if GEO_MILITARY_HEAVY_RE.search(title):
         return "A", "A级突发重磅"
+    if MARKET_SEMI_HEAVY_RE.search(blob):
+        return "A", "A级突发重磅"
     if _WIRE_A_TIER_RE.search(blob):
         return "A", "A级要闻"
     return "B", "常规动态"
+
+
+def _wire_subject_action_cluster(title: str, excerpt: str = "") -> Optional[str]:
+    """Identify recurring multi-post wire burst topics that must collapse inside 3 hours."""
+    blob = f"{title} {excerpt}"
+    if re.search(r"(?:台湾|台股|台交所|台湾证交所)", blob) and re.search(r"(?:保证金|融资|维持率|融券)", blob):
+        return "tw_margin_adj"
+    if re.search(r"(?:a股|沪指|深成指|创业板指|两市|三大指数|上证指数)", blob, re.I) and re.search(
+        r"(?:收盘|收评|收涨|收跌|午盘|成交额)", blob
+    ):
+        return "cn_a_close"
+    if re.search(r"(?:商品期货|股指期货|国内期货|期市|国债期货)", blob) and re.search(r"(?:收盘|收涨|收跌|收评)", blob):
+        return "cn_futures_close"
+    return None
+
+
+def _load_recent_raw_wire_supplements(root: Path, now_dt: Any, max_age_hours: float = 24.0) -> List[dict]:
+    """Supplement 7x24 wire with fresh (<24h) Tech/AI & International items from crawled raw files."""
+    supplements: List[dict] = []
+    seen_u: set[str] = set()
+    preferred_re = re.compile(
+        r"(?:ithome|it之家|36kr|36氪|techcrunch|theverge|the\s*verge|openai|google|deepmind|anthropic|"
+        r"marktechpost|the\s*decoder|arstechnica|ars\s*technica|reuters|路透|bbc|zaobao|联合早报|scmp|南华早报|"
+        r"bloomberg|彭博|wsj|cnbc|guardian|npr)",
+        re.I,
+    )
+
+    def _accept_row(row: dict, default_cat: str, fallback_sid: str = "", fallback_sname: str = "") -> None:
+        if not isinstance(row, dict):
+            return
+        t = str(row.get("title") or "").strip()
+        if not t or len(t) < 6:
+            return
+        sid = str(row.get("source_id") or fallback_sid or "")
+        sname = str(row.get("source_name") or fallback_sname or "")
+        if is_hotlist_aggregator_source(sid, sname):
+            return
+        if not preferred_re.search(f"{sid} {sname}"):
+            return
+        pub_raw = str(row.get("published_at") or "").strip()
+        pub_dt = parse_iso_datetime(pub_raw) if pub_raw else None
+        if pub_dt is None:
+            return
+        age_h = (now_dt - pub_dt).total_seconds() / 3600.0
+        if age_h < -12.0 or age_h > max_age_hours:
+            return
+        cu = canonicalize_url(row.get("canonical_url") or row.get("url")) or ""
+        if cu and cu in seen_u:
+            return
+        if cu:
+            seen_u.add(cu)
+        supplements.append(
+            {
+                "id": row.get("item_id") or row.get("id") or f"sup_{len(supplements)}",
+                "source_id": sid,
+                "source_name": sname or "权威信源",
+                "category": str(row.get("category") or default_cat),
+                "title": t,
+                "excerpt": row.get("excerpt") or "",
+                "url": cu or str(row.get("url") or ""),
+                "published_at": to_iso_shanghai(pub_dt),
+                "thumbnail_url": row.get("thumbnail_url"),
+                "importance": row.get("importance") or "normal",
+                "metric_label": row.get("metric_label"),
+            }
+        )
+
+    for rel_name, def_cat in (("data_tech.json", "tech"), ("data_global.json", "global")):
+        raw_list = load_json_if_exists(root / rel_name, default=[])
+        if isinstance(raw_list, list):
+            for plat in raw_list:
+                if not isinstance(plat, dict):
+                    continue
+                psid = str(plat.get("id") or "")
+                psname = str(plat.get("name") or "")
+                for item in (plat.get("items") or [])[:15]:
+                    _accept_row(item, def_cat, psid, psname)
+
+    conn_doc = load_json_if_exists(root / "data/connectors_latest.json", default={})
+    if isinstance(conn_doc, dict):
+        for item in (conn_doc.get("items") or [])[:120]:
+            _accept_row(item, str(item.get("category") or "tech") if isinstance(item, dict) else "tech")
+
+    return supplements
 
 
 def refresh_live_wire_file(base_dir: Path | str = ".", extra_items: Optional[List[dict]] = None) -> Dict[str, Any]:
@@ -614,7 +800,7 @@ def refresh_live_wire_file(base_dir: Path | str = ".", extra_items: Optional[Lis
     merged: List[dict] = []
     seen_keys: set[str] = set()
     seen_urls: set[str] = set()
-    seen_entries: List[Tuple[str, str, int]] = []  # (norm_title, pub_iso, merged_idx)
+    seen_entries: List[Tuple[str, str, Optional[str], int]] = []  # (norm_title, pub_iso, cluster_key, merged_idx)
 
     _WIRE_CLUSTERS = (
         ("孙正义", "海力士"),
@@ -637,6 +823,8 @@ def refresh_live_wire_file(base_dir: Path | str = ".", extra_items: Optional[Lis
         ("融资保证金", "沪深"),
         ("美股", "期货"),
         ("纳指", "英伟达"),
+        ("kospi", "跌"),
+        ("美光", "hbm"),
     )
 
     def _wire_titles_similar(norm_a: str, norm_b: str) -> bool:
@@ -657,27 +845,36 @@ def refresh_live_wire_file(base_dir: Path | str = ".", extra_items: Optional[Lis
                 return True
         return False
 
-    def _within_two_hours(iso_a: str, iso_b: str) -> bool:
+    def _within_three_hours(iso_a: str, iso_b: str) -> bool:
         dt_a = parse_iso_datetime(iso_a)
         dt_b = parse_iso_datetime(iso_b)
         if dt_a is None or dt_b is None:
             return True
-        return abs((dt_a - dt_b).total_seconds()) <= 7200
+        return abs((dt_a - dt_b).total_seconds()) <= 10800
 
-    def _format_merged_sources(src_list: List[str]) -> str:
+    def _format_merged_sources(src_list: List[str], merged_cnt: int) -> str:
         clean_s = list(dict.fromkeys([s.strip() for s in src_list if s and s.strip()]))
         if not clean_s:
-            return "实时快讯"
+            return f"实时快讯 · {merged_cnt} 源合并" if merged_cnt >= 2 else "实时快讯"
         if len(clean_s) == 1:
-            return clean_s[0]
+            return f"{clean_s[0]} · {merged_cnt} 源合并" if merged_cnt >= 2 else clean_s[0]
+        cnt = max(merged_cnt, len(clean_s))
         if len(clean_s) == 2:
-            return f"{clean_s[0]} / {clean_s[1]} · 2 源合并"
-        return f"{clean_s[0]} / {clean_s[1]} 等 {len(clean_s)} 源合并"
+            return f"{clean_s[0]} / {clean_s[1]} · {cnt} 源合并"
+        return f"{clean_s[0]} / {clean_s[1]} 等 {cnt} 源合并"
 
     def _add(it: dict) -> None:
-        title = str(it.get("title") or "").strip()
+        title = _dedup_repeated_sentences(str(it.get("title") or "").strip())
         excerpt_clean = _clean(it.get("excerpt") or "", 240)
-        if not title or len(title) < 4 or _PURE_WIRE_FLUFF_RE.search(title) or is_consumer_promo_or_fluff(title, excerpt_clean):
+        if excerpt_clean == title:
+            excerpt_clean = ""
+        if (
+            not title
+            or len(title) < 4
+            or _PURE_WIRE_FLUFF_RE.search(title)
+            or is_consumer_promo_or_fluff(title, excerpt_clean)
+            or _is_empty_clock_wire(title, excerpt_clean)
+        ):
             return
         canon_u = canonicalize_url(it.get("url") or it.get("canonical_url")) or ""
         if canon_u and canon_u in seen_urls:
@@ -689,19 +886,7 @@ def refresh_live_wire_file(base_dir: Path | str = ".", extra_items: Optional[Lis
         pub = str(it.get("published_at") or it.get("fetched_at") or fetched_iso)
         src_id = str(it.get("source_id") or "")
         src_name = str(it.get("source_name") or "实时快讯")
-        for prev_norm, prev_pub, prev_idx in seen_entries:
-            if _within_two_hours(pub, prev_pub) and _wire_titles_similar(norm_full, prev_norm):
-                # Coalesce duplicate cross-source wire into existing cluster item
-                target = merged[prev_idx]
-                base_srcs = target.setdefault("_merged_sources", [target.get("source_name") or "实时快讯"])
-                raw_short = src_name.split(" · ")[0].split(" 等 ")[0]
-                if raw_short and raw_short not in base_srcs:
-                    base_srcs.append(raw_short)
-                    target["source_name"] = _format_merged_sources(base_srcs)
-                return
-        if canon_u:
-            seen_urls.add(canon_u)
-        seen_keys.add(k)
+        cluster_key = _wire_subject_action_cluster(title, excerpt_clean)
         cat_norm = _classify_wire_item(title, excerpt_clean, str(it.get("category") or "general"))
         if it.get("synced_from_today") and not HEAVY_NOISE_EXCLUDE_RE.search(title):
             sev_tier = "S" if it.get("severity_tier") == "S" else "A"
@@ -709,8 +894,37 @@ def refresh_live_wire_file(base_dir: Path | str = ".", extra_items: Optional[Lis
         else:
             sev_tier, _ = _classify_wire_severity(title, excerpt_clean, src_id, src_name)
             reason_tag = _infer_wire_heavy_reason_tag(title, excerpt_clean, cat_norm) if sev_tier in {"S", "A"} else None
+
+        in_richness = len(title) + len(excerpt_clean)
+        for prev_norm, prev_pub, prev_cluster, prev_idx in seen_entries:
+            same_cluster = bool(cluster_key and prev_cluster and cluster_key == prev_cluster)
+            if _within_three_hours(pub, prev_pub) and (same_cluster or _wire_titles_similar(norm_full, prev_norm)):
+                # Coalesce multi-post burst or cross-source duplicate into the richest / latest wire item
+                target = merged[prev_idx]
+                base_srcs = target.setdefault("_merged_sources", [target.get("source_name") or "实时快讯"])
+                raw_short = src_name.split(" · ")[0].split(" 等 ")[0].strip()
+                if raw_short and raw_short not in base_srcs:
+                    base_srcs.append(raw_short)
+                target["_merged_count"] = int(target.get("_merged_count") or 1) + 1
+                cur_richness = len(str(target.get("title") or "")) + len(str(target.get("excerpt") or ""))
+                if (in_richness > cur_richness + 4) or (in_richness >= cur_richness - 4 and pub > str(target.get("published_at") or "")):
+                    target["title"] = title
+                    if excerpt_clean:
+                        target["excerpt"] = excerpt_clean
+                    target["published_at"] = pub
+                    if canon_u:
+                        target["url"] = canon_u
+                    if sev_tier == "S" or (sev_tier == "A" and target.get("severity_tier") == "B"):
+                        target["severity_tier"] = sev_tier
+                        target["importance"] = "high"
+                        target["heavy_reason_tag"] = reason_tag
+                target["source_name"] = _format_merged_sources(base_srcs, target["_merged_count"])
+                return
+        if canon_u:
+            seen_urls.add(canon_u)
+        seen_keys.add(k)
         idx_new = len(merged)
-        seen_entries.append((norm_full, pub, idx_new))
+        seen_entries.append((norm_full, pub, cluster_key, idx_new))
         entry_obj = {
             "id": str(it.get("item_id") or it.get("id") or f"lw_{idx_new}"),
             "title": title,
@@ -718,6 +932,7 @@ def refresh_live_wire_file(base_dir: Path | str = ".", extra_items: Optional[Lis
             "category": cat_norm,
             "source_name": src_name,
             "_merged_sources": [s.strip() for s in str(it.get("source_name") or "实时快讯").split(" · ")[0].split(" 等 ")[0].split("/") if s.strip()],
+            "_merged_count": 1,
             "url": canon_u or str(it.get("url") or it.get("canonical_url") or ""),
             "published_at": pub,
             "thumbnail_url": it.get("thumbnail_url"),
@@ -730,9 +945,12 @@ def refresh_live_wire_file(base_dir: Path | str = ".", extra_items: Optional[Lis
             entry_obj["synced_from_today"] = True
         merged.append(entry_obj)
 
+    supplements = _load_recent_raw_wire_supplements(root, now_dt)
     for it in res.get("items") or []:
         _add(it)
     for it in extra_items or []:
+        _add(it)
+    for it in supplements:
         _add(it)
     for it in prev_items:
         if isinstance(it, dict):
@@ -740,8 +958,9 @@ def refresh_live_wire_file(base_dir: Path | str = ".", extra_items: Optional[Lis
 
     for item in merged:
         item.pop("_merged_sources", None)
+        item.pop("_merged_count", None)
     merged.sort(key=lambda x: str(x.get("published_at") or ""), reverse=True)
-    merged = merged[:120]
+    merged = merged[:165]
 
     # Calibrate 7x24 wire heavy alerts (<= 15, zero semantic duplicates or multi-post topic clones among heavy picks)
     high_indices = [idx for idx, it in enumerate(merged) if it.get("importance") == "high"]
@@ -882,7 +1101,7 @@ def refresh_live_wire_file(base_dir: Path | str = ".", extra_items: Optional[Lis
             else:
                 cat_docs[c] = {"events": []}
         if has_any_events:
-            doc = sync_today_heavy_into_live_wire(cat_docs, doc, now_dt)
+            doc = sync_today_heavy_into_live_wire(cat_docs, doc, now_dt, max_total=165)
     except Exception:
         pass
     atomic_write_json(root / "data/live_wire.json", doc)

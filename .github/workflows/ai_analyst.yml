@@ -2,8 +2,8 @@ name: 🧠 AI Briefing Pipeline (V3 Grounded + Research Memory)
 
 on:
   schedule:
-    # Every 3 hours off-peak (:22) AI briefing + research memory build (~32 Gemini calls/day across 13 keys)
-    - cron: '22 */3 * * *'
+    # Hourly (:15) AI briefing + research memory build balanced across 13 keys
+    - cron: '15 */1 * * *'
   workflow_dispatch:
     inputs:
       include_comments:

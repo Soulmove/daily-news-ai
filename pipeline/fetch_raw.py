@@ -14,6 +14,7 @@ import requests
 from pipeline.connectors import run_all_first_party_connectors
 from pipeline.connectors.article_enricher import deep_fetch_selected_items
 from pipeline.connectors.base import HttpCacheStore, repair_mojibake
+from pipeline.connectors.china_realtime import refresh_live_wire_file
 from pipeline.dedup import deduplicate_raw_items, is_consumer_promo_or_fluff, strip_raw_urls_and_domain_tails
 from pipeline.id_utils import canonicalize_url, make_raw_item_id
 from pipeline.manifest import (
@@ -571,7 +572,7 @@ def fetch_raw_snapshot(
         "batch_id": batch_id,
         "fetched_at": fetched_at_iso,
         "published_at": published_iso,
-        "target_cadence_minutes": 60,
+        "target_cadence_minutes": 15,
         "schedule_source": schedule_source,
         "crawl_status": crawl_status,
         "summary": {
@@ -612,6 +613,11 @@ def fetch_raw_snapshot(
     for cat in CATEGORIES:
         atomic_write_json(root / CATEGORY_FILES[cat], categorized_platforms[cat])
     atomic_write_json(root / "data/connectors_latest.json", connectors_disk_payload)
+    if not skip_connectors:
+        try:
+            refresh_live_wire_file(root)
+        except Exception:
+            pass
 
     # 3. Update raw history index
     index_entry = {
@@ -651,7 +657,7 @@ def fetch_raw_snapshot(
         "connectors_path": f"{rel_archive_dir}connectors.json",
         "fetched_at": fetched_at_iso,
         "published_at": published_iso,
-        "target_cadence_minutes": 60,
+        "target_cadence_minutes": 15,
         "schedule_source": schedule_source,
         "status": crawl_status,
         "summary": batch_meta["summary"],
@@ -666,10 +672,10 @@ def fetch_raw_snapshot(
         manifest["gemini_quota"] = quota_info
         manifest["quota"] = quota_info
     manifest["scheduler"] = {
-        "provider": "github_actions",
-        "raw_cron": "7 */1 * * *",
-        "smart_cron": "22 */3 * * *",
-        "note": "轻量化错峰调度（Raw 每小时 / Smart 每3小时）；腾讯云仅静默拉取与静态直出。",
+        "provider": "cloud_runner",
+        "raw_cron": "*/15 * * * *",
+        "smart_cron": "15 */1 * * *",
+        "note": "高频错峰调度（原始抓取每 15 分钟 / 深度研报每小时）；服务端静默增量同步。",
     }
     save_manifest(manifest, root)
 

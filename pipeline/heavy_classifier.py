@@ -25,6 +25,7 @@ HEAVY_NOISE_EXCLUDE_RE = re.compile(
     r"联盟.{0,8}成立|协会.{0,8}成立|发展联盟|正式成立|行业论坛|"
     r"中间价|上海钢联|现货报价|提议设|提议(?:将|用).{0,24}限制|呼吁限制|"
     r"涨停|持续活跃|短剧|影视股|概念股拉升|盘中拉升|探底回升|重仓股曝光|"
+    r"离婚案|财产分割|离婚诉讼|和解方案|赡养费|婚变|SK集团会长.{0,12}离婚|"
     r"台湾|台湾地区|只要.*诉求|立场明确|呼吁对话|传递想法|保持密切对话)",
     re.I,
 )
@@ -36,6 +37,14 @@ GEO_MILITARY_HEAVY_RE = re.compile(
     r"美伊.{0,14}(?:开火|空袭|遇袭|停火|爆发冲突)|"
     r"俄乌.{0,14}(?:停火|和平协议|大规模袭击)|"
     r"中东.{0,14}(?:空袭|开火|全面升级))",
+    re.I,
+)
+
+MARKET_SEMI_HEAVY_RE = re.compile(
+    r"(?:(?:KOSPI|日经225|恒生指数|恒生科技|纳指|标普500|创业板指).{0,16}(?:大跌|暴跌|重挫|跌超|飙升|大涨)\s*[2-9](?:\.\d+)?%|"
+    r"(?:HBM|高带宽内存).{0,18}(?:售罄|产能.{0,6}满载|锁单|涨价)|"
+    r"美光.{0,16}(?:320亿|百亿|HBM)|"
+    r"(?:暴跌|重挫|闪崩)超?\s*[3-9](?:\.\d+)?%)",
     re.I,
 )
 
@@ -56,6 +65,10 @@ def heavy_topic_key(norm_or_title: str) -> Optional[str]:
         return "margin_80"
     if "黄金" in n and any(k in n for k in ("反弹", "杀跌", "突破36", "回升")):
         return "gold_rebound"
+    if ("韩国" in n or "kospi" in n) and any(k in n for k in ("大跌", "跌超", "3.32", "暴跌", "重挫")):
+        return "kospi_drop"
+    if "美光" in n and any(k in n for k in ("hbm", "320亿", "售罄")):
+        return "micron_hbm"
     if "利比亚" in n and any(k in n for k in ("军舰", "沉没", "无人艇", "无人机", "爆炸")):
         return "libya_warship"
     if "spacex" in n and "440亿" in n:
@@ -134,15 +147,15 @@ def sync_today_heavy_into_live_wire(
     window_hours: float = 16.0,
     min_heavy: int = 8,
     max_heavy: int = 12,
-    max_total: int = 120,
+    max_total: int = 165,
 ) -> Dict[str, Any]:
     """
     Bidirectionally align Today Heavy (S/A) events with 7x24 Live Wire Heavy picks:
-      - Purge brokerage buy/rating noise & hotlist fluff from Heavy
-      - Promote geopolitical/military attacks (e.g. warship sinking) to Heavy
+      - Purge brokerage buy/rating noise, corporate family gossip & hotlist fluff from Heavy
+      - Promote geopolitical/military attacks & semi/index market shocks to Heavy
       - Tag gold/commodity rebounds strictly as 大宗与市场剧震
       - Sync recent 16h Today S/A events into Live Wire Heavy (upgrading matches in place, inserting missing ones)
-      - Enforce 8-12 deduplicated high-purity Heavy items while keeping <= 120 total wires
+      - Enforce 8-12 deduplicated high-purity Heavy items while keeping <= 165 total wires
     """
     now_ref = now_dt or now_shanghai()
     items: List[Dict[str, Any]] = [dict(it) for it in (wire_doc.get("items") or []) if isinstance(it, dict)]
@@ -162,6 +175,11 @@ def sync_today_heavy_into_live_wire(
             it["severity_tier"] = "S" if it.get("severity_tier") == "S" else "A"
             it["importance"] = "high"
             it["heavy_reason_tag"] = "地缘与军事突发"
+            continue
+        if MARKET_SEMI_HEAVY_RE.search(f"{title} {exc}"):
+            it["severity_tier"] = "S" if it.get("severity_tier") == "S" else "A"
+            it["importance"] = "high"
+            it["heavy_reason_tag"] = infer_heavy_reason_tag(title, exc)
             continue
         if it.get("importance") == "high" or it.get("severity_tier") in {"S", "A"}:
             if it.get("severity_tier") not in {"S", "A"}:

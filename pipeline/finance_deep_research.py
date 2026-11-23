@@ -1679,7 +1679,7 @@ def _fetch_single_card_ai_research(card: Dict[str, Any], root: Path) -> Optional
     res = call_gemini_raw(
         scope="deep_finance_impact",
         prompt=prompt,
-        models=("gemini-4-hydrogen", "gemini-2.5-flash"),
+        models=("gemini-2.5-flash", "gemini-2.5-flash-lite"),
         temperature=0.15,
         tools=_finance_search_tools(),
         base_dir=root,
@@ -1750,6 +1750,9 @@ def _fetch_single_card_ai_research(card: Dict[str, Any], root: Path) -> Optional
     }
 
 
+_VALID_AI_TICKER_RE = re.compile(r"^[A-Z0-9]{1,6}(?:\.(?:SH|SZ|HK|KS|TW))?$")
+
+
 def enrich_finance_impacts_with_gemini(
     impacts: List[Dict[str, Any]],
     event_impact_map: Dict[str, Dict[str, Any]],
@@ -1778,7 +1781,7 @@ def enrich_finance_impacts_with_gemini(
                 need_fetch.append((ckey, card))
         if need_fetch:
             with ThreadPoolExecutor(max_workers=6) as pool:
-                futs = {pool.submit(_fetch_single_card_ai_research, card, root): (ckey, card) for ckey, card in need_fetch[:12]}
+                futs = {pool.submit(_fetch_single_card_ai_research, card, root): (ckey, card) for ckey, card in need_fetch[:18]}
                 for fut in as_completed(futs):
                     ckey, card = futs[fut]
                     try:
@@ -1817,6 +1820,17 @@ def enrich_finance_impacts_with_gemini(
             card["priced_in_analysis"]["expectation_gap"] = f"{prefix}{gap}" if prefix and prefix not in gap else gap
         if isinstance(ai.get("transmission_layers"), list) and ai["transmission_layers"]:
             card["transmission_layers"] = ai["transmission_layers"]
+            ai_tickers: Dict[str, float] = {}
+            for s in (ai["transmission_layers"][0].get("stocks") or [])[:4]:
+                if not isinstance(s, dict):
+                    continue
+                code = str(s.get("code") or "").strip().upper()
+                if _VALID_AI_TICKER_RE.fullmatch(code):
+                    dir_s = str(s.get("direction") or "mixed")
+                    ai_tickers[code] = -0.65 if dir_s == "negative" else (0.75 if dir_s == "positive" else 0.45)
+            if ai_tickers:
+                merged_tickers = {**ai_tickers, **(card.get("affected_tickers") or {})}
+                card["affected_tickers"] = dict(list(merged_tickers.items())[:6])
         if isinstance(ai.get("historical_precedents"), list) and ai["historical_precedents"]:
             card["historical_precedents"] = ai["historical_precedents"]
         if isinstance(ai.get("quant_if_then"), list) and ai["quant_if_then"]:
@@ -1833,6 +1847,7 @@ def enrich_finance_impacts_with_gemini(
         if eid and eid in event_impact_map:
             m = event_impact_map[eid]
             m["one_liner"] = card["one_liner"]
+            m["affected_tickers"] = card.get("affected_tickers")
             m["priced_in_analysis"] = card.get("priced_in_analysis")
             m["transmission_layers"] = card.get("transmission_layers")
             m["historical_precedents"] = card.get("historical_precedents")

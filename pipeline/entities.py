@@ -376,6 +376,28 @@ ENTITY_REGISTRY: List[EntityDef] = [
         operating_variables=("布伦特/WTI 原油供给中断风险", "黄金避险买盘与主权风险溢价"),
         validation_milestones=("各方官方停火/谈判声明与 OPEC+ 产量决议",),
     ),
+    EntityDef(
+        entity_id="ent_cn_brokers",
+        canonical_name="中信证券 / A股券商与资本市场",
+        entity_type="company",
+        sector="金融基础设施 / 券商",
+        aliases=("中信证券", "券商", "融资保证金", "两融", "沪深北交易所", "主动etf", "华泰证券", "东方财富", "600030"),
+        tickers=(TickerRef("600030", "SH", "SSE", "CNY"),),
+        operating_variables=("两融保证金比例与两市日均成交额", "公募主动 ETF 做市与托管规模", "交易所降费让利落地节奏"),
+        validation_milestones=("证监会与沪深北交易所官方公告", "月度证券行业经营数据"),
+        default_watched=True,
+    ),
+    EntityDef(
+        entity_id="ent_gold_metals",
+        canonical_name="黄金 / 贵金属与避险资产",
+        entity_type="industry",
+        sector="贵金属 / 大宗商品",
+        aliases=("黄金", "现货黄金", "国际金价", "金价", "金条", "贵金属", "黄金etf", "紫金矿业", "菜百", "518880"),
+        tickers=(TickerRef("518880", "SH", "SSE", "CNY"), TickerRef("GLD", "US", "NYSE", "USD")),
+        operating_variables=("COMEX 期金与伦敦现货黄金价格锚", "实际利率与全球央行购金节奏", "零售投资金条溢价与库存"),
+        validation_milestones=("世界黄金协会季度买金统计", "美联储实际利率与美元指数路径"),
+        default_watched=True,
+    ),
 ]
 
 ENTITY_BY_ID: Dict[str, EntityDef] = {e.entity_id: e for e in ENTITY_REGISTRY}

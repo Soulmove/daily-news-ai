@@ -1427,7 +1427,10 @@ def _is_within_recent_hours(date_str: str, gen_dt: Any, hours: int = 72) -> bool
 _MODEL_VER_EXTRACT_RE = re.compile(
     r"\b(GPT-\d+(?:\.\d+)?(?:\s+[A-Za-z]+)?|Claude\s+[A-Za-z]*\s*\d+(?:\.\d+)?|Gemini\s+\d+(?:\.\d+)?(?:\s+[A-Za-z]+)?|"
     r"DeepSeek-[A-Za-z0-9.-]+|Qwen\d+(?:\.\d+)?(?:-[A-Za-z]+)?|GLM-\d+(?:\.\d+)?(?:-[A-Za-z]+)?|"
-    r"Kimi[\s-]*K\d+(?:\.\d+)?|Grok[\s-]*\d+(?:\.\d+)?|Llama[\s-]*\d+(?:\.\d+)?|Mistral\s+[A-Za-z]+\s+\d+|MiniMax-[A-Za-z0-9]+)\b",
+    r"Kimi[\s-]*K\d+(?:\.\d+)?|Grok[\s-]*\d+(?:\.\d+)?|Llama[\s-]*\d+(?:\.\d+)?|Mistral\s+[A-Za-z]+\s+\d+|MiniMax-[A-Za-z0-9]+|"
+    r"Alpamayo\s*\d+(?:\.\d+)?(?:\s+Edge\s+VLA|\s+VLA)?|Nemotron[\s-]*\d+(?:\.\d+)?|Cosmos[\s-]*\d+(?:\.\d+)?|"
+    r"Seed(?:ance|ream)?[\s-]*\d+(?:\.\d+)?|Hunyuan[\s-]*\d+(?:\.\d+)?|ERNIE[\s-]*\d+(?:\.\d+)?|"
+    r"Pangu[\s-]*\d+(?:\.\d+)?|Nova[\s-]*\d+(?:\.\d+)?|Gemma[\s-]*\d+(?:\.\d+)?|DiffusionGemma|Genie\s*\d+)\b",
     re.I,
 )
 
@@ -1440,14 +1443,17 @@ def _auto_absorb_new_lineage_nodes(base_lineage: List[Dict[str, Any]], lab_items
         for n in nodes
     )
     for it in lab_items:
-        if it.get("milestone_dim") not in {"flagship_release", "open_source_eco"}:
-            continue
+        dim = it.get("milestone_dim")
+        title = str(it.get("title") or "")
+        title_en = str(it.get("title_en") or "")
+        if dim not in {"flagship_release", "open_source_eco"}:
+            if not (dim == "infra_compute" and re.search(r"发布|推出|开源|上线|模型|VLA", f"{title} {title_en}", re.I)):
+                continue
         if it.get("is_baseline_milestone"):
             continue
-        title = str(it.get("title") or "")
         if "降价" in title or "促销" in title:
             continue
-        m = _MODEL_VER_EXTRACT_RE.search(title)
+        m = _MODEL_VER_EXTRACT_RE.search(f"{title} {title_en}")
         if not m:
             continue
         tok = re.sub(r"\s+", " ", m.group(1)).strip()

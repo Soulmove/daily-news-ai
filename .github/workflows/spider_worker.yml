@@ -2,8 +2,8 @@ name: 🕷️ Spider Worker (V3 Raw + Connectors Collector)
 
 on:
   schedule:
-    # Hourly lightweight crawl off-peak (:07) across healthy RSS/wires & cadence-cached connectors
-    - cron: '7 */1 * * *'
+    # 15-minute lightweight crawl across healthy RSS/wires & cadence-cached connectors
+    - cron: '*/15 * * * *'
   workflow_dispatch:
     inputs:
       reason:
