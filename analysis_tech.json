@@ -12,14 +12,6 @@
   "quality_flags": [],
   "key_changes": [
     {
-      "headline": "英伟达因会计问题遭SEC调查，股价上周五暴跌14%",
-      "detail": "上周五美股交易中，英伟达股价暴跌14%，已较10月高点腰斩，市值被谷歌超越，位列美股第四。英伟达再遭美国证券交易委员会（SEC）调查，会计问题是审查重点。",
-      "primary_url": "https://wallstreetcn.com/livenews/3203790",
-      "source_name": "华尔街见闻 美股快讯",
-      "event_id": "evt_6a545ccc8e53",
-      "storyline_id": "st_f339f1476f1a"
-    },
-    {
       "headline": "Claude辅助证明广义黎曼猜想获Lean官方与Mathlib社区认证",
       "detail": "Lean官方和Mathlib连夜发布联合声明，确认由Claude辅助生成的1740万行黎曼猜想证明完全正确，多个不同语言的独立验证器均已跑通，排除了“AI钻漏洞作弊”的可能性。人类数学家Levent Alpöge匆忙发布了广义黎曼猜想的证明手稿，马斯克直呼这是惊人成就。",
       "primary_url": "https://www.solidot.org/story?sid=85952",
@@ -87,184 +79,6 @@
     }
   ],
   "events": [
-    {
-      "schema_version": "4.1",
-      "event_id": "evt_6a545ccc8e53",
-      "storyline_id": "st_f339f1476f1a",
-      "article_ids": [
-        "wscn-us-stock-channel_004236518f22"
-      ],
-      "legacy_event_ids": [],
-      "title": "英伟达因会计问题遭SEC调查，股价上周五暴跌14%",
-      "category": "tech",
-      "entities": [
-        "英伟达 (NVIDIA)",
-        "SEC"
-      ],
-      "entity_ids": [
-        "ent_nvidia",
-        "ent_google"
-      ],
-      "entity_confidences": {
-        "英伟达 (NVIDIA)": 0.86,
-        "Google / DeepMind / Gemini": 0.86
-      },
-      "matched_entities": [
-        {
-          "entity_id": "ent_nvidia",
-          "canonical_name": "英伟达 (NVIDIA)",
-          "entity_type": "company",
-          "sector": "半导体 / AI算力",
-          "matched_aliases": [
-            "英伟达"
-          ],
-          "tickers": [
-            {
-              "symbol": "NVDA",
-              "market": "US",
-              "exchange": "NASDAQ",
-              "currency": "USD",
-              "label": "NVDA.US (NASDAQ)"
-            }
-          ],
-          "reason": "正文/实体匹配关键词「英伟达」",
-          "confidence": 0.86
-        },
-        {
-          "entity_id": "ent_google",
-          "canonical_name": "Google / DeepMind / Gemini",
-          "entity_type": "company",
-          "sector": "AI 模型与云基础设施",
-          "matched_aliases": [
-            "谷歌"
-          ],
-          "tickers": [
-            {
-              "symbol": "GOOGL",
-              "market": "US",
-              "exchange": "NASDAQ",
-              "currency": "USD",
-              "label": "GOOGL.US (NASDAQ)"
-            }
-          ],
-          "reason": "正文/实体匹配关键词「谷歌」",
-          "confidence": 0.86
-        }
-      ],
-      "importance": "high",
-      "sentiment": "Bearish",
-      "special_note": null,
-      "material_stage": null,
-      "material_stage_label": null,
-      "material_stage_confidence": null,
-      "thumbnail_url": "https://static.wscn.net/wscn/_static/share.png",
-      "publisher_name": "华尔街见闻 美股快讯",
-      "source_status": "ok",
-      "evidence_status": "single_source",
-      "evidence_label": "单一独立来源线索",
-      "evidence_status_reason": "目前仅见 1 家独立来源（共 1 条引用含转载，含摘要/首段），尚未见独立渠道交叉或官方确认",
-      "attribution_warning": null,
-      "regulatory_note": null,
-      "contradictions": [],
-      "downweight_reasons": [],
-      "quality_flags": [],
-      "material_depth": "title_and_excerpt",
-      "source_count": 1,
-      "platform_count": 1,
-      "independent_publisher_count": 1,
-      "reprint_count": 0,
-      "published_at": "2026-11-23T07:15:31+08:00",
-      "event_date": "2026-11-21",
-      "event_time": "2026-11-23T07:15:31+08:00",
-      "stale": false,
-      "event_date_source": "llm_extracted",
-      "is_stale_rehash": false,
-      "time_trust_level": "article_timestamp",
-      "time_confidence": "article_timestamp",
-      "first_discovered_at": "2026-11-23T10:45:57+08:00",
-      "first_reported_at": "2026-11-23T07:15:31+08:00",
-      "latest_fact_update_at": "2026-11-23T07:15:31+08:00",
-      "latest_reported_at": "2026-11-23T07:15:31+08:00",
-      "fetched_at": "2026-11-23T10:45:57+08:00",
-      "input_batch_id": "raw-20261123-104557",
-      "fact_summary": "上周五美股交易中，英伟达股价暴跌14%，已较10月高点腰斩，市值被谷歌超越，位列美股第四。英伟达再遭美国证券交易委员会（SEC）调查，会计问题是审查重点。",
-      "fact_atoms": [
-        {
-          "atom_id": "fa_99068350",
-          "subject": "英伟达 (NVIDIA)",
-          "metric_or_action": "英伟达因会计问题遭SEC调查，股价上周五暴跌14%",
-          "value": "14",
-          "unit": "%",
-          "period": "单次披露/未注明周期",
-          "scope": "新闻事件陈述",
-          "fact_status": "reported_unconfirmed_by_filing",
-          "attribution": "华尔街见闻 美股快讯",
-          "source_ref": "wscn-us-stock-channel_004236518f22",
-          "source_url": "https://wallstreetcn.com/livenews/3203790",
-          "source_excerpt_or_locator": "上周五美股全线重挫，纳指收跌逾5%，英伟达暴跌14%，VIX涨破35；美债五连涨，现货黄金跌近3%。周一亚市盘初纳指期货反弹2%。 A股三项新政发布，稳市场“组合拳”来了！调整融资保证金比例，拟在创业板引入做市商制度，推出一揽子降费举措。 中国财政部：加强离岸信托个税征管等因素带动，10月个税同比增长89.6%。 英伟达再遭SEC调查，会计问题是审查重点，股",
-          "published_at": "2026-11-23T07:15:31+08:00",
-          "discovered_at": "2026-11-23T10:45:57+08:00",
-          "revision": 1
-        }
-      ],
-      "ai_analysis": "SEC的调查和股价暴跌直接影响英伟达的市场信心和投资者预期，可能导致其在AI芯片市场的领导地位面临挑战，并对整个科技股板块产生负面情绪传导。",
-      "unverified_claims": [],
-      "speculation_or_outlook": null,
-      "sources": [
-        {
-          "item_id": "wscn-us-stock-channel_004236518f22",
-          "article_id": "wscn-us-stock-channel_004236518f22",
-          "source_id": "wscn-us-stock-channel",
-          "source_name": "华尔街见闻 美股快讯",
-          "publisher_name": "华尔街见闻 美股快讯",
-          "source_status": "ok",
-          "source_kind": "news",
-          "source_tier": "direct_media",
-          "publisher_family": "wallstreetcn",
-          "is_reprint_copy": false,
-          "title": "华尔街见闻早餐 | 2026年11月23日",
-          "url": "https://wallstreetcn.com/livenews/3203790",
-          "published_at": "2026-11-23T07:15:31+08:00",
-          "published_at_source": "upstream_api",
-          "fetched_at": "2026-11-23T10:45:58+08:00",
-          "excerpt": "上周五美股全线重挫，纳指收跌逾5%，英伟达暴跌14%，VIX涨破35；美债五连涨，现货黄金跌近3%。周一亚市盘初纳指期货反弹2%。 A股三项新政发布，稳市场“组合拳”来了！调整融资保证金比例，拟在创业板引入做市商制度，推出一揽子降费举措。 中国财政部：加强离岸信托个税征管等因素带动，10月个税同比增长89.6%。 英伟达再遭SEC调查，会计问题是审查重点，股价上周五暴跌14%、已较10月高点腰斩，市值被谷歌超越、位列美股第四。 特朗普呼吁黄仁勋在“重大道歉”后重返英伟达出任CEO。 特朗普威胁对“海外建设数据中心”加重税。",
-          "thumbnail_url": "https://static.wscn.net/wscn/_static/share.png",
-          "deep_fetch_status": null
-        }
-      ],
-      "verification": {
-        "all_refs_valid": true,
-        "has_primary_url": true,
-        "rejected_refs": [],
-        "has_first_party": false
-      },
-      "followup": null,
-      "is_new_in_batch": true,
-      "update_kind": "new_discovery",
-      "radar_score": 76,
-      "severity_tier": "A",
-      "severity_label": "A级要闻",
-      "translation_attempts": 0,
-      "translation_error": null,
-      "title_zh": "英伟达因会计问题遭SEC调查，股价上周五暴跌14%",
-      "translation_status": "native_zh",
-      "summary_zh": "上周五美股交易中，英伟达股价暴跌14%，已较10月高点腰斩，市值被谷歌超越，位列美股第四。英伟达再遭美国证券交易委员会（SEC）调查，会计问题是审查重点。",
-      "title_en": "",
-      "summary_en": "",
-      "ai_analysis_en": "",
-      "deep_qa": [
-        {
-          "question": "这件事对普通投资者和国内行业有何实质影响？",
-          "answer": "核心作用于英伟达 (NVIDIA) / SEC流动性与估值预期：上周五美股交易中，英伟达股价暴跌14%，已较10月高点腰斩，市值被谷歌超越，位列美股第四。英伟达再遭美国证券交易委员会（SEC）调查，会计问题是审查重点。",
-          "historical_parallel": "参考 2023 年以来同类政策落地窗，需重点盯紧次日成交量承接而非单日情绪跳空。"
-        },
-        {
-          "question": "市场正反分歧核心在哪里？",
-          "answer": "看多逻辑看重制度与成本边际改善；谨慎派关注基本面盈利兑现与后续政策衔接连续性。",
-          "historical_parallel": "2024 年 9 月增量政策落地后，基本面验证板块持续跑赢纯概念题材。"
-        }
-      ]
-    },
     {
       "schema_version": "4.1",
       "event_id": "evt_3aad9a7d7f54",
@@ -1095,7 +909,7 @@
       "entity_ids": [],
       "entity_confidences": {},
       "matched_entities": [],
-      "importance": "normal",
+      "importance": "high",
       "sentiment": "Bearish",
       "special_note": null,
       "material_stage": null,
@@ -1192,8 +1006,8 @@
       "is_new_in_batch": false,
       "update_kind": "continuing_coverage",
       "radar_score": 26,
-      "severity_tier": "B",
-      "severity_label": "B级常规",
+      "severity_tier": "A",
+      "severity_label": "A级要闻",
       "translation_attempts": 0,
       "translation_error": null,
       "title_zh": "AI服务器厂商戴尔、慧与科技、联想和超微电脑涨价最高达45%",
@@ -1201,7 +1015,19 @@
       "summary_zh": "据媒体报道，戴尔、慧与科技（HPE）、联想和超微电脑正在要求提高AI服务器的价格，涨幅最高达45%，即使是几个月前已签署的协议也不例外。这些更高的成本正在影响交易公司及其他客户。",
       "title_en": "",
       "summary_en": "",
-      "ai_analysis_en": ""
+      "ai_analysis_en": "",
+      "deep_qa": [
+        {
+          "question": "这次技术变化对普通开发者或用户意味着什么？",
+          "answer": "聚焦戴尔 / 慧与科技能力边界与成本变化：据媒体报道，戴尔、慧与科技（HPE）、联想和超微电脑正在要求提高AI服务器的价格，涨幅最高达45%，即使是几个月前已签署的协议也不例外。这些更高的成本正在影响交易公司及其",
+          "historical_parallel": "历次大模型/算力节点演进中，推理单价下探常在 1~2 季度内显著拉动应用渗透。"
+        },
+        {
+          "question": "该进展目前处于什么验证阶段？",
+          "answer": "需结合官方技术文档、独立第三方复现基准以及下游云厂接入节奏交叉确认。",
+          "historical_parallel": "2025 年初 DeepSeek/Qwen 开源潮验证了开放复现对社区快速采用的关键作用。"
+        }
+      ]
     },
     {
       "schema_version": "4.1",
@@ -1504,7 +1330,7 @@
           "confidence": 0.76
         }
       ],
-      "importance": "high",
+      "importance": "medium",
       "sentiment": "Bullish",
       "special_note": null,
       "material_stage": null,
@@ -1595,8 +1421,8 @@
       "is_new_in_batch": true,
       "update_kind": "new_discovery",
       "radar_score": 76,
-      "severity_tier": "A",
-      "severity_label": "A级要闻",
+      "severity_tier": "B",
+      "severity_label": "B级常规",
       "translation_attempts": 0,
       "translation_error": null,
       "title_zh": "美股科技股夜盘普遍走高，英伟达、SK海力士等涨逾5%",
@@ -1604,19 +1430,7 @@
       "summary_zh": "美股科技股夜盘普遍走高，SK海力士涨逾7%，英伟达、英特尔、闪迪、迈威尔科技涨逾5%，美光科技、博通、谷歌、特斯拉涨逾3%。",
       "title_en": "",
       "summary_en": "",
-      "ai_analysis_en": "",
-      "deep_qa": [
-        {
-          "question": "这件事对普通投资者和国内行业有何实质影响？",
-          "answer": "核心作用于英伟达 (NVIDIA) / 英特尔 (Intel)流动性与估值预期：美股科技股夜盘普遍走高，SK海力士涨逾7%，英伟达、英特尔、闪迪、迈威尔科技涨逾5%，美光科技、博通、谷歌、特斯拉涨逾3%。",
-          "historical_parallel": "参考 2023 年以来同类政策落地窗，需重点盯紧次日成交量承接而非单日情绪跳空。"
-        },
-        {
-          "question": "市场正反分歧核心在哪里？",
-          "answer": "看多逻辑看重制度与成本边际改善；谨慎派关注基本面盈利兑现与后续政策衔接连续性。",
-          "historical_parallel": "2024 年 9 月增量政策落地后，基本面验证板块持续跑赢纯概念题材。"
-        }
-      ]
+      "ai_analysis_en": ""
     },
     {
       "schema_version": "4.1",
@@ -1662,7 +1476,7 @@
           "confidence": 0.96
         }
       ],
-      "importance": "high",
+      "importance": "medium",
       "sentiment": "Bullish",
       "special_note": null,
       "material_stage": null,
@@ -1780,8 +1594,8 @@
       "is_new_in_batch": false,
       "update_kind": "new_fact_update",
       "radar_score": 75,
-      "severity_tier": "A",
-      "severity_label": "A级要闻",
+      "severity_tier": "B",
+      "severity_label": "B级常规",
       "translation_attempts": 0,
       "translation_error": null,
       "title_zh": "英伟达发布车载推理VLA模型Alpamayo 2 Edge，面向DRIVE AGX Thor",
@@ -1853,7 +1667,7 @@
           "confidence": 0.96
         }
       ],
-      "importance": "high",
+      "importance": "medium",
       "sentiment": "Bullish",
       "special_note": null,
       "material_stage": "ga",
@@ -1944,8 +1758,8 @@
       "is_new_in_batch": true,
       "update_kind": "new_discovery",
       "radar_score": 76,
-      "severity_tier": "S",
-      "severity_label": "S级重磅",
+      "severity_tier": "B",
+      "severity_label": "B级常规",
       "translation_attempts": 0,
       "translation_error": null,
       "title_zh": "华为云发布DeepSeek-V4.1-Flash-1017降价通知",
@@ -1953,19 +1767,7 @@
       "summary_zh": "华为云发布了DeepSeek-V4.1-Flash-1017模型的降价通知。",
       "title_en": "",
       "summary_en": "",
-      "ai_analysis_en": "",
-      "deep_qa": [
-        {
-          "question": "这次技术变化对普通开发者或用户意味着什么？",
-          "answer": "聚焦华为云 / DeepSeek (深度求索)能力边界与成本变化：华为云发布了DeepSeek-V4.1-Flash-1017模型的降价通知。",
-          "historical_parallel": "历次大模型/算力节点演进中，推理单价下探常在 1~2 季度内显著拉动应用渗透。"
-        },
-        {
-          "question": "该进展目前处于什么验证阶段？",
-          "answer": "需结合官方技术文档、独立第三方复现基准以及下游云厂接入节奏交叉确认。",
-          "historical_parallel": "2025 年初 DeepSeek/Qwen 开源潮验证了开放复现对社区快速采用的关键作用。"
-        }
-      ]
+      "ai_analysis_en": ""
     },
     {
       "schema_version": "4.1",
