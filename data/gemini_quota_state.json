@@ -1,22 +1,22 @@
 {
   "schema_version": "4.1",
   "date_utc": "2026-11-23",
-  "updated_at": "2026-11-23T04:50:20Z",
+  "updated_at": "2026-11-23T05:41:31Z",
   "keys": {
     "KEY_TECH": {
       "slot": "KEY_TECH",
       "fingerprint": "09c80db8",
       "date_utc": "2026-11-23",
-      "daily_calls": 17,
+      "daily_calls": 21,
       "cooldown_until": null,
       "exhausted_until": null,
       "model_exhausted_until": {},
-      "last_error_code": "RATE_LIMIT_429",
-      "last_error": "ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and ",
-      "last_success_at": "2026-11-23T03:55:26Z",
-      "consecutive_errors": 6,
+      "last_error_code": null,
+      "last_error": null,
+      "last_success_at": "2026-11-23T05:40:43Z",
+      "consecutive_errors": 0,
       "model_cooldown_until": {
-        "gemini-4-hydrogen": "2026-11-23T04:49:20Z",
+        "gemini-4-hydrogen": "2026-11-23T05:40:31Z",
         "gemini-2.5-flash": "2026-11-23T04:47:37Z"
       }
     },
@@ -24,7 +24,7 @@
       "slot": "KEY_GLOBAL",
       "fingerprint": "99678299",
       "date_utc": "2026-11-23",
-      "daily_calls": 34,
+      "daily_calls": 43,
       "cooldown_until": null,
       "exhausted_until": null,
       "model_exhausted_until": {
@@ -32,36 +32,38 @@
       },
       "last_error_code": "RATE_LIMIT_429",
       "last_error": "ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and ",
-      "last_success_at": "2026-11-23T04:48:19Z",
+      "last_success_at": "2026-11-23T05:39:31Z",
       "consecutive_errors": 5,
       "model_cooldown_until": {
-        "gemini-4-hydrogen": "2026-11-23T04:50:41Z",
-        "gemini-2.5-flash": "2026-11-22T17:15:39Z"
+        "gemini-4-hydrogen": "2026-11-23T05:42:25Z",
+        "gemini-2.5-flash": "2026-11-22T17:15:39Z",
+        "gemini-flash-latest": "2026-11-23T05:39:46Z"
       }
     },
     "KEY_FINANCE": {
       "slot": "KEY_FINANCE",
       "fingerprint": "08e82e75",
       "date_utc": "2026-11-23",
-      "daily_calls": 33,
+      "daily_calls": 41,
       "cooldown_until": null,
       "exhausted_until": null,
       "model_exhausted_until": {
         "gemini-2.5-flash": "2026-11-23T09:54:28Z"
       },
-      "last_error_code": "RATE_LIMIT_429",
-      "last_error": "ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and ",
-      "last_success_at": "2026-11-23T03:55:03Z",
-      "consecutive_errors": 17,
+      "last_error_code": "TRANSIENT_ERROR",
+      "last_error": "ServerError: 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand ",
+      "last_success_at": "2026-11-23T05:37:31Z",
+      "consecutive_errors": 4,
       "model_cooldown_until": {
-        "gemini-4-hydrogen": "2026-11-23T04:50:40Z"
+        "gemini-4-hydrogen": "2026-11-23T05:42:25Z",
+        "gemini-flash-latest": "2026-11-23T05:41:50Z"
       }
     },
     "KEY_GENERAL": {
       "slot": "KEY_GENERAL",
       "fingerprint": "f9d158c9",
       "date_utc": "2026-11-23",
-      "daily_calls": 40,
+      "daily_calls": 47,
       "cooldown_until": null,
       "exhausted_until": null,
       "model_exhausted_until": {
@@ -70,9 +72,9 @@
       "last_error_code": "RATE_LIMIT_429",
       "last_error": "ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and ",
       "last_success_at": "2026-11-23T04:49:11Z",
-      "consecutive_errors": 5,
+      "consecutive_errors": 12,
       "model_cooldown_until": {
-        "gemini-4-hydrogen": "2026-11-23T04:50:41Z",
+        "gemini-4-hydrogen": "2026-11-23T05:42:25Z",
         "gemini-2.5-flash": "2026-11-23T03:53:52Z"
       }
     },
@@ -80,18 +82,18 @@
       "slot": "KEY_1",
       "fingerprint": "f48c8cc9",
       "date_utc": "2026-11-23",
-      "daily_calls": 43,
+      "daily_calls": 50,
       "cooldown_until": null,
       "exhausted_until": null,
       "model_exhausted_until": {
         "gemini-2.5-flash": "2026-11-23T10:50:01Z"
       },
-      "last_error_code": null,
-      "last_error": null,
+      "last_error_code": "RATE_LIMIT_429",
+      "last_error": "ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and ",
       "last_success_at": "2026-11-23T04:50:18Z",
-      "consecutive_errors": 0,
+      "consecutive_errors": 7,
       "model_cooldown_until": {
-        "gemini-4-hydrogen": "2026-11-23T04:50:41Z",
+        "gemini-4-hydrogen": "2026-11-23T05:42:25Z",
         "gemini-2.5-flash": "2026-11-23T04:16:38Z"
       }
     },
@@ -99,7 +101,7 @@
       "slot": "KEY_2",
       "fingerprint": "d6427670",
       "date_utc": "2026-11-23",
-      "daily_calls": 33,
+      "daily_calls": 44,
       "cooldown_until": null,
       "exhausted_until": null,
       "model_exhausted_until": {
@@ -107,10 +109,10 @@
       },
       "last_error_code": "RATE_LIMIT_429",
       "last_error": "ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and ",
-      "last_success_at": "2026-11-23T03:56:21Z",
-      "consecutive_errors": 16,
+      "last_success_at": "2026-11-23T05:35:34Z",
+      "consecutive_errors": 7,
       "model_cooldown_until": {
-        "gemini-4-hydrogen": "2026-11-23T04:50:41Z",
+        "gemini-4-hydrogen": "2026-11-23T05:42:25Z",
         "gemini-2.5-flash": "2026-11-22T17:11:53Z"
       }
     },
@@ -118,18 +120,18 @@
       "slot": "KEY_3",
       "fingerprint": "0ca484b5",
       "date_utc": "2026-11-23",
-      "daily_calls": 39,
+      "daily_calls": 45,
       "cooldown_until": null,
       "exhausted_until": null,
       "model_exhausted_until": {
         "gemini-2.5-flash": "2026-11-23T10:50:01Z"
       },
-      "last_error_code": null,
-      "last_error": null,
+      "last_error_code": "RATE_LIMIT_429",
+      "last_error": "ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and ",
       "last_success_at": "2026-11-23T04:50:20Z",
-      "consecutive_errors": 0,
+      "consecutive_errors": 6,
       "model_cooldown_until": {
-        "gemini-4-hydrogen": "2026-11-23T04:50:41Z",
+        "gemini-4-hydrogen": "2026-11-23T05:42:25Z",
         "gemini-2.5-flash": "2026-11-22T13:16:16Z"
       }
     },
@@ -137,18 +139,18 @@
       "slot": "KEY_4",
       "fingerprint": "27eb07c4",
       "date_utc": "2026-11-23",
-      "daily_calls": 39,
+      "daily_calls": 43,
       "cooldown_until": null,
       "exhausted_until": null,
       "model_exhausted_until": {
         "gemini-2.5-flash": "2026-11-23T10:50:01Z"
       },
-      "last_error_code": "QUOTA_EXHAUSTED",
+      "last_error_code": "RATE_LIMIT_429",
       "last_error": "ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and ",
       "last_success_at": "2026-11-23T04:49:40Z",
-      "consecutive_errors": 7,
+      "consecutive_errors": 11,
       "model_cooldown_until": {
-        "gemini-4-hydrogen": "2026-11-23T04:50:41Z",
+        "gemini-4-hydrogen": "2026-11-23T05:42:25Z",
         "gemini-2.5-flash": "2026-11-23T03:08:50Z"
       }
     },
@@ -156,7 +158,7 @@
       "slot": "KEY_5",
       "fingerprint": "5b1c687f",
       "date_utc": "2026-11-23",
-      "daily_calls": 34,
+      "daily_calls": 45,
       "cooldown_until": null,
       "exhausted_until": null,
       "model_exhausted_until": {
@@ -164,18 +166,19 @@
       },
       "last_error_code": "RATE_LIMIT_429",
       "last_error": "ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and ",
-      "last_success_at": "2026-11-23T04:18:38Z",
-      "consecutive_errors": 9,
+      "last_success_at": "2026-11-23T05:41:14Z",
+      "consecutive_errors": 6,
       "model_cooldown_until": {
-        "gemini-4-hydrogen": "2026-11-23T04:50:41Z",
-        "gemini-2.5-flash": "2026-11-23T04:13:53Z"
+        "gemini-4-hydrogen": "2026-11-23T05:42:25Z",
+        "gemini-2.5-flash": "2026-11-23T04:13:53Z",
+        "gemini-flash-latest": "2026-11-23T05:41:05Z"
       }
     },
     "KEY_6": {
       "slot": "KEY_6",
       "fingerprint": "3ccfa6cf",
       "date_utc": "2026-11-23",
-      "daily_calls": 33,
+      "daily_calls": 44,
       "cooldown_until": null,
       "exhausted_until": null,
       "model_exhausted_until": {
@@ -184,36 +187,38 @@
       "last_error_code": "RATE_LIMIT_429",
       "last_error": "ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and ",
       "last_success_at": "2026-11-23T04:14:27Z",
-      "consecutive_errors": 14,
+      "consecutive_errors": 25,
       "model_cooldown_until": {
-        "gemini-4-hydrogen": "2026-11-23T04:50:41Z",
-        "gemini-2.5-flash": "2026-11-23T02:57:13Z"
+        "gemini-4-hydrogen": "2026-11-23T05:42:25Z",
+        "gemini-2.5-flash": "2026-11-23T02:57:13Z",
+        "gemini-flash-latest": "2026-11-23T05:37:40Z"
       }
     },
     "KEY_7": {
       "slot": "KEY_7",
       "fingerprint": "1b965772",
       "date_utc": "2026-11-23",
-      "daily_calls": 38,
+      "daily_calls": 43,
       "cooldown_until": null,
       "exhausted_until": null,
       "model_exhausted_until": {
         "gemini-2.5-flash": "2026-11-23T10:48:57Z"
       },
-      "last_error_code": "RATE_LIMIT_429",
-      "last_error": "ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and ",
+      "last_error_code": "TRANSIENT_ERROR",
+      "last_error": "ServerError: 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand ",
       "last_success_at": "2026-11-23T04:49:25Z",
-      "consecutive_errors": 3,
+      "consecutive_errors": 8,
       "model_cooldown_until": {
-        "gemini-4-hydrogen": "2026-11-23T04:50:41Z",
-        "gemini-2.5-flash": "2026-11-23T04:19:45Z"
+        "gemini-4-hydrogen": "2026-11-23T05:42:25Z",
+        "gemini-2.5-flash": "2026-11-23T04:19:45Z",
+        "gemini-flash-latest": "2026-11-23T05:41:51Z"
       }
     },
     "KEY_8": {
       "slot": "KEY_8",
       "fingerprint": "700d209b",
       "date_utc": "2026-11-23",
-      "daily_calls": 34,
+      "daily_calls": 44,
       "cooldown_until": null,
       "exhausted_until": null,
       "model_exhausted_until": {
@@ -221,29 +226,30 @@
       },
       "last_error_code": "RATE_LIMIT_429",
       "last_error": "ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and ",
-      "last_success_at": "2026-11-23T03:56:10Z",
-      "consecutive_errors": 18,
+      "last_success_at": "2026-11-23T05:37:10Z",
+      "consecutive_errors": 7,
       "model_cooldown_until": {
-        "gemini-4-hydrogen": "2026-11-23T04:50:41Z",
-        "gemini-2.5-flash": "2026-11-23T03:14:02Z"
+        "gemini-4-hydrogen": "2026-11-23T05:42:25Z",
+        "gemini-2.5-flash": "2026-11-23T03:14:02Z",
+        "gemini-flash-latest": "2026-11-23T05:37:21Z"
       }
     },
     "GOOGLE_API_KEY": {
       "slot": "GOOGLE_API_KEY",
       "fingerprint": "09c80db8",
       "date_utc": "2026-11-23",
-      "daily_calls": 47,
+      "daily_calls": 53,
       "cooldown_until": null,
       "exhausted_until": null,
       "model_exhausted_until": {
         "gemini-2.5-flash": "2026-11-23T10:50:01Z"
       },
-      "last_error_code": "QUOTA_EXHAUSTED",
+      "last_error_code": "RATE_LIMIT_429",
       "last_error": "ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and ",
       "last_success_at": "2026-11-23T04:17:43Z",
-      "consecutive_errors": 19,
+      "consecutive_errors": 25,
       "model_cooldown_until": {
-        "gemini-4-hydrogen": "2026-11-23T04:50:41Z",
+        "gemini-4-hydrogen": "2026-11-23T05:42:26Z",
         "gemini-2.5-flash": "2026-11-22T05:54:04Z"
       }
     }
