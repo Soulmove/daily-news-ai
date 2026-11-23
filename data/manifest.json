@@ -1,6 +1,6 @@
 {
   "schema_version": "4.1",
-  "site_published_at": "2026-11-23T16:55:20+08:00",
+  "site_published_at": "2026-11-23T17:06:34+08:00",
   "smart": {
     "latest_batch_id": "smart-20261123-155557",
     "latest_path": "archives/smart/2026-11-23/15-55/",
@@ -83,89 +83,89 @@
     }
   },
   "raw": {
-    "latest_batch_id": "raw-20261123-165456",
-    "latest_path": "archives/raw/2026-11-23/16-54/",
-    "meta_path": "archives/raw/2026-11-23/16-54/meta.json",
-    "connectors_path": "archives/raw/2026-11-23/16-54/connectors.json",
-    "fetched_at": "2026-11-23T16:54:56+08:00",
-    "published_at": "2026-11-23T16:55:20+08:00",
-    "target_cadence_minutes": 60,
-    "schedule_source": "schedule",
+    "latest_batch_id": "raw-20261123-170607",
+    "latest_path": "archives/raw/2026-11-23/17-06/",
+    "meta_path": "archives/raw/2026-11-23/17-06/meta.json",
+    "connectors_path": "archives/raw/2026-11-23/17-06/connectors.json",
+    "fetched_at": "2026-11-23T17:06:07+08:00",
+    "published_at": "2026-11-23T17:06:34+08:00",
+    "target_cadence_minutes": 15,
+    "schedule_source": "workflow_dispatch",
     "status": "partial",
     "summary": {
-      "configured_sources": 77,
-      "ok_sources": 72,
+      "configured_sources": 84,
+      "ok_sources": 76,
       "empty_sources": 4,
-      "error_sources": 1,
+      "error_sources": 4,
       "stale_sources": 0,
       "retired_sources": 5,
-      "total_raw_items": 1439,
+      "total_raw_items": 1517,
       "first_party_items": 30,
       "healthy_connectors": 7,
       "total_connectors": 7,
-      "deep_fetched_enriched": 25,
-      "deduped_events": 1231
+      "deep_fetched_enriched": 27,
+      "deduped_events": 1244
     },
     "categories": {
       "finance": {
         "file": "data_finance.json",
-        "path": "archives/raw/2026-11-23/16-54/data_finance.json",
-        "status": "ok",
-        "source_count": 19,
+        "path": "archives/raw/2026-11-23/17-06/data_finance.json",
+        "status": "partial",
+        "source_count": 20,
         "ok_sources": 19,
-        "error_sources": 0,
+        "error_sources": 1,
         "empty_sources": 0,
         "stale_sources": 0,
-        "item_count": 391
+        "item_count": 397
       },
       "global": {
         "file": "data_global.json",
-        "path": "archives/raw/2026-11-23/16-54/data_global.json",
-        "status": "ok",
-        "source_count": 13,
+        "path": "archives/raw/2026-11-23/17-06/data_global.json",
+        "status": "partial",
+        "source_count": 15,
         "ok_sources": 13,
-        "error_sources": 0,
+        "error_sources": 2,
         "empty_sources": 0,
         "stale_sources": 0,
-        "item_count": 252
+        "item_count": 256
       },
       "tech": {
         "file": "data_tech.json",
-        "path": "archives/raw/2026-11-23/16-54/data_tech.json",
+        "path": "archives/raw/2026-11-23/17-06/data_tech.json",
         "status": "partial",
-        "source_count": 30,
-        "ok_sources": 25,
+        "source_count": 34,
+        "ok_sources": 29,
         "error_sources": 1,
         "empty_sources": 4,
         "stale_sources": 0,
-        "item_count": 458
+        "item_count": 530
       },
       "general": {
         "file": "data_general.json",
-        "path": "archives/raw/2026-11-23/16-54/data_general.json",
+        "path": "archives/raw/2026-11-23/17-06/data_general.json",
         "status": "ok",
         "source_count": 15,
         "ok_sources": 15,
         "error_sources": 0,
         "empty_sources": 0,
         "stale_sources": 0,
-        "item_count": 338
+        "item_count": 334
       }
     }
   },
   "scheduler": {
-    "provider": "github_actions",
-    "raw_cron": "7 */1 * * *",
-    "smart_cron": "22 */3 * * *",
-    "note": "轻量化错峰调度（Raw 每小时 / Smart 每3小时）；腾讯云仅静默拉取与静态直出。"
+    "provider": "cloud_runner",
+    "raw_cron": "*/15 * * * *",
+    "smart_cron": "15 */1 * * *",
+    "note": "高频错峰调度（原始抓取每 15 分钟 / 深度研报每小时）；服务端静默增量同步。"
   },
   "connectors": {
     "latest_path": "data/connectors_latest.json",
-    "fetched_at": "2026-11-23T16:54:56+08:00",
+    "fetched_at": "2026-11-23T17:06:07+08:00",
     "summary": {
       "total_connectors": 7,
       "healthy_connectors": 7,
-      "total_first_party_items": 491,
+      "total_first_party_items": 567,
       "tech_tools_count": 32,
       "calendar_events_count": 5
     }
@@ -210,7 +210,7 @@
     {
       "code": "raw_crawl_degraded",
       "severity": "warning",
-      "message": "原始抓取状态：partial（错误源 1 个）"
+      "message": "原始抓取状态：partial（错误源 4 个）"
     }
   ],
   "gemini_quota": {
@@ -220,7 +220,7 @@
     "exhausted_keys": 12,
     "daily_calls_total": 780,
     "date_utc": "2026-11-23",
-    "updated_at": "2026-11-23T08:55:05Z",
+    "updated_at": "2026-11-23T09:06:18Z",
     "keys": [
       {
         "slot": "KEY_TECH",
@@ -361,7 +361,7 @@
     "exhausted_keys": 12,
     "daily_calls_total": 780,
     "date_utc": "2026-11-23",
-    "updated_at": "2026-11-23T08:55:05Z",
+    "updated_at": "2026-11-23T09:06:18Z",
     "keys": [
       {
         "slot": "KEY_TECH",
