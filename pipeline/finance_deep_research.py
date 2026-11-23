@@ -12,13 +12,62 @@ deterministic event-parameterized fallback so Tencent Cloud stays zero-compute.
 
 from __future__ import annotations
 
+from concurrent.futures import ThreadPoolExecutor, as_completed
+import json
+from pathlib import Path
 import re
+import time
 from typing import Any, Dict, List, Optional, Tuple
 
-from .time_utils import parse_iso_datetime
+from .gemini_pool import call_gemini_raw, collect_api_key_slots
+from .manifest import atomic_write_json, load_json_if_exists
+from .time_utils import now_shanghai, parse_iso_datetime, to_iso_shanghai
+
+
+_FIN_EMOJI_RE = re.compile(
+    "["
+    "\U0001F300-\U0001F5FF"
+    "\U0001F600-\U0001F64F"
+    "\U0001F680-\U0001F6FF"
+    "\U0001F700-\U0001F77F"
+    "\U0001F780-\U0001F7FF"
+    "\U0001F800-\U0001F8FF"
+    "\U0001F900-\U0001F9FF"
+    "\U0001FA00-\U0001FAFF"
+    "\u2600-\u26FF"
+    "\u2700-\u27BF"
+    "\u231A-\u23FA"
+    "\u2B50\u2B55\u2934\u2935\uFE0F\u200D"
+    "]+",
+    flags=re.UNICODE,
+)
+
+
+def strip_finance_emojis(text: Optional[str]) -> str:
+    """Remove any colored Unicode emoji characters cleanly from finance output."""
+    if not text:
+        return ""
+    cleaned = _FIN_EMOJI_RE.sub("", str(text))
+    return re.sub(r"\s{2,}", " ", cleaned).strip()
 
 
 _PRECEDENT_DB: Dict[str, List[Dict[str, str]]] = {
+    "a_share_active_etf_launch": [
+        {
+            "date": "2020-09-22",
+            "event_title": "首批科创板 50 ETF 发行获批并迅速放量上市",
+            "t1_reaction": "券商做市与ETF代销龙头早盘领涨 +2.1%，相关科创主题核心标的成交显著放大。",
+            "t5_reaction": "T+5 场内资金通过新设 ETF 工具持续净申购，带动核心持仓权重估值温和抬升。",
+            "lesson": "全新 ETF 品类破冰本质是改善资金配置工具效率，做市券商与互联网代销平台确定性最高。",
+        },
+        {
+            "date": "2024-09-10",
+            "event_title": "首批中证 A500 ETF 集中获批发行引爆机构场内配置需求",
+            "t1_reaction": "主代销互联网券商及托管做市头部券商领涨非银板块。",
+            "t5_reaction": "T+5 相关基金规模快速突破百亿，印证场内化公募工具的吸金虹吸效应。",
+            "lesson": "盯紧首批挂牌产品上市前 5 个交易日日均成交额与做市流动性表现。",
+        },
+    ],
     "a_share_exchange_fee_cut": [
         {
             "date": "2024-12-27",
@@ -431,6 +480,35 @@ _DEFAULT_PRECEDENTS: List[Dict[str, str]] = [
 
 
 _RULE_TRANSMISSION_DEFAULTS: Dict[str, List[Dict[str, Any]]] = {
+    "a_share_active_etf_launch": [
+        {
+            "tier": 1,
+            "tier_label": "一阶直接冲击（主动 ETF 场内做市、托管与互联网代销龙头）",
+            "summary": "首批主动管理型 ETF 挂牌上市打开公募主动投研“场内化、低费率、T+0 份额折溢价套利”新赛道，直接扩充做市券商手续费与公募参控股券商净资产收益。",
+            "stocks": [
+                {"name": "中信证券", "code": "600030.SH", "market": "A股", "exposure_logic": "ETF 主做市商份额及华夏基金控股叠加托管规模居前，首批主动 ETF 放量直接增厚做市与管理费", "direction": "positive"},
+                {"name": "东方财富", "code": "300059.SZ", "market": "A股", "exposure_logic": "天天基金公募代销与场内 ETF 交易双龙头，受益主动策略投资者向场内工具迁徙", "direction": "positive"},
+                {"name": "华泰证券", "code": "601688.SH", "market": "A股", "exposure_logic": "ETF 做市与机构直连通道体量大，控股南方/华泰柏瑞系产品线直接联动扩容", "direction": "positive"},
+            ],
+        },
+        {
+            "tier": 2,
+            "tier_label": "二阶产业链传导（主动 ETF 首期重点建仓的硬科技成长赛道）",
+            "summary": "主动型 ETF 具备高于被动宽基的选股自由度，首批资金发行建仓阶段倾向超配景气度最高的硬科技制造与创业板权重。",
+            "stocks": [
+                {"name": "创业板ETF", "code": "159915.SZ", "market": "A股", "exposure_logic": "代表高成长科技制造板块增量配置 Beta", "direction": "positive"},
+                {"name": "恒生电子", "code": "600570.SH", "market": "A股", "exposure_logic": "主动 ETF 需高频披露 PCF 清单与跨市场风控系统，拉动公募柜台/O45 系统升级采购", "direction": "positive"},
+            ],
+        },
+        {
+            "tier": 3,
+            "tier_label": "三阶生态重塑（公募费率改革深化与长钱入市工具完善）",
+            "summary": "主动 ETF 填补我国与海外（如 ARK/JPM JEPI）之间千亿级主动 ETF 空白，引导居民理财通过透明低费场内工具入市。",
+            "stocks": [
+                {"name": "沪深300ETF", "code": "510300.SH", "market": "A股", "exposure_logic": "公募产品谱系多元化提升 A 股机构长钱配置深度与流动性稳定器作用", "direction": "positive"},
+            ],
+        },
+    ],
     "a_share_exchange_fee_cut": [
         {
             "tier": 1,
@@ -1032,14 +1110,40 @@ def _detect_session_context(pub_at_iso: str, title: str, rule_id: str, quotes_ma
         "status_code": "unpriced" if after_a_close else "partially_priced",
         "status_label": "未计价（开盘增量催化）" if after_a_close else "部分计价（博弈二次预期差）",
         "status_label_en": "Unpriced (Open Catalyst)" if after_a_close else "Partially Priced",
-        "session_context": "休市/跨时区窗口发布，开盘将集中兑现首次定价比差" if after_a_close else "交易时段内外资金逐步消化，关注成交量印证",
-        "expectation_gap": "表层消息面快速反应后，超额收益取决于一阶直驱标的首小时放量成色与二阶产业链跟涨意愿。",
+        "session_context": f"「{title[:22]}」落于休市/跨时区窗口，开盘将集中兑现首次定价比差" if after_a_close else f"「{title[:22]}」于交易时段内释放，资金正逐步消化量价反馈",
+        "expectation_gap": (
+            f"针对「{title[:26]}」，首波情绪已在{'休市缺口预期' if after_a_close else '盘面初步计价'}中显现，"
+            "真正的预期差取决于后续核心标的成交额能否放量印证及二阶产业链订单/细则跟进。"
+        ),
     }
 
 
 def _build_quant_if_then(rule_id: str, title: str, scenario: Dict[str, Any]) -> List[Dict[str, str]]:
     """Produce numeric-threshold Bull/Bear/Watch market triggers with zero vague boilerplate."""
     custom: Dict[str, List[Dict[str, str]]] = {
+        "a_share_active_etf_launch": [
+            {
+                "case": "bull",
+                "label": "正向验证 · 场内流动性与认购放量",
+                "trigger_metric": "首批主动 ETF 上市首周日均成交额 & 券商指数联动",
+                "threshold": "上市前 5 个交易日单只平均日成交额 ≥ 3 亿元且折溢价率收窄至 ±0.3% 内，东方财富/中信跑赢沪指 ≥ 1.5%",
+                "action_implication": "确认场内投资者高度认可主动 ETF 交易效率，继续持有代销与做市券商龙头。",
+            },
+            {
+                "case": "bear",
+                "label": "反向约束 · 资金分流传统被动与主动股基",
+                "trigger_metric": "上市后场内换手衰减 & 二级折价扩大",
+                "threshold": "若上市第 3~5 日日均换手率骤降逾 60% 且持续出现 > 0.5% 负溢价",
+                "action_implication": "说明产品尚需市场教育周期，短期难以放量驱动非银估值重估。",
+            },
+            {
+                "case": "watch",
+                "label": "核心观测点 · 后续扩展批次与费率",
+                "trigger_metric": "第二批主动 ETF 审批节奏及管理费率水平",
+                "threshold": "跟踪证监会后续批文覆盖固收+/红利增强等品类及做市商考核激励细则",
+                "action_implication": "若扩展至宽基增强与红利低波主动 ETF，将扩大银行理财替代规模空间。",
+            },
+        ],
         "a_share_exchange_fee_cut": [
             {
                 "case": "bull",
@@ -1422,7 +1526,9 @@ def customize_event_copy_and_basis(
     entities = [str(e) for e in (ev.get("entities") or [])[:2] if str(e).strip()]
 
     custom_ol = base_ol
-    if rid == "a_share_exchange_fee_cut":
+    if rid == "a_share_active_etf_launch":
+        custom_ol = "沪深交易所正式迎来首批主动管理型 ETF 挂牌上市，打通“主动投研 alpha + ETF 场内实时流动性与低费率”闭环，重点催化 ETF 做市头部券商、天天基金/东财互联网代销龙头及柜台 IT。"
+    elif rid == "a_share_exchange_fee_cut":
         amt_txt = nums[0] if nums else "约 46 亿元"
         custom_ol = f"沪深交易所发布年度降费让利方案（预计向市场让利 {amt_txt}），实打实免收上市费、CA 证书与债券交易部分规费，直接降低实体融资成本与做市券商交易摩擦。"
     elif rid == "a_share_capital_market_reform":
@@ -1515,3 +1621,220 @@ def enrich_card_deep_research(
         }
         for q in quant_rules
     ]
+
+
+def _extract_json_obj(text: str) -> Optional[Dict[str, Any]]:
+    if not text:
+        return None
+    raw = text.strip()
+    fence = re.search(r"```(?:json)?\s*([\s\S]*?)```", raw, re.I)
+    if fence:
+        raw = fence.group(1).strip()
+    m = re.search(r"\{[\s\S]*\}", raw)
+    if not m:
+        return None
+    try:
+        parsed = json.loads(m.group(0))
+        return parsed if isinstance(parsed, dict) else None
+    except Exception:
+        return None
+
+
+def _finance_search_tools() -> List[Any]:
+    try:
+        from google.genai import types
+
+        return [types.Tool(google_search=types.GoogleSearch())]
+    except Exception:
+        return [{"google_search": {}}]
+
+
+def _fetch_single_card_ai_research(card: Dict[str, Any], root: Path) -> Optional[Dict[str, Any]]:
+    title = str(card.get("event_title") or "").strip()
+    summary = str(card.get("event_summary") or "").strip()[:180]
+    if not title:
+        return None
+    prompt = (
+        "你是机构买方跨境宏观与产业投研总监。请使用联网搜索核实下方突发财经/科技事件，生成高度贴合本事件本身、零套话、严禁使用任何 Emoji 的投研传导 JSON。\n"
+        f"事件标题：{title}\n"
+        f"事实摘要：{summary}\n"
+        "严格输出 JSON 对象（不要加多余说明）：\n"
+        "{\n"
+        '  "one_liner": "65字内一句话直击核心市场逻辑与受益/受损资产",\n'
+        '  "expectation_gap": "80字内说明事件当前跨市场计价状态（美股/港股/A股谁先涨跌、二次预期差博弈点）",\n'
+        '  "transmission_layers": [\n'
+        '    {"tier": 1, "tier_label": "一阶直接冲击（核心受益或受损主体）", "summary": "45字内因果传导", "stocks": [{"name": "真实公司或ETF名", "code": "如600030.SH/NVDA/00700.HK", "market": "A股|港股|美股", "exposure_logic": "35字内直接敞口", "direction": "positive|negative|mixed"}]},\n'
+        '    {"tier": 2, "tier_label": "二阶产业链传导", "summary": "45字内上下游联动", "stocks": [{"name": "公司或ETF", "code": "代码", "market": "A股|港股|美股", "exposure_logic": "35字内联动", "direction": "positive|negative|mixed"}]},\n'
+        '    {"tier": 3, "tier_label": "三阶宏观或避险跷跷板", "summary": "45字内资金偏好切换", "stocks": [{"name": "ETF或龙头", "code": "代码", "market": "A股|港股|美股", "exposure_logic": "35字内逻辑", "direction": "positive|negative|mixed"}]}\n'
+        "  ],\n"
+        '  "historical_precedents": [\n'
+        '    {"date": "YYYY-MM-DD", "event_title": "真实历史相似事件名称", "t1_reaction": "35字内T+1真实走势", "t5_reaction": "35字内T+5演化", "lesson": "35字内交易规律"}\n'
+        "  ],\n"
+        '  "quant_if_then": [\n'
+        '    {"case": "bull", "label": "正向验证阈值", "trigger_metric": "核心指标", "threshold": "量化数字阈值", "action_implication": "35字内应对"},\n'
+        '    {"case": "bear", "label": "证伪退出阈值", "trigger_metric": "反向指标", "threshold": "量化数字阈值", "action_implication": "35字内风控"}\n'
+        "  ]\n"
+        "}"
+    )
+    res = call_gemini_raw(
+        scope="deep_finance_impact",
+        prompt=prompt,
+        models=("gemini-4-hydrogen", "gemini-2.5-flash"),
+        temperature=0.15,
+        tools=_finance_search_tools(),
+        base_dir=root,
+    )
+    if not res.ok or not res.text:
+        return None
+    parsed = _extract_json_obj(res.text)
+    if not parsed:
+        return None
+    layers = parsed.get("transmission_layers")
+    if not isinstance(layers, list) or not layers:
+        return None
+    clean_layers: List[Dict[str, Any]] = []
+    for idx_l, lay in enumerate(layers[:3], start=1):
+        if not isinstance(lay, dict):
+            continue
+        stocks = [
+            {
+                "name": strip_finance_emojis(str(s.get("name") or "")[:18]),
+                "code": strip_finance_emojis(str(s.get("code") or "")[:16]),
+                "market": str(s.get("market") or "A股")[:6],
+                "exposure_logic": strip_finance_emojis(str(s.get("exposure_logic") or "")[:90]),
+                "direction": str(s.get("direction") or "mixed") if str(s.get("direction") or "") in ("positive", "negative", "mixed") else "mixed",
+            }
+            for s in (lay.get("stocks") or [])[:4]
+            if isinstance(s, dict) and s.get("name")
+        ]
+        if not stocks:
+            continue
+        clean_layers.append(
+            {
+                "tier": int(lay.get("tier") or idx_l),
+                "tier_label": strip_finance_emojis(str(lay.get("tier_label") or f"第{idx_l}阶传导")),
+                "summary": strip_finance_emojis(str(lay.get("summary") or "")),
+                "stocks": stocks,
+            }
+        )
+    if not clean_layers:
+        return None
+    clean_precs = [
+        {
+            "date": strip_finance_emojis(str(p.get("date") or ""))[:14],
+            "event_title": strip_finance_emojis(str(p.get("event_title") or ""))[:60],
+            "t1_reaction": strip_finance_emojis(str(p.get("t1_reaction") or ""))[:120],
+            "t5_reaction": strip_finance_emojis(str(p.get("t5_reaction") or ""))[:120],
+            "lesson": strip_finance_emojis(str(p.get("lesson") or ""))[:120],
+        }
+        for p in (parsed.get("historical_precedents") or [])[:2]
+        if isinstance(p, dict) and p.get("event_title") and p.get("t1_reaction")
+    ]
+    clean_qif = [
+        {
+            "case": str(q.get("case") or "watch") if str(q.get("case") or "") in ("bull", "bear", "watch") else "watch",
+            "label": strip_finance_emojis(str(q.get("label") or "核心观察"))[:28],
+            "trigger_metric": strip_finance_emojis(str(q.get("trigger_metric") or "核心跟踪指标"))[:40],
+            "threshold": strip_finance_emojis(str(q.get("threshold") or ""))[:90],
+            "action_implication": strip_finance_emojis(str(q.get("action_implication") or ""))[:90],
+        }
+        for q in (parsed.get("quant_if_then") or [])[:3]
+        if isinstance(q, dict) and q.get("threshold") and q.get("action_implication")
+    ]
+    return {
+        "one_liner": strip_finance_emojis(str(parsed.get("one_liner") or ""))[:160],
+        "expectation_gap": strip_finance_emojis(str(parsed.get("expectation_gap") or ""))[:180],
+        "transmission_layers": clean_layers,
+        "historical_precedents": clean_precs,
+        "quant_if_then": clean_qif,
+    }
+
+
+def enrich_finance_impacts_with_gemini(
+    impacts: List[Dict[str, Any]],
+    event_impact_map: Dict[str, Dict[str, Any]],
+    *,
+    root: Optional[Path],
+    generated_at_iso: str = "",
+) -> None:
+    """Use 13-key Gemini Google Search Grounding (cached 72h in data/finance_ai_cache.json) to individualize cards."""
+    if not root or not impacts:
+        return
+    cache_path = root / "data" / "finance_ai_cache.json"
+    raw_cache = load_json_if_exists(cache_path, default={}) or {}
+    now_ts = time.time()
+    items_cache: Dict[str, Any] = {}
+    for k, v in (raw_cache.get("items") or {}).items():
+        if isinstance(v, dict) and (now_ts - float(v.get("_ts") or 0.0)) <= 72 * 3600:
+            items_cache[str(k)] = v
+
+    if collect_api_key_slots():
+        need_fetch: List[Tuple[str, Dict[str, Any]]] = []
+        for card in impacts[:14]:
+            eid = str(card.get("event_id") or "").strip()
+            tkey = re.sub(r"[\s\W]+", "", str(card.get("event_title") or "").lower())[:28]
+            ckey = eid or tkey
+            if ckey and ckey not in items_cache and tkey not in items_cache:
+                need_fetch.append((ckey, card))
+        if need_fetch:
+            with ThreadPoolExecutor(max_workers=6) as pool:
+                futs = {pool.submit(_fetch_single_card_ai_research, card, root): (ckey, card) for ckey, card in need_fetch[:10]}
+                for fut in as_completed(futs):
+                    ckey, card = futs[fut]
+                    try:
+                        val = fut.result(timeout=45)
+                        if val:
+                            val["_ts"] = now_ts
+                            items_cache[ckey] = val
+                            tkey = re.sub(r"[\s\W]+", "", str(card.get("event_title") or "").lower())[:28]
+                            if tkey and tkey != ckey:
+                                items_cache[tkey] = val
+                    except Exception:
+                        pass
+
+    if items_cache:
+        atomic_write_json(
+            cache_path,
+            {
+                "ts": now_ts,
+                "updated_at": generated_at_iso or to_iso_shanghai(now_shanghai()),
+                "items": dict(list(items_cache.items())[-120:]),
+            },
+        )
+
+    for card in impacts:
+        eid = str(card.get("event_id") or "").strip()
+        tkey = re.sub(r"[\s\W]+", "", str(card.get("event_title") or "").lower())[:28]
+        ai = items_cache.get(eid) or items_cache.get(tkey)
+        if not isinstance(ai, dict):
+            continue
+        if ai.get("one_liner"):
+            card["one_liner"] = strip_finance_emojis(ai["one_liner"])
+        if ai.get("expectation_gap") and isinstance(card.get("priced_in_analysis"), dict):
+            notes = [str(x) for x in (card.get("effective_date_label"), card.get("qualifier_badge")) if x]
+            prefix = f"【{' · '.join(notes)}】" if notes else ""
+            gap = strip_finance_emojis(ai["expectation_gap"])
+            card["priced_in_analysis"]["expectation_gap"] = f"{prefix}{gap}" if prefix and prefix not in gap else gap
+        if isinstance(ai.get("transmission_layers"), list) and ai["transmission_layers"]:
+            card["transmission_layers"] = ai["transmission_layers"]
+        if isinstance(ai.get("historical_precedents"), list) and ai["historical_precedents"]:
+            card["historical_precedents"] = ai["historical_precedents"]
+        if isinstance(ai.get("quant_if_then"), list) and ai["quant_if_then"]:
+            card["quant_if_then"] = ai["quant_if_then"]
+            card["if_then"] = [
+                {
+                    "cond": f"[{q['label']}] {q['threshold']}",
+                    "result": q["action_implication"],
+                    "tone": "bullish" if q["case"] == "bull" else ("bearish" if q["case"] == "bear" else "neutral"),
+                }
+                for q in ai["quant_if_then"]
+            ]
+        card["ai_grounded"] = True
+        if eid and eid in event_impact_map:
+            m = event_impact_map[eid]
+            m["one_liner"] = card["one_liner"]
+            m["priced_in_analysis"] = card.get("priced_in_analysis")
+            m["transmission_layers"] = card.get("transmission_layers")
+            m["historical_precedents"] = card.get("historical_precedents")
+            m["quant_if_then"] = card.get("quant_if_then")
+            m["if_then"] = card.get("if_then")

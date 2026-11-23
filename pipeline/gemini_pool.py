@@ -59,6 +59,7 @@ _SCOPE_PRIORITY: Dict[str, Tuple[str, ...]] = {
     "deep_storylines": ("KEY_3", "KEY_GLOBAL", "KEY_7", "GOOGLE_API_KEY", "KEY_4"),
     "deep_event_qa": ("KEY_4", "KEY_FINANCE", "KEY_8", "GOOGLE_API_KEY", "KEY_5"),
     "deep_topics_cal": ("KEY_5", "KEY_GENERAL", "KEY_1", "GOOGLE_API_KEY", "KEY_6"),
+    "deep_finance_impact": ("KEY_FINANCE", "KEY_1", "KEY_3", "KEY_7", "GOOGLE_API_KEY", "KEY_4"),
 }
 
 _POOL_LOCK = threading.RLock()

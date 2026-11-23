@@ -1405,6 +1405,53 @@ def _is_within_recent_hours(date_str: str, gen_dt: Any, hours: int = 72) -> bool
     return -24.0 <= delta_h <= float(hours)
 
 
+_MODEL_VER_EXTRACT_RE = re.compile(
+    r"\b(GPT-\d+(?:\.\d+)?(?:\s+[A-Za-z]+)?|Claude\s+[A-Za-z]*\s*\d+(?:\.\d+)?|Gemini\s+\d+(?:\.\d+)?(?:\s+[A-Za-z]+)?|"
+    r"DeepSeek-[A-Za-z0-9.-]+|Qwen\d+(?:\.\d+)?(?:-[A-Za-z]+)?|GLM-\d+(?:\.\d+)?(?:-[A-Za-z]+)?|"
+    r"Kimi[\s-]*K\d+(?:\.\d+)?|Grok[\s-]*\d+(?:\.\d+)?|Llama[\s-]*\d+(?:\.\d+)?|Mistral\s+[A-Za-z]+\s+\d+|MiniMax-[A-Za-z0-9]+)\b",
+    re.I,
+)
+
+
+def _auto_absorb_new_lineage_nodes(base_lineage: List[Dict[str, Any]], lab_items: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    """Auto-absorb newly discovered major model releases into chronological lab lineage."""
+    nodes = [dict(n) for n in (base_lineage or []) if isinstance(n, dict)]
+    existing_blob = " ".join(
+        f"{n.get('generation') or ''} {n.get('filter_keyword') or ''} {n.get('highlight') or ''}".lower()
+        for n in nodes
+    )
+    for it in lab_items:
+        if it.get("milestone_dim") not in {"flagship_release", "open_source_eco"}:
+            continue
+        if it.get("is_baseline_milestone"):
+            continue
+        title = str(it.get("title") or "")
+        if "降价" in title or "促销" in title:
+            continue
+        m = _MODEL_VER_EXTRACT_RE.search(title)
+        if not m:
+            continue
+        tok = re.sub(r"\s+", " ", m.group(1)).strip()
+        tok_low = tok.lower()
+        if tok_low in existing_blob or len(tok_low) < 4:
+            continue
+        date_ym = str(it.get("date") or "")[:7] or "2026-11"
+        existing_blob += f" {tok_low}"
+        nodes.append(
+            {
+                "generation": tok,
+                "release_date": date_ym,
+                "status": "开源权重" if it.get("is_open_source") else "最新动态",
+                "specs": str(it.get("category") or "前沿迭代")[:36],
+                "pricing_or_license": "开源社区权重" if it.get("is_open_source") else "商业 API / 预览",
+                "filter_keyword": tok,
+                "highlight": str(it.get("what_it_does") or title)[:90],
+            }
+        )
+    nodes.sort(key=lambda n: str(n.get("release_date") or "9999-99"))
+    return nodes
+
+
 def build_ai_progress_artifact(
     *,
     batch_id: str,
@@ -1794,10 +1841,12 @@ def build_ai_progress_artifact(
 
         lab_arch = lab_all[:24]
         lab_active = lab_all[:24]
+        enriched_lineage = _auto_absorb_new_lineage_nodes(list(lab.get("model_lineage") or []), lab_all)
 
         archive_companies.append(
             {
                 **lab,
+                "model_lineage": enriched_lineage,
                 "recent_count": len(lab_arch),
                 "archive_count": len(lab_all),
                 "latest_date": lab_arch[0]["date"] if lab_arch else "",
@@ -1814,6 +1863,7 @@ def build_ai_progress_artifact(
         active_companies.append(
             {
                 **lab,
+                "model_lineage": enriched_lineage,
                 "recent_count": len(lab_active),
                 "archive_count": len(lab_all),
                 "latest_date": lab_active[0]["date"] if lab_active else "",

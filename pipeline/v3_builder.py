@@ -497,6 +497,7 @@ def build_v3_artifacts(
     connectors_payload: Dict[str, Any],
     calendar_extra: Optional[List[dict]] = None,
     raw_items_by_cat: Optional[Dict[str, List[dict]]] = None,
+    abs_smart_dir: Optional[Path] = None,
 ) -> Dict[str, Any]:
     """
     Build and atomically persist all V3 research memory JSONs under data/:
@@ -1389,6 +1390,7 @@ def build_v3_artifacts(
         quotes_doc=quotes_doc,
         breaking_highlights=list(wire_disk.get("breaking_highlights") or []) if isinstance(wire_disk, dict) else None,
         prev_doc=prev_finance_impact,
+        base_dir=root,
     )
 
     # Enrich entities_map (TSMC/Intel/SMIC etc.) with word-boundary matched storylines; keep change_count_30d aligned with actual events
@@ -1668,7 +1670,7 @@ def build_v3_artifacts(
         print(f"[v3_builder] V12 enrichment warning: {exc}", flush=True)
 
     # Re-persist cat_docs so event-level deep_qa enriches both root analysis_*.json and active batch archive
-    batch_smart_dirs = list((root / "archives/smart").glob(f"*/{batch_id}"))
+    batch_smart_dirs = [abs_smart_dir] if abs_smart_dir else list((root / "archives/smart").glob(f"*/{batch_id}"))
     for cat_key, cdoc in cat_docs.items():
         if isinstance(cdoc, dict):
             atomic_write_json(root / f"analysis_{cat_key}.json", cdoc)

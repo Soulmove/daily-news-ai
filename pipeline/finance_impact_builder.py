@@ -11,10 +11,16 @@ Replaces naive static positive-biased template matching with:
 
 from __future__ import annotations
 
+from pathlib import Path
 import re
 from typing import Any, Dict, List, Optional, Tuple
 
-from .finance_deep_research import customize_event_copy_and_basis, enrich_card_deep_research
+from .finance_deep_research import (
+    customize_event_copy_and_basis,
+    enrich_card_deep_research,
+    enrich_finance_impacts_with_gemini,
+    strip_finance_emojis,
+)
 from .time_utils import now_shanghai, parse_iso_datetime, to_iso_shanghai
 
 
@@ -217,6 +223,41 @@ def _build_domain_scenario(
     # 0a. Early materiality gate: block 3rd-party AI chatter/surveys/benchmarks that have zero capital-market weight
     if _LOW_IMPACT_TECH_CHATTER_RE.search(tl):
         return None
+
+    # 0a-2. A-Share Active ETF Launch (split cleanly off 80% margin reform)
+    if (
+        re.search(r"首批主动\s*etf|主动管理\s*etf|主动\s*etf.*上市|主动.*etf", text, re.I)
+        and "保证金" not in text
+        and "80%" not in text
+        and "台湾" not in tl
+    ):
+        return {
+            "rule_id": "a_share_active_etf_launch",
+            "tag": "公募产品创新破冰 · 首批主动 ETF 正式挂牌上市",
+            "tag_en": "First A-Share Active ETFs List on Mainland Exchanges",
+            "polarity": "bullish",
+            "intensity": 4,
+            "one_liner": "沪深交易所迎来首批主动管理型 ETF 正式上市，打通“主动投研 alpha + ETF 场内 T+0/低费率流动性”双通道，利好主代销与做市券商及公募参控股券商龙头。",
+            "one_liner_en": "Mainland exchanges list the first actively managed ETFs, uniting active alpha selection with ETF intraday liquidity for leading brokers and asset managers.",
+            "sample_basis": {
+                "sample_n": 10,
+                "volatility_pct": 2.6,
+                "volatility_source": "首批创新 ETF 挂牌上市窗口券商及基金重仓科技消费龙头历史样本",
+                "horizon": "1~5 个交易日",
+                "confidence_label": "官方产品制度创新（扩大公募增量与场内做市规模）",
+                "confidence_label_en": "Official Product Regime Breakthrough",
+            },
+            "affected_tickers": {"600030.SH": 0.85, "300059.SZ": 0.80, "601688.SH": 0.78, "510300.SH": 0.65, "159915.SZ": 0.62},
+            "realized_quotes": _quote_snapshot(["000001.SH", "510300.SH", "588000.SH"]),
+            "bars": [
+                _bar("A股", "ETF 做市与头部公募控股券商 (中信 / 华泰)", "ETF Market Makers & Asset-Mgmt Brokers (600030/601688)", 1.6, 4.2, "首批主动 ETF 场内做市流动性激励与申赎做市业务直接增厚头部券商做市与托管佣金。", "Active ETF seeding, market-making spreads, and custody directly benefit leading brokers.", 1.0, "600030.SH"),
+                _bar("A股", "互联网基金代销与场内 ETF 导流平台 (东方财富)", "Retail ETF & Fund Distribution Platforms (300059)", 1.8, 4.8, "兼具天天基金代销与东财证券场内交易入口，最受益主动基金 ETF 化后的零售换手转化。", "Dual mutual-fund distribution and retail brokerage funnels capture active ETF adoption.", 1.0, "300059.SZ"),
+                _bar("A股", "科创创业新质生产力主动重仓赛道 (创业板ETF 159915)", "Growth & Active-Alpha Equity Leaders (159915)", 1.0, 3.1, "主动管理 ETF 首批投向偏重成长制造与自主科技精选标的，带来边际增量建仓支撑。", "Active equity mandates channel incremental institutional inflows into quality growth sectors.", 1.0, "159915.SZ"),
+                _bar("A股", "全市场核心权重与宽基流动性基准 (沪深300ETF 510300)", "CSI 300 Broad Liquidity Benchmark (510300)", 0.7, 2.2, "境内 ETF 产品谱系向国际主动 ETF 接轨，提升公募中长期资金入市留存率。", "Alignment with global active ETF standards deepens domestic institutional market liquidity.", 1.0, "510300.SH"),
+            ],
+            "if_then": [],
+            "milestones": [{"date": "上市首周", "status": "upcoming", "label": "观察首批主动 ETF 场内日均成交额、折溢价率与做市换手放量节奏"}],
+        }
 
     # 0b. A-Share Mainland Capital-Market Reform (split Fee-Cut 46B vs Margin Ratio 80% Cut)
     if (
@@ -1642,6 +1683,7 @@ def build_finance_impact_artifact(
     cat_docs: Optional[Dict[str, dict]] = None,
     breaking_highlights: Optional[List[dict]] = None,
     prev_doc: Optional[Dict[str, Any]] = None,
+    base_dir: Optional[Path] = None,
 ) -> Dict[str, Any]:
     """Generate structurally validated Event -> Direction -> Sector -> Stock impact maps."""
     if all_events is None and isinstance(cat_docs, dict):
@@ -1953,6 +1995,30 @@ def build_finance_impact_artifact(
                 if card_copy.get("qualifier_badge"):
                     m_entry["qualifier_badge"] = card_copy["qualifier_badge"]
                 event_impact_map[p_eid] = m_entry
+
+    # V13: Concurrent 13-Key Grounded Gemini AI Enrichment (cached per event_id)
+    try:
+        enrich_finance_impacts_with_gemini(
+            impacts,
+            event_impact_map,
+            root=Path(base_dir) if base_dir else None,
+            generated_at_iso=generated_at_iso,
+        )
+    except Exception as exc:
+        print(f"[finance_impact] V13 Gemini enrichment skipped: {exc}", flush=True)
+
+    # Unconditional zero-emoji scrub across all output cards & map entries
+    def _scrub_obj(obj: Any) -> Any:
+        if isinstance(obj, str):
+            return strip_finance_emojis(obj)
+        if isinstance(obj, list):
+            return [_scrub_obj(x) for x in obj]
+        if isinstance(obj, dict):
+            return {k: _scrub_obj(v) for k, v in obj.items()}
+        return obj
+
+    impacts = _scrub_obj(impacts)
+    event_impact_map = _scrub_obj(event_impact_map)
 
     return {
         "schema_version": "4.2",

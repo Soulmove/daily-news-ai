@@ -542,9 +542,16 @@ _WIRE_S_TIER_RE = re.compile(
     re.I,
 )
 _WIRE_S_EXCLUDE_RE = re.compile(r"(?:台湾|台湾地区|只要.*诉求|立场明确|呼吁对话|传递想法|保持密切对话)")
+_WIRE_NOISE_HEAVY_RE = re.compile(
+    r"(?:降价通知|api\s*降价|限时降价|促销|优惠|夜盘普遍|夜盘微涨|盘前微涨|中间价|上海钢联|现货报价|提议设|呼吁限制)",
+    re.I,
+)
 _WIRE_A_TIER_RE = re.compile(
     r"(?:自贸协定|百亿美元并购|法院禁售|出口管制|实体清单|重大漏洞|CVE|IPO.*(?:首日|募资)|"
-    r"(?:发布|上线|推出|开源).{0,14}(?:GPT-?\d|Claude|Gemini\s*\d|DeepSeek|Qwen)|央行.*纪要|国务院.*印发)",
+    r"主动ETF|股市稳定基金|平准基金|440亿|黎曼猜想|Mathlib|(?:涨价|提价).{0,8}45%|"
+    r"央行.*(?:降准|降息|利率|货币政策|LPR|纪要)|国务院.*印发|证监会|美联储|FOMC|中美元首|关税|"
+    r"(?:涨超|跌超|暴跌|飙升)\s*[2-9](?:\.\d+)?%|"
+    r"(?:发布|上线|推出|开源).{0,14}(?:GPT-?\d|Claude|Gemini\s*\d|DeepSeek|Qwen|GLM-\d|Kimi)|英伟达|SpaceX)",
     re.I,
 )
 _EXCHANGE_REFORM_CLUSTER_RE = re.compile(
@@ -560,7 +567,7 @@ def _classify_wire_severity(
     source_name: str,
 ) -> tuple[str, str]:
     """Classify wire item severity into S / A / B using authoritative sources + substantive impact."""
-    if is_hotlist_aggregator_source(source_id, source_name) or is_consumer_promo_or_fluff(title, excerpt):
+    if is_hotlist_aggregator_source(source_id, source_name) or is_consumer_promo_or_fluff(title, excerpt) or _WIRE_NOISE_HEAVY_RE.search(title):
         return "B", "常规动态"
     if _WIRE_S_EXCLUDE_RE.search(title):
         return "A" if _WIRE_A_TIER_RE.search(title) else "B", "常规动态"
@@ -662,6 +669,19 @@ def refresh_live_wire_file(base_dir: Path | str = ".", extra_items: Optional[Lis
 
     merged.sort(key=lambda x: str(x.get("published_at") or ""), reverse=True)
     merged = merged[:120]
+
+    # Calibrate 7x24 wire heavy alerts (~10-15 out of 120, S first then newest authoritative A, cap 15)
+    high_indices = [idx for idx, it in enumerate(merged) if it.get("importance") == "high"]
+    if len(high_indices) > 15:
+        keep_high = {idx for idx in high_indices if merged[idx].get("severity_tier") == "S"}
+        for idx in high_indices:
+            if len(keep_high) >= 15:
+                break
+            keep_high.add(idx)
+        for idx in high_indices:
+            if idx not in keep_high:
+                merged[idx]["severity_tier"] = "B"
+                merged[idx]["importance"] = "normal"
 
     # Fast-Track Promotion: cluster <12h authoritative S-tier wires into breaking_highlights for immediate homepage surfacing
     breaking_highlights: List[Dict[str, Any]] = []

@@ -1516,26 +1516,31 @@ def _compute_event_radar_score(ev: dict) -> int:
 _S_MACRO_POLICY_RE = re.compile(
     r"(?:三大交易所|沪深北交易所|融资保证金比例|释放\s*\d+(?:,\d+)?亿|降准|降息|LPR|"
     r"美联储.{0,12}(?:利率决议|加息|降息|FOMC)|"
-    r"中美元首.{0,16}(?:协议|联合声明|公报|关税)|"
+    r"中美元首.{0,16}(?:协议|联合声明|公报|关税|四点宣言|宣言|会晤)|深圳\s*APEC|"
+    r"股市稳定基金|平准基金|韩国.{0,10}股市稳定|"
     r"美伊.{0,14}(?:冲突|遇袭|霍尔木兹海峡封锁|停火)|"
     r"俄乌.{0,14}(?:停火|和平协议|大规模袭击)|"
-    r"黎曼猜想.{0,10}证明|菲尔兹奖|BepiColombo|水星轨道|神舟.{0,8}发射)",
+    r"广义?黎曼猜想.{0,14}(?:证明|认证|Lean|Mathlib)|菲尔兹奖|BepiColombo|水星轨道|神舟.{0,8}发射)",
     re.I,
 )
 _S_MAJOR_TECH_CORP_RE = re.compile(
-    r"(?:(?:发布|上线|推出|开源).{0,16}(?:GPT-?\d|Gemini\s*\d|Claude\s*\d|DeepSeek)|"
+    r"(?:(?!.*(?:降价|促销|优惠))(?:发布|上线|推出|开源).{0,16}(?:GPT-?\d|Gemini\s*\d|Claude\s*\d|DeepSeek)|"
     r"IPO.{0,12}(?:首日|创纪录|935亿|813亿)|万亿.{0,8}危机|"
-    r"英伟达.{0,12}(?:暴跌|换帅|出口管制|禁售)|星舰.{0,8}回收)",
+    r"440亿美元|SpaceX.{0,16}(?:GPU|筹措|融资)|(?:戴尔|HPE|超微|AI服务器).{0,16}(?:涨价|提价).{0,8}45%|最高提价\s*45%|"
+    r"英伟达.{0,12}(?:暴跌|换帅|出口管制|禁售)|SEC.{0,10}英伟达|星舰.{0,8}回收)",
     re.I,
 )
 _S_TECH_NOISE_GUARD_RE = re.compile(
-    r"(?:招聘|回答更简短|透明度|反蒸馏|渠道价|遭证监会立案|信息披露违法违规|专利侵权|控股股东|台湾|台湾地区)"
+    r"(?:招聘|回答更简短|透明度|反蒸馏|渠道价|遭证监会立案|信息披露违法违规|专利侵权|控股股东|台湾|台湾地区|"
+    r"降价通知|api\s*降价|调用降价|限时降价|优惠活动|促销|夜盘普遍|夜盘微涨|盘前微涨|盘前涨跌不一|提议设|呼吁限制|建议设立.*限制|建议限制)",
+    re.I,
 )
 _S_TIER_EVENT_RE = re.compile(f"(?:{_S_MACRO_POLICY_RE.pattern}|{_S_MAJOR_TECH_CORP_RE.pattern})", re.I)
 _A_TIER_EVENT_RE = re.compile(
     r"(?:自贸协定|自由贸易协定|百亿美元并购|欧盟.{0,10}禁售|法院禁令|出口管制|实体清单|菲尔兹奖|梅纳德|BepiColombo|水星轨道|"
     r"神舟.{0,8}(?:发射|合练)|COP31|气候大会|气候变化大会|关税|黄金.{0,8}暴跌|比特币.{0,8}(?:跌破|突破)|并购|收购.{0,8}亿美元|"
-    r"OpenAI|Anthropic|Google|DeepSeek|Qwen|英伟达|NVIDIA|特斯拉|FSD|SpaceX)",
+    r"股市稳定基金|440亿|最高提价\s*45%|AI服务器.{0,12}(?:涨价|提价)|中美元首|四点宣言|主动ETF|黎曼猜想|Mathlib|"
+    r"(?!.*(?:降价通知|夜盘|提议设))OpenAI|Anthropic|Google|DeepSeek|Qwen|英伟达|NVIDIA|特斯拉|FSD|SpaceX)",
     re.I,
 )
 
@@ -1652,15 +1657,46 @@ def calibrate_sitewide_severity_tiers(cat_docs: Dict[str, dict], now_dt: Any = N
 
     s_candidates.sort(key=lambda x: x[0], reverse=True)
     total_events = len(all_evs)
-    max_sa_budget = max(3, int(total_events * 0.25))
+    max_sa_budget = max(6, min(14, int(total_events * 0.28)))
+
+    used_heavy_storylines: set[str] = set()
+    used_heavy_titles: List[str] = []
+
+    def _is_heavy_duplicate(ev: dict) -> bool:
+        sid = str(ev.get("storyline_id") or "").strip()
+        if sid and sid in used_heavy_storylines:
+            return True
+        t_cur = str(ev.get("title") or "").strip()
+        low_cur = t_cur.lower()
+        for prev_t in used_heavy_titles:
+            if title_similarity(t_cur, prev_t) >= 0.36:
+                return True
+            low_p = prev_t.lower()
+            for a, b in (("jakub", "openai"), ("cop31", "气候"), ("融资保证金", "80%")):
+                if a in low_cur and b in low_cur and a in low_p and b in low_p:
+                    return True
+        return False
+
+    def _record_heavy(ev: dict) -> None:
+        sid = str(ev.get("storyline_id") or "").strip()
+        if sid:
+            used_heavy_storylines.add(sid)
+        t_cur = str(ev.get("title") or "").strip()
+        if t_cur:
+            used_heavy_titles.append(t_cur)
 
     s_count = 0
     demoted_to_a: List[Tuple[tuple, dict]] = []
+    demoted_dups: List[dict] = []
     for key_t, ev in s_candidates:
-        if s_count < 3 and s_count < max_sa_budget:
+        if _is_heavy_duplicate(ev):
+            demoted_dups.append(ev)
+            continue
+        if s_count < 4 and s_count < max_sa_budget:
             ev["severity_tier"] = "S"
             ev["severity_label"] = "S级重磅"
             ev["importance"] = "high"
+            _record_heavy(ev)
             s_count += 1
         else:
             demoted_to_a.append((key_t, ev))
@@ -1671,16 +1707,26 @@ def calibrate_sitewide_severity_tiers(cat_docs: Dict[str, dict], now_dt: Any = N
 
     a_count = 0
     for _, ev in merged_a:
-        if a_count < remaining_a:
+        if _is_heavy_duplicate(ev):
+            demoted_dups.append(ev)
+            continue
+        if a_count < remaining_a and not _S_TECH_NOISE_GUARD_RE.search(str(ev.get("title") or "")):
             ev["severity_tier"] = "A"
             ev["severity_label"] = "A级要闻"
             ev["importance"] = "high"
+            _record_heavy(ev)
             a_count += 1
         else:
             radar = int(ev.get("radar_score") or 0)
             ev["severity_tier"] = "B"
             ev["severity_label"] = "B级常规"
             ev["importance"] = "medium" if radar >= 50 else "normal"
+
+    for ev in demoted_dups:
+        radar = int(ev.get("radar_score") or 0)
+        ev["severity_tier"] = "B"
+        ev["severity_label"] = "B级常规"
+        ev["importance"] = "medium" if radar >= 50 else "normal"
 
 
 def _postprocess_and_prune_cross_category(
@@ -2144,6 +2190,7 @@ def build_briefing_batch(
         prev_batch_id=prev_batch_id,
         connectors_payload=connectors_payload,
         raw_items_by_cat=raw_by_cat,
+        abs_smart_dir=abs_smart_dir,
     )
     print(f"🧠 Finished build_v3_artifacts in {time.monotonic() - v3_t0:.1f}s", flush=True)
 

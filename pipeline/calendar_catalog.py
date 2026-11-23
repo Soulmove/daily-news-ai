@@ -986,6 +986,7 @@ _EN_WEEKDAYS = {
 _BREAKING_NOISE_RE = re.compile(
     r"(?:围巾|座驾|同框|开了个玩笑|花絮|是否将举行|没有这方面的信息|美方代表有哪些|发言人回应|外交部回应|"
     r"邀请.{0,12}组阁|呼吁.{0,10}停火|考虑.{0,10}征税|传闻称|或将讨论|股市表现|股价表现|涨停|跌停|大跌|大涨|"
+    r"上海钢联|早盘中间价|现货报价|中间价报|均价报|报\d+.*元/吨|碳酸锂.*(?:报价|中间价|均价)|电池级.*价|生猪价格|猪价|报价持平|较上一交易日|"
     r"IPO后|上市后|复盘|盘点|回顾|闭幕|落幕|已于|此前|上周|昨日|昨天|after\s+ipo|post-?ipo)",
     re.I,
 )
@@ -1364,6 +1365,8 @@ def _infer_location(item: Dict[str, Any], blob: str) -> Tuple[str, str, str]:
     if reg in CALENDAR_REGION_LABELS and country:
         return reg, country, city
     city_rules = [
+        ("沪深北交易所", "china", "中国", "上海/深圳/北京"),
+        ("沪深交易所|上交所|深交所|北交所|证监会|主动etf|融资保证金|a股", "china", "中国", "上海/深圳"),
         ("深圳", "china", "中国", "深圳"),
         ("广州", "china", "中国", "广州"),
         ("上海", "china", "中国", "上海"),
