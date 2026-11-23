@@ -1532,7 +1532,8 @@ _S_MAJOR_TECH_CORP_RE = re.compile(
 )
 _S_TECH_NOISE_GUARD_RE = re.compile(
     r"(?:招聘|回答更简短|透明度|反蒸馏|渠道价|遭证监会立案|信息披露违法违规|专利侵权|控股股东|台湾|台湾地区|"
-    r"降价通知|api\s*降价|调用降价|限时降价|优惠活动|促销|夜盘普遍|夜盘微涨|盘前微涨|盘前涨跌不一|提议设|呼吁限制|建议设立.*限制|建议限制)",
+    r"降价通知|api\s*降价|调用降价|限时降价|优惠活动|促销|夜盘普遍|夜盘微涨|盘前微涨|盘前涨跌不一|"
+    r"提议(?:设|将|用).{0,28}(?:限制|开发限制|挂钩|门槛)|呼吁限制|建议设立.*限制|建议限制)",
     re.I,
 )
 _S_TIER_EVENT_RE = re.compile(f"(?:{_S_MACRO_POLICY_RE.pattern}|{_S_MAJOR_TECH_CORP_RE.pattern})", re.I)
@@ -1540,7 +1541,7 @@ _A_TIER_EVENT_RE = re.compile(
     r"(?:自贸协定|自由贸易协定|百亿美元并购|欧盟.{0,10}禁售|法院禁令|出口管制|实体清单|菲尔兹奖|梅纳德|BepiColombo|水星轨道|"
     r"神舟.{0,8}(?:发射|合练)|COP31|气候大会|气候变化大会|关税|黄金.{0,8}暴跌|比特币.{0,8}(?:跌破|突破)|并购|收购.{0,8}亿美元|"
     r"股市稳定基金|440亿|最高提价\s*45%|AI服务器.{0,12}(?:涨价|提价)|中美元首|四点宣言|主动ETF|黎曼猜想|Mathlib|"
-    r"(?!.*(?:降价通知|夜盘|提议设))OpenAI|Anthropic|Google|DeepSeek|Qwen|英伟达|NVIDIA|特斯拉|FSD|SpaceX)",
+    r"(?!.*(?:降价通知|夜盘|提议(?:设|将|用)))OpenAI|Anthropic|Google|DeepSeek|Qwen|英伟达|NVIDIA|特斯拉|FSD|SpaceX)",
     re.I,
 )
 
@@ -1672,7 +1673,7 @@ def calibrate_sitewide_severity_tiers(cat_docs: Dict[str, dict], now_dt: Any = N
             if title_similarity(t_cur, prev_t) >= 0.36:
                 return True
             low_p = prev_t.lower()
-            for a, b in (("jakub", "openai"), ("cop31", "气候"), ("融资保证金", "80%")):
+            for a, b in (("jakub", "openai"), ("cop31", "气候"), ("融资保证金", "80%"), ("融资保证金", "融资保证金")):
                 if a in low_cur and b in low_cur and a in low_p and b in low_p:
                     return True
         return False

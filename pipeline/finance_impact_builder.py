@@ -1961,6 +1961,20 @@ def build_finance_impact_artifact(
 
             card_copy = dict(prev_card)
             card_copy["carried_over"] = True
+            has_old_boiler = "表层消息面快速反应后" in (card_copy.get("priced_in_analysis") or {}).get("expectation_gap", "")
+            needs_etf_split = "主动" in p_title and "etf" in p_title.lower() and p_rid != "a_share_active_etf_launch"
+            if has_old_boiler or needs_etf_split:
+                fresh_scen = _build_domain_scenario(f"{p_title} {p_summary}", p_title, quotes_map)
+                if fresh_scen is not None:
+                    card_copy["rule_id"] = fresh_scen["rule_id"]
+                    card_copy["tag"] = fresh_scen["tag"]
+                    card_copy["tag_en"] = fresh_scen["tag_en"]
+                    card_copy["one_liner"] = fresh_scen["one_liner"]
+                    card_copy["one_liner_en"] = fresh_scen["one_liner_en"]
+                    card_copy["bars"] = fresh_scen["bars"]
+                    enrich_card_deep_research(card_copy, {"event_id": p_eid, "title": p_title, "fact_summary": p_summary}, fresh_scen, quotes_map)
+                    p_rid = fresh_scen["rule_id"]
+                    p_ol = card_copy["one_liner"]
             ev_t, ev_l = infer_event_evidence_tier(
                 {"sources": card_copy.get("sources") or []}, p_title, p_summary
             )

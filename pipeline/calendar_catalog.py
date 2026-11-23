@@ -1367,6 +1367,9 @@ def _infer_location(item: Dict[str, Any], blob: str) -> Tuple[str, str, str]:
     city_rules = [
         ("沪深北交易所", "china", "中国", "上海/深圳/北京"),
         ("沪深交易所|上交所|深交所|北交所|证监会|主动etf|融资保证金|a股", "china", "中国", "上海/深圳"),
+        ("蚂蚁|阿里|杭州", "china", "中国", "杭州"),
+        ("智元|长电科技|国产算力|创业板", "china", "中国", "上海/深圳"),
+        ("国内首个|我国|中科院|清华|北大|zhu·ge|四部门", "china", "中国", "北京"),
         ("深圳", "china", "中国", "深圳"),
         ("广州", "china", "中国", "广州"),
         ("上海", "china", "中国", "上海"),
@@ -1403,8 +1406,9 @@ def enrich_calendar_item_metadata(item: Dict[str, Any], generated_dt: datetime) 
     """Attach event_type, region, location_display, and countdown_days onto any calendar record."""
     out = dict(item)
     blob = f"{out.get('title') or ''} {out.get('original_time_note') or ''} {out.get('source_name') or ''}"
+    loc_blob = f"{out.get('title') or ''} {out.get('title_en') or ''}"
     et = _infer_event_type(out, blob.lower())
-    reg, country, city = _infer_location(out, blob)
+    reg, country, city = _infer_location(out, loc_blob)
 
     out["event_type"] = et
     out["event_type_label"] = CALENDAR_EVENT_TYPE_LABELS.get(et, "重磅排期")

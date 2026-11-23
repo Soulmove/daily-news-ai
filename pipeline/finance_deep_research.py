@@ -1770,7 +1770,7 @@ def enrich_finance_impacts_with_gemini(
 
     if collect_api_key_slots():
         need_fetch: List[Tuple[str, Dict[str, Any]]] = []
-        for card in impacts[:14]:
+        for card in impacts:
             eid = str(card.get("event_id") or "").strip()
             tkey = re.sub(r"[\s\W]+", "", str(card.get("event_title") or "").lower())[:28]
             ckey = eid or tkey
@@ -1778,7 +1778,7 @@ def enrich_finance_impacts_with_gemini(
                 need_fetch.append((ckey, card))
         if need_fetch:
             with ThreadPoolExecutor(max_workers=6) as pool:
-                futs = {pool.submit(_fetch_single_card_ai_research, card, root): (ckey, card) for ckey, card in need_fetch[:10]}
+                futs = {pool.submit(_fetch_single_card_ai_research, card, root): (ckey, card) for ckey, card in need_fetch[:12]}
                 for fut in as_completed(futs):
                     ckey, card = futs[fut]
                     try:

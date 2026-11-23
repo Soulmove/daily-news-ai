@@ -1728,6 +1728,16 @@ def build_v3_artifacts(
             "events": calendar_items[:90],
         },
     )
+    def _scrub_tool_emojis(obj: Any) -> Any:
+        if isinstance(obj, str):
+            return re.sub(r"[\U0001F300-\U0001FAFF\u2600-\u27BF\uFE0F\u200D]+", "", obj).strip()
+        if isinstance(obj, list):
+            return [_scrub_tool_emojis(x) for x in obj]
+        if isinstance(obj, dict):
+            return {k: _scrub_tool_emojis(v) for k, v in obj.items()}
+        return obj
+
+    final_tools = _scrub_tool_emojis(final_tools)
     atomic_write_json(
         root / "data/tech_tools.json",
         {
