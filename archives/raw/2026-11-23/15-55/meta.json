@@ -1,11 +1,11 @@
 {
   "schema_version": "3.0",
   "batch_type": "raw",
-  "batch_id": "raw-20261123-110235",
-  "fetched_at": "2026-11-23T11:02:35+08:00",
-  "published_at": "2026-11-23T11:03:11+08:00",
+  "batch_id": "raw-20261123-155513",
+  "fetched_at": "2026-11-23T15:55:13+08:00",
+  "published_at": "2026-11-23T15:55:56+08:00",
   "target_cadence_minutes": 60,
-  "schedule_source": "workflow_dispatch",
+  "schedule_source": "ai_compensation_schedule",
   "crawl_status": "partial",
   "summary": {
     "configured_sources": 77,
@@ -14,57 +14,57 @@
     "error_sources": 1,
     "stale_sources": 0,
     "retired_sources": 5,
-    "total_raw_items": 1449,
+    "total_raw_items": 1443,
     "first_party_items": 30,
     "healthy_connectors": 7,
     "total_connectors": 7,
-    "deep_fetched_enriched": 13,
-    "deduped_events": 1235
+    "deep_fetched_enriched": 23,
+    "deduped_events": 1246
   },
   "categories": {
     "finance": {
       "file": "data_finance.json",
-      "path": "archives/raw/2026-11-23/11-02/data_finance.json",
+      "path": "archives/raw/2026-11-23/15-55/data_finance.json",
       "status": "ok",
       "source_count": 19,
       "ok_sources": 19,
       "error_sources": 0,
       "empty_sources": 0,
       "stale_sources": 0,
-      "item_count": 397
+      "item_count": 391
     },
     "global": {
       "file": "data_global.json",
-      "path": "archives/raw/2026-11-23/11-02/data_global.json",
+      "path": "archives/raw/2026-11-23/15-55/data_global.json",
       "status": "ok",
       "source_count": 13,
       "ok_sources": 13,
       "error_sources": 0,
       "empty_sources": 0,
       "stale_sources": 0,
-      "item_count": 255
+      "item_count": 257
     },
     "tech": {
       "file": "data_tech.json",
-      "path": "archives/raw/2026-11-23/11-02/data_tech.json",
+      "path": "archives/raw/2026-11-23/15-55/data_tech.json",
       "status": "partial",
       "source_count": 30,
       "ok_sources": 25,
       "error_sources": 1,
       "empty_sources": 4,
       "stale_sources": 0,
-      "item_count": 456
+      "item_count": 457
     },
     "general": {
       "file": "data_general.json",
-      "path": "archives/raw/2026-11-23/11-02/data_general.json",
+      "path": "archives/raw/2026-11-23/15-55/data_general.json",
       "status": "ok",
       "source_count": 15,
       "ok_sources": 15,
       "error_sources": 0,
       "empty_sources": 0,
       "stale_sources": 0,
-      "item_count": 341
+      "item_count": 338
     }
   },
   "sources": [
@@ -75,16 +75,17 @@
       "kind": "news",
       "expected_interval_minutes": 30,
       "status": "ok",
-      "http_status": 304,
-      "upstream_status": "cached_within_cadence",
-      "upstream_updated_at": "2026-11-23T10:45:58+08:00",
-      "fetched_at": "2026-11-23T10:45:57+08:00",
-      "last_success_at": "2026-11-23T10:45:58+08:00",
+      "http_status": 200,
+      "upstream_status": "cache",
+      "upstream_updated_at": "2026-11-23T15:55:14+08:00",
+      "fetched_at": "2026-11-23T15:55:13+08:00",
+      "last_success_at": "2026-11-23T15:55:14+08:00",
       "item_count": 10,
+      "skipped_invalid_items": 0,
       "pub_date_coverage": 0.0,
       "error_message": null,
       "fallback_used": false,
-      "reused_within_cadence": true
+      "fallback_item_count": 0
     },
     {
       "id": "wallstreetcn-news",
@@ -93,16 +94,17 @@
       "kind": "news",
       "expected_interval_minutes": 30,
       "status": "ok",
-      "http_status": 304,
-      "upstream_status": "cached_within_cadence",
-      "upstream_updated_at": "2026-11-23T10:45:58+08:00",
-      "fetched_at": "2026-11-23T10:45:57+08:00",
-      "last_success_at": "2026-11-23T10:45:58+08:00",
+      "http_status": 200,
+      "upstream_status": "cache",
+      "upstream_updated_at": "2026-11-23T15:55:14+08:00",
+      "fetched_at": "2026-11-23T15:55:13+08:00",
+      "last_success_at": "2026-11-23T15:55:14+08:00",
       "item_count": 25,
+      "skipped_invalid_items": 2,
       "pub_date_coverage": 1.0,
       "error_message": null,
       "fallback_used": false,
-      "reused_within_cadence": true
+      "fallback_item_count": 0
     },
     {
       "id": "wallstreetcn-quick",
@@ -113,9 +115,9 @@
       "status": "ok",
       "http_status": 200,
       "upstream_status": "cache",
-      "upstream_updated_at": "2026-11-23T11:02:36+08:00",
-      "fetched_at": "2026-11-23T11:02:35+08:00",
-      "last_success_at": "2026-11-23T11:02:36+08:00",
+      "upstream_updated_at": "2026-11-23T15:39:15+08:00",
+      "fetched_at": "2026-11-23T15:55:13+08:00",
+      "last_success_at": "2026-11-23T15:39:15+08:00",
       "item_count": 30,
       "skipped_invalid_items": 0,
       "pub_date_coverage": 1.0,
@@ -132,11 +134,11 @@
       "status": "ok",
       "http_status": 200,
       "upstream_status": "cache",
-      "upstream_updated_at": "2026-11-23T10:34:30+08:00",
-      "fetched_at": "2026-11-23T11:02:35+08:00",
-      "last_success_at": "2026-11-23T10:34:30+08:00",
-      "item_count": 13,
-      "skipped_invalid_items": 0,
+      "upstream_updated_at": "2026-11-23T15:26:01+08:00",
+      "fetched_at": "2026-11-23T15:55:13+08:00",
+      "last_success_at": "2026-11-23T15:26:01+08:00",
+      "item_count": 12,
+      "skipped_invalid_items": 1,
       "pub_date_coverage": 0.0,
       "error_message": null,
       "fallback_used": false,
@@ -149,16 +151,17 @@
       "kind": "news",
       "expected_interval_minutes": 30,
       "status": "ok",
-      "http_status": 304,
-      "upstream_status": "cached_within_cadence",
-      "upstream_updated_at": "2026-11-23T10:45:58+08:00",
-      "fetched_at": "2026-11-23T10:45:57+08:00",
-      "last_success_at": "2026-11-23T10:45:58+08:00",
+      "http_status": 200,
+      "upstream_status": "cache",
+      "upstream_updated_at": "2026-11-23T15:55:14+08:00",
+      "fetched_at": "2026-11-23T15:55:13+08:00",
+      "last_success_at": "2026-11-23T15:55:14+08:00",
       "item_count": 29,
+      "skipped_invalid_items": 0,
       "pub_date_coverage": 1.0,
       "error_message": null,
       "fallback_used": false,
-      "reused_within_cadence": true
+      "fallback_item_count": 0
     },
     {
       "id": "cls-telegraph",
@@ -169,9 +172,9 @@
       "status": "ok",
       "http_status": 200,
       "upstream_status": "cache",
-      "upstream_updated_at": "2026-11-23T10:57:36+08:00",
-      "fetched_at": "2026-11-23T11:02:35+08:00",
-      "last_success_at": "2026-11-23T10:57:36+08:00",
+      "upstream_updated_at": "2026-11-23T15:47:57+08:00",
+      "fetched_at": "2026-11-23T15:55:13+08:00",
+      "last_success_at": "2026-11-23T15:47:57+08:00",
       "item_count": 30,
       "skipped_invalid_items": 0,
       "pub_date_coverage": 1.0,
@@ -188,9 +191,9 @@
       "status": "ok",
       "http_status": 200,
       "upstream_status": "cache",
-      "upstream_updated_at": "2026-11-23T10:34:31+08:00",
-      "fetched_at": "2026-11-23T11:02:35+08:00",
-      "last_success_at": "2026-11-23T10:34:31+08:00",
+      "upstream_updated_at": "2026-11-23T15:35:11+08:00",
+      "fetched_at": "2026-11-23T15:55:13+08:00",
+      "last_success_at": "2026-11-23T15:35:11+08:00",
       "item_count": 15,
       "skipped_invalid_items": 0,
       "pub_date_coverage": 1.0,
@@ -207,11 +210,11 @@
       "status": "ok",
       "http_status": 200,
       "upstream_status": "cache",
-      "upstream_updated_at": "2026-11-23T11:02:36+08:00",
-      "fetched_at": "2026-11-23T11:02:35+08:00",
-      "last_success_at": "2026-11-23T11:02:36+08:00",
-      "item_count": 29,
-      "skipped_invalid_items": 1,
+      "upstream_updated_at": "2026-11-23T15:55:14+08:00",
+      "fetched_at": "2026-11-23T15:55:13+08:00",
+      "last_success_at": "2026-11-23T15:55:14+08:00",
+      "item_count": 28,
+      "skipped_invalid_items": 0,
       "pub_date_coverage": 1.0,
       "error_message": null,
       "fallback_used": false,
@@ -226,9 +229,9 @@
       "status": "ok",
       "http_status": 200,
       "upstream_status": "cache",
-      "upstream_updated_at": "2026-11-23T10:45:46+08:00",
-      "fetched_at": "2026-11-23T11:02:35+08:00",
-      "last_success_at": "2026-11-23T10:45:46+08:00",
+      "upstream_updated_at": "2026-11-23T15:25:55+08:00",
+      "fetched_at": "2026-11-23T15:55:13+08:00",
+      "last_success_at": "2026-11-23T15:25:55+08:00",
       "item_count": 30,
       "skipped_invalid_items": 0,
       "pub_date_coverage": 1.0,
@@ -245,9 +248,9 @@
       "status": "ok",
       "http_status": 200,
       "upstream_status": "cache",
-      "upstream_updated_at": "2026-11-23T10:44:43+08:00",
-      "fetched_at": "2026-11-23T11:02:35+08:00",
-      "last_success_at": "2026-11-23T10:44:43+08:00",
+      "upstream_updated_at": "2026-11-23T15:45:26+08:00",
+      "fetched_at": "2026-11-23T15:55:13+08:00",
+      "last_success_at": "2026-11-23T15:45:26+08:00",
       "item_count": 30,
       "skipped_invalid_items": 0,
       "pub_date_coverage": 1.0,
@@ -262,16 +265,17 @@
       "kind": "news",
       "expected_interval_minutes": 30,
       "status": "ok",
-      "http_status": 304,
-      "upstream_status": "cached_within_cadence",
-      "upstream_updated_at": "2026-11-23T10:45:58+08:00",
-      "fetched_at": "2026-11-23T10:45:57+08:00",
-      "last_success_at": "2026-11-23T10:45:58+08:00",
+      "http_status": 200,
+      "upstream_status": "cache",
+      "upstream_updated_at": "2026-11-23T15:55:14+08:00",
+      "fetched_at": "2026-11-23T15:55:13+08:00",
+      "last_success_at": "2026-11-23T15:55:14+08:00",
       "item_count": 1,
+      "skipped_invalid_items": 29,
       "pub_date_coverage": 1.0,
       "error_message": null,
       "fallback_used": false,
-      "reused_within_cadence": true
+      "fallback_item_count": 0
     },
     {
       "id": "xueqiu-hotstock",
@@ -282,9 +286,9 @@
       "status": "ok",
       "http_status": 200,
       "upstream_status": "cache",
-      "upstream_updated_at": "2026-11-23T11:02:36+08:00",
-      "fetched_at": "2026-11-23T11:02:35+08:00",
-      "last_success_at": "2026-11-23T11:02:36+08:00",
+      "upstream_updated_at": "2026-11-23T15:33:49+08:00",
+      "fetched_at": "2026-11-23T15:55:13+08:00",
+      "last_success_at": "2026-11-23T15:33:49+08:00",
       "item_count": 8,
       "skipped_invalid_items": 0,
       "pub_date_coverage": 0.0,
@@ -301,9 +305,9 @@
       "status": "ok",
       "http_status": 200,
       "upstream_status": "cache",
-      "upstream_updated_at": "2026-11-23T10:50:32+08:00",
-      "fetched_at": "2026-11-23T11:02:35+08:00",
-      "last_success_at": "2026-11-23T10:50:32+08:00",
+      "upstream_updated_at": "2026-11-23T15:55:14+08:00",
+      "fetched_at": "2026-11-23T15:55:13+08:00",
+      "last_success_at": "2026-11-23T15:55:14+08:00",
       "item_count": 30,
       "skipped_invalid_items": 0,
       "pub_date_coverage": 1.0,
@@ -318,16 +322,17 @@
       "kind": "news",
       "expected_interval_minutes": 20,
       "status": "ok",
-      "http_status": 304,
-      "upstream_status": "cached_within_cadence",
-      "upstream_updated_at": "2026-11-23T10:45:58+08:00",
-      "fetched_at": "2026-11-23T10:45:57+08:00",
-      "last_success_at": "2026-11-23T10:45:58+08:00",
-      "item_count": 28,
+      "http_status": 200,
+      "upstream_status": "cache",
+      "upstream_updated_at": "2026-11-23T15:34:21+08:00",
+      "fetched_at": "2026-11-23T15:55:13+08:00",
+      "last_success_at": "2026-11-23T15:34:21+08:00",
+      "item_count": 29,
+      "skipped_invalid_items": 1,
       "pub_date_coverage": 1.0,
       "error_message": null,
       "fallback_used": false,
-      "reused_within_cadence": true
+      "fallback_item_count": 0
     },
     {
       "id": "sspai",
@@ -336,16 +341,17 @@
       "kind": "news",
       "expected_interval_minutes": 30,
       "status": "ok",
-      "http_status": 304,
-      "upstream_status": "cached_within_cadence",
-      "upstream_updated_at": "2026-11-23T10:45:58+08:00",
-      "fetched_at": "2026-11-23T10:45:57+08:00",
-      "last_success_at": "2026-11-23T10:45:58+08:00",
+      "http_status": 200,
+      "upstream_status": "cache",
+      "upstream_updated_at": "2026-11-23T15:43:20+08:00",
+      "fetched_at": "2026-11-23T15:55:13+08:00",
+      "last_success_at": "2026-11-23T15:43:20+08:00",
       "item_count": 30,
+      "skipped_invalid_items": 0,
       "pub_date_coverage": 0.0,
       "error_message": null,
       "fallback_used": false,
-      "reused_within_cadence": true
+      "fallback_item_count": 0
     },
     {
       "id": "juejin",
@@ -354,16 +360,17 @@
       "kind": "news",
       "expected_interval_minutes": 20,
       "status": "ok",
-      "http_status": 304,
-      "upstream_status": "cached_within_cadence",
-      "upstream_updated_at": "2026-11-23T10:45:58+08:00",
-      "fetched_at": "2026-11-23T10:45:57+08:00",
-      "last_success_at": "2026-11-23T10:45:58+08:00",
+      "http_status": 200,
+      "upstream_status": "cache",
+      "upstream_updated_at": "2026-11-23T15:41:51+08:00",
+      "fetched_at": "2026-11-23T15:55:13+08:00",
+      "last_success_at": "2026-11-23T15:41:51+08:00",
       "item_count": 30,
+      "skipped_invalid_items": 0,
       "pub_date_coverage": 0.0,
       "error_message": null,
       "fallback_used": false,
-      "reused_within_cadence": true
+      "fallback_item_count": 0
     },
     {
       "id": "coolapk",
@@ -374,9 +381,9 @@
       "status": "ok",
       "http_status": 200,
       "upstream_status": "cache",
-      "upstream_updated_at": "2026-11-23T11:02:36+08:00",
-      "fetched_at": "2026-11-23T11:02:35+08:00",
-      "last_success_at": "2026-11-23T11:02:36+08:00",
+      "upstream_updated_at": "2026-11-23T15:25:45+08:00",
+      "fetched_at": "2026-11-23T15:55:13+08:00",
+      "last_success_at": "2026-11-23T15:25:45+08:00",
       "item_count": 19,
       "skipped_invalid_items": 0,
       "pub_date_coverage": 0.0,
@@ -393,11 +400,11 @@
       "status": "ok",
       "http_status": 200,
       "upstream_status": "cache",
-      "upstream_updated_at": "2026-11-23T10:51:16+08:00",
-      "fetched_at": "2026-11-23T11:02:35+08:00",
-      "last_success_at": "2026-11-23T10:51:16+08:00",
-      "item_count": 25,
-      "skipped_invalid_items": 5,
+      "upstream_updated_at": "2026-11-23T15:55:14+08:00",
+      "fetched_at": "2026-11-23T15:55:13+08:00",
+      "last_success_at": "2026-11-23T15:55:14+08:00",
+      "item_count": 26,
+      "skipped_invalid_items": 4,
       "pub_date_coverage": 1.0,
       "error_message": null,
       "fallback_used": false,
@@ -410,16 +417,17 @@
       "kind": "repo",
       "expected_interval_minutes": 60,
       "status": "ok",
-      "http_status": 304,
-      "upstream_status": "cached_within_cadence",
-      "upstream_updated_at": "2026-11-23T10:35:55+08:00",
-      "fetched_at": "2026-11-23T10:45:57+08:00",
-      "last_success_at": "2026-11-23T10:35:55+08:00",
+      "http_status": 200,
+      "upstream_status": "cache",
+      "upstream_updated_at": "2026-11-23T15:55:14+08:00",
+      "fetched_at": "2026-11-23T15:55:13+08:00",
+      "last_success_at": "2026-11-23T15:55:14+08:00",
       "item_count": 16,
+      "skipped_invalid_items": 0,
       "pub_date_coverage": 0.0,
       "error_message": null,
       "fallback_used": false,
-      "reused_within_cadence": true
+      "fallback_item_count": 0
     },
     {
       "id": "producthunt",
@@ -428,16 +436,17 @@
       "kind": "repo",
       "expected_interval_minutes": 60,
       "status": "ok",
-      "http_status": 304,
-      "upstream_status": "cached_within_cadence",
-      "upstream_updated_at": "2026-11-23T10:45:58+08:00",
-      "fetched_at": "2026-11-23T10:45:57+08:00",
-      "last_success_at": "2026-11-23T10:45:58+08:00",
+      "http_status": 200,
+      "upstream_status": "cache",
+      "upstream_updated_at": "2026-11-23T15:42:38+08:00",
+      "fetched_at": "2026-11-23T15:55:13+08:00",
+      "last_success_at": "2026-11-23T15:42:38+08:00",
       "item_count": 20,
+      "skipped_invalid_items": 0,
       "pub_date_coverage": 0.0,
       "error_message": null,
       "fallback_used": false,
-      "reused_within_cadence": true
+      "fallback_item_count": 0
     },
     {
       "id": "v2ex-share",
@@ -446,16 +455,17 @@
       "kind": "discussion",
       "expected_interval_minutes": 30,
       "status": "ok",
-      "http_status": 304,
-      "upstream_status": "cached_within_cadence",
-      "upstream_updated_at": "2026-11-23T10:45:58+08:00",
-      "fetched_at": "2026-11-23T10:45:57+08:00",
-      "last_success_at": "2026-11-23T10:45:58+08:00",
-      "item_count": 30,
+      "http_status": 200,
+      "upstream_status": "cache",
+      "upstream_updated_at": "2026-11-23T15:55:14+08:00",
+      "fetched_at": "2026-11-23T15:55:13+08:00",
+      "last_success_at": "2026-11-23T15:55:14+08:00",
+      "item_count": 29,
+      "skipped_invalid_items": 1,
       "pub_date_coverage": 1.0,
       "error_message": null,
       "fallback_used": false,
-      "reused_within_cadence": true
+      "fallback_item_count": 0
     },
     {
       "id": "freebuf",
@@ -466,11 +476,11 @@
       "status": "ok",
       "http_status": 200,
       "upstream_status": "cache",
-      "upstream_updated_at": "2026-11-23T11:02:36+08:00",
-      "fetched_at": "2026-11-23T11:02:35+08:00",
-      "last_success_at": "2026-11-23T11:02:36+08:00",
-      "item_count": 18,
-      "skipped_invalid_items": 2,
+      "upstream_updated_at": "2026-11-23T14:31:29+08:00",
+      "fetched_at": "2026-11-23T15:55:13+08:00",
+      "last_success_at": "2026-11-23T14:31:29+08:00",
+      "item_count": 19,
+      "skipped_invalid_items": 1,
       "pub_date_coverage": 1.0,
       "error_message": null,
       "fallback_used": false,
@@ -483,16 +493,17 @@
       "kind": "news",
       "expected_interval_minutes": 60,
       "status": "ok",
-      "http_status": 304,
-      "upstream_status": "cached_within_cadence",
-      "upstream_updated_at": "2026-11-23T10:45:58+08:00",
-      "fetched_at": "2026-11-23T10:45:57+08:00",
-      "last_success_at": "2026-11-23T10:45:58+08:00",
-      "item_count": 20,
+      "http_status": 200,
+      "upstream_status": "cache",
+      "upstream_updated_at": "2026-11-23T15:55:14+08:00",
+      "fetched_at": "2026-11-23T15:55:13+08:00",
+      "last_success_at": "2026-11-23T15:55:14+08:00",
+      "item_count": 18,
+      "skipped_invalid_items": 2,
       "pub_date_coverage": 1.0,
       "error_message": null,
       "fallback_used": false,
-      "reused_within_cadence": true
+      "fallback_item_count": 0
     },
     {
       "id": "pcbeta-windows11",
@@ -503,9 +514,9 @@
       "status": "ok",
       "http_status": 200,
       "upstream_status": "cache",
-      "upstream_updated_at": "2026-11-23T10:57:21+08:00",
-      "fetched_at": "2026-11-23T11:02:35+08:00",
-      "last_success_at": "2026-11-23T10:57:21+08:00",
+      "upstream_updated_at": "2026-11-23T15:46:58+08:00",
+      "fetched_at": "2026-11-23T15:55:13+08:00",
+      "last_success_at": "2026-11-23T15:46:58+08:00",
       "item_count": 20,
       "skipped_invalid_items": 0,
       "pub_date_coverage": 1.0,
@@ -520,16 +531,17 @@
       "kind": "news",
       "expected_interval_minutes": 30,
       "status": "ok",
-      "http_status": 304,
-      "upstream_status": "cached_within_cadence",
-      "upstream_updated_at": "2026-11-23T10:45:58+08:00",
-      "fetched_at": "2026-11-23T10:45:57+08:00",
-      "last_success_at": "2026-11-23T10:45:58+08:00",
+      "http_status": 200,
+      "upstream_status": "cache",
+      "upstream_updated_at": "2026-11-23T15:55:14+08:00",
+      "fetched_at": "2026-11-23T15:55:13+08:00",
+      "last_success_at": "2026-11-23T15:55:14+08:00",
       "item_count": 30,
+      "skipped_invalid_items": 0,
       "pub_date_coverage": 1.0,
       "error_message": null,
       "fallback_used": false,
-      "reused_within_cadence": true
+      "fallback_item_count": 0
     },
     {
       "id": "sputniknewscn",
@@ -538,16 +550,17 @@
       "kind": "news",
       "expected_interval_minutes": 30,
       "status": "ok",
-      "http_status": 304,
-      "upstream_status": "cached_within_cadence",
-      "upstream_updated_at": "2026-11-23T10:45:58+08:00",
-      "fetched_at": "2026-11-23T10:45:57+08:00",
-      "last_success_at": "2026-11-23T10:45:58+08:00",
+      "http_status": 200,
+      "upstream_status": "cache",
+      "upstream_updated_at": "2026-11-23T15:44:18+08:00",
+      "fetched_at": "2026-11-23T15:55:13+08:00",
+      "last_success_at": "2026-11-23T15:44:18+08:00",
       "item_count": 20,
+      "skipped_invalid_items": 0,
       "pub_date_coverage": 1.0,
       "error_message": null,
       "fallback_used": false,
-      "reused_within_cadence": true
+      "fallback_item_count": 0
     },
     {
       "id": "cankaoxiaoxi",
@@ -556,16 +569,17 @@
       "kind": "news",
       "expected_interval_minutes": 30,
       "status": "ok",
-      "http_status": 304,
-      "upstream_status": "cached_within_cadence",
-      "upstream_updated_at": "2026-11-23T10:45:58+08:00",
-      "fetched_at": "2026-11-23T10:45:57+08:00",
-      "last_success_at": "2026-11-23T10:45:58+08:00",
+      "http_status": 200,
+      "upstream_status": "cache",
+      "upstream_updated_at": "2026-11-23T15:55:14+08:00",
+      "fetched_at": "2026-11-23T15:55:13+08:00",
+      "last_success_at": "2026-11-23T15:55:14+08:00",
       "item_count": 30,
+      "skipped_invalid_items": 0,
       "pub_date_coverage": 1.0,
       "error_message": null,
       "fallback_used": false,
-      "reused_within_cadence": true
+      "fallback_item_count": 0
     },
     {
       "id": "kaopu",
@@ -574,16 +588,17 @@
       "kind": "news",
       "expected_interval_minutes": 30,
       "status": "ok",
-      "http_status": 304,
-      "upstream_status": "cached_within_cadence",
-      "upstream_updated_at": "2026-11-23T10:45:58+08:00",
-      "fetched_at": "2026-11-23T10:45:57+08:00",
-      "last_success_at": "2026-11-23T10:45:58+08:00",
+      "http_status": 200,
+      "upstream_status": "cache",
+      "upstream_updated_at": "2026-11-23T15:55:14+08:00",
+      "fetched_at": "2026-11-23T15:55:13+08:00",
+      "last_success_at": "2026-11-23T15:55:14+08:00",
       "item_count": 30,
+      "skipped_invalid_items": 0,
       "pub_date_coverage": 1.0,
       "error_message": null,
       "fallback_used": false,
-      "reused_within_cadence": true
+      "fallback_item_count": 0
     },
     {
       "id": "thepaper",
@@ -592,16 +607,17 @@
       "kind": "news",
       "expected_interval_minutes": 30,
       "status": "ok",
-      "http_status": 304,
-      "upstream_status": "cached_within_cadence",
-      "upstream_updated_at": "2026-11-23T10:45:58+08:00",
-      "fetched_at": "2026-11-23T10:45:57+08:00",
-      "last_success_at": "2026-11-23T10:45:58+08:00",
+      "http_status": 200,
+      "upstream_status": "cache",
+      "upstream_updated_at": "2026-11-23T15:55:14+08:00",
+      "fetched_at": "2026-11-23T15:55:13+08:00",
+      "last_success_at": "2026-11-23T15:55:14+08:00",
       "item_count": 20,
+      "skipped_invalid_items": 0,
       "pub_date_coverage": 0.0,
       "error_message": null,
       "fallback_used": false,
-      "reused_within_cadence": true
+      "fallback_item_count": 0
     },
     {
       "id": "ifeng",
@@ -610,16 +626,17 @@
       "kind": "news",
       "expected_interval_minutes": 20,
       "status": "ok",
-      "http_status": 304,
-      "upstream_status": "cached_within_cadence",
-      "upstream_updated_at": "2026-11-23T10:45:58+08:00",
-      "fetched_at": "2026-11-23T10:45:57+08:00",
-      "last_success_at": "2026-11-23T10:45:58+08:00",
+      "http_status": 200,
+      "upstream_status": "cache",
+      "upstream_updated_at": "2026-11-23T15:55:14+08:00",
+      "fetched_at": "2026-11-23T15:55:13+08:00",
+      "last_success_at": "2026-11-23T15:55:14+08:00",
       "item_count": 12,
-      "pub_date_coverage": 0.167,
+      "skipped_invalid_items": 0,
+      "pub_date_coverage": 0.083,
       "error_message": null,
       "fallback_used": false,
-      "reused_within_cadence": true
+      "fallback_item_count": 0
     },
     {
       "id": "tencent-hot",
@@ -628,16 +645,17 @@
       "kind": "news",
       "expected_interval_minutes": 30,
       "status": "ok",
-      "http_status": 304,
-      "upstream_status": "cached_within_cadence",
-      "upstream_updated_at": "2026-11-23T10:45:58+08:00",
-      "fetched_at": "2026-11-23T10:45:57+08:00",
-      "last_success_at": "2026-11-23T10:45:58+08:00",
+      "http_status": 200,
+      "upstream_status": "cache",
+      "upstream_updated_at": "2026-11-23T15:55:14+08:00",
+      "fetched_at": "2026-11-23T15:55:13+08:00",
+      "last_success_at": "2026-11-23T15:55:14+08:00",
       "item_count": 15,
+      "skipped_invalid_items": 0,
       "pub_date_coverage": 0.0,
       "error_message": null,
       "fallback_used": false,
-      "reused_within_cadence": true
+      "fallback_item_count": 0
     },
     {
       "id": "toutiao",
@@ -646,16 +664,17 @@
       "kind": "news",
       "expected_interval_minutes": 20,
       "status": "ok",
-      "http_status": 304,
-      "upstream_status": "cached_within_cadence",
-      "upstream_updated_at": "2026-11-23T10:45:58+08:00",
-      "fetched_at": "2026-11-23T10:45:57+08:00",
-      "last_success_at": "2026-11-23T10:45:58+08:00",
+      "http_status": 200,
+      "upstream_status": "cache",
+      "upstream_updated_at": "2026-11-23T15:35:03+08:00",
+      "fetched_at": "2026-11-23T15:55:13+08:00",
+      "last_success_at": "2026-11-23T15:35:03+08:00",
       "item_count": 30,
+      "skipped_invalid_items": 0,
       "pub_date_coverage": 0.0,
       "error_message": null,
       "fallback_used": false,
-      "reused_within_cadence": true
+      "fallback_item_count": 0
     },
     {
       "id": "baidu",
@@ -664,16 +683,17 @@
       "kind": "news",
       "expected_interval_minutes": 20,
       "status": "ok",
-      "http_status": 304,
-      "upstream_status": "cached_within_cadence",
-      "upstream_updated_at": "2026-11-23T10:45:58+08:00",
-      "fetched_at": "2026-11-23T10:45:57+08:00",
-      "last_success_at": "2026-11-23T10:45:58+08:00",
+      "http_status": 200,
+      "upstream_status": "cache",
+      "upstream_updated_at": "2026-11-23T15:55:14+08:00",
+      "fetched_at": "2026-11-23T15:55:13+08:00",
+      "last_success_at": "2026-11-23T15:55:14+08:00",
       "item_count": 30,
+      "skipped_invalid_items": 0,
       "pub_date_coverage": 0.0,
       "error_message": null,
       "fallback_used": false,
-      "reused_within_cadence": true
+      "fallback_item_count": 0
     },
     {
       "id": "zhihu",
@@ -682,16 +702,17 @@
       "kind": "discussion",
       "expected_interval_minutes": 20,
       "status": "ok",
-      "http_status": 304,
-      "upstream_status": "cached_within_cadence",
-      "upstream_updated_at": "2026-11-23T10:45:58+08:00",
-      "fetched_at": "2026-11-23T10:45:57+08:00",
-      "last_success_at": "2026-11-23T10:45:58+08:00",
+      "http_status": 200,
+      "upstream_status": "cache",
+      "upstream_updated_at": "2026-11-23T15:39:26+08:00",
+      "fetched_at": "2026-11-23T15:55:13+08:00",
+      "last_success_at": "2026-11-23T15:39:26+08:00",
       "item_count": 20,
+      "skipped_invalid_items": 0,
       "pub_date_coverage": 0.0,
       "error_message": null,
       "fallback_used": false,
-      "reused_within_cadence": true
+      "fallback_item_count": 0
     },
     {
       "id": "weibo",
@@ -702,9 +723,9 @@
       "status": "ok",
       "http_status": 200,
       "upstream_status": "cache",
-      "upstream_updated_at": "2026-11-23T10:55:08+08:00",
-      "fetched_at": "2026-11-23T11:02:35+08:00",
-      "last_success_at": "2026-11-23T10:55:08+08:00",
+      "upstream_updated_at": "2026-11-23T15:55:14+08:00",
+      "fetched_at": "2026-11-23T15:55:13+08:00",
+      "last_success_at": "2026-11-23T15:55:14+08:00",
       "item_count": 30,
       "skipped_invalid_items": 0,
       "pub_date_coverage": 0.0,
@@ -719,16 +740,17 @@
       "kind": "discussion",
       "expected_interval_minutes": 20,
       "status": "ok",
-      "http_status": 304,
-      "upstream_status": "cached_within_cadence",
-      "upstream_updated_at": "2026-11-23T10:45:58+08:00",
-      "fetched_at": "2026-11-23T10:45:57+08:00",
-      "last_success_at": "2026-11-23T10:45:58+08:00",
+      "http_status": 200,
+      "upstream_status": "cache",
+      "upstream_updated_at": "2026-11-23T15:55:14+08:00",
+      "fetched_at": "2026-11-23T15:55:13+08:00",
+      "last_success_at": "2026-11-23T15:55:14+08:00",
       "item_count": 30,
+      "skipped_invalid_items": 0,
       "pub_date_coverage": 0.0,
       "error_message": null,
       "fallback_used": false,
-      "reused_within_cadence": true
+      "fallback_item_count": 0
     },
     {
       "id": "bilibili-hot-search",
@@ -737,16 +759,17 @@
       "kind": "discussion",
       "expected_interval_minutes": 20,
       "status": "ok",
-      "http_status": 304,
-      "upstream_status": "cached_within_cadence",
-      "upstream_updated_at": "2026-11-23T10:45:58+08:00",
-      "fetched_at": "2026-11-23T10:45:57+08:00",
-      "last_success_at": "2026-11-23T10:45:58+08:00",
+      "http_status": 200,
+      "upstream_status": "cache",
+      "upstream_updated_at": "2026-11-23T15:27:54+08:00",
+      "fetched_at": "2026-11-23T15:55:13+08:00",
+      "last_success_at": "2026-11-23T15:27:54+08:00",
       "item_count": 30,
+      "skipped_invalid_items": 0,
       "pub_date_coverage": 0.0,
       "error_message": null,
       "fallback_used": false,
-      "reused_within_cadence": true
+      "fallback_item_count": 0
     },
     {
       "id": "tieba",
@@ -755,16 +778,17 @@
       "kind": "discussion",
       "expected_interval_minutes": 30,
       "status": "ok",
-      "http_status": 304,
-      "upstream_status": "cached_within_cadence",
-      "upstream_updated_at": "2026-11-23T10:45:58+08:00",
-      "fetched_at": "2026-11-23T10:45:57+08:00",
-      "last_success_at": "2026-11-23T10:45:58+08:00",
-      "item_count": 29,
+      "http_status": 200,
+      "upstream_status": "cache",
+      "upstream_updated_at": "2026-11-23T15:31:38+08:00",
+      "fetched_at": "2026-11-23T15:55:13+08:00",
+      "last_success_at": "2026-11-23T15:31:38+08:00",
+      "item_count": 28,
+      "skipped_invalid_items": 1,
       "pub_date_coverage": 0.0,
       "error_message": null,
       "fallback_used": false,
-      "reused_within_cadence": true
+      "fallback_item_count": 0
     },
     {
       "id": "douban",
@@ -773,16 +797,17 @@
       "kind": "discussion",
       "expected_interval_minutes": 60,
       "status": "ok",
-      "http_status": 304,
-      "upstream_status": "cached_within_cadence",
-      "upstream_updated_at": "2026-11-23T10:19:21+08:00",
-      "fetched_at": "2026-11-23T10:45:57+08:00",
-      "last_success_at": "2026-11-23T10:19:21+08:00",
+      "http_status": 200,
+      "upstream_status": "cache",
+      "upstream_updated_at": "2026-11-23T15:39:20+08:00",
+      "fetched_at": "2026-11-23T15:55:13+08:00",
+      "last_success_at": "2026-11-23T15:39:20+08:00",
       "item_count": 20,
+      "skipped_invalid_items": 0,
       "pub_date_coverage": 0.0,
       "error_message": null,
       "fallback_used": false,
-      "reused_within_cadence": true
+      "fallback_item_count": 0
     },
     {
       "id": "hupu",
@@ -793,9 +818,9 @@
       "status": "ok",
       "http_status": 200,
       "upstream_status": "cache",
-      "upstream_updated_at": "2026-11-23T10:48:19+08:00",
-      "fetched_at": "2026-11-23T11:02:35+08:00",
-      "last_success_at": "2026-11-23T10:48:19+08:00",
+      "upstream_updated_at": "2026-11-23T15:31:55+08:00",
+      "fetched_at": "2026-11-23T15:55:13+08:00",
+      "last_success_at": "2026-11-23T15:31:55+08:00",
       "item_count": 30,
       "skipped_invalid_items": 0,
       "pub_date_coverage": 0.0,
@@ -810,16 +835,17 @@
       "kind": "discussion",
       "expected_interval_minutes": 60,
       "status": "ok",
-      "http_status": 304,
-      "upstream_status": "cached_within_cadence",
-      "upstream_updated_at": "2026-11-23T10:45:58+08:00",
-      "fetched_at": "2026-11-23T10:45:57+08:00",
-      "last_success_at": "2026-11-23T10:45:58+08:00",
+      "http_status": 200,
+      "upstream_status": "cache",
+      "upstream_updated_at": "2026-11-23T15:55:14+08:00",
+      "fetched_at": "2026-11-23T15:55:13+08:00",
+      "last_success_at": "2026-11-23T15:55:14+08:00",
       "item_count": 12,
+      "skipped_invalid_items": 0,
       "pub_date_coverage": 0.0,
       "error_message": null,
       "fallback_used": false,
-      "reused_within_cadence": true
+      "fallback_item_count": 0
     },
     {
       "id": "chongbuluo-latest",
@@ -828,16 +854,17 @@
       "kind": "discussion",
       "expected_interval_minutes": 60,
       "status": "ok",
-      "http_status": 304,
-      "upstream_status": "cached_within_cadence",
-      "upstream_updated_at": "2026-11-23T10:45:58+08:00",
-      "fetched_at": "2026-11-23T10:45:57+08:00",
-      "last_success_at": "2026-11-23T10:45:58+08:00",
-      "item_count": 13,
+      "http_status": 200,
+      "upstream_status": "cache",
+      "upstream_updated_at": "2026-11-23T15:55:14+08:00",
+      "fetched_at": "2026-11-23T15:55:13+08:00",
+      "last_success_at": "2026-11-23T15:55:14+08:00",
+      "item_count": 11,
+      "skipped_invalid_items": 9,
       "pub_date_coverage": 1.0,
       "error_message": null,
       "fallback_used": false,
-      "reused_within_cadence": true
+      "fallback_item_count": 0
     },
     {
       "id": "nowcoder",
@@ -848,9 +875,9 @@
       "status": "ok",
       "http_status": 200,
       "upstream_status": "cache",
-      "upstream_updated_at": "2026-11-23T10:50:57+08:00",
-      "fetched_at": "2026-11-23T11:02:35+08:00",
-      "last_success_at": "2026-11-23T10:50:57+08:00",
+      "upstream_updated_at": "2026-11-23T15:55:14+08:00",
+      "fetched_at": "2026-11-23T15:55:13+08:00",
+      "last_success_at": "2026-11-23T15:55:14+08:00",
       "item_count": 20,
       "skipped_invalid_items": 0,
       "pub_date_coverage": 0.0,
@@ -866,7 +893,7 @@
       "status": "error",
       "item_count": 0,
       "pub_date_coverage": 0.0,
-      "upstream_updated_at": "2026-11-23T11:02:36+08:00",
+      "upstream_updated_at": "2026-11-23T15:55:14+08:00",
       "last_success_at": null,
       "error_message": "UnboundLocalError: local variable 'raw_desc' referenced before assignment"
     },
@@ -878,8 +905,20 @@
       "status": "ok",
       "item_count": 25,
       "pub_date_coverage": 1.0,
-      "upstream_updated_at": "2026-11-23T11:02:34+08:00",
-      "last_success_at": "2026-11-23T11:02:34+08:00",
+      "upstream_updated_at": "2026-11-23T15:55:14+08:00",
+      "last_success_at": "2026-11-23T15:55:14+08:00",
+      "error_message": null
+    },
+    {
+      "id": "wscn-global-channel",
+      "name": "华尔街见闻 7×24 全球",
+      "category": "global",
+      "kind": "news",
+      "status": "ok",
+      "item_count": 25,
+      "pub_date_coverage": 1.0,
+      "upstream_updated_at": "2026-11-23T15:52:55+08:00",
+      "last_success_at": "2026-11-23T15:52:55+08:00",
       "error_message": null
     },
     {
@@ -890,8 +929,20 @@
       "status": "ok",
       "item_count": 25,
       "pub_date_coverage": 1.0,
-      "upstream_updated_at": "2026-11-23T11:01:00+08:00",
-      "last_success_at": "2026-11-23T11:01:00+08:00",
+      "upstream_updated_at": "2026-11-23T15:43:42+08:00",
+      "last_success_at": "2026-11-23T15:43:42+08:00",
+      "error_message": null
+    },
+    {
+      "id": "wscn-us-stock-channel",
+      "name": "华尔街见闻 美股快讯",
+      "category": "finance",
+      "kind": "news",
+      "status": "ok",
+      "item_count": 21,
+      "pub_date_coverage": 1.0,
+      "upstream_updated_at": "2026-11-23T14:52:55+08:00",
+      "last_success_at": "2026-11-23T14:52:55+08:00",
       "error_message": null
     },
     {
@@ -907,30 +958,6 @@
       "error_message": null
     },
     {
-      "id": "wscn-us-stock-channel",
-      "name": "华尔街见闻 美股快讯",
-      "category": "finance",
-      "kind": "news",
-      "status": "ok",
-      "item_count": 25,
-      "pub_date_coverage": 1.0,
-      "upstream_updated_at": "2026-11-23T11:00:02+08:00",
-      "last_success_at": "2026-11-23T11:00:02+08:00",
-      "error_message": null
-    },
-    {
-      "id": "wscn-global-channel",
-      "name": "华尔街见闻 7×24 全球",
-      "category": "global",
-      "kind": "news",
-      "status": "ok",
-      "item_count": 22,
-      "pub_date_coverage": 1.0,
-      "upstream_updated_at": "2026-11-23T10:56:39+08:00",
-      "last_success_at": "2026-11-23T10:56:39+08:00",
-      "error_message": null
-    },
-    {
       "id": "rss-github-changelog",
       "name": "GitHub Changelog",
       "category": "tech",
@@ -943,30 +970,6 @@
       "error_message": null
     },
     {
-      "id": "rss-marktechpost",
-      "name": "MarkTechPost (AI论文/模型)",
-      "category": "tech",
-      "kind": "news",
-      "status": "ok",
-      "item_count": 9,
-      "pub_date_coverage": 1.0,
-      "upstream_updated_at": "2026-11-23T02:37:57+08:00",
-      "last_success_at": "2026-11-23T02:37:57+08:00",
-      "error_message": null
-    },
-    {
-      "id": "rss-hf-blog",
-      "name": "Hugging Face 官方博客",
-      "category": "tech",
-      "kind": "news",
-      "status": "empty",
-      "item_count": 0,
-      "pub_date_coverage": 0.0,
-      "upstream_updated_at": "2026-11-23T11:02:39+08:00",
-      "last_success_at": null,
-      "error_message": null
-    },
-    {
       "id": "rss-techcrunch",
       "name": "TechCrunch AI & Tech",
       "category": "tech",
@@ -976,6 +979,30 @@
       "pub_date_coverage": 1.0,
       "upstream_updated_at": "2026-11-23T09:25:53+08:00",
       "last_success_at": "2026-11-23T09:25:53+08:00",
+      "error_message": null
+    },
+    {
+      "id": "rss-openai-news",
+      "name": "OpenAI 官方动态",
+      "category": "tech",
+      "kind": "news",
+      "status": "ok",
+      "item_count": 2,
+      "pub_date_coverage": 1.0,
+      "upstream_updated_at": "2026-11-22T08:00:00+08:00",
+      "last_success_at": "2026-11-22T08:00:00+08:00",
+      "error_message": null
+    },
+    {
+      "id": "rss-theverge",
+      "name": "The Verge",
+      "category": "tech",
+      "kind": "news",
+      "status": "ok",
+      "item_count": 10,
+      "pub_date_coverage": 1.0,
+      "upstream_updated_at": "2026-11-23T11:00:00+08:00",
+      "last_success_at": "2026-11-23T11:00:00+08:00",
       "error_message": null
     },
     {
@@ -1003,6 +1030,18 @@
       "error_message": null
     },
     {
+      "id": "rss-deepmind-blog",
+      "name": "Google DeepMind 博客",
+      "category": "tech",
+      "kind": "news",
+      "status": "empty",
+      "item_count": 0,
+      "pub_date_coverage": 0.0,
+      "upstream_updated_at": "2026-11-23T15:55:18+08:00",
+      "last_success_at": null,
+      "error_message": null
+    },
+    {
       "id": "rss-arstechnica",
       "name": "Ars Technica",
       "category": "tech",
@@ -1015,30 +1054,6 @@
       "error_message": null
     },
     {
-      "id": "rss-google-ai-blog",
-      "name": "Google AI 官方博客",
-      "category": "tech",
-      "kind": "news",
-      "status": "empty",
-      "item_count": 0,
-      "pub_date_coverage": 0.0,
-      "upstream_updated_at": "2026-11-23T11:02:39+08:00",
-      "last_success_at": null,
-      "error_message": null
-    },
-    {
-      "id": "rss-openai-news",
-      "name": "OpenAI 官方动态",
-      "category": "tech",
-      "kind": "news",
-      "status": "ok",
-      "item_count": 2,
-      "pub_date_coverage": 1.0,
-      "upstream_updated_at": "2026-11-22T08:00:00+08:00",
-      "last_success_at": "2026-11-22T08:00:00+08:00",
-      "error_message": null
-    },
-    {
       "id": "rss-nvidia-blog",
       "name": "NVIDIA 官方博客",
       "category": "tech",
@@ -1046,68 +1061,44 @@
       "status": "empty",
       "item_count": 0,
       "pub_date_coverage": 0.0,
-      "upstream_updated_at": "2026-11-23T11:02:39+08:00",
+      "upstream_updated_at": "2026-11-23T15:55:18+08:00",
       "last_success_at": null,
       "error_message": null
     },
     {
-      "id": "rss-deepmind-blog",
-      "name": "Google DeepMind 博客",
+      "id": "rss-hf-blog",
+      "name": "Hugging Face 官方博客",
       "category": "tech",
       "kind": "news",
       "status": "empty",
       "item_count": 0,
       "pub_date_coverage": 0.0,
-      "upstream_updated_at": "2026-11-23T11:02:39+08:00",
+      "upstream_updated_at": "2026-11-23T15:55:18+08:00",
       "last_success_at": null,
       "error_message": null
     },
     {
-      "id": "rss-theverge",
-      "name": "The Verge",
+      "id": "rss-marktechpost",
+      "name": "MarkTechPost (AI论文/模型)",
       "category": "tech",
       "kind": "news",
       "status": "ok",
-      "item_count": 10,
+      "item_count": 9,
       "pub_date_coverage": 1.0,
-      "upstream_updated_at": "2026-11-23T11:00:00+08:00",
-      "last_success_at": "2026-11-23T11:00:00+08:00",
+      "upstream_updated_at": "2026-11-23T02:37:57+08:00",
+      "last_success_at": "2026-11-23T02:37:57+08:00",
       "error_message": null
     },
     {
-      "id": "rss-gnews-world-en",
-      "name": "Google News 英文国际",
-      "category": "global",
+      "id": "rss-google-ai-blog",
+      "name": "Google AI 官方博客",
+      "category": "tech",
       "kind": "news",
-      "status": "ok",
-      "item_count": 18,
-      "pub_date_coverage": 1.0,
-      "upstream_updated_at": "2026-11-23T09:32:36+08:00",
-      "last_success_at": "2026-11-23T09:32:36+08:00",
-      "error_message": null
-    },
-    {
-      "id": "rss-bbc-world",
-      "name": "BBC News World",
-      "category": "global",
-      "kind": "news",
-      "status": "ok",
-      "item_count": 18,
-      "pub_date_coverage": 1.0,
-      "upstream_updated_at": "2026-11-23T10:59:35+08:00",
-      "last_success_at": "2026-11-23T10:59:35+08:00",
-      "error_message": null
-    },
-    {
-      "id": "rss-bbc-asia",
-      "name": "BBC News Asia",
-      "category": "global",
-      "kind": "news",
-      "status": "ok",
-      "item_count": 5,
-      "pub_date_coverage": 1.0,
-      "upstream_updated_at": "2026-11-22T22:05:20+08:00",
-      "last_success_at": "2026-11-22T22:05:20+08:00",
+      "status": "empty",
+      "item_count": 0,
+      "pub_date_coverage": 0.0,
+      "upstream_updated_at": "2026-11-23T15:55:18+08:00",
+      "last_success_at": null,
       "error_message": null
     },
     {
@@ -1118,20 +1109,56 @@
       "status": "ok",
       "item_count": 18,
       "pub_date_coverage": 1.0,
-      "upstream_updated_at": "2026-11-23T10:53:53+08:00",
-      "last_success_at": "2026-11-23T10:53:53+08:00",
+      "upstream_updated_at": "2026-11-23T15:30:57+08:00",
+      "last_success_at": "2026-11-23T15:30:57+08:00",
       "error_message": null
     },
     {
-      "id": "rss-wsj-markets",
-      "name": "WSJ Markets",
-      "category": "finance",
+      "id": "rss-gnews-world-zh",
+      "name": "Google News 中文国际",
+      "category": "global",
       "kind": "news",
       "status": "ok",
       "item_count": 18,
       "pub_date_coverage": 1.0,
-      "upstream_updated_at": "2026-11-23T11:00:00+08:00",
-      "last_success_at": "2026-11-23T11:00:00+08:00",
+      "upstream_updated_at": "2026-11-23T15:41:51+08:00",
+      "last_success_at": "2026-11-23T15:41:51+08:00",
+      "error_message": null
+    },
+    {
+      "id": "rss-bbc-world",
+      "name": "BBC News World",
+      "category": "global",
+      "kind": "news",
+      "status": "ok",
+      "item_count": 18,
+      "pub_date_coverage": 1.0,
+      "upstream_updated_at": "2026-11-23T15:01:31+08:00",
+      "last_success_at": "2026-11-23T15:01:31+08:00",
+      "error_message": null
+    },
+    {
+      "id": "rss-gnews-world-en",
+      "name": "Google News 英文国际",
+      "category": "global",
+      "kind": "news",
+      "status": "ok",
+      "item_count": 18,
+      "pub_date_coverage": 1.0,
+      "upstream_updated_at": "2026-11-23T13:15:06+08:00",
+      "last_success_at": "2026-11-23T13:15:06+08:00",
+      "error_message": null
+    },
+    {
+      "id": "rss-gnews-opensource-ai",
+      "name": "Google News 开源 AI 与推理雷达",
+      "category": "tech",
+      "kind": "news",
+      "status": "ok",
+      "item_count": 18,
+      "pub_date_coverage": 1.0,
+      "upstream_updated_at": "2026-11-23T15:31:49+08:00",
+      "last_success_at": "2026-11-23T15:31:49+08:00",
       "error_message": null
     },
     {
@@ -1140,10 +1167,10 @@
       "category": "tech",
       "kind": "news",
       "status": "ok",
-      "item_count": 17,
+      "item_count": 18,
       "pub_date_coverage": 1.0,
-      "upstream_updated_at": "2026-11-23T10:35:10+08:00",
-      "last_success_at": "2026-11-23T10:35:10+08:00",
+      "upstream_updated_at": "2026-11-23T15:38:00+08:00",
+      "last_success_at": "2026-11-23T15:38:00+08:00",
       "error_message": null
     },
     {
@@ -1159,15 +1186,15 @@
       "error_message": null
     },
     {
-      "id": "rss-gnews-opensource-ai",
-      "name": "Google News 开源 AI 与推理雷达",
-      "category": "tech",
+      "id": "rss-bbc-asia",
+      "name": "BBC News Asia",
+      "category": "global",
       "kind": "news",
       "status": "ok",
-      "item_count": 18,
+      "item_count": 4,
       "pub_date_coverage": 1.0,
-      "upstream_updated_at": "2026-11-23T08:49:42+08:00",
-      "last_success_at": "2026-11-23T08:49:42+08:00",
+      "upstream_updated_at": "2026-11-22T22:05:20+08:00",
+      "last_success_at": "2026-11-22T22:05:20+08:00",
       "error_message": null
     },
     {
@@ -1178,56 +1205,20 @@
       "status": "ok",
       "item_count": 18,
       "pub_date_coverage": 1.0,
-      "upstream_updated_at": "2026-11-23T08:38:00+08:00",
-      "last_success_at": "2026-11-23T08:38:00+08:00",
+      "upstream_updated_at": "2026-11-23T15:45:29+08:00",
+      "last_success_at": "2026-11-23T15:45:29+08:00",
       "error_message": null
     },
     {
-      "id": "rss-gnews-world-zh",
-      "name": "Google News 中文国际",
-      "category": "global",
-      "kind": "news",
-      "status": "ok",
-      "item_count": 18,
-      "pub_date_coverage": 1.0,
-      "upstream_updated_at": "2026-11-23T10:33:59+08:00",
-      "last_success_at": "2026-11-23T10:33:59+08:00",
-      "error_message": null
-    },
-    {
-      "id": "rss-gnews-markets-zh",
-      "name": "Google News A股/美股宏观异动",
+      "id": "rss-wsj-markets",
+      "name": "WSJ Markets",
       "category": "finance",
       "kind": "news",
       "status": "ok",
       "item_count": 18,
       "pub_date_coverage": 1.0,
-      "upstream_updated_at": "2026-11-23T10:56:06+08:00",
-      "last_success_at": "2026-11-23T10:56:06+08:00",
-      "error_message": null
-    },
-    {
-      "id": "rss-cnbc-tech",
-      "name": "CNBC Tech & AI",
-      "category": "finance",
-      "kind": "news",
-      "status": "ok",
-      "item_count": 18,
-      "pub_date_coverage": 1.0,
-      "upstream_updated_at": "2026-11-23T02:55:05+08:00",
-      "last_success_at": "2026-11-23T02:55:05+08:00",
-      "error_message": null
-    },
-    {
-      "id": "rss-cnbc-world",
-      "name": "CNBC Top News",
-      "category": "finance",
-      "kind": "news",
-      "status": "ok",
-      "item_count": 18,
-      "pub_date_coverage": 1.0,
-      "upstream_updated_at": "2026-11-23T09:50:10+08:00",
-      "last_success_at": "2026-11-23T09:50:10+08:00",
+      "upstream_updated_at": "2026-11-23T14:59:00+08:00",
+      "last_success_at": "2026-11-23T14:59:00+08:00",
       "error_message": null
     },
     {
@@ -1238,8 +1229,44 @@
       "status": "ok",
       "item_count": 18,
       "pub_date_coverage": 1.0,
-      "upstream_updated_at": "2026-11-23T10:42:00+08:00",
-      "last_success_at": "2026-11-23T10:42:00+08:00",
+      "upstream_updated_at": "2026-11-23T13:38:00+08:00",
+      "last_success_at": "2026-11-23T13:38:00+08:00",
+      "error_message": null
+    },
+    {
+      "id": "rss-cnbc-tech",
+      "name": "CNBC Tech & AI",
+      "category": "finance",
+      "kind": "news",
+      "status": "ok",
+      "item_count": 18,
+      "pub_date_coverage": 1.0,
+      "upstream_updated_at": "2026-11-23T13:08:03+08:00",
+      "last_success_at": "2026-11-23T13:08:03+08:00",
+      "error_message": null
+    },
+    {
+      "id": "rss-gnews-markets-zh",
+      "name": "Google News A股/美股宏观异动",
+      "category": "finance",
+      "kind": "news",
+      "status": "ok",
+      "item_count": 18,
+      "pub_date_coverage": 1.0,
+      "upstream_updated_at": "2026-11-23T15:45:34+08:00",
+      "last_success_at": "2026-11-23T15:45:34+08:00",
+      "error_message": null
+    },
+    {
+      "id": "rss-cnbc-world",
+      "name": "CNBC Top News",
+      "category": "finance",
+      "kind": "news",
+      "status": "ok",
+      "item_count": 18,
+      "pub_date_coverage": 1.0,
+      "upstream_updated_at": "2026-11-23T15:48:31+08:00",
+      "last_success_at": "2026-11-23T15:48:31+08:00",
       "error_message": null
     },
     {
@@ -1250,8 +1277,8 @@
       "status": "ok",
       "item_count": 18,
       "pub_date_coverage": 1.0,
-      "upstream_updated_at": "2026-11-23T09:00:15+08:00",
-      "last_success_at": "2026-11-23T09:00:15+08:00",
+      "upstream_updated_at": "2026-11-23T13:56:33+08:00",
+      "last_success_at": "2026-11-23T13:56:33+08:00",
       "error_message": null
     },
     {
@@ -1273,9 +1300,9 @@
       "connector_name": "7×24 国内/全球实时电报快讯 (5/6)",
       "source_tier": "direct_media",
       "status": "ok",
-      "fetched_at": "2026-11-23T11:02:36+08:00",
-      "latency_ms": 3125,
-      "item_count": 122,
+      "fetched_at": "2026-11-23T15:55:14+08:00",
+      "latency_ms": 3867,
+      "item_count": 121,
       "calendar_count": 0,
       "error_message": "ithome-rss: UnboundLocalError: local variable 'raw_desc' referenced before assignment",
       "tos_note": "聚合华尔街见闻与 IT 之家稳定公开实时快讯接口，用于 7×24 零延迟消息流。"
@@ -1285,8 +1312,8 @@
       "connector_name": "直连全球/科技权威 RSS (24/28)",
       "source_tier": "direct_media",
       "status": "ok",
-      "fetched_at": "2026-11-23T11:02:39+08:00",
-      "latency_ms": 1259,
+      "fetched_at": "2026-11-23T15:55:18+08:00",
+      "latency_ms": 1324,
       "item_count": 340,
       "calendar_count": 0,
       "error_message": null,
@@ -1296,39 +1323,37 @@
       "connector_id": "sec-edgar",
       "connector_name": "SEC EDGAR 官方监管披露与 XBRL 财报库",
       "source_tier": "first_party",
-      "status": "cached_ttl",
-      "fetched_at": "2026-11-23T07:41:31+08:00",
-      "latency_ms": 0,
+      "status": "ok",
+      "fetched_at": "2026-11-23T15:55:19+08:00",
+      "latency_ms": 1617,
       "item_count": 2,
       "calendar_count": 0,
       "error_message": null,
-      "tos_note": "SEC 公开数据，已附带合规声明式 User-Agent 与保守请求节流。",
-      "cache_reused": true
+      "tos_note": "SEC 公开数据，已附带合规声明式 User-Agent 与保守请求节流。"
     },
     {
       "connector_id": "github-releases",
       "connector_name": "GitHub Releases 官方仓库版本日志",
       "source_tier": "tech_material",
       "status": "ok",
-      "fetched_at": "2026-11-23T11:02:41+08:00",
-      "latency_ms": 13033,
+      "fetched_at": "2026-11-23T15:55:21+08:00",
+      "latency_ms": 10961,
       "item_count": 13,
       "calendar_count": 0,
       "error_message": null,
-      "tos_note": "使用 GitHub REST v3 公共 API（带 ETag 条件请求避免冗余额度消耗）。"
+      "tos_note": "云端智能检索引擎实时追踪全球主流开源项目官方发布动态。"
     },
     {
       "connector_id": "huggingface-hub",
       "connector_name": "Hugging Face 官方模型卡与许可证追踪",
       "source_tier": "tech_material",
-      "status": "cached_ttl",
-      "fetched_at": "2026-11-23T07:41:37+08:00",
-      "latency_ms": 0,
+      "status": "ok",
+      "fetched_at": "2026-11-23T15:55:32+08:00",
+      "latency_ms": 4633,
       "item_count": 7,
       "calendar_count": 0,
       "error_message": null,
-      "tos_note": "使用 Hugging Face 公开只读 Models API 获取模型卡元数据。",
-      "cache_reused": true
+      "tos_note": "使用 Hugging Face 公开只读 Models API 获取模型卡元数据。"
     },
     {
       "connector_id": "arxiv-api",
@@ -1359,26 +1384,39 @@
   ],
   "deep_fetch": {
     "attempted": 32,
-    "enriched": 13,
-    "checked_at": "2026-11-23T11:03:01+08:00",
+    "enriched": 23,
+    "checked_at": "2026-11-23T15:55:44+08:00",
     "logs": [
       {
-        "url": "https://www.zaochenbao.com/news/politics/202611/2286013.html",
+        "url": "https://www.zaochenbao.com/news/politics/202611/2386028.html",
         "status": "not_modified_304",
         "reason": null
       },
       {
-        "url": "https://www.zaochenbao.com/news/politics/202611/2286010.html",
+        "url": "https://www.zaochenbao.com/news/politics/202611/2386046.html",
+        "status": "meta_only",
+        "chars": 124,
+        "has_thumbnail": false
+      },
+      {
+        "url": "https://www.zaochenbao.com/news/politics/202611/2386045.html",
+        "status": "meta_only",
+        "chars": 124,
+        "has_thumbnail": false
+      },
+      {
+        "url": "https://www.zaochenbao.com/news/china/202611/2386041.html",
+        "status": "meta_only",
+        "chars": 134,
+        "has_thumbnail": false
+      },
+      {
+        "url": "https://www.zaochenbao.com/news/politics/202611/2386034.html",
         "status": "not_modified_304",
         "reason": null
       },
       {
-        "url": "https://www.zaochenbao.com/news/china/202611/2286005.html",
-        "status": "not_modified_304",
-        "reason": null
-      },
-      {
-        "url": "https://www.zaochenbao.com/news/politics/202611/2285997.html",
+        "url": "https://www.zaochenbao.com/news/politics/202611/2386020.html",
         "status": "not_modified_304",
         "reason": null
       },
@@ -1389,48 +1427,90 @@
         "has_thumbnail": true
       },
       {
-        "url": "https://wallstreetcn.com/livenews/3203790",
-        "status": "meta_only",
-        "chars": 157,
-        "has_thumbnail": true
-      },
-      {
-        "url": "https://www.cls.cn/detail/2540900",
-        "status": "extracted_body_lead",
-        "chars": 249,
-        "has_thumbnail": false
-      },
-      {
-        "url": "https://sputniknews.cn/20261123/1074303787.html",
-        "status": "extracted_body_lead",
-        "chars": 68,
-        "has_thumbnail": true
-      },
-      {
-        "url": "https://www.v2ex.com/t/1258970",
-        "status": "error",
-        "reason": "HTTP 404"
-      },
-      {
-        "url": "https://sputniknews.cn/20261123/1074303134.html",
-        "status": "meta_only",
-        "chars": 40,
-        "has_thumbnail": true
-      },
-      {
-        "url": "https://www.zaochenbao.com/news/politics/202611/2386028.html",
-        "status": "not_modified_304",
-        "reason": null
-      },
-      {
-        "url": "https://news.google.com/rss/articles/CBMiTEFVX3lxTE9GRTVKalY2RXRJMDJTbUdoWUswRzlMWXFVOWdSSDJVVGFJVnlFb3MwTERKNU9HenJHaWFUand4VXl0UTVVeXExaVp5aGE?oc=5",
+        "url": "https://news.google.com/rss/articles/CBMikwFBVV95cUxNOUtUU1N5MUppQTY5Y2J4amVqSXRPQXQ4QjUwMzF5MTdnelM5RFhVdU1maVAyUUJQNEYxdXh0bEhveDhVM0pFaXZ6MThQOVhzZ1RHNmdnS1VzMkZ6NXV4TWJCWnpmQ0xvdHpXUUNXMUtLYkxidjlhN0hqT3piNEkzT0xZd1EtaUk2NmJHTEFBMWJzSFk?oc=5",
         "status": "empty_or_js_rendered",
         "reason": "未提取到静态正文段落或图片"
       },
       {
-        "url": "https://www.zaochenbao.com/news/politics/202611/2386020.html",
-        "status": "not_modified_304",
-        "reason": null
+        "url": "https://wallstreetcn.com/livenews/3203953",
+        "status": "extracted_body_lead",
+        "chars": 62,
+        "has_thumbnail": true
+      },
+      {
+        "url": "https://wallstreetcn.com/articles/3786441",
+        "status": "extracted_body_lead",
+        "chars": 310,
+        "has_thumbnail": true
+      },
+      {
+        "url": "https://wallstreetcn.com/articles/3786498",
+        "status": "extracted_body_lead",
+        "chars": 395,
+        "has_thumbnail": true
+      },
+      {
+        "url": "https://flash.jin10.com/detail/20261123154305406800",
+        "status": "meta_only",
+        "chars": 47,
+        "has_thumbnail": false
+      },
+      {
+        "url": "https://aihot.news/items/tyttdr5y25gds6ojfo7ti6wdm",
+        "status": "extracted_body_lead",
+        "chars": 485,
+        "has_thumbnail": true
+      },
+      {
+        "url": "https://aihot.news/items/s7xoq2y7ls1y8v14o6urekg0o",
+        "status": "extracted_body_lead",
+        "chars": 424,
+        "has_thumbnail": true
+      },
+      {
+        "url": "https://finance.sina.cn/7x24/2026-11-23/detail-iniztfmy5511700.d.html",
+        "status": "extracted_body_lead",
+        "chars": 32,
+        "has_thumbnail": false
+      },
+      {
+        "url": "https://finance.sina.cn/7x24/2026-11-23/detail-iniztfmy5506694.d.html",
+        "status": "extracted_body_lead",
+        "chars": 41,
+        "has_thumbnail": false
+      },
+      {
+        "url": "https://www.v2ex.com/t/1259131",
+        "status": "extracted_body_lead",
+        "chars": 234,
+        "has_thumbnail": true
+      },
+      {
+        "url": "https://news.google.com/rss/articles/CBMibkFVX3lxTFAxcmZVWlFqZE9yS0p2RzYxbVNzeTVjZXQ5aDBoT1lZNnF5S1htNnB5dmFUNVg5RnNwbzItMmZKcUtxVjVfRldNcmFoS0duWG5QYmlrVmxyWnI1V2tCU2tyb1dyR1RTaTBya3pmQ0xn?oc=5",
+        "status": "empty_or_js_rendered",
+        "reason": "未提取到静态正文段落或图片"
+      },
+      {
+        "url": "https://www.jin10.com/plus/payment/index.html",
+        "status": "empty_or_js_rendered",
+        "reason": "未提取到静态正文段落或图片"
+      },
+      {
+        "url": "https://news.google.com/rss/articles/CBMiSEFVX3lxTFBIS2c0WWhqSWZldW9GUGdZbmFSTDRPbFhENENUTUQ2VmJOTHhfN05ZbGNrVXJsMWo5Z3lWNVpPcjRvRE1Hbko0Yg?oc=5",
+        "status": "empty_or_js_rendered",
+        "reason": "未提取到静态正文段落或图片"
+      },
+      {
+        "url": "https://flash.jin10.com/detail/20261123152707089800",
+        "status": "meta_only",
+        "chars": 218,
+        "has_thumbnail": false
+      },
+      {
+        "url": "https://wallstreetcn.com/livenews/3204007",
+        "status": "extracted_body_lead",
+        "chars": 338,
+        "has_thumbnail": true
       },
       {
         "url": "https://aihot.news/items/ch83tpw6qnmn54srh5w469uqm",
@@ -1439,19 +1519,26 @@
         "has_thumbnail": true
       },
       {
-        "url": "https://news.google.com/rss/articles/CBMizgFBVV95cUxQY0NlQ2FFZWVRd2FPTTJ4cjhKU3Vjb1hXdlZ2R1pfN2IxdlBxMDRZWmRMS1FyNXFSamtldk5GcVVPdnlxOFc2cmRsbS12TnFSdGhKeUx5NEF5dFJHUE12WDR2NGpZckk5cm5Ha3YzeXp0RkR2Y1BuTnhDWDczS18tTTlTWFplX0oyQy1SRDhFRS1jbzY3RnlIMWU1eHB1UktHWmpMT003MXV4d2l0bEg0QVp2bWJrWFUzQ3Rsdk5UbG9zNS1rLWlZV0pjejZQUQ?oc=5",
+        "url": "https://news.google.com/rss/articles/CBMiXkFVX3lxTE53bUJHNllrQnBhR3RSc25hcmkxS0U0REJKT0tGZGE3c1lnWUZKS3VrMGZ4cnROOVBMSllBQ0JBaDdEZkdmU2JkUjBEODBVcDExN2VkXzVGVXZkMks5Ync?oc=5",
         "status": "empty_or_js_rendered",
         "reason": "未提取到静态正文段落或图片"
       },
       {
-        "url": "https://www.ithome.com/1/030/777.htm",
-        "status": "empty_or_js_rendered",
-        "reason": "未提取到静态正文段落或图片"
-      },
-      {
-        "url": "https://wallstreetcn.com/livenews/3203760",
+        "url": "https://aihot.news/items/ahiv28657urifplozo1csu3lg",
         "status": "extracted_body_lead",
-        "chars": 345,
+        "chars": 307,
+        "has_thumbnail": true
+      },
+      {
+        "url": "https://aihot.news/items/rxwc1x34tzdkksi1jd57gsbfd",
+        "status": "extracted_body_lead",
+        "chars": 314,
+        "has_thumbnail": true
+      },
+      {
+        "url": "https://github.com/cathrynlavery/diagram-design",
+        "status": "meta_only",
+        "chars": 200,
         "has_thumbnail": true
       },
       {
@@ -1461,15 +1548,15 @@
         "has_thumbnail": true
       },
       {
-        "url": "https://www.cls.cn/detail/2541234",
-        "status": "empty_or_js_rendered",
-        "reason": "未提取到静态正文段落或图片"
+        "url": "https://wallstreetcn.com/livenews/3183232",
+        "status": "meta_only",
+        "chars": 104,
+        "has_thumbnail": true
       },
       {
-        "url": "https://www.nowcoder.com/discuss/953075892136259584",
-        "status": "extracted_body_lead",
-        "chars": 385,
-        "has_thumbnail": false
+        "url": "https://bbs.pcbeta.com/viewthread-2085371-1-1.html",
+        "status": "empty_or_js_rendered",
+        "reason": "未提取到静态正文段落或图片"
       },
       {
         "url": "https://wallstreetcn.com/livenews/3183682",
@@ -1478,62 +1565,10 @@
         "has_thumbnail": true
       },
       {
-        "url": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE5HX3VpbjhDMllrYmtISlBxRG5VZWttRVkxSE5zMHdCTlVxa1FBZXRnUl9XV3Q3TXNzaWJqZnRaUTNCSVVEcGI3d3JtQkltSHVWbVVNV2xVb0E?oc=5",
-        "status": "empty_or_js_rendered",
-        "reason": "未提取到静态正文段落或图片"
-      },
-      {
-        "url": "https://aihot.news/items/rxwc1x34tzdkksi1jd57gsbfd",
-        "status": "extracted_body_lead",
-        "chars": 314,
-        "has_thumbnail": true
-      },
-      {
-        "url": "https://www.marktechpost.com/2026/11/22/best-personal-ai-agents-2026/",
-        "status": "extracted_body_lead",
-        "chars": 580,
-        "has_thumbnail": true
-      },
-      {
-        "url": "https://news.google.com/rss/articles/CBMiT0FVX3lxTFBOV2pTamcyMktKbDEzZ2JGSHNjY2dKem1HLV83S01LQW52Sks1SVR6VjB5OXhOanRzUzhFOHFodWZDcmcyanJyNVE2ODFtNzA?oc=5",
-        "status": "empty_or_js_rendered",
-        "reason": "未提取到静态正文段落或图片"
-      },
-      {
-        "url": "https://news.google.com/rss/articles/CBMiQ0FVX3lxTE9fX1BYY2syMjRrMjFQSGlhcnd0Unk2VnIxWS1MZW1SVy1nMlRsWlRHYVdWSHVST0RZQzNiejJkZW9HSWM?oc=5",
-        "status": "empty_or_js_rendered",
-        "reason": "未提取到静态正文段落或图片"
-      },
-      {
-        "url": "https://wallstreetcn.com/livenews/3183232",
+        "url": "https://wallstreetcn.com/livenews/3203790",
         "status": "meta_only",
-        "chars": 104,
+        "chars": 157,
         "has_thumbnail": true
-      },
-      {
-        "url": "https://news.google.com/rss/articles/CBMiTkFVX3lxTE5KNl96OXJCbV9Qa0JIdUluQjVGNzdrd0FGb21mOWJtRkR4aHYxbXpCZE4wdElOSmJqelFJb001WjRKcVQ3M0hrX2dUVkFWQQ?oc=5",
-        "status": "empty_or_js_rendered",
-        "reason": "未提取到静态正文段落或图片"
-      },
-      {
-        "url": "https://news.google.com/rss/articles/CBMiogFBVV95cUxQbzJtcU1iS2pNaXg1UE02blJtMXBYaHJSTHAzNlNUNnVjRlFRNEVpZlRMUi1fNFk2OFAxb1F0Z3Rrb3IzWTZPblhpZmk3VHdRNWY2bVZqY0x4NnZISkNhVThzOUVGNHc4UXJ0QUJzbk1YUWZYeHVNTThCejZMOFp3QzVzTXVDZVNVNVlzdi0wQVRZQWx2VmdONVZOZmx3VEp3WlE?oc=5",
-        "status": "empty_or_js_rendered",
-        "reason": "未提取到静态正文段落或图片"
-      },
-      {
-        "url": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE1aQWhnd0hEbXRNdDBtVF9nd3hyMlVVbDNYZEF5MXppdjNQbThXSHhOTU9DeDFhYllTU3lSNUlFU0FXNE9zWlp3U0hyTklRTXFVMGtaWjJSZFIwNUVxWDRR?oc=5",
-        "status": "empty_or_js_rendered",
-        "reason": "未提取到静态正文段落或图片"
-      },
-      {
-        "url": "https://news.google.com/rss/articles/CBMioAFBVV95cUxORGlLdWNxQWZYSjQxOUNtLWdZVjlvRTBROFVkQWs2dC01YjM2RzZ6S1BMem50RExDTjBkMDZ2dHd3TmtnTUZQaEZXQ0xaVDFEZzd1N0V6aUdsbWxESTBSUUtCS3lkd1RBT2pfdVZwR0N4RHZ5MzNiZWVhRlVXSGVULWZpX1hfUnhXVlF6Vms1QU9KbjRWTmFJdWR2RjM0enha?oc=5",
-        "status": "empty_or_js_rendered",
-        "reason": "未提取到静态正文段落或图片"
-      },
-      {
-        "url": "https://aihot.news/items/ahiv28657urifplozo1csu3lg",
-        "status": "error",
-        "reason": "ReadTimeout: HTTPSConnectionPool(host='aihot.news', port=443): Read timed out. (read timeout=6)"
       }
     ]
   },
