@@ -407,7 +407,7 @@ def call_gemini_raw(
     *,
     scope: str,
     prompt: str,
-    models: Sequence[str] = ("gemini-2.5-flash", "gemini-2.5-flash-lite", "gemini-2.0-flash"),
+    models: Sequence[str] = ("gemini-2.5-flash", "gemini-2.5-flash-lite", "gemini-flash-latest"),
     temperature: float = 0.2,
     response_mime_type: Optional[str] = None,
     tools: Optional[List[Any]] = None,
@@ -440,7 +440,7 @@ def call_gemini_raw(
         if model_name in unavailable_models or attempts >= max_attempts or time.monotonic() >= deadline:
             continue
         has_fallback_after = model_idx < len(unique_models) - 1
-        timeout_ms = 45_000 if has_fallback_after else 70_000
+        timeout_ms = 65_000 if has_fallback_after else 75_000
         failed_for_model = failed_slots_by_model.setdefault(model_name, set())
         transient_errors_for_model = 0
         for slot in slots:
@@ -540,7 +540,18 @@ def call_gemini_raw(
                     if err_code == "TRANSIENT_ERROR":
                         transient_errors_for_model += 1
                         is_timeout_504 = any(k in short_msg.lower() for k in ("504", "deadline", "timeout", "timed out"))
-                        if transient_errors_for_model >= (1 if (has_fallback_after and is_timeout_504) else 2):
+                        has_healthy_next = False
+                        if has_fallback_after and is_timeout_504:
+                            next_model = unique_models[model_idx + 1]
+                            now_chk = _utc_now()
+                            with _POOL_LOCK:
+                                chk_ledger = _load_quota_ledger(base_dir)
+                                has_healthy_next = any(
+                                    _is_slot_available_for_model(_ensure_slot_record(chk_ledger, s), next_model, now_chk)
+                                    for s in slots
+                                )
+                        threshold = 1 if (has_healthy_next and is_timeout_504) else 2
+                        if transient_errors_for_model >= threshold:
                             unavailable_models.add(model_name)
                     break
 
@@ -577,7 +588,7 @@ def call_gemini_json(
     *,
     scope: str,
     prompt: str,
-    models: Sequence[str] = ("gemini-2.5-flash", "gemini-2.5-flash-lite", "gemini-2.0-flash"),
+    models: Sequence[str] = ("gemini-2.5-flash", "gemini-2.5-flash-lite", "gemini-flash-latest"),
     temperature: float = 0.25,
     tools: Optional[List[Any]] = None,
     base_dir: Path | str | None = ".",

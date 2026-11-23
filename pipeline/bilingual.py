@@ -392,7 +392,7 @@ def _translate_texts_with_pipeline(
         res = call_gemini_json(
             scope="bilingual",
             prompt=prompt,
-            models=("gemini-2.5-flash", "gemini-2.5-flash-lite", "gemini-2.0-flash", "gemini-4-hydrogen"),
+            models=("gemini-2.5-flash", "gemini-2.5-flash-lite", "gemini-flash-latest", "gemini-4-hydrogen"),
             temperature=0.1,
             base_dir=root_dir,
         )
@@ -1010,7 +1010,7 @@ def enrich_zh_tech_tools(tools: List[Dict[str, Any]], *, base_dir: Path | str = 
         res = call_gemini_json(
             scope="bilingual",
             prompt=prompt,
-            models=("gemini-2.5-flash", "gemini-2.5-flash-lite", "gemini-2.0-flash"),
+            models=("gemini-2.5-flash", "gemini-2.5-flash-lite", "gemini-flash-latest"),
             temperature=0.15,
             base_dir=root_dir,
         )

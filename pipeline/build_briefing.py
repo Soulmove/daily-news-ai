@@ -58,7 +58,7 @@ from pipeline.verifier import dedupe_attribution_prefixes, validate_published_br
 
 PRIMARY_MODEL = os.environ.get("GEMINI_MODEL", "gemini-4-hydrogen")
 FALLBACK_MODEL = os.environ.get("GEMINI_FALLBACK_MODEL", "gemini-2.5-flash")
-SECONDARY_FALLBACK_MODEL = "gemini-2.0-flash"
+SECONDARY_FALLBACK_MODEL = "gemini-flash-latest"
 _LAST_USED_MODEL = PRIMARY_MODEL
 
 PERSPECTIVE_ROLES = [
@@ -2152,7 +2152,12 @@ def build_briefing_batch(
                 }
 
     if success_cats == 0:
-        raise RuntimeError("All categories failed; aborting atomic publish so latest manifest remains intact.")
+        if len(fallback_v3_docs) < len(CATEGORIES):
+            raise RuntimeError("All categories failed; aborting atomic publish so latest manifest remains intact.")
+        print(
+            "⚠️ All 4 categories hit upstream Gemini failure; publishing recalibrated V3 snapshot from previous valid batch.",
+            flush=True,
+        )
 
     all_v3_docs = dict(fallback_v3_docs)
     all_v3_docs.update(cat_docs)
@@ -2174,7 +2179,10 @@ def build_briefing_batch(
     print(f"🌐 Finished enrich_bilingual_events in {time.monotonic() - bi_t0:.1f}s", flush=True)
 
     published_iso = to_iso_shanghai(now_shanghai())
-    batch_status = "complete" if failed_cats == 0 else "partial"
+    if success_cats == 0:
+        batch_status = "degraded_quota_recalibrated"
+    else:
+        batch_status = "complete" if failed_cats == 0 else "partial"
     has_any_comments = any(bool(c.get("comments")) for c in comment_docs.values())
 
     quota_summary = get_quota_summary(root)
@@ -2212,8 +2220,25 @@ def build_briefing_batch(
     for cat, doc in all_v3_docs.items():
         if cat in cat_docs:
             doc["published_at"] = published_iso
-            atomic_write_json(abs_smart_dir / f"analysis_{cat}.json", doc)
+        atomic_write_json(abs_smart_dir / f"analysis_{cat}.json", doc)
         atomic_write_json(root / f"analysis_{cat}.json", doc)
+        if cat not in cat_docs and isinstance(cat_manifest.get(cat), dict):
+            cat_manifest[cat]["path"] = f"{target_smart_rel}analysis_{cat}.json"
+            if cat not in comment_docs:
+                stub_cdoc = {
+                    "schema_version": "3.0",
+                    "batch_id": batch_id,
+                    "input_batch_id": input_batch_id,
+                    "generated_at": None,
+                    "category": cat,
+                    "is_ai_simulated": True,
+                    "status": "fallback",
+                    "disclaimer": "沿用降级模式或未启用 AI 模拟观点。",
+                    "comments": [],
+                }
+                atomic_write_json(abs_smart_dir / f"comments_{cat}.json", stub_cdoc)
+                atomic_write_json(root / f"comments_{cat}.json", stub_cdoc)
+                cat_manifest[cat]["comments_path"] = f"{target_smart_rel}comments_{cat}.json"
     for cat, cdoc in comment_docs.items():
         atomic_write_json(abs_smart_dir / f"comments_{cat}.json", cdoc)
         atomic_write_json(root / f"comments_{cat}.json", cdoc)
@@ -2249,7 +2274,7 @@ def build_briefing_batch(
         "published_at": published_iso,
         "status": batch_status,
         "has_comments": has_any_comments,
-        "categories": list(cat_docs.keys()),
+        "categories": list(cat_docs.keys()) or list(all_v3_docs.keys()),
     }
     upsert_history_index(root / "history/smart_index.json", index_entry, max_entries=96)
     prune_old_archives(root, "history/smart_index.json", keep_latest=12)
