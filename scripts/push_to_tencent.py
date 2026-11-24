@@ -70,7 +70,6 @@ def main() -> int:
 
     buf = io.BytesIO()
     include_paths = [
-        "data",
         "history",
         "analysis_general.json",
         "analysis_global.json",
@@ -90,7 +89,10 @@ def main() -> int:
     if manifest_file.exists():
         try:
             m = json.loads(manifest_file.read_text(encoding="utf-8"))
-            for info in ((m.get("smart") or {}).get("categories") or {}).values():
+            smart_m = m.get("smart") or {}
+            if isinstance(smart_m.get("meta_path"), str) and smart_m["meta_path"]:
+                include_paths.append(smart_m["meta_path"].lstrip("./"))
+            for info in (smart_m.get("categories") or {}).values():
                 if isinstance(info, dict):
                     for k in ("path", "comments_path"):
                         v = info.get(k)
@@ -104,6 +106,17 @@ def main() -> int:
                     include_paths.append(info["path"].lstrip("./"))
         except Exception:
             pass
+
+    data_dir = root / "data"
+    if data_dir.exists():
+        for fp in sorted(data_dir.rglob("*")):
+            if fp.is_file():
+                rel = fp.relative_to(root).as_posix()
+                if rel != "data/manifest.json":
+                    include_paths.append(rel)
+    if manifest_file.exists():
+        # Always write data/manifest.json VERY LAST so archives & analysis files exist on disk first
+        include_paths.append("data/manifest.json")
 
     count = 0
     with tarfile.open(fileobj=buf, mode="w:gz") as tf:

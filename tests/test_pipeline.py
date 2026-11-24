@@ -5086,6 +5086,70 @@ class V3PipelineRegressionTests(unittest.TestCase):
             self.assertEqual(pub_live_settled[0]["prediction_id"], "pred_seed_nvda_sec_502")
             self.assertEqual(pub_live_settled[0]["settlement"]["outcome"], "correct")
 
+    def test_v21_tool_dict_sanitize_gold_sanity_wire_routing_and_inverse_etf(self) -> None:
+        from datetime import datetime, timedelta, timezone
+        from pipeline.bilingual import _extract_tool_summary_text, enrich_zh_tech_tools
+        from pipeline.market_quotes import _is_sane_quote
+        from pipeline.connectors.china_realtime import _classify_wire_item, refresh_live_wire_file
+        from pipeline.finance_impact_builder import build_finance_impact_artifact
+
+        raw_dict_str = "{'name': 'n8n', 'summary': '开源工作流自动化与 AI 编排平台。'}"
+        self.assertEqual(_extract_tool_summary_text(raw_dict_str), "开源工作流自动化与 AI 编排平台。")
+
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "data").mkdir(parents=True, exist_ok=True)
+            tools = [{"tool_id": "t_n8n", "name": "n8n", "summary": raw_dict_str, "summary_zh": "", "summary_en": ""}]
+            enrich_zh_tech_tools(tools, base_dir=root)
+            self.assertNotIn("{'name':", tools[0]["summary"])
+            self.assertIn("工作流", tools[0]["summary"])
+
+            # Gold price sanity bounds check (410 bogus COMEX vs 2650 sane)
+            self.assertFalse(_is_sane_quote("GC=F", "commodity_gold", 410.0, -4.0))
+            self.assertTrue(_is_sane_quote("GC=F", "commodity_gold", 2650.0, 1.2))
+
+            # Foreign industrial explosion should route to global, not finance
+            self.assertEqual(
+                _classify_wire_item("哥伦比亚波哥大工业区发生强烈爆炸已致12人死亡", "", "finance"),
+                "global",
+            )
+
+            # Casualty escalation within 12h merges to higher casualty count (19)
+            now_iso = datetime.now(timezone.utc).isoformat()
+            prev_iso = (datetime.now(timezone.utc) - timedelta(hours=3)).isoformat()
+            res = refresh_live_wire_file(
+                base_dir=root,
+                extra_items=[
+                    {"id": "w_col_1", "title": "哥伦比亚波哥大工业区爆炸已致12人死亡", "excerpt": "救援仍在继续", "url": "https://example.com/1", "source_name": "央视", "category": "global", "published_at": prev_iso, "fetched_at": prev_iso},
+                    {"id": "w_col_2", "title": "哥伦比亚波哥大工业区爆炸事故伤亡人数升至19人", "excerpt": "调查已展开", "url": "https://example.com/2", "source_name": "新华社", "category": "global", "published_at": now_iso, "fetched_at": now_iso},
+                ],
+            )
+            merged_col = [it for it in res["items"] if "波哥大" in it.get("title", "")]
+            self.assertEqual(len(merged_col), 1)
+            self.assertIn("19人", merged_col[0]["title"])
+
+        # Inverse NVDA ETF must NOT match ai_equity_selloff
+        fin_doc = build_finance_impact_artifact(
+            all_events=[
+                {
+                    "event_id": "ev_inv_etf",
+                    "category": "finance",
+                    "title": "做空英伟达两倍ETF大涨63%，资金关注波动对冲",
+                    "fact_summary": "杠杆反向ETF产品受机构对冲情绪推动走强。",
+                    "sources": [{"source_name": "财联社", "url": "https://cls.cn/inv"}],
+                    "latest_reported_at": now_iso,
+                    "importance": "medium",
+                }
+            ],
+            batch_id="smart-test",
+            generated_at_iso=now_iso,
+            quotes_doc={"quotes": {"NVDA": {"ticker": "NVDA", "price": 140.0, "pct_change": 1.2}}},
+        )
+        inv_matches = [it for it in fin_doc.get("event_impacts", []) if it.get("event_id") == "ev_inv_etf"]
+        if inv_matches:
+            self.assertNotEqual(inv_matches[0].get("tag"), "AI 算力链回调")
+            self.assertNotEqual(inv_matches[0].get("polarity"), "bearish")
+
 
 if __name__ == "__main__":
     unittest.main()

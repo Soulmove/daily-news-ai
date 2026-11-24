@@ -1021,11 +1021,12 @@ def _detect_session_context(pub_at_iso: str, title: str, rule_id: str, quotes_ma
     nvda_q = quotes_map.get("NVDA") or {}
     qqq_q = quotes_map.get("QQQ") or {}
     hsi_q = quotes_map.get("HSI.HK") or {}
-    gld_q = quotes_map.get("GLD") or {}
+    gold_q = quotes_map.get("XAUUSD") or quotes_map.get("GC=F") or quotes_map.get("GLD") or {}
+    gold_lbl = "外盘国际黄金" if (quotes_map.get("XAUUSD") or quotes_map.get("GC=F")) else "外盘黄金ETF(GLD)"
 
     nvda_pct = nvda_q.get("pct_change")
     qqq_pct = qqq_q.get("pct_change")
-    gld_pct = gld_q.get("pct_change")
+    gld_pct = gold_q.get("pct_change")
     overseas_big_move = (
         (nvda_pct is not None and abs(float(nvda_pct)) >= 3.0)
         or (qqq_pct is not None and abs(float(qqq_pct)) >= 1.5)
@@ -1047,7 +1048,7 @@ def _detect_session_context(pub_at_iso: str, title: str, rule_id: str, quotes_ma
             )
         elif rule_id == "precious_metals_physical_divergence":
             gap = (
-                f"外盘国际黄金近期波动{' (' + str(gld_pct) + '%)' if gld_pct is not None else ''}已在期货端计价，"
+                f"{gold_lbl}近期波动{' (' + str(gld_pct) + '%)' if gld_pct is not None else ''}已在期货端计价，"
                 "但国内菜百实物金条抢购脱销代表的下游珠宝高周转超预期营收弹性尚未在 A 股充分定价，周一开盘留意矿金承压 vs 金店零售分化。"
             )
         elif rule_id == "a_share_bottom_valuation_signal":
@@ -1560,7 +1561,9 @@ def customize_event_copy_and_basis(
     elif rid == "telecom_digital_sanction":
         custom_ol = "美方限制中资运营商直接获取美国号码资源引发商务部坚决反对，对三大运营商国内现金流实质冲击微乎其微，主要催化自主加密通信与涉外合规安全关注。"
     elif nums and nums[0] not in custom_ol:
-        custom_ol = f"{custom_ol.rstrip('。')}（聚焦本次事件关键量化幅度：{nums[0]}）。"
+        m_sess = re.search(rf"(早盘一度|早盘|盘中一度|盘中|美股收盘|收盘|夜盘|盘前).{{0,8}}{re.escape(nums[0])}", title)
+        sess_note = f"{m_sess.group(1)} " if m_sess else ""
+        custom_ol = f"{custom_ol.rstrip('。')}（聚焦报道时点量化幅度：{sess_note}{nums[0]}，当前实时报价见行情栏）。"
 
     # Populate honest, distinct sample_basis linked to the precedent DB
     prec_list = _PRECEDENT_DB.get(rid) or _DEFAULT_PRECEDENTS

@@ -149,11 +149,12 @@ _NON_TECH_CONSUMER_OR_CRIME_RE = re.compile(
     re.I,
 )
 _DISASTER_SOCIETY_RE = re.compile(
-    r"(?:地震|地震台网|地质调查局|\bUSGS\b|余震|震中|台风|强台风|暴雨|山洪|海啸|火山喷发|泥石流|灾情|救援人员|人员伤亡)",
+    r"(?:地震|地震台网|地质调查局|\bUSGS\b|余震|震中|台风|强台风|暴雨|山洪|海啸|火山喷发|泥石流|灾情|救援人员|人员伤亡|"
+    r"车祸|大巴|巴士|翻车|撞车|爆炸|火灾|空难|矿难|袭击|枪击|遇难|身亡|死亡|死伤|受伤|坠机|坍塌)",
     re.I,
 )
 _DISASTER_FOREIGN_RE = re.compile(
-    r"(?:\bUSGS\b|日本|印尼|印度尼西亚|菲律宾|土耳其|智利|希腊|意大利|加州|阿拉斯加|堪察加|Timor|Chile|Indonesia|Japan|Greece|Turkey|Alaska|California)",
+    r"(?:\bUSGS\b|日本|印尼|印度尼西亚|菲律宾|土耳其|智利|希腊|意大利|加州|阿拉斯加|堪察加|阿联酋|迪拜|阿布扎比|哥伦比亚|巴西|墨西哥|沙特|伊朗|以色列|俄罗斯|乌克兰|美国|英国|法国|德国|韩国|印度|泰国|越南|澳大利亚|西班牙|埃及|南非|巴基斯坦|Timor|Chile|Indonesia|Japan|Greece|Turkey|Alaska|California|UAE|Colombia)",
     re.I,
 )
 _GAMING_ENT_RE = re.compile(
@@ -177,8 +178,10 @@ def _classify_wire_item(title: str, content: str, default_cat: str) -> str:
         return "general"
     if _GAMING_ENT_RE.search(title) and not _STOCK_CORP_TITLE_RE.search(title):
         return "tech"
-    if _DISASTER_SOCIETY_RE.search(title):
-        return "global" if _DISASTER_FOREIGN_RE.search(title) else "general"
+    if _DISASTER_SOCIETY_RE.search(title) or (
+        not _STOCK_CORP_TITLE_RE.search(title) and _DISASTER_SOCIETY_RE.search(cleaned_content[:120])
+    ):
+        return "global" if (_DISASTER_FOREIGN_RE.search(title) or _GEO_PRIORITY_RE.search(title)) else "general"
     if _MACRO_STRATEGIST_RE.search(title):
         return "finance"
     if _AI_KW_RE.search(text):
@@ -838,6 +841,15 @@ def refresh_live_wire_file(base_dir: Path | str = ".", extra_items: Optional[Lis
         ("纳指", "英伟达"),
         ("kospi", "跌"),
         ("美光", "hbm"),
+        ("小豆", "豆包"),
+        ("小豆", "字节"),
+        ("小豆", "ai"),
+        ("花旗", "空头"),
+        ("cop31", "气候"),
+        ("cop31", "化石燃料"),
+        ("cop31", "谈判"),
+        ("哥伦比亚", "爆炸"),
+        ("阿联酋", "车祸"),
     )
 
     def _wire_titles_similar(norm_a: str, norm_b: str) -> bool:
@@ -845,11 +857,16 @@ def refresh_live_wire_file(base_dir: Path | str = ".", extra_items: Optional[Lis
             return False
         if norm_a == norm_b:
             return True
-        if len(norm_a) >= 12 and len(norm_b) >= 12 and (norm_a.startswith(norm_b[:16]) or norm_b.startswith(norm_a[:16])):
+        if len(norm_a) >= 12 and len(nb_s := norm_b) >= 12 and (norm_a.startswith(nb_s[:16]) or nb_s.startswith(norm_a[:16])):
             return True
         for a, b in _WIRE_CLUSTERS:
             if a in norm_a and b in norm_a and a in norm_b and b in norm_b:
                 return True
+        # Match multi-report casualty escalation updates (e.g. 12人受伤 -> 受伤人数升至19人)
+        for loc in ("哥伦比亚", "阿联酋", "迪拜", "菲律宾", "日本", "印尼", "伊朗"):
+            for act in ("爆炸", "车祸", "袭击", "地震", "火灾"):
+                if loc in norm_a and act in norm_a and loc in norm_b and act in norm_b:
+                    return True
         if len(norm_a) >= 10 and len(norm_b) >= 10:
             bg_a = {norm_a[i : i + 2] for i in range(len(norm_a) - 1)}
             bg_b = {norm_b[i : i + 2] for i in range(len(norm_b) - 1)}
@@ -858,12 +875,17 @@ def refresh_live_wire_file(base_dir: Path | str = ".", extra_items: Optional[Lis
                 return True
         return False
 
-    def _within_three_hours(iso_a: str, iso_b: str) -> bool:
+    def _within_merge_window(iso_a: str, iso_b: str, *, same_cluster_or_casualty: bool = False) -> bool:
         dt_a = parse_iso_datetime(iso_a)
         dt_b = parse_iso_datetime(iso_b)
         if dt_a is None or dt_b is None:
             return True
-        return abs((dt_a - dt_b).total_seconds()) <= 10800
+        limit = 43200 if same_cluster_or_casualty else 10800
+        return abs((dt_a - dt_b).total_seconds()) <= limit
+
+    def _extract_casualty_max(text: str) -> int:
+        nums = [int(x) for x in re.findall(r"(?:致|升至|增至|已致|造成)?\s*(\d{1,4})\s*人(?:遇难|死亡|丧生|受伤|伤亡)", str(text or ""))]
+        return max(nums) if nums else 0
 
     def _split_clean_sources(raw_src: str) -> tuple[List[str], int]:
         txt = str(raw_src or "").strip()
@@ -924,18 +946,28 @@ def refresh_live_wire_file(base_dir: Path | str = ".", extra_items: Optional[Lis
             reason_tag = _infer_wire_heavy_reason_tag(title, excerpt_clean, cat_norm) if sev_tier in {"S", "A"} else None
 
         in_richness = len(title) + len(excerpt_clean)
+        in_cas = _extract_casualty_max(f"{title} {excerpt_clean}")
         for prev_norm, prev_pub, prev_cluster, prev_idx in seen_entries:
             same_cluster = bool(cluster_key and prev_cluster and cluster_key == prev_cluster)
-            if _within_three_hours(pub, prev_pub) and (same_cluster or _wire_titles_similar(norm_full, prev_norm)):
-                # Coalesce multi-post burst or cross-source duplicate into the richest / latest wire item
+            sim_match = _wire_titles_similar(norm_full, prev_norm)
+            if (same_cluster or sim_match) and _within_merge_window(
+                pub, prev_pub, same_cluster_or_casualty=bool(same_cluster or in_cas > 0)
+            ):
+                # Coalesce multi-post burst or casualty escalation into the freshest / highest-casualty / richest item
                 target = merged[prev_idx]
                 base_srcs = target.setdefault("_merged_sources", _split_clean_sources(target.get("source_name") or "实时快讯")[0])
                 for s in in_srcs:
                     if s and s not in base_srcs:
                         base_srcs.append(s)
                 target["_merged_count"] = max(int(target.get("_merged_count") or 1) + 1, len(base_srcs))
+                cur_cas = _extract_casualty_max(f"{target.get('title', '')} {target.get('excerpt', '')}")
+                is_casualty_upgrade = (
+                    in_cas > cur_cas and cur_cas > 0 and pub >= str(target.get("published_at") or "")
+                ) or (
+                    in_cas >= cur_cas and in_cas > 0 and bool(re.search(r"升至|增至|最新伤亡", title))
+                )
                 cur_richness = len(str(target.get("title") or "")) + len(str(target.get("excerpt") or ""))
-                if (in_richness > cur_richness + 4) or (in_richness >= cur_richness - 4 and pub > str(target.get("published_at") or "")):
+                if is_casualty_upgrade or (in_richness > cur_richness + 4) or (in_richness >= cur_richness - 4 and pub > str(target.get("published_at") or "")):
                     target["title"] = title
                     if excerpt_clean:
                         target["excerpt"] = excerpt_clean

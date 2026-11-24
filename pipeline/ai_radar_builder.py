@@ -1172,6 +1172,12 @@ def _infer_what_it_does_zh(title: str, summary: str, *, is_tool_release: bool = 
     norm_sum = re.sub(r"[\W_]+", "", clean_sum).lower()
     norm_title = re.sub(r"[\W_]+", "", clean_title).lower()
     cjk_count = sum(1 for ch in clean_sum if "\u4e00" <= ch <= "\u9fff")
+    if "黎曼猜想" in f"{clean_title} {clean_sum}" or "riemann" in f"{clean_title} {clean_sum}".lower():
+        clean_sum = re.sub(
+            r"完全正确[，,、]?\s*并已通过多个独立验证器的验证[，,、]?\s*排除了AI作弊的可能性",
+            "引起广泛讨论，但是否完全严谨及存在代码冗余仍具争议，尚待数学界权威期刊与独立同行评审最终定论",
+            clean_sum,
+        )
     is_echo = (
         not clean_sum
         or clean_sum == clean_title
@@ -1597,6 +1603,9 @@ def build_ai_progress_artifact(
                 "is_recent_72h": _is_within_recent_hours(pub_date, gen_dt, 72),
             }
         )
+        if "黎曼猜想" in title or "riemann" in title.lower():
+            cand["limitations"] = "相关形式化证明目前仍存在代码冗余及独立同行评审争议，尚未获得国际数学界公认定论，请注意区分阶段性新闻进展与正式学术认证边界。"
+            cand["limitations_en"] = "Formal proof claims remain under community scrutiny over code redundancy and await independent peer-reviewed verification."
         if cand.get("what_it_does_en"):
             cand["what_it_does_en"] = strip_raw_urls_and_domain_tails(str(cand["what_it_does_en"]))
         _append_related_source(cand, src_name, url, first_hand)

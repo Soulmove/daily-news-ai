@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import ast
 import hashlib
 import json
 import os
@@ -311,6 +312,48 @@ def _batch_translate_with_gemini(
     return translated
 
 
+def _extract_tool_summary_text(raw_val: Any) -> str:
+    """Safely extract clean text when Gemini or legacy cache yields a dict or stringified Python dict."""
+    if raw_val is None:
+        return ""
+    if isinstance(raw_val, dict):
+        for key in ("notes", "summary", "text", "highlights", "desc", "description"):
+            candidate = str(raw_val.get(key) or "").strip()
+            if candidate and not candidate.startswith(("{", "[")):
+                return candidate
+        return ""
+    txt = str(raw_val).strip()
+    if txt.startswith(("{", "[")) and ("'name':" in txt or '"name":' in txt or "'notes':" in txt or '"notes":' in txt):
+        parsed_obj = None
+        try:
+            parsed_obj = json.loads(txt)
+        except Exception:
+            try:
+                parsed_obj = ast.literal_eval(txt)
+            except Exception:
+                parsed_obj = None
+        if isinstance(parsed_obj, dict):
+            return _extract_tool_summary_text(parsed_obj)
+        m_notes = re.search(r"""['"](?:notes|summary|text)['"]\s*:\s*['"]([^'"]{4,400})['"]""", txt)
+        if m_notes:
+            return m_notes.group(1).strip()
+        return ""
+    return txt
+
+
+def _sanitize_cached_translation_val(val: str) -> str:
+    """Clean stringified dict artifacts and known mistranslations in translation strings/caches."""
+    cleaned = _extract_tool_summary_text(val)
+    if not cleaned:
+        return ""
+    cleaned = re.sub(
+        r"(?:超过?\s*70\s*万(?:名)?\s*俄罗斯士兵在乌克兰(?:丧生|阵亡)|阵亡俄军士兵已?超过?\s*70\s*万)",
+        "俄军总伤亡（含阵亡、负伤及失踪）估计超70万",
+        cleaned,
+    )
+    return cleaned
+
+
 def _translation_cache_key(text: str, target_lang: str) -> str:
     digest = hashlib.sha256(f"{target_lang}\n{text.strip()}".encode("utf-8")).hexdigest()[:16]
     return f"{target_lang}:{digest}"
@@ -322,7 +365,19 @@ def _load_translation_cache(cache_path: Optional[Path] = None) -> Dict[str, str]
         if path.exists():
             raw = json.loads(path.read_text(encoding="utf-8"))
             if isinstance(raw, dict):
-                return {str(k): str(v) for k, v in raw.items() if isinstance(v, str) and v.strip()}
+                cleaned_map: Dict[str, str] = {}
+                repaired = False
+                for k, v in raw.items():
+                    if not isinstance(v, str) or not v.strip():
+                        continue
+                    nv = _sanitize_cached_translation_val(v)
+                    if nv != v:
+                        repaired = True
+                    if nv:
+                        cleaned_map[str(k)] = nv
+                if repaired:
+                    _save_translation_cache(cleaned_map, path)
+                return cleaned_map
     except Exception:
         pass
     return {}
@@ -416,7 +471,7 @@ def _translate_texts_with_pipeline(
             last_error = res.error_message or "chunk_translation_failed"
             continue
         for local_i, orig_pos in enumerate(chunk_idx):
-            val = str(parsed[local_i]).strip()
+            val = _sanitize_cached_translation_val(parsed[local_i])
             out[orig_pos] = val
             if val:
                 ck = _translation_cache_key(chunk[local_i], target_lang)
@@ -1009,6 +1064,10 @@ def enrich_zh_tech_tools(tools: List[Dict[str, Any]], *, base_dir: Path | str = 
     for t in tools:
         if not isinstance(t, dict):
             continue
+        raw_sum = str(t.get("summary") or "").strip()
+        if raw_sum.startswith(("{", "[")) and ("'name':" in raw_sum or '"name":' in raw_sum):
+            recovered = _extract_tool_summary_text(raw_sum)
+            t["summary"] = recovered or str(t.get("summary_en") or "").strip()
         summary = str(t.get("summary") or "").strip()
         if not summary:
             continue
@@ -1020,7 +1079,7 @@ def enrich_zh_tech_tools(tools: List[Dict[str, Any]], *, base_dir: Path | str = 
         tid = str(t.get("tool_id") or t.get("name") or "")
         ver = str(t.get("latest_version") or "")
         ck = _translation_cache_key(f"tool:{tid}:{ver}:{summary[:180]}", "zh")
-        cached_val = cache_map.get(ck)
+        cached_val = _extract_tool_summary_text(cache_map.get(ck))
         if cached_val:
             t["summary"] = cached_val
         else:
@@ -1040,7 +1099,7 @@ def enrich_zh_tech_tools(tools: List[Dict[str, Any]], *, base_dir: Path | str = 
         prompt = (
             "请将以下开源 AI 工具的英文 Release 说明提炼为面向中文开发者的精炼要点（严禁照搬 commit 前缀或 PR 编号）。\n"
             "每条输出 1~2 句核心更新亮点，用中文全角分号“；”分隔，长度控制在 90 字以内。\n"
-            "只输出严格 JSON 字符串数组（长度必须与输入完全一致）：\n"
+            "只输出严格 JSON 字符串数组（长度必须与输入完全一致），每个元素必须是纯中文字符串，严禁输出对象或字典：\n"
             + json.dumps(prompt_items, ensure_ascii=False)
         )
         res = call_gemini_json(
@@ -1055,7 +1114,7 @@ def enrich_zh_tech_tools(tools: List[Dict[str, Any]], *, base_dir: Path | str = 
         parsed = res.data if res.ok else None
     if isinstance(parsed, list) and len(parsed) == len(pending[:16]):
         for pos, (t, ck, _s) in enumerate(pending[:16]):
-            val = str(parsed[pos] or "").strip()
+            val = _extract_tool_summary_text(parsed[pos])
             if val and not re.match(r"^(?:v?\d+\.\d+|Features|Bug Fixes|Improvements|Release Notes)\s*[:：；;]*$", val, re.I):
                 t["summary"] = val
                 cache_map[ck] = val

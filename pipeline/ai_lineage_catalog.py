@@ -41,7 +41,7 @@ LAB_V9_METADATA: Dict[str, Dict[str, Any]] = {
             {"generation": "Claude 4.5 Sonnet / Haiku", "release_date": "2025-10", "status": "GA 闭源", "specs": "200K · Swe-bench 高分自主工程", "pricing_or_license": "$1/$5 (Haiku) · $3/$15 (Sonnet)", "filter_keyword": "Claude 4.5", "highlight": "显著提升大型仓库单测修复成功率与多子代理并行代码编辑吞吐"},
             {"generation": "Claude 4.6 (Opus / Sonnet)", "release_date": "2026-03", "status": "GA 闭源", "specs": "1M Beta · 自适应精细思考", "pricing_or_license": "$3/$15 · 企业 Bedrock/Vertex", "filter_keyword": "Claude 4.6", "highlight": "百万上下文代码库零幻觉检索跃升，深耕金融合规模板审计"},
             {"generation": "Claude Fable 5.2 / Mythos 5.2", "release_date": "2026-10", "status": "GA 闭源", "specs": "512K~1M · 企业安全沙盒推理", "pricing_or_license": "Closed Commercial API", "filter_keyword": "Mythos", "highlight": "强化超大软件系统架构重构、多Agent调度安全边界与企业研发效能"},
-            {"generation": "Claude Sonnet 5.5 / Opus 5.5 & 形式化数学", "release_date": "2026-11", "status": "最新旗舰 GA", "specs": "1M · 形式化定理证明 + 高阶推理", "pricing_or_license": "$3~$15 Input / $15~$75 Output", "filter_keyword": "Claude", "highlight": "辅助证明广义黎曼猜想获 Lean 官方与 Mathlib 验证收录，登顶科研推理榜"},
+            {"generation": "Claude Sonnet 5.5 / Opus 5.5 & 形式化数学", "release_date": "2026-11", "status": "最新旗舰 GA", "specs": "1M · 形式化定理证明 + 高阶推理", "pricing_or_license": "$3~$15 Input / $15~$75 Output", "filter_keyword": "Claude", "highlight": "探索黎曼猜想形式化证明引发学界广泛关注（尚存代码冗余与独立同行评审争议，未获最终定论）"},
         ],
     },
     "zhipu_glm": {

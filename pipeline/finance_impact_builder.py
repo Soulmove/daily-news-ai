@@ -563,10 +563,17 @@ def _build_domain_scenario(
             "if_then": [],
             "milestones": [{"date": "7 日内", "status": "current", "label": "观察商务部是否公布对等美企合规核查清单"}],
         }
+    _inverse_etf_re = re.compile(
+        r"(?:2倍做空|两倍做空|2x\s*short|3倍做空|3x\s*short|杠杆做空|做空产品|反向.*etf|\b(?:nvds|nvdq|nvdd)\b|short\s*nvda\s*daily\s*etf)",
+        re.I,
+    )
     if (
-        any(k in t for k in ("暴跌", "重挫", "下挫", "抛售潮", "抹去年内涨幅", "逼近破发", "破发", "动荡"))
-        and any(k in t for k in ("英伟达", "nvda", "纳指", "anthropic", "ai板块", "算力", "芯片"))
-    ) or ("anthropic" in tl and "ipo" in tl and any(k in t for k in ("动荡", "担忧", "承压", "波动"))):
+        (
+            any(k in t for k in ("暴跌", "重挫", "下挫", "抛售潮", "抹去年内涨幅", "逼近破发", "破发", "动荡"))
+            and any(k in t for k in ("英伟达", "nvda", "纳指", "anthropic", "ai板块", "算力", "芯片"))
+        )
+        or ("anthropic" in tl and "ipo" in tl and any(k in t for k in ("动荡", "担忧", "承压", "波动")))
+    ) and not _inverse_etf_re.search(t):
         is_ipo = "anthropic" in tl or "破发" in tl or "发行价" in tl or "上市" in tl
         if is_ipo:
             qqq_f, atr_v, _ = _volatility_scale("QQQ", quotes_map, intensity)
@@ -1228,12 +1235,47 @@ def _build_domain_scenario(
             "milestones": [{"date": "1 周内", "status": "current", "label": "PHMSA 与运营方公布恢复通流时间表"}],
         }
 
-    # 7. FOMC Hawkish Rate Hike (TITLE-anchored so domestic A-share bottoming reports mentioning overseas rates never misfire!)
+    # 7. FOMC Rate Decision (distinguish hawkish/hike from dovish/rate-cut; TITLE-anchored!)
     if (
         any(k in tl for k in ("美联储", "fomc", "鲍威尔"))
-        and any(k in tl for k in ("加息", "放鹰", "利率"))
+        and any(k in tl for k in ("加息", "降息", "放鹰", "偏鸽", "维持利率", "按兵不动", "利率"))
         and not re.search(r"招商证券|中信证券|华泰证券|券商研报|历史底部|多项指标.*底部", tl)
     ):
+        is_cut_or_dove = any(k in tl for k in ("降息", "偏鸽", "宽松", "转向降息")) and not any(
+            k in tl for k in ("重启加息", "连续加息", "推迟降息", "不排除加息")
+        )
+        if is_cut_or_dove:
+            qqq_f, atr_v, _ = _volatility_scale("QQQ", quotes_map, 4)
+            return {
+                "rule_id": "central_bank_dovish",
+                "tag": "美联储偏鸽 / 降息宽松预期",
+                "tag_en": "Fed Dovish / Rate-Cut Easing",
+                "polarity": "bullish",
+                "intensity": 4,
+                "one_liner": "美联储降息或偏鸽信号压低美债实际收益率与折现率，提振纳指成长股、港股外资流动性与国际金价。",
+                "one_liner_en": "Dovish Fed rate easing lowers real discount rates, lifting Nasdaq growth equities, HKEX liquidity, and gold.",
+                "sample_basis": {
+                    "sample_n": 24,
+                    "volatility_pct": atr_v or 2.6,
+                    "volatility_source": "FOMC 决议日历史 24 次样本",
+                    "horizon": "1~5 个交易日",
+                    "confidence_label": "高置信（利率定价主逻辑）",
+                    "confidence_label_en": "High (Rate-Easing Driver)",
+                },
+                "affected_tickers": {"QQQ": 0.75, "IXIC": 0.75, "GLD": 0.65, "HSI.HK": 0.6, "518880.SH": 0.55, "601398.SH": -0.25},
+                "realized_quotes": _quote_snapshot(["IXIC", "HSI.HK", "GC=F", "518880.SH"]),
+                "bars": [
+                    _bar("美股", "纳指长久期科技成长 (QQQ)", "US Long-Duration Tech (QQQ)", 1.2, 3.6, "折现率下行放大科技成长股估值扩张空间。", "Lower discount rates support long-duration tech multiples.", min(1.3, qqq_f), "QQQ"),
+                    _bar("港股", "恒生科技与外资敏感资产 (HSTECH)", "HKEX Tech & Liquidity Assets", 1.0, 2.8, "港元融资成本趋缓叠加美元走弱利于外资回流港股。", "Softer USD and HKD funding costs aid HK inflows.", 1.0, "HSI.HK"),
+                    _bar("A股", "黄金有色与高弹性成长板块", "A-Share Gold & Growth", 0.8, 2.5, "无息黄金配置吸引力与成长风险偏好同步回升。", "Bullion and growth appetite benefit from lower real rates.", 1.0, "518880.SH"),
+                ],
+                "if_then": [
+                    {"cond": "若后续通胀继续回落确认降息周期延续", "result": "成长科技与黄金主升弹性进一步打开", "tone": "bullish"},
+                    {"cond": "若核心服务通胀反弹触发政策措辞反复", "result": "短线降息交易获利回吐波动加大", "tone": "bearish"},
+                ],
+                "milestones": [{"date": "2026-12-10 03:00", "status": "upcoming", "label": "FOMC 利率决议与季度 SEP 点阵图（北京时间 12 月 10 日 03:00）"}],
+            }
+
         is_hike = any(k in tl for k in ("重启加息", "加息", "放鹰"))
         qqq_f, atr_v, _ = _volatility_scale("QQQ", quotes_map, 4)
         return {
@@ -1242,7 +1284,7 @@ def _build_domain_scenario(
             "tag_en": "Fed Hawkish Rate Decision",
             "polarity": "bearish" if is_hike else "divergent",
             "intensity": 4 if is_hike else 3,
-            "one_liner": "美联储重启加息并密集释放鹰派信号直接推高无风险折现率，压制美股长久期成长与港股流动性，无息黄金同样承压。",
+            "one_liner": "美联储释放鹰派信号（不排除进一步收紧利率）推高无风险折现率，压制美股长久期成长与港股流动性，无息黄金短线承压。",
             "one_liner_en": "Hawkish Fed tightening lifts discount rates, pressuring Nasdaq duration assets, HK liquidity, and non-yielding gold.",
             "sample_basis": {
                 "sample_n": 24,
@@ -1253,7 +1295,7 @@ def _build_domain_scenario(
                 "confidence_label_en": "High (Rate-Discount Driver)",
             },
             "affected_tickers": {"QQQ": -0.75, "IXIC": -0.75, "GLD": -0.65, "HSI.HK": -0.6, "518880.SH": -0.55, "601398.SH": 0.4},
-            "realized_quotes": _quote_snapshot(["IXIC", "HSI.HK", "GLD", "518880.SH"]),
+            "realized_quotes": _quote_snapshot(["IXIC", "HSI.HK", "GC=F", "518880.SH"]),
             "bars": [
                 _bar("美股", "纳指长久期科技成长 (QQQ)", "US Long-Duration Tech (QQQ)", -3.8, -1.3, "实际利率上升直接压缩远期现金流科技股估值折现率。", "Higher real rates compress long-duration equity valuation multiples.", min(1.3, qqq_f), "QQQ"),
                 _bar("港股", "恒生与港元利率敏感成长股 (HSI)", "HKEX Rate-Sensitive Equities (HSI)", -3.0, -0.9, "联系汇率制下港元资金成本跟随紧缩，外资风偏回落。", "Pegged HKD funding costs tighten alongside Fed rate moves.", 1.0, "HSI.HK"),
@@ -1264,7 +1306,7 @@ def _build_domain_scenario(
                 {"cond": "若点阵图进一步上调终端利率且就业维持强劲", "result": "成长板块估值压力延长，现金与高股息继续跑赢", "tone": "bearish"},
                 {"cond": "若会后官员澄清紧缩已接近尾声", "result": "美债长端收益率见顶回落带来成长股反弹", "tone": "bullish"},
             ],
-            "milestones": [{"date": "2026-12-10 03:00", "status": "upcoming", "label": "下次 FOMC 决议与季度 SEP 点阵图"}],
+            "milestones": [{"date": "2026-12-10 03:00", "status": "upcoming", "label": "FOMC 利率决议与季度 SEP 点阵图（北京时间 12 月 10 日 03:00）"}],
         }
 
     # 8a-0. NVIDIA CEO Succession Search / Board Transition (must NEVER match Senate testimony)
@@ -1881,6 +1923,8 @@ def build_finance_impact_artifact(
         ev_tier, ev_tier_label = infer_event_evidence_tier(ev, title, summary)
         eff_date_label = extract_effective_date_label(title, summary)
         qual_badge = extract_qualifier_badge(title, summary)
+        if "做空" in title and "92%" in title and "63%" in f"{title} {summary}":
+            title = re.sub(r"杠杆做空产品跌幅高达\s*92%", "2倍做空英伟达ETF单日跌幅达63%", title)
 
         card = {
             "id": f"imp_{eid}",
@@ -1991,6 +2035,31 @@ def build_finance_impact_artifact(
 
             card_copy = dict(prev_card)
             card_copy["carried_over"] = True
+            if "做空" in p_title and "92%" in p_title and "63%" in f"{p_title} {p_summary}":
+                p_title = re.sub(r"杠杆做空产品跌幅高达\s*92%", "2倍做空英伟达ETF单日跌幅达63%", p_title)
+                card_copy["event_title"] = p_title
+            # Refresh embedded realized_quotes from current quotes_map so cards never disagree on ticker prices
+            if isinstance(card_copy.get("realized_quotes"), list):
+                refreshed_rq = []
+                for rq in card_copy["realized_quotes"]:
+                    if not isinstance(rq, dict):
+                        continue
+                    tkr_u = str(rq.get("ticker") or "").upper()
+                    live_q = quotes_map.get(tkr_u)
+                    if isinstance(live_q, dict) and live_q.get("price") is not None:
+                        refreshed_rq.append(
+                            {
+                                "ticker": live_q["ticker"],
+                                "name": live_q["name"],
+                                "name_en": live_q.get("name_en", live_q["name"]),
+                                "market": live_q["market"],
+                                "price": live_q["price"],
+                                "pct_change": live_q.get("pct_change"),
+                            }
+                        )
+                    else:
+                        refreshed_rq.append(dict(rq))
+                card_copy["realized_quotes"] = refreshed_rq
             has_old_boiler = "表层消息面快速反应后" in (card_copy.get("priced_in_analysis") or {}).get("expectation_gap", "")
             needs_etf_split = "主动" in p_title and "etf" in p_title.lower() and p_rid != "a_share_active_etf_launch"
             if has_old_boiler or needs_etf_split:

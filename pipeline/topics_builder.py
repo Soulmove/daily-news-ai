@@ -182,6 +182,17 @@ def _clean_node_summary(raw_summary: str, title: str = "", max_len: int = 160) -
             break
         s = s2
     s = re.sub(r"\s+(?:凤凰网|央视网|新浪财经|腾讯新闻|网易新闻|澎湃新闻|界面新闻)\s*$", "", s).strip()
+    # Keep verified KIA count (7万) vs total casualties estimate (70万) distinct on Russia-Ukraine summaries
+    s = re.sub(
+        r"阵亡俄军士兵已?超(?:过)?\s*70\s*万",
+        "俄军总伤亡（含阵亡、负伤与失踪）估计超70万",
+        s,
+    )
+    s = re.sub(
+        r"(?:超过?\s*70\s*万(?:名)?\s*俄罗斯士兵在乌克兰(?:丧生|阵亡))",
+        "俄军总伤亡（含阵亡、负伤及失踪）估计超70万",
+        s,
+    )
     s = re.sub(r"\s+", " ", s)
     s = smart_truncate(s, max_len)
     if not s or s == title:

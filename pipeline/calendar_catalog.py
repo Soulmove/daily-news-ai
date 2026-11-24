@@ -701,7 +701,7 @@ def _static_global_schedule() -> List[Dict[str, Any]]:
         },
         {
             "calendar_id": "cal_cb_us_cpi_2026_12",
-            "title": "美国 11 月 CPI 与核心通胀数据公布 (FOMC 决议同日关键前置数据)",
+            "title": "美国 11 月 CPI 与核心通胀数据公布 (FOMC 决议后首份关键通胀数据)",
             "title_en": "US November CPI & Core Inflation Report (BLS)",
             "scheduled_at": "2026-12-10T21:30:00+08:00",
             "original_time_note": "2026-12-10 08:30 EST / 21:30 北京时间",
@@ -1003,7 +1003,7 @@ _EXPLICIT_FUTURE_CUE_RE = re.compile(
 )
 
 _BREAKING_ACTION_RE = re.compile(
-    r"(?:发布会|新品发布|开发布会|发布|推出|上线|开源|预告|开幕|召开|举行|公布|揭晓|出访|访问|启程|表决|听证|生效|施行|实施|减免|免收|执行|上市|挂牌|财报|电话会|交付|峰会|论坛|会谈|"
+    r"(?:发布会|新品发布|开发布会|发布|推出|上线|开源|预告|开幕|召开|举行|公布|揭晓|出访|访问|启程|表决|听证|生效|施行|实施|减免|免收|执行|上市|挂牌|财报|电话会|交付|峰会|论坛|会谈|发射|点火|瞄准|"
     r"\blaunch(?:es|ing)?\b|\bunveil(?:s|ing)?\b|\bkeynote\b|\bsummit\b|\bvisit(?:s|ing)?\b|\bearnings\b|\btake effect\b|\beffective\b|\bvote\b)",
     re.I,
 )

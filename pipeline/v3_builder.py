@@ -928,12 +928,12 @@ def build_dynamic_live_predictions(
         _make_live_card(
             pid="pred_live_anthropic_ipo_hold",
             category="tech_ai",
-            title="Anthropic 上市首月（截至 12 月 19 日）收盘价能否稳在 83 美元发行价上方？",
-            title_en="Will Anthropic hold above its $83 IPO price one month post-listing (by Dec 19)?",
+            title="Anthropic 上市首月（12 月 18 日美股收盘）能否稳在 83 美元发行价上方？",
+            title_en="Will Anthropic hold above its $83 IPO price at Dec 18 US market close?",
             entity_id="ent_anthropic",
             entity_name="Anthropic / Claude",
-            question="截至 12 月 19 日上市满一月收盘时，Anthropic 股价能否站在 83 美元发行价之上？",
-            question_en="At US market close on Dec 18/19, will Anthropic trade above its $83 IPO offer price?",
+            question="截至美股 12 月 18 日周五收盘（对应北京时间 12 月 19 日 05:30），Anthropic 收盘价能否站在 83 美元发行价之上？",
+            question_en="At US market close on Fri Dec 18, will Anthropic trade above its $83 IPO offer price?",
             default_due="2026-12-19T05:30:00+08:00",
             win_rule="12 月 18 日美股收盘价 >= 83.00 美元",
             lose_rule="12 月 18 日美股收盘跌破 83.00 美元（处于破发状态）",
@@ -1012,22 +1012,22 @@ def build_dynamic_live_predictions(
         _make_live_card(
             pid="pred_live_us_pce_oct_2026",
             category="macro",
-            title="明天（11 月 25 日）公布的美国 10 月核心 PCE 通胀同比涨幅能否回落至 2.8% 以下？",
-            title_en="Will US October Core PCE YoY inflation print below 2.8% tomorrow (Nov 25)?",
+            title="11 月 25 日公布的美国 10 月核心 PCE 通胀同比涨幅能否回落至 2.7% 及以下？",
+            title_en="Will US October Core PCE YoY inflation print at or below 2.7% on Nov 25?",
             entity_id="ent_macro_fomc",
             entity_name="美国宏观通胀 / PCE 数据",
-            question="11 月 25 日晚美国商务部公布的 10 月核心 PCE 物价指数同比增速是否严格低于 2.8%？",
-            question_en="On Nov 25, will US BEA report October Core PCE YoY strictly below 2.8%?",
+            question="北京时间 11 月 25 日 21:30 美国商务部公布的 10 月核心 PCE 物价指数同比增速是否 <= 2.7%？",
+            question_en="On Nov 25, will US BEA report October Core PCE YoY <= 2.7%?",
             default_due="2026-11-25T22:30:00+08:00",
             win_rule="美国经济分析局 (BEA) 官方公布 10 月核心 PCE 同比 <= 2.7%",
-            lose_rule="美国 10 月核心 PCE 同比 >= 2.8%（显示通胀依然粘滞）",
+            lose_rule="美国 10 月核心 PCE 同比 > 2.7%（达到 2.8% 及以上显示通胀依然粘滞）",
             indeterminate_rule="受美国政府停摆影响推迟公布",
             supporting=["国际油价此前走低与部分房租环比放缓有助于压低核心物价斜率"],
             opposing=["多位美联储官员本周密集担忧核心服务通胀反弹与关税传导效应"],
-            assumption="直接依据 11 月 25 日 21:30 BEA 官方公布终值结算",
+            assumption="直接依据北京时间 11 月 25 日 21:30 BEA 官方公布终值结算",
             trigger="数据发布窗口因政府停摆推迟",
             prob=41,
-            judgment="明天就是美国核心 PCE 公布日，在美联储“三把手”频频强调通胀未达标的当下，数据稍热就将直接冲击降息预期",
+            judgment="北京时间 11 月 25 日 21:30 公布美国核心 PCE；若高于 2.7%，将直接压制降息预期",
             reason="11 月 25 日美国核心 PCE 重磅宏观催化窗口",
         ),
         _make_live_card(
@@ -1204,11 +1204,25 @@ def auto_settle_live_predictions(
             rec["settlement"] = dict(arch["settlement"])
             if arch.get("current_judgment"):
                 rec["current_judgment"] = arch["current_judgment"]
+            if isinstance(arch.get("versions"), list) and len(arch["versions"]) >= len(rec.get("versions") or []):
+                rec["versions"] = list(arch["versions"])
             st_obj = rec["settlement"]
             if st_obj.get("brier_score") is None:
                 bs = _compute_prediction_brier(rec.get("probability_pct"), str(st_obj.get("outcome") or ""))
                 if bs is not None:
                     st_obj["brier_score"] = bs
+        # Sanitize legacy misleading 11-12 vs 11-23 wording inside NVDA versions trail
+        if pid == "pred_seed_nvda_sec_502" and isinstance(rec.get("versions"), list):
+            cleaned_vers = []
+            for v in rec["versions"]:
+                if isinstance(v, dict):
+                    vc = dict(v)
+                    j_txt = str(vc.get("judgment") or "")
+                    j_txt = j_txt.replace("SEC 8-K Item 5.02 已披露于 2026-11-23；本批", "2026-11-12 曾披露临时管理安排 8-K；最新")
+                    j_txt = j_txt.replace("已追踪到 SEC 2026-11-12 8-K Item 5.02，等待后续正式继任公告", "已追踪到 2026-11-12 临时代理 8-K，关注董事会正式复职或继任决议")
+                    vc["judgment"] = j_txt
+                    cleaned_vers.append(vc)
+            rec["versions"] = cleaned_vers
         clean_preds.append(rec)
 
     for pid_arch, rec_arch in archived_map.items():
@@ -1645,7 +1659,19 @@ def build_v3_artifacts(
 
     from pipeline.dedup import entities_conflict
 
+    def _fix_contradictory_title(raw_t: str, raw_s: str) -> str:
+        t_out = str(raw_t or "").strip()
+        s_blob = f"{t_out} {raw_s}"
+        if "做空" in t_out and "92%" in t_out and "63%" in s_blob:
+            t_out = re.sub(r"杠杆做空产品跌幅高达\s*92%", "2倍做空英伟达ETF单日跌幅达63%", t_out)
+        t_out = re.sub(r"阵亡俄军士兵已?超(?:过)?\s*70\s*万", "俄军总伤亡估计超70万", t_out)
+        return t_out
+
     for ev in all_events:
+        if ev.get("title"):
+            ev["title"] = _fix_contradictory_title(str(ev["title"]), str(ev.get("fact_summary") or ""))
+        if isinstance(ev.get("fact_summary"), str):
+            ev["fact_summary"] = re.sub(r"阵亡俄军士兵已?超(?:过)?\s*70\s*万", "俄军总伤亡（含阵亡、负伤与失踪）估计超70万", ev["fact_summary"])
         st_id = ev.get("storyline_id") or make_storyline_id(ev["category"], ev["title"], ev.get("entities"))
         ev_eids = set(ev.get("entity_ids") or [])
         bucket = _storyline_semantic_bucket(ev["title"])
@@ -1932,6 +1958,12 @@ def build_v3_artifacts(
         ):
             continue
         clean_old = dict(old_st)
+        # Drop bare intraday peak micro-flash storylines when fuller ChiNext/market storyline already exists
+        if re.match(r"^创业板指?涨超\s*\d+(?:\.\d+)?%[。.]?$", old_title.strip()):
+            if any("创业板" in stitle for _, stitle, _ in seen_storyline_titles):
+                continue
+        clean_old["title"] = _fix_contradictory_title(old_title, str(clean_old.get("fact_summary") or ""))
+        old_title = clean_old["title"]
         zh_sum_old = _pick_zh_timeline_summary(clean_old.get("timeline") or [], str(clean_old.get("fact_summary") or ""))
 
         def _scrub_old_ph(txt: str) -> str:
@@ -1940,6 +1972,8 @@ def build_v3_artifacts(
                     return smart_truncate(zh_sum_old, 180)
                 src0_t = ((clean_old.get("sources") or [{}])[0]).get("excerpt") or ((clean_old.get("sources") or [{}])[0]).get("title") or clean_old.get("summary_en") or clean_old.get("title_en") or clean_old.get("title") or ""
                 return smart_truncate(str(src0_t), 120)
+            txt = re.sub(r"阵亡俄军士兵已?超(?:过)?\s*70\s*万", "俄军总伤亡（含阵亡、负伤与失踪）估计超70万", txt)
+            txt = _fix_contradictory_title(txt, str(clean_old.get("fact_summary") or ""))
             return txt
 
         fd_old = clean_old.get("fact_diff")
@@ -2098,10 +2132,25 @@ def build_v3_artifacts(
 
     # Public real-time research questions seeded dynamically in crisp plain language
     nvda_filings = (entities_map.get("ent_nvidia") or {}).get("recent_filings") or []
-    nvda_502 = next(
+    nvda_502_reinstatement = next(
+        (
+            f
+            for f in nvda_filings
+            if f.get("form") == "8-K"
+            and "5.02" in ",".join(str(x) for x in (f.get("items") or []))
+            and str(f.get("filing_date") or "") >= "2026-11-22"
+        ),
+        None,
+    )
+    nvda_502 = nvda_502_reinstatement or next(
         (f for f in nvda_filings if f.get("form") == "8-K" and "5.02" in ",".join(str(x) for x in (f.get("items") or []))),
         None,
     )
+    nvda_sup_ev = ["多家主流财经科技媒体关注黄仁勋重返英伟达呼声"]
+    if nvda_502_reinstatement:
+        nvda_sup_ev = [f"SEC EDGAR 已披露 {nvda_502_reinstatement.get('filing_date', '2026-11-23')} Form 8-K（董事会正式恢复黄仁勋 CEO 职务，Items: 5.02, 9.01）"]
+    elif nvda_502:
+        nvda_sup_ev = [f"SEC EDGAR 已披露 {nvda_502.get('filing_date', '2026-11-12')} 临时代理安排 Form 8-K (Items: 5.02, 9.01)，持续追踪正式 CEO 继任公告"]
     nvda_created, nvda_due = _keep_fixed_dates("pred_seed_nvda_sec_502", "2026-11-16T15:30:00+08:00", "2026-11-30T20:00:00+08:00")
     qwen_old = prev_preds_by_id.get("pred_seed_qwen_release_ga")
     qwen_created = str(qwen_old["created_at"]) if (qwen_old and qwen_old.get("created_at")) else "2026-11-16T15:30:00+08:00"
@@ -2116,18 +2165,14 @@ def build_v3_artifacts(
             "title_en": "Will Jensen Huang officially return as NVIDIA CEO within 14 days?",
             "target_entity_id": "ent_nvidia",
             "target_entity": "英伟达 (NVIDIA)",
-            "question": "2026 年 11 月 30 日前，英伟达官方或 SEC 8-K 公告是否正式宣布黄仁勋复职出任 CEO？",
+            "question": "2026 年 11 月 30 日（观测窗截止日 12 月 3 日）前，英伟达官方或 SEC 8-K 公告是否正式宣布黄仁勋复职出任 CEO？",
             "question_en": "Before Nov 30, 2026, will NVIDIA IR or a SEC Form 8-K confirm Jensen Huang's return as CEO?",
             "created_at": nvda_created,
             "due_at": nvda_due,
             "win_rule": "英伟达官方或 SEC 8-K 公告宣布黄仁勋复职 CEO",
             "lose_rule": "截止日前英伟达未恢复黄仁勋职务或另选他人出任正式 CEO",
             "indeterminate_rule": "仅见媒体猜测而缺乏英伟达官方或 SEC 8-K 正式披露",
-            "supporting_evidence": (
-                [f"SEC EDGAR 已披露 {nvda_502.get('filing_date', '2026-11-23')} Form 8-K (Items: 5.02, 9.01)"]
-                if nvda_502
-                else ["多家主流财经科技媒体关注黄仁勋重返英伟达呼声"]
-            ),
+            "supporting_evidence": nvda_sup_ev,
             "opposing_evidence": ["高管变动及复职需经英伟达董事会正式表决并提交 SEC 8-K 备案"],
             "core_assumption": "以英伟达官网及美国证监会 SEC EDGAR 正式 Form 8-K 为准",
             "invalidation_trigger": "英伟达官方宣布另聘长期新任 CEO",
@@ -2195,15 +2240,15 @@ def build_v3_artifacts(
             "mode": "live",
             "status": "open",
             "category": "macro",
-            "title": "12 月 10 日美联储议息会议是否会宣布继续加息 25 个基点？",
-            "title_en": "Will the Fed hike rates by 25bp at the Dec 10 FOMC meeting?",
+            "title": "北京时间 12 月 10 日 03:00 美联储议息会议是否会宣布继续加息 25 个基点？",
+            "title_en": "Will the Fed hike rates by 25bp at the Dec 10 (03:00 CST) FOMC meeting?",
             "target_entity_id": "ent_macro_fomc",
             "target_entity": "美联储 FOMC 与利率政策",
-            "question": "北京时间 12 月 10 日凌晨公布的美联储议息声明中，是否会宣布再次加息至少 25 个基点？",
-            "question_en": "In the Dec 10, 2026 FOMC decision, will the Fed announce a rate hike of 25bp or more?",
+            "question": "北京时间 12 月 10 日 03:00（对应美东 12 月 8–9 日议息会议）公布的声明中，美联储是否会宣布加息至少 25 个基点？",
+            "question_en": "In the Dec 10, 2026 (Dec 8–9 EST) FOMC decision, will the Fed announce a rate hike of 25bp or more?",
             "created_at": fed_created,
             "due_at": fed_due,
-            "win_rule": "美联储 12 月 10 日官方议息声明宣布上调联邦基金利率 25 个基点及以上",
+            "win_rule": "美联储北京时间 12 月 10 日 03:00 官方议息声明宣布上调联邦基金利率 25 个基点及以上",
             "lose_rule": "美联储宣布维持现有利率不变（暂停加息）或宣布降息",
             "indeterminate_rule": "议息会议出现异常技术改期",
             "supporting_evidence": (
@@ -2211,12 +2256,12 @@ def build_v3_artifacts(
                 if fed_hiked_recently
                 else ["多名美联储官员强调通胀粘性，12 月利率路径分歧加大"]
             ),
-            "opposing_evidence": ["连续紧缩对美债收益率与科技股估值压力增大，鸽派呼吁先暂停观望"],
-            "core_assumption": "直接以美联储官网 12 月 10 日 FOMC 正式决议数字结算",
-            "invalidation_trigger": "明日核心 PCE 与 12 月非农就业超预期大跌",
+            "opposing_evidence": ["连续紧缩对美债收益率与科技股估值压力增大，利率期货对维持不变仍有较高定价分歧"],
+            "core_assumption": "直接以美联储官网 12 月 10 日 03:00 FOMC 正式决议数字结算",
+            "invalidation_trigger": "11 月 25 日核心 PCE 与 12 月非农就业超预期回落",
             "probability_pct": 58 if fed_hiked_recently else 44,
-            "probability_note": "锚定 2026 年 12 月 10 日美联储议息声明官方利率数字自动开奖",
-            "current_judgment": "美联储高官密集警告通胀粘性未退，明天美国 PCE 与下周非农将决定 12 月会否继续加息",
+            "probability_note": "锚定北京时间 2026 年 12 月 10 日 03:00 美联储议息声明官方利率数字自动开奖",
+            "current_judgment": "美联储官员对通胀与利率路径尚存分歧；重点跟踪 11 月 25 日美国 PCE 与 12 月非农数据对 12 月 10 日决议的最终指引",
             "current_judgment_en": "Fed officials highlight sticky inflation; PCE & NFP will decide whether Dec 10 brings another hike.",
             "versions": [
                 {
@@ -2246,6 +2291,32 @@ def build_v3_artifacts(
         existing_cal_titles.append(anch["title"])
 
     calendar_items = [enrich_calendar_item_metadata(cal, generated_dt) for cal in calendar_items]
+    # Upgrade TBD calendar milestones in-place when live news confirms exact launch/ignition timestamps (e.g. 神舟二十四号 11月25日 08:18)
+    for ev in all_events:
+        ev_blob = f"{ev.get('title') or ''} {ev.get('fact_summary') or ''}"
+        if "神舟二十四" in ev_blob or "神舟24" in ev_blob:
+            m_hm = re.search(r"(?:(\d{1,2})月)?(\d{1,2})日\s*(\d{1,2})\s*[时:：]\s*(\d{1,2})\s*分?", ev_blob)
+            if m_hm:
+                try:
+                    mo = int(m_hm.group(1) or generated_dt.month)
+                    dy = int(m_hm.group(2))
+                    hh = int(m_hm.group(3))
+                    mm = int(m_hm.group(4))
+                    sz_dt = generated_dt.replace(month=mo, day=dy, hour=hh, minute=mm, second=0, microsecond=0)
+                    sz_iso = to_iso_shanghai(sz_dt)
+                    for cal in calendar_items:
+                        if cal.get("calendar_id") == "cal_tech_shenzhou_24_launch" or "神舟二十四" in str(cal.get("title") or ""):
+                            cal["scheduled_at"] = sz_iso
+                            cal["is_clock_tbd"] = False
+                            cal["certainty"] = "confirmed_official"
+                            cal["certainty_label"] = "官方已确认发射时刻"
+                            cal["title"] = f"神舟二十四号载人飞船发射入轨（{mo} 月 {dy} 日 {hh:02d}:{mm:02d} 酒泉卫星发射中心）"
+                            cal["title_en"] = f"Shenzhou-24 Crewed Spacecraft Launch ({mo:02d}-{dy:02d} {hh:02d}:{mm:02d} CST, Jiuquan)"
+                            cal["original_time_note"] = f"官方已确认瞄准北京时间 {mo:02d} 月 {dy:02d} 日 {hh:02d}:{mm:02d} 发射"
+                            cal["is_past"] = sz_dt < (generated_dt - timedelta(hours=12))
+                    break
+                except Exception:
+                    pass
     # Sort calendar cleanly: upcoming ascending first, past recent at tail
     calendar_items.sort(key=lambda c: (1 if c.get("is_past") else 0, str(c.get("scheduled_at") or "9999-12-31")))
 
@@ -2472,9 +2543,11 @@ def build_v3_artifacts(
                 ]
                 if has_fed_news:
                     is_hawk = any(any(k in str(ev.get("title") or "") for k in ("放鹰", "加息", "通胀")) for ev in has_fed_news)
-                    new_prob = 62 if is_hawk else 52
-                    new_judgment = f"最新动态：{smart_truncate(str(has_fed_news[0].get('title') or ''), 44)}；明天 PCE 与下周非农将决定 12 月利率方向"
-                    new_reason = f"参考今日最新美联储报道：{smart_truncate(str(has_fed_news[0].get('title') or ''), 32)}"
+                    is_dove = any(any(k in str(ev.get("title") or "") for k in ("降息", "偏鸽", "维持利率", "按兵不动")) for ev in has_fed_news) and not is_hawk
+                    new_prob = 62 if is_hawk else (38 if is_dove else 46)
+                    new_judgment = f"最新动态：{smart_truncate(str(has_fed_news[0].get('title') or ''), 44)}；聚焦 11 月 25 日 PCE 与 12 月非农对北京时间 12 月 10 日 03:00 FOMC 决议的定价指引"
+                    new_reason = f"参考最新美联储报道：{smart_truncate(str(has_fed_news[0].get('title') or ''), 32)}"
+                    p["probability_pct"] = new_prob
 
             if new_reason:
                 vers = list(p.get("versions") or [])

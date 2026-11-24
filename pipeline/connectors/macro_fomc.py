@@ -55,7 +55,7 @@ def _build_fomc_row(
     )
     return {
         "calendar_id": f"cal_fomc_{date_key}",
-        "title": f"美联储 FOMC {'季度点阵图与' if has_sep else ''}议息会议 ({span_label})",
+        "title": f"美联储 FOMC {'季度点阵图与' if has_sep else ''}议息会议（北京时间 {dt_cst.month} 月 {dt_cst.day} 日 {dt_cst:%H:%M} · 美东 {span_label}）",
         "scheduled_at": to_iso_shanghai(dt_cst),
         "original_time_note": f"{date_key} 14:00 America/New_York（已折算 Asia/Shanghai）",
         "timezone": "Asia/Shanghai",

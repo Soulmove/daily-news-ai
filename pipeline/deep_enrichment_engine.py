@@ -131,7 +131,7 @@ def _baseline_model_comparison_matrix() -> List[Dict[str, str]]:
             "pricing_input": "$5.00 / 1M",
             "pricing_output": "$25.00 / 1M",
             "weight_type": "闭源商用",
-            "strengths": "Claude Code 复杂多仓调试、MCP 生态原点、黎曼猜想等形式化证明实测顶尖",
+            "strengths": "Claude Code 复杂多仓调试、MCP 生态原点与形式化数学探索",
             "weaknesses": "API 价格处于第一梯队高位，并发与特定区域合规限制严格",
         },
         {
@@ -850,6 +850,8 @@ def _build_topic_deep_via_gemini(tp: Dict[str, Any], root: Path) -> Optional[Dic
     return {
         "brief_overview": strip_colored_emojis(str(parsed["brief_overview"])),
         "comparison_table": {"headers": headers, "rows": rows} if headers and rows else None,
+        "cached_at_ts": time.time(),
+        "timeline_len": len(tp.get("timeline") or []),
     }
 
 
@@ -1435,7 +1437,23 @@ def run_v12_deep_enrichment(
         for e in ranked[:5]:
             top_events.append((cat, e))
 
-    # 3. Active topics needing overview & table
+    # 3. Active topics needing overview & table (invalidate when timeline grows or cache > 6h stale)
+    tp_now_ts = time.time()
+    for tp in major_topics[:10]:
+        if not isinstance(tp, dict):
+            continue
+        tid_c = str(tp.get("topic_id") or "")
+        cached_td = tp_cache.get(tid_c)
+        if isinstance(cached_td, dict):
+            ov_txt = str(cached_td.get("brief_overview") or "")
+            if "阵亡俄军士兵" in ov_txt and "70万" in ov_txt:
+                cached_td["brief_overview"] = re.sub(r"阵亡俄军士兵已?超(?:过)?\s*70\s*万", "俄军总伤亡（含阵亡、负伤与失踪）估计超70万", ov_txt)
+            tl_len = len(tp.get("timeline") or [])
+            cached_ts = float(cached_td.get("cached_at_ts") or 0)
+            cached_len = int(cached_td.get("timeline_len") or 0)
+            if (cached_ts and (tp_now_ts - cached_ts) > 6 * 3600) or (cached_len and tl_len > cached_len + 1):
+                tp_cache.pop(tid_c, None)
+
     need_topics = [tp for tp in major_topics[:10] if isinstance(tp, dict) and str(tp.get("topic_id") or "") not in tp_cache]
     need_st = [(sid, st) for sid, st in short_storylines[:12] if sid not in st_cache]
     need_qa = [
