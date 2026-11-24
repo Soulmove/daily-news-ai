@@ -323,7 +323,9 @@ def _extract_tool_summary_text(raw_val: Any) -> str:
                 return candidate
         return ""
     txt = str(raw_val).strip()
-    if txt.startswith(("{", "[")) and ("'name':" in txt or '"name":' in txt or "'notes':" in txt or '"notes":' in txt):
+    if txt.startswith(("{", "[")) and any(
+        tok in txt for tok in ("'name':", '"name":', "'notes':", '"notes":', "'summary':", '"summary":', "'version':", '"version":')
+    ):
         parsed_obj = None
         try:
             parsed_obj = json.loads(txt)
@@ -334,9 +336,12 @@ def _extract_tool_summary_text(raw_val: Any) -> str:
                 parsed_obj = None
         if isinstance(parsed_obj, dict):
             return _extract_tool_summary_text(parsed_obj)
-        m_notes = re.search(r"""['"](?:notes|summary|text)['"]\s*:\s*['"]([^'"]{4,400})['"]""", txt)
+        m_notes = re.search(r"""['"](?:notes|summary|text|highlights|desc|description)['"]\s*:\s*['"]([\s\S]+)""", txt)
         if m_notes:
-            return m_notes.group(1).strip()
+            extracted = re.sub(r"""['"]\s*,\s*['"][A-Za-z0-9_]+['"]\s*:[\s\S]*$""", "", m_notes.group(1))
+            extracted = re.sub(r"""['"]?\s*\}\s*$""", "", extracted).strip()
+            if extracted:
+                return extracted
         return ""
     return txt
 

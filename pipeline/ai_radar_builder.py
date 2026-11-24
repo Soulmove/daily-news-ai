@@ -1158,10 +1158,18 @@ _BOILERPLATE_WHAT_RE = re.compile(
 )
 
 
+def _clean_ai_text(raw_val: Any) -> str:
+    from .bilingual import _extract_tool_summary_text
+    from .dedup import strip_raw_urls_and_domain_tails
+
+    unwrapped = _extract_tool_summary_text(raw_val)
+    return strip_raw_urls_and_domain_tails(re.sub(r"\s+", " ", str(unwrapped or "").strip()))
+
+
 def _infer_what_it_does_zh(title: str, summary: str, *, is_tool_release: bool = False) -> str:
     from .dedup import strip_raw_urls_and_domain_tails, title_similarity
 
-    clean_sum = strip_raw_urls_and_domain_tails(re.sub(r"\s+", " ", str(summary or "").strip()))
+    clean_sum = _clean_ai_text(summary)
     clean_sum = re.sub(r"^【[^】]{4,80}】\s*", "", clean_sum).strip()
     clean_sum = re.sub(r"\s*[A-Za-z0-9-]+\.(?:ai|com|org|io|net|cn|co|dev|app)\s*$", "", clean_sum, flags=re.I).strip()
     clean_sum = re.sub(r"\s+(?:新华网|人民网|央视新闻|环球网|财联社|Reuters|Bloomberg)$", "", clean_sum).strip()
@@ -1478,7 +1486,7 @@ def _auto_absorb_new_lineage_nodes(base_lineage: List[Dict[str, Any]], lab_items
                 "specs": str(it.get("category") or "前沿迭代")[:36],
                 "pricing_or_license": "开源社区权重" if it.get("is_open_source") else "商业 API / 预览",
                 "filter_keyword": tok,
-                "highlight": str(it.get("what_it_does") or title)[:90],
+                "highlight": _clean_ai_text(it.get("what_it_does") or title)[:90],
             }
         )
     nodes.sort(key=lambda n: str(n.get("release_date") or "9999-99"))
@@ -1545,7 +1553,7 @@ def build_ai_progress_artifact(
         if drop_noisy_hf and re.search(r"更新于\s*\d{4}-\d{2}-\d{2}", title):
             return
         url = str(raw_it.get("source_url") or "").strip()
-        what = strip_raw_urls_and_domain_tails(str(raw_it.get("what_it_does") or ""))
+        what = _clean_ai_text(raw_it.get("what_it_does") or "")
         what = re.sub(
             r"(?:^(?:财联社|凤凰网|央视网|新浪财经)\s*[丨|：:]?\s*|\s*(?:财联社|华尔街见闻|第一财经|证券时报|澎湃新闻|界面新闻|凤凰网|央视网)$)",
             "",
@@ -1607,7 +1615,7 @@ def build_ai_progress_artifact(
             cand["limitations"] = "相关形式化证明目前仍存在代码冗余及独立同行评审争议，尚未获得国际数学界公认定论，请注意区分阶段性新闻进展与正式学术认证边界。"
             cand["limitations_en"] = "Formal proof claims remain under community scrutiny over code redundancy and await independent peer-reviewed verification."
         if cand.get("what_it_does_en"):
-            cand["what_it_does_en"] = strip_raw_urls_and_domain_tails(str(cand["what_it_does_en"]))
+            cand["what_it_does_en"] = _clean_ai_text(cand["what_it_does_en"])
         _append_related_source(cand, src_name, url, first_hand)
         for rs in raw_it.get("related_sources") or []:
             if isinstance(rs, dict):
@@ -1865,12 +1873,14 @@ def build_ai_progress_artifact(
                 if not isinstance(prev_it, dict):
                     continue
                 cleaned_prev = dict(prev_it)
-                prev_t = strip_raw_urls_and_domain_tails(str(cleaned_prev.get("title") or ""))
-                prev_sum = strip_raw_urls_and_domain_tails(str(cleaned_prev.get("what_it_does") or ""))
+                prev_t = _clean_ai_text(cleaned_prev.get("title") or "")
+                prev_sum = _clean_ai_text(cleaned_prev.get("what_it_does") or "")
                 if "具身智能/物理仿真模型工具" in prev_sum and "robot" not in prev_t.lower() and not str(cleaned_prev.get("id") or "").startswith("ai_tool_"):
                     prev_sum = ""
                 cleaned_prev["title"] = prev_t
                 cleaned_prev["what_it_does"] = prev_sum
+                if cleaned_prev.get("what_it_does_en"):
+                    cleaned_prev["what_it_does_en"] = _clean_ai_text(cleaned_prev.get("what_it_does_en"))
                 _add_or_merge_item(cleaned_prev)
         except Exception:
             pass
@@ -1929,6 +1939,27 @@ def build_ai_progress_artifact(
                 seen_active_ids.add(iid)
                 active_union.append(it)
 
+    def _sweep_clean_ai_dict_fields() -> None:
+        for pool in (archive_union, active_union):
+            for row in pool:
+                if isinstance(row, dict):
+                    row["title"] = _clean_ai_text(row.get("title") or "")
+                    row["what_it_does"] = _clean_ai_text(row.get("what_it_does") or "")
+                    if row.get("what_it_does_en"):
+                        row["what_it_does_en"] = _clean_ai_text(row.get("what_it_does_en"))
+        for comps in (archive_companies, active_companies):
+            for comp in comps:
+                for node in comp.get("model_lineage") or []:
+                    if isinstance(node, dict) and node.get("highlight"):
+                        node["highlight"] = _clean_ai_text(node["highlight"])[:90]
+                for row in comp.get("items") or []:
+                    if isinstance(row, dict):
+                        row["title"] = _clean_ai_text(row.get("title") or "")
+                        row["what_it_does"] = _clean_ai_text(row.get("what_it_does") or "")
+                        if row.get("what_it_does_en"):
+                            row["what_it_does_en"] = _clean_ai_text(row.get("what_it_does_en"))
+
+    _sweep_clean_ai_dict_fields()
     archive_union.sort(key=_ai_item_sort_key, reverse=True)
     active_union.sort(key=_ai_item_sort_key, reverse=True)
 

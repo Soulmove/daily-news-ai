@@ -1211,15 +1211,28 @@ def auto_settle_live_predictions(
                 bs = _compute_prediction_brier(rec.get("probability_pct"), str(st_obj.get("outcome") or ""))
                 if bs is not None:
                     st_obj["brier_score"] = bs
-        # Sanitize legacy misleading 11-12 vs 11-23 wording inside NVDA versions trail
+        # Sanitize legacy misleading 2026-11-12 8-K wording inside NVDA versions trail (v1..v6)
         if pid == "pred_seed_nvda_sec_502" and isinstance(rec.get("versions"), list):
             cleaned_vers = []
-            for v in rec["versions"]:
+            for idx_v, v in enumerate(rec["versions"]):
                 if isinstance(v, dict):
                     vc = dict(v)
                     j_txt = str(vc.get("judgment") or "")
-                    j_txt = j_txt.replace("SEC 8-K Item 5.02 已披露于 2026-11-23；本批", "2026-11-12 曾披露临时管理安排 8-K；最新")
-                    j_txt = j_txt.replace("已追踪到 SEC 2026-11-12 8-K Item 5.02，等待后续正式继任公告", "已追踪到 2026-11-12 临时代理 8-K，关注董事会正式复职或继任决议")
+                    if "2026-11-23" not in j_txt and (int(vc.get("version") or (idx_v + 1)) <= 6 or "2026-11-12" in j_txt):
+                        j_txt = j_txt.replace("SEC 8-K Item 5.02 已披露于 2026-11-23；", "暂未见董事会正式复职 SEC 8-K 披露；")
+                        j_txt = j_txt.replace("SEC 8-K Item 5.02 已披露于 2026-11-12；", "暂未见董事会正式复职 SEC 8-K 披露；")
+                        j_txt = j_txt.replace("2026-11-12 曾披露临时管理安排 8-K；", "暂未见董事会正式复职 SEC 8-K 披露；")
+                        j_txt = j_txt.replace(
+                            "已追踪到 2026-11-12 临时代理 8-K，关注董事会正式复职或继任决议",
+                            "处于管理层过渡期追踪阶段，待董事会正式决议与 SEC Form 8-K 披露",
+                        )
+                        j_txt = j_txt.replace(
+                            "已追踪到 SEC 2026-11-12 8-K Item 5.02，等待后续正式继任公告",
+                            "处于管理层过渡期追踪阶段，待董事会正式决议与 SEC Form 8-K 披露",
+                        )
+                        j_txt = j_txt.replace("最新 1 条最新报道", "最新 1 条报道")
+                        j_txt = j_txt.replace("本批 1 条最新报道", "本批 1 条报道").replace("本批 2 条最新报道", "本批 2 条报道")
+                        j_txt = re.sub(r"2026-11-12", "过渡期", j_txt)
                     vc["judgment"] = j_txt
                     cleaned_vers.append(vc)
             rec["versions"] = cleaned_vers
@@ -1659,11 +1672,52 @@ def build_v3_artifacts(
 
     from pipeline.dedup import entities_conflict
 
+    def _clarify_nvda_short_etf_record(obj: Dict[str, Any]) -> None:
+        if not isinstance(obj, dict):
+            return
+        title_s = str(obj.get("title") or "")
+        sum_s = str(obj.get("fact_summary") or obj.get("summary") or "")
+        blob = f"{title_s} {sum_s}"
+        if "做空" in blob and ("英伟达" in blob or "nvda" in blob.lower() or "nvd" in blob.lower()) and ("63%" in blob or "92%" in blob):
+            clarified_title = "英伟达股价飙升重创空头：美股 2 倍做空 ETF (NVD) 跌 63%、欧股 3 倍做空 ETP (3SNV) 暴跌 92%"
+            clarified_sum = "英伟达股价暴涨重创杠杆空头（不同杠杆倍数与市场口径）：美股 2 倍做空 ETF (NVD) 单日跌 63%，欧股 3 倍做空 ETP (3SNV) 暴跌 92%。"
+            obj["title"] = clarified_title
+            if "fact_summary" in obj:
+                obj["fact_summary"] = clarified_sum
+            if "summary" in obj and obj["summary"]:
+                obj["summary"] = clarified_sum
+            fdiff = obj.get("fact_diff")
+            if isinstance(fdiff, dict):
+                for fk in ("unchanged_background", "new_facts"):
+                    if isinstance(fdiff.get(fk), list) and fdiff[fk]:
+                        fdiff[fk] = [
+                            clarified_sum if ("做空" in str(x) and ("63%" in str(x) or "92%" in str(x))) else x
+                            for x in fdiff[fk]
+                        ]
+            tl = obj.get("timeline")
+            if isinstance(tl, list):
+                for tnode in tl:
+                    if isinstance(tnode, dict):
+                        ns = str(tnode.get("fact_summary") or tnode.get("summary") or "")
+                        if "做空" in ns and ("63%" in ns or "92%" in ns):
+                            if "fact_summary" in tnode:
+                                tnode["fact_summary"] = clarified_sum
+                            if "summary" in tnode:
+                                tnode["summary"] = clarified_sum
+            atoms = obj.get("fact_atoms")
+            if isinstance(atoms, list):
+                for atom in atoms:
+                    if isinstance(atom, dict):
+                        act = str(atom.get("metric_or_action") or "")
+                        if "做空" in act and ("63%" in act or "92%" in act):
+                            atom["metric_or_action"] = clarified_title
+                            atom["value"] = "63% / 92%"
+
     def _fix_contradictory_title(raw_t: str, raw_s: str) -> str:
         t_out = str(raw_t or "").strip()
         s_blob = f"{t_out} {raw_s}"
-        if "做空" in t_out and "92%" in t_out and "63%" in s_blob:
-            t_out = re.sub(r"杠杆做空产品跌幅高达\s*92%", "2倍做空英伟达ETF单日跌幅达63%", t_out)
+        if "做空" in t_out and ("92%" in t_out or "63%" in t_out) and ("英伟达" in s_blob or "NVDA" in s_blob or "NVD" in s_blob):
+            t_out = "英伟达股价飙升重创空头：美股 2 倍做空 ETF (NVD) 跌 63%、欧股 3 倍做空 ETP (3SNV) 暴跌 92%"
         t_out = re.sub(r"阵亡俄军士兵已?超(?:过)?\s*70\s*万", "俄军总伤亡估计超70万", t_out)
         return t_out
 
@@ -1672,6 +1726,7 @@ def build_v3_artifacts(
             ev["title"] = _fix_contradictory_title(str(ev["title"]), str(ev.get("fact_summary") or ""))
         if isinstance(ev.get("fact_summary"), str):
             ev["fact_summary"] = re.sub(r"阵亡俄军士兵已?超(?:过)?\s*70\s*万", "俄军总伤亡（含阵亡、负伤与失踪）估计超70万", ev["fact_summary"])
+        _clarify_nvda_short_etf_record(ev)
         st_id = ev.get("storyline_id") or make_storyline_id(ev["category"], ev["title"], ev.get("entities"))
         ev_eids = set(ev.get("entity_ids") or [])
         bucket = _storyline_semantic_bucket(ev["title"])
@@ -2150,7 +2205,7 @@ def build_v3_artifacts(
     if nvda_502_reinstatement:
         nvda_sup_ev = [f"SEC EDGAR 已披露 {nvda_502_reinstatement.get('filing_date', '2026-11-23')} Form 8-K（董事会正式恢复黄仁勋 CEO 职务，Items: 5.02, 9.01）"]
     elif nvda_502:
-        nvda_sup_ev = [f"SEC EDGAR 已披露 {nvda_502.get('filing_date', '2026-11-12')} 临时代理安排 Form 8-K (Items: 5.02, 9.01)，持续追踪正式 CEO 继任公告"]
+        nvda_sup_ev = [f"SEC EDGAR 追踪管理层过渡公告 Form 8-K ({nvda_502.get('filing_date', '过渡期')} Items: 5.02, 9.01)，持续追踪正式 CEO 复职公告"]
     nvda_created, nvda_due = _keep_fixed_dates("pred_seed_nvda_sec_502", "2026-11-16T15:30:00+08:00", "2026-11-30T20:00:00+08:00")
     qwen_old = prev_preds_by_id.get("pred_seed_qwen_release_ga")
     qwen_created = str(qwen_old["created_at"]) if (qwen_old and qwen_old.get("created_at")) else "2026-11-16T15:30:00+08:00"
@@ -2774,6 +2829,8 @@ def build_v3_artifacts(
         enrich_zh_storylines(storylines, base_dir=root)
     except Exception:
         pass
+    for _st_obj in storylines.values():
+        _clarify_nvda_short_etf_record(_st_obj)
     atomic_write_json(
         root / "data/storylines_index.json",
         {

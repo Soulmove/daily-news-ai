@@ -1923,8 +1923,8 @@ def build_finance_impact_artifact(
         ev_tier, ev_tier_label = infer_event_evidence_tier(ev, title, summary)
         eff_date_label = extract_effective_date_label(title, summary)
         qual_badge = extract_qualifier_badge(title, summary)
-        if "做空" in title and "92%" in title and "63%" in f"{title} {summary}":
-            title = re.sub(r"杠杆做空产品跌幅高达\s*92%", "2倍做空英伟达ETF单日跌幅达63%", title)
+        if "做空" in title and ("92%" in title or "63%" in title) and ("英伟达" in f"{title} {summary}" or "NVDA" in f"{title} {summary}" or "NVD" in f"{title} {summary}"):
+            title = "英伟达股价飙升重创空头：美股 2 倍做空 ETF (NVD) 跌 63%、欧股 3 倍做空 ETP (3SNV) 暴跌 92%"
 
         card = {
             "id": f"imp_{eid}",
@@ -2035,8 +2035,8 @@ def build_finance_impact_artifact(
 
             card_copy = dict(prev_card)
             card_copy["carried_over"] = True
-            if "做空" in p_title and "92%" in p_title and "63%" in f"{p_title} {p_summary}":
-                p_title = re.sub(r"杠杆做空产品跌幅高达\s*92%", "2倍做空英伟达ETF单日跌幅达63%", p_title)
+            if "做空" in p_title and ("92%" in p_title or "63%" in p_title) and ("英伟达" in f"{p_title} {p_summary}" or "NVDA" in f"{p_title} {p_summary}" or "NVD" in f"{p_title} {p_summary}"):
+                p_title = "英伟达股价飙升重创空头：美股 2 倍做空 ETF (NVD) 跌 63%、欧股 3 倍做空 ETP (3SNV) 暴跌 92%"
                 card_copy["event_title"] = p_title
             # Refresh embedded realized_quotes from current quotes_map so cards never disagree on ticker prices
             if isinstance(card_copy.get("realized_quotes"), list):

@@ -5150,6 +5150,106 @@ class V3PipelineRegressionTests(unittest.TestCase):
             self.assertNotEqual(inv_matches[0].get("tag"), "AI 算力链回调")
             self.assertNotEqual(inv_matches[0].get("polarity"), "bearish")
 
+    def test_v21_1_truncated_dict_unwrap_nvda_short_etf_and_8k_trail_cleanup(self) -> None:
+        from datetime import datetime, timezone
+        from unittest import mock
+        from pipeline.bilingual import _extract_tool_summary_text
+        from pipeline.ai_radar_builder import _clean_ai_text, build_ai_progress_artifact
+        from pipeline.v3_builder import build_v3_artifacts
+
+        # 1. Truncated dict literal inside what_it_does (both extract helper and ai_progress builder)
+        trunc = "{'name': 'Anthropic SDK', 'version': 'v2.13.0', 'notes': '消息批处理创建接口新增错误码；优化类…"
+        self.assertEqual(_extract_tool_summary_text(trunc), "消息批处理创建接口新增错误码；优化类…")
+        self.assertNotIn("{'name':", _clean_ai_text(trunc))
+
+        gen_iso = datetime.now(timezone.utc).isoformat()
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "data").mkdir(parents=True, exist_ok=True)
+            ai_doc = build_ai_progress_artifact(
+                batch_id="smart-test-v211",
+                generated_at_iso=gen_iso,
+                cat_docs={},
+                tech_tools=[{
+                    "tool_id": "t_anthropic",
+                    "tool_type": "sdk",
+                    "name": "Anthropic SDK",
+                    "summary": trunc,
+                    "repo": "anthropics/anthropic-sdk-python",
+                    "url": "https://github.com/anthropics/anthropic-sdk-python/releases/tag/v2.13.0",
+                    "checked_at": gen_iso,
+                }],
+                base_dir=root,
+            )
+            self.assertNotIn("{'name':", json.dumps(ai_doc, ensure_ascii=False))
+
+            # 2. NVDA 63% + 92% side-by-side clarification + pred_seed_nvda_sec_502 v1-v6 cleanup
+            (root / "data/predictions_settled_archive.json").write_text(
+                json.dumps({
+                    "schema_version": "1.0",
+                    "updated_at": gen_iso,
+                    "settled": {
+                        "pred_seed_nvda_sec_502": {
+                            "prediction_id": "pred_seed_nvda_sec_502",
+                            "mode": "live",
+                            "status": "settled",
+                            "title": "黄仁勋能否在 14 天内正式重返英伟达出任 CEO？",
+                            "probability_pct": 65,
+                            "current_judgment": "2026-11-23 英伟达董事会正式恢复黄仁勋 CEO 职务并提交 SEC 8-K，预测在截止日前提前命中！",
+                            "settlement": {"outcome": "correct", "settled_at": gen_iso, "evidence_url": "https://www.sec.gov/", "note": "ok", "brier_score": 0.1225},
+                            "versions": [
+                                {"version": 1, "updated_at": "2026-11-19T05:31:12+08:00", "judgment": "已追踪到 2026-11-12 临时代理 8-K，关注董事会正式复职或继任决议", "probability_pct": 60, "reason": "init"},
+                                {"version": 2, "updated_at": "2026-11-22T23:06:16+08:00", "judgment": "SEC 8-K Item 5.02 已披露于 2026-11-12；本批 1 条最新报道聚焦过渡安排，待正式继任公告", "probability_pct": 64, "reason": "update"},
+                                {"version": 7, "updated_at": "2026-11-24T12:11:51+08:00", "judgment": "2026-11-23 英伟达董事会正式恢复黄仁勋 CEO 职务并提交 SEC 8-K，预测在截止日前提前命中！", "probability_pct": 100, "reason": "settled"},
+                            ],
+                        }
+                    },
+                }, ensure_ascii=False),
+                encoding="utf-8",
+            )
+            _mk_cat = lambda c: {"schema_version": "4.2", "category": c, "generated_at": gen_iso, "events": []}
+            cat_docs = {c: _mk_cat(c) for c in ("finance", "global", "tech", "general")}
+            cat_docs["finance"]["events"] = [{
+                "event_id": "evt_nvda_short",
+                "category": "finance",
+                "title": "英伟达股价飙升重创空头，2倍做空英伟达ETF单日跌幅达63%",
+                "fact_summary": "英伟达股价暴涨导致GraniteShares 2x Short NVDA Daily ETF单日跌幅达63%。",
+                "sources": [{"source_name": "华尔街见闻", "url": "https://wallstreetcn.com/articles/nvda-short"}],
+                "latest_reported_at": gen_iso,
+                "first_discovered_at": gen_iso,
+                "first_reported_at": gen_iso,
+                "latest_fact_update_at": gen_iso,
+                "evidence_status": "single_source",
+                "evidence_label": "单一信源",
+                "independent_publisher_count": 1,
+                "reprint_count": 0,
+                "fact_atoms": [{"atom_id": "fa_1", "metric_or_action": "英伟达股价飙升重创空头，杠杆做空产品跌幅高达92%", "value": "92", "unit": "%"}],
+            }]
+            with mock.patch("pipeline.deep_enrichment_engine.collect_api_key_slots", return_value=[]):
+                build_v3_artifacts(
+                    root,
+                    batch_id="smart-test-v211",
+                    generated_at_iso=gen_iso,
+                    cat_docs=cat_docs,
+                    prev_cat_events={},
+                    prev_batch_id=None,
+                    connectors_payload={},
+                )
+            sl_doc = json.loads((root / "data/storylines_index.json").read_text(encoding="utf-8"))
+            st_items = list((sl_doc.get("storylines") or {}).values())
+            self.assertEqual(len(st_items), 1)
+            st0 = st_items[0]
+            self.assertIn("NVD", st0["title"])
+            self.assertIn("63%", st0["title"])
+            self.assertIn("3SNV", st0["title"])
+            self.assertIn("92%", st0["title"])
+            self.assertIn("3SNV", st0["fact_atoms"][0]["metric_or_action"])
+
+            preds_pub = json.loads((root / "data/predictions_public.json").read_text(encoding="utf-8"))
+            nvda_p = next(p for p in preds_pub["predictions"] if p.get("prediction_id") == "pred_seed_nvda_sec_502")
+            for v in nvda_p["versions"]:
+                self.assertNotIn("2026-11-12", json.dumps(v, ensure_ascii=False))
+
 
 if __name__ == "__main__":
     unittest.main()
