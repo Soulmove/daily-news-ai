@@ -12,13 +12,15 @@ persistent TTL caches in `data/*_cache.json`, enriching:
 from __future__ import annotations
 
 from concurrent.futures import ThreadPoolExecutor, as_completed
+from datetime import timedelta
+import hashlib
 import json
 import re
 import time
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
-from .gemini_pool import call_gemini_raw, collect_api_key_slots
+from .gemini_pool import call_gemini_json, call_gemini_raw, collect_api_key_slots
 from .manifest import atomic_write_json, load_json_if_exists
 from .time_utils import now_shanghai, parse_iso_datetime, to_iso_shanghai
 
@@ -288,8 +290,10 @@ def build_model_comparison_matrix(root: Path, *, generated_at_iso: str = "") -> 
     res = call_gemini_raw(
         scope="deep_ai_matrix",
         prompt=prompt,
-        models=("gemini-4-hydrogen", "gemini-2.5-flash"),
+        models=("gemini-3.5-flash-lite", "gemini-3.1-flash-lite", "gemini-2.5-flash-lite", "gemini-2.5-flash"),
         temperature=0.15,
+        max_output_tokens=16384,
+        timeout_ms=25_000,
         tools=_google_search_tools(),
         base_dir=root,
     )
@@ -430,8 +434,10 @@ def enrich_tools_with_ai_comparison(
         res = call_gemini_raw(
             scope="deep_github_tools",
             prompt=prompt,
-            models=("gemini-4-hydrogen", "gemini-2.5-flash"),
+            models=("gemini-3.5-flash-lite", "gemini-3.1-flash-lite", "gemini-2.5-flash-lite", "gemini-2.5-flash"),
             temperature=0.2,
+            max_output_tokens=16384,
+            timeout_ms=25_000,
             tools=_google_search_tools(),
             base_dir=root,
         )
@@ -868,6 +874,307 @@ def _build_deterministic_topic_overview(tp: Dict[str, Any]) -> Dict[str, Any]:
     }
 
 
+def _run_mega_batch_2b_derivatives(
+    root: Path,
+    *,
+    need_topics: List[Dict[str, Any]],
+    need_storylines: List[Tuple[str, Dict[str, Any]]],
+    need_qa_events: List[Tuple[str, Dict[str, Any]]],
+) -> Tuple[Dict[str, Any], Dict[str, Any], Dict[str, Any]]:
+    """Mega-Batch 2B: Enrich uncached topics, storylines & remaining event Q&As in ONE Tier-2 JSON call."""
+    if not need_topics and not need_storylines and not need_qa_events:
+        return {}, {}, {}
+
+    tp_lines: List[str] = []
+    tp_ids: set[str] = set()
+    for tp in need_topics[:6]:
+        tid = str(tp.get("topic_id") or "").strip()
+        if not tid:
+            continue
+        tp_ids.add(tid)
+        nodes_txt = "；".join(str(n.get("title") or "") for n in (tp.get("timeline") or [])[:5])
+        tp_lines.append(f"- tid={tid} | 标题={tp.get('title')} | 已有节点={nodes_txt[:220]}")
+
+    st_lines: List[str] = []
+    st_ids: set[str] = set()
+    for sid, st in need_storylines[:12]:
+        if not sid:
+            continue
+        st_ids.add(sid)
+        ev_sum = str((st.get("timeline") or [{}])[-1].get("fact_summary") or st.get("current_stage") or "")[:140]
+        st_lines.append(f"- sid={sid} | 标题={st.get('title')} | 现状={ev_sum}")
+
+    qa_lines: List[str] = []
+    qa_meta: Dict[str, Tuple[str, str]] = {}
+    for cat_q, ev in need_qa_events[:12]:
+        eid = str(ev.get("event_id") or "").strip()
+        if not eid:
+            continue
+        title_s = str(ev.get("title") or "")
+        qa_meta[eid] = (cat_q, title_s)
+        qa_lines.append(
+            f"- eid={eid} | 板块={cat_q} | 标题={title_s} | 摘要={str(ev.get('fact_summary') or '')[:160]}"
+        )
+
+    prompt = (
+        "你是资深多领域情报研究主编。请一次性在 1 个 JSON 对象中完成以下全部未缓存专题、故事线前情、事件深度追问的增补分析。\n"
+        "硬性要求：\n"
+        "1. 所有 id (`tid` / `sid` / `eid`) 必须原样精确匹配返回；\n"
+        "2. 严禁任何彩色 Emoji，严禁八股套话，每个回答必须用完整句号收尾、不得半截截断；\n"
+        "3. `event_qa` 严禁将美国/黄金/外交事件套用 A股做市商模板。\n\n"
+        + ("【待丰富专题 topics】\n" + "\n".join(tp_lines) + "\n\n" if tp_lines else "")
+        + ("【待补全前情故事线 storylines】\n" + "\n".join(st_lines) + "\n\n" if st_lines else "")
+        + ("【待补全深度追问 event_qa】\n" + "\n".join(qa_lines) + "\n\n" if qa_lines else "")
+        + "严格返回纯 JSON 对象：\n"
+        "{\n"
+        '  "topics": {\n'
+        '    "<tid>": {"brief_overview": "100字内前因→分歧→最新进展总览。", "comparison_table": {"headers": ["参与方/维度", "核心立场/数据", "关键影响"], "rows": [["", "", ""], ["", "", ""]]}}\n'
+        "  },\n"
+        '  "storylines": {\n'
+        '    "<sid>": {"history_nodes": [{"timestamp": "YYYY-MM-DD", "stage_tag": "起因/转折/进展", "title": "22字内节点标题", "fact_summary": "55字内客观前情。", "source_name": "公开信源"}], "stance_comparison": [{"side": "各方名称", "summary": "45字内立场与影响。", "key_sources": ["信源"]}]}\n'
+        "  },\n"
+        '  "event_qa": {\n'
+        '    "<eid>": [{"question": "读者关切提问？", "answer": "95字内明确因果回答。", "historical_parallel": "70字内真实历史参照。"}]\n'
+        "  }\n"
+        "}"
+    )
+
+    res = call_gemini_json(
+        scope="mega_derivative",
+        prompt=prompt,
+        tier="tier2",
+        temperature=0.15,
+        max_output_tokens=24576,
+        timeout_ms=25_000,
+        base_dir=root,
+    )
+    topics_out: Dict[str, Any] = {}
+    storylines_out: Dict[str, Any] = {}
+    qa_out: Dict[str, Any] = {}
+
+    if not res.ok or not isinstance(res.data, dict):
+        print(f"🚀 [Mega-Batch 2B] Derivatives skipped/fallback (model={res.model_used or '-'}, err={res.error_message or 'empty'})", flush=True)
+        return topics_out, storylines_out, qa_out
+
+    parsed = res.data
+    raw_tp = parsed.get("topics") or {}
+    if isinstance(raw_tp, dict):
+        for tid, row in raw_tp.items():
+            if tid not in tp_ids or not isinstance(row, dict) or not row.get("brief_overview"):
+                continue
+            tbl = row.get("comparison_table") or {}
+            headers = [strip_colored_emojis(str(h)) for h in (tbl.get("headers") or [])[:4]] if isinstance(tbl, dict) else []
+            rows = (
+                [[strip_colored_emojis(str(c)) for c in r[:4]] for r in (tbl.get("rows") or [])[:5] if isinstance(r, list)]
+                if isinstance(tbl, dict)
+                else []
+            )
+            topics_out[tid] = {
+                "brief_overview": strip_colored_emojis(str(row["brief_overview"])),
+                "comparison_table": {"headers": headers, "rows": rows} if headers and rows else None,
+            }
+
+    raw_st = parsed.get("storylines") or {}
+    if isinstance(raw_st, dict):
+        for sid, row in raw_st.items():
+            if sid not in st_ids or not isinstance(row, dict):
+                continue
+            nodes_out: List[Dict[str, Any]] = []
+            for n in (row.get("history_nodes") or [])[:4]:
+                if isinstance(n, dict) and n.get("title") and n.get("fact_summary"):
+                    nodes_out.append(
+                        {
+                            "timestamp": str(n.get("timestamp") or "")[:10],
+                            "stage_tag": strip_colored_emojis(str(n.get("stage_tag") or "前情回溯")),
+                            "title": strip_colored_emojis(str(n.get("title") or "")),
+                            "fact_summary": strip_colored_emojis(str(n.get("fact_summary") or "")),
+                            "source_name": strip_colored_emojis(str(n.get("source_name") or "历史公开报道")),
+                        }
+                    )
+            stances_out: List[Dict[str, Any]] = []
+            for s in (row.get("stance_comparison") or [])[:4]:
+                if not isinstance(s, dict):
+                    continue
+                side = strip_colored_emojis(str(s.get("side") or s.get("party") or "")).strip()
+                summary = strip_colored_emojis(str(s.get("summary") or "")).strip()
+                if not side or not summary:
+                    continue
+                ks = [strip_colored_emojis(str(x)).strip() for x in (s.get("key_sources") or []) if str(x).strip()] if isinstance(s.get("key_sources"), list) else []
+                stances_out.append({"side": side, "summary": summary, "key_sources": ks})
+            if nodes_out or stances_out:
+                storylines_out[sid] = {"history_nodes": nodes_out, "stance_comparison": stances_out}
+
+    raw_qa = parsed.get("event_qa") or {}
+    if isinstance(raw_qa, dict):
+        for eid, rows in raw_qa.items():
+            if eid not in qa_meta or not isinstance(rows, list):
+                continue
+            cat_q, title_s = qa_meta[eid]
+            pairs: List[Dict[str, str]] = []
+            for r in rows[:3]:
+                if isinstance(r, dict) and r.get("question") and r.get("answer"):
+                    pairs.append(
+                        {
+                            "question": strip_colored_emojis(str(r["question"])),
+                            "answer": _clip_complete_sentence(str(r["answer"]), 125),
+                            "historical_parallel": _clip_complete_sentence(str(r.get("historical_parallel") or ""), 80) if r.get("historical_parallel") else "",
+                        }
+                    )
+            if pairs and not _is_bad_cached_event_qa(title_s, cat_q, pairs):
+                qa_out[eid] = pairs
+
+    print(
+        f"🚀 [Mega-Batch 2B] Derivatives enriched topics={len(topics_out)} storylines={len(storylines_out)} qa={len(qa_out)} (model={res.model_used or '-'})",
+        flush=True,
+    )
+    return topics_out, storylines_out, qa_out
+
+
+def synthesize_dynamic_live_predictions_via_tier2(
+    root: Path,
+    *,
+    all_events: List[Dict[str, Any]],
+    calendar_items: List[Dict[str, Any]],
+    existing_predictions: List[Dict[str, Any]],
+    generated_dt: Any,
+    generated_at_iso: str,
+    max_new: int = 3,
+) -> List[Dict[str, Any]]:
+    """Use Tier-2 Gemini to synthesize 1~3 timely open live verifiable questions from fresh S/A events & calendar."""
+    open_live = [
+        p for p in existing_predictions
+        if isinstance(p, dict) and p.get("mode") == "live" and p.get("status") == "open"
+    ]
+    if len(open_live) >= 8 or max_new <= 0 or not collect_api_key_slots():
+        return []
+
+    cache_path = root / "data" / "predictions_ai_cache.json"
+    raw_cache = load_json_if_exists(cache_path, default={}) or {}
+    now_ts = time.time()
+    cached_items = raw_cache.get("items") if (now_ts - float(raw_cache.get("ts") or 0.0)) <= 6 * 3600 else None
+
+    existing_pids = {str(p.get("prediction_id") or "") for p in existing_predictions if isinstance(p, dict)}
+    existing_titles = {re.sub(r"\W+", "", str(p.get("title") or "").lower())[:20] for p in existing_predictions if isinstance(p, dict)}
+
+    if isinstance(cached_items, list) and cached_items:
+        filtered = [
+            it for it in cached_items
+            if isinstance(it, dict)
+            and str(it.get("prediction_id") or "") not in existing_pids
+            and re.sub(r"\W+", "", str(it.get("title") or "").lower())[:20] not in existing_titles
+        ]
+        if filtered:
+            return filtered[:max_new]
+
+    sa_events = [
+        e for e in all_events
+        if isinstance(e, dict) and (e.get("severity_tier") in {"S", "A"} or e.get("importance") == "high")
+    ][:10]
+    if not sa_events:
+        sa_events = [e for e in all_events if isinstance(e, dict)][:8]
+    future_cals = [c for c in calendar_items if isinstance(c, dict) and not c.get("is_past")][:6]
+    if not sa_events and not future_cals:
+        return []
+
+    ev_lines = [f"- [{e.get('category')}] {e.get('title')} ({str(e.get('fact_summary') or '')[:90]})" for e in sa_events]
+    cal_lines = [f"- {c.get('scheduled_date_label') or str(c.get('scheduled_at') or '')[:10]} | {c.get('title')}" for c in future_cals]
+    min_due_str = (generated_dt + timedelta(days=3)).strftime("%Y-%m-%d")
+    default_due_iso = (generated_dt + timedelta(days=7)).strftime("%Y-%m-%dT20:00:00+08:00")
+
+    prompt = (
+        f"你是前瞻预测编辑。当前时间：{generated_at_iso}。\n"
+        "请基于以下今日重点动态与未来排期，提出最多 3 条**未来 3~21 天内可通过官方公报/公开数据明确判定对错**的前瞻验证问题。\n"
+        "严禁与现有问题重复，严禁任何彩色 Emoji，严禁内部系统代号，结算日期 `due_at` 必须不早于 " + min_due_str + "。\n\n"
+        + ("现有问题标题：" + "；".join(str(p.get("title") or "")[:30] for p in open_live[:8]) + "\n\n")
+        + ("重点动态：\n" + "\n".join(ev_lines) + "\n\n" if ev_lines else "")
+        + ("未来排期：\n" + "\n".join(cal_lines) + "\n\n" if cal_lines else "")
+        + '严格输出 JSON：{"predictions": [{"title":"中文可验证预测题（28字内）","title_en":"Concise English yes/no question","target_entity":"核心主体名称","question":"明确结算判定问题（45字内）","question_en":"English settlement criterion","due_at":"YYYY-MM-DDT20:00:00+08:00","win_rule":"达成YES的公开依据","lose_rule":"判定NO的公开依据","indeterminate_rule":"无法判定条件","supporting_evidence":["正方事实证据"],"opposing_evidence":["反方制约证据"],"core_assumption":"核心前提假设","invalidation_trigger":"失效触发条件","probability_pct":55,"current_judgment":"当前一句研判"}]}'
+    )
+    res = call_gemini_json(
+        scope="mega_predictions",
+        prompt=prompt,
+        tier="tier2",
+        temperature=0.2,
+        max_output_tokens=8192,
+        timeout_ms=25_000,
+        base_dir=root,
+    )
+    if not res.ok or not isinstance(res.data, dict):
+        return []
+    raw_list = res.data.get("predictions")
+    if not isinstance(raw_list, list):
+        return []
+
+    out: List[Dict[str, Any]] = []
+    min_due_dt = generated_dt + timedelta(days=3)
+    for row in raw_list:
+        if not isinstance(row, dict):
+            continue
+        title = strip_colored_emojis(str(row.get("title") or "")).strip()
+        question = strip_colored_emojis(str(row.get("question") or "")).strip()
+        if len(title) < 10 or len(question) < 12:
+            continue
+        tkey = re.sub(r"\W+", "", title.lower())[:20]
+        if tkey in existing_titles:
+            continue
+        due_raw = str(row.get("due_at") or "").strip()
+        due_dt = parse_iso_datetime(due_raw)
+        if due_dt is None or due_dt < min_due_dt:
+            due_iso = default_due_iso
+        else:
+            due_iso = to_iso_shanghai(due_dt)
+        try:
+            prob = max(20, min(80, int(row.get("probability_pct") or 55)))
+        except Exception:
+            prob = 55
+        pid = "pred_ai_" + hashlib.sha1(title.encode("utf-8")).hexdigest()[:10]
+        if pid in existing_pids:
+            continue
+        existing_pids.add(pid)
+        existing_titles.add(tkey)
+        out.append(
+            {
+                "prediction_id": pid,
+                "mode": "live",
+                "status": "open",
+                "title": title,
+                "title_en": strip_colored_emojis(str(row.get("title_en") or title)),
+                "target_entity_id": "ent_ai_dynamic",
+                "target_entity": strip_colored_emojis(str(row.get("target_entity") or "核心追踪主体")),
+                "question": question,
+                "question_en": strip_colored_emojis(str(row.get("question_en") or question)),
+                "created_at": generated_at_iso,
+                "due_at": due_iso,
+                "win_rule": strip_colored_emojis(str(row.get("win_rule") or "在到期日前获得官方公告或权威一手文件正式确认")),
+                "lose_rule": strip_colored_emojis(str(row.get("lose_rule") or "到期前官方未出台对应决议/披露，或明确宣布延期取消")),
+                "indeterminate_rule": strip_colored_emojis(str(row.get("indeterminate_rule") or "公开披露信息仍存实质模糊、延期未定")),
+                "supporting_evidence": [strip_colored_emojis(str(x)) for x in (row.get("supporting_evidence") or [])[:3] if str(x).strip()] or ["当前已有权威信源持续跟进该关键窗口"],
+                "opposing_evidence": [strip_colored_emojis(str(x)) for x in (row.get("opposing_evidence") or [])[:3] if str(x).strip()] or ["最终落地节奏仍受多方博弈与审批窗口制约"],
+                "core_assumption": strip_colored_emojis(str(row.get("core_assumption") or "关键进展将通过公开官方通告或监管文件留痕")),
+                "invalidation_trigger": strip_colored_emojis(str(row.get("invalidation_trigger") or "当事方正式取消议程或彻底改期")),
+                "probability_pct": prob,
+                "probability_note": "基于当前多维公开信号构建实时基准概率，到期前固定跟踪验证",
+                "current_judgment": strip_colored_emojis(str(row.get("current_judgment") or "持续盯紧到期窗口前的官方披露与核心催化落地")),
+                "versions": [
+                    {
+                        "version": 1,
+                        "updated_at": generated_at_iso,
+                        "judgment": strip_colored_emojis(str(row.get("current_judgment") or "建立实时前瞻观察并持续追踪官方核验信号")),
+                        "probability_pct": prob,
+                        "reason": "基于最新重点动态与未来公开排期交叉生成",
+                    }
+                ],
+                "settlement": None,
+            }
+        )
+        if len(out) >= max_new:
+            break
+
+    if out:
+        atomic_write_json(cache_path, {"ts": now_ts, "updated_at": generated_at_iso, "items": out})
+    return out
+
+
 def run_v12_deep_enrichment(
     root: Path,
     *,
@@ -908,6 +1215,8 @@ def run_v12_deep_enrichment(
             eid_c = str(e.get("event_id") or "")
             if eid_c and eid_c in qa_cache and _is_bad_cached_event_qa(str(e.get("title") or ""), cat, qa_cache.get(eid_c)):
                 qa_cache.pop(eid_c, None)
+            elif eid_c and isinstance(e.get("deep_qa"), list) and e.get("deep_qa") and not _is_bad_cached_event_qa(str(e.get("title") or ""), cat, e.get("deep_qa")):
+                qa_cache.setdefault(eid_c, e["deep_qa"])
         ranked = sorted(
             [e for e in evs if isinstance(e, dict)],
             key=lambda e: (1 if e.get("severity_tier") == "S" else (1 if e.get("importance") == "high" else 0), len(e.get("sources") or [])),
@@ -918,59 +1227,27 @@ def run_v12_deep_enrichment(
 
     # 3. Active topics needing overview & table
     need_topics = [tp for tp in major_topics[:10] if isinstance(tp, dict) and str(tp.get("topic_id") or "") not in tp_cache]
+    need_st = [(sid, st) for sid, st in short_storylines[:12] if sid not in st_cache]
+    need_qa = [
+        (cat_q, ev)
+        for cat_q, ev in top_events[:12]
+        if str(ev.get("event_id") or "")
+        and str(ev.get("event_id") or "") not in qa_cache
+        and not (isinstance(ev.get("deep_qa"), list) and ev.get("deep_qa") and not _is_bad_cached_event_qa(str(ev.get("title") or ""), cat_q, ev.get("deep_qa")))
+    ]
 
     if has_keys:
-        with ThreadPoolExecutor(max_workers=6) as pool:
-            f_tools = pool.submit(enrich_tools_with_ai_comparison, tech_tools, root, generated_at_iso=generated_at_iso)
-
-            st_futures = {
-                pool.submit(_enrich_single_storyline_via_gemini, sid, st, root): sid
-                for sid, st in short_storylines[:10]
-                if sid not in st_cache
-            }
-            qa_futures = {
-                pool.submit(_build_event_deep_qa_via_gemini, ev, root): (cat_q, ev)
-                for cat_q, ev in top_events[:10]
-                if str(ev.get("event_id") or "") and str(ev.get("event_id") or "") not in qa_cache
-            }
-            tp_futures = {
-                pool.submit(_build_topic_deep_via_gemini, tp, root): str(tp.get("topic_id") or "")
-                for tp in need_topics[:6]
-                if str(tp.get("topic_id") or "")
-            }
-
-            try:
-                enriched_tools = f_tools.result(timeout=90)
-            except Exception:
-                enriched_tools = enrich_tools_with_ai_comparison(tech_tools, root, generated_at_iso=generated_at_iso)
-
-            for fut in as_completed(st_futures):
-                sid = st_futures[fut]
-                try:
-                    val = fut.result(timeout=45)
-                    if val:
-                        st_cache[sid] = val
-                except Exception:
-                    pass
-
-            for fut in as_completed(qa_futures):
-                cat_q, ev_q = qa_futures[fut]
-                eid = str(ev_q.get("event_id") or "")
-                try:
-                    val = fut.result(timeout=45)
-                    if val and not _is_bad_cached_event_qa(str(ev_q.get("title") or ""), cat_q, val):
-                        qa_cache[eid] = val
-                except Exception:
-                    pass
-
-            for fut in as_completed(tp_futures):
-                tid = tp_futures[fut]
-                try:
-                    val = fut.result(timeout=45)
-                    if val:
-                        tp_cache[tid] = val
-                except Exception:
-                    pass
+        enriched_tools = enrich_tools_with_ai_comparison(tech_tools, root, generated_at_iso=generated_at_iso)
+        if need_topics[:6] or need_st or need_qa:
+            tp_new, st_new, qa_new = _run_mega_batch_2b_derivatives(
+                root,
+                need_topics=need_topics[:6],
+                need_storylines=need_st,
+                need_qa_events=need_qa,
+            )
+            tp_cache.update(tp_new)
+            st_cache.update(st_new)
+            qa_cache.update(qa_new)
     else:
         enriched_tools = enrich_tools_with_ai_comparison(tech_tools, root, generated_at_iso=generated_at_iso)
 
@@ -1044,9 +1321,14 @@ def run_v12_deep_enrichment(
             if cached_qa is not None and _is_bad_cached_event_qa(title_s, cat, cached_qa):
                 qa_cache.pop(eid, None)
                 cached_qa = None
+            existing_qa = ev.get("deep_qa")
+            if isinstance(existing_qa, list) and existing_qa and _is_bad_cached_event_qa(title_s, cat, existing_qa):
+                existing_qa = None
             if cached_qa:
                 ev["deep_qa"] = cached_qa
-            elif ev.get("severity_tier") in {"S", "A"} or ev.get("importance") == "high" or len(ev.get("sources") or []) >= 2 or ev.get("deep_qa"):
+            elif isinstance(existing_qa, list) and existing_qa:
+                ev["deep_qa"] = existing_qa
+            elif ev.get("severity_tier") in {"S", "A"} or ev.get("importance") == "high" or len(ev.get("sources") or []) >= 2:
                 ev["deep_qa"] = _build_deterministic_event_qa(ev, cat)
             if ev.get("deep_qa"):
                 qa_enriched_count += 1

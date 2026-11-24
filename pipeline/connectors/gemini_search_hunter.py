@@ -277,8 +277,9 @@ def fetch_gemini_search_breaking_news(
     res = call_gemini_raw(
         scope="search_hunter",
         prompt=prompt,
-        models=("gemini-4-hydrogen", "gemini-2.5-flash"),
+        tier="tier1",
         temperature=0.15,
+        timeout_ms=25_000,
         tools=search_tools,
         base_dir=root,
     )

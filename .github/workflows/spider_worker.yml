@@ -81,7 +81,7 @@ jobs:
         env:
           TENCENT_INGEST_URL: ${{ secrets.TENCENT_INGEST_URL }}
           TENCENT_INGEST_TOKEN: ${{ secrets.TENCENT_INGEST_TOKEN }}
-          TRIGGER_PUSH: '0'
+          TRIGGER_PUSH: '1'
         run: python scripts/push_to_tencent.py
 
       - name: 💾 Commit and push atomically
@@ -96,8 +96,8 @@ jobs:
           fi
           git commit -m "🕷️ V3 Raw & Connectors Snapshot: $(date '+%Y-%m-%d %H:%M CST')"
           for i in 1 2 3; do
-            git pull --rebase origin main && git push && exit 0
-            echo "Push retry $i after rebase..."
+            git fetch origin main && git merge -X ours --no-edit origin/main && git push origin main && exit 0
+            echo "Push retry $i after ours-merge..."
             sleep 3
           done
           exit 1

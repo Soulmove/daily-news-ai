@@ -1292,8 +1292,9 @@ def _query_gemini_google_search_ai_weekly(base_dir: Path | str = ".") -> List[Di
     res = call_gemini_raw(
         scope="ai_radar",
         prompt=prompt,
-        models=("gemini-4-hydrogen", "gemini-2.5-flash"),
+        tier="tier1",
         temperature=0.2,
+        timeout_ms=25_000,
         tools=search_tools,
         base_dir=root,
     )
@@ -1425,12 +1426,13 @@ def _is_within_recent_hours(date_str: str, gen_dt: Any, hours: int = 72) -> bool
 
 
 _MODEL_VER_EXTRACT_RE = re.compile(
-    r"\b(GPT-\d+(?:\.\d+)?(?:\s+[A-Za-z]+)?|Claude\s+[A-Za-z]*\s*\d+(?:\.\d+)?|Gemini\s+\d+(?:\.\d+)?(?:\s+[A-Za-z]+)?|"
+    r"((?:\b(?:GPT-\d+(?:\.\d+)?(?:\s+[A-Za-z]+)?|Claude\s+[A-Za-z]*\s*\d+(?:\.\d+)?|Gemini\s+\d+(?:\.\d+)?(?:\s+[A-Za-z]+)?|"
     r"DeepSeek-[A-Za-z0-9.-]+|Qwen\d+(?:\.\d+)?(?:-[A-Za-z]+)?|GLM-\d+(?:\.\d+)?(?:-[A-Za-z]+)?|"
     r"Kimi[\s-]*K\d+(?:\.\d+)?|Grok[\s-]*\d+(?:\.\d+)?|Llama[\s-]*\d+(?:\.\d+)?|Mistral\s+[A-Za-z]+\s+\d+|MiniMax-[A-Za-z0-9]+|"
     r"Alpamayo\s*\d+(?:\.\d+)?(?:\s+Edge\s+VLA|\s+VLA)?|Nemotron[\s-]*\d+(?:\.\d+)?|Cosmos[\s-]*\d+(?:\.\d+)?|"
     r"Seed(?:ance|ream)?[\s-]*\d+(?:\.\d+)?|Hunyuan[\s-]*\d+(?:\.\d+)?|ERNIE[\s-]*\d+(?:\.\d+)?|"
-    r"Pangu[\s-]*\d+(?:\.\d+)?|Nova[\s-]*\d+(?:\.\d+)?|Gemma[\s-]*\d+(?:\.\d+)?|DiffusionGemma|Genie\s*\d+)\b",
+    r"Pangu[\s-]*\d+(?:\.\d+)?|Nova[\s-]*\d+(?:\.\d+)?|Gemma[\s-]*\d+(?:\.\d+)?|DiffusionGemma|Genie\s*\d+)\b|"
+    r"Anthropic\s+EFS|Claude\s+EFS|\bEFS\s*系统))",
     re.I,
 )
 

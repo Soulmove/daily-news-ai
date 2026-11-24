@@ -116,8 +116,8 @@ jobs:
           fi
           git commit -m "🧠 V3 Briefing & Research Memory Batch: $(date '+%Y-%m-%d %H:%M CST')"
           for i in 1 2 3; do
-            git pull --rebase origin main && git push && exit 0
-            echo "Push retry $i after rebase..."
+            git fetch origin main && git merge -X ours --no-edit origin/main && git push origin main && exit 0
+            echo "Push retry $i after ours-merge..."
             sleep 3
           done
           exit 1

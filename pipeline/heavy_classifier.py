@@ -41,12 +41,109 @@ GEO_MILITARY_HEAVY_RE = re.compile(
 )
 
 MARKET_SEMI_HEAVY_RE = re.compile(
-    r"(?:(?:KOSPI|日经225|恒生指数|恒生科技|纳指|标普500|创业板指).{0,16}(?:大跌|暴跌|重挫|跌超|飙升|大涨)\s*[2-9](?:\.\d+)?%|"
+    r"(?:(?:KOSPI|日经225|恒生指数|恒生科技|纳指|标普500|创业板指).{0,16}(?:大跌|暴跌|重挫|跌超|飙升|大涨|涨超?\s*[3-9])\s*[2-9]?(?:\.\d+)?%?|"
     r"(?:HBM|高带宽内存).{0,18}(?:售罄|产能.{0,6}满载|锁单|涨价)|"
     r"美光.{0,16}(?:320亿|百亿|HBM)|"
-    r"(?:暴跌|重挫|闪崩)超?\s*[3-9](?:\.\d+)?%)",
+    r"黄仁勋.{0,14}(?:重掌|回归|帅印|执掌)|"
+    r"英伟达.{0,14}(?:暴涨|狂飙|大涨)\s*\d+%?|"
+    r"Anthropic.{0,14}(?:推出|发布|上线).{0,10}EFS|"
+    r"(?:暴跌|重挫|暴涨|飙涨|闪崩)超?\s*[3-9](?:\.\d+)?%|"
+    r"(?:暴涨|大涨)\s*[1-9]\d+(?:\.\d+)?%)",
     re.I,
 )
+
+_HEAVY_BLOCKBUSTER_EXEMPT_RE = re.compile(
+    r"(?:暴涨\s*[1-9]?\d+(?:\.\d+)?%|大涨\s*[5-9](?:\.\d+)?%|重掌.{0,8}帅印|回归.{0,8}(?:CEO|英伟达)|Anthropic.{0,12}EFS|纳指.{0,10}(?:大涨|涨超?\s*[5-9]))",
+    re.I,
+)
+_MINOR_SESSION_FLUFF_RE = re.compile(r"(?:夜盘普遍|夜盘微涨|夜盘涨|夜盘跌|盘前微涨|盘前涨|盘前跌|盘前涨跌不一)")
+
+
+def is_heavy_noise_excluded(title: str, summary: str = "") -> bool:
+    """Return True if item is heavy-ineligible noise/gossip, exempting blockbuster >=10% moves or CEO shocks."""
+    t = str(title or "").strip()
+    if not t:
+        return True
+    is_blockbuster = bool(_HEAVY_BLOCKBUSTER_EXEMPT_RE.search(t))
+    if is_blockbuster:
+        # Blockbusters still cannot be Taiwan fluff or family gossip
+        if re.search(r"离婚案|财产分割|离婚诉讼|台湾|台湾地区|早间要闻|要闻汇总|盘前必读", t):
+            return True
+        return False
+    if HEAVY_NOISE_EXCLUDE_RE.search(t):
+        return True
+    return False
+
+
+def compute_deterministic_heavy_score(
+    title: str,
+    summary: str = "",
+    *,
+    independent_publishers: int = 1,
+    is_official: bool = False,
+    has_authoritative_source: bool = True,
+    age_hours: float = 6.0,
+    is_rumor_single: bool = False,
+) -> float:
+    """
+    0-AI pure mathematical Heavy score formula:
+      Score = (AuthMediaPts + OfficialPts + MagnitudePts + DomainPts) * TimeDecay + NoisePenalty
+    Used deterministically across Today briefings & 7x24 Live Wire with zero LLM dependency.
+    """
+    t = str(title or "").strip()
+    s = str(summary or "").strip()
+    blob = f"{t} {s}"
+    if is_heavy_noise_excluded(t, s) or not has_authoritative_source or is_rumor_single:
+        return 0.0
+
+    auth_pts = 18.0 * min(max(1, int(independent_publishers or 1)), 5)
+    official_pts = 28.0 if is_official else 0.0
+
+    magnitude_pts = 0.0
+    for m_pct in re.finditer(r"(\d+(?:\.\d+)?)\s*%", t):
+        try:
+            val = float(m_pct.group(1))
+        except ValueError:
+            continue
+        # Only score percentage when adjacent to clear market/asset shock verbs
+        ctx = t[max(0, m_pct.start() - 10) : min(len(t), m_pct.end() + 4)]
+        if re.search(r"涨|跌|飙|重挫|暴跌|暴涨|回撤|蒸发|提价|降[低至]", ctx):
+            if val >= 20.0:
+                magnitude_pts = max(magnitude_pts, 30.0)
+            elif val >= 8.0:
+                magnitude_pts = max(magnitude_pts, 22.0)
+            elif val >= 3.0:
+                magnitude_pts = max(magnitude_pts, 14.0)
+    if re.search(r"(?:[1-9]\d{2,}\s*亿美元|万亿(?:美元|人民币|元)?|440亿|320亿)", blob):
+        magnitude_pts = max(magnitude_pts, 24.0)
+    elif re.search(r"(?:[1-9]\d\s*亿美元|百亿|千亿)", blob):
+        magnitude_pts = max(magnitude_pts, 16.0)
+
+    domain_pts = 0.0
+    if GEO_MILITARY_HEAVY_RE.search(t) or re.search(
+        r"(?:沪深北|三大)交易所|融资保证金|股市稳定基金|平准基金|美联储.{0,10}(?:降息|加息|FOMC)|中美元首|黄仁勋.{0,10}(?:重掌|回归|帅印)|黎曼猜想|Anthropic.{0,10}EFS",
+        t,
+        re.I,
+    ):
+        domain_pts = 26.0
+    elif MARKET_SEMI_HEAVY_RE.search(blob) or re.search(
+        r"(?:OpenAI|Anthropic|Google|DeepSeek|Qwen|英伟达|NVIDIA|SpaceX|特斯拉|神舟|COP31|黄金|央行)",
+        t,
+        re.I,
+    ):
+        domain_pts = 14.0
+
+    if age_hours <= 6.0:
+        decay = 1.15
+    elif age_hours <= 24.0:
+        decay = 1.0
+    elif age_hours <= 36.0:
+        decay = 0.72
+    else:
+        decay = 0.35
+
+    raw_score = (auth_pts + official_pts + magnitude_pts + domain_pts) * decay
+    return round(max(0.0, raw_score), 1)
 
 
 def _norm_title_text(title: str) -> str:
@@ -59,8 +156,12 @@ def heavy_topic_key(norm_or_title: str) -> Optional[str]:
         return "korea_stab"
     if "主动etf" in n:
         return "cn_active_etf"
-    if "黄仁勋" in n and "英伟达" in n:
+    if "黄仁勋" in n and any(k in n for k in ("英伟达", "重掌", "帅印", "回归", "ceo")):
         return "nvda_jensen"
+    if "anthropic" in n and "efs" in n:
+        return "anthropic_efs"
+    if "纳指" in n and any(k in n for k in ("大涨", "反攻", "暴涨", "涨8", "涨超")):
+        return "us_tech_rebound"
     if "融资保证金" in n and "80%" in n:
         return "margin_80"
     if "黄金" in n and any(k in n for k in ("反弹", "杀跌", "突破36", "回升")):
@@ -166,11 +267,20 @@ def sync_today_heavy_into_live_wire(
         exc = str(it.get("excerpt") or "")
         src_name = str(it.get("source_name") or "")
         src_id = str(it.get("source_id") or "")
-        if HEAVY_NOISE_EXCLUDE_RE.search(title) or is_hotlist_aggregator_source(src_id, src_name):
+        if is_heavy_noise_excluded(title, exc) or is_hotlist_aggregator_source(src_id, src_name):
             it["severity_tier"] = "B"
             it["importance"] = "normal"
             it["heavy_reason_tag"] = None
             continue
+        _, w_age_h = _event_ts_age_hours(it, now_ref)
+        it["heavy_score"] = compute_deterministic_heavy_score(
+            title,
+            exc,
+            independent_publishers=max(1, int(it.get("_merged_count") or 1)),
+            is_official=bool(it.get("source_tier") == "first_party"),
+            has_authoritative_source=not is_hotlist_aggregator_source(src_id, src_name),
+            age_hours=w_age_h,
+        )
         if GEO_MILITARY_HEAVY_RE.search(title):
             it["severity_tier"] = "S" if it.get("severity_tier") == "S" else "A"
             it["importance"] = "high"
@@ -198,18 +308,29 @@ def sync_today_heavy_into_live_wire(
             if tier not in {"S", "A"}:
                 continue
             t_ev = str(ev.get("title") or "").strip()
-            if not t_ev or HEAVY_NOISE_EXCLUDE_RE.search(t_ev):
+            if not t_ev or is_heavy_noise_excluded(t_ev, str(ev.get("fact_summary") or "")):
                 continue
             if not has_authoritative_primary_source(ev.get("sources") or []):
                 continue
             _, age_h = _event_ts_age_hours(ev, now_ref)
             prio = 2 if tier == "S" else 1
-            heavy_events.append((prio, -age_h, {**ev, "_cat": cat, "_age_h": age_h}))
+            hscore = float(
+                ev.get("heavy_score")
+                or compute_deterministic_heavy_score(
+                    t_ev,
+                    str(ev.get("fact_summary") or ""),
+                    independent_publishers=int(ev.get("independent_publisher_count") or len(ev.get("sources") or []) or 1),
+                    is_official=bool(ev.get("evidence_status") == "official_confirmed"),
+                    has_authoritative_source=True,
+                    age_hours=age_h,
+                )
+            )
+            heavy_events.append((prio, hscore, -age_h, {**ev, "_cat": cat, "_age_h": age_h}))
 
-    heavy_events.sort(key=lambda x: (x[0], x[1]), reverse=True)
+    heavy_events.sort(key=lambda x: (x[0], x[1], x[2]), reverse=True)
 
     # 3. Sync recent (<16h) Today Heavy events (plus older S-tier up to min_heavy) into wire items
-    for prio, _, ev in heavy_events:
+    for prio, _hscore, _, ev in heavy_events:
         age_h = float(ev.get("_age_h") or 0.0)
         if age_h > window_hours and prio < 2:
             continue
@@ -260,9 +381,15 @@ def sync_today_heavy_into_live_wire(
     # 4. Deduplicate & enforce 8-12 cap on Heavy items (S-tier prioritized, then newest A-tier)
     items.sort(key=lambda x: str(x.get("published_at") or ""), reverse=True)
     heavy_candidates = [idx for idx, it in enumerate(items) if it.get("importance") == "high" or it.get("severity_tier") in {"S", "A"}]
-    ranked_heavy = [idx for idx in heavy_candidates if items[idx].get("severity_tier") == "S"] + [
-        idx for idx in heavy_candidates if items[idx].get("severity_tier") != "S"
-    ]
+    ranked_heavy = sorted(
+        heavy_candidates,
+        key=lambda idx: (
+            1 if items[idx].get("severity_tier") == "S" else 0,
+            float(items[idx].get("heavy_score") or 0.0),
+            str(items[idx].get("published_at") or ""),
+        ),
+        reverse=True,
+    )
     selected_heavy: List[int] = []
     seen_keys: set[str] = set()
     kept_titles: List[str] = []
@@ -282,7 +409,7 @@ def sync_today_heavy_into_live_wire(
 
     # If still below min_heavy and today events have additional unique S/A items, top up cleanly
     if len(selected_heavy) < min_heavy:
-        for _, _, ev in heavy_events:
+        for _, _, _, ev in heavy_events:
             if len(selected_heavy) >= min_heavy:
                 break
             t = str(ev.get("title") or "").strip()
@@ -340,7 +467,7 @@ def sync_today_heavy_into_live_wire(
             if not isinstance(hl, dict):
                 continue
             ht = str(hl.get("title") or "").strip()
-            if not ht or HEAVY_NOISE_EXCLUDE_RE.search(ht):
+            if not ht or is_heavy_noise_excluded(ht, str(hl.get("excerpt") or "")):
                 continue
             h_exc = str(hl.get("excerpt") or "")
             tk = heavy_topic_key(ht)

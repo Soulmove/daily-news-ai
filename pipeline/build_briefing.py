@@ -31,12 +31,21 @@ from pipeline.dedup import (
 )
 from pipeline.entities import ENTITY_REGISTRY, match_entities_with_reasons
 from pipeline.gemini_pool import (
+    TIER1_DEEP_MODELS,
     call_gemini_json,
+    collect_api_key_slots,
     count_healthy_keys,
     get_ordered_key_slots,
     get_quota_summary,
 )
-from pipeline.heavy_classifier import GEO_MILITARY_HEAVY_RE, HEAVY_NOISE_EXCLUDE_RE, infer_heavy_reason_tag
+from pipeline.heavy_classifier import (
+    GEO_MILITARY_HEAVY_RE,
+    HEAVY_NOISE_EXCLUDE_RE,
+    MARKET_SEMI_HEAVY_RE,
+    compute_deterministic_heavy_score,
+    infer_heavy_reason_tag,
+    is_heavy_noise_excluded,
+)
 from pipeline.id_utils import canonicalize_url, is_generic_quote_or_homepage_url, make_raw_item_id
 from pipeline.manifest import (
     atomic_write_json,
@@ -332,15 +341,24 @@ def _call_gemini_json_with_meta(
     *,
     scope: str = "default",
     temperature: float = 0.25,
+    tier: str = "tier1",
+    max_output_tokens: Optional[int] = None,
+    timeout_ms: int = 25_000,
     base_dir: Path | str | None = ".",
 ) -> Tuple[Any, Optional[str], List[Dict[str, str]], bool]:
     global _LAST_USED_MODEL
-    models = list(dict.fromkeys([PRIMARY_MODEL, FALLBACK_MODEL, "gemini-2.5-flash-lite", SECONDARY_FALLBACK_MODEL]))
+    if tier == "tier1":
+        models = list(dict.fromkeys([PRIMARY_MODEL, *TIER1_DEEP_MODELS, FALLBACK_MODEL, "gemini-2.5-flash-lite", SECONDARY_FALLBACK_MODEL]))
+    else:
+        models = list(dict.fromkeys([*TIER1_DEEP_MODELS, PRIMARY_MODEL, FALLBACK_MODEL, SECONDARY_FALLBACK_MODEL]))
     res = call_gemini_json(
         scope=scope,
         prompt=prompt,
         models=models,
+        tier=tier,
         temperature=temperature,
+        max_output_tokens=max_output_tokens,
+        timeout_ms=timeout_ms,
         base_dir=base_dir,
     )
     if res.ok:
@@ -1525,15 +1543,19 @@ _S_MACRO_POLICY_RE = re.compile(
     re.I,
 )
 _S_MAJOR_TECH_CORP_RE = re.compile(
-    r"(?:(?!.*(?:降价|促销|优惠))(?:发布|上线|推出|开源).{0,16}(?:GPT-?\d|Gemini\s*\d|Claude\s*\d|DeepSeek)|"
+    r"(?:(?!.*(?:降价|促销|优惠))(?:发布|上线|推出|开源).{0,16}(?:GPT-?\d|Gemini\s*\d|Claude\s*\d|DeepSeek|EFS)|"
+    r"Anthropic.{0,12}EFS|"
     r"IPO.{0,12}(?:首日|创纪录|935亿|813亿)|万亿.{0,8}危机|"
     r"440亿美元|SpaceX.{0,16}(?:GPU|筹措|融资)|(?:戴尔|HPE|超微|AI服务器).{0,16}(?:涨价|提价).{0,8}45%|最高提价\s*45%|"
-    r"英伟达.{0,12}(?:暴跌|换帅|出口管制|禁售)|SEC.{0,10}英伟达|星舰.{0,8}回收)",
+    r"黄仁勋.{0,14}(?:重掌|回归|帅印|执掌)|"
+    r"英伟达.{0,14}(?:暴涨|大涨|暴跌|换帅|出口管制|禁售)|"
+    r"美股科技.{0,12}反攻|纳指.{0,10}(?:大涨|涨超?\s*[5-9])|"
+    r"SEC.{0,10}英伟达|星舰.{0,8}回收)",
     re.I,
 )
 _S_TECH_NOISE_GUARD_RE = re.compile(
     r"(?:招聘|回答更简短|透明度|反蒸馏|渠道价|遭证监会立案|信息披露违法违规|专利侵权|控股股东|台湾|台湾地区|"
-    r"降价通知|api\s*降价|调用降价|限时降价|优惠活动|促销|夜盘普遍|夜盘微涨|盘前微涨|盘前涨跌不一|"
+    r"降价通知|api\s*降价|调用降价|限时降价|优惠活动|促销|"
     r"涨停|持续活跃|短剧|影视股|概念股拉升|"
     r"提议(?:设|将|用).{0,28}(?:限制|开发限制|挂钩|门槛)|呼吁限制|建议设立.*限制|建议限制)",
     re.I,
@@ -1543,7 +1565,8 @@ _A_TIER_EVENT_RE = re.compile(
     r"(?:自贸协定|自由贸易协定|百亿美元并购|欧盟.{0,10}禁售|法院禁令|出口管制|实体清单|菲尔兹奖|梅纳德|BepiColombo|水星轨道|"
     r"神舟.{0,8}(?:发射|合练)|COP31|气候大会|气候变化大会|关税|黄金.{0,8}暴跌|比特币.{0,8}(?:跌破|突破)|并购|收购.{0,8}亿美元|"
     r"股市稳定基金|440亿|最高提价\s*45%|AI服务器.{0,12}(?:涨价|提价)|中美元首|四点宣言|主动ETF|黎曼猜想|Mathlib|"
-    r"(?!.*(?:降价通知|夜盘|提议(?:设|将|用)))OpenAI|Anthropic|Google|DeepSeek|Qwen|英伟达|NVIDIA|特斯拉|FSD|SpaceX)",
+    r"黄仁勋|Anthropic.{0,10}EFS|暴涨\s*[1-9]\d*%|"
+    r"(?!.*(?:降价通知|提议(?:设|将|用)))OpenAI|Anthropic|Google|DeepSeek|Qwen|英伟达|NVIDIA|特斯拉|FSD|SpaceX)",
     re.I,
 )
 
@@ -1561,7 +1584,7 @@ def _event_age_hours(ev: dict, now_dt: Any) -> Tuple[float, float]:
 
 def _s_tier_priority(title: str, ev: dict) -> int:
     """Return 2 for macro/policy/geopolitical/science S-tier, 1 for major tech/corp S-tier, 0 otherwise."""
-    if _S_TECH_NOISE_GUARD_RE.search(title) or HEAVY_NOISE_EXCLUDE_RE.search(title):
+    if _S_TECH_NOISE_GUARD_RE.search(title) or is_heavy_noise_excluded(title, str(ev.get("fact_summary") or "")):
         return 0
     if _S_MACRO_POLICY_RE.search(title) or GEO_MILITARY_HEAVY_RE.search(title):
         return 2
@@ -1569,7 +1592,7 @@ def _s_tier_priority(title: str, ev: dict) -> int:
     lead_fact = str(ev.get("fact_summary") or "")[:90]
     if re.search(r"黎曼猜想.{0,10}证明", lead_fact):
         return 2
-    if _S_MAJOR_TECH_CORP_RE.search(title):
+    if _S_MAJOR_TECH_CORP_RE.search(title) or MARKET_SEMI_HEAVY_RE.search(f"{title} {lead_fact}"):
         return 1
     return 0
 
@@ -1581,12 +1604,13 @@ def classify_event_severity(ev: dict, now_dt: Any = None) -> Tuple[str, str]:
     """
     now_ref = now_dt or now_shanghai()
     title = str(ev.get("title") or "")
+    summary_s = str(ev.get("fact_summary") or ev.get("summary") or "")
     sources = ev.get("sources") or []
     if not has_authoritative_primary_source(sources):
         return "B", "社媒热榜聚合（不进 S/A 重磅）"
     if _is_unrelated_company_mashup(title):
         return "B", "多公司日常公告组合（降为常规）"
-    if HEAVY_NOISE_EXCLUDE_RE.search(title):
+    if is_heavy_noise_excluded(title, summary_s):
         return "B", "券商评级或常规摘要（不进重磅）"
     if ev.get("evidence_status") == "needs_verification" or ev.get("is_stale_rehash"):
         return "B", "待核实或滞后旧闻"
@@ -1598,9 +1622,15 @@ def classify_event_severity(ev: dict, now_dt: Any = None) -> Tuple[str, str]:
     is_recent_48h = age_h <= 48.0 or upd_h <= 12.0
 
     s_prio = _s_tier_priority(title, ev)
-    if is_fresh_24h and s_prio > 0:
+    if is_fresh_24h and (s_prio > 0 or float(ev.get("heavy_score") or 0.0) >= 62.0):
         return "S", "S级核心重磅"
-    if is_recent_48h and not _S_TECH_NOISE_GUARD_RE.search(title) and (s_prio > 0 or GEO_MILITARY_HEAVY_RE.search(title) or _A_TIER_EVENT_RE.search(title)):
+    if is_recent_48h and not _S_TECH_NOISE_GUARD_RE.search(title) and (
+        s_prio > 0
+        or GEO_MILITARY_HEAVY_RE.search(title)
+        or MARKET_SEMI_HEAVY_RE.search(f"{title} {summary_s[:100]}")
+        or _A_TIER_EVENT_RE.search(title)
+        or float(ev.get("heavy_score") or 0.0) >= 42.0
+    ):
         return "A", "A级重要要闻"
     return "B", "B级常规要闻"
 
@@ -1643,15 +1673,29 @@ def calibrate_sitewide_severity_tiers(cat_docs: Dict[str, dict], now_dt: Any = N
         if age_h > 24.0 and upd_h > 6.0:
             ev["is_new_in_batch"] = False
 
-        cand_tier, _ = classify_event_severity(ev, now_ref)
         indep = int(ev.get("independent_publisher_count") or 1)
         is_off = 1 if ev.get("evidence_status") == "official_confirmed" else 0
+        has_auth = has_authoritative_primary_source(ev.get("sources") or [])
+        is_rumor = ev.get("evidence_status") == "single_source" and bool(ev.get("attribution_warning"))
+        heavy_sc = compute_deterministic_heavy_score(
+            str(ev.get("title") or ""),
+            str(ev.get("fact_summary") or ""),
+            independent_publishers=indep,
+            is_official=bool(is_off),
+            has_authoritative_source=has_auth,
+            age_hours=min(age_h, upd_h + 4.0),
+            is_rumor_single=is_rumor,
+        )
+        ev["heavy_score"] = heavy_sc
+
+        cand_tier, _ = classify_event_severity(ev, now_ref)
         radar = int(ev.get("radar_score") or 0)
         s_prio = _s_tier_priority(str(ev.get("title") or ""), ev) if cand_tier == "S" else 0
         key_tuple = (
             s_prio,
             1 if ev.get("is_new_in_batch") else 0,
             is_off,
+            heavy_sc,
             min(indep, 6),
             radar,
             -age_h,
@@ -1880,6 +1924,533 @@ def _postprocess_and_prune_cross_category(
             cat_manifest[cat]["needs_verification_count"] = len(doc["events"]) - v_cnt
 
 
+def _build_deterministic_fresh_analysis(title: str, excerpt: str, cat: str, entities: List[str]) -> str:
+    """Concise, domain-specific factual impact note when running in 0-AI deterministic core mode."""
+    ent_lbl = " / ".join(entities[:2]) if entities else CATEGORY_LABELS.get(cat, "相关领域")
+    low = f"{title} {excerpt}".lower()
+    if any(k in low for k in ("保证金", "降准", "降息", "lpr", "证监会", "沪深北", "平准基金", "稳市")):
+        return f"政策作用于{ent_lbl}流动性与风险偏好，后续关注落地生效节点及成交量承接表现。"
+    if any(k in low for k in ("暴涨", "暴跌", "纳指", "标普", "kospi", "hbm", "英伟达", "黄仁勋")):
+        return f"引发{ent_lbl}估值与产业链联动重定价，需紧盯主力资金流向与官方后续披露。"
+    if cat == "tech" or any(k in low for k in ("efs", "anthropic", "openai", "deepseek", "qwen", "gemini", "开源", "模型")):
+        return f"反映{ent_lbl}技术架构与商业落地节奏变化，实际效果仍待开发者生态与第三方实测验证。"
+    if cat == "global" or GEO_MILITARY_HEAVY_RE.search(title):
+        return f"牵动{ent_lbl}跨区风险溢价与供应链预期，重点跟踪涉事各方下一轮官方通报。"
+    return f"该动态聚焦{ent_lbl}核心变量变化，建议结合多方信源跟踪后续实质进展。"
+
+
+def build_deterministic_events_from_fresh_clusters(
+    root: Path,
+    cat: str,
+    raw_by_cat: Dict[str, List[dict]],
+    input_batch_id: str,
+    input_cutoff_at: str,
+    generated_at_iso: str,
+    batch_id: str,
+    prev_events: List[dict],
+    prev_batch_id: Optional[str],
+    *,
+    prev_comments_doc: Optional[dict] = None,
+    sec_entity_status: Optional[Dict[str, dict]] = None,
+    target_min: int = 10,
+    target_max: int = 12,
+) -> Tuple[dict, dict, Dict[str, Any]]:
+    """
+    Engine A (0-AI Deterministic Core Base):
+      Build fresh, deduplicated, verified briefing events straight from freshly crawled raw clusters
+      using mathematical scoring + lead-excerpt extraction + source/entity verification.
+      NEVER falls back to yesterday's stale events when fresh clusters exist.
+    """
+    del root
+    own_raw = [x for x in raw_by_cat.get(cat, []) if x.get("citable_as_news", True) and x.get("source_kind") != "market_ticker"]
+    cross_raw = [
+        x
+        for c in CATEGORIES
+        if c != cat
+        for x in raw_by_cat.get(c, [])
+        if x.get("citable_as_news", True) and x.get("source_kind") != "market_ticker"
+    ]
+    all_raw = own_raw + cross_raw
+    cutoff_dt = parse_iso_datetime(input_cutoff_at) or now_shanghai()
+
+    clustered = deduplicate_raw_items(own_raw)
+    ref_lookup: Dict[str, dict] = {}
+    id_lookup: Dict[str, dict] = {}
+    for idx, r in enumerate(all_raw, start=1):
+        rk = f"F{idx:04d}"
+        rc = dict(r)
+        ref_lookup[rk] = rc
+        if rc.get("item_id"):
+            id_lookup[rc["item_id"]] = rc
+
+    scored_pool: List[Tuple[tuple, dict, float]] = []
+    for cl in clustered:
+        t = repair_mojibake(str(cl.get("title") or "").strip())
+        if not t or is_omnibus_digest_title(t):
+            continue
+        srcs = cl.get("related_sources") or [cl]
+        exc = repair_mojibake(str(cl.get("excerpt") or "").strip())
+        if is_consumer_promo_or_fluff(t, exc):
+            continue
+        if _MARKET_PRICE_RE.search(t) and not has_authoritative_primary_source(srcs):
+            continue
+        if re.match(r"^\[HKEX\s+\d{5}\s+", t) and t.split()[1] not in _TRACKED_HKEX_CODES:
+            continue
+        pub_dt = parse_iso_datetime(str(cl.get("published_at") or ""))
+        age_h = max(0.0, (cutoff_dt - pub_dt).total_seconds() / 3600.0) if pub_dt else 12.0
+        is_fresh_24h = 1 if age_h <= 24.0 else 0
+        is_fp = any(s.get("source_tier") == "first_party" for s in srcs if isinstance(s, dict))
+        has_auth = has_authoritative_primary_source(srcs)
+        indep = int(cl.get("independent_publisher_count") or len(srcs) or 1)
+        ent_matches = match_entities_with_reasons(f"{t} {exc}")
+        brief_sc, _ = score_cluster_for_briefing(cl, watched_match_count=len(ent_matches))
+        heavy_sc = compute_deterministic_heavy_score(
+            t,
+            exc,
+            independent_publishers=indep,
+            is_official=is_fp,
+            has_authoritative_source=has_auth,
+            age_hours=age_h,
+        )
+        rank_key = (is_fresh_24h, 1 if has_auth else 0, heavy_sc * 1.4 + float(brief_sc), indep, -age_h)
+        scored_pool.append((rank_key, cl, heavy_sc))
+
+    scored_pool.sort(key=lambda x: x[0], reverse=True)
+
+    from pipeline.heavy_classifier import heavy_topic_key
+
+    selected_clusters: List[Tuple[dict, float]] = []
+    overflow_clusters: List[Tuple[dict, float]] = []
+    topic_counts: Dict[str, int] = {}
+    for _, cl, h_sc in scored_pool:
+        t = str(cl.get("title") or "")
+        tk = heavy_topic_key(t)
+        if tk and topic_counts.get(tk, 0) >= 1:
+            overflow_clusters.append((cl, h_sc))
+            continue
+        if any(title_similarity(t, str(prev_cl.get("title") or "")) >= 0.44 for prev_cl, _ in selected_clusters):
+            continue
+        selected_clusters.append((cl, h_sc))
+        if tk:
+            topic_counts[tk] = topic_counts.get(tk, 0) + 1
+        if len(selected_clusters) >= target_max:
+            break
+
+    if len(selected_clusters) < target_min:
+        for cl, h_sc in overflow_clusters:
+            if len(selected_clusters) >= target_min:
+                break
+            t = str(cl.get("title") or "")
+            if any(title_similarity(t, str(prev_cl.get("title") or "")) >= 0.55 for prev_cl, _ in selected_clusters):
+                continue
+            selected_clusters.append((cl, h_sc))
+
+    used_event_ids: Set[str] = set()
+    events: List[dict] = []
+    seen_urls: Set[str] = set()
+    old_id_to_new_id: Dict[str, str] = {}
+
+    for ordinal, (cl, h_sc) in enumerate(selected_clusters):
+        title = repair_mojibake(str(cl.get("title") or "").strip())
+        srcs = cl.get("related_sources") or [cl]
+        src_ids: List[str] = []
+        best_excerpt = repair_mojibake(str(cl.get("excerpt") or "").strip())
+        for s in srcs[:4]:
+            if not isinstance(s, dict):
+                continue
+            sid_it = s.get("item_id")
+            if sid_it:
+                if sid_it not in id_lookup:
+                    id_lookup[sid_it] = s
+                src_ids.append(sid_it)
+            cu = canonicalize_url(s.get("canonical_url") or s.get("url"))
+            if cu:
+                seen_urls.add(cu)
+            ex_s = repair_mojibake(str(s.get("excerpt") or "").strip())
+            if len(ex_s) > len(best_excerpt):
+                best_excerpt = ex_s
+        if not src_ids and cl.get("item_id"):
+            src_ids = [cl["item_id"]]
+
+        fact_summary = _smart_truncate(best_excerpt, 210) if best_excerpt else title
+        ents = [h["canonical_name"] for h in match_entities_with_reasons(f"{title} {fact_summary}")[:4]]
+        sentiment = "Mixed"
+        if re.search(r"暴涨|大涨|飙升|突破|获批|成功|推出|开源|利好|复苏", title):
+            sentiment = "Bullish"
+        elif re.search(r"暴跌|重挫|遇袭|沉没|警告|起诉|下调|收紧|破产|危机", title):
+            sentiment = "Bearish"
+
+        cand = {
+            "title": title,
+            "fact_summary": fact_summary,
+            "ai_analysis": _build_deterministic_fresh_analysis(title, fact_summary, cat, ents),
+            "unverified_claims": [],
+            "speculation_or_outlook": None,
+            "entities": ents,
+            "importance": "high" if h_sc >= 45.0 else ("medium" if h_sc >= 22.0 else "normal"),
+            "sentiment": sentiment,
+            "source_refs": src_ids,
+            "sources": srcs[:4],
+            "event_date": str(cl.get("published_at") or input_cutoff_at)[:10],
+            "heavy_score": h_sc,
+        }
+        verified_ev = verify_and_enrich_event(
+            cand,
+            category=cat,
+            input_batch_id=input_batch_id,
+            fetched_at_iso=input_cutoff_at,
+            ref_lookup=ref_lookup,
+            id_lookup=id_lookup,
+            prev_events=prev_events,
+            prev_batch_id=prev_batch_id,
+            require_semantic_match=False,
+            used_event_ids=used_event_ids,
+            sec_entity_status=sec_entity_status,
+            ordinal=ordinal,
+        )
+        verified_ev["heavy_score"] = h_sc
+        verified_ev["is_new_in_batch"] = True
+        verified_ev["update_kind"] = "new_discovery"
+        events.append(verified_ev)
+
+    # Supplement ONLY with <36h non-duplicate high-signal carryovers if raw clusters < 8
+    if len(events) < min(8, target_min) and prev_events:
+        for pev in prev_events:
+            if len(events) >= target_min:
+                break
+            if not isinstance(pev, dict) or not pev.get("title"):
+                continue
+            pt = str(pev.get("title") or "")
+            p_dt = parse_iso_datetime(str(pev.get("latest_reported_at") or pev.get("published_at") or ""))
+            if p_dt and (cutoff_dt - p_dt).total_seconds() > 36 * 3600:
+                continue
+            if any(title_similarity(pt, e.get("title", "")) >= 0.40 for e in events):
+                continue
+            verified_carry = verify_and_enrich_event(
+                {**pev, "source_refs": [s.get("item_id") for s in (pev.get("sources") or []) if isinstance(s, dict) and s.get("item_id")]},
+                category=cat,
+                input_batch_id=input_batch_id,
+                fetched_at_iso=input_cutoff_at,
+                ref_lookup=ref_lookup,
+                id_lookup=id_lookup,
+                prev_events=prev_events,
+                prev_batch_id=prev_batch_id,
+                require_semantic_match=False,
+                used_event_ids=used_event_ids,
+                sec_entity_status=sec_entity_status,
+                ordinal=len(events) + 1,
+            )
+            events.append(verified_carry)
+
+    key_changes = _build_key_changes_from_events(events)
+    overview_points = [
+        {"text": _smart_truncate(f"{e['title']}：{e['fact_summary']}", 120), "source_refs": []}
+        for e in events[:4]
+    ]
+    overview_sections = [{"title": "本批核心脉络", "points": overview_points}] if overview_points else []
+    audit = {
+        "total_clusters": len(clustered),
+        "selected_for_prompt": len(events),
+        "omitted_sample": [
+            {"title": cl.get("title"), "score": h_sc, "reason": "多源去重或配额精简"}
+            for cl, h_sc in overflow_clusters[:12]
+        ],
+    }
+
+    doc = {
+        "schema_version": "4.2",
+        "batch_id": batch_id,
+        "input_batch_id": input_batch_id,
+        "input_cutoff_at": input_cutoff_at,
+        "generated_at": generated_at_iso,
+        "published_at": to_iso_shanghai(now_shanghai()),
+        "category": cat,
+        "category_label": CATEGORY_LABELS[cat],
+        "generation_mode": "deterministic_fresh_clusters",
+        "model_name": "deterministic-v3-grounding",
+        "quality_flags": ["deterministic_fresh_base"],
+        "key_changes": key_changes,
+        "overview_sections": overview_sections,
+        "events": events,
+    }
+    cdoc = _build_deterministic_dialectic_comments(cat, doc, prev_comments_doc, old_id_to_new_id)
+    return doc, cdoc, audit
+
+
+def _normalize_qa_pairs(raw_qa: Any) -> Optional[List[Dict[str, str]]]:
+    if not isinstance(raw_qa, list):
+        return None
+    out: List[Dict[str, str]] = []
+    for row in raw_qa[:3]:
+        if not isinstance(row, dict):
+            continue
+        q = _PIPELINE_JARGON_RE.sub("", str(row.get("question") or "")).strip()
+        a = _PIPELINE_JARGON_RE.sub("", str(row.get("answer") or "")).strip()
+        hp = _PIPELINE_JARGON_RE.sub("", str(row.get("historical_parallel") or "")).strip()
+        if q and a:
+            if a[-1] not in "。！？.!?）\"'":
+                a += "。"
+            if hp and hp[-1] not in "。！？.!?）\"'":
+                hp += "。"
+            out.append({"question": q[:60], "answer": a[:160], "historical_parallel": hp[:110]})
+    return out or None
+
+
+def _overlay_mega_batch_ai_analysis(
+    root: Path,
+    cat_docs: Dict[str, dict],
+    *,
+    input_cutoff_at: str,
+) -> Dict[str, Any]:
+    """
+    Engine B Mega-Batch 1 Incremental Overlay (250K TPM Tier 1):
+      - Translates ONLY pure-English headlines/summaries into Chinese first (0 LLM calls for Chinese).
+      - Applies cached `data/event_ai_overlay_cache.json` hits cleanly.
+      - Sends ONE 250K-TPM Mega-Batch JSON request covering ALL 4 categories' uncached events
+        (auto-falling back to 2 half-batches ONLY if 1-shot fails), never crashing if all LLMs fail.
+    """
+    from pipeline.bilingual import is_mostly_english, translate_texts_batch
+
+    # 1. Pure-English event normalization (en -> zh, 0 calls for Chinese)
+    en_texts: List[str] = []
+    en_targets: List[Tuple[dict, str]] = []
+    for doc in cat_docs.values():
+        for ev in doc.get("events") or []:
+            t = str(ev.get("title") or "").strip()
+            fs = str(ev.get("fact_summary") or "").strip()
+            if t and is_mostly_english(t):
+                ev.setdefault("title_en", t)
+                en_texts.append(t)
+                en_targets.append((ev, "title"))
+            if fs and is_mostly_english(fs):
+                ev.setdefault("summary_en", fs)
+                en_texts.append(fs)
+                en_targets.append((ev, "fact_summary"))
+    if en_texts and collect_api_key_slots():
+        zh_out, _, _ = translate_texts_batch(en_texts, target_lang="zh", chunk_size=60, root_dir=root)
+        if zh_out:
+            for (ev_ref, fld), zh_val in zip(en_targets, zh_out):
+                if zh_val and not is_mostly_english(zh_val):
+                    ev_ref[fld] = _smart_truncate(zh_val, 210 if fld == "fact_summary" else 90)
+                    if fld == "fact_summary":
+                        ev_ref["summary"] = ev_ref[fld]
+                        ev_ref["summary_zh"] = ev_ref[fld]
+
+    cache_path = root / "data" / "event_ai_overlay_cache.json"
+    raw_cache = load_json_if_exists(cache_path, default={}) or {}
+    now_ts = time.time()
+    cache_items: Dict[str, Any] = {
+        str(k): v
+        for k, v in (raw_cache.get("items") or {}).items()
+        if isinstance(v, dict) and (now_ts - float(v.get("_ts") or 0.0)) <= 72 * 3600
+    }
+
+    def _ev_cache_key(ev: dict) -> str:
+        eid = str(ev.get("event_id") or "").strip()
+        if eid:
+            return eid
+        return re.sub(r"[\s\W]+", "", str(ev.get("title") or "").lower())[:32]
+
+    def _apply_overlay(ev: dict, ov: dict, cat_name: str) -> bool:
+        changed = False
+        new_title = _PIPELINE_JARGON_RE.sub("", str(ov.get("title") or "")).strip()
+        if new_title and len(new_title) >= 8 and is_mostly_english(str(ev.get("title") or "")):
+            ev["title"] = new_title[:85]
+            changed = True
+        fs = _PIPELINE_JARGON_RE.sub("", str(ov.get("fact_summary") or "")).strip()
+        if fs and len(fs) >= 16:
+            ev["fact_summary"] = _smart_truncate(fs, 220)
+            ev["summary"] = ev["fact_summary"]
+            ev["summary_zh"] = ev["fact_summary"]
+            changed = True
+        aia = _PIPELINE_JARGON_RE.sub("", str(ov.get("ai_analysis") or "")).strip()
+        if aia and len(aia) >= 14:
+            ev["ai_analysis"] = _smart_truncate(aia, 190)
+            changed = True
+        spec = ov.get("speculation_or_outlook")
+        if isinstance(spec, str) and spec.strip():
+            ev["speculation_or_outlook"] = _smart_truncate(_PIPELINE_JARGON_RE.sub("", spec).strip(), 170)
+            changed = True
+        qa_clean = _normalize_qa_pairs(ov.get("deep_qa"))
+        if qa_clean:
+            ev["deep_qa"] = qa_clean
+            changed = True
+        if changed:
+            ev["ai_overlaid"] = True
+        return changed
+
+    cache_hits = 0
+    uncached: List[Tuple[str, dict]] = []
+    for cat in CATEGORIES:
+        evs = (cat_docs.get(cat) or {}).get("events") or []
+        for idx_e, ev in enumerate(evs):
+            if idx_e >= 10:
+                continue
+            ck = _ev_cache_key(ev)
+            norm_k = re.sub(r"[\s\W]+", "", str(ev.get("title") or "").lower())[:32]
+            hit = cache_items.get(ck) or cache_items.get(norm_k)
+            if isinstance(hit, dict) and _apply_overlay(ev, hit, cat):
+                cache_hits += 1
+            elif len(uncached) < 36:
+                uncached.append((cat, ev))
+
+    if not uncached or not collect_api_key_slots():
+        if cache_hits:
+            print(f"⚡ [Mega-Batch 1] 100% cache hit ({cache_hits} events), 0 LLM calls.", flush=True)
+        return {"ok": cache_hits > 0, "overlaid": cache_hits, "cache_hits": cache_hits, "model_used": None}
+
+    def _run_batch_chunk(chunk_items: List[Tuple[str, dict]], *, max_tokens: int) -> Tuple[int, Optional[str], Optional[str]]:
+        lines_by_cat: Dict[str, List[str]] = {}
+        ev_map: Dict[str, Tuple[str, dict]] = {}
+        for cat_c, ev in chunk_items:
+            eid = _ev_cache_key(ev)
+            ev_map[eid] = (cat_c, ev)
+            srcs_lbl = "、".join(
+                dict.fromkeys(str(s.get("source_name") or "") for s in (ev.get("sources") or [])[:3] if isinstance(s, dict) and s.get("source_name"))
+            ) or "多源报道"
+            is_hi = ev.get("severity_tier") in {"S", "A"} or ev.get("importance") == "high"
+            tag_h = "[重磅需deep_qa]" if is_hi else ""
+            lines_by_cat.setdefault(cat_c, []).append(
+                f"- id={eid} {tag_h} | 来源={srcs_lbl} | 时间={ev.get('published_at') or input_cutoff_at} | "
+                f"标题={ev.get('title')} | 摘要={str(ev.get('fact_summary') or '')[:160]}"
+            )
+        cats_block = "\n\n".join(
+            f"【{CATEGORY_LABELS.get(c, c)} ({c})】\n" + "\n".join(ls)
+            for c, ls in lines_by_cat.items()
+        )
+        prompt = f"""你是「镜信 (MirrorBrief)」严肃新闻主编。下方事件已由底层完成去重、信源核验与重磅评级。
+请一次性在 1 个 JSON 对象中为以下全部板块的未缓存事件生成高质量语义精炼与因果研判，严禁编造素材中不存在的数字/日期，严禁「凸显了」「引发广泛关注」等八股套话，严禁使用 Emoji，严禁输出 R001 等内部代号。
+
+要求：
+1. 每条返回 JSON 键必须使用原始 `id` 精确匹配；
+2. `fact_summary`：1–2 句客观精确事实（完整保留人名、公司、金额、百分比、交易时段与生效前提）；
+3. `ai_analysis`：1–2 句有别于同类新闻的独特传导与直接因果分析；
+4. 仅标有 `[重磅需deep_qa]` 或最关键的 3~5 条重点事件生成 `deep_qa`（2 题深度追问：`question`、`answer`、`historical_parallel`，均须完整句号收尾）；其余填 `[]` 以节省输出空间；
+5. 每个出现的分类顺带输出 3 条 `key_changes` (`headline`, `detail`, `event_id`) 与 1 节 `overview_sections`。
+
+输入素材（截止 {input_cutoff_at}）：
+{cats_block}
+
+严格返回纯 JSON 对象：
+{{
+  "categories": {{
+    "finance": {{
+      "key_changes": [{{"headline": "变化标题", "detail": "简洁事实", "event_id": "对应id"}}],
+      "overview_sections": [{{"title": "核心脉络", "points": [{{"text": "一句话概括"}}]}}],
+      "events": [
+        {{
+          "id": "原样id",
+          "fact_summary": "客观事实",
+          "ai_analysis": "因果影响拆解",
+          "speculation_or_outlook": null,
+          "deep_qa": [{{"question": "提问", "answer": "完整解答。", "historical_parallel": "真实历史参照。"}}]
+        }}
+      ]
+    }}
+  }}
+}}"""
+        res = call_gemini_json(
+            scope="briefing:mega",
+            prompt=prompt,
+            tier="tier1",
+            temperature=0.2,
+            max_output_tokens=max_tokens,
+            timeout_ms=25_000,
+            base_dir=root,
+        )
+        if not res.ok or not isinstance(res.data, dict):
+            return 0, res.model_used, res.key_slot
+        cats_obj = res.data.get("categories") if isinstance(res.data.get("categories"), dict) else res.data
+        applied = 0
+        for c_key, c_val in cats_obj.items():
+            if c_key not in cat_docs or not isinstance(c_val, dict):
+                continue
+            for ov in c_val.get("events") or []:
+                if not isinstance(ov, dict):
+                    continue
+                oid = str(ov.get("id") or ov.get("event_id") or "").strip()
+                if oid not in ev_map:
+                    continue
+                c_orig, ev_orig = ev_map[oid]
+                if _apply_overlay(ev_orig, ov, c_orig):
+                    applied += 1
+                    cache_items[oid] = {
+                        "_ts": now_ts,
+                        "title": ov.get("title"),
+                        "fact_summary": ev_orig.get("fact_summary"),
+                        "ai_analysis": ev_orig.get("ai_analysis"),
+                        "speculation_or_outlook": ev_orig.get("speculation_or_outlook"),
+                        "deep_qa": ev_orig.get("deep_qa"),
+                    }
+                    nk = re.sub(r"[\s\W]+", "", str(ev_orig.get("title") or "").lower())[:32]
+                    if nk:
+                        cache_items[nk] = cache_items[oid]
+            # Update key_changes & overview_sections if clean
+            kcs = c_val.get("key_changes")
+            if isinstance(kcs, list) and kcs:
+                clean_kcs = [
+                    {
+                        "headline": _PIPELINE_JARGON_RE.sub("", str(k.get("headline") or "")).strip(),
+                        "detail": _smart_truncate(_PIPELINE_JARGON_RE.sub("", str(k.get("detail") or "")).strip(), 150),
+                        "event_id": str(k.get("event_id") or "").strip() or None,
+                    }
+                    for k in kcs[:3]
+                    if isinstance(k, dict) and k.get("headline")
+                ]
+                if clean_kcs:
+                    cat_docs[c_key]["key_changes"] = _sync_key_changes_attribution(clean_kcs, cat_docs[c_key].get("events") or [])
+            ov_secs = c_val.get("overview_sections")
+            if isinstance(ov_secs, list) and ov_secs:
+                clean_secs = []
+                for sec in ov_secs[:2]:
+                    if not isinstance(sec, dict):
+                        continue
+                    pts = [
+                        {"text": str(p.get("text") if isinstance(p, dict) else p).strip(), "source_refs": []}
+                        for p in (sec.get("points") or [])
+                        if (isinstance(p, dict) and p.get("text")) or (isinstance(p, str) and p.strip())
+                    ]
+                    if pts:
+                        clean_secs.append({"title": str(sec.get("title") or "核心脉络").strip(), "points": pts})
+                if clean_secs:
+                    cat_docs[c_key]["overview_sections"] = clean_secs
+            cat_docs[c_key]["generation_mode"] = "ai_v3_mega_overlay"
+            if res.model_used:
+                cat_docs[c_key]["model_name"] = res.model_used
+        return applied, res.model_used, res.key_slot
+
+    t0 = time.monotonic()
+    overlaid, model_used, key_slot = _run_batch_chunk(uncached, max_tokens=32768)
+    min_acceptable = min(len(uncached), max(1, len(uncached) // 4))
+    if overlaid < min_acceptable and len(uncached) >= 4:
+        # Half-batch split fallback ONLY if 1-shot Mega-Batch failed or returned sparse partial output
+        remaining = [(c, e) for (c, e) in uncached if not e.get("ai_overlaid")]
+        half1 = [pair for pair in remaining if pair[0] in ("finance", "global")]
+        half2 = [pair for pair in remaining if pair[0] in ("tech", "general")]
+        if half1:
+            o1, m1, k1 = _run_batch_chunk(half1, max_tokens=24576)
+            overlaid += o1
+            model_used = model_used or m1
+            key_slot = key_slot or k1
+        if half2:
+            o2, m2, k2 = _run_batch_chunk(half2, max_tokens=24576)
+            overlaid += o2
+            model_used = model_used or m2
+            key_slot = key_slot or k2
+
+    if cache_items:
+        atomic_write_json(
+            cache_path,
+            {"ts": now_ts, "updated_at": input_cutoff_at, "items": dict(list(cache_items.items())[-240:])},
+        )
+    print(
+        f"🚀 [Mega-Batch 1] overlaid {overlaid}/{len(uncached)} uncached events in {time.monotonic() - t0:.1f}s "
+        f"via model={model_used} key={key_slot} (cache_hits={cache_hits})",
+        flush=True,
+    )
+    return {"ok": (overlaid + cache_hits) > 0, "overlaid": overlaid, "cache_hits": cache_hits, "model_used": model_used}
+
+
 def build_briefing_batch(
     base_dir: Path | str = ".",
     *,
@@ -1889,6 +2460,7 @@ def build_briefing_batch(
     include_comments: bool = True,
 ) -> Dict[str, Any]:
     """Build, reconcile, or V3-ground-update a complete smart briefing and switch manifest atomically."""
+    global _LAST_USED_MODEL
     root = Path(base_dir)
     manifest = load_manifest(root)
     input_batch_id, input_cutoff_at, used_raw_rel, raw_by_cat, connectors_payload = _load_raw_batch(root, raw_path)
@@ -1988,6 +2560,38 @@ def build_briefing_batch(
                     raise RuntimeError(f"Validation failed: {errs}")
                 return cat, doc, cdoc, sel_audit, None, prev_cat_meta
 
+            if mode == "ai":
+                # Dual-Engine: Engine A builds fresh 0-AI clusters first (NEVER reverts to yesterday if raw exists!)
+                citable_own = [
+                    x
+                    for x in raw_by_cat.get(cat, [])
+                    if x.get("citable_as_news", True) and x.get("source_kind") != "market_ticker"
+                ]
+                prev_c_path = prev_cat_meta.get("comments_path") if isinstance(prev_cat_meta, dict) else None
+                prev_c_doc = load_json_if_exists(root / prev_c_path, default={}) if prev_c_path else {}
+                if citable_own:
+                    doc, cdoc, sel_audit = build_deterministic_events_from_fresh_clusters(
+                        root,
+                        cat,
+                        raw_by_cat,
+                        input_batch_id,
+                        input_cutoff_at,
+                        generated_at_iso,
+                        batch_id,
+                        prev_events,
+                        prev_batch_id,
+                        prev_comments_doc=prev_c_doc,
+                        sec_entity_status=sec_entity_status,
+                    )
+                    ok, errs = validate_published_briefing(doc)
+                    if not ok:
+                        raise RuntimeError(f"Engine A validation failed: {errs}")
+                    print(
+                        f"⚡ [{cat}] Engine-A deterministic base finished in {time.monotonic() - cat_t0:.2f}s (events={len(doc.get('events') or [])})",
+                        flush=True,
+                    )
+                    return cat, doc, cdoc, sel_audit, None, prev_cat_meta
+
             api_keys = _collect_api_keys(cat)
             if not api_keys:
                 raise RuntimeError(f"Missing Gemini API key for category {cat}")
@@ -2044,21 +2648,8 @@ def build_briefing_batch(
             print(f"⚠️ [{cat}] errored in {time.monotonic() - cat_t0:.1f}s: {exc}", flush=True)
             return cat, None, None, None, exc, prev_cat_meta
 
-    # Run 2 categories concurrently with slight stagger to avoid 4x simultaneous Gemini burst 503s
-    def _process_staggered(cat_idx_and_name: Tuple[int, str]) -> Tuple[str, Optional[dict], Optional[dict], Optional[dict], Optional[Exception], dict]:
-        idx, cat = cat_idx_and_name
-        if mode == "ai" and idx > 0:
-            time.sleep(min(idx * 1.0, 2.0))
-        return _process_category(cat)
-
     if mode == "ai":
-        results_map: Dict[str, tuple] = {}
-        with ThreadPoolExecutor(max_workers=2) as pool:
-            futs = [pool.submit(_process_staggered, (idx, cat)) for idx, cat in enumerate(CATEGORIES)]
-            for fut in as_completed(futs):
-                res_tuple = fut.result()
-                results_map[res_tuple[0]] = res_tuple
-        ordered_results = [results_map[cat] for cat in CATEGORIES]
+        ordered_results = [_process_category(cat) for cat in CATEGORIES]
     else:
         ordered_results = [_process_category(cat) for cat in CATEGORIES]
 
@@ -2101,11 +2692,13 @@ def build_briefing_batch(
                     fallback_v3_docs[cat] = loaded_prev
             else:
                 try:
-                    g_doc, _ = _ground_update_category(
+                    g_doc, _, _ = build_deterministic_events_from_fresh_clusters(
+                        root,
                         cat,
                         raw_by_cat,
                         input_batch_id,
                         input_cutoff_at,
+                        generated_at_iso,
                         batch_id,
                         [],
                         prev_batch_id,
@@ -2142,6 +2735,15 @@ def build_briefing_batch(
     all_v3_docs.update(cat_docs)
     _postprocess_and_prune_cross_category(all_v3_docs, cat_manifest, max_per_category=12)
 
+    mega_overlay_res: Dict[str, Any] = {"ok": False, "overlaid": 0, "cache_hits": 0, "model_used": None}
+    if mode == "ai" and cat_docs:
+        try:
+            mega_overlay_res = _overlay_mega_batch_ai_analysis(root, cat_docs, input_cutoff_at=input_cutoff_at)
+            if mega_overlay_res.get("model_used"):
+                _LAST_USED_MODEL = str(mega_overlay_res["model_used"])
+        except Exception as mb_exc:
+            print(f"⚠️ [Mega-Batch 1] overlay skipped safely (Engine A deterministic base intact): {mb_exc}", flush=True)
+
     from .bilingual import enrich_bilingual_events
 
     bi_t0 = time.monotonic()
@@ -2170,11 +2772,13 @@ def build_briefing_batch(
         quality_flags.append("partial_category_fallback")
     if mode != "ai":
         quality_flags.append(f"mode_{mode}")
+    elif cat_docs and not mega_overlay_res.get("ok"):
+        quality_flags.append("deterministic_fresh_base")
     if quota_summary.get("total_configured_keys", 0) > 0 and quota_summary.get("healthy_keys", 0) == 0:
         quality_flags.append("gemini_quota_exhausted")
 
     batch_meta = {
-        "schema_version": "4.1",
+        "schema_version": "4.2",
         "batch_id": batch_id,
         "input_batch_id": input_batch_id,
         "input_raw_path": used_raw_rel,
@@ -2183,7 +2787,11 @@ def build_briefing_batch(
         "published_at": published_iso,
         "status": batch_status,
         "mode": mode,
-        "generation_mode": f"mode_{mode}",
+        "generation_mode": (
+            "ai_v3_mega_overlay"
+            if (mode == "ai" and mega_overlay_res.get("ok"))
+            else ("deterministic_fresh_clusters" if mode == "ai" and cat_docs else f"mode_{mode}")
+        ),
         "quality_flags": quality_flags,
         "model_name": (
             next((c.get("model_name") for c in cat_docs.values() if c.get("model_name")), None)

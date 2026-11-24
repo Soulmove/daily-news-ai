@@ -18,6 +18,7 @@ import hashlib
 import json
 import os
 from pathlib import Path
+import re
 import threading
 import time
 from typing import Any, Dict, List, Optional, Sequence, Tuple
@@ -51,20 +52,60 @@ _SCOPE_PRIORITY: Dict[str, Tuple[str, ...]] = {
     "comments:tech": ("KEY_TECH", "KEY_6", "KEY_5", "KEY_7", "GOOGLE_API_KEY"),
     "briefing:general": ("KEY_GENERAL", "KEY_7", "KEY_8", "KEY_1", "GOOGLE_API_KEY"),
     "comments:general": ("KEY_GENERAL", "KEY_8", "KEY_7", "KEY_1", "GOOGLE_API_KEY"),
+    "briefing:mega": ("KEY_1", "KEY_FINANCE", "KEY_TECH", "KEY_GLOBAL", "KEY_GENERAL", "GOOGLE_API_KEY"),
     "search_hunter": ("KEY_6", "KEY_7", "KEY_8", "GOOGLE_API_KEY", "KEY_4", "KEY_2"),
     "ai_radar": ("KEY_5", "KEY_8", "GOOGLE_API_KEY", "KEY_4", "KEY_TECH", "KEY_3"),
     "bilingual": ("KEY_2", "KEY_4", "KEY_6", "KEY_8", "GOOGLE_API_KEY", "KEY_GLOBAL"),
+    "mega_derivative": ("KEY_3", "KEY_5", "KEY_7", "KEY_GENERAL", "GOOGLE_API_KEY", "KEY_2"),
+    "mega_finance_impact": ("KEY_FINANCE", "KEY_1", "KEY_3", "KEY_7", "GOOGLE_API_KEY", "KEY_4"),
+    "mega_predictions": ("KEY_4", "KEY_8", "KEY_2", "KEY_GLOBAL", "GOOGLE_API_KEY", "KEY_6"),
     "deep_ai_matrix": ("KEY_1", "KEY_TECH", "KEY_5", "GOOGLE_API_KEY", "KEY_2"),
     "deep_github_tools": ("KEY_2", "KEY_6", "KEY_TECH", "GOOGLE_API_KEY", "KEY_3"),
     "deep_storylines": ("KEY_3", "KEY_GLOBAL", "KEY_7", "GOOGLE_API_KEY", "KEY_4"),
     "deep_event_qa": ("KEY_4", "KEY_FINANCE", "KEY_8", "GOOGLE_API_KEY", "KEY_5"),
     "deep_topics_cal": ("KEY_5", "KEY_GENERAL", "KEY_1", "GOOGLE_API_KEY", "KEY_6"),
-    "deep_finance_impact": ("KEY_FINANCE", "KEY_1", "KEY_3", "KEY_7", "GOOGLE_API_KEY", "KEY_4"),
+    "deep_finance_impact": ("KEY_FINANCE", "KEY_1", "KEY_3", "GOOGLE_API_KEY", "KEY_4"),
 }
+
+# Verified per-key model quota specs across all 8 Gemini models (total 1,120 RPD/key x 13 = 14,560 RPD, all 250K TPM)
+MODEL_QUOTA_SPECS: Dict[str, Dict[str, Any]] = {
+    "gemini-4-hydrogen": {"tier": 1, "rpm": 5, "rpd": 20, "soft_rpd": 18, "min_interval_sec": 13.0, "tokens": ("gemini", "4", "hydrogen"), "exclude": ("lite",)},
+    "gemini-3.8-flash": {"tier": 1, "rpm": 5, "rpd": 20, "soft_rpd": 18, "min_interval_sec": 13.0, "tokens": ("gemini", "3.8", "flash"), "exclude": ("lite", "pro")},
+    "gemini-3.6-flash": {"tier": 1, "rpm": 5, "rpd": 20, "soft_rpd": 18, "min_interval_sec": 13.0, "tokens": ("gemini", "3.6", "flash"), "exclude": ("lite", "pro")},
+    "gemini-3-flash": {"tier": 1, "rpm": 5, "rpd": 20, "soft_rpd": 18, "min_interval_sec": 13.0, "tokens": ("gemini", "3", "flash"), "exclude": ("3.1", "3.5", "3.6", "3.8", "lite", "pro")},
+    "gemini-2.5-flash": {"tier": 1, "rpm": 5, "rpd": 20, "soft_rpd": 18, "min_interval_sec": 13.0, "tokens": ("gemini", "2.5", "flash"), "exclude": ("lite", "pro")},
+    "gemini-2.5-flash-lite": {"tier": 1, "rpm": 10, "rpd": 20, "soft_rpd": 18, "min_interval_sec": 6.5, "tokens": ("gemini", "2.5", "flash", "lite"), "exclude": ()},
+    "gemini-3.5-flash-lite": {"tier": 2, "rpm": 15, "rpd": 500, "soft_rpd": 475, "min_interval_sec": 4.2, "tokens": ("gemini", "3.5", "flash", "lite"), "exclude": ()},
+    "gemini-3.1-flash-lite": {"tier": 2, "rpm": 15, "rpd": 500, "soft_rpd": 475, "min_interval_sec": 4.2, "tokens": ("gemini", "3.1", "flash", "lite"), "exclude": ()},
+}
+
+TIER1_DEEP_MODELS: Tuple[str, ...] = (
+    "gemini-4-hydrogen",
+    "gemini-3.8-flash",
+    "gemini-3.6-flash",
+    "gemini-3-flash",
+    "gemini-2.5-flash",
+    "gemini-3.5-flash-lite",
+    "gemini-3.1-flash-lite",
+    "gemini-2.5-flash-lite",
+)
+
+TIER2_HIGH_THROUGHPUT_MODELS: Tuple[str, ...] = (
+    "gemini-3.5-flash-lite",
+    "gemini-3.1-flash-lite",
+    "gemini-2.5-flash-lite",
+    "gemini-3.8-flash",
+    "gemini-3.6-flash",
+    "gemini-3-flash",
+    "gemini-2.5-flash",
+)
 
 _POOL_LOCK = threading.RLock()
 _SCOPE_CURSORS: Dict[str, int] = {}
 _MEMORY_STATE: Dict[str, Dict[str, Any]] = {}
+_LAST_CALL_MONO: Dict[Tuple[str, str, str], float] = {}
+_RESOLVED_MODELS_CACHE: Dict[str, Tuple[float, Dict[str, str]]] = {}
+_SKIP_NON_TEXT_RE = re.compile(r"(?:embedding|imagen|veo|tts|audio|robotics|aqa|lyria|gemma-3n-e)", re.I)
 
 
 @dataclass(frozen=True)
@@ -166,9 +207,12 @@ def _load_quota_ledger(base_dir: Path | str | None = ".") -> Dict[str, Any]:
         if rec_copy.get("date_utc") != today:
             rec_copy["date_utc"] = today
             rec_copy["daily_calls"] = 0
+            rec_copy["model_daily_calls"] = {}
             rec_copy["exhausted_until"] = None
             rec_copy["model_exhausted_until"] = {}
         else:
+            if not isinstance(rec_copy.get("model_daily_calls"), dict):
+                rec_copy["model_daily_calls"] = {}
             ex_dt = _parse_utc(rec_copy.get("exhausted_until"))
             if ex_dt and ex_dt <= now:
                 rec_copy["exhausted_until"] = None
@@ -185,14 +229,157 @@ def _load_quota_ledger(base_dir: Path | str | None = ".") -> Dict[str, Any]:
                 rec_copy["model_exhausted_until"] = {}
         normalized_keys[slot] = rec_copy
 
+    resolved_models = raw.get("resolved_models") if isinstance(raw.get("resolved_models"), dict) else {}
+    resolved_models_at = raw.get("resolved_models_at")
     ledger = {
-        "schema_version": "4.1",
+        "schema_version": "4.2",
         "date_utc": today,
         "updated_at": _iso_utc(now),
+        "resolved_models": resolved_models,
+        "resolved_models_at": resolved_models_at,
         "keys": normalized_keys,
     }
     _MEMORY_STATE[mem_key] = ledger
     return ledger
+
+
+def _canonical_model_key(model_name: str) -> str:
+    slug = re.sub(r"^models/", "", str(model_name or "").strip().lower())
+    if slug in MODEL_QUOTA_SPECS:
+        return slug
+    for canon, spec in MODEL_QUOTA_SPECS.items():
+        tokens = spec.get("tokens") or ()
+        excludes = spec.get("exclude") or ()
+        if all(t in slug for t in tokens) and not any(ex in slug for ex in excludes):
+            return canon
+    if "3.0" in slug and "flash" in slug and not any(ex in slug for ex in ("lite", "pro")):
+        return "gemini-3-flash"
+    return slug
+
+
+def _match_model_slug(logical_name: str, live_slugs: Sequence[str]) -> Optional[str]:
+    clean_live = [re.sub(r"^models/", "", s.strip()) for s in live_slugs if s and str(s).strip()]
+    low_map = {s.lower(): s for s in clean_live}
+    ln = logical_name.lower()
+    if ln in low_map:
+        return low_map[ln]
+    for suf in ("-preview", "-latest"):
+        if f"{ln}{suf}" in low_map:
+            return low_map[f"{ln}{suf}"]
+    spec = MODEL_QUOTA_SPECS.get(ln)
+    if not spec:
+        return None
+    tokens = list(spec.get("tokens") or ())
+    excludes = list(spec.get("exclude") or ())
+    candidates: List[Tuple[int, int, str]] = []
+    for raw_s in clean_live:
+        ls = raw_s.lower()
+        if _SKIP_NON_TEXT_RE.search(ls):
+            continue
+        if any(ex in ls for ex in excludes):
+            continue
+        alt_ok = ln == "gemini-3-flash" and "3.0" in ls and "flash" in ls
+        if not (all(t in ls for t in tokens) or alt_ok):
+            continue
+        score = 0 if ls.startswith(ln) else (1 if "preview" in ls else 2)
+        if "-exp" in ls:
+            score += 2
+        candidates.append((score, len(ls), raw_s))
+    if not candidates:
+        return None
+    candidates.sort(key=lambda x: (x[0], x[1], x[2]))
+    return candidates[0][2]
+
+
+def resolve_available_model_slugs(
+    slots: Optional[Sequence[KeySlot]] = None,
+    *,
+    base_dir: Path | str | None = ".",
+    force: bool = False,
+) -> Dict[str, str]:
+    """Query client.models.list() once per 6h and resolve exact API slugs for all 8 registered models."""
+    path = _state_file_path(base_dir)
+    cache_key = str(path.resolve()) if path is not None else "__memory__"
+    now_mono = time.monotonic()
+
+    with _POOL_LOCK:
+        if not force and cache_key in _RESOLVED_MODELS_CACHE:
+            cached_ts, cached_map = _RESOLVED_MODELS_CACHE[cache_key]
+            if (now_mono - cached_ts) < 21600.0:
+                return dict(cached_map)
+        ledger = _load_quota_ledger(base_dir)
+        persisted = ledger.get("resolved_models")
+        persisted_at = _parse_utc(ledger.get("resolved_models_at"))
+        if not force and isinstance(persisted, dict) and persisted and persisted_at and (_utc_now() - persisted_at).total_seconds() < 21600.0:
+            _RESOLVED_MODELS_CACHE[cache_key] = (now_mono, dict(persisted))
+            return dict(persisted)
+
+    use_slots = list(slots) if slots else collect_api_key_slots()
+    if not use_slots:
+        return {}
+    try:
+        from google import genai
+        from google.genai import types
+    except Exception:
+        return {}
+
+    live_slugs: List[str] = []
+    for slot in use_slots[:3]:
+        try:
+            http_opts = types.HttpOptions(timeout=8_000) if hasattr(types, "HttpOptions") else None
+            client = genai.Client(api_key=slot.secret, http_options=http_opts) if http_opts is not None else genai.Client(api_key=slot.secret)
+            if not (hasattr(client, "models") and hasattr(client.models, "list")):
+                break
+            listed = list(client.models.list())
+            for item in listed:
+                m_name = str(getattr(item, "name", "") or "").strip()
+                if not m_name:
+                    continue
+                short_name = re.sub(r"^models/", "", m_name)
+                if _SKIP_NON_TEXT_RE.search(short_name):
+                    continue
+                actions = getattr(item, "supported_actions", None) or getattr(item, "supported_generation_methods", None) or ()
+                actions_low = {str(a).lower() for a in actions}
+                if actions_low and not any("generatecontent" in a for a in actions_low):
+                    continue
+                live_slugs.append(short_name)
+            if live_slugs:
+                break
+        except Exception:
+            continue
+
+    resolved_map: Dict[str, str] = {}
+    if live_slugs:
+        for logical_name in MODEL_QUOTA_SPECS:
+            matched = _match_model_slug(logical_name, live_slugs)
+            if matched:
+                resolved_map[logical_name] = matched
+        with _POOL_LOCK:
+            _RESOLVED_MODELS_CACHE[cache_key] = (time.monotonic(), dict(resolved_map))
+            ledger = _load_quota_ledger(base_dir)
+            ledger["resolved_models"] = dict(resolved_map)
+            ledger["resolved_models_at"] = _iso_utc(_utc_now())
+            _save_quota_ledger(ledger, base_dir)
+        print(f"[gemini_pool] Resolved {len(resolved_map)}/{len(MODEL_QUOTA_SPECS)} live models: {resolved_map}", flush=True)
+    return resolved_map
+
+
+def resolve_model_slug(
+    logical_name: str,
+    *,
+    resolved_map: Optional[Dict[str, str]] = None,
+    base_dir: Path | str | None = ".",
+) -> str:
+    clean = re.sub(r"^models/", "", str(logical_name or "").strip())
+    if not clean:
+        return clean
+    if resolved_map and clean in resolved_map:
+        return resolved_map[clean]
+    if resolved_map is None:
+        m = resolve_available_model_slugs(base_dir=base_dir)
+        if clean in m:
+            return m[clean]
+    return clean
 
 
 def _save_quota_ledger(ledger: Dict[str, Any], base_dir: Path | str | None = ".") -> None:
@@ -217,6 +404,7 @@ def _ensure_slot_record(ledger: Dict[str, Any], slot: KeySlot) -> Dict[str, Any]
             "fingerprint": slot.fingerprint,
             "date_utc": _utc_date_str(),
             "daily_calls": 0,
+            "model_daily_calls": {},
             "cooldown_until": None,
             "exhausted_until": None,
             "model_exhausted_until": {},
@@ -265,18 +453,27 @@ def _is_slot_available_for_model(rec: Dict[str, Any], model_name: str, now: date
     ex_dt = _parse_utc(rec.get("exhausted_until"))
     if ex_dt and ex_dt > now:
         return False
+    canon_m = _canonical_model_key(model_name)
     mod_cd = rec.get("model_cooldown_until") or {}
-    mc_dt = _parse_utc(mod_cd.get(model_name))
-    if mc_dt and mc_dt > now:
-        return False
+    for key_m in (model_name, canon_m):
+        mc_dt = _parse_utc(mod_cd.get(key_m))
+        if mc_dt and mc_dt > now:
+            return False
     if not mod_cd:
         cd_dt = _parse_utc(rec.get("cooldown_until"))
         if cd_dt and cd_dt > now:
             return False
     mod_ex = rec.get("model_exhausted_until") or {}
-    m_dt = _parse_utc(mod_ex.get(model_name))
-    if m_dt and m_dt > now:
-        return False
+    for key_m in (model_name, canon_m):
+        m_dt = _parse_utc(mod_ex.get(key_m))
+        if m_dt and m_dt > now:
+            return False
+    spec = MODEL_QUOTA_SPECS.get(canon_m)
+    if spec:
+        mod_calls = rec.get("model_daily_calls") or {}
+        used_today = int(mod_calls.get(canon_m) or mod_calls.get(model_name) or 0)
+        if used_today >= int(spec.get("soft_rpd") or spec.get("rpd") or 20):
+            return False
     return True
 
 
@@ -407,15 +604,21 @@ def call_gemini_raw(
     *,
     scope: str,
     prompt: str,
-    models: Sequence[str] = ("gemini-2.5-flash", "gemini-2.5-flash-lite", "gemini-flash-latest"),
+    models: Optional[Sequence[str]] = None,
+    tier: Optional[str] = None,
     temperature: float = 0.2,
+    max_output_tokens: Optional[int] = None,
+    timeout_ms: int = 25_000,
     response_mime_type: Optional[str] = None,
     tools: Optional[List[Any]] = None,
     base_dir: Path | str | None = ".",
 ) -> GeminiCallResult:
     """
-    Execute a quota-aware Gemini generate_content call across all 13 keys.
-    Per-model isolation: rate-limits or 503s on one model never block fallback models on the same key.
+    Execute a quota-aware, RPM/RPD-paced Gemini generate_content call across all 13 keys and 8 models.
+    Features:
+      - Dynamic `client.models.list()` slug mapping (preserving exact `-preview` / version slugs)
+      - Per-key per-model RPM cooldown pacing (13s for 5-RPM models, 4.2s for 15-RPM models) + soft RPD cap
+      - Fast 25s timeout + 1-strike 503/504 instant model failover (zero wasted retries on congested models)
     """
     slots = get_ordered_key_slots(scope, base_dir=base_dir)
     if not slots:
@@ -427,133 +630,162 @@ def call_gemini_raw(
     except Exception as exc:
         return GeminiCallResult(ok=False, error_message=f"{type(exc).__name__}: {exc}")
 
-    unique_models = list(dict.fromkeys([m for m in models if m]))
+    requested_models = list(models) if models else list(TIER2_HIGH_THROUGHPUT_MODELS if tier == "tier2" else TIER1_DEEP_MODELS)
+    resolved_map = resolve_available_model_slugs(slots, base_dir=base_dir)
+    unique_models: List[str] = []
+    for raw_m in requested_models:
+        if not raw_m:
+            continue
+        mapped_m = resolve_model_slug(raw_m, resolved_map=resolved_map, base_dir=base_dir)
+        if mapped_m not in unique_models:
+            unique_models.append(mapped_m)
+
+    root_key = str(Path(base_dir).resolve()) if base_dir is not None else "__memory__"
     unavailable_models: set[str] = set()
     failed_slots_by_model: Dict[str, set[str]] = {}
     per_key_errors: List[Dict[str, str]] = []
     attempts = 0
-    max_attempts = min(18, max(10, len(slots) + 4))
-    deadline = time.monotonic() + 210.0
+    max_attempts = min(24, max(12, len(slots) + 8))
+    deadline = time.monotonic() + 180.0
     saw_quota_exhaustion = False
 
     for model_idx, model_name in enumerate(unique_models):
         if model_name in unavailable_models or attempts >= max_attempts or time.monotonic() >= deadline:
             continue
+        canon_m = _canonical_model_key(model_name)
+        spec = MODEL_QUOTA_SPECS.get(canon_m, {"rpm": 5, "min_interval_sec": 13.0})
+        min_interval = float(spec.get("min_interval_sec") or 13.0)
         has_fallback_after = model_idx < len(unique_models) - 1
-        timeout_ms = 65_000 if has_fallback_after else 75_000
+        req_timeout_ms = max(5_000, int(timeout_ms))
         failed_for_model = failed_slots_by_model.setdefault(model_name, set())
-        transient_errors_for_model = 0
-        for slot in slots:
+
+        # Order candidate slots for THIS model: ready (RPM cooled down) keys first, lowest per-model RPD first
+        with _POOL_LOCK:
+            ledger = _load_quota_ledger(base_dir)
+            now_utc = _utc_now()
+            now_mono = time.monotonic()
+            candidate_rows: List[Tuple[int, int, int, int, KeySlot]] = []
+            for pos, s in enumerate(slots):
+                if s.slot in failed_for_model:
+                    continue
+                rec = _ensure_slot_record(ledger, s)
+                if not _is_slot_available_for_model(rec, model_name, now_utc):
+                    continue
+                mod_calls = int((rec.get("model_daily_calls") or {}).get(canon_m) or 0)
+                total_calls = int(rec.get("daily_calls") or 0)
+                last_m_ts = _LAST_CALL_MONO.get((root_key, s.fingerprint, canon_m), 0.0)
+                in_rpm_window = 1 if (last_m_ts > 0.0 and (now_mono - last_m_ts) < min_interval) else 0
+                candidate_rows.append((in_rpm_window, mod_calls, total_calls, pos, s))
+            candidate_rows.sort(key=lambda r: (r[0], r[1], r[2], r[3]))
+
+        for in_rpm_window, _, _, _, slot in candidate_rows:
             if slot.slot in failed_for_model or attempts >= max_attempts or time.monotonic() >= deadline:
+                continue
+            if in_rpm_window and has_fallback_after:
+                # Skip throttled keys when another model is ready; never trip 6/5 RPM limit
                 continue
             with _POOL_LOCK:
                 ledger = _load_quota_ledger(base_dir)
                 rec = _ensure_slot_record(ledger, slot)
                 if not _is_slot_available_for_model(rec, model_name, _utc_now()):
                     continue
+                _LAST_CALL_MONO[(root_key, slot.fingerprint, canon_m)] = time.monotonic()
 
-            max_transient_tries = 1
-            for _try_idx in range(max_transient_tries):
-                attempts += 1
-                try:
-                    http_opts = types.HttpOptions(timeout=timeout_ms) if hasattr(types, "HttpOptions") else None
-                    client = (
-                        genai.Client(api_key=slot.secret, http_options=http_opts)
-                        if http_opts is not None
-                        else genai.Client(api_key=slot.secret)
-                    )
-                    cfg_kwargs: Dict[str, Any] = {"temperature": temperature}
-                    if response_mime_type:
-                        cfg_kwargs["response_mime_type"] = response_mime_type
-                    if tools:
-                        cfg_kwargs["tools"] = tools
-                    resp = client.models.generate_content(
-                        model=model_name,
-                        contents=prompt,
-                        config=types.GenerateContentConfig(**cfg_kwargs),
-                    )
-                    text = getattr(resp, "text", None) or ""
-                    if text.strip():
-                        with _POOL_LOCK:
-                            ledger = _load_quota_ledger(base_dir)
-                            rec = _ensure_slot_record(ledger, slot)
-                            rec["daily_calls"] = int(rec.get("daily_calls") or 0) + 1
-                            rec["last_success_at"] = _iso_utc(_utc_now())
-                            rec["last_error_code"] = None
-                            rec["last_error"] = None
-                            rec["consecutive_errors"] = 0
-                            _save_quota_ledger(ledger, base_dir)
-                        return GeminiCallResult(
-                            ok=True,
-                            text=text,
-                            raw_response=resp,
-                            model_used=model_name,
-                            key_slot=slot.slot,
-                            attempts=attempts,
-                            per_key_errors=per_key_errors,
-                            quota_exhausted=saw_quota_exhaustion,
-                            degraded=False,
-                        )
-                    # Empty response text without exception: move cleanly to next key
-                    per_key_errors.append(
-                        {"slot": slot.slot, "model": model_name, "code": "EMPTY_RESPONSE", "error": "Empty model response text"}
-                    )
-                    break
-                except Exception as exc:
-                    err_code, short_msg, cd_secs, is_daily, is_missing_model = _classify_gemini_error(exc)
-                    if is_missing_model:
-                        unavailable_models.add(model_name)
-                        per_key_errors.append(
-                            {"slot": slot.slot, "model": model_name, "code": err_code, "error": short_msg}
-                        )
-                        break
-
-                    now = _utc_now()
-                    if err_code == "AUTH_INVALID":
-                        # Key itself is invalid across all models
-                        for m in unique_models:
-                            failed_slots_by_model.setdefault(m, set()).add(slot.slot)
-                    else:
-                        if is_daily or err_code == "RATE_LIMIT_429":
-                            saw_quota_exhaustion = saw_quota_exhaustion or is_daily
-                        failed_for_model.add(slot.slot)
-
+            attempts += 1
+            try:
+                http_opts = types.HttpOptions(timeout=req_timeout_ms) if hasattr(types, "HttpOptions") else None
+                client = (
+                    genai.Client(api_key=slot.secret, http_options=http_opts)
+                    if http_opts is not None
+                    else genai.Client(api_key=slot.secret)
+                )
+                cfg_kwargs: Dict[str, Any] = {"temperature": temperature}
+                if max_output_tokens is not None and int(max_output_tokens) > 0:
+                    cfg_kwargs["max_output_tokens"] = int(max_output_tokens)
+                if response_mime_type:
+                    cfg_kwargs["response_mime_type"] = response_mime_type
+                if tools:
+                    cfg_kwargs["tools"] = tools
+                resp = client.models.generate_content(
+                    model=model_name,
+                    contents=prompt,
+                    config=types.GenerateContentConfig(**cfg_kwargs),
+                )
+                text = getattr(resp, "text", None) or ""
+                if text.strip():
                     with _POOL_LOCK:
                         ledger = _load_quota_ledger(base_dir)
                         rec = _ensure_slot_record(ledger, slot)
                         rec["daily_calls"] = int(rec.get("daily_calls") or 0) + 1
-                        rec["last_error_code"] = err_code
-                        rec["last_error"] = short_msg
-                        rec["consecutive_errors"] = int(rec.get("consecutive_errors") or 0) + 1
-                        until_iso = _iso_utc(now + timedelta(seconds=cd_secs))
-                        if err_code == "AUTH_INVALID":
-                            rec["exhausted_until"] = until_iso
-                        elif is_daily:
-                            rec.setdefault("model_exhausted_until", {})[model_name] = until_iso
-                        else:
-                            rec.setdefault("model_cooldown_until", {})[model_name] = until_iso
+                        mod_counts = rec.setdefault("model_daily_calls", {})
+                        mod_counts[canon_m] = int(mod_counts.get(canon_m) or 0) + 1
+                        rec["last_success_at"] = _iso_utc(_utc_now())
+                        rec["last_error_code"] = None
+                        rec["last_error"] = None
+                        rec["consecutive_errors"] = 0
                         _save_quota_ledger(ledger, base_dir)
-
+                    return GeminiCallResult(
+                        ok=True,
+                        text=text,
+                        raw_response=resp,
+                        model_used=model_name,
+                        key_slot=slot.slot,
+                        attempts=attempts,
+                        per_key_errors=per_key_errors,
+                        quota_exhausted=saw_quota_exhaustion,
+                        degraded=False,
+                    )
+                per_key_errors.append(
+                    {"slot": slot.slot, "model": model_name, "code": "EMPTY_RESPONSE", "error": "Empty model response text"}
+                )
+            except Exception as exc:
+                err_code, short_msg, cd_secs, is_daily, is_missing_model = _classify_gemini_error(exc)
+                if is_missing_model:
+                    unavailable_models.add(model_name)
                     per_key_errors.append(
                         {"slot": slot.slot, "model": model_name, "code": err_code, "error": short_msg}
                     )
-                    if err_code == "TRANSIENT_ERROR":
-                        transient_errors_for_model += 1
-                        is_timeout_504 = any(k in short_msg.lower() for k in ("504", "deadline", "timeout", "timed out"))
-                        has_healthy_next = False
-                        if has_fallback_after and is_timeout_504:
-                            next_model = unique_models[model_idx + 1]
-                            now_chk = _utc_now()
-                            with _POOL_LOCK:
-                                chk_ledger = _load_quota_ledger(base_dir)
-                                has_healthy_next = any(
-                                    _is_slot_available_for_model(_ensure_slot_record(chk_ledger, s), next_model, now_chk)
-                                    for s in slots
-                                )
-                        threshold = 1 if (has_healthy_next and is_timeout_504) else 2
-                        if transient_errors_for_model >= threshold:
-                            unavailable_models.add(model_name)
                     break
+
+                now = _utc_now()
+                if err_code == "AUTH_INVALID":
+                    for m in unique_models:
+                        failed_slots_by_model.setdefault(m, set()).add(slot.slot)
+                else:
+                    if is_daily or err_code == "RATE_LIMIT_429":
+                        saw_quota_exhaustion = saw_quota_exhaustion or is_daily
+                    failed_for_model.add(slot.slot)
+
+                with _POOL_LOCK:
+                    ledger = _load_quota_ledger(base_dir)
+                    rec = _ensure_slot_record(ledger, slot)
+                    rec["daily_calls"] = int(rec.get("daily_calls") or 0) + 1
+                    mod_counts = rec.setdefault("model_daily_calls", {})
+                    mod_counts[canon_m] = int(mod_counts.get(canon_m) or 0) + 1
+                    rec["last_error_code"] = err_code
+                    rec["last_error"] = short_msg
+                    rec["consecutive_errors"] = int(rec.get("consecutive_errors") or 0) + 1
+                    until_iso = _iso_utc(now + timedelta(seconds=cd_secs))
+                    if err_code == "AUTH_INVALID":
+                        rec["exhausted_until"] = until_iso
+                    elif is_daily:
+                        rec.setdefault("model_exhausted_until", {})[canon_m] = until_iso
+                    else:
+                        rec.setdefault("model_cooldown_until", {})[canon_m] = until_iso
+                    _save_quota_ledger(ledger, base_dir)
+
+                per_key_errors.append(
+                    {"slot": slot.slot, "model": model_name, "code": err_code, "error": short_msg}
+                )
+                if err_code == "TRANSIENT_ERROR":
+                    low_err = short_msg.lower()
+                    is_1strike = any(
+                        k in low_err
+                        for k in ("503", "unavailable", "high demand", "504", "deadline", "timeout", "timed out")
+                    )
+                    if is_1strike:
+                        # Instant 0s model switch: 1 strike of 503 high demand or 504 timeout marks this model unavailable this run
+                        unavailable_models.add(model_name)
 
             if model_name in unavailable_models or time.monotonic() >= deadline:
                 break
@@ -574,11 +806,12 @@ def call_gemini_raw(
 def _extract_json_payload(raw_text: str) -> Any:
     cleaned = (raw_text or "").strip()
     if cleaned.startswith("```"):
-        cleaned = cleaned.strip("`").lstrip("json").strip()
+        cleaned = re.sub(r"^```(?:json)?\s*", "", cleaned, flags=re.I)
+        cleaned = re.sub(r"\s*```\s*$", "", cleaned).strip()
     try:
         return json.loads(cleaned)
     except json.JSONDecodeError:
-        m = __import__("re").search(r"(\{[\s\S]*\}|\[[\s\S]*\])", cleaned)
+        m = re.search(r"(\{[\s\S]*\}|\[[\s\S]*\])", cleaned)
         if m:
             return json.loads(m.group(1))
         raise
@@ -588,8 +821,11 @@ def call_gemini_json(
     *,
     scope: str,
     prompt: str,
-    models: Sequence[str] = ("gemini-2.5-flash", "gemini-2.5-flash-lite", "gemini-flash-latest"),
+    models: Optional[Sequence[str]] = None,
+    tier: Optional[str] = None,
     temperature: float = 0.25,
+    max_output_tokens: Optional[int] = None,
+    timeout_ms: int = 25_000,
     tools: Optional[List[Any]] = None,
     base_dir: Path | str | None = ".",
 ) -> GeminiCallResult:
@@ -598,7 +834,10 @@ def call_gemini_json(
         scope=scope,
         prompt=prompt,
         models=models,
+        tier=tier,
         temperature=temperature,
+        max_output_tokens=max_output_tokens,
+        timeout_ms=timeout_ms,
         response_mime_type=None if tools else "application/json",
         tools=tools,
         base_dir=base_dir,

@@ -289,6 +289,15 @@ def ensure_zh_headline(text: str, category: str = "") -> str:
 _LEGACY_PLACEHOLDER_SUMMARY_RE = re.compile(r"该条为海外主流媒体英文原报|云端\s*AI\s*批次将自动")
 
 
+def _has_sufficient_cjk(text: str, *, threshold: float = 0.15) -> bool:
+    """Return True when text already contains >=15% CJK characters so ZH mode skips LLM calls."""
+    clean = _STRIP_TAG_PREFIX_RE.sub("", str(text or "").strip())
+    compact = re.sub(r"\s+", "", clean)
+    if not compact:
+        return True
+    return (len(_CJK_RE.findall(compact)) / max(1, len(compact))) >= threshold
+
+
 def _batch_translate_with_gemini(
     texts: List[str],
     target_lang: str = "zh",
@@ -339,7 +348,7 @@ def _translate_texts_with_pipeline(
     *,
     max_retries: int = 2,
     backoff_base: float = 0.5,
-    chunk_size: int = 16,
+    chunk_size: int = 60,
     base_dir: Path | str | None = None,
 ) -> Tuple[Optional[List[str]], int, Optional[str]]:
     """Translate in bounded chunks with content-hash caching and full 13-key Gemini pool rotation."""
@@ -348,10 +357,6 @@ def _translate_texts_with_pipeline(
         return None, 0, None
 
     from pipeline.gemini_pool import call_gemini_json, collect_api_key_slots
-
-    slots = collect_api_key_slots()
-    if not slots:
-        return None, 0, "no_api_key"
 
     root_dir = Path(base_dir) if base_dir is not None else DEFAULT_TRANSLATION_CACHE_PATH.parent.parent
     cache_path = root_dir / "data" / "translation_cache.json"
@@ -365,6 +370,9 @@ def _translate_texts_with_pipeline(
         if not clean:
             out[idx] = ""
             continue
+        if target_lang == "zh" and _has_sufficient_cjk(clean):
+            out[idx] = clean
+            continue
         ck = _translation_cache_key(clean, target_lang)
         cached_val = cache_map.get(ck)
         if cached_val:
@@ -375,6 +383,10 @@ def _translate_texts_with_pipeline(
 
     if not missing_texts:
         return [str(x or "") for x in out], 0, None
+
+    slots = collect_api_key_slots()
+    if not slots:
+        return ([str(x or "") for x in out], 0, "no_api_key") if any(bool(x) for x in out) else (None, 0, "no_api_key")
 
     lang_desc = "自然流畅、专业简洁的中文新闻表达" if target_lang == "zh" else "concise, journalistic English"
     total_attempts = 0
@@ -392,8 +404,10 @@ def _translate_texts_with_pipeline(
         res = call_gemini_json(
             scope="bilingual",
             prompt=prompt,
-            models=("gemini-2.5-flash", "gemini-2.5-flash-lite", "gemini-flash-latest", "gemini-4-hydrogen"),
+            tier="tier2",
             temperature=0.1,
+            max_output_tokens=16384,
+            timeout_ms=25_000,
             base_dir=root_dir,
         )
         total_attempts += max(1, res.attempts)
@@ -416,6 +430,28 @@ def _translate_texts_with_pipeline(
     if not has_any and last_error:
         return None, total_attempts, last_error
     return [str(x or "") for x in out], total_attempts, last_error
+
+
+def translate_texts_batch(
+    texts: Sequence[str],
+    target_lang: str = "zh",
+    *,
+    max_retries: int = 2,
+    backoff_base: float = 0.5,
+    chunk_size: int = 60,
+    root_dir: Path | str | None = None,
+    base_dir: Path | str | None = None,
+) -> Tuple[Optional[List[str]], int, Optional[str]]:
+    """Public Tier-2 batch translation entry point preserving tuple return (texts, attempts, err)."""
+    resolved_dir = root_dir if root_dir is not None else base_dir
+    return _translate_texts_with_pipeline(
+        list(texts),
+        target_lang=target_lang,
+        max_retries=max_retries,
+        backoff_base=backoff_base,
+        chunk_size=chunk_size,
+        base_dir=resolved_dir,
+    )
 
 
 def enrich_bilingual_events(
@@ -1010,8 +1046,10 @@ def enrich_zh_tech_tools(tools: List[Dict[str, Any]], *, base_dir: Path | str = 
         res = call_gemini_json(
             scope="bilingual",
             prompt=prompt,
-            models=("gemini-2.5-flash", "gemini-2.5-flash-lite", "gemini-flash-latest"),
+            tier="tier2",
             temperature=0.15,
+            max_output_tokens=16384,
+            timeout_ms=25_000,
             base_dir=root_dir,
         )
         parsed = res.data if res.ok else None

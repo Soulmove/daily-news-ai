@@ -23,8 +23,10 @@ from pipeline.heavy_classifier import (
     GEO_MILITARY_HEAVY_RE,
     HEAVY_NOISE_EXCLUDE_RE,
     MARKET_SEMI_HEAVY_RE,
+    compute_deterministic_heavy_score,
     heavy_topic_key,
     infer_heavy_reason_tag,
+    is_heavy_noise_excluded,
     sync_today_heavy_into_live_wire,
 )
 from pipeline.id_utils import canonicalize_url, make_raw_item_id
@@ -687,13 +689,14 @@ def _classify_wire_severity(
     source_id: str,
     source_name: str,
 ) -> tuple[str, str]:
-    """Classify wire item severity into S / A / B using authoritative sources + substantive impact."""
+    """Classify wire item severity into S / A / B using authoritative sources + 0-AI deterministic rules."""
     if (
         is_hotlist_aggregator_source(source_id, source_name)
         or is_consumer_promo_or_fluff(title, excerpt)
-        or _WIRE_NOISE_HEAVY_RE.search(title)
-        or HEAVY_NOISE_EXCLUDE_RE.search(title)
+        or is_heavy_noise_excluded(title, excerpt)
     ):
+        return "B", "常规动态"
+    if _WIRE_NOISE_HEAVY_RE.search(title) and not re.search(r"暴涨\s*\d+|重掌.{0,8}帅印|Anthropic.{0,10}EFS|纳指.{0,10}大涨", title, re.I):
         return "B", "常规动态"
     if _WIRE_S_EXCLUDE_RE.search(title):
         return "A" if _WIRE_A_TIER_RE.search(title) else "B", "常规动态"
@@ -720,6 +723,10 @@ def _wire_subject_action_cluster(title: str, excerpt: str = "") -> Optional[str]
         return "cn_a_close"
     if re.search(r"(?:商品期货|股指期货|国内期货|期市|国债期货)", blob) and re.search(r"(?:收盘|收涨|收跌|收评)", blob):
         return "cn_futures_close"
+    if re.search(r"(?:黄金|金价|COMEX.*金)", blob, re.I) and re.search(r"(?:反弹|暴跌|重挫|杀跌|回升|突破)", blob):
+        return "gold_rebound"
+    if "黄仁勋" in blob and any(k in blob for k in ("英伟达", "重掌", "帅印", "回归")):
+        return "nvda_jensen"
     return None
 
 
@@ -909,7 +916,7 @@ def refresh_live_wire_file(base_dir: Path | str = ".", extra_items: Optional[Lis
         in_srcs, in_cnt = _split_clean_sources(src_name)
         cluster_key = _wire_subject_action_cluster(title, excerpt_clean)
         cat_norm = _classify_wire_item(title, excerpt_clean, str(it.get("category") or "general"))
-        if it.get("synced_from_today") and not HEAVY_NOISE_EXCLUDE_RE.search(title):
+        if it.get("synced_from_today") and not is_heavy_noise_excluded(title, excerpt_clean):
             sev_tier = "S" if it.get("severity_tier") == "S" else "A"
             reason_tag = str(it.get("heavy_reason_tag") or "").strip() or _infer_wire_heavy_reason_tag(title, excerpt_clean, cat_norm)
         else:
@@ -979,19 +986,35 @@ def refresh_live_wire_file(base_dir: Path | str = ".", extra_items: Optional[Lis
             _add(it)
 
     for item in merged:
+        mc = int(item.pop("_merged_count", 1) or 1)
         item.pop("_merged_sources", None)
-        item.pop("_merged_count", None)
+        pub_dt_i = parse_iso_datetime(str(item.get("published_at") or ""))
+        age_h_i = max(0.0, (now_dt - pub_dt_i).total_seconds() / 3600.0) if pub_dt_i else 6.0
+        item["heavy_score"] = compute_deterministic_heavy_score(
+            str(item.get("title") or ""),
+            str(item.get("excerpt") or ""),
+            independent_publishers=max(mc, 1),
+            is_official=False,
+            has_authoritative_source=True,
+            age_hours=age_h_i,
+        )
     merged.sort(key=lambda x: str(x.get("published_at") or ""), reverse=True)
     merged = merged[:165]
 
-    # Calibrate 7x24 wire heavy alerts (<= 15, zero semantic duplicates or multi-post topic clones among heavy picks)
+    # Calibrate 7x24 wire heavy alerts (<= 12, ranked deterministically by 0-AI math heavy_score, zero topic clones)
     high_indices = [idx for idx, it in enumerate(merged) if it.get("importance") == "high"]
     selected_high: List[int] = []
     heavy_norms: List[str] = []
     seen_topic_keys: set[str] = set()
-    s_first = [idx for idx in high_indices if merged[idx].get("severity_tier") == "S"] + [
-        idx for idx in high_indices if merged[idx].get("severity_tier") != "S"
-    ]
+    s_first = sorted(
+        high_indices,
+        key=lambda idx: (
+            1 if merged[idx].get("severity_tier") == "S" else 0,
+            float(merged[idx].get("heavy_score") or 0.0),
+            str(merged[idx].get("published_at") or ""),
+        ),
+        reverse=True,
+    )
     for idx in s_first:
         n_cur = re.sub(r"[\s\-_·:：,，.。!！?？()（）\[\]【】'\"]+", "", str(merged[idx].get("title") or "").lower())
         tkey = heavy_topic_key(n_cur)

@@ -19,7 +19,7 @@ import re
 import time
 from typing import Any, Dict, List, Optional, Tuple
 
-from .gemini_pool import call_gemini_raw, collect_api_key_slots
+from .gemini_pool import call_gemini_json, call_gemini_raw, collect_api_key_slots
 from .manifest import atomic_write_json, load_json_if_exists
 from .time_utils import now_shanghai, parse_iso_datetime, to_iso_shanghai
 
@@ -1679,8 +1679,9 @@ def _fetch_single_card_ai_research(card: Dict[str, Any], root: Path) -> Optional
     res = call_gemini_raw(
         scope="deep_finance_impact",
         prompt=prompt,
-        models=("gemini-2.5-flash", "gemini-2.5-flash-lite"),
+        tier="tier2",
         temperature=0.15,
+        timeout_ms=25_000,
         tools=_finance_search_tools(),
         base_dir=root,
     )
@@ -1688,6 +1689,13 @@ def _fetch_single_card_ai_research(card: Dict[str, Any], root: Path) -> Optional
         return None
     parsed = _extract_json_obj(res.text)
     if not parsed:
+        return None
+    return _sanitize_ai_research_payload(parsed)
+
+
+def _sanitize_ai_research_payload(parsed: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+    """Normalize and scrub AI-generated transmission layers, precedents and quant thresholds."""
+    if not isinstance(parsed, dict):
         return None
     layers = parsed.get("transmission_layers")
     if not isinstance(layers, list) or not layers:
@@ -1750,6 +1758,104 @@ def _fetch_single_card_ai_research(card: Dict[str, Any], root: Path) -> Optional
     }
 
 
+def _fetch_batch_cards_ai_research(
+    need_items: List[Tuple[str, Dict[str, Any]]],
+    root: Path,
+) -> Dict[str, Dict[str, Any]]:
+    """Mega-Batch 2A: Pack up to 18 uncached finance impact cards into 1 Tier-2 JSON request."""
+    if not need_items:
+        return {}
+    out: Dict[str, Dict[str, Any]] = {}
+    used_model: Optional[str] = None
+
+    def _run_chunk(chunk: List[Tuple[str, Dict[str, Any]]]) -> Dict[str, Dict[str, Any]]:
+        nonlocal used_model
+        lines: List[str] = []
+        valid_keys: set[str] = set()
+        for ckey, card in chunk:
+            title = str(card.get("event_title") or "").strip()
+            summary = str(card.get("event_summary") or "").strip()[:160]
+            if not ckey or not title:
+                continue
+            valid_keys.add(ckey)
+            etype = str(card.get("event_type_label") or card.get("event_type") or "宏观财经")
+            lines.append(f"- id={ckey} | 类别={etype} | 标题={title} | 摘要={summary}")
+        if not lines:
+            return {}
+        prompt = (
+            "你是机构买方跨境宏观与产业投研总监。请一次性在 1 个 JSON 对象中为以下全部未缓存事件生成差异化投研传导分析。\n"
+            "硬性要求：\n"
+            "1. 每条结果必须按原始 `id` 精确回传，严禁编造虚构股票代码或虚构历史数字；\n"
+            "2. 严禁使用任何彩色 Emoji、严禁「凸显了」「引发广泛关注」等八股套话，直击一线受益/受损标的与预期差；\n"
+            "3. A股/港股/美股标的 `code` 使用真实代码格式（如 600519.SH / 300750.SZ / 00700.HK / NVDA / GLD）。\n\n"
+            "待分析事件列表：\n"
+            + "\n".join(lines)
+            + "\n\n严格返回纯 JSON 对象：\n"
+            "{\n"
+            '  "items": [\n'
+            "    {\n"
+            '      "id": "原样id",\n'
+            '      "one_liner": "65字内直击核心市场逻辑与受益/受损资产",\n'
+            '      "expectation_gap": "80字内说明跨市场计价状态与预期差博弈点",\n'
+            '      "transmission_layers": [\n'
+            '        {"tier": 1, "tier_label": "一阶直接冲击（核心受益或受损主体）", "summary": "45字内因果传导", "stocks": [{"name": "真实公司或ETF名", "code": "600030.SH/NVDA/00700.HK", "market": "A股|港股|美股", "exposure_logic": "35字内直接敞口", "direction": "positive|negative|mixed"}]},\n'
+            '        {"tier": 2, "tier_label": "二阶产业链传导", "summary": "45字内上下游联动", "stocks": [{"name": "公司或ETF", "code": "代码", "market": "A股|港股|美股", "exposure_logic": "35字内联动", "direction": "positive|negative|mixed"}]},\n'
+            '        {"tier": 3, "tier_label": "三阶宏观或避险跷跷板", "summary": "45字内资金偏好切换", "stocks": [{"name": "ETF或龙头", "code": "代码", "market": "A股|港股|美股", "exposure_logic": "35字内逻辑", "direction": "positive|negative|mixed"}]}\n'
+            "      ],\n"
+            '      "historical_precedents": [{"date": "YYYY-MM-DD", "event_title": "真实历史相似事件", "t1_reaction": "35字内T+1走势", "t5_reaction": "35字内T+5演化", "lesson": "35字内交易规律"}],\n'
+            '      "quant_if_then": [\n'
+            '        {"case": "bull", "label": "正向验证阈值", "trigger_metric": "核心指标", "threshold": "量化阈值", "action_implication": "35字内应对"},\n'
+            '        {"case": "bear", "label": "证伪退出阈值", "trigger_metric": "反向指标", "threshold": "量化阈值", "action_implication": "35字内风控"}\n'
+            "      ]\n"
+            "    }\n"
+            "  ]\n"
+            "}"
+        )
+        res = call_gemini_json(
+            scope="mega_finance_impact",
+            prompt=prompt,
+            tier="tier2",
+            temperature=0.15,
+            max_output_tokens=24576,
+            timeout_ms=25_000,
+            base_dir=root,
+        )
+        if res.model_used:
+            used_model = res.model_used
+        parsed = res.data
+        if not res.ok or not parsed:
+            return {}
+        raw_items: List[Dict[str, Any]] = []
+        if isinstance(parsed, dict):
+            if isinstance(parsed.get("items"), list):
+                raw_items = [x for x in parsed["items"] if isinstance(x, dict)]
+            else:
+                for k, v in parsed.items():
+                    if isinstance(v, dict) and k in valid_keys:
+                        raw_items.append({"id": k, **v})
+        elif isinstance(parsed, list):
+            raw_items = [x for x in parsed if isinstance(x, dict)]
+        chunk_out: Dict[str, Dict[str, Any]] = {}
+        for item in raw_items:
+            rid = str(item.get("id") or "").strip()
+            if rid not in valid_keys:
+                continue
+            cleaned = _sanitize_ai_research_payload(item)
+            if cleaned:
+                chunk_out[rid] = cleaned
+        return chunk_out
+
+    out.update(_run_chunk(need_items))
+    if len(out) < max(1, len(need_items) // 2) and len(need_items) >= 4:
+        mid = len(need_items) // 2
+        for half in (need_items[:mid], need_items[mid:]):
+            missing = [(ck, card) for ck, card in half if ck not in out]
+            if missing:
+                out.update(_run_chunk(missing))
+    print(f"🚀 [Mega-Batch 2A] Finance impact enriched {len(out)}/{len(need_items)} cards (model={used_model or '-'})", flush=True)
+    return out
+
+
 _VALID_AI_TICKER_RE = re.compile(r"^[A-Z0-9]{1,6}(?:\.(?:SH|SZ|HK|KS|TW))?$")
 
 
@@ -1780,20 +1886,15 @@ def enrich_finance_impacts_with_gemini(
             if ckey and ckey not in items_cache and tkey not in items_cache:
                 need_fetch.append((ckey, card))
         if need_fetch:
-            with ThreadPoolExecutor(max_workers=6) as pool:
-                futs = {pool.submit(_fetch_single_card_ai_research, card, root): (ckey, card) for ckey, card in need_fetch[:18]}
-                for fut in as_completed(futs):
-                    ckey, card = futs[fut]
-                    try:
-                        val = fut.result(timeout=45)
-                        if val:
-                            val["_ts"] = now_ts
-                            items_cache[ckey] = val
-                            tkey = re.sub(r"[\s\W]+", "", str(card.get("event_title") or "").lower())[:28]
-                            if tkey and tkey != ckey:
-                                items_cache[tkey] = val
-                    except Exception:
-                        pass
+            batch_res = _fetch_batch_cards_ai_research(need_fetch[:18], root)
+            for ckey, card in need_fetch[:18]:
+                val = batch_res.get(ckey)
+                if val:
+                    val["_ts"] = now_ts
+                    items_cache[ckey] = val
+                    tkey = re.sub(r"[\s\W]+", "", str(card.get("event_title") or "").lower())[:28]
+                    if tkey and tkey != ckey:
+                        items_cache[tkey] = val
 
     if items_cache:
         atomic_write_json(

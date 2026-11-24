@@ -1887,6 +1887,37 @@ def build_v3_artifacts(
         min_open_live=6,
         max_open_live=10,
     )
+    try:
+        from .deep_enrichment_engine import synthesize_dynamic_live_predictions_via_tier2
+
+        open_live_cnt = sum(
+            1 for p in seed_predictions if isinstance(p, dict) and p.get("mode") == "live" and p.get("status") == "open"
+        )
+        if open_live_cnt < 10:
+            ai_live_preds = synthesize_dynamic_live_predictions_via_tier2(
+                root,
+                all_events=all_events,
+                calendar_items=calendar_items,
+                existing_predictions=seed_predictions,
+                generated_dt=generated_dt,
+                generated_at_iso=generated_at_iso,
+                max_new=max(0, 10 - open_live_cnt),
+            )
+            existing_pids = {str(p.get("prediction_id") or "") for p in seed_predictions if isinstance(p, dict)}
+            existing_ptitles = {
+                re.sub(r"\W+", "", str(p.get("title") or "").lower())[:20]
+                for p in seed_predictions
+                if isinstance(p, dict)
+            }
+            for npred in ai_live_preds:
+                pid_n = str(npred.get("prediction_id") or "")
+                tkey_n = re.sub(r"\W+", "", str(npred.get("title") or "").lower())[:20]
+                if pid_n and pid_n not in existing_pids and tkey_n not in existing_ptitles:
+                    seed_predictions.append(npred)
+                    existing_pids.add(pid_n)
+                    existing_ptitles.add(tkey_n)
+    except Exception:
+        pass
 
     # Preserve existing version history & auto-evolve probabilities/judgments when matching new events arrive
     for p in seed_predictions:
