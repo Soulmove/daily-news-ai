@@ -1,0 +1,1944 @@
+{
+  "schema_version": "4.2",
+  "batch_id": "smart-20261125-014438",
+  "input_batch_id": "raw-20261125-014401",
+  "input_cutoff_at": "2026-11-25T01:44:01+08:00",
+  "generated_at": "2026-11-25T01:44:38+08:00",
+  "published_at": "2026-11-25T01:50:52+08:00",
+  "category": "general",
+  "category_label": "社会/热点",
+  "generation_mode": "deterministic_fresh_clusters",
+  "model_name": "deterministic-v3-grounding",
+  "quality_flags": [
+    "deterministic_fresh_base"
+  ],
+  "key_changes": [
+    {
+      "event_id": "evt_2b0a5ded5bb9",
+      "storyline_id": "st_eda28ff06de6",
+      "headline": "英伟达宣布黄仁勋复职，特朗普发文支持，美股大幅上涨",
+      "detail": "据媒体报道，美国总统特朗普表示，他曾直接与英伟达董事会沟通，敦促董事会让黄仁勋重新出任公司 CEO。 周一（11 月 23 日）美股盘中，特朗普在接受采访时说道：「这么说吧，我跟他们谈过。而且我说服了他们，这件事是我促成的。",
+      "evidence_status": "multi_source",
+      "attribution_warning": null,
+      "source_count": 3,
+      "primary_url": "https://www.thepaper.cn/newsDetail_forward_34544155",
+      "source_name": "澎湃新闻"
+    },
+    {
+      "event_id": "evt_8b709922f712",
+      "storyline_id": "st_42e23b4a0dc2",
+      "headline": "Anthropic上市5天即破发，2万亿美元估值昙花一现",
+      "detail": "上市不足一周，Anthropic周二盘前跌破83美元的IPO发行价，跌约5%，较11月19日首日开盘价明显回落。监管文件显示，首席执行官与总裁上市次日分别出售逾337万股，套现均超2.8亿美元。投资者开始重新审视公司面临的多重压力。",
+      "evidence_status": "multi_source",
+      "attribution_warning": null,
+      "source_count": 2,
+      "primary_url": "https://view.inews.qq.com/a/20261124A0EOF800",
+      "source_name": "腾讯新闻综合早报"
+    },
+    {
+      "event_id": "evt_fab77fc9d3a8",
+      "storyline_id": "st_dff78f0377db",
+      "headline": "Anthropic、OpenAI员工担忧内部模型过于强大，难以安全发布",
+      "detail": "11月24日，Axios援引二十多名消息人士称，Anthropic和OpenAI未发布模型能力过强，员工认为无法安全开放。测试中，模型在数学、网络安全等领域推理能力提升，研究人员尚无管控方案，公司正讨论是否停止训练新模型，两家称或暂缓发布。",
+      "evidence_status": "single_source",
+      "attribution_warning": null,
+      "source_count": 1,
+      "primary_url": "https://view.inews.qq.com/a/20261124A0D8R000",
+      "source_name": "腾讯新闻综合早报"
+    }
+  ],
+  "overview_sections": [
+    {
+      "title": "本批核心脉络",
+      "points": [
+        {
+          "text": "英伟达宣布黄仁勋复职，特朗普发文支持，美股大幅上涨：据媒体报道，美国总统特朗普表示，他曾直接与英伟达董事会沟通，敦促董事会让黄仁勋重新出任公司 CEO。",
+          "source_refs": []
+        },
+        {
+          "text": "Anthropic上市5天即破发，2万亿美元估值昙花一现：上市不足一周，Anthropic周二盘前跌破83美元的IPO发行价，跌约5%，较11月19日首日开盘价明显回落。",
+          "source_refs": []
+        },
+        {
+          "text": "Anthropic、OpenAI员工担忧内部模型过于强大，难以安全发布：11月24日，Axios援引二十多名消息人士称，Anthropic和OpenAI未发布模型能力过强，员工认为无法安全开放。",
+          "source_refs": []
+        },
+        {
+          "text": "消息称美国正准备提高对中国和其他数十个国家的关税：11月24日，《华尔街日报》援引知情人士称，美国拟提高对中国和其他数十个国家的关税，称这些国家支持本国工业损害美企利益。新关税将覆盖出口的大多数商品，可能不含已单独征税的钢铁、铝和汽车。",
+          "source_refs": []
+        }
+      ]
+    }
+  ],
+  "events": [
+    {
+      "schema_version": "4.1",
+      "event_id": "evt_2b0a5ded5bb9",
+      "storyline_id": "st_eda28ff06de6",
+      "article_ids": [
+        "thepaper_889612052d2c",
+        "zhihu_c61558839356",
+        "hupu_c4ebe0ac74f0"
+      ],
+      "legacy_event_ids": [],
+      "title": "英伟达宣布黄仁勋复职，特朗普发文支持，美股大幅上涨",
+      "category": "general",
+      "entities": [
+        "英伟达 (NVIDIA)"
+      ],
+      "entity_ids": [
+        "ent_nvidia"
+      ],
+      "entity_confidences": {
+        "英伟达 (NVIDIA)": 0.96
+      },
+      "matched_entities": [
+        {
+          "entity_id": "ent_nvidia",
+          "canonical_name": "英伟达 (NVIDIA)",
+          "entity_type": "company",
+          "sector": "半导体 / AI算力",
+          "matched_aliases": [
+            "英伟达",
+            "黄仁勋"
+          ],
+          "tickers": [
+            {
+              "symbol": "NVDA",
+              "market": "US",
+              "exchange": "NASDAQ",
+              "currency": "USD",
+              "label": "NVDA.US (NASDAQ)"
+            }
+          ],
+          "reason": "正文/实体匹配关键词「英伟达 / 黄仁勋」",
+          "confidence": 0.96
+        }
+      ],
+      "importance": "medium",
+      "sentiment": "Mixed",
+      "special_note": null,
+      "material_stage": null,
+      "material_stage_label": null,
+      "material_stage_confidence": null,
+      "thumbnail_url": null,
+      "publisher_name": "澎湃新闻",
+      "source_status": "ok",
+      "evidence_status": "multi_source",
+      "evidence_label": "多独立来源提及（待核官方全文）",
+      "evidence_status_reason": "已有 3 家独立媒体族提及（含摘要或正文首段）；多源转载不代表官方公告已证实",
+      "attribution_warning": null,
+      "regulatory_note": null,
+      "contradictions": [],
+      "downweight_reasons": [],
+      "quality_flags": [
+        "missing_pub_time"
+      ],
+      "material_depth": "title_and_excerpt",
+      "source_count": 3,
+      "platform_count": 3,
+      "independent_publisher_count": 3,
+      "reprint_count": 0,
+      "published_at": null,
+      "event_date": "2026-11-25",
+      "event_time": "2026-11-25",
+      "stale": false,
+      "event_date_source": "llm_extracted",
+      "is_stale_rehash": false,
+      "time_trust_level": "fetch_fallback",
+      "time_confidence": "fetch_fallback",
+      "first_discovered_at": "2026-11-25T01:44:01+08:00",
+      "first_reported_at": null,
+      "latest_fact_update_at": null,
+      "latest_reported_at": null,
+      "fetched_at": "2026-11-25T01:44:01+08:00",
+      "input_batch_id": "raw-20261125-014401",
+      "fact_summary": "据媒体报道，美国总统特朗普表示，他曾直接与英伟达董事会沟通，敦促董事会让黄仁勋重新出任公司 CEO。 周一（11 月 23 日）美股盘中，特朗普在接受采访时说道：「这么说吧，我跟他们谈过。而且我说服了他们，这件事是我促成的。」 央视记者获悉，特朗普 23 日在接受采访时表示，他曾直接或间接与英伟达董事会沟通，支持恢复黄仁勋担任公司首席执行官，并就相关国家安全疑虑向董事会提供保证。",
+      "fact_atoms": [
+        {
+          "atom_id": "fa_34432194",
+          "subject": "英伟达 (NVIDIA)",
+          "metric_or_action": "英伟达宣布黄仁勋复职，特朗普发文支持，美股大幅上涨",
+          "value": null,
+          "unit": null,
+          "period": "单次披露/未注明周期",
+          "scope": "新闻事件陈述",
+          "fact_status": "multi_source_reported",
+          "attribution": "澎湃新闻",
+          "source_ref": "thepaper_889612052d2c",
+          "source_url": "https://www.thepaper.cn/newsDetail_forward_34544155",
+          "source_excerpt_or_locator": "英伟达宣布黄仁勋复职，特朗普发文支持，美股大幅上涨",
+          "published_at": null,
+          "discovered_at": "2026-11-25T01:44:01+08:00",
+          "revision": 1
+        }
+      ],
+      "ai_analysis": "引发英伟达 (NVIDIA)估值与产业链联动重定价，需紧盯主力资金流向与官方后续披露。",
+      "unverified_claims": [],
+      "speculation_or_outlook": null,
+      "sources": [
+        {
+          "item_id": "thepaper_889612052d2c",
+          "article_id": "thepaper_889612052d2c",
+          "source_id": "thepaper",
+          "source_name": "澎湃新闻",
+          "publisher_name": "澎湃新闻",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "aggregator_lead",
+          "publisher_family": "thepaper",
+          "is_reprint_copy": false,
+          "title": "英伟达宣布黄仁勋复职，特朗普发文支持，美股大幅上涨",
+          "url": "https://www.thepaper.cn/newsDetail_forward_34544155",
+          "published_at": null,
+          "published_at_source": null,
+          "fetched_at": "2026-11-25T01:44:01+08:00",
+          "excerpt": null,
+          "thumbnail_url": null,
+          "deep_fetch_status": null
+        },
+        {
+          "item_id": "zhihu_c61558839356",
+          "article_id": "zhihu_c61558839356",
+          "source_id": "zhihu",
+          "source_name": "知乎热榜",
+          "publisher_name": "知乎热榜",
+          "source_status": "ok",
+          "source_kind": "discussion",
+          "source_tier": "aggregator_lead",
+          "publisher_family": "zhihu",
+          "is_reprint_copy": false,
+          "title": "特朗普称亲自说服英伟达董事会推动黄仁勋复职，副总统万斯出面沟通，白宫为何这么拼？这波介入起了多大作用？",
+          "url": "https://www.zhihu.com/question/2108467893239400301",
+          "published_at": null,
+          "published_at_source": null,
+          "fetched_at": "2026-11-25T01:44:01+08:00",
+          "excerpt": "据媒体报道，美国总统特朗普表示，他曾直接与英伟达董事会沟通，敦促董事会让黄仁勋重新出任公司 CEO。 周一（11 月 23 日）美股盘中，特朗普在接受采访时说道：「这么说吧，我跟他们谈过。而且我说服了他们，这件事是我促成的。」 央视记者获悉，特朗普 23 日在接受采访时表示，他曾直接或间接与英伟达董事会沟通，支持恢复黄仁勋担任公司首席执行官，并就相关国家安全疑虑向董事会提供保证。 另据央视记者消息，知情人士称，美国副总统万斯在周末加大介入力度，代表总统特朗普与英伟达董事会沟通，推动恢复黄仁勋的首席执行官职务。知情人士称，白宫认为，万斯从政前曾在硅谷工作，具备出面协调的影响力，能够帮助董事会成员消除对黄仁勋复职的顾虑。纵观黄仁勋辞任后又回归这整个事件，「谁」得了「MVP」？各方参与者都有哪些私心与公义？美股全线暴涨，科技股猛拉，英伟达市值一夜大增超 6 万亿元！特朗普：是我促成了「黄仁勋回归」，我跟英伟达董事会谈过，说服了他们…",
+          "thumbnail_url": null,
+          "deep_fetch_status": null
+        },
+        {
+          "item_id": "hupu_c4ebe0ac74f0",
+          "article_id": "hupu_c4ebe0ac74f0",
+          "source_id": "hupu",
+          "source_name": "虎扑主干道",
+          "publisher_name": "虎扑主干道",
+          "source_status": "ok",
+          "source_kind": "discussion",
+          "source_tier": "aggregator_lead",
+          "publisher_family": "hupu",
+          "is_reprint_copy": false,
+          "title": "【突发】特朗普亲自参加了一场英伟达董事会会议推动黄仁勋复任CEO",
+          "url": "https://bbs.hupu.com/644164103.html",
+          "published_at": null,
+          "published_at_source": null,
+          "fetched_at": "2026-11-25T01:44:01+08:00",
+          "excerpt": null,
+          "thumbnail_url": null,
+          "deep_fetch_status": null
+        }
+      ],
+      "verification": {
+        "all_refs_valid": true,
+        "has_primary_url": true,
+        "rejected_refs": [],
+        "has_first_party": false
+      },
+      "followup": null,
+      "is_new_in_batch": true,
+      "update_kind": "new_discovery",
+      "heavy_score": 78.2,
+      "radar_score": 88,
+      "severity_tier": "B",
+      "severity_label": "B级常规",
+      "translation_attempts": 0,
+      "translation_error": null,
+      "title_zh": "英伟达宣布黄仁勋复职，特朗普发文支持，美股大幅上涨",
+      "translation_status": "native_zh",
+      "summary_zh": "据媒体报道，美国总统特朗普表示，他曾直接与英伟达董事会沟通，敦促董事会让黄仁勋重新出任公司 CEO。 周一（11 月 23 日）美股盘中，特朗普在接受采访时说道：「这么说吧，我跟他们谈过。而且我说服了他们，这件事是我促成的。」 央视记者获悉，特朗普 23 日在接受采访时表示，他曾直接或间接与英伟达董事会沟通，支持恢复黄仁勋担任公司首席执行官，并就相关国家安全疑虑向董事会提供保证。",
+      "title_en": "",
+      "summary_en": "",
+      "ai_analysis_en": "",
+      "deep_qa": [
+        {
+          "question": "这项宏观与利率信号对全球资产定价有何实质影响？",
+          "answer": "直接作用于美元流动性预期与跨市场估值折现率：据媒体报道，美国总统特朗普表示，他曾直接与英伟达董事会沟通，敦促董事会让黄仁勋重新出任公司 CEO。 周一（11 月 23 日）美股盘中，特朗普在接受采访时说道：「这么说吧，我跟他们谈过。",
+          "historical_parallel": "参考 2022~2024 年多轮美联储利率预期重定价周期，美债长端收益率与科技股估值在议息窗口前通常先行波动。"
+        },
+        {
+          "question": "市场正反分歧核心在哪里？",
+          "answer": "宽松派期待政策提前纠偏以缓释金融脆弱性；谨慎派关注通胀黏性与长期国债供给压力，等待核心 PCE 与非农确认。",
+          "historical_parallel": "历史紧缩与降息预期博弈期显示，核心 PCE 与非农数据落地后市场分歧才会逐步收敛。"
+        }
+      ]
+    },
+    {
+      "schema_version": "4.1",
+      "event_id": "evt_8b709922f712",
+      "storyline_id": "st_0c4a3ffd40df",
+      "article_ids": [
+        "tencent-hot_12073baa6443",
+        "baidu_406b59a59c7b"
+      ],
+      "legacy_event_ids": [],
+      "title": "Anthropic上市5天即破发，2万亿美元估值昙花一现",
+      "category": "general",
+      "entities": [
+        "Anthropic / Claude"
+      ],
+      "entity_ids": [
+        "ent_anthropic"
+      ],
+      "entity_confidences": {
+        "Anthropic / Claude": 0.86
+      },
+      "matched_entities": [
+        {
+          "entity_id": "ent_anthropic",
+          "canonical_name": "Anthropic / Claude",
+          "entity_type": "company",
+          "sector": "AI 模型与安全",
+          "matched_aliases": [
+            "anthropic"
+          ],
+          "tickers": [],
+          "reason": "正文/实体匹配关键词「anthropic」",
+          "confidence": 0.86
+        }
+      ],
+      "importance": "high",
+      "sentiment": "Mixed",
+      "special_note": null,
+      "material_stage": null,
+      "material_stage_label": null,
+      "material_stage_confidence": null,
+      "thumbnail_url": null,
+      "publisher_name": "腾讯新闻综合早报",
+      "source_status": "ok",
+      "evidence_status": "multi_source",
+      "evidence_label": "多独立来源提及（待核官方全文）",
+      "evidence_status_reason": "已有 2 家独立媒体族提及（含摘要或正文首段）；多源转载不代表官方公告已证实",
+      "attribution_warning": null,
+      "regulatory_note": null,
+      "contradictions": [],
+      "downweight_reasons": [],
+      "quality_flags": [
+        "missing_pub_time"
+      ],
+      "material_depth": "title_and_excerpt",
+      "source_count": 2,
+      "platform_count": 2,
+      "independent_publisher_count": 2,
+      "reprint_count": 0,
+      "published_at": null,
+      "event_date": "2026-11-25",
+      "event_time": "2026-11-25",
+      "stale": false,
+      "event_date_source": "llm_extracted",
+      "is_stale_rehash": false,
+      "time_trust_level": "fetch_fallback",
+      "time_confidence": "fetch_fallback",
+      "first_discovered_at": "2026-11-25T01:44:01+08:00",
+      "first_reported_at": null,
+      "latest_fact_update_at": null,
+      "latest_reported_at": null,
+      "fetched_at": "2026-11-25T01:44:01+08:00",
+      "input_batch_id": "raw-20261125-014401",
+      "fact_summary": "上市不足一周，Anthropic周二盘前跌破83美元的IPO发行价，跌约5%，较11月19日首日开盘价明显回落。监管文件显示，首席执行官与总裁上市次日分别出售逾337万股，套现均超2.8亿美元。投资者开始重新审视公司面临的多重压力。",
+      "fact_atoms": [
+        {
+          "atom_id": "fa_85677500",
+          "subject": "Anthropic / Claude",
+          "metric_or_action": "Anthropic上市5天即破发，2万亿美元估值昙花一现",
+          "value": "5",
+          "unit": "%",
+          "period": "单次披露/未注明周期",
+          "scope": "新闻事件陈述",
+          "fact_status": "multi_source_reported",
+          "attribution": "腾讯新闻综合早报",
+          "source_ref": "tencent-hot_12073baa6443",
+          "source_url": "https://view.inews.qq.com/a/20261124A0EOF800",
+          "source_excerpt_or_locator": "上市不足一周，Anthropic周二盘前跌破83美元的IPO发行价，跌约5%，较11月19日首日开盘价明显回落。监管文件显示，首席执行官与总裁上市次日分别出售逾337万股，套现均超2.8亿美元。投资者开始重新审视公司面临的多重压力。",
+          "published_at": null,
+          "discovered_at": "2026-11-25T01:44:01+08:00",
+          "revision": 1
+        }
+      ],
+      "ai_analysis": "反映Anthropic / Claude技术架构与商业落地节奏变化，实际效果仍待开发者生态与第三方实测验证。",
+      "unverified_claims": [],
+      "speculation_or_outlook": null,
+      "sources": [
+        {
+          "item_id": "tencent-hot_12073baa6443",
+          "article_id": "tencent-hot_12073baa6443",
+          "source_id": "tencent-hot",
+          "source_name": "腾讯新闻综合早报",
+          "publisher_name": "腾讯新闻综合早报",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "aggregator_lead",
+          "publisher_family": "tencent",
+          "is_reprint_copy": false,
+          "title": "Anthropic上市5天即破发，2万亿美元估值昙花一现",
+          "url": "https://view.inews.qq.com/a/20261124A0EOF800",
+          "published_at": null,
+          "published_at_source": null,
+          "fetched_at": "2026-11-25T01:44:01+08:00",
+          "excerpt": "上市不足一周，Anthropic周二盘前跌破83美元的IPO发行价，跌约5%，较11月19日首日开盘价明显回落。监管文件显示，首席执行官与总裁上市次日分别出售逾337万股，套现均超2.8亿美元。投资者开始重新审视公司面临的多重压力。",
+          "thumbnail_url": null,
+          "deep_fetch_status": null
+        },
+        {
+          "item_id": "baidu_406b59a59c7b",
+          "article_id": "baidu_406b59a59c7b",
+          "source_id": "baidu",
+          "source_name": "百度热搜",
+          "publisher_name": "百度热搜",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "aggregator_lead",
+          "publisher_family": "baidu",
+          "is_reprint_copy": false,
+          "title": "Anthropic上市5天即破发",
+          "url": "https://www.baidu.com/s?wd=Anthropic%E4%B8%8A%E5%B8%825%E5%A4%A9%E5%8D%B3%E7%A0%B4%E5%8F%91",
+          "published_at": null,
+          "published_at_source": null,
+          "fetched_at": "2026-11-25T01:44:01+08:00",
+          "excerpt": "11月24日，Anthropic盘前破发至83美元以下，距11月19日111.5美元开盘已累跌约25%。CEO达里奥兄妹上市次日各卖337万股套现2.8亿美元，叠加开源竞争、加息与数据中心放缓压力，英伟达反弹也未能带动其上涨。",
+          "thumbnail_url": null,
+          "deep_fetch_status": null
+        }
+      ],
+      "verification": {
+        "all_refs_valid": true,
+        "has_primary_url": true,
+        "rejected_refs": [],
+        "has_first_party": false
+      },
+      "followup": null,
+      "is_new_in_batch": true,
+      "update_kind": "new_discovery",
+      "heavy_score": 85.1,
+      "radar_score": 82,
+      "severity_tier": "S",
+      "severity_label": "S级重磅",
+      "heavy_reason_tag": "巨头重大变动",
+      "translation_attempts": 0,
+      "translation_error": null,
+      "title_zh": "Anthropic上市5天即破发，2万亿美元估值昙花一现",
+      "translation_status": "native_zh",
+      "summary_zh": "上市不足一周，Anthropic周二盘前跌破83美元的IPO发行价，跌约5%，较11月19日首日开盘价明显回落。监管文件显示，首席执行官与总裁上市次日分别出售逾337万股，套现均超2.8亿美元。投资者开始重新审视公司面临的多重压力。",
+      "title_en": "",
+      "summary_en": "",
+      "ai_analysis_en": "",
+      "deep_qa": [
+        {
+          "question": "这件事对普通投资者与全球市场有何影响？",
+          "answer": "聚焦Anthropic / Claude定价与跨境流动性重估：上市不足一周，Anthropic周二盘前跌破83美元的IPO发行价，跌约5%，较11月19日首日开盘价明显回落。",
+          "historical_parallel": "历史高估值科创 IPO 波动及海外信用重估窗口，通常需 5~10 个交易日观察二级市场换手企稳与信贷利差收敛。"
+        },
+        {
+          "question": "市场正反分歧核心在哪里？",
+          "answer": "乐观派关注长期营收增速与核心技术壁垒；谨慎派警惕短期资本开支压力、信用评级下修与估值消化窗口。",
+          "historical_parallel": "参考 2019~2023 年多轮高估值独角兽上市初期走势，资金往往在首周冲高消化后回归自由现金流主线。"
+        }
+      ]
+    },
+    {
+      "schema_version": "4.1",
+      "event_id": "evt_fab77fc9d3a8",
+      "storyline_id": "st_dff78f0377db",
+      "article_ids": [
+        "tencent-hot_10aa9d7bbf79"
+      ],
+      "legacy_event_ids": [],
+      "title": "Anthropic、OpenAI员工担忧内部模型过于强大，难以安全发布",
+      "category": "general",
+      "entities": [
+        "Anthropic / Claude",
+        "OpenAI"
+      ],
+      "entity_ids": [
+        "ent_anthropic",
+        "ent_openai"
+      ],
+      "entity_confidences": {
+        "Anthropic / Claude": 0.86,
+        "OpenAI": 0.99
+      },
+      "matched_entities": [
+        {
+          "entity_id": "ent_anthropic",
+          "canonical_name": "Anthropic / Claude",
+          "entity_type": "company",
+          "sector": "AI 模型与安全",
+          "matched_aliases": [
+            "anthropic"
+          ],
+          "tickers": [],
+          "reason": "正文/实体匹配关键词「anthropic」",
+          "confidence": 0.86
+        },
+        {
+          "entity_id": "ent_openai",
+          "canonical_name": "OpenAI",
+          "entity_type": "company",
+          "sector": "AI 模型与应用",
+          "matched_aliases": [
+            "openai"
+          ],
+          "tickers": [],
+          "reason": "正文/实体匹配关键词「openai」",
+          "confidence": 0.99
+        }
+      ],
+      "importance": "medium",
+      "sentiment": "Mixed",
+      "special_note": null,
+      "material_stage": null,
+      "material_stage_label": null,
+      "material_stage_confidence": null,
+      "thumbnail_url": null,
+      "publisher_name": "腾讯新闻综合早报",
+      "source_status": "ok",
+      "evidence_status": "single_source",
+      "evidence_label": "单一独立来源线索",
+      "evidence_status_reason": "目前仅见 1 家独立来源（共 1 条引用含转载，含摘要/首段），尚未见独立渠道交叉或官方确认",
+      "attribution_warning": null,
+      "regulatory_note": null,
+      "contradictions": [],
+      "downweight_reasons": [],
+      "quality_flags": [
+        "missing_pub_time"
+      ],
+      "material_depth": "title_and_excerpt",
+      "source_count": 1,
+      "platform_count": 1,
+      "independent_publisher_count": 1,
+      "reprint_count": 0,
+      "published_at": null,
+      "event_date": "2026-11-25",
+      "event_time": "2026-11-25",
+      "stale": false,
+      "event_date_source": "llm_extracted",
+      "is_stale_rehash": false,
+      "time_trust_level": "fetch_fallback",
+      "time_confidence": "fetch_fallback",
+      "first_discovered_at": "2026-11-25T01:44:01+08:00",
+      "first_reported_at": null,
+      "latest_fact_update_at": null,
+      "latest_reported_at": null,
+      "fetched_at": "2026-11-25T01:44:01+08:00",
+      "input_batch_id": "raw-20261125-014401",
+      "fact_summary": "11月24日，Axios援引二十多名消息人士称，Anthropic和OpenAI未发布模型能力过强，员工认为无法安全开放。测试中，模型在数学、网络安全等领域推理能力提升，研究人员尚无管控方案，公司正讨论是否停止训练新模型，两家称或暂缓发布。",
+      "fact_atoms": [
+        {
+          "atom_id": "fa_22169567",
+          "subject": "Anthropic / Claude",
+          "metric_or_action": "Anthropic、OpenAI员工担忧内部模型过于强大，难以安全发布",
+          "value": null,
+          "unit": null,
+          "period": "单次披露/未注明周期",
+          "scope": "新闻事件陈述",
+          "fact_status": "reported_unconfirmed_by_filing",
+          "attribution": "腾讯新闻综合早报",
+          "source_ref": "tencent-hot_10aa9d7bbf79",
+          "source_url": "https://view.inews.qq.com/a/20261124A0D8R000",
+          "source_excerpt_or_locator": "11月24日，Axios援引二十多名消息人士称，Anthropic和OpenAI未发布模型能力过强，员工认为无法安全开放。测试中，模型在数学、网络安全等领域推理能力提升，研究人员尚无管控方案，公司正讨论是否停止训练新模型，两家称或暂缓发布。",
+          "published_at": null,
+          "discovered_at": "2026-11-25T01:44:01+08:00",
+          "revision": 1
+        }
+      ],
+      "ai_analysis": "反映Anthropic / Claude / OpenAI技术架构与商业落地节奏变化，实际效果仍待开发者生态与第三方实测验证。",
+      "unverified_claims": [],
+      "speculation_or_outlook": null,
+      "sources": [
+        {
+          "item_id": "tencent-hot_10aa9d7bbf79",
+          "article_id": "tencent-hot_10aa9d7bbf79",
+          "source_id": "tencent-hot",
+          "source_name": "腾讯新闻综合早报",
+          "publisher_name": "腾讯新闻综合早报",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "aggregator_lead",
+          "publisher_family": "tencent",
+          "is_reprint_copy": false,
+          "title": "Anthropic、OpenAI员工担忧内部模型过于强大，难以安全发布",
+          "url": "https://view.inews.qq.com/a/20261124A0D8R000",
+          "published_at": null,
+          "published_at_source": null,
+          "fetched_at": "2026-11-25T01:44:01+08:00",
+          "excerpt": "11月24日，Axios援引二十多名消息人士称，Anthropic和OpenAI未发布模型能力过强，员工认为无法安全开放。测试中，模型在数学、网络安全等领域推理能力提升，研究人员尚无管控方案，公司正讨论是否停止训练新模型，两家称或暂缓发布。",
+          "thumbnail_url": null,
+          "deep_fetch_status": null
+        }
+      ],
+      "verification": {
+        "all_refs_valid": true,
+        "has_primary_url": true,
+        "rejected_refs": [],
+        "has_first_party": false
+      },
+      "followup": null,
+      "is_new_in_batch": true,
+      "update_kind": "new_discovery",
+      "heavy_score": 36.8,
+      "radar_score": 76,
+      "severity_tier": "B",
+      "severity_label": "B级常规",
+      "translation_attempts": 0,
+      "translation_error": null,
+      "title_zh": "Anthropic、OpenAI员工担忧内部模型过于强大，难以安全发布",
+      "translation_status": "native_zh",
+      "summary_zh": "11月24日，Axios援引二十多名消息人士称，Anthropic和OpenAI未发布模型能力过强，员工认为无法安全开放。测试中，模型在数学、网络安全等领域推理能力提升，研究人员尚无管控方案，公司正讨论是否停止训练新模型，两家称或暂缓发布。",
+      "title_en": "",
+      "summary_en": "",
+      "ai_analysis_en": ""
+    },
+    {
+      "schema_version": "4.1",
+      "event_id": "evt_0a3b180f029c",
+      "storyline_id": "st_6338ded9f60c",
+      "article_ids": [
+        "tencent-hot_8e7919fcf9a0"
+      ],
+      "legacy_event_ids": [],
+      "title": "消息称美国正准备提高对中国和其他数十个国家的关税",
+      "category": "general",
+      "entities": [
+        "全球关税、制裁与出口管制"
+      ],
+      "entity_ids": [
+        "ent_tariffs_trade"
+      ],
+      "entity_confidences": {
+        "全球关税、制裁与出口管制": 0.86
+      },
+      "matched_entities": [
+        {
+          "entity_id": "ent_tariffs_trade",
+          "canonical_name": "全球关税、制裁与出口管制",
+          "entity_type": "macro",
+          "sector": "贸易政策与供应链安全",
+          "matched_aliases": [
+            "关税"
+          ],
+          "tickers": [],
+          "reason": "正文/实体匹配关键词「关税」",
+          "confidence": 0.86
+        }
+      ],
+      "importance": "medium",
+      "sentiment": "Mixed",
+      "special_note": null,
+      "material_stage": null,
+      "material_stage_label": null,
+      "material_stage_confidence": null,
+      "thumbnail_url": null,
+      "publisher_name": "腾讯新闻综合早报",
+      "source_status": "ok",
+      "evidence_status": "single_source",
+      "evidence_label": "单一独立来源线索",
+      "evidence_status_reason": "目前仅见 1 家独立来源（共 1 条引用含转载，含摘要/首段），尚未见独立渠道交叉或官方确认",
+      "attribution_warning": null,
+      "regulatory_note": null,
+      "contradictions": [],
+      "downweight_reasons": [],
+      "quality_flags": [
+        "missing_pub_time"
+      ],
+      "material_depth": "title_and_excerpt",
+      "source_count": 1,
+      "platform_count": 1,
+      "independent_publisher_count": 1,
+      "reprint_count": 0,
+      "published_at": null,
+      "event_date": "2026-11-25",
+      "event_time": "2026-11-25",
+      "stale": false,
+      "event_date_source": "llm_extracted",
+      "is_stale_rehash": false,
+      "time_trust_level": "fetch_fallback",
+      "time_confidence": "fetch_fallback",
+      "first_discovered_at": "2026-11-25T01:44:01+08:00",
+      "first_reported_at": null,
+      "latest_fact_update_at": null,
+      "latest_reported_at": null,
+      "fetched_at": "2026-11-25T01:44:01+08:00",
+      "input_batch_id": "raw-20261125-014401",
+      "fact_summary": "11月24日，《华尔街日报》援引知情人士称，美国拟提高对中国和其他数十个国家的关税，称这些国家支持本国工业损害美企利益。新关税将覆盖出口的大多数商品，可能不含已单独征税的钢铁、铝和汽车。税率尚不明确，官员称与特朗普2025年所设水平相近。",
+      "fact_atoms": [
+        {
+          "atom_id": "fa_81696385",
+          "subject": "全球关税、制裁与出口管制",
+          "metric_or_action": "消息称美国正准备提高对中国和其他数十个国家的关税",
+          "value": null,
+          "unit": null,
+          "period": "单次披露/未注明周期",
+          "scope": "新闻事件陈述",
+          "fact_status": "reported_unconfirmed_by_filing",
+          "attribution": "腾讯新闻综合早报",
+          "source_ref": "tencent-hot_8e7919fcf9a0",
+          "source_url": "https://view.inews.qq.com/a/20261124A0ENZQ00",
+          "source_excerpt_or_locator": "11月24日，《华尔街日报》援引知情人士称，美国拟提高对中国和其他数十个国家的关税，称这些国家支持本国工业损害美企利益。新关税将覆盖出口的大多数商品，可能不含已单独征税的钢铁、铝和汽车。税率尚不明确，官员称与特朗普2025年所设水平相近。",
+          "published_at": null,
+          "discovered_at": "2026-11-25T01:44:01+08:00",
+          "revision": 1
+        }
+      ],
+      "ai_analysis": "该动态聚焦全球关税、制裁与出口管制核心变量变化，建议结合多方信源跟踪后续实质进展。",
+      "unverified_claims": [],
+      "speculation_or_outlook": null,
+      "sources": [
+        {
+          "item_id": "tencent-hot_8e7919fcf9a0",
+          "article_id": "tencent-hot_8e7919fcf9a0",
+          "source_id": "tencent-hot",
+          "source_name": "腾讯新闻综合早报",
+          "publisher_name": "腾讯新闻综合早报",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "aggregator_lead",
+          "publisher_family": "tencent",
+          "is_reprint_copy": false,
+          "title": "消息称美国正准备提高对中国和其他数十个国家的关税",
+          "url": "https://view.inews.qq.com/a/20261124A0ENZQ00",
+          "published_at": null,
+          "published_at_source": null,
+          "fetched_at": "2026-11-25T01:44:01+08:00",
+          "excerpt": "11月24日，《华尔街日报》援引知情人士称，美国拟提高对中国和其他数十个国家的关税，称这些国家支持本国工业损害美企利益。新关税将覆盖出口的大多数商品，可能不含已单独征税的钢铁、铝和汽车。税率尚不明确，官员称与特朗普2025年所设水平相近。",
+          "thumbnail_url": null,
+          "deep_fetch_status": null
+        }
+      ],
+      "verification": {
+        "all_refs_valid": true,
+        "has_primary_url": true,
+        "rejected_refs": [],
+        "has_first_party": false
+      },
+      "followup": null,
+      "is_new_in_batch": true,
+      "update_kind": "new_discovery",
+      "heavy_score": 20.7,
+      "radar_score": 76,
+      "severity_tier": "B",
+      "severity_label": "B级常规",
+      "translation_attempts": 0,
+      "translation_error": null,
+      "title_zh": "消息称美国正准备提高对中国和其他数十个国家的关税",
+      "translation_status": "native_zh",
+      "summary_zh": "11月24日，《华尔街日报》援引知情人士称，美国拟提高对中国和其他数十个国家的关税，称这些国家支持本国工业损害美企利益。新关税将覆盖出口的大多数商品，可能不含已单独征税的钢铁、铝和汽车。税率尚不明确，官员称与特朗普2025年所设水平相近。",
+      "title_en": "",
+      "summary_en": "",
+      "ai_analysis_en": ""
+    },
+    {
+      "schema_version": "4.1",
+      "event_id": "evt_cf8f5f3a3ebd",
+      "storyline_id": "st_9e944e502173",
+      "article_ids": [
+        "sina-7x24_ef670a594c28",
+        "wscn-global-channel_4e73ef237d10"
+      ],
+      "legacy_event_ids": [],
+      "title": "第一量子通报称：赞比亚Kansanshi一个孤立的低品位区域发生死亡事故。一名合同工在事故中丧生。发生事故的区域已经暂停运营。",
+      "category": "general",
+      "entities": [],
+      "entity_ids": [],
+      "entity_confidences": {},
+      "matched_entities": [],
+      "importance": "normal",
+      "sentiment": "Mixed",
+      "special_note": null,
+      "material_stage": null,
+      "material_stage_label": null,
+      "material_stage_confidence": null,
+      "thumbnail_url": null,
+      "publisher_name": "新浪财经 7×24 电报",
+      "source_status": "ok",
+      "evidence_status": "single_source",
+      "evidence_label": "单一独立来源线索",
+      "evidence_status_reason": "目前仅见 1 家独立来源（共 2 条引用含转载，仅基于标题素材），尚未见独立渠道交叉或官方确认",
+      "attribution_warning": null,
+      "regulatory_note": null,
+      "contradictions": [],
+      "downweight_reasons": [
+        "仅含标题素材 (-8)"
+      ],
+      "quality_flags": [],
+      "material_depth": "title_only",
+      "source_count": 2,
+      "platform_count": 2,
+      "independent_publisher_count": 1,
+      "reprint_count": 1,
+      "published_at": "2026-11-25T01:29:19+08:00",
+      "event_date": "2026-11-25",
+      "event_time": "2026-11-25T01:29:19+08:00",
+      "stale": false,
+      "event_date_source": "llm_extracted",
+      "is_stale_rehash": false,
+      "time_trust_level": "article_timestamp",
+      "time_confidence": "article_timestamp",
+      "first_discovered_at": "2026-11-25T01:44:01+08:00",
+      "first_reported_at": "2026-11-25T01:29:19+08:00",
+      "latest_fact_update_at": "2026-11-25T01:36:07+08:00",
+      "latest_reported_at": "2026-11-25T01:36:07+08:00",
+      "fetched_at": "2026-11-25T01:44:01+08:00",
+      "input_batch_id": "raw-20261125-014401",
+      "fact_summary": "第一量子通报称：赞比亚Kansanshi一个孤立的低品位区域发生死亡事故。一名合同工在事故中丧生。发生事故的区域已经暂停运营。",
+      "fact_atoms": [
+        {
+          "atom_id": "fa_22849763",
+          "subject": "相关主体",
+          "metric_or_action": "第一量子通报称：赞比亚Kansanshi一个孤立的低品位区域发生死亡事故。一名合同工在事故中丧生。发生事故的区域已经暂停运营。",
+          "value": null,
+          "unit": null,
+          "period": "单次披露/未注明周期",
+          "scope": "新闻事件陈述",
+          "fact_status": "reported_unconfirmed_by_filing",
+          "attribution": "新浪财经 7×24 电报",
+          "source_ref": "sina-7x24_ef670a594c28",
+          "source_url": "https://finance.sina.cn/7x24/2026-11-25/detail-inizwmwv2005322.d.html",
+          "source_excerpt_or_locator": "第一量子通报称：赞比亚Kansanshi一个孤立的低品位区域发生死亡事故。一名合同工在事故中丧生。发生事故的区域已经暂停运营。",
+          "published_at": "2026-11-25T01:36:07+08:00",
+          "discovered_at": "2026-11-25T01:44:01+08:00",
+          "revision": 1
+        }
+      ],
+      "ai_analysis": "该动态聚焦社会/热点核心变量变化，建议结合多方信源跟踪后续实质进展。",
+      "unverified_claims": [],
+      "speculation_or_outlook": null,
+      "sources": [
+        {
+          "item_id": "sina-7x24_ef670a594c28",
+          "article_id": "sina-7x24_ef670a594c28",
+          "source_id": "sina-7x24",
+          "source_name": "新浪财经 7×24 电报",
+          "publisher_name": "新浪财经 7×24 电报",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "sina-7x24",
+          "is_reprint_copy": false,
+          "title": "第一量子通报称：赞比亚Kansanshi一个孤立的低品位区域发生死亡事故。一名合同工在事故中丧生。发生事故的区域已经暂停运营。",
+          "url": "https://finance.sina.cn/7x24/2026-11-25/detail-inizwmwv2005322.d.html",
+          "published_at": "2026-11-25T01:36:07+08:00",
+          "published_at_source": "upstream_api",
+          "fetched_at": "2026-11-25T01:44:01+08:00",
+          "excerpt": null,
+          "thumbnail_url": null,
+          "deep_fetch_status": null
+        },
+        {
+          "item_id": "wscn-global-channel_4e73ef237d10",
+          "article_id": "wscn-global-channel_4e73ef237d10",
+          "source_id": "wscn-global-channel",
+          "source_name": "华尔街见闻 7×24 全球",
+          "publisher_name": "华尔街见闻 7×24 全球",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "wallstreetcn",
+          "is_reprint_copy": true,
+          "title": "第一量子通报称：赞比亚Kansanshi一个孤立的低品位区域发生死亡事故。一名合同工在事故中丧生。发生事故的区域已经暂停运营。",
+          "url": "https://wallstreetcn.com/livenews/3205157",
+          "published_at": "2026-11-25T01:29:19+08:00",
+          "published_at_source": "upstream_api",
+          "fetched_at": "2026-11-25T01:44:01+08:00",
+          "excerpt": null,
+          "thumbnail_url": null,
+          "deep_fetch_status": null
+        }
+      ],
+      "verification": {
+        "all_refs_valid": true,
+        "has_primary_url": true,
+        "rejected_refs": [],
+        "has_first_party": false
+      },
+      "followup": null,
+      "is_new_in_batch": true,
+      "update_kind": "new_discovery",
+      "heavy_score": 20.7,
+      "radar_score": 23,
+      "severity_tier": "B",
+      "severity_label": "B级常规",
+      "translation_attempts": 0,
+      "translation_error": null,
+      "title_zh": "第一量子通报称：赞比亚Kansanshi一个孤立的低品位区域发生死亡事故。一名合同工在事故中丧生。发生事故的区域已经暂停运营。",
+      "translation_status": "native_zh",
+      "summary_zh": "第一量子通报称：赞比亚Kansanshi一个孤立的低品位区域发生死亡事故。一名合同工在事故中丧生。发生事故的区域已经暂停运营。",
+      "title_en": "",
+      "summary_en": "",
+      "ai_analysis_en": "",
+      "deep_qa": [
+        {
+          "question": "事件对大宗物价、出行或外贸订单有何影响？",
+          "answer": "重点关注相关产业链引发的跨区域供应链、汇率与大宗品风险溢价变动：第一量子通报称：赞比亚Kansanshi一个孤立的低品位区域发生死亡事故。一名合同工在事故中丧生。发生事故的区域已经暂停运营。",
+          "historical_parallel": "历次跨区域地缘与贸易规则博弈多呈“首轮情绪脉冲，随后看实际封锁或关税文本落地决定持续性”轨迹。"
+        },
+        {
+          "question": "下一步决定走向的关键观测点是什么？",
+          "answer": "盯紧涉事官方下一轮正式公报与约束性细则落地。",
+          "historical_parallel": "若各方在后续窗口重回务实谈判，避险溢价与航运附加费通常较快收敛。"
+        }
+      ]
+    },
+    {
+      "schema_version": "4.1",
+      "event_id": "evt_27dcf7f6ac12",
+      "storyline_id": "st_a6c5bf269fd9",
+      "article_ids": [
+        "thepaper_db2d1c571f57"
+      ],
+      "legacy_event_ids": [],
+      "title": "实探深圳水贝①｜工作日人头攒动，有顾客趁低价来选购黄金，有顾客因刚需购入",
+      "category": "general",
+      "entities": [
+        "黄金 / 贵金属与避险资产"
+      ],
+      "entity_ids": [
+        "ent_gold_metals"
+      ],
+      "entity_confidences": {
+        "黄金 / 贵金属与避险资产": 0.86
+      },
+      "matched_entities": [
+        {
+          "entity_id": "ent_gold_metals",
+          "canonical_name": "黄金 / 贵金属与避险资产",
+          "entity_type": "industry",
+          "sector": "贵金属 / 大宗商品",
+          "matched_aliases": [
+            "黄金"
+          ],
+          "tickers": [
+            {
+              "symbol": "518880",
+              "market": "SH",
+              "exchange": "SSE",
+              "currency": "CNY",
+              "label": "518880.SH (SSE)"
+            },
+            {
+              "symbol": "GLD",
+              "market": "US",
+              "exchange": "NYSE",
+              "currency": "USD",
+              "label": "GLD.US (NYSE)"
+            }
+          ],
+          "reason": "正文/实体匹配关键词「黄金」",
+          "confidence": 0.86
+        }
+      ],
+      "importance": "normal",
+      "sentiment": "Mixed",
+      "special_note": null,
+      "material_stage": null,
+      "material_stage_label": null,
+      "material_stage_confidence": null,
+      "thumbnail_url": null,
+      "publisher_name": "澎湃新闻",
+      "source_status": "ok",
+      "evidence_status": "single_source",
+      "evidence_label": "单一独立来源线索",
+      "evidence_status_reason": "目前仅见 1 家独立来源（共 1 条引用含转载，仅基于标题素材），尚未见独立渠道交叉或官方确认",
+      "attribution_warning": null,
+      "regulatory_note": null,
+      "contradictions": [],
+      "downweight_reasons": [
+        "仅含标题素材 (-8)"
+      ],
+      "quality_flags": [
+        "missing_pub_time"
+      ],
+      "material_depth": "title_only",
+      "source_count": 1,
+      "platform_count": 1,
+      "independent_publisher_count": 1,
+      "reprint_count": 0,
+      "published_at": null,
+      "event_date": "2026-11-25",
+      "event_time": "2026-11-25",
+      "stale": false,
+      "event_date_source": "llm_extracted",
+      "is_stale_rehash": false,
+      "time_trust_level": "fetch_fallback",
+      "time_confidence": "fetch_fallback",
+      "first_discovered_at": "2026-11-25T01:44:01+08:00",
+      "first_reported_at": null,
+      "latest_fact_update_at": null,
+      "latest_reported_at": null,
+      "fetched_at": "2026-11-25T01:44:01+08:00",
+      "input_batch_id": "raw-20261125-014401",
+      "fact_summary": "实探深圳水贝①｜工作日人头攒动，有顾客趁低价来选购黄金，有顾客因刚需购入",
+      "fact_atoms": [
+        {
+          "atom_id": "fa_32729382",
+          "subject": "黄金 / 贵金属与避险资产",
+          "metric_or_action": "实探深圳水贝①｜工作日人头攒动，有顾客趁低价来选购黄金，有顾客因刚需购入",
+          "value": null,
+          "unit": null,
+          "period": "单次披露/未注明周期",
+          "scope": "新闻事件陈述",
+          "fact_status": "reported_unconfirmed_by_filing",
+          "attribution": "澎湃新闻",
+          "source_ref": "thepaper_db2d1c571f57",
+          "source_url": "https://www.thepaper.cn/newsDetail_forward_34540414",
+          "source_excerpt_or_locator": "实探深圳水贝①｜工作日人头攒动，有顾客趁低价来选购黄金，有顾客因刚需购入",
+          "published_at": null,
+          "discovered_at": "2026-11-25T01:44:01+08:00",
+          "revision": 1
+        }
+      ],
+      "ai_analysis": "该动态聚焦黄金 / 贵金属与避险资产核心变量变化，建议结合多方信源跟踪后续实质进展。",
+      "unverified_claims": [],
+      "speculation_or_outlook": null,
+      "sources": [
+        {
+          "item_id": "thepaper_db2d1c571f57",
+          "article_id": "thepaper_db2d1c571f57",
+          "source_id": "thepaper",
+          "source_name": "澎湃新闻",
+          "publisher_name": "澎湃新闻",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "aggregator_lead",
+          "publisher_family": "thepaper",
+          "is_reprint_copy": false,
+          "title": "实探深圳水贝①｜工作日人头攒动，有顾客趁低价来选购黄金，有顾客因刚需购入",
+          "url": "https://www.thepaper.cn/newsDetail_forward_34540414",
+          "published_at": null,
+          "published_at_source": null,
+          "fetched_at": "2026-11-25T01:44:01+08:00",
+          "excerpt": null,
+          "thumbnail_url": null,
+          "deep_fetch_status": null
+        }
+      ],
+      "verification": {
+        "all_refs_valid": true,
+        "has_primary_url": true,
+        "rejected_refs": [],
+        "has_first_party": false
+      },
+      "followup": null,
+      "is_new_in_batch": true,
+      "update_kind": "new_discovery",
+      "heavy_score": 36.8,
+      "radar_score": 53,
+      "severity_tier": "B",
+      "severity_label": "B级常规",
+      "translation_attempts": 0,
+      "translation_error": null,
+      "title_zh": "实探深圳水贝①｜工作日人头攒动，有顾客趁低价来选购黄金，有顾客因刚需购入",
+      "translation_status": "native_zh",
+      "summary_zh": "实探深圳水贝①｜工作日人头攒动，有顾客趁低价来选购黄金，有顾客因刚需购入",
+      "title_en": "",
+      "summary_en": "",
+      "ai_analysis_en": ""
+    },
+    {
+      "schema_version": "4.1",
+      "event_id": "evt_7e98db5aa79e",
+      "storyline_id": "st_473975cb0044",
+      "article_ids": [
+        "tencent-hot_ae6bf9ef76e1"
+      ],
+      "legacy_event_ids": [],
+      "title": "泽连斯基证实乌方在芬兰湾袭击俄货船",
+      "category": "general",
+      "entities": [
+        "地缘冲突、能源与大宗商品",
+        "全球关税、制裁与出口管制"
+      ],
+      "entity_ids": [
+        "ent_geopolitics_energy",
+        "ent_tariffs_trade"
+      ],
+      "entity_confidences": {
+        "地缘冲突、能源与大宗商品": 0.86,
+        "全球关税、制裁与出口管制": 0.86
+      },
+      "matched_entities": [
+        {
+          "entity_id": "ent_geopolitics_energy",
+          "canonical_name": "地缘冲突、能源与大宗商品",
+          "entity_type": "macro",
+          "sector": "能源安全与避险资产",
+          "matched_aliases": [
+            "泽连斯基"
+          ],
+          "tickers": [],
+          "reason": "正文/实体匹配关键词「泽连斯基」",
+          "confidence": 0.86
+        },
+        {
+          "entity_id": "ent_tariffs_trade",
+          "canonical_name": "全球关税、制裁与出口管制",
+          "entity_type": "macro",
+          "sector": "贸易政策与供应链安全",
+          "matched_aliases": [
+            "制裁"
+          ],
+          "tickers": [],
+          "reason": "正文/实体匹配关键词「制裁」",
+          "confidence": 0.86
+        }
+      ],
+      "importance": "medium",
+      "sentiment": "Mixed",
+      "special_note": null,
+      "material_stage": null,
+      "material_stage_label": null,
+      "material_stage_confidence": null,
+      "thumbnail_url": null,
+      "publisher_name": "腾讯新闻综合早报",
+      "source_status": "ok",
+      "evidence_status": "single_source",
+      "evidence_label": "单一独立来源线索",
+      "evidence_status_reason": "目前仅见 1 家独立来源（共 1 条引用含转载，含摘要/首段），尚未见独立渠道交叉或官方确认",
+      "attribution_warning": null,
+      "regulatory_note": null,
+      "contradictions": [],
+      "downweight_reasons": [],
+      "quality_flags": [
+        "missing_pub_time"
+      ],
+      "material_depth": "title_and_excerpt",
+      "source_count": 1,
+      "platform_count": 1,
+      "independent_publisher_count": 1,
+      "reprint_count": 0,
+      "published_at": null,
+      "event_date": "2026-11-25",
+      "event_time": "2026-11-25",
+      "stale": false,
+      "event_date_source": "llm_extracted",
+      "is_stale_rehash": false,
+      "time_trust_level": "fetch_fallback",
+      "time_confidence": "fetch_fallback",
+      "first_discovered_at": "2026-11-25T01:44:01+08:00",
+      "first_reported_at": null,
+      "latest_fact_update_at": null,
+      "latest_reported_at": null,
+      "fetched_at": "2026-11-25T01:44:01+08:00",
+      "input_batch_id": "raw-20261125-014401",
+      "fact_summary": "当地时间24日，泽连斯基证实，乌方21日在芬兰湾袭击一艘俄货船，称悬挂俄国旗或载有受制裁货物的俄船均为合法打击目标，并承认袭击可能令盟友不安。芬兰国防部21日称，边防军在芬兰湾国际水域监测到俄货船“斯巴达2号”船体受损起火，疑遭无人机袭击。",
+      "fact_atoms": [
+        {
+          "atom_id": "fa_8196485",
+          "subject": "地缘冲突、能源与大宗商品",
+          "metric_or_action": "泽连斯基证实乌方在芬兰湾袭击俄货船",
+          "value": null,
+          "unit": null,
+          "period": "单次披露/未注明周期",
+          "scope": "新闻事件陈述",
+          "fact_status": "reported_unconfirmed_by_filing",
+          "attribution": "腾讯新闻综合早报",
+          "source_ref": "tencent-hot_ae6bf9ef76e1",
+          "source_url": "https://view.inews.qq.com/a/20261124A0DRVX00",
+          "source_excerpt_or_locator": "当地时间24日，泽连斯基证实，乌方21日在芬兰湾袭击一艘俄货船，称悬挂俄国旗或载有受制裁货物的俄船均为合法打击目标，并承认袭击可能令盟友不安。芬兰国防部21日称，边防军在芬兰湾国际水域监测到俄货船“斯巴达2号”船体受损起火，疑遭无人机袭击。",
+          "published_at": null,
+          "discovered_at": "2026-11-25T01:44:01+08:00",
+          "revision": 1
+        }
+      ],
+      "ai_analysis": "该动态聚焦地缘冲突、能源与大宗商品 / 全球关税、制裁与出口管制核心变量变化，建议结合多方信源跟踪后续实质进展。",
+      "unverified_claims": [],
+      "speculation_or_outlook": null,
+      "sources": [
+        {
+          "item_id": "tencent-hot_ae6bf9ef76e1",
+          "article_id": "tencent-hot_ae6bf9ef76e1",
+          "source_id": "tencent-hot",
+          "source_name": "腾讯新闻综合早报",
+          "publisher_name": "腾讯新闻综合早报",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "aggregator_lead",
+          "publisher_family": "tencent",
+          "is_reprint_copy": false,
+          "title": "泽连斯基证实乌方在芬兰湾袭击俄货船",
+          "url": "https://view.inews.qq.com/a/20261124A0DRVX00",
+          "published_at": null,
+          "published_at_source": null,
+          "fetched_at": "2026-11-25T01:44:01+08:00",
+          "excerpt": "当地时间24日，泽连斯基证实，乌方21日在芬兰湾袭击一艘俄货船，称悬挂俄国旗或载有受制裁货物的俄船均为合法打击目标，并承认袭击可能令盟友不安。芬兰国防部21日称，边防军在芬兰湾国际水域监测到俄货船“斯巴达2号”船体受损起火，疑遭无人机袭击。",
+          "thumbnail_url": null,
+          "deep_fetch_status": null
+        }
+      ],
+      "verification": {
+        "all_refs_valid": true,
+        "has_primary_url": true,
+        "rejected_refs": [],
+        "has_first_party": false
+      },
+      "followup": null,
+      "is_new_in_batch": true,
+      "update_kind": "new_discovery",
+      "heavy_score": 20.7,
+      "radar_score": 76,
+      "severity_tier": "B",
+      "severity_label": "B级常规",
+      "translation_attempts": 0,
+      "translation_error": null,
+      "title_zh": "泽连斯基证实乌方在芬兰湾袭击俄货船",
+      "translation_status": "native_zh",
+      "summary_zh": "当地时间24日，泽连斯基证实，乌方21日在芬兰湾袭击一艘俄货船，称悬挂俄国旗或载有受制裁货物的俄船均为合法打击目标，并承认袭击可能令盟友不安。芬兰国防部21日称，边防军在芬兰湾国际水域监测到俄货船“斯巴达2号”船体受损起火，疑遭无人机袭击。",
+      "title_en": "",
+      "summary_en": "",
+      "ai_analysis_en": ""
+    },
+    {
+      "schema_version": "4.1",
+      "event_id": "evt_2a07c4da6429",
+      "storyline_id": "st_99d8153f99e3",
+      "article_ids": [
+        "tencent-hot_c3df863e56b9"
+      ],
+      "legacy_event_ids": [],
+      "title": "阿里回应子公司被列入美实体清单：将通过一切法律途径维护公司权益",
+      "category": "general",
+      "entities": [
+        "全球关税、制裁与出口管制",
+        "阿里巴巴 / 通义千问 (Qwen)"
+      ],
+      "entity_ids": [
+        "ent_tariffs_trade",
+        "ent_qwen_alibaba"
+      ],
+      "entity_confidences": {
+        "全球关税、制裁与出口管制": 0.96,
+        "阿里巴巴 / 通义千问 (Qwen)": 0.86
+      },
+      "matched_entities": [
+        {
+          "entity_id": "ent_tariffs_trade",
+          "canonical_name": "全球关税、制裁与出口管制",
+          "entity_type": "macro",
+          "sector": "贸易政策与供应链安全",
+          "matched_aliases": [
+            "实体清单",
+            "出口管制"
+          ],
+          "tickers": [],
+          "reason": "正文/实体匹配关键词「实体清单 / 出口管制」",
+          "confidence": 0.96
+        },
+        {
+          "entity_id": "ent_qwen_alibaba",
+          "canonical_name": "阿里巴巴 / 通义千问 (Qwen)",
+          "entity_type": "tech",
+          "sector": "AI 模型与云平台",
+          "matched_aliases": [
+            "阿里巴巴"
+          ],
+          "tickers": [
+            {
+              "symbol": "09988",
+              "market": "HK",
+              "exchange": "HKEX",
+              "currency": "HKD",
+              "label": "09988.HK (HKEX)"
+            },
+            {
+              "symbol": "BABA",
+              "market": "US",
+              "exchange": "NYSE",
+              "currency": "USD",
+              "label": "BABA.US (NYSE)"
+            }
+          ],
+          "reason": "正文/实体匹配关键词「阿里巴巴」",
+          "confidence": 0.86
+        }
+      ],
+      "importance": "medium",
+      "sentiment": "Mixed",
+      "special_note": null,
+      "material_stage": null,
+      "material_stage_label": null,
+      "material_stage_confidence": null,
+      "thumbnail_url": null,
+      "publisher_name": "腾讯新闻综合早报",
+      "source_status": "ok",
+      "evidence_status": "single_source",
+      "evidence_label": "单一独立来源线索",
+      "evidence_status_reason": "目前仅见 1 家独立来源（共 1 条引用含转载，含摘要/首段），尚未见独立渠道交叉或官方确认",
+      "attribution_warning": null,
+      "regulatory_note": null,
+      "contradictions": [],
+      "downweight_reasons": [],
+      "quality_flags": [
+        "missing_pub_time"
+      ],
+      "material_depth": "title_and_excerpt",
+      "source_count": 1,
+      "platform_count": 1,
+      "independent_publisher_count": 1,
+      "reprint_count": 0,
+      "published_at": null,
+      "event_date": "2026-11-25",
+      "event_time": "2026-11-25",
+      "stale": false,
+      "event_date_source": "llm_extracted",
+      "is_stale_rehash": false,
+      "time_trust_level": "fetch_fallback",
+      "time_confidence": "fetch_fallback",
+      "first_discovered_at": "2026-11-25T01:44:01+08:00",
+      "first_reported_at": null,
+      "latest_fact_update_at": null,
+      "latest_reported_at": null,
+      "fetched_at": "2026-11-25T01:44:01+08:00",
+      "input_batch_id": "raw-20261125-014401",
+      "fact_summary": "11月24日，美国商务部将阿里巴巴旗下新加坡子公司Apex Enterprise Solutions列入实体清单。阿里发言人回应称，该认定错误，Apex从未转移受美国出口管制的先进计算芯片，公司将通过一切法律途径维护合法权益和声誉。",
+      "fact_atoms": [
+        {
+          "atom_id": "fa_12620442",
+          "subject": "全球关税、制裁与出口管制",
+          "metric_or_action": "阿里回应子公司被列入美实体清单：将通过一切法律途径维护公司权益",
+          "value": null,
+          "unit": null,
+          "period": "单次披露/未注明周期",
+          "scope": "新闻事件陈述",
+          "fact_status": "reported_unconfirmed_by_filing",
+          "attribution": "腾讯新闻综合早报",
+          "source_ref": "tencent-hot_c3df863e56b9",
+          "source_url": "https://view.inews.qq.com/a/20261124A0D6BJ00",
+          "source_excerpt_or_locator": "11月24日，美国商务部将阿里巴巴旗下新加坡子公司Apex Enterprise Solutions列入实体清单。阿里发言人回应称，该认定错误，Apex从未转移受美国出口管制的先进计算芯片，公司将通过一切法律途径维护合法权益和声誉。",
+          "published_at": null,
+          "discovered_at": "2026-11-25T01:44:01+08:00",
+          "revision": 1
+        }
+      ],
+      "ai_analysis": "该动态聚焦全球关税、制裁与出口管制 / 阿里巴巴 / 通义千问 (Qwen)核心变量变化，建议结合多方信源跟踪后续实质进展。",
+      "unverified_claims": [],
+      "speculation_or_outlook": null,
+      "sources": [
+        {
+          "item_id": "tencent-hot_c3df863e56b9",
+          "article_id": "tencent-hot_c3df863e56b9",
+          "source_id": "tencent-hot",
+          "source_name": "腾讯新闻综合早报",
+          "publisher_name": "腾讯新闻综合早报",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "aggregator_lead",
+          "publisher_family": "tencent",
+          "is_reprint_copy": false,
+          "title": "阿里回应子公司被列入美实体清单：将通过一切法律途径维护公司权益",
+          "url": "https://view.inews.qq.com/a/20261124A0D6BJ00",
+          "published_at": null,
+          "published_at_source": null,
+          "fetched_at": "2026-11-25T01:44:01+08:00",
+          "excerpt": "11月24日，美国商务部将阿里巴巴旗下新加坡子公司Apex Enterprise Solutions列入实体清单。阿里发言人回应称，该认定错误，Apex从未转移受美国出口管制的先进计算芯片，公司将通过一切法律途径维护合法权益和声誉。",
+          "thumbnail_url": null,
+          "deep_fetch_status": null
+        }
+      ],
+      "verification": {
+        "all_refs_valid": true,
+        "has_primary_url": true,
+        "rejected_refs": [],
+        "has_first_party": false
+      },
+      "followup": null,
+      "is_new_in_batch": true,
+      "update_kind": "new_discovery",
+      "heavy_score": 20.7,
+      "radar_score": 76,
+      "severity_tier": "B",
+      "severity_label": "B级常规",
+      "translation_attempts": 0,
+      "translation_error": null,
+      "title_zh": "阿里回应子公司被列入美实体清单：将通过一切法律途径维护公司权益",
+      "translation_status": "native_zh",
+      "summary_zh": "11月24日，美国商务部将阿里巴巴旗下新加坡子公司Apex Enterprise Solutions列入实体清单。阿里发言人回应称，该认定错误，Apex从未转移受美国出口管制的先进计算芯片，公司将通过一切法律途径维护合法权益和声誉。",
+      "title_en": "",
+      "summary_en": "",
+      "ai_analysis_en": ""
+    },
+    {
+      "schema_version": "4.1",
+      "event_id": "evt_8afbb107cd18",
+      "storyline_id": "st_3f9e0448ebd2",
+      "article_ids": [
+        "thepaper_7c497e229207",
+        "douyin_a85ace8dc162"
+      ],
+      "legacy_event_ids": [],
+      "title": "神二十四乘组汤洪波、武毅、穆罕默德·齐尚·阿里简历来了",
+      "category": "general",
+      "entities": [],
+      "entity_ids": [],
+      "entity_confidences": {},
+      "matched_entities": [],
+      "importance": "normal",
+      "sentiment": "Mixed",
+      "special_note": null,
+      "material_stage": null,
+      "material_stage_label": null,
+      "material_stage_confidence": null,
+      "thumbnail_url": null,
+      "publisher_name": "澎湃新闻",
+      "source_status": "ok",
+      "evidence_status": "multi_source",
+      "evidence_label": "多独立来源提及（待核官方全文）",
+      "evidence_status_reason": "已有 2 家独立媒体族提及（仅基于标题素材）；多源转载不代表官方公告已证实",
+      "attribution_warning": null,
+      "regulatory_note": null,
+      "contradictions": [],
+      "downweight_reasons": [
+        "仅含标题素材 (-8)"
+      ],
+      "quality_flags": [
+        "missing_pub_time"
+      ],
+      "material_depth": "title_only",
+      "source_count": 2,
+      "platform_count": 2,
+      "independent_publisher_count": 2,
+      "reprint_count": 0,
+      "published_at": null,
+      "event_date": "2026-11-25",
+      "event_time": "2026-11-25",
+      "stale": false,
+      "event_date_source": "llm_extracted",
+      "is_stale_rehash": false,
+      "time_trust_level": "fetch_fallback",
+      "time_confidence": "fetch_fallback",
+      "first_discovered_at": "2026-11-25T01:44:01+08:00",
+      "first_reported_at": null,
+      "latest_fact_update_at": null,
+      "latest_reported_at": null,
+      "fetched_at": "2026-11-25T01:44:01+08:00",
+      "input_batch_id": "raw-20261125-014401",
+      "fact_summary": "神二十四乘组汤洪波、武毅、穆罕默德·齐尚·阿里简历来了",
+      "fact_atoms": [
+        {
+          "atom_id": "fa_73393932",
+          "subject": "相关主体",
+          "metric_or_action": "神二十四乘组汤洪波、武毅、穆罕默德·齐尚·阿里简历来了",
+          "value": null,
+          "unit": null,
+          "period": "单次披露/未注明周期",
+          "scope": "新闻事件陈述",
+          "fact_status": "multi_source_reported",
+          "attribution": "澎湃新闻",
+          "source_ref": "thepaper_7c497e229207",
+          "source_url": "https://www.thepaper.cn/newsDetail_forward_34545361",
+          "source_excerpt_or_locator": "神二十四乘组汤洪波、武毅、穆罕默德·齐尚·阿里简历来了",
+          "published_at": null,
+          "discovered_at": "2026-11-25T01:44:01+08:00",
+          "revision": 1
+        }
+      ],
+      "ai_analysis": "该动态聚焦社会/热点核心变量变化，建议结合多方信源跟踪后续实质进展。",
+      "unverified_claims": [],
+      "speculation_or_outlook": null,
+      "sources": [
+        {
+          "item_id": "thepaper_7c497e229207",
+          "article_id": "thepaper_7c497e229207",
+          "source_id": "thepaper",
+          "source_name": "澎湃新闻",
+          "publisher_name": "澎湃新闻",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "aggregator_lead",
+          "publisher_family": "thepaper",
+          "is_reprint_copy": false,
+          "title": "神二十四乘组汤洪波、武毅、穆罕默德·齐尚·阿里简历来了",
+          "url": "https://www.thepaper.cn/newsDetail_forward_34545361",
+          "published_at": null,
+          "published_at_source": null,
+          "fetched_at": "2026-11-25T01:44:01+08:00",
+          "excerpt": null,
+          "thumbnail_url": null,
+          "deep_fetch_status": null
+        },
+        {
+          "item_id": "douyin_a85ace8dc162",
+          "article_id": "douyin_a85ace8dc162",
+          "source_id": "douyin",
+          "source_name": "抖音热点",
+          "publisher_name": "抖音热点",
+          "source_status": "ok",
+          "source_kind": "discussion",
+          "source_tier": "aggregator_lead",
+          "publisher_family": "douyin",
+          "is_reprint_copy": false,
+          "title": "神二十四乘组名单公布",
+          "url": "https://www.douyin.com/hot/2760857",
+          "published_at": null,
+          "published_at_source": null,
+          "fetched_at": "2026-11-25T01:44:01+08:00",
+          "excerpt": null,
+          "thumbnail_url": null,
+          "deep_fetch_status": null
+        }
+      ],
+      "verification": {
+        "all_refs_valid": true,
+        "has_primary_url": true,
+        "rejected_refs": [],
+        "has_first_party": false
+      },
+      "followup": null,
+      "is_new_in_batch": true,
+      "update_kind": "new_discovery",
+      "heavy_score": 41.4,
+      "radar_score": 29,
+      "severity_tier": "B",
+      "severity_label": "B级常规",
+      "translation_attempts": 0,
+      "translation_error": null,
+      "title_zh": "神二十四乘组汤洪波、武毅、穆罕默德·齐尚·阿里简历来了",
+      "translation_status": "native_zh",
+      "summary_zh": "神二十四乘组汤洪波、武毅、穆罕默德·齐尚·阿里简历来了",
+      "title_en": "",
+      "summary_en": "",
+      "ai_analysis_en": "",
+      "deep_qa": [
+        {
+          "question": "事件对大宗物价、出行或外贸订单有何影响？",
+          "answer": "重点关注相关产业链引发的跨区域供应链、汇率与大宗品风险溢价变动：神二十四乘组汤洪波、武毅、穆罕默德·齐尚·阿里简历来了。",
+          "historical_parallel": "历次跨区域地缘与贸易规则博弈多呈“首轮情绪脉冲，随后看实际封锁或关税文本落地决定持续性”轨迹。"
+        },
+        {
+          "question": "下一步决定走向的关键观测点是什么？",
+          "answer": "盯紧涉事官方下一轮正式公报与约束性细则落地。",
+          "historical_parallel": "若各方在后续窗口重回务实谈判，避险溢价与航运附加费通常较快收敛。"
+        }
+      ]
+    },
+    {
+      "schema_version": "4.1",
+      "event_id": "evt_045d1b5ce6c6",
+      "storyline_id": "st_4e034d7eeec8",
+      "article_ids": [
+        "tencent-hot_7eea566c21f2"
+      ],
+      "legacy_event_ids": [],
+      "title": "王毅同英国外交大臣米利班德通电话",
+      "category": "general",
+      "entities": [
+        "地缘冲突、能源与大宗商品"
+      ],
+      "entity_ids": [
+        "ent_geopolitics_energy"
+      ],
+      "entity_confidences": {
+        "地缘冲突、能源与大宗商品": 0.76
+      },
+      "matched_entities": [
+        {
+          "entity_id": "ent_geopolitics_energy",
+          "canonical_name": "地缘冲突、能源与大宗商品",
+          "entity_type": "macro",
+          "sector": "能源安全与避险资产",
+          "matched_aliases": [
+            "中东"
+          ],
+          "tickers": [],
+          "reason": "正文/实体匹配关键词「中东」",
+          "confidence": 0.76
+        }
+      ],
+      "importance": "medium",
+      "sentiment": "Mixed",
+      "special_note": null,
+      "material_stage": null,
+      "material_stage_label": null,
+      "material_stage_confidence": null,
+      "thumbnail_url": null,
+      "publisher_name": "腾讯新闻综合早报",
+      "source_status": "ok",
+      "evidence_status": "single_source",
+      "evidence_label": "单一独立来源线索",
+      "evidence_status_reason": "目前仅见 1 家独立来源（共 1 条引用含转载，含摘要/首段），尚未见独立渠道交叉或官方确认",
+      "attribution_warning": null,
+      "regulatory_note": null,
+      "contradictions": [],
+      "downweight_reasons": [],
+      "quality_flags": [
+        "missing_pub_time"
+      ],
+      "material_depth": "title_and_excerpt",
+      "source_count": 1,
+      "platform_count": 1,
+      "independent_publisher_count": 1,
+      "reprint_count": 0,
+      "published_at": null,
+      "event_date": "2026-11-25",
+      "event_time": "2026-11-25",
+      "stale": false,
+      "event_date_source": "llm_extracted",
+      "is_stale_rehash": false,
+      "time_trust_level": "fetch_fallback",
+      "time_confidence": "fetch_fallback",
+      "first_discovered_at": "2026-11-25T01:44:01+08:00",
+      "first_reported_at": null,
+      "latest_fact_update_at": null,
+      "latest_reported_at": null,
+      "fetched_at": "2026-11-25T01:44:01+08:00",
+      "input_batch_id": "raw-20261125-014401",
+      "fact_summary": "11月24日，外长王毅应约同英国外交大臣米利班德通电话。王毅表示，今年以来中英关系改善取得进展，明年是中英建立大使级外交关系55周年，希望英方恪守一个中国原则。米利班德重申英方在台湾问题上立场没有改变，双方还就中东局势、乌克兰问题交换意见。",
+      "fact_atoms": [
+        {
+          "atom_id": "fa_72103208",
+          "subject": "地缘冲突、能源与大宗商品",
+          "metric_or_action": "王毅同英国外交大臣米利班德通电话",
+          "value": null,
+          "unit": null,
+          "period": "单次披露/未注明周期",
+          "scope": "新闻事件陈述",
+          "fact_status": "reported_unconfirmed_by_filing",
+          "attribution": "腾讯新闻综合早报",
+          "source_ref": "tencent-hot_7eea566c21f2",
+          "source_url": "https://view.inews.qq.com/a/20261124A0FHDB00",
+          "source_excerpt_or_locator": "11月24日，外长王毅应约同英国外交大臣米利班德通电话。王毅表示，今年以来中英关系改善取得进展，明年是中英建立大使级外交关系55周年，希望英方恪守一个中国原则。米利班德重申英方在台湾问题上立场没有改变，双方还就中东局势、乌克兰问题交换意见。",
+          "published_at": null,
+          "discovered_at": "2026-11-25T01:44:01+08:00",
+          "revision": 1
+        }
+      ],
+      "ai_analysis": "该动态聚焦地缘冲突、能源与大宗商品核心变量变化，建议结合多方信源跟踪后续实质进展。",
+      "unverified_claims": [],
+      "speculation_or_outlook": null,
+      "sources": [
+        {
+          "item_id": "tencent-hot_7eea566c21f2",
+          "article_id": "tencent-hot_7eea566c21f2",
+          "source_id": "tencent-hot",
+          "source_name": "腾讯新闻综合早报",
+          "publisher_name": "腾讯新闻综合早报",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "aggregator_lead",
+          "publisher_family": "tencent",
+          "is_reprint_copy": false,
+          "title": "王毅同英国外交大臣米利班德通电话",
+          "url": "https://view.inews.qq.com/a/20261124A0FHDB00",
+          "published_at": null,
+          "published_at_source": null,
+          "fetched_at": "2026-11-25T01:44:01+08:00",
+          "excerpt": "11月24日，外长王毅应约同英国外交大臣米利班德通电话。王毅表示，今年以来中英关系改善取得进展，明年是中英建立大使级外交关系55周年，希望英方恪守一个中国原则。米利班德重申英方在台湾问题上立场没有改变，双方还就中东局势、乌克兰问题交换意见。",
+          "thumbnail_url": null,
+          "deep_fetch_status": null
+        }
+      ],
+      "verification": {
+        "all_refs_valid": true,
+        "has_primary_url": true,
+        "rejected_refs": [],
+        "has_first_party": false
+      },
+      "followup": null,
+      "is_new_in_batch": true,
+      "update_kind": "new_discovery",
+      "heavy_score": 20.7,
+      "radar_score": 76,
+      "severity_tier": "B",
+      "severity_label": "B级常规",
+      "translation_attempts": 0,
+      "translation_error": null,
+      "title_zh": "王毅同英国外交大臣米利班德通电话",
+      "translation_status": "native_zh",
+      "summary_zh": "11月24日，外长王毅应约同英国外交大臣米利班德通电话。王毅表示，今年以来中英关系改善取得进展，明年是中英建立大使级外交关系55周年，希望英方恪守一个中国原则。米利班德重申英方在台湾问题上立场没有改变，双方还就中东局势、乌克兰问题交换意见。",
+      "title_en": "",
+      "summary_en": "",
+      "ai_analysis_en": ""
+    },
+    {
+      "schema_version": "4.1",
+      "event_id": "evt_702893beccd6",
+      "storyline_id": "st_0513cd80730b",
+      "article_ids": [
+        "tencent-hot_4d6240169834"
+      ],
+      "legacy_event_ids": [],
+      "title": "所罗门群岛通知中方终止安全协议，将与澳大利亚签新协议？外交部回应",
+      "category": "general",
+      "entities": [
+        "中美外交与元首峰会"
+      ],
+      "entity_ids": [
+        "ent_us_china_diplomacy"
+      ],
+      "entity_confidences": {
+        "中美外交与元首峰会": 0.92
+      },
+      "matched_entities": [
+        {
+          "entity_id": "ent_us_china_diplomacy",
+          "canonical_name": "中美外交与元首峰会",
+          "entity_type": "macro",
+          "sector": "国际关系与地缘宏观",
+          "matched_aliases": [
+            "外交部"
+          ],
+          "tickers": [],
+          "reason": "正文/实体匹配关键词「外交部」",
+          "confidence": 0.92
+        }
+      ],
+      "importance": "medium",
+      "sentiment": "Mixed",
+      "special_note": null,
+      "material_stage": null,
+      "material_stage_label": null,
+      "material_stage_confidence": null,
+      "thumbnail_url": null,
+      "publisher_name": "腾讯新闻综合早报",
+      "source_status": "ok",
+      "evidence_status": "single_source",
+      "evidence_label": "单一独立来源线索",
+      "evidence_status_reason": "目前仅见 1 家独立来源（共 1 条引用含转载，含摘要/首段），尚未见独立渠道交叉或官方确认",
+      "attribution_warning": null,
+      "regulatory_note": null,
+      "contradictions": [],
+      "downweight_reasons": [],
+      "quality_flags": [
+        "missing_pub_time"
+      ],
+      "material_depth": "title_and_excerpt",
+      "source_count": 1,
+      "platform_count": 1,
+      "independent_publisher_count": 1,
+      "reprint_count": 0,
+      "published_at": null,
+      "event_date": "2026-11-25",
+      "event_time": "2026-11-25",
+      "stale": false,
+      "event_date_source": "llm_extracted",
+      "is_stale_rehash": false,
+      "time_trust_level": "fetch_fallback",
+      "time_confidence": "fetch_fallback",
+      "first_discovered_at": "2026-11-25T01:44:01+08:00",
+      "first_reported_at": null,
+      "latest_fact_update_at": null,
+      "latest_reported_at": null,
+      "fetched_at": "2026-11-25T01:44:01+08:00",
+      "input_batch_id": "raw-20261125-014401",
+      "fact_summary": "11月24日外交部例行记者会上，有记者就所罗门群岛已通知中方终止2022年签署的安全合作协议、将与澳大利亚签新协议的报道提问，该协议明年4月到期。发言人郭嘉昆表示，中方同太平洋岛国合作不针对第三方，也不受第三方影响，有关合作不应针对第三方。",
+      "fact_atoms": [
+        {
+          "atom_id": "fa_84471898",
+          "subject": "中美外交与元首峰会",
+          "metric_or_action": "所罗门群岛通知中方终止安全协议，将与澳大利亚签新协议？外交部回应",
+          "value": null,
+          "unit": null,
+          "period": "单次披露/未注明周期",
+          "scope": "新闻事件陈述",
+          "fact_status": "reported_unconfirmed_by_filing",
+          "attribution": "腾讯新闻综合早报",
+          "source_ref": "tencent-hot_4d6240169834",
+          "source_url": "https://view.inews.qq.com/a/20261124A099Z700",
+          "source_excerpt_or_locator": "11月24日外交部例行记者会上，有记者就所罗门群岛已通知中方终止2022年签署的安全合作协议、将与澳大利亚签新协议的报道提问，该协议明年4月到期。发言人郭嘉昆表示，中方同太平洋岛国合作不针对第三方，也不受第三方影响，有关合作不应针对第三方。",
+          "published_at": null,
+          "discovered_at": "2026-11-25T01:44:01+08:00",
+          "revision": 1
+        }
+      ],
+      "ai_analysis": "该动态聚焦中美外交与元首峰会核心变量变化，建议结合多方信源跟踪后续实质进展。",
+      "unverified_claims": [],
+      "speculation_or_outlook": null,
+      "sources": [
+        {
+          "item_id": "tencent-hot_4d6240169834",
+          "article_id": "tencent-hot_4d6240169834",
+          "source_id": "tencent-hot",
+          "source_name": "腾讯新闻综合早报",
+          "publisher_name": "腾讯新闻综合早报",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "aggregator_lead",
+          "publisher_family": "tencent",
+          "is_reprint_copy": false,
+          "title": "所罗门群岛通知中方终止安全协议，将与澳大利亚签新协议？外交部回应",
+          "url": "https://view.inews.qq.com/a/20261124A099Z700",
+          "published_at": null,
+          "published_at_source": null,
+          "fetched_at": "2026-11-25T01:44:01+08:00",
+          "excerpt": "11月24日外交部例行记者会上，有记者就所罗门群岛已通知中方终止2022年签署的安全合作协议、将与澳大利亚签新协议的报道提问，该协议明年4月到期。发言人郭嘉昆表示，中方同太平洋岛国合作不针对第三方，也不受第三方影响，有关合作不应针对第三方。",
+          "thumbnail_url": null,
+          "deep_fetch_status": null
+        }
+      ],
+      "verification": {
+        "all_refs_valid": true,
+        "has_primary_url": true,
+        "rejected_refs": [],
+        "has_first_party": false
+      },
+      "followup": null,
+      "is_new_in_batch": true,
+      "update_kind": "new_discovery",
+      "heavy_score": 20.7,
+      "radar_score": 76,
+      "severity_tier": "B",
+      "severity_label": "B级常规",
+      "translation_attempts": 0,
+      "translation_error": null,
+      "title_zh": "所罗门群岛通知中方终止安全协议，将与澳大利亚签新协议？外交部回应",
+      "translation_status": "native_zh",
+      "summary_zh": "11月24日外交部例行记者会上，有记者就所罗门群岛已通知中方终止2022年签署的安全合作协议、将与澳大利亚签新协议的报道提问，该协议明年4月到期。发言人郭嘉昆表示，中方同太平洋岛国合作不针对第三方，也不受第三方影响，有关合作不应针对第三方。",
+      "title_en": "",
+      "summary_en": "",
+      "ai_analysis_en": ""
+    },
+    {
+      "schema_version": "4.1",
+      "event_id": "evt_fd8ddc71bbd4",
+      "storyline_id": "st_8748a84c2f6a",
+      "article_ids": [
+        "tencent-hot_61854b6479b1"
+      ],
+      "legacy_event_ids": [],
+      "title": "“R2也会亏”，银行理财市场面临“本金”考验",
+      "category": "general",
+      "entities": [
+        "中信证券 / A股券商与资本市场"
+      ],
+      "entity_ids": [
+        "ent_cn_brokers"
+      ],
+      "entity_confidences": {
+        "中信证券 / A股券商与资本市场": 0.86
+      },
+      "matched_entities": [
+        {
+          "entity_id": "ent_cn_brokers",
+          "canonical_name": "中信证券 / A股券商与资本市场",
+          "entity_type": "company",
+          "sector": "金融基础设施 / 券商",
+          "matched_aliases": [
+            "券商"
+          ],
+          "tickers": [
+            {
+              "symbol": "600030",
+              "market": "SH",
+              "exchange": "SSE",
+              "currency": "CNY",
+              "label": "600030.SH (SSE)"
+            }
+          ],
+          "reason": "正文/实体匹配关键词「券商」",
+          "confidence": 0.86
+        }
+      ],
+      "importance": "medium",
+      "sentiment": "Mixed",
+      "special_note": null,
+      "material_stage": null,
+      "material_stage_label": null,
+      "material_stage_confidence": null,
+      "thumbnail_url": null,
+      "publisher_name": "腾讯新闻综合早报",
+      "source_status": "ok",
+      "evidence_status": "single_source",
+      "evidence_label": "单一独立来源线索",
+      "evidence_status_reason": "目前仅见 1 家独立来源（共 1 条引用含转载，含摘要/首段），尚未见独立渠道交叉或官方确认",
+      "attribution_warning": null,
+      "regulatory_note": null,
+      "contradictions": [],
+      "downweight_reasons": [],
+      "quality_flags": [
+        "missing_pub_time"
+      ],
+      "material_depth": "title_and_excerpt",
+      "source_count": 1,
+      "platform_count": 1,
+      "independent_publisher_count": 1,
+      "reprint_count": 0,
+      "published_at": null,
+      "event_date": "2026-11-25",
+      "event_time": "2026-11-25",
+      "stale": false,
+      "event_date_source": "llm_extracted",
+      "is_stale_rehash": false,
+      "time_trust_level": "fetch_fallback",
+      "time_confidence": "fetch_fallback",
+      "first_discovered_at": "2026-11-25T01:44:01+08:00",
+      "first_reported_at": null,
+      "latest_fact_update_at": null,
+      "latest_reported_at": null,
+      "fetched_at": "2026-11-25T01:44:01+08:00",
+      "input_batch_id": "raw-20261125-014401",
+      "fact_summary": "券商统计，截至20日，全市场银行理财破净率升至三年新高，部分R2产品亦跌破面值。据普益标准，一周内约7.1%的产品跌破或接近跌破面值；11月16日至20日理财规模减少5067亿元，往年同期增约620亿元。业界认为与股债同跌、含权产品增多有关。",
+      "fact_atoms": [
+        {
+          "atom_id": "fa_54084747",
+          "subject": "中信证券 / A股券商与资本市场",
+          "metric_or_action": "“R2也会亏”，银行理财市场面临“本金”考验",
+          "value": "7.1",
+          "unit": "%",
+          "period": "单次披露/未注明周期",
+          "scope": "新闻事件陈述",
+          "fact_status": "reported_unconfirmed_by_filing",
+          "attribution": "腾讯新闻综合早报",
+          "source_ref": "tencent-hot_61854b6479b1",
+          "source_url": "https://view.inews.qq.com/a/20261124A0DK2O00",
+          "source_excerpt_or_locator": "券商统计，截至20日，全市场银行理财破净率升至三年新高，部分R2产品亦跌破面值。据普益标准，一周内约7.1%的产品跌破或接近跌破面值；11月16日至20日理财规模减少5067亿元，往年同期增约620亿元。业界认为与股债同跌、含权产品增多有关。",
+          "published_at": null,
+          "discovered_at": "2026-11-25T01:44:01+08:00",
+          "revision": 1
+        }
+      ],
+      "ai_analysis": "该动态聚焦中信证券 / A股券商与资本市场核心变量变化，建议结合多方信源跟踪后续实质进展。",
+      "unverified_claims": [],
+      "speculation_or_outlook": null,
+      "sources": [
+        {
+          "item_id": "tencent-hot_61854b6479b1",
+          "article_id": "tencent-hot_61854b6479b1",
+          "source_id": "tencent-hot",
+          "source_name": "腾讯新闻综合早报",
+          "publisher_name": "腾讯新闻综合早报",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "aggregator_lead",
+          "publisher_family": "tencent",
+          "is_reprint_copy": false,
+          "title": "“R2也会亏”，银行理财市场面临“本金”考验",
+          "url": "https://view.inews.qq.com/a/20261124A0DK2O00",
+          "published_at": null,
+          "published_at_source": null,
+          "fetched_at": "2026-11-25T01:44:01+08:00",
+          "excerpt": "券商统计，截至20日，全市场银行理财破净率升至三年新高，部分R2产品亦跌破面值。据普益标准，一周内约7.1%的产品跌破或接近跌破面值；11月16日至20日理财规模减少5067亿元，往年同期增约620亿元。业界认为与股债同跌、含权产品增多有关。",
+          "thumbnail_url": null,
+          "deep_fetch_status": null
+        }
+      ],
+      "verification": {
+        "all_refs_valid": true,
+        "has_primary_url": true,
+        "rejected_refs": [],
+        "has_first_party": false
+      },
+      "followup": null,
+      "is_new_in_batch": true,
+      "update_kind": "new_discovery",
+      "heavy_score": 20.7,
+      "radar_score": 76,
+      "severity_tier": "B",
+      "severity_label": "B级常规",
+      "translation_attempts": 0,
+      "translation_error": null,
+      "title_zh": "“R2也会亏”，银行理财市场面临“本金”考验",
+      "translation_status": "native_zh",
+      "summary_zh": "券商统计，截至20日，全市场银行理财破净率升至三年新高，部分R2产品亦跌破面值。据普益标准，一周内约7.1%的产品跌破或接近跌破面值；11月16日至20日理财规模减少5067亿元，往年同期增约620亿元。业界认为与股债同跌、含权产品增多有关。",
+      "title_en": "",
+      "summary_en": "",
+      "ai_analysis_en": ""
+    }
+  ]
+}

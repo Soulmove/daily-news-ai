@@ -1,0 +1,2238 @@
+{
+  "schema_version": "4.2",
+  "batch_id": "smart-20261125-014438",
+  "input_batch_id": "raw-20261125-014401",
+  "input_cutoff_at": "2026-11-25T01:44:01+08:00",
+  "generated_at": "2026-11-25T01:44:38+08:00",
+  "published_at": "2026-11-25T01:50:52+08:00",
+  "category": "tech",
+  "category_label": "科技/AI",
+  "generation_mode": "deterministic_fresh_clusters",
+  "model_name": "deterministic-v3-grounding",
+  "quality_flags": [
+    "deterministic_fresh_base"
+  ],
+  "key_changes": [
+    {
+      "event_id": "evt_dfc6358caede",
+      "storyline_id": "st_931174e12837",
+      "headline": "黄仁勋深度伪造视频成为新的AI糟粕",
+      "detail": "黄仁勋正在伊比萨岛狂欢。一段在Instagram上获得近600万次观看的视频显示，这位英伟达前首席执行官在拥挤的俱乐部里跳舞，手持香槟杯，仍然穿着他标志性的黑色……",
+      "evidence_status": "multi_source",
+      "attribution_warning": null,
+      "source_count": 4,
+      "primary_url": "https://www.scmp.com/news/china/diplomacy/article/3375631/how-jensen-huangs-nvidia-return-could-deepen-us-rift-over-china-chip-curbs",
+      "source_name": "南华早报 SCMP"
+    },
+    {
+      "event_id": "evt_557562f5071e",
+      "storyline_id": "st_4144457e820b",
+      "headline": "Amazon 以约 75 亿美元收购 Decart，押注用软件缩小与 Nvidia 的 AI 芯片差距",
+      "detail": "亚马逊据报道以75亿美元收购Decart的决定，是其提高Trainium芯片效率努力的一部分。",
+      "evidence_status": "multi_source",
+      "attribution_warning": null,
+      "source_count": 2,
+      "primary_url": "https://techcrunch.com/2026/11/24/amazons-decart-acquisition-is-a-bet-on-using-software-to-narrow-the-gap-with-nvidia-in-the-ai-chip-race",
+      "source_name": "TechCrunch AI & Tech"
+    },
+    {
+      "event_id": "evt_5722ea9539d1",
+      "storyline_id": "st_58c778df12d9",
+      "headline": "英伟达前合作伙伴Megaspeed遭遇美国商务部出口禁令",
+      "detail": "随着黄仁勋在特朗普政府的支持下重返英伟达首席执行官一职，商务部已将Megaspeed列入其实体清单，此举将阻止与该公司进行贸易，理由是……",
+      "evidence_status": "multi_source",
+      "attribution_warning": null,
+      "source_count": 2,
+      "primary_url": "https://www.theverge.com/policy/1041270/nvidia-megaspeed-commerce-dept-entity-list",
+      "source_name": "The Verge"
+    }
+  ],
+  "overview_sections": [
+    {
+      "title": "本批核心脉络",
+      "points": [
+        {
+          "text": "Jensen Huang deepfakes are the hot new AI slop：Jensen Huang is partying it up in Ibiza.",
+          "source_refs": []
+        },
+        {
+          "text": "Amazon 以约 75 亿美元收购 Decart，押注用软件缩小与 Nvidia 的 AI 芯片差距：Amazon’s decision to acquire Decart for a reported $7.5 billion…",
+          "source_refs": []
+        },
+        {
+          "text": "Ex-Nvidia partner Megaspeed hit with U.S. Commerce Department export ban：As Jensen Huang returns to his post as…",
+          "source_refs": []
+        },
+        {
+          "text": "Axos 报道：数十名内部人士称 OpenAI 和 Anthropic 未发布模型的能力已超出安全措施：消息称OpenAI与Anthropic员工警告：内部AI模型能力过于强大，无法安全发布 凤凰网科技",
+          "source_refs": []
+        }
+      ]
+    }
+  ],
+  "events": [
+    {
+      "schema_version": "4.1",
+      "event_id": "evt_dfc6358caede",
+      "storyline_id": "st_931174e12837",
+      "article_ids": [
+        "scmp-rss_334ba4da4c7b",
+        "theverge-rss_991247fdcb71",
+        "techcrunch-rss_a66a31ffb7e7",
+        "bbc-world-rss_5f0326891787"
+      ],
+      "legacy_event_ids": [],
+      "title": "黄仁勋深度伪造视频成为新的AI糟粕",
+      "category": "tech",
+      "entities": [
+        "英伟达 (NVIDIA)"
+      ],
+      "entity_ids": [
+        "ent_nvidia"
+      ],
+      "entity_confidences": {
+        "英伟达 (NVIDIA)": 0.96
+      },
+      "matched_entities": [
+        {
+          "entity_id": "ent_nvidia",
+          "canonical_name": "英伟达 (NVIDIA)",
+          "entity_type": "company",
+          "sector": "半导体 / AI算力",
+          "matched_aliases": [
+            "jensen huang",
+            "nvidia"
+          ],
+          "tickers": [
+            {
+              "symbol": "NVDA",
+              "market": "US",
+              "exchange": "NASDAQ",
+              "currency": "USD",
+              "label": "NVDA.US (NASDAQ)"
+            }
+          ],
+          "reason": "正文/实体匹配关键词「jensen huang / nvidia」",
+          "confidence": 0.96
+        }
+      ],
+      "importance": "high",
+      "sentiment": "Mixed",
+      "special_note": null,
+      "material_stage": null,
+      "material_stage_label": null,
+      "material_stage_confidence": null,
+      "thumbnail_url": "https://cdn.i-scmp.com/sites/default/files/styles/1280x720/public/d8/images/canvas/2026/11/24/d67adf04-1e00-4c5e-98d2-ba34002cf3ad_aa390131.jpg?itok=ViYDITwj&v=1795517881",
+      "publisher_name": "南华早报 SCMP",
+      "source_status": "ok",
+      "evidence_status": "multi_source",
+      "evidence_label": "多独立来源提及（待核官方全文）",
+      "evidence_status_reason": "已有 4 家独立媒体族提及（含摘要或正文首段）；多源转载不代表官方公告已证实",
+      "attribution_warning": null,
+      "regulatory_note": null,
+      "contradictions": [],
+      "downweight_reasons": [],
+      "quality_flags": [],
+      "material_depth": "title_and_excerpt",
+      "source_count": 4,
+      "platform_count": 4,
+      "independent_publisher_count": 4,
+      "reprint_count": 0,
+      "published_at": "2026-11-24T05:47:41+08:00",
+      "event_date": "2026-11-25",
+      "event_time": "2026-11-24T05:47:41+08:00",
+      "stale": false,
+      "event_date_source": "llm_extracted",
+      "is_stale_rehash": false,
+      "time_trust_level": "article_timestamp",
+      "time_confidence": "article_timestamp",
+      "first_discovered_at": "2026-11-25T01:44:01+08:00",
+      "first_reported_at": "2026-11-24T05:47:41+08:00",
+      "latest_fact_update_at": "2026-11-25T01:04:20+08:00",
+      "latest_reported_at": "2026-11-25T01:04:20+08:00",
+      "fetched_at": "2026-11-25T01:44:01+08:00",
+      "input_batch_id": "raw-20261125-014401",
+      "fact_summary": "黄仁勋正在伊比萨岛狂欢。一段在Instagram上获得近600万次观看的视频显示，这位英伟达前首席执行官在拥挤的俱乐部里跳舞，手持香槟杯，仍然穿着他标志性的黑色……",
+      "fact_atoms": [
+        {
+          "atom_id": "fa_226799",
+          "subject": "英伟达 (NVIDIA)",
+          "metric_or_action": "Jensen Huang deepfakes are the hot new AI slop",
+          "value": null,
+          "unit": null,
+          "period": "单次披露/未注明周期",
+          "scope": "新闻事件陈述",
+          "fact_status": "multi_source_reported",
+          "attribution": "南华早报 SCMP",
+          "source_ref": "scmp-rss_334ba4da4c7b",
+          "source_url": "https://www.scmp.com/news/china/diplomacy/article/3375631/how-jensen-huangs-nvidia-return-could-deepen-us-rift-over-china-chip-curbs",
+          "source_excerpt_or_locator": "Jensen Huang’s return as Nvidia CEO could complicate Washington’s China policy, widening the gap between a White House keen to steady ties with Beijing and an incoming Democratic-l",
+          "published_at": "2026-11-24T22:00:06+08:00",
+          "discovered_at": "2026-11-25T01:44:01+08:00",
+          "revision": 1
+        }
+      ],
+      "ai_analysis": "反映英伟达 (NVIDIA)技术架构与商业落地节奏变化，实际效果仍待开发者生态与第三方实测验证。",
+      "unverified_claims": [],
+      "speculation_or_outlook": null,
+      "sources": [
+        {
+          "item_id": "scmp-rss_334ba4da4c7b",
+          "article_id": "scmp-rss_334ba4da4c7b",
+          "source_id": "scmp-rss",
+          "source_name": "南华早报 SCMP",
+          "publisher_name": "南华早报 SCMP",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "scmp-rss",
+          "is_reprint_copy": false,
+          "title": "How Jensen Huang’s Nvidia return could deepen US rift over China chip curbs",
+          "url": "https://www.scmp.com/news/china/diplomacy/article/3375631/how-jensen-huangs-nvidia-return-could-deepen-us-rift-over-china-chip-curbs",
+          "published_at": "2026-11-24T22:00:06+08:00",
+          "published_at_source": "upstream_rfc2822",
+          "fetched_at": "2026-11-25T01:44:01+08:00",
+          "excerpt": "Jensen Huang’s return as Nvidia CEO could complicate Washington’s China policy, widening the gap between a White House keen to steady ties with Beijing and an incoming Democratic-led Congress poised to tighten chip curbs.",
+          "thumbnail_url": "https://cdn.i-scmp.com/sites/default/files/styles/1280x720/public/d8/images/canvas/2026/11/24/d67adf04-1e00-4c5e-98d2-ba34002cf3ad_aa390131.jpg?itok=ViYDITwj&v=1795517881",
+          "deep_fetch_status": null,
+          "title_zh": "黄仁勋重返英伟达将如何加剧美国在对华芯片限制上的分歧"
+        },
+        {
+          "item_id": "theverge-rss_991247fdcb71",
+          "article_id": "theverge-rss_991247fdcb71",
+          "source_id": "theverge-rss",
+          "source_name": "The Verge",
+          "publisher_name": "The Verge",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "theverge",
+          "is_reprint_copy": false,
+          "title": "Jensen Huang deepfakes are the hot new AI slop",
+          "url": "https://www.theverge.com/tech/1041222/jensen-huang-nvidia-scandal-deepfakes",
+          "published_at": "2026-11-25T00:30:00+08:00",
+          "published_at_source": "upstream_iso",
+          "fetched_at": "2026-11-25T01:44:01+08:00",
+          "excerpt": "Jensen Huang is partying it up in Ibiza. In a video with nearly 6 million views on Instagram, the former CEO of Nvidia is dancing in a crowded club, champagne glass in hand, still wearing his signature black leather jacket.",
+          "thumbnail_url": null,
+          "deep_fetch_status": null,
+          "title_zh": "黄仁勋深度伪造视频成为新的AI糟粕"
+        },
+        {
+          "item_id": "techcrunch-rss_a66a31ffb7e7",
+          "article_id": "techcrunch-rss_a66a31ffb7e7",
+          "source_id": "techcrunch-rss",
+          "source_name": "TechCrunch AI & Tech",
+          "publisher_name": "TechCrunch AI & Tech",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "techcrunch",
+          "is_reprint_copy": false,
+          "title": "Elon Musk and others rejoice as Jensen Huang is reinstated at Nvidia amid scandal",
+          "url": "https://techcrunch.com/2026/11/23/elon-musk-and-others-rejoice-as-jensen-huang-is-reinstated-at-nvidia-amid-scandal",
+          "published_at": "2026-11-24T05:47:41+08:00",
+          "published_at_source": "upstream_rfc2822",
+          "fetched_at": "2026-11-25T01:44:01+08:00",
+          "excerpt": "\"The mistake has been corrected,\" Elon Musk chimed in.",
+          "thumbnail_url": null,
+          "deep_fetch_status": null,
+          "title_zh": "丑闻阴影下黄仁勋重掌英伟达，埃隆·马斯克等人欢欣鼓舞"
+        },
+        {
+          "item_id": "bbc-world-rss_5f0326891787",
+          "article_id": "bbc-world-rss_5f0326891787",
+          "source_id": "bbc-world-rss",
+          "source_name": "BBC News World",
+          "publisher_name": "BBC News World",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "bbc-world-rss",
+          "is_reprint_copy": false,
+          "title": "Nvidia shares slide as Trump's role in Jensen Huang's comeback questioned by US politicians",
+          "url": "https://www.bbc.co.uk/news/articles/crpdw1qx7jgxo?at_medium=RSS&at_campaign=rss",
+          "published_at": "2026-11-25T01:04:20+08:00",
+          "published_at_source": "upstream_rfc2822",
+          "fetched_at": "2026-11-25T01:44:01+08:00",
+          "excerpt": "Nvidia's stock market value surged on the annoucement of Huang's reappointment, but some of the gains reversed in Tuesday trading.",
+          "thumbnail_url": null,
+          "deep_fetch_status": null,
+          "title_zh": "美国政客质疑特朗普在黄仁勋复出中的作用，英伟达股价应声下跌"
+        }
+      ],
+      "verification": {
+        "all_refs_valid": true,
+        "has_primary_url": true,
+        "rejected_refs": [],
+        "has_first_party": false
+      },
+      "followup": null,
+      "is_new_in_batch": true,
+      "update_kind": "new_discovery",
+      "heavy_score": 82.8,
+      "radar_score": 94,
+      "severity_tier": "S",
+      "severity_label": "S级重磅",
+      "heavy_reason_tag": "科研/模型里程碑",
+      "title_en": "Jensen Huang deepfakes are the hot new AI slop",
+      "summary_en": "Jensen Huang is partying it up in Ibiza. In a video with nearly 6 million views on Instagram, the former CEO of Nvidia is dancing in a crowded club, champagne glass in hand, still wearing his signature black…",
+      "translation_attempts": 7,
+      "translation_error": null,
+      "translation_status": "translated",
+      "title_zh": "黄仁勋深度伪造视频成为新的AI糟粕",
+      "summary_zh": "黄仁勋正在伊比萨岛狂欢。一段在Instagram上获得近600万次观看的视频显示，这位英伟达前首席执行官在拥挤的俱乐部里跳舞，手持香槟杯，仍然穿着他标志性的黑色……",
+      "ai_analysis_en": "",
+      "deep_qa": [
+        {
+          "question": "这次技术变化对普通开发者或用户意味着什么？",
+          "answer": "聚焦英伟达 (NVIDIA)能力边界与使用成本变化：黄仁勋正在伊比萨岛狂欢。一段在Instagram上获得近600万次观看的视频显示，这位英伟达前首席执行官在拥挤的俱乐部里跳舞，手持香槟杯，仍然穿着他标志性的黑色……。",
+          "historical_parallel": "历次大模型与算力架构迭代中，推理单价下探与生态开放通常在 1~2 个季度内显著拉动应用渗透率。"
+        },
+        {
+          "question": "该进展目前处于什么验证阶段？",
+          "answer": "需结合官方技术报告、独立第三方复现基准以及下游云厂与终端真实接入节奏交叉确认。",
+          "historical_parallel": "2025 年以来主流开源/闭源大模型竞赛证明，公开基准与真实开发者采用率决定商业化天花板。"
+        }
+      ]
+    },
+    {
+      "schema_version": "4.1",
+      "event_id": "evt_557562f5071e",
+      "storyline_id": "st_4144457e820b",
+      "article_ids": [
+        "techcrunch-rss_50ab14a585b5",
+        "aihot_e6d97020f2b9"
+      ],
+      "legacy_event_ids": [],
+      "title": "Amazon 以约 75 亿美元收购 Decart，押注用软件缩小与 Nvidia 的 AI 芯片差距",
+      "category": "tech",
+      "entities": [
+        "英伟达 (NVIDIA)"
+      ],
+      "entity_ids": [
+        "ent_nvidia"
+      ],
+      "entity_confidences": {
+        "英伟达 (NVIDIA)": 0.86
+      },
+      "matched_entities": [
+        {
+          "entity_id": "ent_nvidia",
+          "canonical_name": "英伟达 (NVIDIA)",
+          "entity_type": "company",
+          "sector": "半导体 / AI算力",
+          "matched_aliases": [
+            "nvidia"
+          ],
+          "tickers": [
+            {
+              "symbol": "NVDA",
+              "market": "US",
+              "exchange": "NASDAQ",
+              "currency": "USD",
+              "label": "NVDA.US (NASDAQ)"
+            }
+          ],
+          "reason": "正文/实体匹配关键词「nvidia」",
+          "confidence": 0.86
+        }
+      ],
+      "importance": "high",
+      "sentiment": "Mixed",
+      "special_note": null,
+      "material_stage": null,
+      "material_stage_label": null,
+      "material_stage_confidence": null,
+      "thumbnail_url": null,
+      "publisher_name": "TechCrunch AI & Tech",
+      "source_status": "ok",
+      "evidence_status": "multi_source",
+      "evidence_label": "多独立来源提及（待核官方全文）",
+      "evidence_status_reason": "已有 2 家独立媒体族提及（含摘要或正文首段）；多源转载不代表官方公告已证实",
+      "attribution_warning": null,
+      "regulatory_note": null,
+      "contradictions": [],
+      "downweight_reasons": [],
+      "quality_flags": [],
+      "material_depth": "title_and_excerpt",
+      "source_count": 2,
+      "platform_count": 2,
+      "independent_publisher_count": 2,
+      "reprint_count": 0,
+      "published_at": "2026-11-24T23:51:07+08:00",
+      "event_date": "2026-11-24",
+      "event_time": "2026-11-24T23:51:07+08:00",
+      "stale": false,
+      "event_date_source": "llm_extracted",
+      "is_stale_rehash": false,
+      "time_trust_level": "article_timestamp",
+      "time_confidence": "article_timestamp",
+      "first_discovered_at": "2026-11-25T01:44:01+08:00",
+      "first_reported_at": "2026-11-24T23:51:07+08:00",
+      "latest_fact_update_at": "2026-11-24T23:51:07+08:00",
+      "latest_reported_at": "2026-11-24T23:51:07+08:00",
+      "fetched_at": "2026-11-25T01:44:01+08:00",
+      "input_batch_id": "raw-20261125-014401",
+      "fact_summary": "亚马逊据报道以75亿美元收购Decart的决定，是其提高Trainium芯片效率努力的一部分。",
+      "fact_atoms": [
+        {
+          "atom_id": "fa_97018133",
+          "subject": "英伟达 (NVIDIA)",
+          "metric_or_action": "Amazon 以约 75 亿美元收购 Decart，押注用软件缩小与 Nvidia 的 AI 芯片差距",
+          "value": "75",
+          "unit": "亿美元",
+          "period": "单次披露/未注明周期",
+          "scope": "新闻事件陈述",
+          "fact_status": "multi_source_reported",
+          "attribution": "TechCrunch AI & Tech",
+          "source_ref": "techcrunch-rss_50ab14a585b5",
+          "source_url": "https://techcrunch.com/2026/11/24/amazons-decart-acquisition-is-a-bet-on-using-software-to-narrow-the-gap-with-nvidia-in-the-ai-chip-race",
+          "source_excerpt_or_locator": "Amazon’s decision to acquire Decart for a reported $7.5 billion is part of its efforts to improve the efficiency of its Trainium chips.",
+          "published_at": "2026-11-24T23:51:07+08:00",
+          "discovered_at": "2026-11-25T01:44:01+08:00",
+          "revision": 1
+        }
+      ],
+      "ai_analysis": "反映英伟达 (NVIDIA)技术架构与商业落地节奏变化，实际效果仍待开发者生态与第三方实测验证。",
+      "unverified_claims": [],
+      "speculation_or_outlook": null,
+      "sources": [
+        {
+          "item_id": "techcrunch-rss_50ab14a585b5",
+          "article_id": "techcrunch-rss_50ab14a585b5",
+          "source_id": "techcrunch-rss",
+          "source_name": "TechCrunch AI & Tech",
+          "publisher_name": "TechCrunch AI & Tech",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "techcrunch",
+          "is_reprint_copy": false,
+          "title": "Amazon’s Decart acquisition is a bet on using software to narrow the silicon gap with Nvidia",
+          "url": "https://techcrunch.com/2026/11/24/amazons-decart-acquisition-is-a-bet-on-using-software-to-narrow-the-gap-with-nvidia-in-the-ai-chip-race",
+          "published_at": "2026-11-24T23:51:07+08:00",
+          "published_at_source": "upstream_rfc2822",
+          "fetched_at": "2026-11-25T01:44:01+08:00",
+          "excerpt": "Amazon’s decision to acquire Decart for a reported $7.5 billion is part of its efforts to improve the efficiency of its Trainium chips.",
+          "thumbnail_url": null,
+          "deep_fetch_status": null,
+          "title_zh": "亚马逊收购Decart意在押注软件，以缩小与英伟达的芯片差距"
+        },
+        {
+          "item_id": "aihot_e6d97020f2b9",
+          "article_id": "aihot_e6d97020f2b9",
+          "source_id": "aihot",
+          "source_name": "AIHOT 前沿",
+          "publisher_name": "AIHOT 前沿",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "aggregator_lead",
+          "publisher_family": "aihot",
+          "is_reprint_copy": false,
+          "title": "Amazon 以约 75 亿美元收购 Decart，押注用软件缩小与 Nvidia 的 AI 芯片差距",
+          "url": "https://aihot.news/items/lks52jurngifbb4ovovipgsi4",
+          "published_at": "2026-11-24T23:51:07+08:00",
+          "published_at_source": "upstream_rfc2822",
+          "fetched_at": "2026-11-25T01:44:01+08:00",
+          "excerpt": null,
+          "thumbnail_url": null,
+          "deep_fetch_status": null
+        }
+      ],
+      "verification": {
+        "all_refs_valid": true,
+        "has_primary_url": true,
+        "rejected_refs": [],
+        "has_first_party": false
+      },
+      "followup": null,
+      "is_new_in_batch": true,
+      "update_kind": "new_discovery",
+      "heavy_score": 75.9,
+      "radar_score": 82,
+      "severity_tier": "A",
+      "severity_label": "A级要闻",
+      "heavy_reason_tag": "巨头重大变动",
+      "summary_en": "Amazon's decision to acquire Decart for a reported $7.5 billion is part of its efforts to improve the efficiency of its Trainium chips.",
+      "translation_attempts": 0,
+      "translation_error": null,
+      "title_zh": "Amazon 以约 75 亿美元收购 Decart，押注用软件缩小与 Nvidia 的 AI 芯片差距",
+      "translation_status": "native_zh",
+      "summary_zh": "亚马逊据报道以75亿美元收购Decart的决定，是其提高Trainium芯片效率努力的一部分。",
+      "title_en": "Amazon's Decart acquisition is a bet on using software to narrow the silicon gap with Nvidia",
+      "ai_analysis_en": "",
+      "deep_qa": [
+        {
+          "question": "这次技术变化对普通开发者或用户意味着什么？",
+          "answer": "聚焦英伟达 (NVIDIA)能力边界与使用成本变化：亚马逊据报道以75亿美元收购Decart的决定，是其提高Trainium芯片效率努力的一部分。",
+          "historical_parallel": "历次大模型与算力架构迭代中，推理单价下探与生态开放通常在 1~2 个季度内显著拉动应用渗透率。"
+        },
+        {
+          "question": "该进展目前处于什么验证阶段？",
+          "answer": "需结合官方技术报告、独立第三方复现基准以及下游云厂与终端真实接入节奏交叉确认。",
+          "historical_parallel": "2025 年以来主流开源/闭源大模型竞赛证明，公开基准与真实开发者采用率决定商业化天花板。"
+        }
+      ]
+    },
+    {
+      "schema_version": "4.1",
+      "event_id": "evt_5722ea9539d1",
+      "storyline_id": "st_58c778df12d9",
+      "article_ids": [
+        "theverge-rss_f84e42456fef",
+        "hackernews_99b880242051"
+      ],
+      "legacy_event_ids": [],
+      "title": "英伟达前合作伙伴Megaspeed遭遇美国商务部出口禁令",
+      "category": "tech",
+      "entities": [
+        "英伟达 (NVIDIA)"
+      ],
+      "entity_ids": [
+        "ent_nvidia"
+      ],
+      "entity_confidences": {
+        "英伟达 (NVIDIA)": 0.96
+      },
+      "matched_entities": [
+        {
+          "entity_id": "ent_nvidia",
+          "canonical_name": "英伟达 (NVIDIA)",
+          "entity_type": "company",
+          "sector": "半导体 / AI算力",
+          "matched_aliases": [
+            "nvidia",
+            "jensen huang"
+          ],
+          "tickers": [
+            {
+              "symbol": "NVDA",
+              "market": "US",
+              "exchange": "NASDAQ",
+              "currency": "USD",
+              "label": "NVDA.US (NASDAQ)"
+            }
+          ],
+          "reason": "正文/实体匹配关键词「nvidia / jensen huang」",
+          "confidence": 0.96
+        }
+      ],
+      "importance": "medium",
+      "sentiment": "Mixed",
+      "special_note": null,
+      "material_stage": null,
+      "material_stage_label": null,
+      "material_stage_confidence": null,
+      "thumbnail_url": null,
+      "publisher_name": "The Verge",
+      "source_status": "ok",
+      "evidence_status": "multi_source",
+      "evidence_label": "多独立来源提及（待核官方全文）",
+      "evidence_status_reason": "已有 2 家独立媒体族提及（含摘要或正文首段）；多源转载不代表官方公告已证实",
+      "attribution_warning": null,
+      "regulatory_note": null,
+      "contradictions": [],
+      "downweight_reasons": [],
+      "quality_flags": [],
+      "material_depth": "title_and_excerpt",
+      "source_count": 2,
+      "platform_count": 2,
+      "independent_publisher_count": 2,
+      "reprint_count": 0,
+      "published_at": "2026-11-25T00:08:29+08:00",
+      "event_date": "2026-11-25",
+      "event_time": "2026-11-25T00:08:29+08:00",
+      "stale": false,
+      "event_date_source": "llm_extracted",
+      "is_stale_rehash": false,
+      "time_trust_level": "article_timestamp",
+      "time_confidence": "article_timestamp",
+      "first_discovered_at": "2026-11-25T01:44:01+08:00",
+      "first_reported_at": "2026-11-25T00:08:29+08:00",
+      "latest_fact_update_at": "2026-11-25T00:37:03+08:00",
+      "latest_reported_at": "2026-11-25T00:37:03+08:00",
+      "fetched_at": "2026-11-25T01:44:01+08:00",
+      "input_batch_id": "raw-20261125-014401",
+      "fact_summary": "随着黄仁勋在特朗普政府的支持下重返英伟达首席执行官一职，商务部已将Megaspeed列入其实体清单，此举将阻止与该公司进行贸易，理由是……",
+      "fact_atoms": [
+        {
+          "atom_id": "fa_58793541",
+          "subject": "英伟达 (NVIDIA)",
+          "metric_or_action": "Ex-Nvidia partner Megaspeed hit with U.S. Commerce Department export ban",
+          "value": null,
+          "unit": null,
+          "period": "单次披露/未注明周期",
+          "scope": "新闻事件陈述",
+          "fact_status": "multi_source_reported",
+          "attribution": "The Verge",
+          "source_ref": "theverge-rss_f84e42456fef",
+          "source_url": "https://www.theverge.com/policy/1041270/nvidia-megaspeed-commerce-dept-entity-list",
+          "source_excerpt_or_locator": "As Jensen Huang returns to his post as Nvidia's CEO with support from the Trump administration, the Department of Commerce has added Megaspeed to its Entity List, which blocks trad",
+          "published_at": "2026-11-25T00:37:03+08:00",
+          "discovered_at": "2026-11-25T01:44:01+08:00",
+          "revision": 1
+        }
+      ],
+      "ai_analysis": "反映英伟达 (NVIDIA)技术架构与商业落地节奏变化，实际效果仍待开发者生态与第三方实测验证。",
+      "unverified_claims": [],
+      "speculation_or_outlook": null,
+      "sources": [
+        {
+          "item_id": "theverge-rss_f84e42456fef",
+          "article_id": "theverge-rss_f84e42456fef",
+          "source_id": "theverge-rss",
+          "source_name": "The Verge",
+          "publisher_name": "The Verge",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "theverge",
+          "is_reprint_copy": false,
+          "title": "US Commerce Department adds Megaspeed to trade blacklist as Huang retakes control of Nvidia",
+          "url": "https://www.theverge.com/policy/1041270/nvidia-megaspeed-commerce-dept-entity-list",
+          "published_at": "2026-11-25T00:37:03+08:00",
+          "published_at_source": "upstream_iso",
+          "fetched_at": "2026-11-25T01:44:01+08:00",
+          "excerpt": "As Jensen Huang returns to his post as Nvidia's CEO with support from the Trump administration, the Department of Commerce has added Megaspeed to its Entity List, which blocks trade with the company, citing national security risks.",
+          "thumbnail_url": null,
+          "deep_fetch_status": null,
+          "title_zh": "在黄仁勋重新掌控英伟达之际，美国商务部将美佳速（Megaspeed）列入贸易黑名单"
+        },
+        {
+          "item_id": "hackernews_99b880242051",
+          "article_id": "hackernews_99b880242051",
+          "source_id": "hackernews",
+          "source_name": "Hacker News",
+          "publisher_name": "Hacker News",
+          "source_status": "ok",
+          "source_kind": "discussion",
+          "source_tier": "aggregator_lead",
+          "publisher_family": "hackernews",
+          "is_reprint_copy": false,
+          "title": "Ex-Nvidia partner Megaspeed hit with U.S. Commerce Department export ban",
+          "url": "https://news.ycombinator.com/item?id=50630245",
+          "published_at": "2026-11-25T00:08:29+08:00",
+          "published_at_source": "upstream_rfc2822",
+          "fetched_at": "2026-11-25T01:44:01+08:00",
+          "excerpt": null,
+          "thumbnail_url": null,
+          "deep_fetch_status": null,
+          "title_zh": "英伟达前合作伙伴Megaspeed遭遇美国商务部出口禁令"
+        }
+      ],
+      "verification": {
+        "all_refs_valid": true,
+        "has_primary_url": true,
+        "rejected_refs": [],
+        "has_first_party": false
+      },
+      "followup": null,
+      "is_new_in_batch": true,
+      "update_kind": "new_discovery",
+      "heavy_score": 57.5,
+      "radar_score": 82,
+      "severity_tier": "B",
+      "severity_label": "B级常规",
+      "title_en": "Ex-Nvidia partner Megaspeed hit with U.S. Commerce Department export ban",
+      "summary_en": "As Jensen Huang returns to his post as Nvidia's CEO with support from the Trump administration, the Department of Commerce has added Megaspeed to its Entity List, which blocks trade with the company, citing…",
+      "translation_attempts": 7,
+      "translation_error": null,
+      "translation_status": "translated",
+      "title_zh": "英伟达前合作伙伴Megaspeed遭遇美国商务部出口禁令",
+      "summary_zh": "随着黄仁勋在特朗普政府的支持下重返英伟达首席执行官一职，商务部已将Megaspeed列入其实体清单，此举将阻止与该公司进行贸易，理由是……",
+      "ai_analysis_en": "",
+      "deep_qa": [
+        {
+          "question": "这次技术变化对普通开发者或用户意味着什么？",
+          "answer": "聚焦英伟达 (NVIDIA)能力边界与使用成本变化：随着黄仁勋在特朗普政府的支持下重返英伟达首席执行官一职，商务部已将Megaspeed列入其实体清单，此举将阻止与该公司进行贸易，理由是……。",
+          "historical_parallel": "历次大模型与算力架构迭代中，推理单价下探与生态开放通常在 1~2 个季度内显著拉动应用渗透率。"
+        },
+        {
+          "question": "该进展目前处于什么验证阶段？",
+          "answer": "需结合官方技术报告、独立第三方复现基准以及下游云厂与终端真实接入节奏交叉确认。",
+          "historical_parallel": "2025 年以来主流开源/闭源大模型竞赛证明，公开基准与真实开发者采用率决定商业化天花板。"
+        }
+      ]
+    },
+    {
+      "schema_version": "4.1",
+      "event_id": "evt_066dc4aaadf8",
+      "storyline_id": "st_394897c69ab7",
+      "article_ids": [
+        "rss-gnews-ai-models-zh_244ae0523185",
+        "rss-gnews-ai-models-zh_115326cf1441",
+        "aihot_07c2386afdcc",
+        "aihot_b58b047252c9"
+      ],
+      "legacy_event_ids": [],
+      "title": "Axos 报道：数十名内部人士称 OpenAI 和 Anthropic 未发布模型的能力已超出安全措施",
+      "category": "tech",
+      "entities": [
+        "OpenAI",
+        "Anthropic / Claude"
+      ],
+      "entity_ids": [
+        "ent_openai",
+        "ent_anthropic"
+      ],
+      "entity_confidences": {
+        "OpenAI": 0.99,
+        "Anthropic / Claude": 0.86
+      },
+      "matched_entities": [
+        {
+          "entity_id": "ent_openai",
+          "canonical_name": "OpenAI",
+          "entity_type": "company",
+          "sector": "AI 模型与应用",
+          "matched_aliases": [
+            "openai"
+          ],
+          "tickers": [],
+          "reason": "正文/实体匹配关键词「openai」",
+          "confidence": 0.99
+        },
+        {
+          "entity_id": "ent_anthropic",
+          "canonical_name": "Anthropic / Claude",
+          "entity_type": "company",
+          "sector": "AI 模型与安全",
+          "matched_aliases": [
+            "anthropic"
+          ],
+          "tickers": [],
+          "reason": "正文/实体匹配关键词「anthropic」",
+          "confidence": 0.86
+        }
+      ],
+      "importance": "high",
+      "sentiment": "Mixed",
+      "special_note": null,
+      "material_stage": null,
+      "material_stage_label": null,
+      "material_stage_confidence": null,
+      "thumbnail_url": null,
+      "publisher_name": "观点网",
+      "source_status": "ok",
+      "evidence_status": "multi_source",
+      "evidence_label": "多独立来源提及（待核官方全文）",
+      "evidence_status_reason": "已有 3 家独立媒体族提及（含摘要或正文首段）；多源转载不代表官方公告已证实",
+      "attribution_warning": null,
+      "regulatory_note": null,
+      "contradictions": [],
+      "downweight_reasons": [],
+      "quality_flags": [],
+      "material_depth": "title_and_excerpt",
+      "source_count": 4,
+      "platform_count": 2,
+      "independent_publisher_count": 3,
+      "reprint_count": 0,
+      "published_at": "2026-11-24T19:18:56+08:00",
+      "event_date": "2026-11-24",
+      "event_time": "2026-11-24T19:18:56+08:00",
+      "stale": false,
+      "event_date_source": "llm_extracted",
+      "is_stale_rehash": false,
+      "time_trust_level": "article_timestamp",
+      "time_confidence": "article_timestamp",
+      "first_discovered_at": "2026-11-25T01:44:01+08:00",
+      "first_reported_at": "2026-11-24T19:18:56+08:00",
+      "latest_fact_update_at": "2026-11-24T22:02:31+08:00",
+      "latest_reported_at": "2026-11-24T22:02:31+08:00",
+      "fetched_at": "2026-11-25T01:44:01+08:00",
+      "input_batch_id": "raw-20261125-014401",
+      "fact_summary": "消息称OpenAI与Anthropic员工警告：内部AI模型能力过于强大，无法安全发布 凤凰网科技",
+      "fact_atoms": [
+        {
+          "atom_id": "fa_99396163",
+          "subject": "OpenAI",
+          "metric_or_action": "Axos 报道：数十名内部人士称 OpenAI 和 Anthropic 未发布模型的能力已超出安全措施",
+          "value": null,
+          "unit": null,
+          "period": "单次披露/未注明周期",
+          "scope": "新闻事件陈述",
+          "fact_status": "reported_unconfirmed_by_filing",
+          "attribution": "观点网",
+          "source_ref": "rss-gnews-ai-models-zh_244ae0523185",
+          "source_url": "https://news.google.com/rss/articles/CBMiYkFVX3lxTE9CQUVnbHF3VWFwaFd1dFVDRWRRdWg1NjNrZHhJNEJpcmFuQ1V3cXBXdWxkdkhXSzlwRUdUdjVySlZsTjczcWZYcmxKRkpqZHRRQTV6ZUpaUWhHemhWVExSblF3?oc=5",
+          "source_excerpt_or_locator": "OpenAI与Anthropic员工对未发布模型提安全顾虑 两公司回应 观点网",
+          "published_at": "2026-11-24T20:47:21+08:00",
+          "discovered_at": "2026-11-25T01:44:01+08:00",
+          "revision": 1
+        }
+      ],
+      "ai_analysis": "反映OpenAI / Anthropic / Claude技术架构与商业落地节奏变化，实际效果仍待开发者生态与第三方实测验证。",
+      "unverified_claims": [],
+      "speculation_or_outlook": null,
+      "sources": [
+        {
+          "item_id": "rss-gnews-ai-models-zh_244ae0523185",
+          "article_id": "rss-gnews-ai-models-zh_244ae0523185",
+          "source_id": "rss-gnews-ai-models-zh",
+          "source_name": "观点网",
+          "publisher_name": "观点网",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "guandian",
+          "is_reprint_copy": false,
+          "title": "OpenAI与Anthropic员工对未发布模型提安全顾虑 两公司回应",
+          "url": "https://news.google.com/rss/articles/CBMiYkFVX3lxTE9CQUVnbHF3VWFwaFd1dFVDRWRRdWg1NjNrZHhJNEJpcmFuQ1V3cXBXdWxkdkhXSzlwRUdUdjVySlZsTjczcWZYcmxKRkpqZHRRQTV6ZUpaUWhHemhWVExSblF3?oc=5",
+          "published_at": "2026-11-24T20:47:21+08:00",
+          "published_at_source": "upstream_rfc2822",
+          "fetched_at": "2026-11-25T01:44:05+08:00",
+          "excerpt": "OpenAI与Anthropic员工对未发布模型提安全顾虑 两公司回应 观点网",
+          "thumbnail_url": null,
+          "deep_fetch_status": "empty_or_js_rendered"
+        },
+        {
+          "item_id": "rss-gnews-ai-models-zh_115326cf1441",
+          "article_id": "rss-gnews-ai-models-zh_115326cf1441",
+          "source_id": "rss-gnews-ai-models-zh",
+          "source_name": "凤凰网科技",
+          "publisher_name": "凤凰网科技",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "tech",
+          "is_reprint_copy": false,
+          "title": "消息称OpenAI与Anthropic员工警告：内部AI模型能力过于强大，无法安全发布",
+          "url": "https://news.google.com/rss/articles/CBMiTEFVX3lxTE5rMjhTUFlqRTFmZ3FkQVJSVGx3bGd0UE1TUlJwQWJNUk9QY2JCNzRFOVVwYUxNZWtJRU9NbFZ1dUFJZmRiVTFJblRCSmU?oc=5",
+          "published_at": "2026-11-24T19:29:28+08:00",
+          "published_at_source": "upstream_rfc2822",
+          "fetched_at": "2026-11-25T01:44:05+08:00",
+          "excerpt": "消息称OpenAI与Anthropic员工警告：内部AI模型能力过于强大，无法安全发布 凤凰网科技",
+          "thumbnail_url": null,
+          "deep_fetch_status": "empty_or_js_rendered"
+        },
+        {
+          "item_id": "aihot_07c2386afdcc",
+          "article_id": "aihot_07c2386afdcc",
+          "source_id": "aihot",
+          "source_name": "AIHOT 前沿",
+          "publisher_name": "AIHOT 前沿",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "aggregator_lead",
+          "publisher_family": "aihot",
+          "is_reprint_copy": false,
+          "title": "Axos 报道：数十名内部人士称 OpenAI 和 Anthropic 未发布模型的能力已超出安全措施",
+          "url": "https://aihot.news/items/lq87k55eq302bk57xq3o5orsv",
+          "published_at": "2026-11-24T22:02:31+08:00",
+          "published_at_source": "upstream_rfc2822",
+          "fetched_at": "2026-11-25T01:44:01+08:00",
+          "excerpt": null,
+          "thumbnail_url": null,
+          "deep_fetch_status": null
+        },
+        {
+          "item_id": "aihot_b58b047252c9",
+          "article_id": "aihot_b58b047252c9",
+          "source_id": "aihot",
+          "source_name": "AIHOT 前沿",
+          "publisher_name": "AIHOT 前沿",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "aggregator_lead",
+          "publisher_family": "aihot",
+          "is_reprint_copy": false,
+          "title": "Axios 报道 OpenAI 与 Anthropic 员工警告内部模型能力过强难以安全发布",
+          "url": "https://aihot.news/items/io4nmesz93eugi0fyu5bofjw7",
+          "published_at": "2026-11-24T19:18:56+08:00",
+          "published_at_source": "upstream_rfc2822",
+          "fetched_at": "2026-11-25T01:44:01+08:00",
+          "excerpt": null,
+          "thumbnail_url": null,
+          "deep_fetch_status": null
+        }
+      ],
+      "verification": {
+        "all_refs_valid": true,
+        "has_primary_url": true,
+        "rejected_refs": [],
+        "has_first_party": false
+      },
+      "followup": null,
+      "is_new_in_batch": true,
+      "update_kind": "new_discovery",
+      "heavy_score": 68.0,
+      "radar_score": 88,
+      "severity_tier": "A",
+      "severity_label": "A级要闻",
+      "heavy_reason_tag": "巨头重大变动",
+      "translation_attempts": 0,
+      "translation_error": null,
+      "title_zh": "Axos 报道：数十名内部人士称 OpenAI 和 Anthropic 未发布模型的能力已超出安全措施",
+      "translation_status": "native_zh",
+      "summary_zh": "消息称OpenAI与Anthropic员工警告：内部AI模型能力过于强大，无法安全发布 凤凰网科技",
+      "title_en": "",
+      "summary_en": "",
+      "ai_analysis_en": "",
+      "deep_qa": [
+        {
+          "question": "这次技术变化对普通开发者或用户意味着什么？",
+          "answer": "聚焦OpenAI / Anthropic / Claude能力边界与使用成本变化：消息称OpenAI与Anthropic员工警告：内部AI模型能力过于强大，无法安全发布 凤凰网科技。",
+          "historical_parallel": "历次大模型与算力架构迭代中，推理单价下探与生态开放通常在 1~2 个季度内显著拉动应用渗透率。"
+        },
+        {
+          "question": "该进展目前处于什么验证阶段？",
+          "answer": "需结合官方技术报告、独立第三方复现基准以及下游云厂与终端真实接入节奏交叉确认。",
+          "historical_parallel": "2025 年以来主流开源/闭源大模型竞赛证明，公开基准与真实开发者采用率决定商业化天花板。"
+        }
+      ]
+    },
+    {
+      "schema_version": "4.1",
+      "event_id": "evt_0b58590bfbb1",
+      "storyline_id": "st_f5a5691b1983",
+      "article_ids": [
+        "rss-marktechpost_74c42d0ab794",
+        "rss-hf-blog_67b1533e76ba",
+        "aihot_1dbb38a5e7cf"
+      ],
+      "legacy_event_ids": [],
+      "title": "NVIDIA Isaac Lab 与 Newton 实现 Microduck 机器人避障的 Sim2Real 教程",
+      "category": "tech",
+      "entities": [
+        "英伟达 (NVIDIA)"
+      ],
+      "entity_ids": [
+        "ent_nvidia"
+      ],
+      "entity_confidences": {
+        "英伟达 (NVIDIA)": 0.86
+      },
+      "matched_entities": [
+        {
+          "entity_id": "ent_nvidia",
+          "canonical_name": "英伟达 (NVIDIA)",
+          "entity_type": "company",
+          "sector": "半导体 / AI算力",
+          "matched_aliases": [
+            "nvidia"
+          ],
+          "tickers": [
+            {
+              "symbol": "NVDA",
+              "market": "US",
+              "exchange": "NASDAQ",
+              "currency": "USD",
+              "label": "NVDA.US (NASDAQ)"
+            }
+          ],
+          "reason": "正文/实体匹配关键词「nvidia」",
+          "confidence": 0.86
+        }
+      ],
+      "importance": "high",
+      "sentiment": "Mixed",
+      "special_note": null,
+      "material_stage": null,
+      "material_stage_label": null,
+      "material_stage_confidence": null,
+      "thumbnail_url": "https://s.w.org/images/core/emoji/17.0.2/72x72/25b6.png",
+      "publisher_name": "MarkTechPost (AI论文/模型)",
+      "source_status": "ok",
+      "evidence_status": "multi_source",
+      "evidence_label": "多独立来源提及（待核官方全文）",
+      "evidence_status_reason": "已有 3 家独立媒体族提及（含摘要或正文首段）；多源转载不代表官方公告已证实",
+      "attribution_warning": null,
+      "regulatory_note": null,
+      "contradictions": [],
+      "downweight_reasons": [],
+      "quality_flags": [],
+      "material_depth": "title_and_excerpt",
+      "source_count": 3,
+      "platform_count": 3,
+      "independent_publisher_count": 3,
+      "reprint_count": 0,
+      "published_at": "2026-11-23T02:37:57+08:00",
+      "event_date": "2026-11-25",
+      "event_time": "2026-11-23T02:37:57+08:00",
+      "stale": false,
+      "event_date_source": "llm_extracted",
+      "is_stale_rehash": false,
+      "time_trust_level": "article_timestamp",
+      "time_confidence": "article_timestamp",
+      "first_discovered_at": "2026-11-25T01:44:01+08:00",
+      "first_reported_at": "2026-11-23T02:37:57+08:00",
+      "latest_fact_update_at": "2026-11-25T00:34:13+08:00",
+      "latest_reported_at": "2026-11-25T00:34:13+08:00",
+      "fetched_at": "2026-11-25T01:44:01+08:00",
+      "input_batch_id": "raw-20261125-014401",
+      "fact_summary": "英伟达发布了Alpamayo 2 Edge，这是一款2B级推理视觉-语言-动作模型，可在DRIVE AGX Thor平台上规划驾驶轨迹并进行解释，其像素到轨迹延迟为160至190毫秒。",
+      "fact_atoms": [
+        {
+          "atom_id": "fa_23879913",
+          "subject": "英伟达 (NVIDIA)",
+          "metric_or_action": "NVIDIA Isaac Lab 与 Newton 实现 Microduck 机器人避障的 Sim2Real 教程",
+          "value": null,
+          "unit": null,
+          "period": "单次披露/未注明周期",
+          "scope": "新闻事件陈述",
+          "fact_status": "multi_source_reported",
+          "attribution": "MarkTechPost (AI论文/模型)",
+          "source_ref": "rss-marktechpost_74c42d0ab794",
+          "source_url": "https://www.marktechpost.com/2026/11/22/nvidia-alpamayo-2-edge-2b-reasoning-vla-drive-thor",
+          "source_excerpt_or_locator": "NVIDIA released Alpamayo 2 Edge, a 2B-class reasoning vision-language-action model that plans driving trajectories and explains them on DRIVE AGX Thor, at 160 to 190 ms pixel-to-tr",
+          "published_at": "2026-11-23T02:37:57+08:00",
+          "discovered_at": "2026-11-25T01:44:01+08:00",
+          "revision": 1
+        }
+      ],
+      "ai_analysis": "反映英伟达 (NVIDIA)技术架构与商业落地节奏变化，实际效果仍待开发者生态与第三方实测验证。",
+      "unverified_claims": [],
+      "speculation_or_outlook": null,
+      "sources": [
+        {
+          "item_id": "rss-marktechpost_74c42d0ab794",
+          "article_id": "rss-marktechpost_74c42d0ab794",
+          "source_id": "rss-marktechpost",
+          "source_name": "MarkTechPost (AI论文/模型)",
+          "publisher_name": "MarkTechPost (AI论文/模型)",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "marktechpost",
+          "is_reprint_copy": false,
+          "title": "NVIDIA Releases Alpamayo 2 Edge: A 2B Reasoning VLA for DRIVE Thor",
+          "url": "https://www.marktechpost.com/2026/11/22/nvidia-alpamayo-2-edge-2b-reasoning-vla-drive-thor",
+          "published_at": "2026-11-23T02:37:57+08:00",
+          "published_at_source": "upstream_rfc2822",
+          "fetched_at": "2026-11-25T01:44:05+08:00",
+          "excerpt": "NVIDIA released Alpamayo 2 Edge, a 2B-class reasoning vision-language-action model that plans driving trajectories and explains them on DRIVE AGX Thor, at 160 to 190 ms pixel-to-trajectory latency. The post NVIDIA Releases Alpamayo 2 Edge: A 2B Reasoning VLA…",
+          "thumbnail_url": "https://s.w.org/images/core/emoji/17.0.2/72x72/25b6.png",
+          "deep_fetch_status": null,
+          "title_zh": "英伟达发布 Alpamayo 2 Edge：一款适用于 DRIVE Thor 的 2B 推理 VLA"
+        },
+        {
+          "item_id": "rss-hf-blog_67b1533e76ba",
+          "article_id": "rss-hf-blog_67b1533e76ba",
+          "source_id": "rss-hf-blog",
+          "source_name": "Hugging Face 官方博客",
+          "publisher_name": "Hugging Face 官方博客",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "huggingface",
+          "is_reprint_copy": false,
+          "title": "Microduck Obstacle Avoidance: A Sim2Real Workflow with Isaac Lab and Newton",
+          "url": "https://huggingface.co/blog/nvidia/microduck-obstacle-avoidance",
+          "published_at": "2026-11-25T00:34:13+08:00",
+          "published_at_source": "upstream_rfc2822",
+          "fetched_at": "2026-11-25T01:44:05+08:00",
+          "excerpt": null,
+          "thumbnail_url": null,
+          "deep_fetch_status": null,
+          "title_zh": "Microduck避障：基于Isaac Lab与Newton的Sim2Real工作流"
+        },
+        {
+          "item_id": "aihot_1dbb38a5e7cf",
+          "article_id": "aihot_1dbb38a5e7cf",
+          "source_id": "aihot",
+          "source_name": "AIHOT 前沿",
+          "publisher_name": "AIHOT 前沿",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "aggregator_lead",
+          "publisher_family": "aihot",
+          "is_reprint_copy": false,
+          "title": "NVIDIA Isaac Lab 与 Newton 实现 Microduck 机器人避障的 Sim2Real 教程",
+          "url": "https://aihot.news/items/dgubf5qkk6sfbvnogqotjisrm",
+          "published_at": "2026-11-25T00:34:13+08:00",
+          "published_at_source": "upstream_rfc2822",
+          "fetched_at": "2026-11-25T01:44:01+08:00",
+          "excerpt": null,
+          "thumbnail_url": null,
+          "deep_fetch_status": null
+        }
+      ],
+      "verification": {
+        "all_refs_valid": true,
+        "has_primary_url": true,
+        "rejected_refs": [],
+        "has_first_party": false
+      },
+      "followup": null,
+      "is_new_in_batch": true,
+      "update_kind": "new_discovery",
+      "heavy_score": 78.2,
+      "radar_score": 88,
+      "severity_tier": "A",
+      "severity_label": "A级要闻",
+      "heavy_reason_tag": "巨头重大变动",
+      "summary_en": "NVIDIA released Alpamayo 2 Edge, a 2B-class reasoning vision-language-action model that plans driving trajectories and explains them on DRIVE AGX Thor, at 160 to 190 ms pixel-to-trajectory latency.",
+      "translation_attempts": 0,
+      "translation_error": null,
+      "title_zh": "NVIDIA Isaac Lab 与 Newton 实现 Microduck 机器人避障的 Sim2Real 教程",
+      "translation_status": "native_zh",
+      "summary_zh": "英伟达发布了Alpamayo 2 Edge，这是一款2B级推理视觉-语言-动作模型，可在DRIVE AGX Thor平台上规划驾驶轨迹并进行解释，其像素到轨迹延迟为160至190毫秒。",
+      "title_en": "NVIDIA Releases Alpamayo 2 Edge: A 2B Reasoning VLA for DRIVE Thor",
+      "ai_analysis_en": "",
+      "deep_qa": [
+        {
+          "question": "这次技术变化对普通开发者或用户意味着什么？",
+          "answer": "聚焦英伟达 (NVIDIA)能力边界与使用成本变化：英伟达发布了Alpamayo 2 Edge，这是一款2B级推理视觉-语言-动作模型，可在DRIVE AGX Thor平台上规划驾驶轨迹并进行解释，其像素到轨迹延迟为160至190毫秒。",
+          "historical_parallel": "历次大模型与算力架构迭代中，推理单价下探与生态开放通常在 1~2 个季度内显著拉动应用渗透率。"
+        },
+        {
+          "question": "该进展目前处于什么验证阶段？",
+          "answer": "需结合官方技术报告、独立第三方复现基准以及下游云厂与终端真实接入节奏交叉确认。",
+          "historical_parallel": "2025 年以来主流开源/闭源大模型竞赛证明，公开基准与真实开发者采用率决定商业化天花板。"
+        }
+      ]
+    },
+    {
+      "schema_version": "4.1",
+      "event_id": "evt_8a0beefbeb78",
+      "storyline_id": "st_c7e9d6c83840",
+      "article_ids": [
+        "rss-arstechnica_9a0814d6b24e",
+        "theverge-rss_e7a826e06f23",
+        "techcrunch-rss_717b34efdbe1"
+      ],
+      "legacy_event_ids": [],
+      "title": "Tidal禁止AI生成音乐",
+      "category": "tech",
+      "entities": [],
+      "entity_ids": [],
+      "entity_confidences": {},
+      "matched_entities": [],
+      "importance": "medium",
+      "sentiment": "Mixed",
+      "special_note": null,
+      "material_stage": null,
+      "material_stage_label": null,
+      "material_stage_confidence": null,
+      "thumbnail_url": "https://cdn.arstechnica.net/wp-content/uploads/2026/11/GettyImages-1083228790-1152x648.jpg",
+      "publisher_name": "Ars Technica",
+      "source_status": "ok",
+      "evidence_status": "multi_source",
+      "evidence_label": "多独立来源提及（待核官方全文）",
+      "evidence_status_reason": "已有 3 家独立媒体族提及（含摘要或正文首段）；多源转载不代表官方公告已证实",
+      "attribution_warning": null,
+      "regulatory_note": null,
+      "contradictions": [],
+      "downweight_reasons": [],
+      "quality_flags": [],
+      "material_depth": "title_and_excerpt",
+      "source_count": 3,
+      "platform_count": 3,
+      "independent_publisher_count": 3,
+      "reprint_count": 0,
+      "published_at": "2026-11-25T00:46:00+08:00",
+      "event_date": "2026-11-25",
+      "event_time": "2026-11-25T00:46:00+08:00",
+      "stale": false,
+      "event_date_source": "llm_extracted",
+      "is_stale_rehash": false,
+      "time_trust_level": "article_timestamp",
+      "time_confidence": "article_timestamp",
+      "first_discovered_at": "2026-11-25T01:44:01+08:00",
+      "first_reported_at": "2026-11-25T00:46:00+08:00",
+      "latest_fact_update_at": "2026-11-25T01:34:34+08:00",
+      "latest_reported_at": "2026-11-25T01:34:34+08:00",
+      "fetched_at": "2026-11-25T01:44:01+08:00",
+      "input_batch_id": "raw-20261125-014401",
+      "fact_summary": "Tidal将于12月9日正式禁止AI生成音乐。这一变化将导致Tidal删除约2900万首AI生成歌曲，并预计每天拒绝8万至8.5万首曲目……",
+      "fact_atoms": [
+        {
+          "atom_id": "fa_12961905",
+          "subject": "相关主体",
+          "metric_or_action": "Tidal bans AI-generated music",
+          "value": null,
+          "unit": null,
+          "period": "单次披露/未注明周期",
+          "scope": "新闻事件陈述",
+          "fact_status": "multi_source_reported",
+          "attribution": "Ars Technica",
+          "source_ref": "rss-arstechnica_9a0814d6b24e",
+          "source_url": "https://arstechnica.com/ai/2026/11/tidal-will-ban-fully-ai-generated-music-on-december-9",
+          "source_excerpt_or_locator": "AI songs account for 6.3 percent of Tidal's catalog, but it's about to be zero.",
+          "published_at": "2026-11-25T01:34:34+08:00",
+          "discovered_at": "2026-11-25T01:44:01+08:00",
+          "revision": 1
+        }
+      ],
+      "ai_analysis": "反映科技/AI技术架构与商业落地节奏变化，实际效果仍待开发者生态与第三方实测验证。",
+      "unverified_claims": [],
+      "speculation_or_outlook": null,
+      "sources": [
+        {
+          "item_id": "rss-arstechnica_9a0814d6b24e",
+          "article_id": "rss-arstechnica_9a0814d6b24e",
+          "source_id": "rss-arstechnica",
+          "source_name": "Ars Technica",
+          "publisher_name": "Ars Technica",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "arstechnica",
+          "is_reprint_copy": false,
+          "title": "Tidal will ban fully AI-generated music on December 9",
+          "url": "https://arstechnica.com/ai/2026/11/tidal-will-ban-fully-ai-generated-music-on-december-9",
+          "published_at": "2026-11-25T01:34:34+08:00",
+          "published_at_source": "upstream_rfc2822",
+          "fetched_at": "2026-11-25T01:44:05+08:00",
+          "excerpt": "AI songs account for 6.3 percent of Tidal's catalog, but it's about to be zero.",
+          "thumbnail_url": "https://cdn.arstechnica.net/wp-content/uploads/2026/11/GettyImages-1083228790-1152x648.jpg",
+          "deep_fetch_status": null,
+          "title_zh": "Tidal将于12月9日全面禁止完全由AI生成的音乐"
+        },
+        {
+          "item_id": "theverge-rss_e7a826e06f23",
+          "article_id": "theverge-rss_e7a826e06f23",
+          "source_id": "theverge-rss",
+          "source_name": "The Verge",
+          "publisher_name": "The Verge",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "theverge",
+          "is_reprint_copy": false,
+          "title": "Tidal will start banning AI-generated music next month",
+          "url": "https://www.theverge.com/entertainment/1041362/tidal-ai-music-ban",
+          "published_at": "2026-11-25T01:17:09+08:00",
+          "published_at_source": "upstream_iso",
+          "fetched_at": "2026-11-25T01:44:01+08:00",
+          "excerpt": "Tidal is officially banning AI-generated music on December 9th. As a result of this change, Tidal will delete around 29 million AI-generated songs and reject an estimated 80,000 to 85,000 tracks per day, according to Tidal music lead…",
+          "thumbnail_url": null,
+          "deep_fetch_status": null,
+          "title_zh": "Tidal将于下个月开始禁止AI生成的音乐"
+        },
+        {
+          "item_id": "techcrunch-rss_717b34efdbe1",
+          "article_id": "techcrunch-rss_717b34efdbe1",
+          "source_id": "techcrunch-rss",
+          "source_name": "TechCrunch AI & Tech",
+          "publisher_name": "TechCrunch AI & Tech",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "techcrunch",
+          "is_reprint_copy": false,
+          "title": "Tidal to ban and remove millions of AI-generated tracks as AI slop inundates music streaming",
+          "url": "https://techcrunch.com/2026/11/24/tidal-to-ban-and-remove-millions-of-ai-generated-tracks-as-ai-slop-inundates-music-streaming",
+          "published_at": "2026-11-25T00:46:00+08:00",
+          "published_at_source": "upstream_rfc2822",
+          "fetched_at": "2026-11-25T01:44:01+08:00",
+          "excerpt": "The company said it will still accept songs that were made with AI assistance, but not fully generated.",
+          "thumbnail_url": null,
+          "deep_fetch_status": null,
+          "title_zh": "随着AI劣质内容充斥音乐流媒体，Tidal将禁封并下架数百万首AI生成曲目"
+        }
+      ],
+      "verification": {
+        "all_refs_valid": true,
+        "has_primary_url": true,
+        "rejected_refs": [],
+        "has_first_party": false
+      },
+      "followup": null,
+      "is_new_in_batch": true,
+      "update_kind": "new_discovery",
+      "heavy_score": 62.1,
+      "radar_score": 58,
+      "severity_tier": "B",
+      "severity_label": "B级常规",
+      "title_en": "Tidal bans AI-generated music",
+      "summary_en": "Tidal is officially banning AI-generated music on December 9th. As a result of this change, Tidal will delete around 29 million AI-generated songs and reject an estimated 80,000 to 85,000 tracks per day…",
+      "translation_attempts": 7,
+      "translation_error": null,
+      "translation_status": "translated",
+      "title_zh": "Tidal禁止AI生成音乐",
+      "summary_zh": "Tidal将于12月9日正式禁止AI生成音乐。这一变化将导致Tidal删除约2900万首AI生成歌曲，并预计每天拒绝8万至8.5万首曲目……",
+      "ai_analysis_en": "",
+      "deep_qa": [
+        {
+          "question": "这次技术变化对普通开发者或用户意味着什么？",
+          "answer": "聚焦相关产业链能力边界与使用成本变化：Tidal将于12月9日正式禁止AI生成音乐。这一变化将导致Tidal删除约2900万首AI生成歌曲，并预计每天拒绝8万至8.5万首曲目……。",
+          "historical_parallel": "历次大模型与算力架构迭代中，推理单价下探与生态开放通常在 1~2 个季度内显著拉动应用渗透率。"
+        },
+        {
+          "question": "该进展目前处于什么验证阶段？",
+          "answer": "需结合官方技术报告、独立第三方复现基准以及下游云厂与终端真实接入节奏交叉确认。",
+          "historical_parallel": "2025 年以来主流开源/闭源大模型竞赛证明，公开基准与真实开发者采用率决定商业化天花板。"
+        }
+      ]
+    },
+    {
+      "schema_version": "4.1",
+      "event_id": "evt_30c9e2ca59f5",
+      "storyline_id": "st_39d2b29fdc13",
+      "article_ids": [
+        "ithome-rss_84ba554f7bcc"
+      ],
+      "legacy_event_ids": [],
+      "title": "华为：截至目前，对外专利许可协议累计金额超 69 亿美元",
+      "category": "tech",
+      "entities": [
+        "华为 / 盘古 / 昇腾"
+      ],
+      "entity_ids": [
+        "ent_huawei"
+      ],
+      "entity_confidences": {
+        "华为 / 盘古 / 昇腾": 0.86
+      },
+      "matched_entities": [
+        {
+          "entity_id": "ent_huawei",
+          "canonical_name": "华为 / 盘古 / 昇腾",
+          "entity_type": "company",
+          "sector": "AI 模型与算力底座",
+          "matched_aliases": [
+            "华为"
+          ],
+          "tickers": [],
+          "reason": "正文/实体匹配关键词「华为」",
+          "confidence": 0.86
+        }
+      ],
+      "importance": "medium",
+      "sentiment": "Mixed",
+      "special_note": null,
+      "material_stage": null,
+      "material_stage_label": null,
+      "material_stage_confidence": null,
+      "thumbnail_url": "https://img.ithome.com/newsuploadfiles/2026/11/9b278731-a97b-4aff-8c8f-b30fad04bb55.jpg?x-bce-process=image/format,f_auto",
+      "publisher_name": "IT之家 实时快讯",
+      "source_status": "ok",
+      "evidence_status": "single_source",
+      "evidence_label": "单一独立来源线索",
+      "evidence_status_reason": "目前仅见 1 家独立来源（共 1 条引用含转载，含摘要/首段），尚未见独立渠道交叉或官方确认",
+      "attribution_warning": null,
+      "regulatory_note": null,
+      "contradictions": [],
+      "downweight_reasons": [],
+      "quality_flags": [],
+      "material_depth": "title_and_excerpt",
+      "source_count": 1,
+      "platform_count": 1,
+      "independent_publisher_count": 1,
+      "reprint_count": 0,
+      "published_at": "2026-11-25T01:06:26+08:00",
+      "event_date": "2026-11-25",
+      "event_time": "2026-11-25T01:06:26+08:00",
+      "stale": false,
+      "event_date_source": "llm_extracted",
+      "is_stale_rehash": false,
+      "time_trust_level": "article_timestamp",
+      "time_confidence": "article_timestamp",
+      "first_discovered_at": "2026-11-25T01:44:01+08:00",
+      "first_reported_at": "2026-11-25T01:06:26+08:00",
+      "latest_fact_update_at": "2026-11-25T01:06:26+08:00",
+      "latest_reported_at": "2026-11-25T01:06:26+08:00",
+      "fetched_at": "2026-11-25T01:44:01+08:00",
+      "input_batch_id": "raw-20261125-014401",
+      "fact_summary": "IT之家 11 月 25 日消息，以“卓越创新、开放共赢”为主题的第七届华为创新和知识产权论坛昨日在北京举办。▲ 华为在北京召开第七届创新和知识产权论坛 据介绍， 2025 年华为增加了 20 个被许可人 ，覆盖网络与通信设备、消费电子与计算、物联网、汽车、流媒体和半导体等领域。",
+      "fact_atoms": [
+        {
+          "atom_id": "fa_66715288",
+          "subject": "华为 / 盘古 / 昇腾",
+          "metric_or_action": "华为：截至目前，对外专利许可协议累计金额超 69 亿美元",
+          "value": "69",
+          "unit": "亿美元",
+          "period": "单次披露/未注明周期",
+          "scope": "新闻事件陈述",
+          "fact_status": "reported_unconfirmed_by_filing",
+          "attribution": "IT之家 实时快讯",
+          "source_ref": "ithome-rss_84ba554f7bcc",
+          "source_url": "https://www.ithome.com/1/031/896.htm",
+          "source_excerpt_or_locator": "IT之家 11 月 25 日消息，以“卓越创新、开放共赢”为主题的第七届华为创新和知识产权论坛昨日在北京举办。▲ 华为在北京召开第七届创新和知识产权论坛 据介绍， 2025 年华为增加了 20 个被许可人 ，覆盖网络与通信设备、消费电子与计算、物联网、汽车、流媒体和半导体等领域。",
+          "published_at": "2026-11-25T01:06:26+08:00",
+          "discovered_at": "2026-11-25T01:44:01+08:00",
+          "revision": 1
+        }
+      ],
+      "ai_analysis": "反映华为 / 盘古 / 昇腾技术架构与商业落地节奏变化，实际效果仍待开发者生态与第三方实测验证。",
+      "unverified_claims": [],
+      "speculation_or_outlook": null,
+      "sources": [
+        {
+          "item_id": "ithome-rss_84ba554f7bcc",
+          "article_id": "ithome-rss_84ba554f7bcc",
+          "source_id": "ithome-rss",
+          "source_name": "IT之家 实时快讯",
+          "publisher_name": "IT之家 实时快讯",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "ithome",
+          "is_reprint_copy": false,
+          "title": "华为：截至目前，对外专利许可协议累计金额超 69 亿美元",
+          "url": "https://www.ithome.com/1/031/896.htm",
+          "published_at": "2026-11-25T01:06:26+08:00",
+          "published_at_source": "upstream_rfc2822",
+          "fetched_at": "2026-11-25T01:44:01+08:00",
+          "excerpt": "IT之家 11 月 25 日消息，以“卓越创新、开放共赢”为主题的第七届华为创新和知识产权论坛昨日在北京举办。▲ 华为在北京召开第七届创新和知识产权论坛 据介绍， 2025 年华为增加了 20 个被许可人 ，覆盖网络与通信设备、消费电子与计算、物联网、汽车、流媒体和半导体等领域。",
+          "thumbnail_url": "https://img.ithome.com/newsuploadfiles/2026/11/9b278731-a97b-4aff-8c8f-b30fad04bb55.jpg?x-bce-process=image/format,f_auto",
+          "deep_fetch_status": null
+        }
+      ],
+      "verification": {
+        "all_refs_valid": true,
+        "has_primary_url": true,
+        "rejected_refs": [],
+        "has_first_party": false
+      },
+      "followup": null,
+      "is_new_in_batch": true,
+      "update_kind": "new_discovery",
+      "heavy_score": 39.1,
+      "radar_score": 76,
+      "severity_tier": "B",
+      "severity_label": "B级常规",
+      "translation_attempts": 0,
+      "translation_error": null,
+      "title_zh": "华为：截至目前，对外专利许可协议累计金额超 69 亿美元",
+      "translation_status": "native_zh",
+      "summary_zh": "IT之家 11 月 25 日消息，以“卓越创新、开放共赢”为主题的第七届华为创新和知识产权论坛昨日在北京举办。▲ 华为在北京召开第七届创新和知识产权论坛 据介绍， 2025 年华为增加了 20 个被许可人 ，覆盖网络与通信设备、消费电子与计算、物联网、汽车、流媒体和半导体等领域。",
+      "title_en": "",
+      "summary_en": "",
+      "ai_analysis_en": ""
+    },
+    {
+      "schema_version": "4.1",
+      "event_id": "evt_aeaa303656f5",
+      "storyline_id": "st_bcbac61b897f",
+      "article_ids": [
+        "solidot_e9ac2f6f9b4c",
+        "aihot_5c30eedb2512"
+      ],
+      "legacy_event_ids": [],
+      "title": "Google 申请个性化 AI 电视频道专利，用户将成视频主角",
+      "category": "tech",
+      "entities": [],
+      "entity_ids": [
+        "ent_google"
+      ],
+      "entity_confidences": {
+        "Google / DeepMind / Gemini": 0.86
+      },
+      "matched_entities": [
+        {
+          "entity_id": "ent_google",
+          "canonical_name": "Google / DeepMind / Gemini",
+          "entity_type": "company",
+          "sector": "AI 模型与云基础设施",
+          "matched_aliases": [
+            "google"
+          ],
+          "tickers": [
+            {
+              "symbol": "GOOGL",
+              "market": "US",
+              "exchange": "NASDAQ",
+              "currency": "USD",
+              "label": "GOOGL.US (NASDAQ)"
+            }
+          ],
+          "reason": "正文/实体匹配关键词「google」",
+          "confidence": 0.86
+        }
+      ],
+      "importance": "medium",
+      "sentiment": "Mixed",
+      "special_note": null,
+      "material_stage": null,
+      "material_stage_label": null,
+      "material_stage_confidence": null,
+      "thumbnail_url": null,
+      "publisher_name": "Solidot 奇客",
+      "source_status": "ok",
+      "evidence_status": "multi_source",
+      "evidence_label": "多独立来源提及（待核官方全文）",
+      "evidence_status_reason": "已有 2 家独立媒体族提及（仅基于标题素材）；多源转载不代表官方公告已证实",
+      "attribution_warning": null,
+      "regulatory_note": null,
+      "contradictions": [],
+      "downweight_reasons": [
+        "仅含标题素材 (-8)"
+      ],
+      "quality_flags": [],
+      "material_depth": "title_only",
+      "source_count": 2,
+      "platform_count": 2,
+      "independent_publisher_count": 2,
+      "reprint_count": 0,
+      "published_at": "2026-11-24T15:22:48+08:00",
+      "event_date": "2026-11-24",
+      "event_time": "2026-11-24T15:22:48+08:00",
+      "stale": false,
+      "event_date_source": "llm_extracted",
+      "is_stale_rehash": false,
+      "time_trust_level": "article_timestamp",
+      "time_confidence": "article_timestamp",
+      "first_discovered_at": "2026-11-25T01:44:01+08:00",
+      "first_reported_at": "2026-11-24T15:22:48+08:00",
+      "latest_fact_update_at": "2026-11-24T21:42:30+08:00",
+      "latest_reported_at": "2026-11-24T21:42:30+08:00",
+      "fetched_at": "2026-11-25T01:44:01+08:00",
+      "input_batch_id": "raw-20261125-014401",
+      "fact_summary": "Google 申请个性化 AI 电视频道专利，用户将成视频主角",
+      "fact_atoms": [
+        {
+          "atom_id": "fa_63650199",
+          "subject": "Google / DeepMind / Gemini",
+          "metric_or_action": "Google 申请个性化 AI 电视频道专利，用户将成视频主角",
+          "value": null,
+          "unit": null,
+          "period": "单次披露/未注明周期",
+          "scope": "新闻事件陈述",
+          "fact_status": "multi_source_reported",
+          "attribution": "Solidot 奇客",
+          "source_ref": "solidot_e9ac2f6f9b4c",
+          "source_url": "https://www.solidot.org/story?sid=85973",
+          "source_excerpt_or_locator": "Google 申请专利为用户量身定制 AI 电视频道",
+          "published_at": "2026-11-24T15:22:48+08:00",
+          "discovered_at": "2026-11-25T01:44:01+08:00",
+          "revision": 1
+        }
+      ],
+      "ai_analysis": "反映Google / DeepMind / Gemini技术架构与商业落地节奏变化，实际效果仍待开发者生态与第三方实测验证。",
+      "unverified_claims": [],
+      "speculation_or_outlook": null,
+      "sources": [
+        {
+          "item_id": "solidot_e9ac2f6f9b4c",
+          "article_id": "solidot_e9ac2f6f9b4c",
+          "source_id": "solidot",
+          "source_name": "Solidot 奇客",
+          "publisher_name": "Solidot 奇客",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "aggregator_lead",
+          "publisher_family": "solidot",
+          "is_reprint_copy": false,
+          "title": "Google 申请专利为用户量身定制 AI 电视频道",
+          "url": "https://www.solidot.org/story?sid=85973",
+          "published_at": "2026-11-24T15:22:48+08:00",
+          "published_at_source": "upstream_rfc2822",
+          "fetched_at": "2026-11-25T01:44:01+08:00",
+          "excerpt": null,
+          "thumbnail_url": null,
+          "deep_fetch_status": null
+        },
+        {
+          "item_id": "aihot_5c30eedb2512",
+          "article_id": "aihot_5c30eedb2512",
+          "source_id": "aihot",
+          "source_name": "AIHOT 前沿",
+          "publisher_name": "AIHOT 前沿",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "aggregator_lead",
+          "publisher_family": "aihot",
+          "is_reprint_copy": false,
+          "title": "Google 申请个性化 AI 电视频道专利，用户将成视频主角",
+          "url": "https://aihot.news/items/wt6k43mkad8g71cmkkz9qr4wc",
+          "published_at": "2026-11-24T21:42:30+08:00",
+          "published_at_source": "upstream_rfc2822",
+          "fetched_at": "2026-11-25T01:44:01+08:00",
+          "excerpt": null,
+          "thumbnail_url": null,
+          "deep_fetch_status": null
+        }
+      ],
+      "verification": {
+        "all_refs_valid": true,
+        "has_primary_url": true,
+        "rejected_refs": [],
+        "has_first_party": false
+      },
+      "followup": null,
+      "is_new_in_batch": true,
+      "update_kind": "new_discovery",
+      "heavy_score": 50.0,
+      "radar_score": 59,
+      "severity_tier": "B",
+      "severity_label": "B级常规",
+      "translation_attempts": 0,
+      "translation_error": null,
+      "title_zh": "Google 申请个性化 AI 电视频道专利，用户将成视频主角",
+      "translation_status": "native_zh",
+      "summary_zh": "Google 申请个性化 AI 电视频道专利，用户将成视频主角",
+      "title_en": "",
+      "summary_en": "",
+      "ai_analysis_en": "",
+      "deep_qa": [
+        {
+          "question": "这次技术变化对普通开发者或用户意味着什么？",
+          "answer": "聚焦相关产业链能力边界与使用成本变化：Google 申请个性化 AI 电视频道专利，用户将成视频主角。",
+          "historical_parallel": "历次大模型与算力架构迭代中，推理单价下探与生态开放通常在 1~2 个季度内显著拉动应用渗透率。"
+        },
+        {
+          "question": "该进展目前处于什么验证阶段？",
+          "answer": "需结合官方技术报告、独立第三方复现基准以及下游云厂与终端真实接入节奏交叉确认。",
+          "historical_parallel": "2025 年以来主流开源/闭源大模型竞赛证明，公开基准与真实开发者采用率决定商业化天花板。"
+        }
+      ]
+    },
+    {
+      "schema_version": "4.1",
+      "event_id": "evt_25fb06e3ce33",
+      "storyline_id": "st_36629a0fbdc1",
+      "article_ids": [
+        "ithome_e8d0c070313d",
+        "aihot_cf4c4e03c648"
+      ],
+      "legacy_event_ids": [],
+      "title": "OpenAI 窃听案细节曝光：沙特工程师用 Codex 改装设备偷录会议",
+      "category": "tech",
+      "entities": [
+        "OpenAI"
+      ],
+      "entity_ids": [
+        "ent_openai"
+      ],
+      "entity_confidences": {
+        "OpenAI": 0.99
+      },
+      "matched_entities": [
+        {
+          "entity_id": "ent_openai",
+          "canonical_name": "OpenAI",
+          "entity_type": "company",
+          "sector": "AI 模型与应用",
+          "matched_aliases": [
+            "openai"
+          ],
+          "tickers": [],
+          "reason": "正文/实体匹配关键词「openai」",
+          "confidence": 0.99
+        }
+      ],
+      "importance": "medium",
+      "sentiment": "Mixed",
+      "special_note": null,
+      "material_stage": null,
+      "material_stage_label": null,
+      "material_stage_confidence": null,
+      "thumbnail_url": null,
+      "publisher_name": "IT之家",
+      "source_status": "ok",
+      "evidence_status": "multi_source",
+      "evidence_label": "多独立来源提及（待核官方全文）",
+      "evidence_status_reason": "已有 2 家独立媒体族提及（仅基于标题素材）；多源转载不代表官方公告已证实",
+      "attribution_warning": null,
+      "regulatory_note": null,
+      "contradictions": [],
+      "downweight_reasons": [
+        "仅含标题素材 (-8)"
+      ],
+      "quality_flags": [],
+      "material_depth": "title_only",
+      "source_count": 2,
+      "platform_count": 2,
+      "independent_publisher_count": 2,
+      "reprint_count": 0,
+      "published_at": "2026-11-24T21:11:23+08:00",
+      "event_date": "2026-11-24",
+      "event_time": "2026-11-24T21:11:23+08:00",
+      "stale": false,
+      "event_date_source": "llm_extracted",
+      "is_stale_rehash": false,
+      "time_trust_level": "article_timestamp",
+      "time_confidence": "article_timestamp",
+      "first_discovered_at": "2026-11-25T01:44:01+08:00",
+      "first_reported_at": "2026-11-24T21:11:23+08:00",
+      "latest_fact_update_at": "2026-11-24T21:11:23+08:00",
+      "latest_reported_at": "2026-11-24T21:11:23+08:00",
+      "fetched_at": "2026-11-25T01:44:01+08:00",
+      "input_batch_id": "raw-20261125-014401",
+      "fact_summary": "OpenAI 窃听案细节曝光：沙特工程师用 Codex 改装设备偷录会议",
+      "fact_atoms": [
+        {
+          "atom_id": "fa_22942958",
+          "subject": "OpenAI",
+          "metric_or_action": "OpenAI 窃听案细节曝光：沙特工程师用 Codex 改装设备偷录会议",
+          "value": null,
+          "unit": null,
+          "period": "单次披露/未注明周期",
+          "scope": "新闻事件陈述",
+          "fact_status": "multi_source_reported",
+          "attribution": "IT之家",
+          "source_ref": "ithome_e8d0c070313d",
+          "source_url": "https://www.ithome.com/1/031/867.htm",
+          "source_excerpt_or_locator": "OpenAI“窃听”案更多细节浮出水面，当事沙特工程师借助 Codex 偷录重要会议",
+          "published_at": "2026-11-24T21:11:23+08:00",
+          "discovered_at": "2026-11-25T01:44:01+08:00",
+          "revision": 1
+        }
+      ],
+      "ai_analysis": "反映OpenAI技术架构与商业落地节奏变化，实际效果仍待开发者生态与第三方实测验证。",
+      "unverified_claims": [],
+      "speculation_or_outlook": null,
+      "sources": [
+        {
+          "item_id": "ithome_e8d0c070313d",
+          "article_id": "ithome_e8d0c070313d",
+          "source_id": "ithome",
+          "source_name": "IT之家",
+          "publisher_name": "IT之家",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "aggregator_lead",
+          "publisher_family": "ithome",
+          "is_reprint_copy": false,
+          "title": "OpenAI“窃听”案更多细节浮出水面，当事沙特工程师借助 Codex 偷录重要会议",
+          "url": "https://www.ithome.com/1/031/867.htm",
+          "published_at": "2026-11-24T21:11:23+08:00",
+          "published_at_source": "upstream_local_cst",
+          "fetched_at": "2026-11-25T01:44:01+08:00",
+          "excerpt": null,
+          "thumbnail_url": null,
+          "deep_fetch_status": null
+        },
+        {
+          "item_id": "aihot_cf4c4e03c648",
+          "article_id": "aihot_cf4c4e03c648",
+          "source_id": "aihot",
+          "source_name": "AIHOT 前沿",
+          "publisher_name": "AIHOT 前沿",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "aggregator_lead",
+          "publisher_family": "aihot",
+          "is_reprint_copy": false,
+          "title": "OpenAI 窃听案细节曝光：沙特工程师用 Codex 改装设备偷录会议",
+          "url": "https://aihot.news/items/mo6ykye9mp25x6ytmyf9ms9sp",
+          "published_at": "2026-11-24T21:11:23+08:00",
+          "published_at_source": "upstream_rfc2822",
+          "fetched_at": "2026-11-25T01:44:01+08:00",
+          "excerpt": null,
+          "thumbnail_url": null,
+          "deep_fetch_status": null
+        }
+      ],
+      "verification": {
+        "all_refs_valid": true,
+        "has_primary_url": true,
+        "rejected_refs": [],
+        "has_first_party": false
+      },
+      "followup": null,
+      "is_new_in_batch": true,
+      "update_kind": "new_discovery",
+      "heavy_score": 57.5,
+      "radar_score": 59,
+      "severity_tier": "B",
+      "severity_label": "B级常规",
+      "translation_attempts": 0,
+      "translation_error": null,
+      "title_zh": "OpenAI 窃听案细节曝光：沙特工程师用 Codex 改装设备偷录会议",
+      "translation_status": "native_zh",
+      "summary_zh": "OpenAI 窃听案细节曝光：沙特工程师用 Codex 改装设备偷录会议",
+      "title_en": "",
+      "summary_en": "",
+      "ai_analysis_en": "",
+      "deep_qa": [
+        {
+          "question": "这次技术变化对普通开发者或用户意味着什么？",
+          "answer": "聚焦OpenAI能力边界与使用成本变化：OpenAI 窃听案细节曝光：沙特工程师用 Codex 改装设备偷录会议。",
+          "historical_parallel": "历次大模型与算力架构迭代中，推理单价下探与生态开放通常在 1~2 个季度内显著拉动应用渗透率。"
+        },
+        {
+          "question": "该进展目前处于什么验证阶段？",
+          "answer": "需结合官方技术报告、独立第三方复现基准以及下游云厂与终端真实接入节奏交叉确认。",
+          "historical_parallel": "2025 年以来主流开源/闭源大模型竞赛证明，公开基准与真实开发者采用率决定商业化天花板。"
+        }
+      ]
+    },
+    {
+      "schema_version": "4.1",
+      "event_id": "evt_0eaf74f8e9c6",
+      "storyline_id": "st_fd8e6b3e31f9",
+      "article_ids": [
+        "rss-the-decoder_e84687fa1a85"
+      ],
+      "legacy_event_ids": [],
+      "title": "Anthropic 对算力的巨大需求正推动 xAI 转向“以租代建”策略",
+      "category": "tech",
+      "entities": [
+        "Anthropic / Claude",
+        "SpaceX / 特斯拉 / 马斯克生态",
+        "xAI / Grok"
+      ],
+      "entity_ids": [
+        "ent_anthropic",
+        "ent_spacex_tesla",
+        "ent_xai"
+      ],
+      "entity_confidences": {
+        "Anthropic / Claude": 0.86,
+        "SpaceX / 特斯拉 / 马斯克生态": 0.96,
+        "xAI / Grok": 0.68
+      },
+      "matched_entities": [
+        {
+          "entity_id": "ent_anthropic",
+          "canonical_name": "Anthropic / Claude",
+          "entity_type": "company",
+          "sector": "AI 模型与安全",
+          "matched_aliases": [
+            "anthropic"
+          ],
+          "tickers": [],
+          "reason": "正文/实体匹配关键词「anthropic」",
+          "confidence": 0.86
+        },
+        {
+          "entity_id": "ent_spacex_tesla",
+          "canonical_name": "SpaceX / 特斯拉 / 马斯克生态",
+          "entity_type": "company",
+          "sector": "商业航天、自动驾驶与 AI",
+          "matched_aliases": [
+            "xai",
+            "musk"
+          ],
+          "tickers": [
+            {
+              "symbol": "TSLA",
+              "market": "US",
+              "exchange": "NASDAQ",
+              "currency": "USD",
+              "label": "TSLA.US (NASDAQ)"
+            }
+          ],
+          "reason": "正文/实体匹配关键词「xai / musk」",
+          "confidence": 0.96
+        },
+        {
+          "entity_id": "ent_xai",
+          "canonical_name": "xAI / Grok",
+          "entity_type": "company",
+          "sector": "AI 模型与算力",
+          "matched_aliases": [
+            "xai"
+          ],
+          "tickers": [],
+          "reason": "正文/实体匹配关键词「xai」",
+          "confidence": 0.68
+        }
+      ],
+      "importance": "medium",
+      "sentiment": "Mixed",
+      "special_note": null,
+      "material_stage": null,
+      "material_stage_label": null,
+      "material_stage_confidence": null,
+      "thumbnail_url": null,
+      "publisher_name": "The Decoder (AI前沿)",
+      "source_status": "ok",
+      "evidence_status": "single_source",
+      "evidence_label": "单一独立来源线索",
+      "evidence_status_reason": "目前仅见 1 家独立来源（共 1 条引用含转载，含摘要/首段），尚未见独立渠道交叉或官方确认",
+      "attribution_warning": null,
+      "regulatory_note": null,
+      "contradictions": [],
+      "downweight_reasons": [],
+      "quality_flags": [],
+      "material_depth": "body_lead_extracted",
+      "source_count": 1,
+      "platform_count": 1,
+      "independent_publisher_count": 1,
+      "reprint_count": 0,
+      "published_at": "2026-11-24T02:47:53+08:00",
+      "event_date": "2026-11-24",
+      "event_time": "2026-11-24T02:47:53+08:00",
+      "stale": false,
+      "event_date_source": "llm_extracted",
+      "is_stale_rehash": false,
+      "time_trust_level": "article_timestamp",
+      "time_confidence": "article_timestamp",
+      "first_discovered_at": "2026-11-25T01:44:01+08:00",
+      "first_reported_at": "2026-11-24T02:47:53+08:00",
+      "latest_fact_update_at": "2026-11-24T02:47:53+08:00",
+      "latest_reported_at": "2026-11-24T02:47:53+08:00",
+      "fetched_at": "2026-11-25T01:44:01+08:00",
+      "input_batch_id": "raw-20261125-014401",
+      "fact_summary": "Anthropic对算力的巨大需求促使埃隆·马斯克旗下的xAI转向以租代建的算力优化策略。",
+      "fact_atoms": [
+        {
+          "atom_id": "fa_54334053",
+          "subject": "Anthropic / Claude",
+          "metric_or_action": "Anthropic's appetite for compute is pushing xAI toward a rent-over-build strategy",
+          "value": null,
+          "unit": null,
+          "period": "单次披露/未注明周期",
+          "scope": "新闻事件陈述",
+          "fact_status": "reported_unconfirmed_by_filing",
+          "attribution": "The Decoder (AI前沿)",
+          "source_ref": "rss-the-decoder_e84687fa1a85",
+          "source_url": "https://the-decoder.com/anthropics-appetite-for-compute-is-pushing-xai-toward-a-rent-over-build-strategy",
+          "source_excerpt_or_locator": "Anthropic's massive compute needs align with growing profit pressure at xAI, Elon Musk's AI unit. xAI has rented compute to rivals since May, and its June IPO made the push for rev",
+          "published_at": "2026-11-24T02:47:53+08:00",
+          "discovered_at": "2026-11-25T01:44:01+08:00",
+          "revision": 1
+        }
+      ],
+      "ai_analysis": "高昂的资本开支压力正在重塑AI头部企业的算力供应链模式，迫使厂商通过租赁和资源共享平衡财务风险。",
+      "unverified_claims": [],
+      "speculation_or_outlook": null,
+      "sources": [
+        {
+          "item_id": "rss-the-decoder_e84687fa1a85",
+          "article_id": "rss-the-decoder_e84687fa1a85",
+          "source_id": "rss-the-decoder",
+          "source_name": "The Decoder (AI前沿)",
+          "publisher_name": "The Decoder (AI前沿)",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "thedecoder",
+          "is_reprint_copy": false,
+          "title": "Anthropic's appetite for compute is pushing xAI toward a rent-over-build strategy",
+          "url": "https://the-decoder.com/anthropics-appetite-for-compute-is-pushing-xai-toward-a-rent-over-build-strategy",
+          "published_at": "2026-11-24T02:47:53+08:00",
+          "published_at_source": "upstream_rfc2822",
+          "fetched_at": "2026-11-25T01:44:05+08:00",
+          "excerpt": "Anthropic's massive compute needs align with growing profit pressure at xAI, Elon Musk's AI unit. xAI has rented compute to rivals since May, and its June IPO made the push for revenue even more urgent, the New York Times reports. Anthropic is now xAI's biggest customer with a contract worth roughly $3.1 billion a month. Google spends $800 million. Either deal can be canceled with 90 days' notice. SpaceXSI now brings in more than half of SpaceX's revenue. Insiders say the company had to finish new data centers by October to fill Anthropic's orders, and Musk says the Claude…",
+          "thumbnail_url": null,
+          "deep_fetch_status": "extracted_body_lead",
+          "title_zh": "Anthropic 对算力的巨大需求正推动 xAI 转向“以租代建”策略"
+        }
+      ],
+      "verification": {
+        "all_refs_valid": true,
+        "has_primary_url": true,
+        "rejected_refs": [],
+        "has_first_party": false
+      },
+      "followup": null,
+      "is_new_in_batch": true,
+      "update_kind": "new_discovery",
+      "heavy_score": 32.0,
+      "radar_score": 76,
+      "severity_tier": "B",
+      "severity_label": "B级常规",
+      "title_en": "Anthropic's appetite for compute is pushing xAI toward a rent-over-build strategy",
+      "summary_en": "Anthropic's massive compute needs align with growing profit pressure at xAI, Elon Musk's AI unit.",
+      "summary": "Anthropic对算力的巨大需求促使埃隆·马斯克旗下的xAI转向以租代建的算力优化策略。",
+      "summary_zh": "Anthropic对算力的巨大需求促使埃隆·马斯克旗下的xAI转向以租代建的算力优化策略。",
+      "ai_overlaid": true,
+      "translation_attempts": 0,
+      "translation_error": null,
+      "title_zh": "Anthropic 对算力的巨大需求正推动 xAI 转向“以租代建”策略",
+      "translation_status": "native_zh",
+      "ai_analysis_en": ""
+    },
+    {
+      "schema_version": "4.1",
+      "event_id": "evt_5c4212ffc58f",
+      "storyline_id": "st_a435220ef44c",
+      "article_ids": [
+        "ithome-rss_f7ea77b2a34c"
+      ],
+      "legacy_event_ids": [],
+      "title": "英伟达发布 GeForce 621.40 驱动：优化《战锤 40K：战争黎明 4》等多款游戏",
+      "category": "tech",
+      "entities": [
+        "英伟达 (NVIDIA)"
+      ],
+      "entity_ids": [
+        "ent_nvidia"
+      ],
+      "entity_confidences": {
+        "英伟达 (NVIDIA)": 0.86
+      },
+      "matched_entities": [
+        {
+          "entity_id": "ent_nvidia",
+          "canonical_name": "英伟达 (NVIDIA)",
+          "entity_type": "company",
+          "sector": "半导体 / AI算力",
+          "matched_aliases": [
+            "英伟达"
+          ],
+          "tickers": [
+            {
+              "symbol": "NVDA",
+              "market": "US",
+              "exchange": "NASDAQ",
+              "currency": "USD",
+              "label": "NVDA.US (NASDAQ)"
+            }
+          ],
+          "reason": "正文/实体匹配关键词「英伟达」",
+          "confidence": 0.86
+        }
+      ],
+      "importance": "medium",
+      "sentiment": "Mixed",
+      "special_note": null,
+      "material_stage": null,
+      "material_stage_label": null,
+      "material_stage_confidence": null,
+      "thumbnail_url": "https://img.ithome.com/newsuploadfiles/2026/11/458d6f55-bb77-4a60-a538-7648b093bdc8.jpg",
+      "publisher_name": "IT之家 实时快讯",
+      "source_status": "ok",
+      "evidence_status": "single_source",
+      "evidence_label": "单一独立来源线索",
+      "evidence_status_reason": "目前仅见 1 家独立来源（共 1 条引用含转载，含摘要/首段），尚未见独立渠道交叉或官方确认",
+      "attribution_warning": null,
+      "regulatory_note": null,
+      "contradictions": [],
+      "downweight_reasons": [],
+      "quality_flags": [],
+      "material_depth": "title_and_excerpt",
+      "source_count": 1,
+      "platform_count": 1,
+      "independent_publisher_count": 1,
+      "reprint_count": 0,
+      "published_at": "2026-11-24T22:15:38+08:00",
+      "event_date": "2026-11-24",
+      "event_time": "2026-11-24T22:15:38+08:00",
+      "stale": false,
+      "event_date_source": "llm_extracted",
+      "is_stale_rehash": false,
+      "time_trust_level": "article_timestamp",
+      "time_confidence": "article_timestamp",
+      "first_discovered_at": "2026-11-25T01:44:01+08:00",
+      "first_reported_at": "2026-11-24T22:15:38+08:00",
+      "latest_fact_update_at": "2026-11-24T22:15:38+08:00",
+      "latest_reported_at": "2026-11-24T22:15:38+08:00",
+      "fetched_at": "2026-11-25T01:44:01+08:00",
+      "input_batch_id": "raw-20261125-014401",
+      "fact_summary": "IT之家 11 月 24 日消息，英伟达近日发布 GeForce Game Ready 621.40 显卡驱动，为《战锤 40000：战争黎明 4》《燕云十六声》《神力科莎拉力》等新作提供优化支持，同时修复了日志文件写入异常、渲染降噪失败及视频播放色彩错误等通用问题。IT之家附官方公告链接（ ）。",
+      "fact_atoms": [
+        {
+          "atom_id": "fa_1391523",
+          "subject": "英伟达 (NVIDIA)",
+          "metric_or_action": "英伟达发布 GeForce 621.40 驱动：优化《战锤 40K：战争黎明 4》等多款游戏",
+          "value": null,
+          "unit": null,
+          "period": "单次披露/未注明周期",
+          "scope": "新闻事件陈述",
+          "fact_status": "reported_unconfirmed_by_filing",
+          "attribution": "IT之家 实时快讯",
+          "source_ref": "ithome-rss_f7ea77b2a34c",
+          "source_url": "https://www.ithome.com/1/031/881.htm",
+          "source_excerpt_or_locator": "IT之家 11 月 24 日消息，英伟达近日发布 GeForce Game Ready 621.40 显卡驱动，为《战锤 40000：战争黎明 4》《燕云十六声》《神力科莎拉力》等新作提供优化支持，同时修复了日志文件写入异常、渲染降噪失败及视频播放色彩错误等通用问题。IT之家附官方公告链接（ ）。",
+          "published_at": "2026-11-24T22:15:38+08:00",
+          "discovered_at": "2026-11-25T01:44:01+08:00",
+          "revision": 1
+        }
+      ],
+      "ai_analysis": "引发英伟达 (NVIDIA)估值与产业链联动重定价，需紧盯主力资金流向与官方后续披露。",
+      "unverified_claims": [],
+      "speculation_or_outlook": null,
+      "sources": [
+        {
+          "item_id": "ithome-rss_f7ea77b2a34c",
+          "article_id": "ithome-rss_f7ea77b2a34c",
+          "source_id": "ithome-rss",
+          "source_name": "IT之家 实时快讯",
+          "publisher_name": "IT之家 实时快讯",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "ithome",
+          "is_reprint_copy": false,
+          "title": "英伟达发布 GeForce 621.40 驱动：优化《战锤 40K：战争黎明 4》等多款游戏",
+          "url": "https://www.ithome.com/1/031/881.htm",
+          "published_at": "2026-11-24T22:15:38+08:00",
+          "published_at_source": "upstream_rfc2822",
+          "fetched_at": "2026-11-25T01:44:01+08:00",
+          "excerpt": "IT之家 11 月 24 日消息，英伟达近日发布 GeForce Game Ready 621.40 显卡驱动，为《战锤 40000：战争黎明 4》《燕云十六声》《神力科莎拉力》等新作提供优化支持，同时修复了日志文件写入异常、渲染降噪失败及视频播放色彩错误等通用问题。IT之家附官方公告链接（ ）。",
+          "thumbnail_url": "https://img.ithome.com/newsuploadfiles/2026/11/458d6f55-bb77-4a60-a538-7648b093bdc8.jpg",
+          "deep_fetch_status": null
+        }
+      ],
+      "verification": {
+        "all_refs_valid": true,
+        "has_primary_url": true,
+        "rejected_refs": [],
+        "has_first_party": false
+      },
+      "followup": null,
+      "is_new_in_batch": true,
+      "update_kind": "new_discovery",
+      "heavy_score": 36.8,
+      "radar_score": 76,
+      "severity_tier": "B",
+      "severity_label": "B级常规",
+      "translation_attempts": 0,
+      "translation_error": null,
+      "title_zh": "英伟达发布 GeForce 621.40 驱动：优化《战锤 40K：战争黎明 4》等多款游戏",
+      "translation_status": "native_zh",
+      "summary_zh": "IT之家 11 月 24 日消息，英伟达近日发布 GeForce Game Ready 621.40 显卡驱动，为《战锤 40000：战争黎明 4》《燕云十六声》《神力科莎拉力》等新作提供优化支持，同时修复了日志文件写入异常、渲染降噪失败及视频播放色彩错误等通用问题。IT之家附官方公告链接（ ）。",
+      "title_en": "",
+      "summary_en": "",
+      "ai_analysis_en": ""
+    },
+    {
+      "schema_version": "4.1",
+      "event_id": "evt_2d24b915cecf",
+      "storyline_id": "st_e1076b023396",
+      "article_ids": [
+        "rss-marktechpost_de601df9fcbd",
+        "rss-gnews-ai-models-en_bb8556922378"
+      ],
+      "legacy_event_ids": [],
+      "title": "OpenAI和思科发布Shirudo：一个允许代理不停机防御系统的开源Linux运行时",
+      "category": "tech",
+      "entities": [
+        "OpenAI"
+      ],
+      "entity_ids": [
+        "ent_openai"
+      ],
+      "entity_confidences": {
+        "OpenAI": 0.99
+      },
+      "matched_entities": [
+        {
+          "entity_id": "ent_openai",
+          "canonical_name": "OpenAI",
+          "entity_type": "company",
+          "sector": "AI 模型与应用",
+          "matched_aliases": [
+            "openai"
+          ],
+          "tickers": [],
+          "reason": "正文/实体匹配关键词「openai」",
+          "confidence": 0.99
+        }
+      ],
+      "importance": "medium",
+      "sentiment": "Mixed",
+      "special_note": null,
+      "material_stage": "beta",
+      "material_stage_label": "测试开放 (Beta)",
+      "material_stage_confidence": 0.78,
+      "thumbnail_url": "https://s.w.org/images/core/emoji/17.0.2/72x72/25c0.png",
+      "publisher_name": "MarkTechPost (AI论文/模型)",
+      "source_status": "ok",
+      "evidence_status": "single_source",
+      "evidence_label": "单一独立来源线索",
+      "evidence_status_reason": "目前仅见 1 家独立来源（共 2 条引用含转载，含摘要/首段），尚未见独立渠道交叉或官方确认",
+      "attribution_warning": null,
+      "regulatory_note": null,
+      "contradictions": [],
+      "downweight_reasons": [],
+      "quality_flags": [],
+      "material_depth": "title_and_excerpt",
+      "source_count": 2,
+      "platform_count": 2,
+      "independent_publisher_count": 1,
+      "reprint_count": 1,
+      "published_at": "2026-11-24T22:16:53+08:00",
+      "event_date": "2026-11-24",
+      "event_time": "2026-11-24T22:16:53+08:00",
+      "stale": false,
+      "event_date_source": "llm_extracted",
+      "is_stale_rehash": false,
+      "time_trust_level": "article_timestamp",
+      "time_confidence": "article_timestamp",
+      "first_discovered_at": "2026-11-25T01:44:01+08:00",
+      "first_reported_at": "2026-11-24T22:16:53+08:00",
+      "latest_fact_update_at": "2026-11-24T22:16:53+08:00",
+      "latest_reported_at": "2026-11-24T22:16:53+08:00",
+      "fetched_at": "2026-11-25T01:44:01+08:00",
+      "input_batch_id": "raw-20261125-014401",
+      "fact_summary": "OpenAI和思科发布了Shirudo，这是一款预发布、BSD许可的Linux eBPF运行时。AI代理编写签名的“防护罩”，用于阻止运行系统上的漏洞利用路径，同时团队测试并推出真正的补丁。",
+      "fact_atoms": [
+        {
+          "atom_id": "fa_21700373",
+          "subject": "OpenAI",
+          "metric_or_action": "OpenAI and Cisco Releases Shirudo: An Open-Source Linux Runtime Allowing Agents to Defend Systems Without Downtime",
+          "value": "测试开放 (Beta)",
+          "unit": "可用状态",
+          "period": "单次披露/未注明周期",
+          "scope": "模型/产品/技术指标",
+          "fact_status": "reported_unconfirmed_by_filing",
+          "attribution": "MarkTechPost (AI论文/模型)",
+          "source_ref": "rss-marktechpost_de601df9fcbd",
+          "source_url": "https://www.marktechpost.com/2026/11/24/openai-cisco-shirudo-ebpf-linux-runtime",
+          "source_excerpt_or_locator": "OpenAI and Cisco released Shirudo, a pre-release, BSD-licensed eBPF runtime for Linux. AI agents write signed \"shields\" that block exploit paths on running systems while teams test",
+          "published_at": "2026-11-24T22:16:53+08:00",
+          "discovered_at": "2026-11-25T01:44:01+08:00",
+          "revision": 1
+        }
+      ],
+      "ai_analysis": "反映OpenAI技术架构与商业落地节奏变化，实际效果仍待开发者生态与第三方实测验证。",
+      "unverified_claims": [],
+      "speculation_or_outlook": null,
+      "sources": [
+        {
+          "item_id": "rss-marktechpost_de601df9fcbd",
+          "article_id": "rss-marktechpost_de601df9fcbd",
+          "source_id": "rss-marktechpost",
+          "source_name": "MarkTechPost (AI论文/模型)",
+          "publisher_name": "MarkTechPost (AI论文/模型)",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "marktechpost",
+          "is_reprint_copy": false,
+          "title": "OpenAI and Cisco Releases Shirudo: An Open-Source Linux Runtime Allowing Agents to Defend Systems Without Downtime",
+          "url": "https://www.marktechpost.com/2026/11/24/openai-cisco-shirudo-ebpf-linux-runtime",
+          "published_at": "2026-11-24T22:16:53+08:00",
+          "published_at_source": "upstream_rfc2822",
+          "fetched_at": "2026-11-25T01:44:05+08:00",
+          "excerpt": "OpenAI and Cisco released Shirudo, a pre-release, BSD-licensed eBPF runtime for Linux. AI agents write signed \"shields\" that block exploit paths on running systems while teams test and roll out real patches. The post OpenAI and Cisco Releases Shirudo: An Open…",
+          "thumbnail_url": "https://s.w.org/images/core/emoji/17.0.2/72x72/25c0.png",
+          "deep_fetch_status": null,
+          "title_zh": "OpenAI和思科发布Shirudo：一个允许代理不停机防御系统的开源Linux运行时"
+        },
+        {
+          "item_id": "rss-gnews-ai-models-en_bb8556922378",
+          "article_id": "rss-gnews-ai-models-en_bb8556922378",
+          "source_id": "rss-gnews-ai-models-en",
+          "source_name": "MarkTechPost",
+          "publisher_name": "MarkTechPost",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "marktechpost",
+          "is_reprint_copy": true,
+          "title": "OpenAI and Cisco Releases Shirudo: An Open-Source Linux Runtime Allowing Agents to Defend Systems Without Downtime",
+          "url": "https://news.google.com/rss/articles/CBMihwFBVV95cUxNblBUSndodVFfOEtKM1lpQ0NKeDdibnh0VFpZc0NiVVJzdTQtTkNGWjVHdzQ4Ry1Idi1wMTRMNE1paEpBemprQVFBcVJkWXZUQUt3NjBqbXVodmhmeWRzc2h0Z0pXT1BtUjFzVGFtYjNwZHhqNGxhVEZJbkRrUW5KZmRNb2tMWEXSAYcBQVVfeXFMTW5QVEp3aHVRXzhLSjNZaUNDSng3Ym54dFRaWXNDYlVSc3U0LU5DRlo1R3c0OEctSHYtcDE0TDRNaWhKQXpqa0FRQXFSZFl2VEFLdzYwam11aHZoZnlkc3NodGdKV09QbVIxc1RhbWIzcGR4ajRsYVRGSW5Ea1FuSmZkTW9rTFhF?oc=5",
+          "published_at": "2026-11-24T22:16:53+08:00",
+          "published_at_source": "upstream_rfc2822",
+          "fetched_at": "2026-11-25T01:44:05+08:00",
+          "excerpt": "OpenAI and Cisco Releases Shirudo: An Open-Source Linux Runtime Allowing Agents to Defend Systems Without Downtime MarkTechPost",
+          "thumbnail_url": null,
+          "deep_fetch_status": null,
+          "title_zh": "OpenAI和思科发布Shirudo：一个允许代理不停机防御系统的开源Linux运行时"
+        }
+      ],
+      "verification": {
+        "all_refs_valid": true,
+        "has_primary_url": true,
+        "rejected_refs": [],
+        "has_first_party": false
+      },
+      "followup": null,
+      "is_new_in_batch": true,
+      "update_kind": "new_discovery",
+      "heavy_score": 36.8,
+      "radar_score": 76,
+      "severity_tier": "B",
+      "severity_label": "B级常规",
+      "title_en": "OpenAI and Cisco Releases Shirudo: An Open-Source Linux Runtime Allowing Agents to Defend Systems Without Downtime",
+      "summary_en": "OpenAI and Cisco released Shirudo, a pre-release, BSD-licensed eBPF runtime for Linux. AI agents write signed \"shields\" that block exploit paths on running systems while teams test and roll out real patches.",
+      "translation_attempts": 7,
+      "translation_error": null,
+      "translation_status": "translated",
+      "title_zh": "OpenAI和思科发布Shirudo：一个允许代理不停机防御系统的开源Linux运行时",
+      "summary_zh": "OpenAI和思科发布了Shirudo，这是一款预发布、BSD许可的Linux eBPF运行时。AI代理编写签名的“防护罩”，用于阻止运行系统上的漏洞利用路径，同时团队测试并推出真正的补丁。",
+      "ai_analysis_en": "",
+      "deep_qa": [
+        {
+          "question": "这次技术变化对普通开发者或用户意味着什么？",
+          "answer": "聚焦OpenAI能力边界与使用成本变化：OpenAI和思科发布了Shirudo，这是一款预发布、BSD许可的Linux eBPF运行时。AI代理编写签名的“防护罩”，用于阻止运行系统上的漏洞利用路径，同时团队测试并推出真正的补丁。",
+          "historical_parallel": "历次大模型与算力架构迭代中，推理单价下探与生态开放通常在 1~2 个季度内显著拉动应用渗透率。"
+        },
+        {
+          "question": "该进展目前处于什么验证阶段？",
+          "answer": "需结合官方技术报告、独立第三方复现基准以及下游云厂与终端真实接入节奏交叉确认。",
+          "historical_parallel": "2025 年以来主流开源/闭源大模型竞赛证明，公开基准与真实开发者采用率决定商业化天花板。"
+        }
+      ]
+    }
+  ]
+}
