@@ -1,42 +1,47 @@
 {
   "schema_version": "4.2",
-  "batch_id": "smart-20261124-113048",
+  "batch_id": "smart-20261124-114458",
   "input_batch_id": "raw-20261124-112914",
   "input_cutoff_at": "2026-11-24T11:29:14+08:00",
-  "generated_at": "2026-11-24T11:30:48+08:00",
-  "published_at": "2026-11-24T11:33:06+08:00",
+  "generated_at": "2026-11-24T11:44:58+08:00",
+  "published_at": "2026-11-24T11:46:44+08:00",
   "category": "finance",
   "category_label": "财经/市场",
   "generation_mode": "ai_v3_mega_overlay",
-  "model_name": "gemini-3.1-flash-lite",
+  "model_name": "gemini-3.5-flash-lite",
   "quality_flags": [
     "deterministic_fresh_base"
   ],
   "key_changes": [
     {
-      "headline": "黄仁勋重掌英伟达帅印！股价暴涨31%，市值单日增长近万亿",
-      "detail": "英伟达董事会确认黄仁勋重返公司担任CEO，受此消息影响，英伟达股价单日暴涨31%，市值增长近万亿美元。",
-      "event_id": "evt_5baeaf024a36",
-      "storyline_id": "st_cc929d1d51ed"
+      "headline": "美联储“三把手”：通胀仍未达标，需逐步采取行动，不排除连续加息的可能",
+      "detail": "美国纽约联储主席威廉姆斯表示，不排除FOMC在必要时连续加息的可能性，未来的利率行动时机和步伐将由数据决定。",
+      "event_id": "evt_2db81c6ab4ea",
+      "storyline_id": "st_a13f7d812b38"
     },
     {
-      "headline": "中国央行进行5,160亿元人民币隔夜逆回购操作，操作利率1.25%。 中国央行公开市场今日净投放165亿元人民币。",
-      "detail": "中国央行于11月24日开展5,160亿元人民币隔夜逆回购操作，操作利率为1.25%，当日实现净投放165亿元人民币。",
-      "event_id": "evt_af20847a10eb",
-      "storyline_id": "st_ec2d7b33d075"
+      "headline": "日本10年期国债收益率下行6个基点至2.725%。",
+      "detail": "日本10年期国债收益率下行6个基点至2.725%。",
+      "event_id": "evt_5b30c9ee9ece",
+      "storyline_id": "st_74ddefe0c560"
     },
     {
-      "headline": "英伟达股价飙升重创空头，杠杆做空产品跌幅高达92%",
-      "detail": "英伟达股价暴涨导致做空产品GraniteShares 2x Short NVDA Daily ETF（NVD）单日跌幅达63%。",
-      "event_id": "evt_dcf514191a7a"
+      "headline": "军工板块表现活跃 晨曦航空涨超10%",
+      "detail": "A股军工板块盘中表现活跃，其中晨曦航空股价涨幅超过10%。",
+      "event_id": "evt_07fcd4681612",
+      "storyline_id": "st_48ce6af64fd5"
     }
   ],
   "overview_sections": [
     {
-      "title": "市场情绪与流动性博弈",
+      "title": "宏观与市场资金动向",
       "points": [
         {
-          "text": "英伟达管理层变动引发美股空头回补潮，叠加央行流动性投放，市场风险偏好显著回升。",
+          "text": "美联储官员释放鹰派信号，货币政策路径扰动全球金融市场预期。",
+          "source_refs": []
+        },
+        {
+          "text": "港股恒指及科技指数转跌，亚洲多国债市及特定行业板块震荡加剧。",
           "source_refs": []
         }
       ]
@@ -127,7 +132,7 @@
       "fact_summary": "英伟达董事会确认黄仁勋重返公司担任CEO，受此消息影响，英伟达股价单日暴涨31%，市值增长近万亿美元。",
       "fact_atoms": [
         {
-          "atom_id": "fa_99821533",
+          "atom_id": "fa_77914890",
           "subject": "英伟达 (NVIDIA)",
           "metric_or_action": "黄仁勋重掌英伟达帅印！股价暴涨31%，市值单日增长近万亿",
           "value": "31",
@@ -196,7 +201,13 @@
         "rejected_refs": [],
         "has_first_party": false
       },
-      "followup": null,
+      "followup": {
+        "is_continuing": true,
+        "prev_batch_id": "smart-20261124-113048",
+        "prev_event_id": "evt_5baeaf024a36",
+        "prev_title": "黄仁勋重掌英伟达帅印！股价暴涨31%，市值单日增长近万亿",
+        "delta_note": "较上期新增 1 家独立来源报道"
+      },
       "is_new_in_batch": true,
       "update_kind": "new_discovery",
       "heavy_score": 92.0,
@@ -301,10 +312,10 @@
       "latest_reported_at": "2026-11-24T10:39:21+08:00",
       "fetched_at": "2026-11-24T11:29:14+08:00",
       "input_batch_id": "raw-20261124-112914",
-      "fact_summary": "美国纽约联储主席（享有FOMC永久投票权，号称美联储三把手）威廉姆斯：不排除FOMC在必要时连续加息的可能性。针对未来（多次）会议都不排除任何选项。数据将决定利率行动的时机和步伐。市场走势可能会在短期内逆转。金融条件的持续变化可能会影响需求。对增长前景仍然非常乐观。",
+      "fact_summary": "美国纽约联储主席威廉姆斯表示，不排除FOMC在必要时连续加息的可能性，未来的利率行动时机和步伐将由数据决定。",
       "fact_atoms": [
         {
-          "atom_id": "fa_9298256",
+          "atom_id": "fa_29091087",
           "subject": "美联储 FOMC 与全球流动性",
           "metric_or_action": "美联储“三把手”：通胀仍未达标，需逐步采取行动，不排除连续加息的可能",
           "value": null,
@@ -321,7 +332,7 @@
           "revision": 1
         }
       ],
-      "ai_analysis": "该动态聚焦美联储 FOMC 与全球流动性核心变量变化，建议结合多方信源跟踪后续实质进展。",
+      "ai_analysis": "美联储高级官员对连续加息保持开放态度，直接推高了市场对长期高利率环境的定价，压制风险资产估值。",
       "unverified_claims": [],
       "speculation_or_outlook": null,
       "sources": [
@@ -412,33 +423,41 @@
         "rejected_refs": [],
         "has_first_party": false
       },
-      "followup": null,
+      "followup": {
+        "is_continuing": true,
+        "prev_batch_id": "smart-20261124-113048",
+        "prev_event_id": "evt_2db81c6ab4ea",
+        "prev_title": "美联储“三把手”：通胀仍未达标，需逐步采取行动，不排除连续加息的可能",
+        "delta_note": "在上期简报中已出现，本批持续关注（暂无新增独立变化）"
+      },
       "is_new_in_batch": true,
       "update_kind": "new_discovery",
       "heavy_score": 62.1,
       "radar_score": 88,
       "severity_tier": "B",
       "severity_label": "B级常规",
+      "summary": "美国纽约联储主席威廉姆斯表示，不排除FOMC在必要时连续加息的可能性，未来的利率行动时机和步伐将由数据决定。",
+      "summary_zh": "美国纽约联储主席威廉姆斯表示，不排除FOMC在必要时连续加息的可能性，未来的利率行动时机和步伐将由数据决定。",
+      "deep_qa": [
+        {
+          "question": "威廉姆斯的表态对当前的利率期货市场定价有何实质性扰动？",
+          "answer": "该表态直接动摇了市场此前关于降息周期开启的过度乐观预期，迫使投资者重新校准对冲通胀粘性的期限溢价。",
+          "historical_parallel": "类似于2022年年中美联储官员密集发声打破市场降息幻想的紧缩预期重定价。"
+        },
+        {
+          "question": "连续加息选项的重提如何通过金融条件指数向实体经济传导？",
+          "answer": "它将迅速推高美元指数及美债收益率，收紧全球美元流动性，抑制非美经济体的资本开支与信贷需求。",
+          "historical_parallel": "对应2006年保罗·沃尔克或早期紧缩周期中，美联储为遏制顽固通胀而采取的预期管理手段。"
+        }
+      ],
+      "ai_overlaid": true,
       "translation_attempts": 0,
       "translation_error": null,
       "title_zh": "美联储“三把手”：通胀仍未达标，需逐步采取行动，不排除连续加息的可能",
       "translation_status": "native_zh",
-      "summary_zh": "美国纽约联储主席（享有FOMC永久投票权，号称美联储三把手）威廉姆斯：不排除FOMC在必要时连续加息的可能性。针对未来（多次）会议都不排除任何选项。数据将决定利率行动的时机和步伐。市场走势可能会在短期内逆转。金融条件的持续变化可能会影响需求。对增长前景仍然非常乐观。",
       "title_en": "",
       "summary_en": "",
-      "ai_analysis_en": "",
-      "deep_qa": [
-        {
-          "question": "这项宏观与利率信号对全球资产定价有何实质影响？",
-          "answer": "直接作用于美元流动性预期与跨市场估值折现率：美国纽约联储主席（享有FOMC永久投票权，号称美联储三把手）威廉姆斯：不排除FOMC在必要时连续加息的可能性。针对未来（多次）会议都不排除任何选项。数据将决定利率行动的时机和步伐。",
-          "historical_parallel": "参考 2022~2024 年多轮美联储利率预期重定价周期，美债长端收益率与科技股估值在议息窗口前通常先行波动。"
-        },
-        {
-          "question": "市场正反分歧核心在哪里？",
-          "answer": "宽松派期待政策提前纠偏以缓释金融脆弱性；谨慎派关注通胀黏性与长期国债供给压力，等待核心 PCE 与非农确认。",
-          "historical_parallel": "历史紧缩与降息预期博弈期显示，核心 PCE 与非农数据落地后市场分歧才会逐步收敛。"
-        }
-      ]
+      "ai_analysis_en": ""
     },
     {
       "schema_version": "4.1",
@@ -495,7 +514,7 @@
       "fact_summary": "中国央行于11月24日开展5,160亿元人民币隔夜逆回购操作，操作利率为1.25%，当日实现净投放165亿元人民币。",
       "fact_atoms": [
         {
-          "atom_id": "fa_44379084",
+          "atom_id": "fa_31297884",
           "subject": "相关主体",
           "metric_or_action": "中国央行进行5,160亿元人民币隔夜逆回购操作，操作利率1.25%。 中国央行公开市场今日净投放165亿元人民币。",
           "value": "160",
@@ -583,7 +602,13 @@
         "rejected_refs": [],
         "has_first_party": false
       },
-      "followup": null,
+      "followup": {
+        "is_continuing": true,
+        "prev_batch_id": "smart-20261124-113048",
+        "prev_event_id": "evt_af20847a10eb",
+        "prev_title": "中国央行进行5,160亿元人民币隔夜逆回购操作，操作利率1.25%。 中国央行公开市场今日净投放165亿元人民币。",
+        "delta_note": "同一事件在最新批次出现表述修订或信息补充"
+      },
       "is_new_in_batch": true,
       "update_kind": "new_discovery",
       "heavy_score": 78.2,
@@ -696,7 +721,7 @@
       "fact_summary": "英伟达股价暴涨导致做空产品GraniteShares 2x Short NVDA Daily ETF（NVD）单日跌幅达63%。",
       "fact_atoms": [
         {
-          "atom_id": "fa_24281196",
+          "atom_id": "fa_84754323",
           "subject": "英伟达 (NVIDIA)",
           "metric_or_action": "英伟达股价飙升重创空头，杠杆做空产品跌幅高达92%",
           "value": "92",
@@ -764,7 +789,13 @@
         "rejected_refs": [],
         "has_first_party": false
       },
-      "followup": null,
+      "followup": {
+        "is_continuing": true,
+        "prev_batch_id": "smart-20261124-113048",
+        "prev_event_id": "evt_dcf514191a7a",
+        "prev_title": "英伟达股价飙升重创空头，杠杆做空产品跌幅高达92%",
+        "delta_note": "同一事件在最新批次出现表述修订或信息补充"
+      },
       "is_new_in_batch": true,
       "update_kind": "new_discovery",
       "heavy_score": 71.3,
@@ -922,7 +953,7 @@
       "fact_summary": "2026年11月24日，英伟达股价暴涨31%，纳指大涨6.5%，芯片指数飙涨14%，黄金反弹近3%，WTI原油期货跌超4%。",
       "fact_atoms": [
         {
-          "atom_id": "fa_39879747",
+          "atom_id": "fa_59423823",
           "subject": "英伟达 (NVIDIA)",
           "metric_or_action": "华尔街见闻早餐FM-Radio | 2026年11月24日",
           "value": "6.5",
@@ -990,7 +1021,13 @@
         "rejected_refs": [],
         "has_first_party": false
       },
-      "followup": null,
+      "followup": {
+        "is_continuing": true,
+        "prev_batch_id": "smart-20261124-113048",
+        "prev_event_id": "evt_cc0d6d49222d",
+        "prev_title": "华尔街见闻早餐FM-Radio | 2026年11月24日",
+        "delta_note": "同一事件在最新批次出现表述修订或信息补充"
+      },
       "is_new_in_batch": true,
       "update_kind": "new_discovery",
       "heavy_score": 64.4,
@@ -1093,10 +1130,10 @@
       "latest_reported_at": "2026-11-24T08:39:04+08:00",
       "fetched_at": "2026-11-24T11:29:14+08:00",
       "input_batch_id": "raw-20261124-112914",
-      "fact_summary": "英伟达是AI循环经济的“央行” 一文看懂资金流向 新浪财经",
+      "fact_summary": "新浪财经发文分析英伟达在AI循环经济中所扮演的“央行”角色及其资金流向机制。",
       "fact_atoms": [
         {
-          "atom_id": "fa_62862812",
+          "atom_id": "fa_49324620",
           "subject": "英伟达 (NVIDIA)",
           "metric_or_action": "英伟达是AI循环经济的“央行” 一文看懂资金流向",
           "value": null,
@@ -1113,7 +1150,7 @@
           "revision": 1
         }
       ],
-      "ai_analysis": "引发英伟达 (NVIDIA)估值与产业链联动重定价，需紧盯主力资金流向与官方后续披露。",
+      "ai_analysis": "英伟达通过资本纽带与芯片供给深度绑定整个AI产业链的上下游，其财务健康直接决定了AI生态的杠杆扩张速度。",
       "unverified_claims": [],
       "speculation_or_outlook": null,
       "sources": [
@@ -1144,18 +1181,26 @@
         "rejected_refs": [],
         "has_first_party": false
       },
-      "followup": null,
+      "followup": {
+        "is_continuing": true,
+        "prev_batch_id": "smart-20261124-113048",
+        "prev_event_id": "evt_3b20b31cf60e",
+        "prev_title": "英伟达是AI循环经济的“央行” 一文看懂资金流向",
+        "delta_note": "在上期简报中已出现，本批持续关注（暂无新增独立变化）"
+      },
       "is_new_in_batch": true,
       "update_kind": "new_discovery",
       "heavy_score": 36.8,
       "radar_score": 76,
       "severity_tier": "B",
       "severity_label": "B级常规",
+      "summary": "新浪财经发文分析英伟达在AI循环经济中所扮演的“央行”角色及其资金流向机制。",
+      "summary_zh": "新浪财经发文分析英伟达在AI循环经济中所扮演的“央行”角色及其资金流向机制。",
+      "ai_overlaid": true,
       "translation_attempts": 0,
       "translation_error": null,
       "title_zh": "英伟达是AI循环经济的“央行” 一文看懂资金流向",
       "translation_status": "native_zh",
-      "summary_zh": "英伟达是AI循环经济的“央行” 一文看懂资金流向 新浪财经",
       "title_en": "",
       "summary_en": "",
       "ai_analysis_en": ""
@@ -1248,7 +1293,7 @@
       "fact_summary": "11月23日，新兴市场ETF收涨7.41%，纳斯达克100 ETF涨7%，标普500 ETF涨4.71%，多类大类资产ETF录得显著涨幅。",
       "fact_atoms": [
         {
-          "atom_id": "fa_29860905",
+          "atom_id": "fa_99063427",
           "subject": "黄金 / 贵金属与避险资产",
           "metric_or_action": "新兴市场ETF、纳指100 ETF至少收涨7%，领跑美股大类资产类ETF",
           "value": "7",
@@ -1296,7 +1341,13 @@
         "rejected_refs": [],
         "has_first_party": false
       },
-      "followup": null,
+      "followup": {
+        "is_continuing": true,
+        "prev_batch_id": "smart-20261124-113048",
+        "prev_event_id": "evt_770ea0f758e0",
+        "prev_title": "新兴市场ETF、纳指100 ETF至少收涨7%，领跑美股大类资产类ETF",
+        "delta_note": "同一事件在最新批次出现表述修订或信息补充"
+      },
       "is_new_in_batch": true,
       "update_kind": "new_discovery",
       "heavy_score": 52.9,
@@ -1377,10 +1428,10 @@
       "latest_reported_at": "2026-11-24T11:25:02+08:00",
       "fetched_at": "2026-11-24T11:29:14+08:00",
       "input_batch_id": "raw-20261124-112914",
-      "fact_summary": "恒指、恒生科技指数均转跌。",
+      "fact_summary": "恒生指数与恒生科技指数在交易时段盘中双双转跌。",
       "fact_atoms": [
         {
-          "atom_id": "fa_30105215",
+          "atom_id": "fa_65542354",
           "subject": "相关主体",
           "metric_or_action": "恒指、恒生科技指数均转跌。",
           "value": null,
@@ -1397,7 +1448,7 @@
           "revision": 1
         }
       ],
-      "ai_analysis": "该动态聚焦财经/市场核心变量变化，建议结合多方信源跟踪后续实质进展。",
+      "ai_analysis": "受外部宏观流动性预期收紧及权重股板块走弱拖动，港股市场短期承压并出现获利回吐。",
       "unverified_claims": [],
       "speculation_or_outlook": null,
       "sources": [
@@ -1488,6 +1539,187 @@
         "rejected_refs": [],
         "has_first_party": false
       },
+      "followup": {
+        "is_continuing": true,
+        "prev_batch_id": "smart-20261124-113048",
+        "prev_event_id": "evt_c13fb8c23da0",
+        "prev_title": "恒指、恒生科技指数均转跌。",
+        "delta_note": "在上期简报中已出现，本批持续关注（暂无新增独立变化）"
+      },
+      "is_new_in_batch": true,
+      "update_kind": "new_discovery",
+      "heavy_score": 62.1,
+      "radar_score": 35,
+      "severity_tier": "B",
+      "severity_label": "B级常规",
+      "summary": "恒生指数与恒生科技指数在交易时段盘中双双转跌。",
+      "summary_zh": "恒生指数与恒生科技指数在交易时段盘中双双转跌。",
+      "ai_overlaid": true,
+      "translation_attempts": 0,
+      "translation_error": null,
+      "title_zh": "恒指、恒生科技指数均转跌。",
+      "translation_status": "native_zh",
+      "title_en": "",
+      "summary_en": "",
+      "ai_analysis_en": "",
+      "deep_qa": [
+        {
+          "question": "事件对大宗物价、出行或外贸订单有何影响？",
+          "answer": "重点关注相关产业链引发的跨区域供应链、汇率与大宗品风险溢价变动：恒生指数与恒生科技指数在交易时段盘中双双转跌。",
+          "historical_parallel": "历次跨区域地缘与贸易规则博弈多呈“首轮情绪脉冲，随后看实际封锁或关税文本落地决定持续性”轨迹。"
+        },
+        {
+          "question": "下一步决定走向的关键观测点是什么？",
+          "answer": "盯紧涉事官方下一轮正式公报与约束性细则落地。",
+          "historical_parallel": "若各方在后续窗口重回务实谈判，避险溢价与航运附加费通常较快收敛。"
+        }
+      ]
+    },
+    {
+      "schema_version": "4.1",
+      "event_id": "evt_5b30c9ee9ece",
+      "storyline_id": "st_74ddefe0c560",
+      "article_ids": [
+        "wscn-global-channel_ebed6759b54e",
+        "cls-telegraph_2d5fb4f53d6f",
+        "fastbull-express_ea2ba58002bb"
+      ],
+      "legacy_event_ids": [],
+      "title": "日本10年期国债收益率下行6个基点至2.725%。",
+      "category": "finance",
+      "entities": [],
+      "entity_ids": [],
+      "entity_confidences": {},
+      "matched_entities": [],
+      "importance": "normal",
+      "sentiment": "Mixed",
+      "special_note": null,
+      "material_stage": null,
+      "material_stage_label": null,
+      "material_stage_confidence": null,
+      "thumbnail_url": null,
+      "publisher_name": "华尔街见闻 7×24 全球",
+      "source_status": "ok",
+      "evidence_status": "multi_source",
+      "evidence_label": "多独立来源提及（待核官方全文）",
+      "evidence_status_reason": "已有 3 家独立媒体族提及（仅基于标题素材）；多源转载不代表官方公告已证实",
+      "attribution_warning": null,
+      "regulatory_note": null,
+      "contradictions": [],
+      "downweight_reasons": [
+        "仅含标题素材 (-8)"
+      ],
+      "quality_flags": [],
+      "material_depth": "title_only",
+      "source_count": 3,
+      "platform_count": 3,
+      "independent_publisher_count": 3,
+      "reprint_count": 0,
+      "published_at": "2026-11-24T09:52:43+08:00",
+      "event_date": "2026-11-24",
+      "event_time": "2026-11-24T09:52:43+08:00",
+      "stale": false,
+      "event_date_source": "llm_extracted",
+      "is_stale_rehash": false,
+      "time_trust_level": "article_timestamp",
+      "time_confidence": "article_timestamp",
+      "first_discovered_at": "2026-11-24T11:29:14+08:00",
+      "first_reported_at": "2026-11-24T09:52:43+08:00",
+      "latest_fact_update_at": "2026-11-24T10:31:23+08:00",
+      "latest_reported_at": "2026-11-24T10:31:23+08:00",
+      "fetched_at": "2026-11-24T11:29:14+08:00",
+      "input_batch_id": "raw-20261124-112914",
+      "fact_summary": "日本10年期国债收益率下行6个基点至2.725%。",
+      "fact_atoms": [
+        {
+          "atom_id": "fa_69760911",
+          "subject": "相关主体",
+          "metric_or_action": "日本10年期国债收益率下行6个基点至2.725%。",
+          "value": "2.725",
+          "unit": "%",
+          "period": "单次披露/未注明周期",
+          "scope": "新闻事件陈述",
+          "fact_status": "multi_source_reported",
+          "attribution": "华尔街见闻 7×24 全球",
+          "source_ref": "wscn-global-channel_ebed6759b54e",
+          "source_url": "https://wallstreetcn.com/livenews/3204638",
+          "source_excerpt_or_locator": "日本10年期国债收益率下行6个基点至2.725%。",
+          "published_at": "2026-11-24T09:52:43+08:00",
+          "discovered_at": "2026-11-24T11:29:14+08:00",
+          "revision": 1
+        }
+      ],
+      "ai_analysis": "日本长期国债收益率的显著下行缓解了当地金融机构的短期估值压力，反映出日债买盘力量的阶段性回暖。",
+      "unverified_claims": [],
+      "speculation_or_outlook": null,
+      "sources": [
+        {
+          "item_id": "wscn-global-channel_ebed6759b54e",
+          "article_id": "wscn-global-channel_ebed6759b54e",
+          "source_id": "wscn-global-channel",
+          "source_name": "华尔街见闻 7×24 全球",
+          "publisher_name": "华尔街见闻 7×24 全球",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "wallstreetcn",
+          "is_reprint_copy": false,
+          "title": "日本10年期国债收益率下行6个基点至2.725%。",
+          "url": "https://wallstreetcn.com/livenews/3204638",
+          "published_at": "2026-11-24T09:52:43+08:00",
+          "published_at_source": "upstream_api",
+          "fetched_at": "2026-11-24T11:29:16+08:00",
+          "excerpt": null,
+          "thumbnail_url": null,
+          "deep_fetch_status": null
+        },
+        {
+          "item_id": "cls-telegraph_2d5fb4f53d6f",
+          "article_id": "cls-telegraph_2d5fb4f53d6f",
+          "source_id": "cls-telegraph",
+          "source_name": "财联社 · 电报",
+          "publisher_name": "财联社 · 电报",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "aggregator_lead",
+          "publisher_family": "cls",
+          "is_reprint_copy": false,
+          "title": "财联社11月24日电，5年期日本国债收益率下跌5.5个基点，至2.125%。",
+          "url": "https://www.cls.cn/detail/2542575",
+          "published_at": "2026-11-24T10:04:37+08:00",
+          "published_at_source": "upstream_epoch",
+          "fetched_at": "2026-11-24T11:29:14+08:00",
+          "excerpt": null,
+          "thumbnail_url": null,
+          "deep_fetch_status": null
+        },
+        {
+          "item_id": "fastbull-express_ea2ba58002bb",
+          "article_id": "fastbull-express_ea2ba58002bb",
+          "source_id": "fastbull-express",
+          "source_name": "法布财经 · 快讯",
+          "publisher_name": "法布财经 · 快讯",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "aggregator_lead",
+          "publisher_family": "fastbull",
+          "is_reprint_copy": false,
+          "title": "韩国财政部以4.0%的收益率发行20年期国债。",
+          "url": "https://www.fastbull.com/cn/fastshort/4363076_1_1",
+          "published_at": "2026-11-24T10:31:23+08:00",
+          "published_at_source": "upstream_epoch",
+          "fetched_at": "2026-11-24T11:29:14+08:00",
+          "excerpt": null,
+          "thumbnail_url": null,
+          "deep_fetch_status": null
+        }
+      ],
+      "verification": {
+        "all_refs_valid": true,
+        "has_primary_url": true,
+        "rejected_refs": [],
+        "has_first_party": false
+      },
       "followup": null,
       "is_new_in_batch": true,
       "update_kind": "new_discovery",
@@ -1495,18 +1727,195 @@
       "radar_score": 35,
       "severity_tier": "B",
       "severity_label": "B级常规",
+      "summary": "日本10年期国债收益率下行6个基点至2.725%。",
+      "summary_zh": "日本10年期国债收益率下行6个基点至2.725%。",
+      "ai_overlaid": true,
       "translation_attempts": 0,
       "translation_error": null,
-      "title_zh": "恒指、恒生科技指数均转跌。",
+      "title_zh": "日本10年期国债收益率下行6个基点至2.725%。",
       "translation_status": "native_zh",
-      "summary_zh": "恒指、恒生科技指数均转跌。",
       "title_en": "",
       "summary_en": "",
       "ai_analysis_en": "",
       "deep_qa": [
         {
           "question": "事件对大宗物价、出行或外贸订单有何影响？",
-          "answer": "重点关注相关产业链引发的跨区域供应链、汇率与大宗品风险溢价变动：恒指、恒生科技指数均转跌。",
+          "answer": "重点关注相关产业链引发的跨区域供应链、汇率与大宗品风险溢价变动：日本10年期国债收益率下行6个基点至2.725%。",
+          "historical_parallel": "历次跨区域地缘与贸易规则博弈多呈“首轮情绪脉冲，随后看实际封锁或关税文本落地决定持续性”轨迹。"
+        },
+        {
+          "question": "下一步决定走向的关键观测点是什么？",
+          "answer": "盯紧涉事官方下一轮正式公报与约束性细则落地。",
+          "historical_parallel": "若各方在后续窗口重回务实谈判，避险溢价与航运附加费通常较快收敛。"
+        }
+      ]
+    },
+    {
+      "schema_version": "4.1",
+      "event_id": "evt_07fcd4681612",
+      "storyline_id": "st_48ce6af64fd5",
+      "article_ids": [
+        "wscn-a-stock-channel_4c8cc4718307",
+        "wscn-a-stock-channel_d993dd5cccc7",
+        "cls-telegraph_17d5a00c3f03"
+      ],
+      "legacy_event_ids": [],
+      "title": "军工板块表现活跃 晨曦航空涨超10%",
+      "category": "finance",
+      "entities": [],
+      "entity_ids": [],
+      "entity_confidences": {},
+      "matched_entities": [],
+      "importance": "normal",
+      "sentiment": "Mixed",
+      "special_note": null,
+      "material_stage": null,
+      "material_stage_label": null,
+      "material_stage_confidence": null,
+      "thumbnail_url": null,
+      "publisher_name": "华尔街见闻 A股快讯",
+      "source_status": "ok",
+      "evidence_status": "multi_source",
+      "evidence_label": "多独立来源提及（待核官方全文）",
+      "evidence_status_reason": "已有 2 家独立媒体族提及（仅基于标题素材）；多源转载不代表官方公告已证实",
+      "attribution_warning": null,
+      "regulatory_note": null,
+      "contradictions": [],
+      "downweight_reasons": [
+        "仅含标题素材 (-8)"
+      ],
+      "quality_flags": [],
+      "material_depth": "title_only",
+      "source_count": 3,
+      "platform_count": 2,
+      "independent_publisher_count": 2,
+      "reprint_count": 0,
+      "published_at": "2026-11-24T10:14:58+08:00",
+      "event_date": "2026-11-24",
+      "event_time": "2026-11-24T10:14:58+08:00",
+      "stale": false,
+      "event_date_source": "llm_extracted",
+      "is_stale_rehash": false,
+      "time_trust_level": "article_timestamp",
+      "time_confidence": "article_timestamp",
+      "first_discovered_at": "2026-11-24T11:29:14+08:00",
+      "first_reported_at": "2026-11-24T10:14:58+08:00",
+      "latest_fact_update_at": "2026-11-24T11:08:17+08:00",
+      "latest_reported_at": "2026-11-24T11:08:17+08:00",
+      "fetched_at": "2026-11-24T11:29:14+08:00",
+      "input_batch_id": "raw-20261124-112914",
+      "fact_summary": "A股军工板块盘中表现活跃，其中晨曦航空股价涨幅超过10%。",
+      "fact_atoms": [
+        {
+          "atom_id": "fa_77910424",
+          "subject": "相关主体",
+          "metric_or_action": "军工板块表现活跃 晨曦航空涨超10%",
+          "value": "10",
+          "unit": "%",
+          "period": "单次披露/未注明周期",
+          "scope": "新闻事件陈述",
+          "fact_status": "multi_source_reported",
+          "attribution": "华尔街见闻 A股快讯",
+          "source_ref": "wscn-a-stock-channel_4c8cc4718307",
+          "source_url": "https://wallstreetcn.com/livenews/3204666",
+          "source_excerpt_or_locator": "AI眼镜概念表现活跃，明月镜片、天键股份涨超10%，共达电声此前涨停，歌尔股份、龙旗科技、瀛通通讯涨超6%。",
+          "published_at": "2026-11-24T11:08:17+08:00",
+          "discovered_at": "2026-11-24T11:29:14+08:00",
+          "revision": 1
+        }
+      ],
+      "ai_analysis": "板块内部资金抱团特征明显，游资与机构交织推动弹性标的快速拉升。",
+      "unverified_claims": [],
+      "speculation_or_outlook": null,
+      "sources": [
+        {
+          "item_id": "wscn-a-stock-channel_4c8cc4718307",
+          "article_id": "wscn-a-stock-channel_4c8cc4718307",
+          "source_id": "wscn-a-stock-channel",
+          "source_name": "华尔街见闻 A股快讯",
+          "publisher_name": "华尔街见闻 A股快讯",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "wallstreetcn",
+          "is_reprint_copy": false,
+          "title": "AI眼镜概念表现活跃，明月镜片、天键股份涨超10%，共达电声此前涨停，歌尔股份、龙旗科技、瀛通通讯涨超6%。",
+          "url": "https://wallstreetcn.com/livenews/3204666",
+          "published_at": "2026-11-24T11:08:17+08:00",
+          "published_at_source": "upstream_api",
+          "fetched_at": "2026-11-24T11:29:16+08:00",
+          "excerpt": null,
+          "thumbnail_url": null,
+          "deep_fetch_status": null
+        },
+        {
+          "item_id": "wscn-a-stock-channel_d993dd5cccc7",
+          "article_id": "wscn-a-stock-channel_d993dd5cccc7",
+          "source_id": "wscn-a-stock-channel",
+          "source_name": "华尔街见闻 A股快讯",
+          "publisher_name": "华尔街见闻 A股快讯",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "wallstreetcn",
+          "is_reprint_copy": false,
+          "title": "军工板块表现活跃，晨曦航空涨超10%，北方长龙、广联航空、晟楠科技、佳力奇、爱乐达等跟涨。",
+          "url": "https://wallstreetcn.com/livenews/3204643",
+          "published_at": "2026-11-24T10:14:58+08:00",
+          "published_at_source": "upstream_api",
+          "fetched_at": "2026-11-24T11:29:16+08:00",
+          "excerpt": null,
+          "thumbnail_url": null,
+          "deep_fetch_status": null
+        },
+        {
+          "item_id": "cls-telegraph_17d5a00c3f03",
+          "article_id": "cls-telegraph_17d5a00c3f03",
+          "source_id": "cls-telegraph",
+          "source_name": "财联社 · 电报",
+          "publisher_name": "财联社 · 电报",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "aggregator_lead",
+          "publisher_family": "cls",
+          "is_reprint_copy": false,
+          "title": "军工板块表现活跃 晨曦航空涨超10%",
+          "url": "https://www.cls.cn/detail/2542585",
+          "published_at": "2026-11-24T10:15:30+08:00",
+          "published_at_source": "upstream_epoch",
+          "fetched_at": "2026-11-24T11:29:14+08:00",
+          "excerpt": null,
+          "thumbnail_url": null,
+          "deep_fetch_status": null
+        }
+      ],
+      "verification": {
+        "all_refs_valid": true,
+        "has_primary_url": true,
+        "rejected_refs": [],
+        "has_first_party": false
+      },
+      "followup": null,
+      "is_new_in_batch": true,
+      "update_kind": "new_discovery",
+      "heavy_score": 66.7,
+      "radar_score": 29,
+      "severity_tier": "B",
+      "severity_label": "B级常规",
+      "summary": "A股军工板块盘中表现活跃，其中晨曦航空股价涨幅超过10%。",
+      "summary_zh": "A股军工板块盘中表现活跃，其中晨曦航空股价涨幅超过10%。",
+      "ai_overlaid": true,
+      "translation_attempts": 0,
+      "translation_error": null,
+      "title_zh": "军工板块表现活跃 晨曦航空涨超10%",
+      "translation_status": "native_zh",
+      "title_en": "",
+      "summary_en": "",
+      "ai_analysis_en": "",
+      "deep_qa": [
+        {
+          "question": "事件对大宗物价、出行或外贸订单有何影响？",
+          "answer": "重点关注相关产业链引发的跨区域供应链、汇率与大宗品风险溢价变动：A股军工板块盘中表现活跃，其中晨曦航空股价涨幅超过10%。",
           "historical_parallel": "历次跨区域地缘与贸易规则博弈多呈“首轮情绪脉冲，随后看实际封锁或关税文本落地决定持续性”轨迹。"
         },
         {
