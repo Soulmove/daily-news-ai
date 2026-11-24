@@ -1,7 +1,7 @@
 {
   "schema_version": "4.1",
-  "generated_at": "2026-11-24T05:24:59+08:00",
-  "batch_id": "smart-20261124-052459",
+  "generated_at": "2026-11-24T11:30:48+08:00",
+  "batch_id": "smart-20261124-113048",
   "note": "基于公开官方催化剂与权威报道建立的客观验证观察题；个人自建与修订记录保存在本地浏览器，支持导入导出。",
   "predictions": [
     {
@@ -65,6 +65,13 @@
           "judgment": "SEC 8-K Item 5.02 已披露于 2026-11-12；本批 1 条最新报道聚焦过渡安排，待正式继任公告",
           "probability_pct": 64,
           "reason": "本批捕捉到 1 条英伟达管理层过渡相关最新报道（含：特朗普呼吁英伟达董事会重新聘用黄仁勋 英伟达夜盘反弹7%）"
+        },
+        {
+          "version": 6,
+          "updated_at": "2026-11-24T11:30:48+08:00",
+          "judgment": "SEC 8-K Item 5.02 已披露于 2026-11-23；本批 1 条最新报道聚焦过渡安排，待正式继任公告",
+          "probability_pct": 64,
+          "reason": "本批捕捉到 1 条英伟达管理层过渡相关最新报道（含：特朗普电话参加英伟达董事会会议：已就国家安全问题作出保证）"
         }
       ],
       "settlement": null
@@ -190,6 +197,13 @@
           "judgment": "本批美联储官员表态及市场通胀预期延续博弈，12 月点阵图对 2027 路径至关重要",
           "probability_pct": 66,
           "reason": "本批纳入 1 条美联储利率路径最新报道（含：美财长贝森特警告美联储过度收紧风险 交易员下调12月加息押注）"
+        },
+        {
+          "version": 8,
+          "updated_at": "2026-11-24T11:30:48+08:00",
+          "judgment": "本批美联储官员表态及市场通胀预期延续博弈，12 月点阵图对 2027 路径至关重要",
+          "probability_pct": 66,
+          "reason": "本批纳入 1 条美联储利率路径最新报道（含：美联储“三把手”：通胀仍未达标，需逐步采取行动…）"
         }
       ],
       "settlement": null
@@ -232,81 +246,6 @@
       "settlement": null
     },
     {
-      "prediction_id": "pred_live_margin80_turnover",
-      "mode": "live",
-      "status": "open",
-      "title": "11月30日两融融资保证金降至80%施行首日，沪深两市成交额能否突破1.8万亿",
-      "title_en": "Will A-share daily turnover exceed RMB 1.8T on Nov 30 margin-ratio cut effective day?",
-      "target_entity_id": "ent_cn_brokers",
-      "target_entity": "中信证券 / A股券商与资本市场",
-      "question": "2026-11-30 沪深北交易所融资保证金下调至 80% 正式生效当日，沪深两市全日成交总额是否突破 1.8 万亿元？",
-      "question_en": "On Nov 30, 2026 when the 80% margin cut takes effect, will combined SH+SZ turnover exceed RMB 1.8 trillion?",
-      "created_at": "2026-11-23T17:07:49+08:00",
-      "due_at": "2026-11-30T16:00:00+08:00",
-      "win_rule": "11 月 30 日沪深两市收盘合计成交额 >= 1.8 万亿元人民币",
-      "lose_rule": "当日沪深两市收盘合计成交额低于 1.8 万亿元",
-      "indeterminate_rule": "交易所临时公告延后施行日期或休市",
-      "supporting_evidence": [
-        "沪深北交易所官方发布融资保证金下调至 80% 并定档 11 月 30 日正式施行",
-        "政策预计显著提升两融杠杆可用空间与券商交投活跃度"
-      ],
-      "opposing_evidence": [
-        "前期利好消息公告后已有部分资金提前抢跑，生效当日或存兑现分化"
-      ],
-      "core_assumption": "以 11 月 30 日 A 股收盘官方成交额统计为准",
-      "invalidation_trigger": "生效时间变更",
-      "probability_pct": 64,
-      "probability_note": "基于两融新政生效日期与当前成交基数自动构建观察",
-      "current_judgment": "杠杆资金空间打开利好交投放量，重点跟踪中信/东财等券商龙头量能表现",
-      "versions": [
-        {
-          "version": 1,
-          "updated_at": "2026-11-23T17:07:49+08:00",
-          "judgment": "锚定 11 月 30 日正式生效日成交额放量验证",
-          "probability_pct": 64,
-          "reason": "由两融 80% 重大监管新政自动立项"
-        }
-      ],
-      "settlement": null
-    },
-    {
-      "prediction_id": "pred_live_korea_stab_fund",
-      "mode": "live",
-      "status": "open",
-      "title": "韩国股市平准基金本周是否正式宣布启动实质性入场买盘护盘",
-      "title_en": "Will South Korea activate its equity stabilization fund for actual market buying this week?",
-      "target_entity_id": "ent_memory_chips",
-      "target_entity": "存储芯片 / 韩国资本市场",
-      "question": "截至本观察期末，韩国企划财政部或金融委员会 (FSC) 是否正式发布股市平准基金实质入场买盘公告？",
-      "question_en": "Within the observation window, will South Korea's MOEF/FSC announce actual deployment of its stock stabilization fund?",
-      "created_at": "2026-11-23T17:07:49+08:00",
-      "due_at": "2026-11-29T20:00:00+08:00",
-      "win_rule": "韩国监管当局公告股市平准基金已拨款入场或启动首笔实质买入操作",
-      "lose_rule": "仅维持“审查/准备启动”口头表态而未动用平准基金实际资金",
-      "indeterminate_rule": "韩国市场连续休市",
-      "supporting_evidence": [
-        "韩国财长及金融监管部门近期针对 KOSPI 波动公开表示将审查动用股市平准基金"
-      ],
-      "opposing_evidence": [
-        "历史上韩方多次以口头表态+融资限额管控优先，实际动用平准基金门槛较高"
-      ],
-      "core_assumption": "以韩国政府及权威财经通讯社（韩联社/路透）实锤公告为准",
-      "invalidation_trigger": "KOSPI 快速收复失地导致监管撤回动议",
-      "probability_pct": 42,
-      "probability_note": "由韩国股市平准基金动向自动生成",
-      "current_judgment": "韩国监管口头稳市信号明确，但是否真金白银入场仍取决于本周 KOSPI 指数守位情况",
-      "versions": [
-        {
-          "version": 1,
-          "updated_at": "2026-11-23T17:07:49+08:00",
-          "judgment": "持续跟踪韩国 FSC 公告与 KOSPI 止跌表现",
-          "probability_pct": 42,
-          "reason": "由韩国股市波动与平准基金重磅动态自动立项"
-        }
-      ],
-      "settlement": null
-    },
-    {
       "prediction_id": "pred_live_gold_rebound_window",
       "mode": "live",
       "status": "open",
@@ -339,6 +278,43 @@
           "judgment": "跟踪黄金期现反弹强度与美元实际利率走势",
           "probability_pct": 52,
           "reason": "由大宗金属剧震事件自动立项"
+        }
+      ],
+      "settlement": null
+    },
+    {
+      "prediction_id": "pred_live_auto_e6931f8b",
+      "mode": "live",
+      "status": "open",
+      "title": "后续验证：黄仁勋重掌英伟达帅印！股价暴涨31%，市值单日增长近万亿 未来 7 天是否触发实质进展",
+      "title_en": "Follow-up verification: Will \"Jensen Huang reinstated as Nvidia CEO.\" reach formal milestone in 7 days?",
+      "target_entity_id": "ent_nvidia",
+      "target_entity": "英伟达 (NVIDIA)",
+      "question": "未来 7 天内，围绕「黄仁勋重掌英伟达帅印！股价暴涨31%，市值单日增长近万亿」是否出现官方正式生效/签约/财务落地等可交叉证实的实质性后续通报？",
+      "question_en": "Within 7 days, will official notices or multi-source reporting confirm concrete follow-through on \"Jensen Huang reinstated as Nvidia CEO.\"?",
+      "created_at": "2026-11-24T11:30:48+08:00",
+      "due_at": "2026-12-01T20:00:00+08:00",
+      "win_rule": "7 天内出现权威官方文件、交易所/监管披露或两家以上主流媒体实锤落地进展",
+      "lose_rule": "到期前未见任何实质性后续落地或当事方正式撤回/否决相关动议",
+      "indeterminate_rule": "当事方官方推迟决策窗口",
+      "supporting_evidence": [
+        "来源 CNBC Tech & AI 已披露首轮重磅信号（finance）"
+      ],
+      "opposing_evidence": [
+        "初期快讯信号仍待官方细则与多方时间表验证"
+      ],
+      "core_assumption": "重点事件通常在 7 天窗口内释放正式文件或明确转折",
+      "invalidation_trigger": "议程提前取消",
+      "probability_pct": 55,
+      "probability_note": "由当日 S/A 级重磅事件自动提取建立 7 天跟踪验证",
+      "current_judgment": "保持关注未来一周官方后续落地公告或量化指标变化",
+      "versions": [
+        {
+          "version": 1,
+          "updated_at": "2026-11-24T11:30:48+08:00",
+          "judgment": "基于当日重磅事件自动立项跟踪",
+          "probability_pct": 55,
+          "reason": "当日 S/A 级重点事件自动立项"
         }
       ],
       "settlement": null
