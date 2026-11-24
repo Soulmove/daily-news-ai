@@ -4910,6 +4910,182 @@ class V3PipelineRegressionTests(unittest.TestCase):
                 self.assertEqual(cat_docs["finance"]["events"][0]["deep_qa"][0]["question"], "Mega-Batch 1 原生深度追问？")
                 self.assertEqual(cat_docs["tech"]["events"][0]["deep_qa"][0]["question"], "推理降本带来什么变化？")
 
+    def test_v20_predictions_plain_language_12_to_18_and_early_auto_settle(self) -> None:
+        from datetime import datetime
+        from unittest import mock
+        from pipeline.gemini_pool import GeminiCallResult
+        from pipeline.deep_enrichment_engine import verify_live_predictions_settlement_via_tier2
+        from pipeline.time_utils import SHANGHAI_TZ
+        from pipeline.v3_builder import (
+            auto_settle_live_predictions,
+            build_dynamic_live_predictions,
+            build_v3_artifacts,
+        )
+
+        gen_dt = datetime(2026, 11, 24, 12, 0, tzinfo=SHANGHAI_TZ)
+        gen_iso = "2026-11-24T12:00:00+08:00"
+        slop_legacy = {
+            "prediction_id": "pred_live_auto_e6931f8b",
+            "mode": "live",
+            "status": "open",
+            "title": "后续验证：黄仁勋重掌英伟达帅印！股价暴涨31% 未来 7 天是否触发实质进展",
+        }
+        dyn = build_dynamic_live_predictions(
+            all_events=[
+                {"title": "黄仁勋重掌英伟达帅印，股价飙涨31%", "severity_tier": "S", "category": "finance"},
+                {"title": "神舟二十四号瞄准25日发射", "severity_tier": "A", "category": "tech"},
+            ],
+            calendar_items=[],
+            wire_items=[],
+            generated_dt=gen_dt,
+            generated_at_iso=gen_iso,
+            existing_predictions=[slop_legacy],
+            prev_preds_by_id={slop_legacy["prediction_id"]: slop_legacy},
+        )
+        pids = {p["prediction_id"] for p in dyn}
+        self.assertNotIn("pred_live_auto_e6931f8b", pids)
+        open_dyn = [p for p in dyn if p.get("mode") == "live" and p.get("status") == "open"]
+        self.assertGreaterEqual(len(open_dyn), 12)
+        self.assertLessEqual(len(open_dyn), 18)
+        cats_present = {p.get("category") for p in open_dyn}
+        self.assertEqual(cats_present, {"tech_ai", "market", "macro", "global_space"})
+        sz = next(p for p in dyn if p["prediction_id"] == "pred_live_shenzhou24_launch")
+        self.assertEqual(sz["target_entity_id"], "ent_china_aerospace")
+
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            (root / "data").mkdir(parents=True, exist_ok=True)
+            nvda_seed = {
+                "prediction_id": "pred_seed_nvda_sec_502",
+                "mode": "live",
+                "status": "open",
+                "category": "tech_ai",
+                "title": "黄仁勋能否在 14 天内正式重返英伟达出任 CEO？",
+                "probability_pct": 65,
+                "due_at": "2026-11-30T20:00:00+08:00",
+                "win_rule": "英伟达官方或 SEC 8-K 公告宣布黄仁勋复职 CEO",
+                "lose_rule": "截止日前英伟达未恢复黄仁勋职务或另选他人出任正式 CEO",
+                "current_judgment": "等待核验",
+                "versions": [{"version": 1, "updated_at": gen_iso, "judgment": "待核验", "probability_pct": 65, "reason": "初始"}],
+                "settlement": None,
+            }
+            settled = auto_settle_live_predictions(
+                root,
+                predictions=[nvda_seed, slop_legacy] + dyn,
+                all_events=[
+                    {
+                        "title": "在涉嫌间谍事件后，英伟达恢复黄仁勋的CEO职务",
+                        "fact_summary": "英伟达董事会已恢复黄仁勋 CEO 职务。",
+                        "sources": [{"source_name": "财联社", "url": "https://www.cls.cn/detail/1"}],
+                    },
+                    {
+                        "title": "黄仁勋复职重掌英伟达 股价飙涨逾30%",
+                        "fact_summary": "SEC 8-K 同步披露正式任命。",
+                        "sources": [{"source_name": "华尔街见闻", "url": "https://wallstreetcn.com/articles/1"}],
+                    },
+                ],
+                entities_map={
+                    "ent_nvidia": {
+                        "recent_filings": [{"form": "8-K", "filing_date": "2026-11-23", "items": ["5.02,9.01"], "url": "https://www.sec.gov/nvda-8k"}]
+                    }
+                },
+                generated_dt=gen_dt,
+                generated_at_iso=gen_iso,
+                use_ai=False,
+            )
+            by_id = {p["prediction_id"]: p for p in settled}
+            self.assertNotIn("pred_live_auto_e6931f8b", by_id)
+            nv = by_id["pred_seed_nvda_sec_502"]
+            self.assertEqual(nv["status"], "settled")
+            self.assertEqual(nv["settlement"]["outcome"], "correct")
+            self.assertIsNotNone(nv["settlement"].get("brier_score"))
+            self.assertTrue((root / "data/predictions_settled_archive.json").exists())
+
+            # Rebuild without NVDA events -> archive permanently keeps status="settled"
+            settled_again = auto_settle_live_predictions(
+                root,
+                predictions=[{**nvda_seed, "status": "open", "settlement": None}],
+                all_events=[],
+                generated_dt=gen_dt,
+                generated_at_iso=gen_iso,
+                use_ai=False,
+            )
+            self.assertEqual(settled_again[0]["status"], "settled")
+            self.assertEqual(settled_again[0]["settlement"]["outcome"], "correct")
+
+            # Verify Tier-2 AI settler accepts real catalog E01 & rejects hallucinated E99
+            with (
+                mock.patch("pipeline.deep_enrichment_engine.collect_api_key_slots", return_value=["k1"]),
+                mock.patch("pipeline.deep_enrichment_engine.call_gemini_json") as m_settle,
+            ):
+                m_settle.return_value = GeminiCallResult(
+                    ok=True,
+                    model_used="gemini-3.5-flash-lite",
+                    data={
+                        "settlements": [
+                            {"prediction_id": "pred_live_zhipu_glm54_launch", "settle": True, "outcome": "correct", "evidence_id": "E01", "note": "智谱官方正式上线 GLM-5.4 模型。"},
+                            {"prediction_id": "pred_live_gold_rebound_window", "settle": True, "outcome": "correct", "evidence_id": "E99", "note": "虚假编号不应通过校验"},
+                        ]
+                    },
+                )
+                ai_res = verify_live_predictions_settlement_via_tier2(
+                    root,
+                    open_predictions=[
+                        {"prediction_id": "pred_live_zhipu_glm54_launch", "mode": "live", "status": "open", "title": "智谱 GLM-5.4 能否正式发布", "target_entity": "智谱", "win_rule": "官宣发布", "lose_rule": "推迟"},
+                        {"prediction_id": "pred_live_gold_rebound_window", "mode": "live", "status": "open", "title": "现货黄金能否站上 3700 美元", "target_entity": "黄金", "win_rule": "站上3700", "lose_rule": "低于3700"},
+                    ],
+                    all_events=[{"title": "智谱正式发布 GLM-5.4 并开放 API", "fact_summary": "今日全量上线", "sources": [{"source_name": "机器之心", "url": "https://jiqizhixin.com/glm54"}]}],
+                    wire_items=[],
+                    generated_at_iso=gen_iso,
+                )
+                self.assertIn("pred_live_zhipu_glm54_launch", ai_res)
+                self.assertEqual(ai_res["pred_live_zhipu_glm54_launch"]["evidence_url"], "https://jiqizhixin.com/glm54")
+                self.assertNotIn("pred_live_gold_rebound_window", ai_res)
+
+            # End-to-end build_v3_artifacts sanity on note hygiene & count bounds
+            empty_cat = lambda c: {"category": c, "batch_id": "b20", "generated_at": gen_iso, "events": []}
+            cat_docs = {c: empty_cat(c) for c in ("finance", "global", "tech", "general")}
+            cat_docs["finance"]["events"] = [{
+                "event_id": "ev_nvda_ret",
+                "category": "finance",
+                "title": "黄仁勋重掌英伟达帅印，股价飙升31%",
+                "fact_summary": "英伟达董事会恢复黄仁勋 CEO 职务。",
+                "sources": [{"source_name": "财联社", "url": "https://cls.cn/nvda"}],
+                "latest_reported_at": gen_iso,
+                "first_discovered_at": gen_iso,
+                "first_reported_at": gen_iso,
+                "latest_fact_update_at": gen_iso,
+                "evidence_status": "corroborated",
+                "evidence_label": "交叉印证",
+                "independent_publisher_count": 2,
+                "reprint_count": 0,
+                "severity_tier": "S",
+            }]
+            with mock.patch("pipeline.deep_enrichment_engine.collect_api_key_slots", return_value=[]):
+                build_v3_artifacts(
+                    root,
+                    batch_id="smart-20261124-120000",
+                    generated_at_iso=gen_iso,
+                    cat_docs=cat_docs,
+                    prev_cat_events={},
+                    prev_batch_id=None,
+                    connectors_payload={
+                        "entity_updates": {
+                            "ent_nvidia": {"sec_filings": [{"form": "8-K", "filing_date": "2026-11-23", "items": ["5.02,9.01"], "url": "https://www.sec.gov/nvda-8k"}]}
+                        }
+                    },
+                )
+            pub_doc = json.loads((root / "data/predictions_public.json").read_text(encoding="utf-8"))
+            self.assertNotIn("导入导出", pub_doc["note"])
+            self.assertNotIn("本地浏览器", pub_doc["note"])
+            pub_live_open = [p for p in pub_doc["predictions"] if p.get("mode") == "live" and p.get("status") == "open"]
+            pub_live_settled = [p for p in pub_doc["predictions"] if p.get("mode") == "live" and p.get("status") == "settled"]
+            self.assertGreaterEqual(len(pub_live_open), 12)
+            self.assertLessEqual(len(pub_live_open), 18)
+            self.assertEqual(len(pub_live_settled), 1)
+            self.assertEqual(pub_live_settled[0]["prediction_id"], "pred_seed_nvda_sec_502")
+            self.assertEqual(pub_live_settled[0]["settlement"]["outcome"], "correct")
+
 
 if __name__ == "__main__":
     unittest.main()

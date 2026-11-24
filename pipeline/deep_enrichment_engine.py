@@ -1030,6 +1030,26 @@ def _run_mega_batch_2b_derivatives(
     return topics_out, storylines_out, qa_out
 
 
+def _is_bureaucratic_or_slop_prediction(title: str) -> bool:
+    t = str(title or "").strip()
+    if not t:
+        return True
+    if re.search(r"后续验证[:：]|是否触发实质进展|是否释放超预期关键指引|临时管理层|董事回任安排|涉事机构|相关监管主体", t):
+        return True
+    return False
+
+
+def _infer_pred_category(title: str, target_entity: str = "") -> str:
+    blob = f"{title} {target_entity}".lower()
+    if any(k in blob for k in ("神舟", "cop31", "气候", "关税", "特朗普", "外交", "航天", "停火", "联合国", "空间站", "国际")):
+        return "global_space"
+    if any(k in blob for k in ("美联储", "fomc", "pmi", "非农", "pce", "cpi", "央行", "经济工作会议", "赤字率", "宏观", "降息", "加息")):
+        return "macro"
+    if any(k in blob for k in ("黄金", "金价", "a股", "成交额", "保证金", "平准基金", "股价", "市值", "opec", "原油", "美股", "nvda", "收盘价", "港股")):
+        return "market"
+    return "tech_ai"
+
+
 def synthesize_dynamic_live_predictions_via_tier2(
     root: Path,
     *,
@@ -1038,14 +1058,17 @@ def synthesize_dynamic_live_predictions_via_tier2(
     existing_predictions: List[Dict[str, Any]],
     generated_dt: Any,
     generated_at_iso: str,
-    max_new: int = 3,
+    max_new: int = 4,
 ) -> List[Dict[str, Any]]:
-    """Use Tier-2 Gemini to synthesize 1~3 timely open live verifiable questions from fresh S/A events & calendar."""
+    """Use Tier-2 Gemini to synthesize timely plain-language live questions up to 12~18 active items."""
+    from .dedup import title_similarity
+    from .heavy_classifier import heavy_topic_key
+
     open_live = [
         p for p in existing_predictions
         if isinstance(p, dict) and p.get("mode") == "live" and p.get("status") == "open"
     ]
-    if len(open_live) >= 8 or max_new <= 0 or not collect_api_key_slots():
+    if len(open_live) >= 16 or max_new <= 0 or not collect_api_key_slots():
         return []
 
     cache_path = root / "data" / "predictions_ai_cache.json"
@@ -1053,15 +1076,41 @@ def synthesize_dynamic_live_predictions_via_tier2(
     now_ts = time.time()
     cached_items = raw_cache.get("items") if (now_ts - float(raw_cache.get("ts") or 0.0)) <= 6 * 3600 else None
 
-    existing_pids = {str(p.get("prediction_id") or "") for p in existing_predictions if isinstance(p, dict)}
-    existing_titles = {re.sub(r"\W+", "", str(p.get("title") or "").lower())[:20] for p in existing_predictions if isinstance(p, dict)}
+    recent_cutoff_dt = generated_dt - timedelta(days=7)
+    occupied_recs: List[Dict[str, Any]] = []
+    for p in existing_predictions:
+        if not isinstance(p, dict):
+            continue
+        if p.get("status") == "open":
+            occupied_recs.append(p)
+        elif p.get("status") == "settled":
+            st_dt = parse_iso_datetime(str(((p.get("settlement") or {}).get("settled_at")) or p.get("due_at") or ""))
+            if st_dt is None or st_dt >= recent_cutoff_dt:
+                occupied_recs.append(p)
+
+    existing_pids = {str(p.get("prediction_id") or "") for p in occupied_recs}
+    existing_titles = [str(p.get("title") or "") for p in occupied_recs if str(p.get("title") or "").strip()]
+    existing_prefixes = {re.sub(r"\W+", "", t.lower())[:20] for t in existing_titles}
+    existing_topics = {hk for hk in (heavy_topic_key(t) for t in existing_titles) if hk}
+
+    def _is_duplicate_topic(cand_title: str) -> bool:
+        tkey = re.sub(r"\W+", "", cand_title.lower())[:20]
+        if tkey in existing_prefixes:
+            return True
+        chk = heavy_topic_key(cand_title)
+        if chk and chk in existing_topics:
+            return True
+        if any(title_similarity(cand_title, ot) >= 0.45 for ot in existing_titles):
+            return True
+        return False
 
     if isinstance(cached_items, list) and cached_items:
         filtered = [
             it for it in cached_items
             if isinstance(it, dict)
+            and not _is_bureaucratic_or_slop_prediction(str(it.get("title") or ""))
             and str(it.get("prediction_id") or "") not in existing_pids
-            and re.sub(r"\W+", "", str(it.get("title") or "").lower())[:20] not in existing_titles
+            and not _is_duplicate_topic(str(it.get("title") or ""))
         ]
         if filtered:
             return filtered[:max_new]
@@ -1069,10 +1118,10 @@ def synthesize_dynamic_live_predictions_via_tier2(
     sa_events = [
         e for e in all_events
         if isinstance(e, dict) and (e.get("severity_tier") in {"S", "A"} or e.get("importance") == "high")
-    ][:10]
+    ][:12]
     if not sa_events:
         sa_events = [e for e in all_events if isinstance(e, dict)][:8]
-    future_cals = [c for c in calendar_items if isinstance(c, dict) and not c.get("is_past")][:6]
+    future_cals = [c for c in calendar_items if isinstance(c, dict) and not c.get("is_past")][:8]
     if not sa_events and not future_cals:
         return []
 
@@ -1082,13 +1131,18 @@ def synthesize_dynamic_live_predictions_via_tier2(
     default_due_iso = (generated_dt + timedelta(days=7)).strftime("%Y-%m-%dT20:00:00+08:00")
 
     prompt = (
-        f"你是前瞻预测编辑。当前时间：{generated_at_iso}。\n"
-        "请基于以下今日重点动态与未来排期，提出最多 3 条**未来 3~21 天内可通过官方公报/公开数据明确判定对错**的前瞻验证问题。\n"
-        "严禁与现有问题重复，严禁任何彩色 Emoji，严禁内部系统代号，结算日期 `due_at` 必须不早于 " + min_due_str + "。\n\n"
-        + ("现有问题标题：" + "；".join(str(p.get("title") or "")[:30] for p in open_live[:8]) + "\n\n")
-        + ("重点动态：\n" + "\n".join(ev_lines) + "\n\n" if ev_lines else "")
+        f"你是面向大众读者的财经科技前瞻预测编辑。当前时间：{generated_at_iso}。\n"
+        "请结合以下今日新闻与未来排期，新出 2~4 道**未来 3~21 天内大众一看就懂、是非分明可开奖**的新增预测题。\n"
+        "【说人话 5 条铁律（必须严格遵守）】\n"
+        "1. 直呼具体人名、公司名与产品/指标名（如「黄仁勋」「阿里 Qwen 4」「美联储」「现货黄金」），严禁「临时管理层」「涉事机构」「相关监管主体」等官话；\n"
+        "2. 标题必须是 1 秒看懂的是/否明确赌点 + 具体日期 + 硬核判据（例：「11 月 30 日中国官方制造业 PMI 能否站上 50 荣枯线？」），严禁「后续验证：...是否触发实质进展」这类废话模板；\n"
+        "3. 每题用三句大白话写清 `win_rule`（猜对开奖条件）、`lose_rule`（猜错落空条件）、`current_judgment`（今日最新进展）；\n"
+        "4. `category` 只能四选一：`tech_ai`（科技与AI）、`market`（股市与大宗）、`macro`（宏观与央行）、`global_space`（国际与航天）；\n"
+        "5. 严禁与已有活跃题或近 7 天已开奖题目重复（同主题绝不重复出题！），严禁任何 Emoji，结算日 `due_at` 不早于 " + min_due_str + "。\n\n"
+        + ("已有/近7天已结算题目（严禁撞车）：" + "；".join(t[:32] for t in existing_titles[:16]) + "\n\n")
+        + ("重点新闻：\n" + "\n".join(ev_lines) + "\n\n" if ev_lines else "")
         + ("未来排期：\n" + "\n".join(cal_lines) + "\n\n" if cal_lines else "")
-        + '严格输出 JSON：{"predictions": [{"title":"中文可验证预测题（28字内）","title_en":"Concise English yes/no question","target_entity":"核心主体名称","question":"明确结算判定问题（45字内）","question_en":"English settlement criterion","due_at":"YYYY-MM-DDT20:00:00+08:00","win_rule":"达成YES的公开依据","lose_rule":"判定NO的公开依据","indeterminate_rule":"无法判定条件","supporting_evidence":["正方事实证据"],"opposing_evidence":["反方制约证据"],"core_assumption":"核心前提假设","invalidation_trigger":"失效触发条件","probability_pct":55,"current_judgment":"当前一句研判"}]}'
+        + '严格输出 JSON：{"predictions": [{"category":"tech_ai|market|macro|global_space","title":"大白话是非问句（30字内，带具体时间）","title_en":"Concise English yes/no question","target_entity":"核心主体（如 美联储 / 阿里 Qwen）","question":"具体到日期与官方判据的一句话问题（45字内）","question_en":"English settlement criterion","due_at":"YYYY-MM-DDT20:00:00+08:00","win_rule":"一句大白话开奖条件（猜对）","lose_rule":"一句大白话落空条件（猜错）","indeterminate_rule":"推迟或数据缺失如何处理","supporting_evidence":["正方依据"],"opposing_evidence":["反方制约"],"core_assumption":"核心前提","invalidation_trigger":"提前失效条件","probability_pct":55,"current_judgment":"一句话交代今日刚发生了什么相关新消息"}]}'
     )
     res = call_gemini_json(
         scope="mega_predictions",
@@ -1107,16 +1161,19 @@ def synthesize_dynamic_live_predictions_via_tier2(
 
     out: List[Dict[str, Any]] = []
     min_due_dt = generated_dt + timedelta(days=3)
+    valid_cats = {"tech_ai", "market", "macro", "global_space"}
     for row in raw_list:
         if not isinstance(row, dict):
             continue
         title = strip_colored_emojis(str(row.get("title") or "")).strip()
         question = strip_colored_emojis(str(row.get("question") or "")).strip()
-        if len(title) < 10 or len(question) < 12:
+        if len(title) < 10 or len(question) < 12 or _is_bureaucratic_or_slop_prediction(title):
             continue
-        tkey = re.sub(r"\W+", "", title.lower())[:20]
-        if tkey in existing_titles:
+        if _is_duplicate_topic(title):
             continue
+        target_entity = strip_colored_emojis(str(row.get("target_entity") or "核心追踪主体")).strip()
+        raw_cat = str(row.get("category") or "").strip().lower()
+        cat_val = raw_cat if raw_cat in valid_cats else _infer_pred_category(title, target_entity)
         due_raw = str(row.get("due_at") or "").strip()
         due_dt = parse_iso_datetime(due_raw)
         if due_dt is None or due_dt < min_due_dt:
@@ -1131,35 +1188,40 @@ def synthesize_dynamic_live_predictions_via_tier2(
         if pid in existing_pids:
             continue
         existing_pids.add(pid)
-        existing_titles.add(tkey)
+        existing_titles.append(title)
+        existing_prefixes.add(re.sub(r"\W+", "", title.lower())[:20])
+        chk = heavy_topic_key(title)
+        if chk:
+            existing_topics.add(chk)
         out.append(
             {
                 "prediction_id": pid,
                 "mode": "live",
                 "status": "open",
+                "category": cat_val,
                 "title": title,
                 "title_en": strip_colored_emojis(str(row.get("title_en") or title)),
                 "target_entity_id": "ent_ai_dynamic",
-                "target_entity": strip_colored_emojis(str(row.get("target_entity") or "核心追踪主体")),
+                "target_entity": target_entity,
                 "question": question,
                 "question_en": strip_colored_emojis(str(row.get("question_en") or question)),
                 "created_at": generated_at_iso,
                 "due_at": due_iso,
-                "win_rule": strip_colored_emojis(str(row.get("win_rule") or "在到期日前获得官方公告或权威一手文件正式确认")),
-                "lose_rule": strip_colored_emojis(str(row.get("lose_rule") or "到期前官方未出台对应决议/披露，或明确宣布延期取消")),
-                "indeterminate_rule": strip_colored_emojis(str(row.get("indeterminate_rule") or "公开披露信息仍存实质模糊、延期未定")),
+                "win_rule": strip_colored_emojis(str(row.get("win_rule") or "到期前获得官方公告或公开数据正式确认达标")),
+                "lose_rule": strip_colored_emojis(str(row.get("lose_rule") or "截止日前官方未确认落地或明确宣布推迟取消")),
+                "indeterminate_rule": strip_colored_emojis(str(row.get("indeterminate_rule") or "官方推迟窗口或权威统计延迟未公布")),
                 "supporting_evidence": [strip_colored_emojis(str(x)) for x in (row.get("supporting_evidence") or [])[:3] if str(x).strip()] or ["当前已有权威信源持续跟进该关键窗口"],
-                "opposing_evidence": [strip_colored_emojis(str(x)) for x in (row.get("opposing_evidence") or [])[:3] if str(x).strip()] or ["最终落地节奏仍受多方博弈与审批窗口制约"],
-                "core_assumption": strip_colored_emojis(str(row.get("core_assumption") or "关键进展将通过公开官方通告或监管文件留痕")),
+                "opposing_evidence": [strip_colored_emojis(str(x)) for x in (row.get("opposing_evidence") or [])[:3] if str(x).strip()] or ["最终落地节奏仍受多方博弈与窗口条件制约"],
+                "core_assumption": strip_colored_emojis(str(row.get("core_assumption") or "以官方正式公告或权威统计公开结果为准")),
                 "invalidation_trigger": strip_colored_emojis(str(row.get("invalidation_trigger") or "当事方正式取消议程或彻底改期")),
                 "probability_pct": prob,
-                "probability_note": "基于当前多维公开信号构建实时基准概率，到期前固定跟踪验证",
-                "current_judgment": strip_colored_emojis(str(row.get("current_judgment") or "持续盯紧到期窗口前的官方披露与核心催化落地")),
+                "probability_note": "结合今日动态与公开排期自动生成，事件实锤或到期后自动核验开奖",
+                "current_judgment": strip_colored_emojis(str(row.get("current_judgment") or "相关事件正按预定时间窗口推进，等待官方实锤或数据落地")),
                 "versions": [
                     {
                         "version": 1,
                         "updated_at": generated_at_iso,
-                        "judgment": strip_colored_emojis(str(row.get("current_judgment") or "建立实时前瞻观察并持续追踪官方核验信号")),
+                        "judgment": strip_colored_emojis(str(row.get("current_judgment") or "基于最新公开信息建立实时追踪")),
                         "probability_pct": prob,
                         "reason": "基于最新重点动态与未来公开排期交叉生成",
                     }
@@ -1173,6 +1235,154 @@ def synthesize_dynamic_live_predictions_via_tier2(
     if out:
         atomic_write_json(cache_path, {"ts": now_ts, "updated_at": generated_at_iso, "items": out})
     return out
+
+
+def verify_live_predictions_settlement_via_tier2(
+    root: Path,
+    *,
+    open_predictions: List[Dict[str, Any]],
+    all_events: List[Dict[str, Any]],
+    wire_items: List[Dict[str, Any]],
+    generated_at_iso: str,
+) -> Dict[str, Dict[str, Any]]:
+    """Single Mega-Batch Tier-2 check for unambiguous early/due settlement backed by real evidence_id URLs."""
+    del generated_at_iso
+    if not open_predictions or not collect_api_key_slots():
+        return {}
+
+    catalog: List[Dict[str, str]] = []
+    seen_urls: set[str] = set()
+    for ev in all_events:
+        if not isinstance(ev, dict) or ev.get("is_stale_rehash"):
+            continue
+        srcs = [s for s in (ev.get("sources") or []) if isinstance(s, dict) and str(s.get("url") or "").startswith(("http://", "https://"))]
+        if not srcs:
+            continue
+        u = str(srcs[0].get("url") or "").strip()
+        if not u or u in seen_urls:
+            continue
+        seen_urls.add(u)
+        eid = f"E{len(catalog) + 1:02d}"
+        catalog.append(
+            {
+                "id": eid,
+                "title": strip_colored_emojis(str(ev.get("title") or "")),
+                "url": u,
+                "source_name": str(srcs[0].get("source_name") or "权威媒体"),
+                "published_at": str(ev.get("latest_reported_at") or ev.get("published_at") or "")[:16],
+                "summary": strip_colored_emojis(str(ev.get("fact_summary") or ""))[:140],
+            }
+        )
+        if len(catalog) >= 36:
+            break
+
+    if len(catalog) < 48:
+        for w in wire_items[:60]:
+            if not isinstance(w, dict):
+                continue
+            u = str(w.get("url") or "").strip()
+            if not u.startswith(("http://", "https://")) or u in seen_urls:
+                continue
+            seen_urls.add(u)
+            eid = f"E{len(catalog) + 1:02d}"
+            catalog.append(
+                {
+                    "id": eid,
+                    "title": strip_colored_emojis(str(w.get("title") or "")),
+                    "url": u,
+                    "source_name": str(w.get("source_name") or "7×24快讯"),
+                    "published_at": str(w.get("published_at") or "")[:16],
+                    "summary": strip_colored_emojis(str(w.get("excerpt") or ""))[:120],
+                }
+            )
+            if len(catalog) >= 48:
+                break
+
+    if not catalog:
+        return {}
+
+    catalog_by_id = {c["id"]: c for c in catalog}
+    catalog_blob = "\n".join(f"{c['title']} {c['summary']}".lower() for c in catalog)
+
+    candidate_preds: List[Dict[str, Any]] = []
+    for pr in open_predictions:
+        if not isinstance(pr, dict) or pr.get("mode") != "live" or pr.get("status") != "open":
+            continue
+        ent_tokens = [
+            tok.strip().lower()
+            for tok in re.split(r"[\s/()（）·,，、]+", f"{pr.get('target_entity') or ''} {pr.get('title') or ''}")
+            if len(tok.strip()) >= 2 and tok.strip() not in {"能否", "是否", "正式", "今年", "月底", "本周", "公布", "宣布", "以及"}
+        ]
+        if any(tok in catalog_blob for tok in ent_tokens[:6]):
+            candidate_preds.append(pr)
+        if len(candidate_preds) >= 12:
+            break
+
+    if not candidate_preds:
+        return {}
+
+    pred_lines = [
+        f"- pid={pr.get('prediction_id')} | 标题={pr.get('title')} | 到期={str(pr.get('due_at') or '')[:10]} | 开奖条件={pr.get('win_rule')} | 落空条件={pr.get('lose_rule')}"
+        for pr in candidate_preds
+    ]
+    cat_lines = [
+        f"- {c['id']} | {c['published_at']} | {c['source_name']} | {c['title']} | {c['summary']}"
+        for c in catalog
+    ]
+    prompt = (
+        "你是极度严谨的前瞻预测开奖核验官。请对照下方【今日真实证据目录】，逐题判断是否已有**确凿实锤、毫无疑义**的证据满足开奖条件（win_rule）或落空条件（lose_rule）。\n"
+        "铁律（宁缺毋滥）：\n"
+        "1. 只有当某条证据 E01..E48 明确实锤「已经发生/正式公布/明确达成或落空」时，才输出 `settle: true`；尚在传闻、探讨、未到期观察中的题目一律不要结算！\n"
+        "2. 必须填写实际存在的 `evidence_id`（例如 `E03`），严禁编造 URL 或证据；\n"
+        "3. `note` 用一句大白话讲清开奖结论与日期，严禁 Emoji。\n\n"
+        "【待核验预测题】\n" + "\n".join(pred_lines) + "\n\n"
+        "【今日真实证据目录】\n" + "\n".join(cat_lines) + "\n\n"
+        '严格返回 JSON：{"settlements": [{"prediction_id": "...", "settle": true, "outcome": "correct|incorrect", "evidence_id": "E01", "note": "一句话大白话开奖结论"}]}'
+    )
+
+    res = call_gemini_json(
+        scope="mega_pred_settle",
+        prompt=prompt,
+        tier="tier2",
+        temperature=0.05,
+        max_output_tokens=8192,
+        timeout_ms=25_000,
+        base_dir=root,
+    )
+    if not res.ok or not isinstance(res.data, dict):
+        return {}
+    rows = res.data.get("settlements")
+    if not isinstance(rows, list):
+        return {}
+
+    valid_pids = {str(pr.get("prediction_id") or "") for pr in candidate_preds}
+    verified: Dict[str, Dict[str, Any]] = {}
+    for row in rows:
+        if not isinstance(row, dict) or not row.get("settle"):
+            continue
+        pid = str(row.get("prediction_id") or "").strip()
+        ev_id = str(row.get("evidence_id") or "").strip().upper()
+        if pid not in valid_pids or ev_id not in catalog_by_id:
+            continue
+        ev_item = catalog_by_id[ev_id]
+        ev_url = str(ev_item.get("url") or "").strip()
+        if not ev_url.startswith(("http://", "https://")):
+            continue
+        raw_out = str(row.get("outcome") or "").strip().lower()
+        if raw_out in {"wrong", "false", "no", "failed", "incorrect"}:
+            outcome = "incorrect"
+        elif raw_out in {"correct", "true", "yes", "won"}:
+            outcome = "correct"
+        else:
+            continue
+        note = strip_colored_emojis(str(row.get("note") or "")).strip() or f"依据最新权威报道「{ev_item['title']}」提前触发客观开奖。"
+        verified[pid] = {
+            "outcome": outcome,
+            "evidence_url": ev_url,
+            "evidence_title": ev_item["title"],
+            "note": note,
+        }
+    return verified
 
 
 def run_v12_deep_enrichment(
