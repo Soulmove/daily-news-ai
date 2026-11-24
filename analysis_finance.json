@@ -1,47 +1,70 @@
 {
   "schema_version": "4.2",
-  "batch_id": "smart-20261124-114458",
+  "batch_id": "smart-20261124-121151",
   "input_batch_id": "raw-20261124-112914",
   "input_cutoff_at": "2026-11-24T11:29:14+08:00",
-  "generated_at": "2026-11-24T11:44:58+08:00",
-  "published_at": "2026-11-24T11:46:44+08:00",
+  "generated_at": "2026-11-24T12:11:51+08:00",
+  "published_at": "2026-11-24T12:11:53+08:00",
   "category": "finance",
   "category_label": "财经/市场",
-  "generation_mode": "ai_v3_mega_overlay",
-  "model_name": "gemini-3.5-flash-lite",
+  "generation_mode": "deterministic_fresh_clusters",
+  "model_name": "deterministic-v3-grounding",
   "quality_flags": [
     "deterministic_fresh_base"
   ],
   "key_changes": [
     {
+      "event_id": "evt_5baeaf024a36",
+      "storyline_id": "st_cc929d1d51ed",
+      "headline": "黄仁勋重掌英伟达帅印！股价暴涨31%，市值单日增长近万亿",
+      "detail": "英伟达董事会确认黄仁勋重返公司担任CEO，受此消息影响，英伟达股价单日暴涨31%，市值增长近万亿美元。",
+      "evidence_status": "multi_source",
+      "attribution_warning": null,
+      "source_count": 3,
+      "primary_url": "https://www.cnbc.com/2026/11/23/nvidia-jensen-huang-ceo.html",
+      "source_name": "CNBC Tech & AI"
+    },
+    {
+      "event_id": "evt_2db81c6ab4ea",
+      "storyline_id": "st_a13f7d812b38",
       "headline": "美联储“三把手”：通胀仍未达标，需逐步采取行动，不排除连续加息的可能",
       "detail": "美国纽约联储主席威廉姆斯表示，不排除FOMC在必要时连续加息的可能性，未来的利率行动时机和步伐将由数据决定。",
-      "event_id": "evt_2db81c6ab4ea",
-      "storyline_id": "st_a13f7d812b38"
+      "evidence_status": "multi_source",
+      "attribution_warning": null,
+      "source_count": 4,
+      "primary_url": "https://wallstreetcn.com/livenews/3204546",
+      "source_name": "华尔街见闻 美股快讯"
     },
     {
-      "headline": "日本10年期国债收益率下行6个基点至2.725%。",
-      "detail": "日本10年期国债收益率下行6个基点至2.725%。",
-      "event_id": "evt_5b30c9ee9ece",
-      "storyline_id": "st_74ddefe0c560"
-    },
-    {
-      "headline": "军工板块表现活跃 晨曦航空涨超10%",
-      "detail": "A股军工板块盘中表现活跃，其中晨曦航空股价涨幅超过10%。",
-      "event_id": "evt_07fcd4681612",
-      "storyline_id": "st_48ce6af64fd5"
+      "event_id": "evt_af20847a10eb",
+      "storyline_id": "st_ec2d7b33d075",
+      "headline": "中国央行进行5,160亿元人民币隔夜逆回购操作，操作利率1.25%。 中国央行公开市场今日净投放165亿元人民币。",
+      "detail": "中国央行于11月24日开展5,160亿元人民币隔夜逆回购操作，操作利率为1.25%，当日实现净投放165亿元人民币。",
+      "evidence_status": "multi_source",
+      "attribution_warning": null,
+      "source_count": 3,
+      "primary_url": "https://news.google.com/rss/articles/CBMiaEFVX3lxTE94bkdpb0twTjBwUEpHZ3o4OThsSm1hVlRlT29WMV9sQUIyaTBLeURjNW5CYnJsUmhHcE9DNEJKRkgxUlo5MVdXYkRLbWJ5RzV5NTd3WGNvemFnajVuWnE2ZXdMSV9ENDBw?oc=5",
+      "source_name": "中国新闻网"
     }
   ],
   "overview_sections": [
     {
-      "title": "宏观与市场资金动向",
+      "title": "本批核心脉络",
       "points": [
         {
-          "text": "美联储官员释放鹰派信号，货币政策路径扰动全球金融市场预期。",
+          "text": "黄仁勋重掌英伟达帅印！股价暴涨31%，市值单日增长近万亿：The Nvidia board said it had input from senior levels of the U.S. government.",
           "source_refs": []
         },
         {
-          "text": "港股恒指及科技指数转跌，亚洲多国债市及特定行业板块震荡加剧。",
+          "text": "美联储“三把手”：通胀仍未达标，需逐步采取行动，不排除连续加息的可能：美国纽约联储主席（享有FOMC永久投票权，号称美联储三把手）威廉姆斯：不排除FOMC在必要时连续加息的可能性。针对未来（多次）会议都不排除任何选项。",
+          "source_refs": []
+        },
+        {
+          "text": "中国央行进行5,160亿元人民币隔夜逆回购操作，操作利率1.25%。 中国央行公开市场今日净投放165亿元人民币。：11月24日央行开展5160亿元隔夜逆回购操作 中国新闻网",
+          "source_refs": []
+        },
+        {
+          "text": "英伟达股价飙升重创空头，杠杆做空产品跌幅高达92%：寻求提供英伟达单日表现两倍反向回报的GraniteShares 2x Short NVDA Daily ETF（代码NVD）暴跌63%。",
           "source_refs": []
         }
       ]
@@ -132,7 +155,7 @@
       "fact_summary": "英伟达董事会确认黄仁勋重返公司担任CEO，受此消息影响，英伟达股价单日暴涨31%，市值增长近万亿美元。",
       "fact_atoms": [
         {
-          "atom_id": "fa_77914890",
+          "atom_id": "fa_32503811",
           "subject": "英伟达 (NVIDIA)",
           "metric_or_action": "黄仁勋重掌英伟达帅印！股价暴涨31%，市值单日增长近万亿",
           "value": "31",
@@ -203,7 +226,7 @@
       },
       "followup": {
         "is_continuing": true,
-        "prev_batch_id": "smart-20261124-113048",
+        "prev_batch_id": "smart-20261124-114458",
         "prev_event_id": "evt_5baeaf024a36",
         "prev_title": "黄仁勋重掌英伟达帅印！股价暴涨31%，市值单日增长近万亿",
         "delta_note": "较上期新增 1 家独立来源报道"
@@ -315,7 +338,7 @@
       "fact_summary": "美国纽约联储主席威廉姆斯表示，不排除FOMC在必要时连续加息的可能性，未来的利率行动时机和步伐将由数据决定。",
       "fact_atoms": [
         {
-          "atom_id": "fa_29091087",
+          "atom_id": "fa_27452802",
           "subject": "美联储 FOMC 与全球流动性",
           "metric_or_action": "美联储“三把手”：通胀仍未达标，需逐步采取行动，不排除连续加息的可能",
           "value": null,
@@ -425,10 +448,10 @@
       },
       "followup": {
         "is_continuing": true,
-        "prev_batch_id": "smart-20261124-113048",
+        "prev_batch_id": "smart-20261124-114458",
         "prev_event_id": "evt_2db81c6ab4ea",
         "prev_title": "美联储“三把手”：通胀仍未达标，需逐步采取行动，不排除连续加息的可能",
-        "delta_note": "在上期简报中已出现，本批持续关注（暂无新增独立变化）"
+        "delta_note": "同一事件在最新批次出现表述修订或信息补充"
       },
       "is_new_in_batch": true,
       "update_kind": "new_discovery",
@@ -514,7 +537,7 @@
       "fact_summary": "中国央行于11月24日开展5,160亿元人民币隔夜逆回购操作，操作利率为1.25%，当日实现净投放165亿元人民币。",
       "fact_atoms": [
         {
-          "atom_id": "fa_31297884",
+          "atom_id": "fa_33571375",
           "subject": "相关主体",
           "metric_or_action": "中国央行进行5,160亿元人民币隔夜逆回购操作，操作利率1.25%。 中国央行公开市场今日净投放165亿元人民币。",
           "value": "160",
@@ -604,7 +627,7 @@
       },
       "followup": {
         "is_continuing": true,
-        "prev_batch_id": "smart-20261124-113048",
+        "prev_batch_id": "smart-20261124-114458",
         "prev_event_id": "evt_af20847a10eb",
         "prev_title": "中国央行进行5,160亿元人民币隔夜逆回购操作，操作利率1.25%。 中国央行公开市场今日净投放165亿元人民币。",
         "delta_note": "同一事件在最新批次出现表述修订或信息补充"
@@ -721,7 +744,7 @@
       "fact_summary": "英伟达股价暴涨导致做空产品GraniteShares 2x Short NVDA Daily ETF（NVD）单日跌幅达63%。",
       "fact_atoms": [
         {
-          "atom_id": "fa_84754323",
+          "atom_id": "fa_58897166",
           "subject": "英伟达 (NVIDIA)",
           "metric_or_action": "英伟达股价飙升重创空头，杠杆做空产品跌幅高达92%",
           "value": "92",
@@ -791,7 +814,7 @@
       },
       "followup": {
         "is_continuing": true,
-        "prev_batch_id": "smart-20261124-113048",
+        "prev_batch_id": "smart-20261124-114458",
         "prev_event_id": "evt_dcf514191a7a",
         "prev_title": "英伟达股价飙升重创空头，杠杆做空产品跌幅高达92%",
         "delta_note": "同一事件在最新批次出现表述修订或信息补充"
@@ -953,7 +976,7 @@
       "fact_summary": "2026年11月24日，英伟达股价暴涨31%，纳指大涨6.5%，芯片指数飙涨14%，黄金反弹近3%，WTI原油期货跌超4%。",
       "fact_atoms": [
         {
-          "atom_id": "fa_59423823",
+          "atom_id": "fa_22229260",
           "subject": "英伟达 (NVIDIA)",
           "metric_or_action": "华尔街见闻早餐FM-Radio | 2026年11月24日",
           "value": "6.5",
@@ -1023,7 +1046,7 @@
       },
       "followup": {
         "is_continuing": true,
-        "prev_batch_id": "smart-20261124-113048",
+        "prev_batch_id": "smart-20261124-114458",
         "prev_event_id": "evt_cc0d6d49222d",
         "prev_title": "华尔街见闻早餐FM-Radio | 2026年11月24日",
         "delta_note": "同一事件在最新批次出现表述修订或信息补充"
@@ -1133,7 +1156,7 @@
       "fact_summary": "新浪财经发文分析英伟达在AI循环经济中所扮演的“央行”角色及其资金流向机制。",
       "fact_atoms": [
         {
-          "atom_id": "fa_49324620",
+          "atom_id": "fa_60906812",
           "subject": "英伟达 (NVIDIA)",
           "metric_or_action": "英伟达是AI循环经济的“央行” 一文看懂资金流向",
           "value": null,
@@ -1183,10 +1206,10 @@
       },
       "followup": {
         "is_continuing": true,
-        "prev_batch_id": "smart-20261124-113048",
+        "prev_batch_id": "smart-20261124-114458",
         "prev_event_id": "evt_3b20b31cf60e",
         "prev_title": "英伟达是AI循环经济的“央行” 一文看懂资金流向",
-        "delta_note": "在上期简报中已出现，本批持续关注（暂无新增独立变化）"
+        "delta_note": "同一事件在最新批次出现表述修订或信息补充"
       },
       "is_new_in_batch": true,
       "update_kind": "new_discovery",
@@ -1293,7 +1316,7 @@
       "fact_summary": "11月23日，新兴市场ETF收涨7.41%，纳斯达克100 ETF涨7%，标普500 ETF涨4.71%，多类大类资产ETF录得显著涨幅。",
       "fact_atoms": [
         {
-          "atom_id": "fa_99063427",
+          "atom_id": "fa_73152182",
           "subject": "黄金 / 贵金属与避险资产",
           "metric_or_action": "新兴市场ETF、纳指100 ETF至少收涨7%，领跑美股大类资产类ETF",
           "value": "7",
@@ -1343,7 +1366,7 @@
       },
       "followup": {
         "is_continuing": true,
-        "prev_batch_id": "smart-20261124-113048",
+        "prev_batch_id": "smart-20261124-114458",
         "prev_event_id": "evt_770ea0f758e0",
         "prev_title": "新兴市场ETF、纳指100 ETF至少收涨7%，领跑美股大类资产类ETF",
         "delta_note": "同一事件在最新批次出现表述修订或信息补充"
@@ -1431,7 +1454,7 @@
       "fact_summary": "恒生指数与恒生科技指数在交易时段盘中双双转跌。",
       "fact_atoms": [
         {
-          "atom_id": "fa_65542354",
+          "atom_id": "fa_51356530",
           "subject": "相关主体",
           "metric_or_action": "恒指、恒生科技指数均转跌。",
           "value": null,
@@ -1541,10 +1564,10 @@
       },
       "followup": {
         "is_continuing": true,
-        "prev_batch_id": "smart-20261124-113048",
+        "prev_batch_id": "smart-20261124-114458",
         "prev_event_id": "evt_c13fb8c23da0",
         "prev_title": "恒指、恒生科技指数均转跌。",
-        "delta_note": "在上期简报中已出现，本批持续关注（暂无新增独立变化）"
+        "delta_note": "同一事件在最新批次出现表述修订或信息补充"
       },
       "is_new_in_batch": true,
       "update_kind": "new_discovery",
@@ -1632,7 +1655,7 @@
       "fact_summary": "日本10年期国债收益率下行6个基点至2.725%。",
       "fact_atoms": [
         {
-          "atom_id": "fa_69760911",
+          "atom_id": "fa_97204073",
           "subject": "相关主体",
           "metric_or_action": "日本10年期国债收益率下行6个基点至2.725%。",
           "value": "2.725",
@@ -1720,7 +1743,13 @@
         "rejected_refs": [],
         "has_first_party": false
       },
-      "followup": null,
+      "followup": {
+        "is_continuing": true,
+        "prev_batch_id": "smart-20261124-114458",
+        "prev_event_id": "evt_5b30c9ee9ece",
+        "prev_title": "日本10年期国债收益率下行6个基点至2.725%。",
+        "delta_note": "在上期简报中已出现，本批持续关注（暂无新增独立变化）"
+      },
       "is_new_in_batch": true,
       "update_kind": "new_discovery",
       "heavy_score": 62.1,
@@ -1807,7 +1836,7 @@
       "fact_summary": "A股军工板块盘中表现活跃，其中晨曦航空股价涨幅超过10%。",
       "fact_atoms": [
         {
-          "atom_id": "fa_77910424",
+          "atom_id": "fa_61698025",
           "subject": "相关主体",
           "metric_or_action": "军工板块表现活跃 晨曦航空涨超10%",
           "value": "10",
@@ -1895,7 +1924,13 @@
         "rejected_refs": [],
         "has_first_party": false
       },
-      "followup": null,
+      "followup": {
+        "is_continuing": true,
+        "prev_batch_id": "smart-20261124-114458",
+        "prev_event_id": "evt_07fcd4681612",
+        "prev_title": "军工板块表现活跃 晨曦航空涨超10%",
+        "delta_note": "同一事件在最新批次出现表述修订或信息补充"
+      },
       "is_new_in_batch": true,
       "update_kind": "new_discovery",
       "heavy_score": 66.7,

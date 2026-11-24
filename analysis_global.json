@@ -1,47 +1,59 @@
 {
   "schema_version": "4.2",
-  "batch_id": "smart-20261124-114458",
+  "batch_id": "smart-20261124-121151",
   "input_batch_id": "raw-20261124-112914",
   "input_cutoff_at": "2026-11-24T11:29:14+08:00",
-  "generated_at": "2026-11-24T11:44:58+08:00",
-  "published_at": "2026-11-24T11:46:44+08:00",
+  "generated_at": "2026-11-24T12:11:51+08:00",
+  "published_at": "2026-11-24T12:11:53+08:00",
   "category": "global",
   "category_label": "国际/宏观",
-  "generation_mode": "ai_v3_mega_overlay",
-  "model_name": "gemini-3.5-flash-lite",
+  "generation_mode": "deterministic_fresh_clusters",
+  "model_name": "deterministic-v3-grounding",
   "quality_flags": [
     "deterministic_fresh_base"
   ],
   "key_changes": [
     {
+      "event_id": "evt_8fe6a8ea45bc",
+      "storyline_id": "st_6c29d8ca7f1b",
+      "headline": "在涉嫌间谍事件后，英伟达恢复黄仁勋的CEO职务，特朗普称“这笔交易是我谈成的”",
+      "detail": "在美国总统特朗普介入下，黄仁勋于周一重返英伟达担任CEO，特朗普公开宣称该交易由其促成。",
+      "evidence_status": "multi_source",
+      "attribution_warning": null,
+      "source_count": 3,
+      "primary_url": "https://www.scmp.com/news/us/economy-trade-business/article/3375531/jensen-huangs-stunning-return-11-days-5-key-takeaways",
+      "source_name": "南华早报 SCMP"
+    },
+    {
+      "event_id": "evt_887ab15a70d6",
+      "storyline_id": "st_6c29d8ca7f1b",
       "headline": "黄仁勋复职重掌英伟达 股价飙涨逾30%",
       "detail": "黄仁勋复职重掌英伟达，受高层人事变动提振，英伟达股价单日飙涨逾30%。",
-      "event_id": "evt_887ab15a70d6",
-      "storyline_id": "st_6c29d8ca7f1b"
-    },
-    {
-      "headline": "在美国英伟达丑闻发生后，美国将把亚洲AI企业Megaspeed列入黑名单",
-      "detail": "此前曝光前高管与黄仁勋绯闻及向中国输送AI芯片指控后，美国计划将亚洲AI企业Megaspeed列入黑名单。",
-      "event_id": "evt_14f6e114c48a",
-      "storyline_id": "st_1fc0aefb8da5"
-    },
-    {
-      "headline": "印尼糖果厂火灾已致24人死亡",
-      "detail": "印尼一处糖果厂发生火灾，目前已造成24人死亡，搜救工作仍在持续进行。",
-      "event_id": "evt_e890977f2a89",
-      "storyline_id": "st_ce39be3c5b7d"
+      "evidence_status": "multi_source",
+      "attribution_warning": null,
+      "source_count": 4,
+      "primary_url": "https://www.zaochenbao.com/news/politics/202611/2486096.html",
+      "source_name": "联合早报"
     }
   ],
   "overview_sections": [
     {
-      "title": "地缘政治与国际供应链动荡",
+      "title": "本批核心脉络",
       "points": [
         {
-          "text": "地缘冲突持续外溢，国际能源运输通道与地区安全局势面临严峻考验。",
+          "text": "Nvidia reinstates CEO Jensen Huang after affair with alleged spy as Trump says 'I made the deal'：Jensen Huang’s…",
           "source_refs": []
         },
         {
-          "text": "科技地缘博弈加剧，美国针对特定亚洲企业的合规与制裁动作频出。",
+          "text": "黄仁勋复职重掌英伟达 股价飙涨逾30%：黄仁勋复职重掌英伟达 股价飙涨逾30%",
+          "source_refs": []
+        },
+        {
+          "text": "英伟达股价飙升重创空头，杠杆做空产品跌幅高达92%：英伟达董事会恢复黄仁勋首席执行官职务后，该公司股价飙升。寻求提供英伟达单日表现两倍反向回报的GraniteShares 2x Short NVDA Daily ETF（代码NVD）暴跌6…",
+          "source_refs": []
+        },
+        {
+          "text": "US to blacklist Asian AI firm Megaspeed after Nvidia scandal：Megaspeed has been accused of funneling AI chips to…",
           "source_refs": []
         }
       ]
@@ -131,7 +143,7 @@
       "fact_summary": "在美国总统特朗普介入下，黄仁勋于周一重返英伟达担任CEO，特朗普公开宣称该交易由其促成。",
       "fact_atoms": [
         {
-          "atom_id": "fa_20278420",
+          "atom_id": "fa_76079452",
           "subject": "英伟达 (NVIDIA)",
           "metric_or_action": "Nvidia reinstates CEO Jensen Huang after affair with alleged spy as Trump says 'I made the deal'",
           "value": null,
@@ -225,7 +237,7 @@
       "followup": null,
       "is_new_in_batch": true,
       "update_kind": "new_discovery",
-      "heavy_score": 78.2,
+      "heavy_score": 68.0,
       "radar_score": 88,
       "severity_tier": "A",
       "severity_label": "A级要闻",
@@ -339,7 +351,7 @@
       "fact_summary": "黄仁勋复职重掌英伟达，受高层人事变动提振，英伟达股价单日飙涨逾30%。",
       "fact_atoms": [
         {
-          "atom_id": "fa_29506720",
+          "atom_id": "fa_55332452",
           "subject": "英伟达 (NVIDIA)",
           "metric_or_action": "黄仁勋复职重掌英伟达 股价飙涨逾30%",
           "value": "30",
@@ -449,10 +461,10 @@
       },
       "followup": {
         "is_continuing": true,
-        "prev_batch_id": "smart-20261124-113048",
+        "prev_batch_id": "smart-20261124-114458",
         "prev_event_id": "evt_887ab15a70d6",
         "prev_title": "黄仁勋复职重掌英伟达 股价飙涨逾30%",
-        "delta_note": "在上期简报中已出现，本批持续关注（暂无新增独立变化）"
+        "delta_note": "同一事件在最新批次出现表述修订或信息补充"
       },
       "is_new_in_batch": true,
       "update_kind": "new_discovery",
@@ -560,7 +572,7 @@
       "fact_summary": "此前曝光前高管与黄仁勋绯闻及向中国输送AI芯片指控后，美国计划将亚洲AI企业Megaspeed列入黑名单。",
       "fact_atoms": [
         {
-          "atom_id": "fa_52267753",
+          "atom_id": "fa_20455873",
           "subject": "英伟达 (NVIDIA)",
           "metric_or_action": "US to blacklist Asian AI firm Megaspeed after Nvidia scandal",
           "value": null,
@@ -717,7 +729,7 @@
       "fact_summary": "神舟二十四号载人飞船瞄准11月25日8时18分发射，任务包含外籍航天员参与。",
       "fact_atoms": [
         {
-          "atom_id": "fa_43766419",
+          "atom_id": "fa_45239275",
           "subject": "相关主体",
           "metric_or_action": "神舟二十四号瞄准25日8时18分发射 外籍航天员任务公布",
           "value": null,
@@ -807,7 +819,7 @@
       },
       "followup": {
         "is_continuing": true,
-        "prev_batch_id": "smart-20261124-113048",
+        "prev_batch_id": "smart-20261124-114458",
         "prev_event_id": "evt_9ea07ea10c4c",
         "prev_title": "神舟二十四号瞄准25日8时18分发射 外籍航天员任务公布",
         "delta_note": "同一事件在最新批次出现表述修订或信息补充"
@@ -897,7 +909,7 @@
       "fact_summary": "针对德国媒体宣称俄罗斯计划年底前在太空部署核武器卫星的报道，克里姆林宫予以公开驳斥。",
       "fact_atoms": [
         {
-          "atom_id": "fa_94842191",
+          "atom_id": "fa_65015263",
           "subject": "相关主体",
           "metric_or_action": "德媒称俄罗斯要发射携带核武器卫星，克宫驳斥",
           "value": null,
@@ -987,10 +999,10 @@
       },
       "followup": {
         "is_continuing": true,
-        "prev_batch_id": "smart-20261124-113048",
+        "prev_batch_id": "smart-20261124-114458",
         "prev_event_id": "evt_1642da4c7816",
         "prev_title": "德媒称俄罗斯要发射携带核武器卫星，克宫驳斥",
-        "delta_note": "在上期简报中已出现，本批持续关注（暂无新增独立变化）"
+        "delta_note": "同一事件在最新批次出现表述修订或信息补充"
       },
       "is_new_in_batch": true,
       "update_kind": "new_discovery",
@@ -1095,7 +1107,7 @@
       "fact_summary": "印尼一处糖果厂发生火灾，目前已造成24人死亡，搜救工作仍在持续进行。",
       "fact_atoms": [
         {
-          "atom_id": "fa_81227629",
+          "atom_id": "fa_57744807",
           "subject": "Google / DeepMind / Gemini",
           "metric_or_action": "印尼糖果厂火灾已致24人死亡",
           "value": null,
@@ -1165,10 +1177,10 @@
       },
       "followup": {
         "is_continuing": true,
-        "prev_batch_id": "smart-20261124-113048",
+        "prev_batch_id": "smart-20261124-114458",
         "prev_event_id": "evt_e890977f2a89",
         "prev_title": "印尼糖果厂火灾已致24人死亡",
-        "delta_note": "在上期简报中已出现，本批持续关注（暂无新增独立变化）"
+        "delta_note": "同一事件在最新批次出现表述修订或信息补充"
       },
       "is_new_in_batch": true,
       "update_kind": "new_discovery",
@@ -1271,7 +1283,7 @@
       "fact_summary": "中国外交部就联合国气候大会（COP31）未能达成协议表态，对结果表示失望但不失多边信心。",
       "fact_atoms": [
         {
-          "atom_id": "fa_73504602",
+          "atom_id": "fa_99336104",
           "subject": "中美外交与元首峰会",
           "metric_or_action": "外交部回应联合国气候大会:表示失望但不失多边信心",
           "value": null,
@@ -1321,10 +1333,10 @@
       },
       "followup": {
         "is_continuing": true,
-        "prev_batch_id": "smart-20261124-113048",
+        "prev_batch_id": "smart-20261124-114458",
         "prev_event_id": "evt_b021d7b25c59",
         "prev_title": "外交部回应联合国气候大会:表示失望但不失多边信心",
-        "delta_note": "在上期简报中已出现，本批持续关注（暂无新增独立变化）"
+        "delta_note": "同一事件在最新批次出现表述修订或信息补充"
       },
       "is_new_in_batch": true,
       "update_kind": "new_discovery",
@@ -1417,7 +1429,7 @@
       "fact_summary": "美以伊局势紧张，特朗普威胁若未达成协议新年后再打伊朗，以总理称伊朗威胁迫在眉睫，且霍尔木兹海峡发生3艘油轮爆炸。",
       "fact_atoms": [
         {
-          "atom_id": "fa_30875738",
+          "atom_id": "fa_79905954",
           "subject": "地缘冲突、能源与大宗商品",
           "metric_or_action": "美以伊局势：特朗普威胁美伊若未达成协议，新年后再打伊朗；以总理称伊朗威胁迫在眉睫；伊最高领袖新动态；3艘油轮霍尔木兹海峡发生爆炸",
           "value": null,
@@ -1487,10 +1499,10 @@
       },
       "followup": {
         "is_continuing": true,
-        "prev_batch_id": "smart-20261124-113048",
+        "prev_batch_id": "smart-20261124-114458",
         "prev_event_id": "evt_45ac8e92ef6b",
         "prev_title": "美以伊局势：特朗普威胁美伊若未达成协议，新年后再打伊朗；以总理称伊朗威胁迫在眉睫；伊最高领袖新动态；3艘油轮霍尔木兹海峡发生爆炸",
-        "delta_note": "在上期简报中已出现，本批持续关注（暂无新增独立变化）"
+        "delta_note": "同一事件在最新批次出现表述修订或信息补充"
       },
       "is_new_in_batch": true,
       "update_kind": "new_discovery",
@@ -1576,7 +1588,7 @@
       "fact_summary": "媒体分析指出，近期针对利比亚境内俄罗斯船只的袭击事件揭示了乌克兰战争长期化引发的战场外溢效应。",
       "fact_atoms": [
         {
-          "atom_id": "fa_51398280",
+          "atom_id": "fa_52730668",
           "subject": "相关主体",
           "metric_or_action": "What strike on Russian ship in Libya says about spread of Ukraine war",
           "value": null,
@@ -1750,7 +1762,7 @@
       "fact_summary": "中证转债指数开盘上涨0.98%，联瑞转债等涨幅居前，爱科转债等跌幅居前。",
       "fact_atoms": [
         {
-          "atom_id": "fa_33114333",
+          "atom_id": "fa_8033089",
           "subject": "相关主体",
           "metric_or_action": "中证转债指数开盘上涨0.98%。联瑞转债、奥士转债、欧通转债、澳弘转债、华懋转债涨幅居前，分别涨11.95%、7.78%、7.35%、7.27%、6.87%。",
           "value": "0.98",
@@ -1800,10 +1812,10 @@
       },
       "followup": {
         "is_continuing": true,
-        "prev_batch_id": "smart-20261124-113048",
+        "prev_batch_id": "smart-20261124-114458",
         "prev_event_id": "evt_15f0cd5c1714",
         "prev_title": "中证转债指数开盘上涨0.98%。联瑞转债、奥士转债、欧通转债、澳弘转债、华懋转债涨幅居前，分别涨11.95%、7.78%、7.35%、7.27%、6.87%。",
-        "delta_note": "在上期简报中已出现，本批持续关注（暂无新增独立变化）"
+        "delta_note": "同一事件在最新批次出现表述修订或信息补充"
       },
       "is_new_in_batch": true,
       "update_kind": "new_discovery",
@@ -1877,7 +1889,7 @@
       "fact_summary": "截至早盘收盘，日经225指数涨4%，东证指数涨2.5%。",
       "fact_atoms": [
         {
-          "atom_id": "fa_74793947",
+          "atom_id": "fa_82253755",
           "subject": "相关主体",
           "metric_or_action": "截至早盘收盘，日经225指数涨4%，东证指数涨2.5%。",
           "value": "4",
@@ -1925,7 +1937,13 @@
         "rejected_refs": [],
         "has_first_party": false
       },
-      "followup": null,
+      "followup": {
+        "is_continuing": true,
+        "prev_batch_id": "smart-20261124-114458",
+        "prev_event_id": "evt_2a10bb31b9b5",
+        "prev_title": "截至早盘收盘，日经225指数涨4%，东证指数涨2.5%。",
+        "delta_note": "在上期简报中已出现，本批持续关注（暂无新增独立变化）"
+      },
       "is_new_in_batch": true,
       "update_kind": "new_discovery",
       "heavy_score": 52.9,
@@ -2006,7 +2024,7 @@
       "fact_summary": "特朗普将于美东时间周三下午4点在佛罗里达州同北约秘书长会面。",
       "fact_atoms": [
         {
-          "atom_id": "fa_1248232",
+          "atom_id": "fa_86092348",
           "subject": "相关主体",
           "metric_or_action": "特朗普将于美东时间周三下午4点在佛罗里达州同北约秘书长会面。",
           "value": null,

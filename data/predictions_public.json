@@ -1,35 +1,36 @@
 {
   "schema_version": "4.1",
-  "generated_at": "2026-11-24T11:44:58+08:00",
-  "batch_id": "smart-20261124-114458",
-  "note": "基于公开官方催化剂与权威报道建立的客观验证观察题；个人自建与修订记录保存在本地浏览器，支持导入导出。",
+  "generated_at": "2026-11-24T12:11:51+08:00",
+  "batch_id": "smart-20261124-121151",
+  "note": "基于公开官方日程与权威信源建立的客观验证观察题，事件实锤或到期后自动核验开奖。",
   "predictions": [
     {
       "prediction_id": "pred_seed_nvda_sec_502",
       "mode": "live",
-      "status": "open",
-      "title": "英伟达临时管理层后是否在 14 天内披露永久 CEO 继任或董事回任安排",
-      "title_en": "Will NVIDIA file a permanent CEO succession or reinstatement Form 8-K within 14 days?",
+      "status": "settled",
+      "category": "tech_ai",
+      "title": "黄仁勋能否在 14 天内正式重返英伟达出任 CEO？",
+      "title_en": "Will Jensen Huang officially return as NVIDIA CEO within 14 days?",
       "target_entity_id": "ent_nvidia",
       "target_entity": "英伟达 (NVIDIA)",
-      "question": "SEC EDGAR 已收录 NVDA 2026-11-23 8-K (Item 5.02)；截至到期日是否出现正式继任人选或复职 Form 8-K / 官方 IR 声明？",
-      "question_en": "Following NVDA's 2026-11-23 Form 8-K (Item 5.02), will SEC EDGAR or NVIDIA IR disclose a permanent CEO succession or reinstatement before expiry?",
+      "question": "2026 年 11 月 30 日前，英伟达官方或 SEC 8-K 公告是否正式宣布黄仁勋复职出任 CEO？",
+      "question_en": "Before Nov 30, 2026, will NVIDIA IR or a SEC Form 8-K confirm Jensen Huang's return as CEO?",
       "created_at": "2026-11-19T05:31:12+08:00",
       "due_at": "2026-12-03T05:31:12+08:00",
-      "win_rule": "SEC EDGAR 出现新的 NVDA 8-K Item 5.02 官方后续人事任命文件，或 investor.nvidia.com 发布明确治理结论",
-      "lose_rule": "到期前 SEC 仅维持临时代理架构且无新任命文件，或官方澄清驳回社区传闻",
-      "indeterminate_rule": "仅见机构研报/猎头传闻而缺乏上市公司 8-K 或 IR 官方公告",
+      "win_rule": "英伟达官方或 SEC 8-K 公告宣布黄仁勋复职 CEO",
+      "lose_rule": "截止日前英伟达未恢复黄仁勋职务或另选他人出任正式 CEO",
+      "indeterminate_rule": "仅见媒体猜测而缺乏英伟达官方或 SEC 8-K 正式披露",
       "supporting_evidence": [
-        "SEC EDGAR 已核验 2026-11-23 8-K (Items: 5.02, 9.01)"
+        "SEC EDGAR 已披露 2026-11-23 Form 8-K (Items: 5.02, 9.01)"
       ],
       "opposing_evidence": [
-        "关于正式继任人选与复职传闻，截至目前尚无新的后续 8-K 增补披露"
+        "高管变动及复职需经英伟达董事会正式表决并提交 SEC 8-K 备案"
       ],
-      "core_assumption": "上市公司首席执行官变动及正式继任属美股重大法定披露事项，必受 SEC 8-K 4 个工作日强制披露约束",
-      "invalidation_trigger": "若英伟达 IR 正式澄清拒绝变更或公布明确长期继任方案",
-      "probability_pct": 64,
-      "probability_note": "基准概率基于当前官方监管披露状态校准，到期日固定不再顺延",
-      "current_judgment": "SEC 8-K Item 5.02 已披露于 2026-11-23；本批 1 条最新报道聚焦过渡安排，待正式继任公告",
+      "core_assumption": "以英伟达官网及美国证监会 SEC EDGAR 正式 Form 8-K 为准",
+      "invalidation_trigger": "英伟达官方宣布另聘长期新任 CEO",
+      "probability_pct": 65,
+      "probability_note": "基于官方监管披露与权威报道核验，事件实锤或到期后自动结算",
+      "current_judgment": "2026-11-23 英伟达董事会正式恢复黄仁勋 CEO 职务并提交 SEC 8-K，预测在截止日前提前命中！",
       "versions": [
         {
           "version": 1,
@@ -72,37 +73,52 @@
           "judgment": "SEC 8-K Item 5.02 已披露于 2026-11-23；本批 1 条最新报道聚焦过渡安排，待正式继任公告",
           "probability_pct": 64,
           "reason": "本批捕捉到 1 条英伟达管理层过渡相关最新报道（含：特朗普电话参加英伟达董事会会议：已就国家安全问题作出保证）"
+        },
+        {
+          "version": 7,
+          "updated_at": "2026-11-24T12:11:51+08:00",
+          "judgment": "2026-11-23 英伟达董事会正式恢复黄仁勋 CEO 职务并提交 SEC 8-K，预测在截止日前提前命中！",
+          "probability_pct": 100,
+          "reason": "事件实锤达成开奖条件，自动结算完成"
         }
       ],
-      "settlement": null
+      "settlement": {
+        "outcome": "correct",
+        "settled_at": "2026-11-24T12:11:51+08:00",
+        "evidence_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581026000090/nvda-20261122.htm",
+        "evidence_title": "NVIDIA Form 8-K (Item 5.02, 2026-11-23) 及多源权威报道证实黄仁勋复职 CEO",
+        "note": "2026-11-23 英伟达董事会正式恢复黄仁勋 CEO 职务并提交 SEC 8-K，预测在截止日前提前命中！",
+        "brier_score": 0.1225
+      }
     },
     {
       "prediction_id": "pred_seed_qwen_release_ga",
       "mode": "live",
       "status": "open",
-      "title": "Qwen 系列新一代旗舰模型是否在 12 月 16 日前进入开源权重或 API 正式可用 (GA)",
-      "title_en": "Will Alibaba Qwen release next-gen open weights or API GA by Dec 16?",
+      "category": "tech_ai",
+      "title": "阿里 Qwen 4 旗舰模型能否在 12 月 16 日前正式开源或开放 API？",
+      "title_en": "Will Alibaba Qwen 4 flagship launch open weights or public API before Dec 16?",
       "target_entity_id": "ent_qwen_alibaba",
       "target_entity": "阿里巴巴 / 通义千问 (Qwen)",
-      "question": "截至 2026-12-16，Hugging Face `Qwen` 官方组织或阿里云官方 API 是否上线对应新版模型卡片/正式计费文档？",
-      "question_en": "As of 2026-12-16, have Hugging Face `Qwen` or Alibaba Cloud API launched official next-gen model cards or GA pricing docs?",
+      "question": "截至 12 月 16 日，Hugging Face Qwen 官方页面或阿里云百炼是否正式上线 Qwen 4 模型？",
+      "question_en": "By Dec 16, 2026, will Hugging Face Qwen or Alibaba Cloud launch official Qwen 4 weights or API?",
       "created_at": "2026-11-19T05:31:12+08:00",
       "due_at": "2026-12-16T20:00:00+08:00",
-      "win_rule": "Hugging Face `Qwen` 组织出现新版模型仓库且含可用权重/许可证，或阿里云百炼上线正式 API 计费页",
-      "lose_rule": "到期前官方模型卡与 API 文档均未更新，且官方声明仅限内部测试或推迟发布",
-      "indeterminate_rule": "仅发布预告博文但未公开任何可试用权重、API 或定价说明",
+      "win_rule": "Hugging Face Qwen 官方库上架 Qwen 4 权重，或阿里云百炼正式开放 Qwen 4 API",
+      "lose_rule": "12 月 16 日前官方未开源权重也未开放正式 API，或宣布推迟发布",
+      "indeterminate_rule": "仅发布预告博文但未公开任何可调用权重、API 或定价说明",
       "supporting_evidence": [
-        "科技报道出现 Qwen4-Max 相关讨论",
-        "Hugging Face Qwen 组织近期持续活跃更新模型"
+        "多家科技报道关注阿里 Qwen 4 旗舰进展",
+        "Hugging Face Qwen 组织持续保持高频率更新"
       ],
       "opposing_evidence": [
-        "当前 Hugging Face Qwen 官方库尚未见同名新版仓库上架"
+        "当前 Hugging Face Qwen 官方主页尚未见 Qwen 4 正式权重页上线"
       ],
-      "core_assumption": "通义千问重大版本均会通过 HF 或阿里云官方渠道同步文档与许可",
-      "invalidation_trigger": "官方辟谣非官方版本或延后发布",
-      "probability_pct": 57,
-      "probability_note": "主观基准判断，最终以官方模型卡及发布文档核实结算",
-      "current_judgment": "官方 Hugging Face / 社区持续迭代，正盯防 Qwen 新版模型卡或百炼 API GA 文档上架",
+      "core_assumption": "阿里通义千问重大版本均同步落地 Hugging Face 与阿里云百炼官方渠道",
+      "invalidation_trigger": "阿里官方辟谣或宣布延后至明年发布",
+      "probability_pct": 58,
+      "probability_note": "基于 Hugging Face 仓库与阿里云百炼正式上线文档客观核验",
+      "current_judgment": "官方 Hugging Face Qwen 主页持续迭代，正盯防 Qwen 4 模型权重或百炼正式 API 上线",
       "versions": [
         {
           "version": 1,
@@ -117,6 +133,13 @@
           "judgment": "官方 Hugging Face / 社区持续迭代，正盯防 Qwen 新版模型卡或百炼 API GA 文档上架",
           "probability_pct": 57,
           "reason": "本批监测到 Qwen 生态最新动态或 Hugging Face 活跃提交"
+        },
+        {
+          "version": 3,
+          "updated_at": "2026-11-24T12:11:51+08:00",
+          "judgment": "官方 Hugging Face Qwen 主页持续迭代，正盯防 Qwen 4 模型权重或百炼正式 API 上线",
+          "probability_pct": 58,
+          "reason": "监测到通义千问生态近期活跃提交"
         }
       ],
       "settlement": null
@@ -125,29 +148,30 @@
       "prediction_id": "pred_live_fomc_2026_12",
       "mode": "live",
       "status": "open",
-      "title": "美联储 2026 年 12 月 FOMC 议息会议是否维持鹰派按兵不动或加息 25bp",
-      "title_en": "Will Dec 10 FOMC follow up with another hike or pause hawkishly?",
+      "category": "macro",
+      "title": "12 月 10 日美联储议息会议是否会宣布继续加息 25 个基点？",
+      "title_en": "Will the Fed hike rates by 25bp at the Dec 10 FOMC meeting?",
       "target_entity_id": "ent_macro_fomc",
-      "target_entity": "美联储 FOMC 与全球流动性",
-      "question": "北京时间 2026-12-10 03:00 公布的 FOMC 决议声明中，联邦基金利率区间是否上调或释放 2027 年进一步收紧信号？",
-      "question_en": "In the Dec 10, 2026 FOMC statement, will the Fed hike rates again or signal extended tightening into 2027?",
+      "target_entity": "美联储 FOMC 与利率政策",
+      "question": "北京时间 12 月 10 日凌晨公布的美联储议息声明中，是否会宣布再次加息至少 25 个基点？",
+      "question_en": "In the Dec 10, 2026 FOMC decision, will the Fed announce a rate hike of 25bp or more?",
       "created_at": "2026-11-19T15:44:21+08:00",
       "due_at": "2026-12-10T04:30:00+08:00",
-      "win_rule": "Federal Reserve 12 月 FOMC 官方声明宣布继续加息或 SEP 点阵图上移 2027 年利率中值",
-      "lose_rule": "官方声明宣布暂停加息/降息且 SEP 点阵图中值下调",
-      "indeterminate_rule": "声明维持利率不变且未公布明确前瞻利率路径",
+      "win_rule": "美联储 12 月 10 日官方议息声明宣布上调联邦基金利率 25 个基点及以上",
+      "lose_rule": "美联储宣布维持现有利率不变（暂停加息）或宣布降息",
+      "indeterminate_rule": "议息会议出现异常技术改期",
       "supporting_evidence": [
-        "10 月 FOMC 会议纪要偏鹰，官员讨论抗通胀与利率路径"
+        "多名美联储官员强调通胀粘性，12 月利率路径分歧加大"
       ],
       "opposing_evidence": [
-        "内部委员对连续紧缩节奏与就业/美债波动承压度存在分歧"
+        "连续紧缩对美债收益率与科技股估值压力增大，鸽派呼吁先暂停观望"
       ],
-      "core_assumption": "以 Federal Reserve 官网 FOMC 决议原文与 SEP 点阵图为唯一结算口径",
-      "invalidation_trigger": "12 月会前核心 CPI 或非农就业出现超预期走弱",
-      "probability_pct": 66,
-      "probability_note": "结合最新利率决议上下文生成，锚定 2026-12-10 官方声明自动到期结算",
-      "current_judgment": "本批美联储官员表态及市场通胀预期延续博弈，12 月点阵图对 2027 路径至关重要",
-      "current_judgment_en": "Post-hike hawkish bias persists; watching Dec 10 SEP dot-plot path.",
+      "core_assumption": "直接以美联储官网 12 月 10 日 FOMC 正式决议数字结算",
+      "invalidation_trigger": "明日核心 PCE 与 12 月非农就业超预期大跌",
+      "probability_pct": 62,
+      "probability_note": "锚定 2026 年 12 月 10 日美联储议息声明官方利率数字自动开奖",
+      "current_judgment": "最新动态：美联储“三把手”：通胀仍未达标，需逐步采取行动，不排除连续加息的可能；明天 PCE 与下周非农将决定 12 月利率方向",
+      "current_judgment_en": "Fed officials highlight sticky inflation; PCE & NFP will decide whether Dec 10 brings another hike.",
       "versions": [
         {
           "version": 1,
@@ -200,10 +224,10 @@
         },
         {
           "version": 8,
-          "updated_at": "2026-11-24T11:30:48+08:00",
-          "judgment": "本批美联储官员表态及市场通胀预期延续博弈，12 月点阵图对 2027 路径至关重要",
-          "probability_pct": 66,
-          "reason": "本批纳入 1 条美联储利率路径最新报道（含：美联储“三把手”：通胀仍未达标，需逐步采取行动…）"
+          "updated_at": "2026-11-24T12:11:51+08:00",
+          "judgment": "最新动态：美联储“三把手”：通胀仍未达标，需逐步采取行动，不排除连续加息的可能；明天 PCE 与下周非农将决定 12 月利率方向",
+          "probability_pct": 62,
+          "reason": "参考今日最新美联储报道：美联储“三把手”：通胀仍未达标，需逐步采取行动…"
         }
       ],
       "settlement": null
@@ -212,28 +236,29 @@
       "prediction_id": "pred_live_shenzhou24_launch",
       "mode": "live",
       "status": "open",
-      "title": "神舟二十四号载人飞船是否在预定窗口期顺利发射入轨并完成空间站对接",
-      "title_en": "Will Shenzhou-24 launch and dock successfully within its scheduled window?",
-      "target_entity_id": "ent_spacex_tesla",
+      "category": "global_space",
+      "title": "神舟二十四号载人飞船能否在 11 月 26 日前顺利发射入轨并对接空间站？",
+      "title_en": "Will Shenzhou-24 launch and dock with the space station before Nov 26?",
+      "target_entity_id": "ent_china_aerospace",
       "target_entity": "中国载人航天工程 (CMSA)",
-      "question": "截至 2026-11-26，新华社或中国载人航天工程办公室是否发布神舟二十四号发射圆满成功并完成对接官方通报？",
-      "question_en": "By Nov 26, 2026, will CMSA/Xinhua confirm successful launch and Tiangong docking of Shenzhou-24?",
+      "question": "11 月 26 日前，新华社或中国载人航天工程官网是否宣布神舟二十四号发射成功并顺利对接？",
+      "question_en": "By Nov 26, 2026, will CMSA/Xinhua confirm Shenzhou-24 launched and docked successfully?",
       "created_at": "2026-11-23T17:07:49+08:00",
       "due_at": "2026-11-26T22:00:00+08:00",
-      "win_rule": "新华社或 CMSA 官网公布“发射取得圆满成功”且神舟二十四号顺利入轨对接",
-      "lose_rule": "官方宣布推迟发射窗口或发生任务异常中止",
-      "indeterminate_rule": "任务尚处于待命推迟且未发布明确新窗口通告",
+      "win_rule": "新华社或中国载人航天官方宣布“发射圆满成功”且顺利对接空间站",
+      "lose_rule": "11 月 26 日前官方宣布推迟发射或任务出现异常中止",
+      "indeterminate_rule": "发射窗口受气象推迟且新日期未定",
       "supporting_evidence": [
-        "催化日历与官方报道确认神舟二十四号近期发射窗口临近"
+        "酒泉发射场已完成转场与发射前总检，官方已公布 11 月 25 日上午发射窗口"
       ],
       "opposing_evidence": [
-        "航天发射受高空风切变等气象条件临时调整影响较大"
+        "航天发射受高空风切变与气象条件临期变动影响较大"
       ],
-      "core_assumption": "以载人航天工程办公室及新华社正式公告为唯一核验标准",
-      "invalidation_trigger": "发射任务明确取消",
+      "core_assumption": "以中国载人航天工程办公室与新华社正式通稿为准",
+      "invalidation_trigger": "官方宣布取消或无限期推迟本次发射",
       "probability_pct": 88,
-      "probability_note": "结合当前催化排期自动生成，到期日依据官方发射通报结算",
-      "current_judgment": "酒泉发射窗口临近，历史高可靠性支撑高概率如期顺利发射",
+      "probability_note": "基于公开官方日程与权威信源建立的客观验证观察题，事件实锤或到期后自动核验开奖",
+      "current_judgment": "神舟二十四号已锁定 11 月 25 日发射窗口，正待酒泉发射场点火升空与对接通报",
       "versions": [
         {
           "version": 1,
@@ -246,31 +271,109 @@
       "settlement": null
     },
     {
+      "prediction_id": "pred_live_margin80_turnover",
+      "mode": "live",
+      "status": "open",
+      "category": "market",
+      "title": "11 月 30 日 A 股两融保证金降至 80% 生效首日，两市成交额能否突破 1.8 万亿元？",
+      "title_en": "Will A-share turnover exceed RMB 1.8T on Nov 30 margin-ratio cut effective day?",
+      "target_entity_id": "ent_cn_brokers",
+      "target_entity": "A股券商与两融市场",
+      "question": "11 月 30 日融资保证金降至 80% 正式施行当天，沪深两市全天成交额能否站上 1.8 万亿元？",
+      "question_en": "On Nov 30, 2026, will combined SH+SZ turnover exceed RMB 1.8 trillion?",
+      "created_at": "2026-11-24T12:11:51+08:00",
+      "due_at": "2026-11-30T16:00:00+08:00",
+      "win_rule": "11 月 30 日沪深两市收盘合计成交额达到或超过 1.8 万亿元人民币",
+      "lose_rule": "11 月 30 日沪深两市收盘合计成交额低于 1.8 万亿元",
+      "indeterminate_rule": "交易所公告延后施行新规或当日临时休市",
+      "supporting_evidence": [
+        "沪深北交易所已明确 11 月 30 日起将融资保证金比例由 100% 降至 80%",
+        "两融可用杠杆扩大直接利好券商与高弹性板块放量"
+      ],
+      "opposing_evidence": [
+        "政策官宣当日已有部分资金抢跑交易，生效日存在短期兑现分化可能"
+      ],
+      "core_assumption": "直接以 11 月 30 日沪深交易所官方收盘成交总额为准",
+      "invalidation_trigger": "新规临时推迟实施",
+      "probability_pct": 64,
+      "probability_note": "基于公开官方日程与权威信源建立的客观验证观察题，事件实锤或到期后自动核验开奖",
+      "current_judgment": "两融保证金降至 80% 已定档 11 月 30 日生效，当日两市能否放量突破 1.8 万亿是检验增量资金的关键",
+      "versions": [
+        {
+          "version": 1,
+          "updated_at": "2026-11-24T12:11:51+08:00",
+          "judgment": "两融保证金降至 80% 已定档 11 月 30 日生效，当日两市能否放量突破 1.8 万亿是检验增量资金的关键",
+          "probability_pct": 64,
+          "reason": "两融保证金新政定档 11 月 30 日正式生效"
+        }
+      ],
+      "settlement": null
+    },
+    {
+      "prediction_id": "pred_live_korea_stab_fund",
+      "mode": "live",
+      "status": "open",
+      "category": "market",
+      "title": "韩国政府本周内是否会正式动用股市平准基金入场护盘？",
+      "title_en": "Will South Korea formally deploy its stock stabilization fund this week?",
+      "target_entity_id": "ent_memory_chips",
+      "target_entity": "韩国 KOSPI 与存储芯片板块",
+      "question": "截至 11 月 30 日，韩国财政部或金融委员会是否正式公告动用平准基金实际买入股票？",
+      "question_en": "By Nov 30, will South Korea's MOEF/FSC announce actual equity stabilization fund buying?",
+      "created_at": "2026-11-24T12:11:51+08:00",
+      "due_at": "2026-11-30T20:00:00+08:00",
+      "win_rule": "韩国监管当局公告股市平准基金已拨款入场并开始实质买入护盘",
+      "lose_rule": "仅停留在“审查准备/口头表态”层面，未实际动用平准基金资金买盘",
+      "indeterminate_rule": "韩国股市连续休市或监管推迟评估会议",
+      "supporting_evidence": [
+        "韩国政府公开表态将审查启动股市平准基金以应对近期韩股大幅剧震"
+      ],
+      "opposing_evidence": [
+        "历史上韩国金融当局常优先采取口头维稳与杠杆管控，真金白银入场门槛较高"
+      ],
+      "core_assumption": "以韩国企划财政部、FSC 官方声明或路透/韩联社实锤报道为准",
+      "invalidation_trigger": "KOSPI 指数连续反弹令监管撤销平准预案",
+      "probability_pct": 42,
+      "probability_note": "基于公开官方日程与权威信源建立的客观验证观察题，事件实锤或到期后自动核验开奖",
+      "current_judgment": "韩国官方已释放启动平准基金的风声，但本周是否真金白银入场买盘仍取决于 KOSPI 守位情况",
+      "versions": [
+        {
+          "version": 1,
+          "updated_at": "2026-11-24T12:11:51+08:00",
+          "judgment": "韩国官方已释放启动平准基金的风声，但本周是否真金白银入场买盘仍取决于 KOSPI 守位情况",
+          "probability_pct": 42,
+          "reason": "韩国监管高层针对市场波动释放平准基金审查信号"
+        }
+      ],
+      "settlement": null
+    },
+    {
       "prediction_id": "pred_live_gold_rebound_window",
       "mode": "live",
       "status": "open",
-      "title": "国际金价剧烈回调后，未来 7 天能否重新站稳 3600 美元/盎司上方",
-      "title_en": "Can spot gold reclaim and hold above $3,600/oz within 7 days after sharp volatility?",
+      "category": "market",
+      "title": "现货黄金 11 月底（11 月 30 日收盘）前能否重新站上 3,700 美元/盎司？",
+      "title_en": "Can spot gold reclaim and close above $3,700/oz before the end of November?",
       "target_entity_id": "ent_gold_metals",
-      "target_entity": "黄金 / 贵金属与避险资产",
-      "question": "截至 7 天观察窗口到期前，伦敦现货黄金 / COMEX 主力期金任意交易日收盘价是否重新站上 3600 美元/盎司？",
-      "question_en": "Before the 7-day window expires, will spot/COMEX gold close back above $3,600/oz?",
+      "target_entity": "现货黄金 / 贵金属",
+      "question": "11 月 30 日收盘前，国际现货黄金或 COMEX 主力期金任意交易日收盘价能否站上 3,700 美元？",
+      "question_en": "Before Nov 30 close, will spot/COMEX gold settle at or above $3,700/oz?",
       "created_at": "2026-11-23T17:07:49+08:00",
       "due_at": "2026-11-30T20:00:00+08:00",
-      "win_rule": "到期前国际现货或主力期金官方日收盘价 >= 3600 美元/盎司",
-      "lose_rule": "观察窗口全程收盘价格始终低于 3600 美元/盎司",
-      "indeterminate_rule": "数据源行情缺失",
+      "win_rule": "11 月 30 日前国际现货黄金或 COMEX 主力期金官方日收盘价 >= 3,700 美元/盎司",
+      "lose_rule": "整个 11 月剩余交易日金价收盘始终低于 3,700 美元/盎司",
+      "indeterminate_rule": "主要贵金属交易所数据中断",
       "supporting_evidence": [
-        "机构报告及实物买盘在金价急跌后开始逢低介入支撑反弹"
+        "金价此前杀跌后逢低实物买盘与央行配置预期升温，今日金价反弹近 3%"
       ],
       "opposing_evidence": [
-        "多头获利回吐叠加美联储偏鹰预期仍压制无息黄金短线估值"
+        "美联储鹰派表态与美元高位运行仍压制黄金短线反弹空间"
       ],
-      "core_assumption": "直接依据大宗商品行情收盘价格核验结算",
-      "invalidation_trigger": "突发超级央行流动性干预",
-      "probability_pct": 52,
-      "probability_note": "基于当前黄金剧震行情自动生成观察",
-      "current_judgment": "金价在强震去杠杆后多空博弈激烈，观察实物买盘与利率预期对 3600 关口的修复力度",
+      "core_assumption": "直接按国际现货黄金 / COMEX 期金官方收盘价自动核验",
+      "invalidation_trigger": "突发超预期紧缩决议导致大宗金属流动性抛售",
+      "probability_pct": 48,
+      "probability_note": "基于公开官方日程与权威信源建立的客观验证观察题，事件实锤或到期后自动核验开奖",
+      "current_judgment": "金价急跌后迎来近 3% 逢低反弹，但 11 月底前能否一举站回 3,700 美元还要看明天美国核心 PCE 数据",
       "versions": [
         {
           "version": 1,
@@ -283,38 +386,419 @@
       "settlement": null
     },
     {
-      "prediction_id": "pred_live_auto_e6931f8b",
+      "prediction_id": "pred_live_nvda_post_return_hold",
       "mode": "live",
       "status": "open",
-      "title": "后续验证：黄仁勋重掌英伟达帅印！股价暴涨31%，市值单日增长近万亿 未来 7 天是否触发实质进展",
-      "title_en": "Follow-up verification: Will \"Jensen Huang reinstated as Nvidia CEO.\" reach formal milestone in 7 days?",
+      "category": "market",
+      "title": "黄仁勋复职后，英伟达（NVDA）本周五收盘价能否守住复职大涨后的涨幅（较上周五累涨超 25%）？",
+      "title_en": "Can NVIDIA (NVDA) close Friday holding >25% weekly gains following Jensen Huang's return?",
       "target_entity_id": "ent_nvidia",
       "target_entity": "英伟达 (NVIDIA)",
-      "question": "未来 7 天内，围绕「黄仁勋重掌英伟达帅印！股价暴涨31%，市值单日增长近万亿」是否出现官方正式生效/签约/财务落地等可交叉证实的实质性后续通报？",
-      "question_en": "Within 7 days, will official notices or multi-source reporting confirm concrete follow-through on \"Jensen Huang reinstated as Nvidia CEO.\"?",
-      "created_at": "2026-11-24T11:30:48+08:00",
-      "due_at": "2026-12-01T20:00:00+08:00",
-      "win_rule": "7 天内出现权威官方文件、交易所/监管披露或两家以上主流媒体实锤落地进展",
-      "lose_rule": "到期前未见任何实质性后续落地或当事方正式撤回/否决相关动议",
-      "indeterminate_rule": "当事方官方推迟决策窗口",
+      "question": "11 月 27 日美股周五收盘时，英伟达（NVDA）本周累计涨幅能否保持在 25% 以上？",
+      "question_en": "At Friday Nov 27 US market close, will NVDA retain >25% weekly gains above last Friday's close?",
+      "created_at": "2026-11-24T12:11:51+08:00",
+      "due_at": "2026-11-28T05:30:00+08:00",
+      "win_rule": "11 月 27 日美股收盘英伟达股价较上周五（11 月 20 日）收盘累计涨幅 >= 25%",
+      "lose_rule": "本周五收盘涨幅回吐至不足 25%",
+      "indeterminate_rule": "美股交易异常暂停或行情数据缺失",
       "supporting_evidence": [
-        "来源 CNBC Tech & AI 已披露首轮重磅信号（finance）"
+        "黄仁勋正式复职触发空头回补，英伟达单日飙升逾 31% 并带动芯片板块走高"
       ],
       "opposing_evidence": [
-        "初期快讯信号仍待官方细则与多方时间表验证"
+        "单日暴涨超 30% 后短线获利盘较重，感恩节假期清淡交投易放大波动"
       ],
-      "core_assumption": "重点事件通常在 7 天窗口内释放正式文件或明确转折",
-      "invalidation_trigger": "议程提前取消",
-      "probability_pct": 55,
-      "probability_note": "由当日 S/A 级重磅事件自动提取建立 7 天跟踪验证",
-      "current_judgment": "保持关注未来一周官方后续落地公告或量化指标变化",
+      "core_assumption": "直接按纳斯达克 NVDA 官方周五收盘价与前一周五收盘价对比结算",
+      "invalidation_trigger": "若周内再现监管出口审查升级消息",
+      "probability_pct": 58,
+      "probability_note": "基于公开官方日程与权威信源建立的客观验证观察题，事件实锤或到期后自动核验开奖",
+      "current_judgment": "黄仁勋回归点燃空头回补，NVDA 暴涨 31%；本周后半段感恩节短周交易中能否守住 25% 周涨幅是关键多空试金石",
       "versions": [
         {
           "version": 1,
-          "updated_at": "2026-11-24T11:30:48+08:00",
-          "judgment": "基于当日重磅事件自动立项跟踪",
-          "probability_pct": 55,
-          "reason": "当日 S/A 级重点事件自动立项"
+          "updated_at": "2026-11-24T12:11:51+08:00",
+          "judgment": "黄仁勋回归点燃空头回补，NVDA 暴涨 31%；本周后半段感恩节短周交易中能否守住 25% 周涨幅是关键多空试金石",
+          "probability_pct": 58,
+          "reason": "黄仁勋复职推动 NVDA 暴涨逾 31% 后检验多头承接力"
+        }
+      ],
+      "settlement": null
+    },
+    {
+      "prediction_id": "pred_live_zhipu_glm54_launch",
+      "mode": "live",
+      "status": "open",
+      "category": "tech_ai",
+      "title": "智谱 GLM-5.4 轻量旗舰能否在 11 月 30 日前如期正式发布？",
+      "title_en": "Will Zhipu AI officially release GLM-5.4 lightweight flagship model by Nov 30?",
+      "target_entity_id": "ent_zhipu",
+      "target_entity": "智谱 AI (Zhipu / GLM)",
+      "question": "11 月 30 日前，智谱 AI 官方或开源社区是否正式上线 GLM-5.4 并公布定价或权重？",
+      "question_en": "By Nov 30, 2026, will Zhipu AI officially launch GLM-5.4 with weights or API docs?",
+      "created_at": "2026-11-24T12:11:51+08:00",
+      "due_at": "2026-11-30T22:00:00+08:00",
+      "win_rule": "智谱开放平台或 GitHub / Hugging Face 官方仓库正式发布 GLM-5.4",
+      "lose_rule": "11 月底前未见 GLM-5.4 正式发布或官方宣布延后至 12 月",
+      "indeterminate_rule": "仅发布小范围盲测代号但未公开型号名称",
+      "supporting_evidence": [
+        "独立开发者实测 Z.ai GLM-5.4 性能出色，多家科技媒体跟进测试进展"
+      ],
+      "opposing_evidence": [
+        "近期国产大模型多采用灰度盲测节奏，正式定名发布周期偶有后延"
+      ],
+      "core_assumption": "以智谱 AI 官方公告、bigmodel.cn 文档或官方开源仓库为准",
+      "invalidation_trigger": "智谱官方宣布推迟或更名发布",
+      "probability_pct": 68,
+      "probability_note": "基于公开官方日程与权威信源建立的客观验证观察题，事件实锤或到期后自动核验开奖",
+      "current_judgment": "Z.ai 已出现高口碑 GLM-5.4 实测版本，11 月底前官宣并开放全量 API 概率较高",
+      "versions": [
+        {
+          "version": 1,
+          "updated_at": "2026-11-24T12:11:51+08:00",
+          "judgment": "Z.ai 已出现高口碑 GLM-5.4 实测版本，11 月底前官宣并开放全量 API 概率较高",
+          "probability_pct": 68,
+          "reason": "近期科技圈密集实测智谱 GLM-5.4 新版本"
+        }
+      ],
+      "settlement": null
+    },
+    {
+      "prediction_id": "pred_live_anthropic_ipo_hold",
+      "mode": "live",
+      "status": "open",
+      "category": "tech_ai",
+      "title": "Anthropic 上市首月（截至 12 月 19 日）收盘价能否稳在 83 美元发行价上方？",
+      "title_en": "Will Anthropic hold above its $83 IPO price one month post-listing (by Dec 19)?",
+      "target_entity_id": "ent_anthropic",
+      "target_entity": "Anthropic / Claude",
+      "question": "截至 12 月 19 日上市满一月收盘时，Anthropic 股价能否站在 83 美元发行价之上？",
+      "question_en": "At US market close on Dec 18/19, will Anthropic trade above its $83 IPO offer price?",
+      "created_at": "2026-11-24T12:11:51+08:00",
+      "due_at": "2026-12-19T05:30:00+08:00",
+      "win_rule": "12 月 18 日美股收盘价 >= 83.00 美元",
+      "lose_rule": "12 月 18 日美股收盘跌破 83.00 美元（处于破发状态）",
+      "indeterminate_rule": "出现停牌或重大并购重组暂停交易",
+      "supporting_evidence": [
+        "Anthropic 募资超 810 亿美元创史上最大 IPO，企业级 Claude 收入增速迅猛"
+      ],
+      "opposing_evidence": [
+        "高估值次日一度回撤逼近发行价，海外算力资本开支争议仍困扰估值溢价"
+      ],
+      "core_assumption": "直接以美股交易所官方收盘价对比 83 美元发行价结算",
+      "invalidation_trigger": "美股 AI 硬件或大型科技板块出现系统性估值重挫",
+      "probability_pct": 56,
+      "probability_note": "基于公开官方日程与权威信源建立的客观验证观察题，事件实锤或到期后自动核验开奖",
+      "current_judgment": "上市初期多空在 83 美元发行价附近剧烈换手，首月收官需检验 Claude 企业付费留存与大盘情绪",
+      "versions": [
+        {
+          "version": 1,
+          "updated_at": "2026-11-24T12:11:51+08:00",
+          "judgment": "上市初期多空在 83 美元发行价附近剧烈换手，首月收官需检验 Claude 企业付费留存与大盘情绪",
+          "probability_pct": 56,
+          "reason": "Anthropic 创纪录 810 亿美元 IPO 上市首月破发保卫战"
+        }
+      ],
+      "settlement": null
+    },
+    {
+      "prediction_id": "pred_live_tesla_fsd_cn_2026",
+      "mode": "live",
+      "status": "open",
+      "category": "tech_ai",
+      "title": "特斯拉 FSD V15 能否在 2026 年底前正式开启中国市场首批用户推送？",
+      "title_en": "Will Tesla begin first customer FSD V15 rollout in China before end of 2026?",
+      "target_entity_id": "ent_spacex_tesla",
+      "target_entity": "特斯拉 (Tesla)",
+      "question": "12 月 31 日前，特斯拉官方或中国监管渠道是否确认 FSD V15 向中国车主正式推送？",
+      "question_en": "By Dec 31, 2026, will Tesla push FSD V15 to first China customer vehicles?",
+      "created_at": "2026-11-24T12:11:51+08:00",
+      "due_at": "2026-12-31T22:00:00+08:00",
+      "win_rule": "特斯拉中国官方微博/官网确认开启 FSD 中国区城市道路智驾推送",
+      "lose_rule": "截至 2026 年 12 月 31 日仍仅限内部测试或未获批准向零售车主推送",
+      "indeterminate_rule": "仅开放极小范围员工车队且无公开软件更新说明",
+      "supporting_evidence": [
+        "广州车展与年底交付冲刺窗口下，国产高阶智驾竞争倒逼特斯拉加速 FSD 入华审批"
+      ],
+      "opposing_evidence": [
+        "跨境数据合规、地图测绘资质及算法本地安全备案流程门槛仍高"
+      ],
+      "core_assumption": "以特斯拉中国官方发布及车主 OTA 实际更新公告为准",
+      "invalidation_trigger": "监管明确驳回或延后至 2027 年一季度",
+      "probability_pct": 36,
+      "probability_note": "基于公开官方日程与权威信源建立的客观验证观察题，事件实锤或到期后自动核验开奖",
+      "current_judgment": "智驾竞赛压力推动加速沟通，但今年仅剩最后 5 周，FSD V15 年内全量或首批合规推送仍有难度",
+      "versions": [
+        {
+          "version": 1,
+          "updated_at": "2026-11-24T12:11:51+08:00",
+          "judgment": "智驾竞赛压力推动加速沟通，但今年仅剩最后 5 周，FSD V15 年内全量或首批合规推送仍有难度",
+          "probability_pct": 36,
+          "reason": "广州车展智驾密集发布窗口下的特斯拉 FSD 落地预期"
+        }
+      ],
+      "settlement": null
+    },
+    {
+      "prediction_id": "pred_live_aws_reinvent_chip",
+      "mode": "live",
+      "status": "open",
+      "category": "tech_ai",
+      "title": "11 月 30 日 AWS re:Invent 大会是否会发布自研新一代 AI 训练芯片或旗舰大模型？",
+      "title_en": "Will AWS re:Invent (Nov 30) launch next-gen AI training silicon or flagship Nova models?",
+      "target_entity_id": "ent_aws",
+      "target_entity": "亚马逊云计算 (AWS)",
+      "question": "AWS re:Invent 2026 主旨演讲期间，亚马逊是否正式官宣新一代 Trainium 芯片或新版 Nova 模型？",
+      "question_en": "During AWS re:Invent 2026 keynotes, will Amazon unveil new AI training chips or Nova models?",
+      "created_at": "2026-11-24T12:11:51+08:00",
+      "due_at": "2026-12-05T18:00:00+08:00",
+      "win_rule": "AWS 官方主题演讲与新闻中心宣布新一代 AI 训练芯片正式规格或 Nova 系列重要升级",
+      "lose_rule": "大会仅聚焦已有服务常规更新，未发布下一代自研芯片或新版旗舰基础模型",
+      "indeterminate_rule": "大会临时取消",
+      "supporting_evidence": [
+        "AWS re:Invent 历年均于 11 月底至 12 月初发布自研芯片 Trainium/Inferentia 与基础模型重磅更新"
+      ],
+      "opposing_evidence": [
+        "在英伟达、Anthropic 算力合作加深背景下，今年 keynote 重点可能更偏应用侧 Agent"
+      ],
+      "core_assumption": "以 AboutAmazon / AWS 官方新闻稿为准",
+      "invalidation_trigger": "主题演讲议程临时缩水",
+      "probability_pct": 74,
+      "probability_note": "基于公开官方日程与权威信源建立的客观验证观察题，事件实锤或到期后自动核验开奖",
+      "current_judgment": "下周 AWS re:Invent 开幕在即，按往届传统发布自研新算力实例与 Agent 工具链概率大",
+      "versions": [
+        {
+          "version": 1,
+          "updated_at": "2026-11-24T12:11:51+08:00",
+          "judgment": "下周 AWS re:Invent 开幕在即，按往届传统发布自研新算力实例与 Agent 工具链概率大",
+          "probability_pct": 74,
+          "reason": "下周即将举办 AWS re:Invent 2026 全球云计算大会"
+        }
+      ],
+      "settlement": null
+    },
+    {
+      "prediction_id": "pred_live_cn_pmi_nov_2026",
+      "mode": "live",
+      "status": "open",
+      "category": "macro",
+      "title": "11 月 30 日中国官方 11 月制造业 PMI 能否站上 50.0 荣枯线？",
+      "title_en": "Will China's official November Manufacturing PMI reach or exceed 50.0 on Nov 30?",
+      "target_entity_id": "ent_macro_cn",
+      "target_entity": "中国宏观经济 / 统计局 PMI",
+      "question": "11 月 30 日上午国家统计局公布的 11 月份官方制造业 PMI 数值是否 >= 50.0？",
+      "question_en": "On Nov 30, 2026, will NBS report November Manufacturing PMI >= 50.0?",
+      "created_at": "2026-11-24T12:11:51+08:00",
+      "due_at": "2026-11-30T11:00:00+08:00",
+      "win_rule": "中国国家统计局官方公布 11 月制造业采购经理指数 (PMI) >= 50.0%",
+      "lose_rule": "官方公布 11 月制造业 PMI 低于 50.0%（位于收缩区间）",
+      "indeterminate_rule": "统计局延期发布数据",
+      "supporting_evidence": [
+        "国内逆回购与增量稳增长政策持续托底工业生产与出口赶工订单"
+      ],
+      "opposing_evidence": [
+        "海外需求波动及部分传统行业去库存仍对新订单分项形成制约"
+      ],
+      "core_assumption": "直接依据中国国家统计局 11 月 30 日 09:30 官网公布数据结算",
+      "invalidation_trigger": "无",
+      "probability_pct": 54,
+      "probability_note": "基于公开官方日程与权威信源建立的客观验证观察题，事件实锤或到期后自动核验开奖",
+      "current_judgment": "11 月 30 日早间官方 PMI 将检验四季度工业景气度成色，预计在 50 荣枯线附近拉锯",
+      "versions": [
+        {
+          "version": 1,
+          "updated_at": "2026-11-24T12:11:51+08:00",
+          "judgment": "11 月 30 日早间官方 PMI 将检验四季度工业景气度成色，预计在 50 荣枯线附近拉锯",
+          "probability_pct": 54,
+          "reason": "11 月 30 日国家统计局制造业 PMI 月度重要催化"
+        }
+      ],
+      "settlement": null
+    },
+    {
+      "prediction_id": "pred_live_us_pce_oct_2026",
+      "mode": "live",
+      "status": "open",
+      "category": "macro",
+      "title": "明天（11 月 25 日）公布的美国 10 月核心 PCE 通胀同比涨幅能否回落至 2.8% 以下？",
+      "title_en": "Will US October Core PCE YoY inflation print below 2.8% tomorrow (Nov 25)?",
+      "target_entity_id": "ent_macro_fomc",
+      "target_entity": "美国宏观通胀 / PCE 数据",
+      "question": "11 月 25 日晚美国商务部公布的 10 月核心 PCE 物价指数同比增速是否严格低于 2.8%？",
+      "question_en": "On Nov 25, will US BEA report October Core PCE YoY strictly below 2.8%?",
+      "created_at": "2026-11-24T12:11:51+08:00",
+      "due_at": "2026-11-25T22:30:00+08:00",
+      "win_rule": "美国经济分析局 (BEA) 官方公布 10 月核心 PCE 同比 <= 2.7%",
+      "lose_rule": "美国 10 月核心 PCE 同比 >= 2.8%（显示通胀依然粘滞）",
+      "indeterminate_rule": "受美国政府停摆影响推迟公布",
+      "supporting_evidence": [
+        "国际油价此前走低与部分房租环比放缓有助于压低核心物价斜率"
+      ],
+      "opposing_evidence": [
+        "多位美联储官员本周密集担忧核心服务通胀反弹与关税传导效应"
+      ],
+      "core_assumption": "直接依据 11 月 25 日 21:30 BEA 官方公布终值结算",
+      "invalidation_trigger": "数据发布窗口因政府停摆推迟",
+      "probability_pct": 41,
+      "probability_note": "基于公开官方日程与权威信源建立的客观验证观察题，事件实锤或到期后自动核验开奖",
+      "current_judgment": "明天就是美国核心 PCE 公布日，在美联储“三把手”频频强调通胀未达标的当下，数据稍热就将直接冲击降息预期",
+      "versions": [
+        {
+          "version": 1,
+          "updated_at": "2026-11-24T12:11:51+08:00",
+          "judgment": "明天就是美国核心 PCE 公布日，在美联储“三把手”频频强调通胀未达标的当下，数据稍热就将直接冲击降息预期",
+          "probability_pct": 41,
+          "reason": "11 月 25 日美国核心 PCE 重磅宏观催化窗口"
+        }
+      ],
+      "settlement": null
+    },
+    {
+      "prediction_id": "pred_live_us_nfp_nov_2026",
+      "mode": "live",
+      "status": "open",
+      "category": "macro",
+      "title": "12 月 4 日美国 11 月非农新增就业人数能否突破 15 万人？",
+      "title_en": "Will US November Nonfarm Payrolls exceed 150K on Dec 4?",
+      "target_entity_id": "ent_macro_fomc",
+      "target_entity": "美国劳工部非农就业 (BLS)",
+      "question": "12 月 4 日晚公布的 11 月美国非农季调后就业增量是否大于或等于 15 万人？",
+      "question_en": "On Dec 4, 2026, will US November Nonfarm Payrolls print >= 150,000?",
+      "created_at": "2026-11-24T12:11:51+08:00",
+      "due_at": "2026-12-04T22:30:00+08:00",
+      "win_rule": "美国劳工统计局 (BLS) 公布 11 月非农新增就业 >= 15.0 万人",
+      "lose_rule": "官方公布 11 月非农新增就业低于 15.0 万人",
+      "indeterminate_rule": "BLS 因不可抗力推迟发布就业报告",
+      "supporting_evidence": [
+        "年底消费季临时用工与服务业岗位仍提供一定用工韧性"
+      ],
+      "opposing_evidence": [
+        "大科技公司及部分制造业裁员消息增多，高利率正逐步向就业市场降温传导"
+      ],
+      "core_assumption": "直接按 12 月 4 日 BLS 初值公告数字结算",
+      "invalidation_trigger": "美国政府预算停摆推迟统计",
+      "probability_pct": 52,
+      "probability_note": "基于公开官方日程与权威信源建立的客观验证观察题，事件实锤或到期后自动核验开奖",
+      "current_judgment": "作为 12 月 10 日美联储议息前最重磅的就业成绩单，15 万关口将直接决定是否继续加息",
+      "versions": [
+        {
+          "version": 1,
+          "updated_at": "2026-11-24T12:11:51+08:00",
+          "judgment": "作为 12 月 10 日美联储议息前最重磅的就业成绩单，15 万关口将直接决定是否继续加息",
+          "probability_pct": 52,
+          "reason": "12 月 4 日美国非农报告决定 12 月 FOMC 走向"
+        }
+      ],
+      "settlement": null
+    },
+    {
+      "prediction_id": "pred_live_cewc_fiscal_2027",
+      "mode": "live",
+      "status": "open",
+      "category": "macro",
+      "title": "12 月中央经济工作会议公报是否会明确释放“提高 2027 年财政赤字率”信号？",
+      "title_en": "Will December's Central Economic Work Conference signal a higher 2027 fiscal deficit ratio?",
+      "target_entity_id": "ent_macro_cn",
+      "target_entity": "中央经济工作会议 / 中国财政",
+      "question": "12 月中旬新华社发布的中央经济工作会议通稿中，是否明确提出“提高财政赤字率”？",
+      "question_en": "Will the December CEWC communiqué explicitly call for a higher fiscal deficit ratio for 2027?",
+      "created_at": "2026-11-24T12:11:51+08:00",
+      "due_at": "2026-12-18T20:00:00+08:00",
+      "win_rule": "新华社发布的 2026 年中央经济工作会议官方通稿明确出现“提高财政赤字率”或“更加积极的财政政策加力提效”并指向赤字扩表",
+      "lose_rule": "通稿仅延续稳健平衡或结构性减税降费表述，未提及提高赤字率",
+      "indeterminate_rule": "会议延后至 12 月下旬且通稿尚未披露",
+      "supporting_evidence": [
+        "扩内需、稳就业及地方化债背景持续需要中央财政赤字率与超长期特别国债托举"
+      ],
+      "opposing_evidence": [
+        "财政纪律与防范跨期风险考量下，部分年度更倾向专项债增发而非高调写明赤字率数字"
+      ],
+      "core_assumption": "以新华社正式发布的中央经济工作会议权威通稿文本为准",
+      "invalidation_trigger": "会议安排明显推迟",
+      "probability_pct": 72,
+      "probability_note": "基于公开官方日程与权威信源建立的客观验证观察题，事件实锤或到期后自动核验开奖",
+      "current_judgment": "12 月重要政策窗口临近，市场普遍聚焦明年财政扩张力度与中央加杠杆幅度表述",
+      "versions": [
+        {
+          "version": 1,
+          "updated_at": "2026-11-24T12:11:51+08:00",
+          "judgment": "12 月重要政策窗口临近，市场普遍聚焦明年财政扩张力度与中央加杠杆幅度表述",
+          "probability_pct": 72,
+          "reason": "12 月中央经济工作会议为明年国内政策定调"
+        }
+      ],
+      "settlement": null
+    },
+    {
+      "prediction_id": "pred_live_cop31_fossil_roadmap",
+      "mode": "live",
+      "status": "open",
+      "category": "global_space",
+      "title": "联合国 COP31 气候大会加时谈判最终文本是否会保留“摆脱化石燃料路线图”？",
+      "title_en": "Will the final UN COP31 text retain a formal 'transition away from fossil fuels' roadmap?",
+      "target_entity_id": "ent_macro_global",
+      "target_entity": "联合国气候变化大会 (COP31)",
+      "question": "安塔利亚 COP31 大会最终闭幕公报中，是否写明推动“逐步摆脱化石燃料”的路线图条款？",
+      "question_en": "Will the closing COP31 Antalya agreement include formal fossil fuel phase-out/transition roadmap language?",
+      "created_at": "2026-11-24T12:11:51+08:00",
+      "due_at": "2026-11-28T20:00:00+08:00",
+      "win_rule": "UNFCCC 发布的 COP31 最终大会决议文本正式保留或强化“摆脱/转型替代化石燃料”路线图字样",
+      "lose_rule": "受产油国集体抵制，最终文本彻底删除具体化石燃料退出/过渡时间表",
+      "indeterminate_rule": "谈判彻底破裂未形成任何最终共同文本",
+      "supporting_evidence": [
+        "欧盟及多国气候联盟在加时磋商中坚持将摆脱化石燃料设为最后底线条款"
+      ],
+      "opposing_evidence": [
+        "产油大国反对写入强制时间表，多边一致同意规则极易迫使文本妥协淡化"
+      ],
+      "core_assumption": "以 UNFCCC 官网公布的 COP31 正式终稿决议文本为准",
+      "invalidation_trigger": "大会无果而终",
+      "probability_pct": 47,
+      "probability_note": "基于公开官方日程与权威信源建立的客观验证观察题，事件实锤或到期后自动核验开奖",
+      "current_judgment": "COP31 已进入加时磋商关键时刻，欧盟与产油阵营围绕化石燃料措辞博弈进入最后冲刺",
+      "versions": [
+        {
+          "version": 1,
+          "updated_at": "2026-11-24T12:11:51+08:00",
+          "judgment": "COP31 已进入加时磋商关键时刻，欧盟与产油阵营围绕化石燃料措辞博弈进入最后冲刺",
+          "probability_pct": 47,
+          "reason": "COP31 气候大会安塔利亚加时终稿表决在即"
+        }
+      ],
+      "settlement": null
+    },
+    {
+      "prediction_id": "pred_live_us_overseas_ai_dc_tariff",
+      "mode": "live",
+      "status": "open",
+      "category": "global_space",
+      "title": "特朗普政府是否会在 12 月底前正式出台针对“海外建 AI 数据中心”的新增关税或限制令？",
+      "title_en": "Will the Trump administration impose tariffs or curbs on US tech overseas AI data centers by year-end?",
+      "target_entity_id": "ent_us_policy",
+      "target_entity": "美国白宫与芯片出口管制",
+      "question": "12 月 31 日前，白宫或美国商务部是否正式发布对海外建设 AI 数据中心加征税收/关税的行政令？",
+      "question_en": "By Dec 31, will the White House or Commerce Dept issue formal curbs/tariffs on overseas AI data centers?",
+      "created_at": "2026-11-24T12:11:51+08:00",
+      "due_at": "2026-12-31T20:00:00+08:00",
+      "win_rule": "美国白宫或商务部正式签署发布针对海外建设 AI 数据中心的关税/算力外流限制细则",
+      "lose_rule": "截至年底仅停留在官员口头表态与国会听证讨论阶段，未出台正式行政令或约束细则",
+      "indeterminate_rule": "仅针对单个国家发起调查但尚未出台普适性规则",
+      "supporting_evidence": [
+        "白宫与参议员近期频繁提出算力回流本土议题，东南亚与中东数据中心扩张成为审查焦点"
+      ],
+      "opposing_evidence": [
+        "大型美股云厂（微软/谷歌/AWS）强烈游说反对全面限制，正式规则制定通常耗时数月"
+      ],
+      "core_assumption": "以美国白宫官网或联邦公报 (Federal Register) 正式文件为准",
+      "invalidation_trigger": "美方转向通过双边豁免协议替代关税处罚",
+      "probability_pct": 44,
+      "probability_note": "基于公开官方日程与权威信源建立的客观验证观察题，事件实锤或到期后自动核验开奖",
+      "current_judgment": "华盛顿围绕算力出海与安全审查的博弈持续升温，年内直接落地一刀切正式行政令阻力仍大",
+      "versions": [
+        {
+          "version": 1,
+          "updated_at": "2026-11-24T12:11:51+08:00",
+          "judgment": "华盛顿围绕算力出海与安全审查的博弈持续升温，年内直接落地一刀切正式行政令阻力仍大",
+          "probability_pct": 44,
+          "reason": "美国监管持续针对 AI 数据中心海外布局释放限制信号"
         }
       ],
       "settlement": null
@@ -323,11 +807,12 @@
       "prediction_id": "pred_replay_anthropic_ipo_2026_11",
       "mode": "replay",
       "status": "settled",
-      "title": "历史复盘：Anthropic 上市首周高位估值波动（创纪录募资 vs 次日破发压力）",
+      "category": "tech_ai",
+      "title": "历史复盘：Anthropic 上市首周是否跌超 5% 逼近破发",
       "title_en": "Review: Anthropic Mega-IPO Valuation Volatility Window",
       "target_entity_id": "ent_anthropic",
       "target_entity": "Anthropic / Claude",
-      "question": "Anthropic 完成创纪录 IPO 后首个完整交易周，二级市场是否发生 >5% 的高估值回撤压力测试？",
+      "question": "Anthropic 完成创纪录 IPO 后首个交易周，二级市场是否发生 >5% 的剧烈回撤检验？",
       "question_en": "Did Anthropic suffer a >5% post-IPO drawdown pressure test within its first trading week?",
       "created_at": "2026-11-18T10:00:00+08:00",
       "due_at": "2026-11-20T22:30:00+08:00",
@@ -343,7 +828,7 @@
       "core_assumption": "仅以交易所开盘价与媒体交叉核实收盘跌幅为结算基准",
       "invalidation_trigger": "发行中止",
       "probability_pct": 68,
-      "probability_note": "历史复盘样题（单独计分，不计入实时追踪胜率）",
+      "probability_note": "历史复盘样题（单独计分，不计入实时胜率榜）",
       "current_judgment": "高估值 Mega-IPO 上市后短期估值消化压力显著",
       "current_judgment_en": "Rich valuation mega-IPO faced sharp near-term digestion pressure.",
       "versions": [
@@ -359,18 +844,21 @@
         "outcome": "correct",
         "settled_at": "2026-11-20T22:30:00+08:00",
         "evidence_url": "https://wallstreetcn.com/",
-        "note": "多源快讯实录确认上市次日下挫 8.5%、盘中逼近发行价，触发 >5% 压力检验。"
+        "evidence_title": "Anthropic 上市次日盘中放量下挫 8.5%",
+        "note": "多源快讯实录确认上市次日下挫 8.5%、盘中逼近发行价，触发 >5% 压力检验。",
+        "brier_score": 0.1024
       }
     },
     {
       "prediction_id": "pred_replay_nvda_volatility_2026_11",
       "mode": "replay",
       "status": "settled",
-      "title": "历史复盘：AI 高权重龙头（NVDA）与纳指高波期单日剧震检验",
+      "category": "market",
+      "title": "历史复盘：英伟达 (NVDA) 与纳指高波期单日跌超 8% 检验",
       "title_en": "Review: NVDA & Nasdaq High-Volatility Session Test",
       "target_entity_id": "ent_nvidia",
       "target_entity": "英伟达 (NVIDIA)",
-      "question": "治理不确定性与海外算力税负升温期间，NVDA 单周内是否发生超过 8% 的单日剧烈回撤？",
+      "question": "管理层风波与海外算力审查升温期间，NVDA 单周内是否发生超过 8% 的单日剧烈回撤？",
       "question_en": "Did NVDA experience a >8% single-day drawdown amid governance and data-center policy risk?",
       "created_at": "2026-11-17T09:00:00+08:00",
       "due_at": "2026-11-21T05:30:00+08:00",
@@ -378,16 +866,16 @@
       "lose_rule": "整周单日最大跌幅维持在 8% 以内",
       "indeterminate_rule": "停牌无交易",
       "supporting_evidence": [
-        "实际行情记录 NVDA 最新收盘 125.53 美元，单日实际下跌 -14.01%"
+        "前期剧震期间 NVDA 单日实测大跌 -14.01%"
       ],
       "opposing_evidence": [
-        "前期 AI 硬件强基本面一度提供逢低买盘支撑"
+        "AI 硬件强基本面一度提供逢低买盘支撑"
       ],
-      "core_assumption": "直接对接美股延迟/收盘行情数据源自动结算",
+      "core_assumption": "直接对接美股官方收盘行情数据源自动结算",
       "invalidation_trigger": "无",
       "probability_pct": 64,
-      "probability_note": "自动行情复盘核验样本",
-      "current_judgment": "高拥挤度叠加治理与政策变量易引发超 8% 尾部波动",
+      "probability_note": "历史波动复盘样本（单独计分）",
+      "current_judgment": "高拥挤度叠加突发治理冲击易触发单日超 8% 剧烈波动",
       "current_judgment_en": "Crowded positioning plus policy shock triggers >8% tail volatility.",
       "versions": [
         {
@@ -402,7 +890,9 @@
         "outcome": "correct",
         "settled_at": "2026-11-21T05:30:00+08:00",
         "evidence_url": "https://www.sec.gov/edgar/browse/?CIK=0001045810",
-        "note": "行情实测结算：NVDA 收报 165.05（31.48%）。"
+        "evidence_title": "NVDA 2026-11-20 单日重挫 -14.01%",
+        "note": "行情实测结算：该周 NVDA 单日暴跌 -14.01%（跌幅超 8% 阈值），压力预警命中。",
+        "brier_score": 0.1296
       }
     }
   ]
