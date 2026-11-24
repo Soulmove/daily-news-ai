@@ -1,9 +1,11 @@
 {
   "schema_version": "1.0",
-  "updated_at": "2026-11-24T14:05:50+08:00",
+  "updated_at": "2026-11-24T15:41:16+08:00",
+  "quote_time_hhmm": "15:41",
+  "session_status": "trading",
   "status": "ok",
-  "source_note": "实时/延迟参考行情来自公开交易所聚合源（美股/港股/A股最近交易时段收盘或盘中报价），仅作量化对照参考。",
-  "source_note_en": "Delayed/close market quotes across A-Shares, HKEX & US markets for quantitative validation.",
+  "source_note": "实时/延迟参考行情来自公开交易所聚合源（A股/港股/美股/COMEX黄金盘中或最近收盘报价），全站统一口径，仅作量化对照参考。",
+  "source_note_en": "Live/delayed market quotes across A-Shares, HKEX, US equities & COMEX Gold for quantitative validation.",
   "indices": [
     {
       "symbol": "sh000001",
@@ -12,11 +14,12 @@
       "name_en": "SSE Composite",
       "market": "A股",
       "role": "index",
-      "price": 3545.14,
-      "change": 6.19,
-      "pct_change": 0.17,
+      "price": 3548.37,
+      "change": 9.42,
+      "pct_change": 0.27,
       "atr_20d_pct": 1.42,
-      "source": "Tencent Finance (Delayed / Close)"
+      "quote_time_hhmm": "15:41",
+      "source": "Tencent Finance (Live / Delayed)"
     },
     {
       "symbol": "sz399001",
@@ -25,11 +28,12 @@
       "name_en": "SZSE Component",
       "market": "A股",
       "role": "index",
-      "price": 10455.69,
-      "change": 1.32,
-      "pct_change": 0.01,
-      "atr_20d_pct": 2.78,
-      "source": "Tencent Finance (Delayed / Close)"
+      "price": 10423.6,
+      "change": -30.77,
+      "pct_change": -0.29,
+      "atr_20d_pct": 2.79,
+      "quote_time_hhmm": "15:41",
+      "source": "Tencent Finance (Live / Delayed)"
     },
     {
       "symbol": "hkHSI",
@@ -38,11 +42,12 @@
       "name_en": "Hang Seng Index",
       "market": "港股",
       "role": "index",
-      "price": 22288.51,
-      "change": -95.23,
-      "pct_change": -0.43,
+      "price": 22241.29,
+      "change": -142.45,
+      "pct_change": -0.64,
       "atr_20d_pct": 1.1,
-      "source": "Tencent Finance (Delayed / Close)"
+      "quote_time_hhmm": "15:41",
+      "source": "Tencent Finance (Live / Delayed)"
     },
     {
       "symbol": "hkHSTECH",
@@ -51,11 +56,12 @@
       "name_en": "Hang Seng Tech",
       "market": "港股",
       "role": "index",
-      "price": 3473.15,
-      "change": -34.85,
-      "pct_change": -0.99,
+      "price": 3467.35,
+      "change": -40.65,
+      "pct_change": -1.16,
       "atr_20d_pct": 1.1,
-      "source": "Tencent Finance (Delayed / Close)"
+      "quote_time_hhmm": "15:41",
+      "source": "Tencent Finance (Live / Delayed)"
     },
     {
       "symbol": "usIXIC",
@@ -68,7 +74,8 @@
       "change": 1471.83,
       "pct_change": 6.51,
       "atr_20d_pct": 5.53,
-      "source": "Tencent Finance (Delayed / Close)"
+      "quote_time_hhmm": "15:41",
+      "source": "Tencent Finance (Live / Delayed)"
     },
     {
       "symbol": "usINX",
@@ -81,7 +88,8 @@
       "change": 326.78,
       "pct_change": 4.73,
       "atr_20d_pct": 4.02,
-      "source": "Tencent Finance (Delayed / Close)"
+      "quote_time_hhmm": "15:41",
+      "source": "Tencent Finance (Live / Delayed)"
     }
   ],
   "quotes": {
@@ -92,11 +100,12 @@
       "name_en": "SSE Composite",
       "market": "A股",
       "role": "index",
-      "price": 3545.14,
-      "change": 6.19,
-      "pct_change": 0.17,
+      "price": 3548.37,
+      "change": 9.42,
+      "pct_change": 0.27,
       "atr_20d_pct": 1.42,
-      "source": "Tencent Finance (Delayed / Close)"
+      "quote_time_hhmm": "15:41",
+      "source": "Tencent Finance (Live / Delayed)"
     },
     "399001.SZ": {
       "symbol": "sz399001",
@@ -105,11 +114,12 @@
       "name_en": "SZSE Component",
       "market": "A股",
       "role": "index",
-      "price": 10455.69,
-      "change": 1.32,
-      "pct_change": 0.01,
-      "atr_20d_pct": 2.78,
-      "source": "Tencent Finance (Delayed / Close)"
+      "price": 10423.6,
+      "change": -30.77,
+      "pct_change": -0.29,
+      "atr_20d_pct": 2.79,
+      "quote_time_hhmm": "15:41",
+      "source": "Tencent Finance (Live / Delayed)"
     },
     "HSI.HK": {
       "symbol": "hkHSI",
@@ -118,11 +128,12 @@
       "name_en": "Hang Seng Index",
       "market": "港股",
       "role": "index",
-      "price": 22288.51,
-      "change": -95.23,
-      "pct_change": -0.43,
+      "price": 22241.29,
+      "change": -142.45,
+      "pct_change": -0.64,
       "atr_20d_pct": 1.1,
-      "source": "Tencent Finance (Delayed / Close)"
+      "quote_time_hhmm": "15:41",
+      "source": "Tencent Finance (Live / Delayed)"
     },
     "HSTECH.HK": {
       "symbol": "hkHSTECH",
@@ -131,11 +142,12 @@
       "name_en": "Hang Seng Tech",
       "market": "港股",
       "role": "index",
-      "price": 3473.15,
-      "change": -34.85,
-      "pct_change": -0.99,
+      "price": 3467.35,
+      "change": -40.65,
+      "pct_change": -1.16,
       "atr_20d_pct": 1.1,
-      "source": "Tencent Finance (Delayed / Close)"
+      "quote_time_hhmm": "15:41",
+      "source": "Tencent Finance (Live / Delayed)"
     },
     "IXIC": {
       "symbol": "usIXIC",
@@ -148,7 +160,8 @@
       "change": 1471.83,
       "pct_change": 6.51,
       "atr_20d_pct": 5.53,
-      "source": "Tencent Finance (Delayed / Close)"
+      "quote_time_hhmm": "15:41",
+      "source": "Tencent Finance (Live / Delayed)"
     },
     "SPX": {
       "symbol": "usINX",
@@ -161,7 +174,22 @@
       "change": 326.78,
       "pct_change": 4.73,
       "atr_20d_pct": 4.02,
-      "source": "Tencent Finance (Delayed / Close)"
+      "quote_time_hhmm": "15:41",
+      "source": "Tencent Finance (Live / Delayed)"
+    },
+    "399006.SZ": {
+      "symbol": "sz399006",
+      "ticker": "399006.SZ",
+      "name": "创业板指",
+      "name_en": "ChiNext Index",
+      "market": "A股",
+      "role": "index_extra",
+      "price": 2278.99,
+      "change": -1.21,
+      "pct_change": -0.05,
+      "atr_20d_pct": 4.1,
+      "quote_time_hhmm": "15:41",
+      "source": "Tencent Finance (Live / Delayed)"
     },
     "NVDA": {
       "symbol": "usNVDA",
@@ -174,7 +202,8 @@
       "change": 39.52,
       "pct_change": 31.48,
       "atr_20d_pct": 14.0,
-      "source": "Tencent Finance (Delayed / Close)"
+      "quote_time_hhmm": "15:41",
+      "source": "Tencent Finance (Live / Delayed)"
     },
     "TSM": {
       "symbol": "usTSM",
@@ -187,7 +216,8 @@
       "change": 44.89,
       "pct_change": 14.08,
       "atr_20d_pct": 11.97,
-      "source": "Tencent Finance (Delayed / Close)"
+      "quote_time_hhmm": "15:41",
+      "source": "Tencent Finance (Live / Delayed)"
     },
     "AMD": {
       "symbol": "usAMD",
@@ -200,7 +230,8 @@
       "change": 29.07,
       "pct_change": 6.85,
       "atr_20d_pct": 5.82,
-      "source": "Tencent Finance (Delayed / Close)"
+      "quote_time_hhmm": "15:41",
+      "source": "Tencent Finance (Live / Delayed)"
     },
     "INTC": {
       "symbol": "usINTC",
@@ -213,7 +244,8 @@
       "change": 8.38,
       "pct_change": 16.34,
       "atr_20d_pct": 13.89,
-      "source": "Tencent Finance (Delayed / Close)"
+      "quote_time_hhmm": "15:41",
+      "source": "Tencent Finance (Live / Delayed)"
     },
     "QQQ": {
       "symbol": "usQQQ",
@@ -226,7 +258,8 @@
       "change": 42.58,
       "pct_change": 7.0,
       "atr_20d_pct": 5.95,
-      "source": "Tencent Finance (Delayed / Close)"
+      "quote_time_hhmm": "15:41",
+      "source": "Tencent Finance (Live / Delayed)"
     },
     "KWEB": {
       "symbol": "usKWEB",
@@ -239,7 +272,8 @@
       "change": 0.69,
       "pct_change": 3.33,
       "atr_20d_pct": 2.83,
-      "source": "Tencent Finance (Delayed / Close)"
+      "quote_time_hhmm": "15:41",
+      "source": "Tencent Finance (Live / Delayed)"
     },
     "GLD": {
       "symbol": "usGLD",
@@ -252,7 +286,8 @@
       "change": 10.15,
       "pct_change": 3.14,
       "atr_20d_pct": 2.67,
-      "source": "Tencent Finance (Delayed / Close)"
+      "quote_time_hhmm": "15:41",
+      "source": "Tencent Finance (Live / Delayed)"
     },
     "USO": {
       "symbol": "usUSO",
@@ -265,7 +300,8 @@
       "change": -6.27,
       "pct_change": -4.49,
       "atr_20d_pct": 3.82,
-      "source": "Tencent Finance (Delayed / Close)"
+      "quote_time_hhmm": "15:41",
+      "source": "Tencent Finance (Live / Delayed)"
     },
     "CRWD": {
       "symbol": "usCRWD",
@@ -278,7 +314,8 @@
       "change": -20.47,
       "pct_change": -8.92,
       "atr_20d_pct": 7.58,
-      "source": "Tencent Finance (Delayed / Close)"
+      "quote_time_hhmm": "15:41",
+      "source": "Tencent Finance (Live / Delayed)"
     },
     "00700.HK": {
       "symbol": "hk00700",
@@ -287,11 +324,12 @@
       "name_en": "Tencent",
       "market": "港股",
       "role": "stock",
-      "price": 343.2,
-      "change": -0.8,
-      "pct_change": -0.23,
+      "price": 341.4,
+      "change": -2.6,
+      "pct_change": -0.76,
       "atr_20d_pct": 3.34,
-      "source": "Tencent Finance (Delayed / Close)"
+      "quote_time_hhmm": "15:41",
+      "source": "Tencent Finance (Live / Delayed)"
     },
     "00981.HK": {
       "symbol": "hk00981",
@@ -300,11 +338,12 @@
       "name_en": "SMIC",
       "market": "港股",
       "role": "stock",
-      "price": 49.9,
-      "change": 1.16,
-      "pct_change": 2.38,
+      "price": 49.36,
+      "change": 0.62,
+      "pct_change": 1.27,
       "atr_20d_pct": 6.31,
-      "source": "Tencent Finance (Delayed / Close)"
+      "quote_time_hhmm": "15:41",
+      "source": "Tencent Finance (Live / Delayed)"
     },
     "00883.HK": {
       "symbol": "hk00883",
@@ -317,7 +356,8 @@
       "change": -0.48,
       "pct_change": -2.26,
       "atr_20d_pct": 2.91,
-      "source": "Tencent Finance (Delayed / Close)"
+      "quote_time_hhmm": "15:41",
+      "source": "Tencent Finance (Live / Delayed)"
     },
     "02899.HK": {
       "symbol": "hk02899",
@@ -326,11 +366,12 @@
       "name_en": "Zijin Mining",
       "market": "港股",
       "role": "stock",
-      "price": 23.22,
-      "change": -0.8,
-      "pct_change": -3.33,
+      "price": 23.28,
+      "change": -0.74,
+      "pct_change": -3.08,
       "atr_20d_pct": 4.64,
-      "source": "Tencent Finance (Delayed / Close)"
+      "quote_time_hhmm": "15:41",
+      "source": "Tencent Finance (Live / Delayed)"
     },
     "512480.SH": {
       "symbol": "sh512480",
@@ -339,11 +380,12 @@
       "name_en": "CN Semi ETF",
       "market": "A股",
       "role": "etf",
-      "price": 0.764,
-      "change": 0.016,
-      "pct_change": 2.14,
+      "price": 0.759,
+      "change": 0.011,
+      "pct_change": 1.47,
       "atr_20d_pct": 2.2,
-      "source": "Tencent Finance (Delayed / Close)"
+      "quote_time_hhmm": "15:41",
+      "source": "Tencent Finance (Live / Delayed)"
     },
     "515880.SH": {
       "symbol": "sh515880",
@@ -352,11 +394,12 @@
       "name_en": "CN Telecom ETF",
       "market": "A股",
       "role": "etf",
-      "price": 0.387,
-      "change": 0.006,
-      "pct_change": 1.57,
+      "price": 0.384,
+      "change": 0.003,
+      "pct_change": 0.79,
       "atr_20d_pct": 2.2,
-      "source": "Tencent Finance (Delayed / Close)"
+      "quote_time_hhmm": "15:41",
+      "source": "Tencent Finance (Live / Delayed)"
     },
     "518880.SH": {
       "symbol": "sh518880",
@@ -365,11 +408,12 @@
       "name_en": "CN Gold ETF",
       "market": "A股",
       "role": "commodity",
-      "price": 7.382,
-      "change": -0.014,
-      "pct_change": -0.19,
+      "price": 7.391,
+      "change": -0.005,
+      "pct_change": -0.07,
       "atr_20d_pct": 2.2,
-      "source": "Tencent Finance (Delayed / Close)"
+      "quote_time_hhmm": "15:41",
+      "source": "Tencent Finance (Live / Delayed)"
     },
     "601398.SH": {
       "symbol": "sh601398",
@@ -382,7 +426,36 @@
       "change": 0.07,
       "pct_change": 0.77,
       "atr_20d_pct": 2.2,
-      "source": "Tencent Finance (Delayed / Close)"
+      "quote_time_hhmm": "15:41",
+      "source": "Tencent Finance (Live / Delayed)"
+    },
+    "GC=F": {
+      "symbol": "hf_GC",
+      "ticker": "GC=F",
+      "name": "COMEX黄金",
+      "name_en": "COMEX Gold",
+      "market": "商品",
+      "role": "commodity",
+      "price": 3648.36,
+      "change": -33.34,
+      "pct_change": -0.91,
+      "atr_20d_pct": 1.8,
+      "quote_time_hhmm": "15:40",
+      "source": "Sina Finance COMEX/Spot Gold"
+    },
+    "XAUUSD": {
+      "symbol": "hf_XAU",
+      "ticker": "XAUUSD",
+      "name": "现货黄金",
+      "name_en": "Spot Gold",
+      "market": "商品",
+      "role": "commodity",
+      "price": 3620.2,
+      "change": -15.03,
+      "pct_change": -0.41,
+      "atr_20d_pct": 1.8,
+      "quote_time_hhmm": "15:41",
+      "source": "Sina Finance COMEX/Spot Gold"
     }
   }
 }

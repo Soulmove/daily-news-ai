@@ -1,6 +1,6 @@
 {
-  "ts": 1795421058.4877322,
-  "updated_at": "2026-11-23T15:55:57+08:00",
+  "ts": 1795506097.6933773,
+  "updated_at": "2026-11-24T15:38:24+08:00",
   "profiles": {
     "tool_gh_anthropics_anthropic-sdk-python": {
       "pain_point": "简化与Claude API集成，处理复杂请求与错误。",
@@ -96,6 +96,11 @@
       "pain_point": "解决设备端多模态任务集成，避免独立模型堆叠带来的资源与管理负担。",
       "best_for": "需在设备端统一处理文本生成、图像理解与结构化决策的智能应用。",
       "comparison_note": "腾讯出品，2B参数下融合多模态生成、嵌入与决策能力，决策表现突出。"
+    },
+    "tool_hf_nvidia_nvidia-nemotron-3_5-bolt-e4b-4gb": {
+      "pain_point": "解决边缘设备上AI代理内存受限、响应迟缓、多轮工具调用不畅的难题。",
+      "best_for": "本地运行的语音助手、交互式角色及嵌入式智能代理。",
+      "comparison_note": "基于Gemma 4 E4B，NVIDIA优化其多轮工具调用与低内存快速响应，尤其适合边缘设备。"
     }
   }
 }

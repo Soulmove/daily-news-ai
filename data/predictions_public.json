@@ -1,7 +1,7 @@
 {
   "schema_version": "4.1",
-  "generated_at": "2026-11-24T14:02:23+08:00",
-  "batch_id": "smart-20261124-140223",
+  "generated_at": "2026-11-24T15:38:24+08:00",
+  "batch_id": "smart-20261124-153824",
   "note": "基于公开官方日程与权威信源建立的客观验证观察题，事件实锤或到期后自动核验开奖。",
   "predictions": [
     {
@@ -13,7 +13,7 @@
       "title_en": "Will Jensen Huang officially return as NVIDIA CEO within 14 days?",
       "target_entity_id": "ent_nvidia",
       "target_entity": "英伟达 (NVIDIA)",
-      "question": "2026 年 11 月 30 日前，英伟达官方或 SEC 8-K 公告是否正式宣布黄仁勋复职出任 CEO？",
+      "question": "2026 年 11 月 30 日（观测窗截止日 12 月 3 日）前，英伟达官方或 SEC 8-K 公告是否正式宣布黄仁勋复职出任 CEO？",
       "question_en": "Before Nov 30, 2026, will NVIDIA IR or a SEC Form 8-K confirm Jensen Huang's return as CEO?",
       "created_at": "2026-11-19T05:31:12+08:00",
       "due_at": "2026-12-03T05:31:12+08:00",
@@ -21,7 +21,7 @@
       "lose_rule": "截止日前英伟达未恢复黄仁勋职务或另选他人出任正式 CEO",
       "indeterminate_rule": "仅见媒体猜测而缺乏英伟达官方或 SEC 8-K 正式披露",
       "supporting_evidence": [
-        "SEC EDGAR 已披露 2026-11-23 Form 8-K (Items: 5.02, 9.01)"
+        "SEC EDGAR 已披露 2026-11-23 Form 8-K（董事会正式恢复黄仁勋 CEO 职务，Items: 5.02, 9.01）"
       ],
       "opposing_evidence": [
         "高管变动及复职需经英伟达董事会正式表决并提交 SEC 8-K 备案"
@@ -35,7 +35,7 @@
         {
           "version": 1,
           "updated_at": "2026-11-19T05:31:12+08:00",
-          "judgment": "已追踪到 SEC 2026-11-12 8-K Item 5.02，等待后续正式继任公告",
+          "judgment": "已追踪到 2026-11-12 临时代理 8-K，关注董事会正式复职或继任决议",
           "probability_pct": 60,
           "reason": "基于公开监管文件与权威媒体报道核对建立"
         },
@@ -70,7 +70,7 @@
         {
           "version": 6,
           "updated_at": "2026-11-24T11:30:48+08:00",
-          "judgment": "SEC 8-K Item 5.02 已披露于 2026-11-23；本批 1 条最新报道聚焦过渡安排，待正式继任公告",
+          "judgment": "2026-11-12 曾披露临时管理安排 8-K；最新 1 条最新报道聚焦过渡安排，待正式继任公告",
           "probability_pct": 64,
           "reason": "本批捕捉到 1 条英伟达管理层过渡相关最新报道（含：特朗普电话参加英伟达董事会会议：已就国家安全问题作出保证）"
         },
@@ -149,28 +149,28 @@
       "mode": "live",
       "status": "open",
       "category": "macro",
-      "title": "12 月 10 日美联储议息会议是否会宣布继续加息 25 个基点？",
-      "title_en": "Will the Fed hike rates by 25bp at the Dec 10 FOMC meeting?",
+      "title": "北京时间 12 月 10 日 03:00 美联储议息会议是否会宣布继续加息 25 个基点？",
+      "title_en": "Will the Fed hike rates by 25bp at the Dec 10 (03:00 CST) FOMC meeting?",
       "target_entity_id": "ent_macro_fomc",
       "target_entity": "美联储 FOMC 与利率政策",
-      "question": "北京时间 12 月 10 日凌晨公布的美联储议息声明中，是否会宣布再次加息至少 25 个基点？",
-      "question_en": "In the Dec 10, 2026 FOMC decision, will the Fed announce a rate hike of 25bp or more?",
+      "question": "北京时间 12 月 10 日 03:00（对应美东 12 月 8–9 日议息会议）公布的声明中，美联储是否会宣布加息至少 25 个基点？",
+      "question_en": "In the Dec 10, 2026 (Dec 8–9 EST) FOMC decision, will the Fed announce a rate hike of 25bp or more?",
       "created_at": "2026-11-19T15:44:21+08:00",
       "due_at": "2026-12-10T04:30:00+08:00",
-      "win_rule": "美联储 12 月 10 日官方议息声明宣布上调联邦基金利率 25 个基点及以上",
+      "win_rule": "美联储北京时间 12 月 10 日 03:00 官方议息声明宣布上调联邦基金利率 25 个基点及以上",
       "lose_rule": "美联储宣布维持现有利率不变（暂停加息）或宣布降息",
       "indeterminate_rule": "议息会议出现异常技术改期",
       "supporting_evidence": [
         "多名美联储官员强调通胀粘性，12 月利率路径分歧加大"
       ],
       "opposing_evidence": [
-        "连续紧缩对美债收益率与科技股估值压力增大，鸽派呼吁先暂停观望"
+        "连续紧缩对美债收益率与科技股估值压力增大，利率期货对维持不变仍有较高定价分歧"
       ],
-      "core_assumption": "直接以美联储官网 12 月 10 日 FOMC 正式决议数字结算",
-      "invalidation_trigger": "明日核心 PCE 与 12 月非农就业超预期大跌",
+      "core_assumption": "直接以美联储官网 12 月 10 日 03:00 FOMC 正式决议数字结算",
+      "invalidation_trigger": "11 月 25 日核心 PCE 与 12 月非农就业超预期回落",
       "probability_pct": 62,
-      "probability_note": "锚定 2026 年 12 月 10 日美联储议息声明官方利率数字自动开奖",
-      "current_judgment": "最新动态：美联储“三把手”放话：通胀持续过高，必要时或连续加息！；明天 PCE 与下周非农将决定 12 月利率方向",
+      "probability_note": "锚定北京时间 2026 年 12 月 10 日 03:00 美联储议息声明官方利率数字自动开奖",
+      "current_judgment": "最新动态：美联储“三把手”：通胀仍未达标，需逐步采取行动，不排除连续加息的可能；聚焦 11 月 25 日 PCE 与 12 月非农对北京时间 12 月 10 日 03:00 FOMC 决议的定价指引",
       "current_judgment_en": "Fed officials highlight sticky inflation; PCE & NFP will decide whether Dec 10 brings another hike.",
       "versions": [
         {
@@ -224,10 +224,10 @@
         },
         {
           "version": 8,
-          "updated_at": "2026-11-24T14:02:23+08:00",
-          "judgment": "最新动态：美联储“三把手”放话：通胀持续过高，必要时或连续加息！；明天 PCE 与下周非农将决定 12 月利率方向",
+          "updated_at": "2026-11-24T15:38:24+08:00",
+          "judgment": "最新动态：美联储“三把手”：通胀仍未达标，需逐步采取行动，不排除连续加息的可能；聚焦 11 月 25 日 PCE 与 12 月非农对北京时间 12 月 10 日 03:00 FOMC 决议的定价指引",
           "probability_pct": 62,
-          "reason": "参考今日最新美联储报道：美联储“三把手”放话：通胀持续过高，必要时或连续加息！"
+          "reason": "参考最新美联储报道：美联储“三把手”：通胀仍未达标，需逐步采取行动…"
         }
       ],
       "settlement": null
@@ -466,12 +466,12 @@
       "mode": "live",
       "status": "open",
       "category": "tech_ai",
-      "title": "Anthropic 上市首月（截至 12 月 19 日）收盘价能否稳在 83 美元发行价上方？",
-      "title_en": "Will Anthropic hold above its $83 IPO price one month post-listing (by Dec 19)?",
+      "title": "Anthropic 上市首月（12 月 18 日美股收盘）能否稳在 83 美元发行价上方？",
+      "title_en": "Will Anthropic hold above its $83 IPO price at Dec 18 US market close?",
       "target_entity_id": "ent_anthropic",
       "target_entity": "Anthropic / Claude",
-      "question": "截至 12 月 19 日上市满一月收盘时，Anthropic 股价能否站在 83 美元发行价之上？",
-      "question_en": "At US market close on Dec 18/19, will Anthropic trade above its $83 IPO offer price?",
+      "question": "截至美股 12 月 18 日周五收盘（对应北京时间 12 月 19 日 05:30），Anthropic 收盘价能否站在 83 美元发行价之上？",
+      "question_en": "At US market close on Fri Dec 18, will Anthropic trade above its $83 IPO offer price?",
       "created_at": "2026-11-24T12:11:51+08:00",
       "due_at": "2026-12-19T05:30:00+08:00",
       "win_rule": "12 月 18 日美股收盘价 >= 83.00 美元",
@@ -618,16 +618,16 @@
       "mode": "live",
       "status": "open",
       "category": "macro",
-      "title": "明天（11 月 25 日）公布的美国 10 月核心 PCE 通胀同比涨幅能否回落至 2.8% 以下？",
-      "title_en": "Will US October Core PCE YoY inflation print below 2.8% tomorrow (Nov 25)?",
+      "title": "11 月 25 日公布的美国 10 月核心 PCE 通胀同比涨幅能否回落至 2.7% 及以下？",
+      "title_en": "Will US October Core PCE YoY inflation print at or below 2.7% on Nov 25?",
       "target_entity_id": "ent_macro_fomc",
       "target_entity": "美国宏观通胀 / PCE 数据",
-      "question": "11 月 25 日晚美国商务部公布的 10 月核心 PCE 物价指数同比增速是否严格低于 2.8%？",
-      "question_en": "On Nov 25, will US BEA report October Core PCE YoY strictly below 2.8%?",
+      "question": "北京时间 11 月 25 日 21:30 美国商务部公布的 10 月核心 PCE 物价指数同比增速是否 <= 2.7%？",
+      "question_en": "On Nov 25, will US BEA report October Core PCE YoY <= 2.7%?",
       "created_at": "2026-11-24T12:11:51+08:00",
       "due_at": "2026-11-25T22:30:00+08:00",
       "win_rule": "美国经济分析局 (BEA) 官方公布 10 月核心 PCE 同比 <= 2.7%",
-      "lose_rule": "美国 10 月核心 PCE 同比 >= 2.8%（显示通胀依然粘滞）",
+      "lose_rule": "美国 10 月核心 PCE 同比 > 2.7%（达到 2.8% 及以上显示通胀依然粘滞）",
       "indeterminate_rule": "受美国政府停摆影响推迟公布",
       "supporting_evidence": [
         "国际油价此前走低与部分房租环比放缓有助于压低核心物价斜率"
@@ -635,11 +635,11 @@
       "opposing_evidence": [
         "多位美联储官员本周密集担忧核心服务通胀反弹与关税传导效应"
       ],
-      "core_assumption": "直接依据 11 月 25 日 21:30 BEA 官方公布终值结算",
+      "core_assumption": "直接依据北京时间 11 月 25 日 21:30 BEA 官方公布终值结算",
       "invalidation_trigger": "数据发布窗口因政府停摆推迟",
       "probability_pct": 41,
       "probability_note": "基于公开官方日程与权威信源建立的客观验证观察题，事件实锤或到期后自动核验开奖",
-      "current_judgment": "明天就是美国核心 PCE 公布日，在美联储“三把手”频频强调通胀未达标的当下，数据稍热就将直接冲击降息预期",
+      "current_judgment": "北京时间 11 月 25 日 21:30 公布美国核心 PCE；若高于 2.7%，将直接压制降息预期",
       "versions": [
         {
           "version": 1,

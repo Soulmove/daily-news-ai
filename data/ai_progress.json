@@ -1,16 +1,150 @@
 {
   "schema_version": "4.3",
-  "generated_at": "2026-11-24T14:02:23+08:00",
-  "batch_id": "smart-20261124-140223",
+  "generated_at": "2026-11-24T15:38:24+08:00",
+  "batch_id": "smart-20261124-153824",
   "search_grounded": false,
   "archive_path": "data/ai_progress_archive.json",
-  "archive_total": 144,
+  "archive_total": 149,
   "weekly_digest": {
     "period_label": "近 7 日全球 AI 大事周报（截至 2026-11-24）",
     "period_label_en": "Weekly Global AI Digest (as of 2026-11-24)",
-    "summary": "实时追踪 93 项国内外 AI 关键进展（海外 55 · 国内 30 · 开源 29 · 一手官方 38）。自动聚合官方博客、Hugging Face、GitHub Releases 与 7×24 突发快讯，重大发布秒级入榜。",
-    "summary_en": "Tracking 93 AI milestones (55 global, 30 China, 29 open-source, 38 first-hand official) from lab blogs, Hugging Face, GitHub Releases & 7×24 live wires.",
+    "summary": "实时追踪 96 项国内外 AI 关键进展（海外 56 · 国内 32 · 开源 31 · 一手官方 39）。自动聚合官方博客、Hugging Face、GitHub Releases 与 7×24 突发快讯，重大发布秒级入榜。",
+    "summary_en": "Tracking 96 AI milestones (56 global, 32 China, 31 open-source, 39 first-hand official) from lab blogs, Hugging Face, GitHub Releases & 7×24 live wires.",
     "highlights": [
+      {
+        "id": "ai_raw_github-releases_b03e5730de96",
+        "date": "2026-11-24T15:02:04+08:00",
+        "company_id": "indie_opensource",
+        "company_name": "独立实验室 & 开源黑马",
+        "region": "全球开源",
+        "category": "开源突破",
+        "category_en": "Open Source",
+        "title": "[GitHub Release] Ollama 发布 v0.40.18-rc0",
+        "title_en": "[GitHub Release] Ollama 发布 v0.40.18-rc0",
+        "what_it_does": "{'name': 'llama.cpp', 'version': 'b12669', 'notes': '量化工具新增目标文件大小与比特率的自动最优类型选择功能；重构帕累托优化、拉格朗日惩罚及量化检查函数'}",
+        "what_it_does_en": "版本 v0.40.18-rc0（Pre-release/RC | 许可: MIT）。",
+        "who_cares": "",
+        "limitations": "",
+        "limitations_en": "",
+        "source_id": "github-releases",
+        "source_name": "GitHub Releases 官方版本",
+        "source_url": "https://github.com/ollama/ollama/releases/tag/v0.40.18-rc0",
+        "is_first_hand": true,
+        "source_tier": "first_party",
+        "is_open_source": true,
+        "milestone_dim": "open_source_eco",
+        "milestone_dim_label": "开源权重与生态",
+        "milestone_dim_label_en": "Open Source",
+        "is_recent_72h": true,
+        "related_sources": [
+          {
+            "source_name": "GitHub Releases 官方版本",
+            "url": "https://github.com/ollama/ollama/releases/tag/v0.40.18-rc0",
+            "is_first_hand": true
+          },
+          {
+            "source_name": "GitHub Releases 官方版本",
+            "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12671",
+            "is_first_hand": true
+          },
+          {
+            "source_name": "GitHub Releases 官方版本",
+            "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12669",
+            "is_first_hand": true
+          }
+        ]
+      },
+      {
+        "id": "ai_tool_tool_gh_ggml-org_llama.cpp",
+        "date": "2026-11-24T15:02:04+08:00",
+        "company_id": "indie_opensource",
+        "company_name": "独立实验室 & 开源黑马",
+        "region": "全球开源",
+        "category": "开源工具/仓库",
+        "category_en": "Open-Source Repo",
+        "title": "开源工具更新：llama.cpp b12671",
+        "title_en": "Open-source release: llama.cpp b12671",
+        "what_it_does": "提供了macOS Apple Silicon (arm64) 和 Intel (x64) 版本支持；同时发布了iOS XCFramework，但Apple Silicon上的KleidiAI功能暂时禁用。",
+        "what_it_does_en": "优化了 Metal 后端的拼接内核，通过每线程组处理多行并采用四元素块连续拷贝，大幅提升了宽行处理时的内存带宽利用率；",
+        "who_cares": "",
+        "limitations": "许可证：MIT",
+        "limitations_en": "License: MIT",
+        "source_id": "github-releases",
+        "source_name": "GitHub Releases API",
+        "source_url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12671",
+        "is_first_hand": true,
+        "source_tier": "first_party",
+        "is_open_source": true,
+        "milestone_dim": "open_source_eco",
+        "milestone_dim_label": "开源权重与生态",
+        "milestone_dim_label_en": "Open Source",
+        "is_recent_72h": true,
+        "related_sources": [
+          {
+            "source_name": "GitHub Releases API",
+            "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12671",
+            "is_first_hand": true
+          },
+          {
+            "source_name": "GitHub Releases API",
+            "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12649",
+            "is_first_hand": true
+          },
+          {
+            "source_name": "GitHub Releases API",
+            "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12646",
+            "is_first_hand": true
+          },
+          {
+            "source_name": "GitHub Releases API",
+            "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12633",
+            "is_first_hand": true
+          },
+          {
+            "source_name": "GitHub Releases API",
+            "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12631",
+            "is_first_hand": true
+          }
+        ]
+      },
+      {
+        "id": "ai_raw_huggingface-hub_f7c5131ed798",
+        "date": "2026-11-24T12:56:04+08:00",
+        "company_id": "kimi",
+        "company_name": "月之暗面 (Kimi)",
+        "region": "国内",
+        "category": "开源突破",
+        "category_en": "Open Source",
+        "title": "[HF 模型卡] moonshotai/Kimi-K3 更新 (自定义开源许可 (详见模型卡))",
+        "title_en": "[HF 模型卡] moonshotai/Kimi-K3 更新 (自定义开源许可 (详见模型卡))",
+        "what_it_does": "月之暗面 (Kimi) 旗下 Kimi-K3（代码工程专项）：图文多模态理解与对话生成；支持输入图像与文本并生成精准分析回复，适用于视觉问答、图表解析与多模态代理（近期下载 70.9 万次）",
+        "what_it_does_en": "Hugging Face 官方机构 moonshotai 更新模型 moonshotai/Kimi-K3（开源权重可用 (GA)，许可：自定义开源许可 (详见模型卡)，近期下载：708831）。",
+        "who_cares": "",
+        "limitations": "",
+        "limitations_en": "",
+        "source_id": "huggingface-hub",
+        "source_name": "Hugging Face 官方模型库",
+        "source_url": "https://huggingface.co/moonshotai/Kimi-K3",
+        "is_first_hand": true,
+        "source_tier": "first_party",
+        "is_open_source": true,
+        "milestone_dim": "open_source_eco",
+        "milestone_dim_label": "开源权重与生态",
+        "milestone_dim_label_en": "Open Source",
+        "is_recent_72h": true,
+        "related_sources": [
+          {
+            "source_name": "Hugging Face 官方模型库",
+            "url": "https://huggingface.co/moonshotai/Kimi-K3",
+            "is_first_hand": true
+          },
+          {
+            "source_name": "Hugging Face 官方模型库",
+            "url": "https://huggingface.co/MiniMaxAI/MiniMax-H3",
+            "is_first_hand": true
+          }
+        ]
+      },
       {
         "id": "ai_raw_rss-marktechpost_b2a85e30cf8b",
         "date": "2026-11-24T10:46:31+08:00",
@@ -63,51 +197,18 @@
             "is_first_hand": false
           },
           {
-            "source_name": "ThePaper.cn",
-            "url": "https://news.google.com/rss/articles/CBMiYEFVX3lxTE91OWpEZXU1Um9vYVJKQlZCZlRIZFJoYmRkeElqX29TU0YxcnpaUnd5VnRzdXBuZi1NLTh1aTNLaElZMUFDd2szSndURjhzZHR6R1NxUUhjM1hieF9ycmdFZQ?oc=5",
-            "is_first_hand": false
-          },
-          {
             "source_name": "东方财富",
             "url": "https://news.google.com/rss/articles/CBMiZkFVX3lxTFB6eG5KVmpaOUdzTGZZSmtEcU9NTnViLTl6RjhWS014N2tfYUo4c3JJaWl6bUlLRnVDLXNQSmZNLUVhWFZoY1l1czZ1UkVYMEdyamk1aFQ1NnQ2bk16X0pmLVNabU5OUQ?oc=5",
             "is_first_hand": false
           },
           {
-            "source_name": "驱动之家",
-            "url": "https://news.google.com/rss/articles/CBMiWEFVX3lxTFBET1NDVWVpNlRoZTExT3FOdHQxR2Z4M0VMaGJGb240NmNVYWpNbmFfOS05OGZZUFNvZkpVVTlmbzBjWnRrWlBkNnJ4QkFEQjVTOTBjbzNQVW4?oc=5",
+            "source_name": "东方财富",
+            "url": "https://news.google.com/rss/articles/CBMiZkFVX3lxTE9hdGVyWEdBOGJ2TEc4WFE4bHdmSW45c1l3NjFGVDkwRUFHTUFXemxWdXdPTWxrQW9VeFdFMFQ0cTJxa1ZwS3NHakJYa2xsNjNJdXRoODljV1pfLVVTcmE4MzNFMWtIdw?oc=5",
             "is_first_hand": false
-          }
-        ]
-      },
-      {
-        "id": "ai_raw_github-releases_3ed38f2d9274",
-        "date": "2026-11-24T10:38:41+08:00",
-        "company_id": "indie_opensource",
-        "company_name": "独立实验室 & 开源黑马",
-        "region": "全球开源",
-        "category": "开源突破",
-        "category_en": "Open Source",
-        "title": "[GitHub Release] llama.cpp 发布 b12669",
-        "title_en": "[GitHub Release] llama.cpp 发布 b12669",
-        "what_it_does": "{'name': 'llama.cpp', 'version': 'b12669', 'notes': '量化工具新增目标文件大小与比特率的自动最优类型选择功能；重构帕累托优化、拉格朗日惩罚及量化检查函数'}",
-        "what_it_does_en": "版本 b12669（Pre-release/RC | 许可: MIT）。quantize: add option to automatically choose optimal quant types to reach a file/bpw target size at lowest error；Refactor pa",
-        "who_cares": "",
-        "limitations": "",
-        "limitations_en": "",
-        "source_id": "github-releases",
-        "source_name": "GitHub Releases 官方版本",
-        "source_url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12669",
-        "is_first_hand": true,
-        "source_tier": "first_party",
-        "is_open_source": true,
-        "milestone_dim": "open_source_eco",
-        "milestone_dim_label": "开源权重与生态",
-        "milestone_dim_label_en": "Open Source",
-        "is_recent_72h": true,
-        "related_sources": [
+          },
           {
-            "source_name": "GitHub Releases 官方版本",
-            "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12669",
+            "source_name": "Zhipu AI 官方",
+            "url": "https://bigmodel.cn/",
             "is_first_hand": true
           }
         ]
@@ -209,7 +310,7 @@
         "title": "开源工具更新：OpenAI SDK v3.58.0",
         "title_en": "Open-source release: OpenAI SDK v3.58.0",
         "what_it_does": "OpenAI启动了大规模反蒸馏战役，通过模型训练、防护、检测和执法等分层方法对抗对抗性蒸馏，已将GPT-6.2 Astra的思考链提取成功率从54%降至0.2%。此外，OpenAI还在API中发布了GPT-Live-1.1全双工语音模型…",
-        "what_it_does_en": "{'name': 'OpenAI SDK', 'version': 'v3.58.0', 'notes': 'API 新增代理会话消费限额的设置与读取功能；明确并优化了补全选项计数的可选说明'}",
+        "what_it_does_en": "API 新增代理会话消费限额的设置与读取功能；明确并优化了补全选项计数的可选说明",
         "who_cares": "",
         "limitations": "许可证：Apache-2.0",
         "limitations_en": "License: Apache-2.0",
@@ -297,83 +398,6 @@
             "is_first_hand": true
           }
         ],
-        "is_recent_72h": true
-      },
-      {
-        "id": "ai_raw_ithome-rss_111275606d02",
-        "date": "2026-11-24T12:58:18+08:00",
-        "company_id": "indie_opensource",
-        "company_name": "独立实验室 & 开源黑马",
-        "region": "全球开源",
-        "category": "开源突破",
-        "category_en": "Open Source",
-        "title": "商汤发布并开源 SenseNova U1.6 原生多模态模型，能自己修正图片错误",
-        "title_en": "商汤发布并开源 SenseNova U1.6 原生多模态模型，能自己修正图片错误",
-        "what_it_does": "IT之家 11 月 24 日消息，商汤科技今日发布并开源 SenseNova U1.6 原生多模态模型，延续了 U 系列的理解与生成统一范式， 首次为该系列的 8B 开源模型带来原生图像自修正 。开启自修正后，同一个模型可以先生成首稿，…",
-        "what_it_does_en": "IT之家 11 月 24 日消息，商汤科技今日发布并开源 SenseNova U1.6 原生多模态模型，延续了 U 系列的理解与生成统一范式， 首次为该系列的 8B 开源模型带来原生图像自修正 。开启自修正后，同一个模型可以先生成首稿，再对照原始提示检查画面，并根据发现的文字问题生成修正版。人像的光影、插画的笔触、海报",
-        "who_cares": "",
-        "limitations": "",
-        "limitations_en": "",
-        "source_id": "ithome-rss",
-        "source_name": "IT之家 实时快讯",
-        "source_url": "https://www.ithome.com/1/031/465.htm",
-        "is_first_hand": false,
-        "source_tier": "wire_media",
-        "is_open_source": true,
-        "milestone_dim": "open_source_eco",
-        "milestone_dim_label": "开源权重与生态",
-        "milestone_dim_label_en": "Open Source",
-        "is_recent_72h": true,
-        "related_sources": [
-          {
-            "source_name": "IT之家 实时快讯",
-            "url": "https://www.ithome.com/1/031/465.htm",
-            "is_first_hand": false
-          }
-        ]
-      },
-      {
-        "id": "ai_ev_evt_1235ff5fffc6",
-        "date": "2026-11-24T12:36:05+08:00",
-        "company_id": "bytedance_doubao",
-        "company_name": "字节豆包 (Seed)",
-        "region": "国内",
-        "category": "模型与产品",
-        "category_en": "Model & Product",
-        "title": "消息称豆包 App 灰度测试“豆包购物”，配一级功能入口",
-        "title_en": "消息称豆包 App 灰度测试“豆包购物”，配一级功能入口",
-        "what_it_does": "IT之家 11 月 24 日消息，据《读佳》今日报道，豆包 App 正灰度测试“ 豆包购物 ”，并配有一级功能入口，目前部分用户可见该功能。从报道中晒出的截图可以看到，豆包购物独立放置在侧边菜单栏，和新对话、定时任务、插件技能并列，点击…",
-        "what_it_does_en": "IT之家 11 月 24 日消息，据《读佳》今日报道，豆包 App 正灰度测试“ 豆包购物 ”，并配有一级功能入口，目前部分用户可见该功能。从报道中晒出的截图可以看到，豆包购物独立放置在侧边菜单栏，和新对话、定时任务、插件技能并列，点击进入后是抖音电商提供的类小程序页面，相当于一个小型的抖音商城。豆包购物底层复用抖音电",
-        "who_cares": "",
-        "limitations": "",
-        "limitations_en": "",
-        "source_id": "ithome-rss",
-        "source_name": "IT之家 实时快讯",
-        "source_url": "https://www.ithome.com/1/031/464.htm",
-        "is_first_hand": false,
-        "source_tier": "wire_media",
-        "event_id": "evt_1235ff5fffc6",
-        "is_open_source": false,
-        "related_sources": [
-          {
-            "source_name": "IT之家 实时快讯",
-            "url": "https://www.ithome.com/1/031/464.htm",
-            "is_first_hand": false
-          },
-          {
-            "source_name": "华尔街见闻 7×24 全球",
-            "url": "https://wallstreetcn.com/livenews/3204687",
-            "is_first_hand": false
-          },
-          {
-            "source_name": "AIHOT 前沿",
-            "url": "https://aihot.news/items/casw4pz6a2ioa09w16y3qlwjh",
-            "is_first_hand": false
-          }
-        ],
-        "milestone_dim": "flagship_release",
-        "milestone_dim_label": "旗舰模型发布",
-        "milestone_dim_label_en": "Flagship Model",
         "is_recent_72h": true
       }
     ]
@@ -857,14 +881,81 @@
           "specs": "1M · 形式化定理证明 + 高阶推理",
           "pricing_or_license": "$3~$15 Input / $15~$75 Output",
           "filter_keyword": "Claude",
-          "highlight": "辅助证明广义黎曼猜想获 Lean 官方与 Mathlib 验证收录，登顶科研推理榜"
+          "highlight": "探索黎曼猜想形式化证明引发学界广泛关注（尚存代码冗余与独立同行评审争议，未获最终定论）"
         }
       ],
       "recent_count": 8,
-      "archive_count": 14,
-      "latest_date": "2026-11-24T11:19:50+08:00",
-      "latest_headline": "Claude黎曼猜想证明引争议 阿尔珀格回应代码冗余",
+      "archive_count": 16,
+      "latest_date": "2026-11-24T15:16:22+08:00",
+      "latest_headline": "Anthropic CEO 阿莫迪十年前想法曝光：电子游戏或许能解决 AI 失业问题",
       "items": [
+        {
+          "id": "ai_ev_evt_262d868ee896",
+          "date": "2026-11-24T15:16:22+08:00",
+          "company_id": "anthropic",
+          "company_name": "Anthropic",
+          "region": "海外",
+          "category": "模型与产品",
+          "category_en": "Model & Product",
+          "title": "Anthropic CEO 阿莫迪十年前想法曝光：电子游戏或许能解决 AI 失业问题",
+          "title_en": "Anthropic CEO 阿莫迪十年前想法曝光：电子游戏或许能解决 AI 失业问题",
+          "what_it_does": "据科技媒体TweakTown报道，Anthropic CEO达里奥·阿莫迪十年前在OpenAI工作时曾认为沉浸式电子游戏或许能够缓解AI带来的白领失业问题。",
+          "what_it_does_en": "据科技媒体TweakTown报道，Anthropic CEO达里奥·阿莫迪十年前在OpenAI工作时曾认为沉浸式电子游戏或许能够缓解AI带来的白领失业问题。",
+          "who_cares": "",
+          "limitations": "",
+          "limitations_en": "",
+          "source_id": "ithome-rss",
+          "source_name": "IT之家 实时快讯",
+          "source_url": "https://www.ithome.com/1/031/512.htm",
+          "is_first_hand": false,
+          "source_tier": "wire_media",
+          "event_id": "evt_262d868ee896",
+          "is_open_source": false,
+          "related_sources": [
+            {
+              "source_name": "IT之家 实时快讯",
+              "url": "https://www.ithome.com/1/031/512.htm",
+              "is_first_hand": false
+            }
+          ],
+          "milestone_dim": "flagship_release",
+          "milestone_dim_label": "旗舰模型发布",
+          "milestone_dim_label_en": "Flagship Model",
+          "is_recent_72h": true
+        },
+        {
+          "id": "ai_raw_rss-gnews-ai-models-en_2b740f4035b4",
+          "date": "2026-11-24T13:27:04+08:00",
+          "company_id": "anthropic",
+          "company_name": "Anthropic",
+          "region": "海外",
+          "category": "最新动态",
+          "category_en": "Latest Release",
+          "title": "Claude Fable 5.2 与 Mythos 5.2：基准测试与定价",
+          "title_en": "Claude Fable 5.2 and Mythos 5.2: Benchmarks and Pricing",
+          "what_it_does": "",
+          "what_it_does_en": "",
+          "who_cares": "",
+          "limitations": "",
+          "limitations_en": "",
+          "source_id": "rss-gnews-ai-models-en",
+          "source_name": "Fello AI",
+          "source_url": "https://news.google.com/rss/articles/CBMiTkFVX3lxTE1KeElxa0JKY3NHc1ljYXpMNHBtc1F6bk9rTUZSS2x0b3U4YnM3TW9nR0RHckZ5RmFSSmxiUi04MTJlWGpLSTlpaG96YXZRQQ?oc=5",
+          "is_first_hand": false,
+          "source_tier": "wire_media",
+          "is_open_source": false,
+          "milestone_dim": "research_breakthrough",
+          "milestone_dim_label": "算法与科研突破",
+          "milestone_dim_label_en": "Research & Math",
+          "is_recent_72h": true,
+          "related_sources": [
+            {
+              "source_name": "Fello AI",
+              "url": "https://news.google.com/rss/articles/CBMiTkFVX3lxTE1KeElxa0JKY3NHc1ljYXpMNHBtc1F6bk9rTUZSS2x0b3U4YnM3TW9nR0RHckZ5RmFSSmxiUi04MTJlWGpLSTlpaG96YXZRQQ?oc=5",
+              "is_first_hand": false
+            }
+          ]
+        },
         {
           "id": "ai_ev_evt_9c453fb11801",
           "date": "2026-11-24T11:19:50+08:00",
@@ -875,11 +966,11 @@
           "category_en": "Model & Product",
           "title": "Claude黎曼猜想证明引争议 阿尔珀格回应代码冗余",
           "title_en": "Claude黎曼猜想证明引争议 阿尔珀格回应代码冗余",
-          "what_it_does": "Lean官方社区和Mathlib证实，由Claude生成的1740万行黎曼猜想证明完全正确，并已通过多个独立验证器的验证，排除了AI作弊的可能性。此前Anthropic曾声称Claude已证明黎曼猜想，斯坦福大学也发布了人类完成的竞争性…",
+          "what_it_does": "Lean官方社区和Mathlib证实，由Claude生成的1740万行黎曼猜想证明引起广泛讨论，但是否完全严谨及存在代码冗余仍具争议，尚待数学界权威期刊与独立同行评审最终定论。此前Anthropic曾声称Claude已证明黎曼猜想，斯坦…",
           "what_it_does_en": "Claude在黎曼猜想证明过程中引发争议，阿尔珀格公开回应了关于代码冗余的相关质疑。",
           "who_cares": "",
-          "limitations": "",
-          "limitations_en": "",
+          "limitations": "相关形式化证明目前仍存在代码冗余及独立同行评审争议，尚未获得国际数学界公认定论，请注意区分阶段性新闻进展与正式学术认证边界。",
+          "limitations_en": "Formal proof claims remain under community scrutiny over code redundancy and await independent peer-reviewed verification.",
           "source_id": "rss-gnews-ai-models-zh",
           "source_name": "观点",
           "source_url": "https://news.google.com/rss/articles/CBMiYkFVX3lxTE1fMklzMWNiU2R4UzdSMkNIQ3FCMmxvNDNGdVRfY1RMUkpfZkZNWWwxRUZQeDNDYTVJZDdySkJ3MEg1NjgxdG8ySXZ1OWlQNHZhX3hKbTRqRE5ad2U4aG5RaXhB?oc=5",
@@ -935,17 +1026,17 @@
           "is_recent_72h": true
         },
         {
-          "id": "ai_raw_techcrunch-rss_0f07e9351970",
+          "id": "ai_ev_evt_291aa6c1a1fb",
           "date": "2026-11-24T11:08:34+08:00",
           "company_id": "anthropic",
           "company_name": "Anthropic",
           "region": "海外",
-          "category": "最新动态",
-          "category_en": "Latest Release",
+          "category": "模型与产品",
+          "category_en": "Model & Product",
           "title": "Anthropic 推出 Claude Ship，允许 AI 代理审查、修复和批准代码更改",
           "title_en": "Anthropic launches Claude Ship, letting AI agents review, fix, and approve code changes",
           "what_it_does": "Anthropic 的 Claude Ship 整合了代码审查、PR 管理员和 Claude Approvals，用于审查、修复和批准 GitHub 的合并请求。代码审查功能已正式发布（GA），其余两个代理目前面向团队和企业用户进行公开…",
-          "what_it_does_en": "As AI-generated code piles up, Anthropic's new developer tools aim to eliminate another bottleneck by letting agents handle routine approvals.",
+          "what_it_does_en": "Anthropic's Claude Ship bundles Code Review, PR Steward and Claude Approvals to review, fix and approve GitHub pull requests. Code Review is GA; the other 2 agents are in public beta for Team and Enterprise.",
           "who_cares": "",
           "limitations": "",
           "limitations_en": "",
@@ -954,15 +1045,17 @@
           "source_url": "https://techcrunch.com/2026/11/23/anthropic-launches-claude-ship-letting-ai-agents-review-fix-and-approve-code-changes",
           "is_first_hand": false,
           "source_tier": "wire_media",
+          "event_id": "evt_291aa6c1a1fb",
           "is_open_source": false,
-          "milestone_dim": "api_agent_eng",
-          "milestone_dim_label": "API 与 Agent 工程",
-          "milestone_dim_label_en": "API & Agent Eng",
-          "is_recent_72h": true,
           "related_sources": [
             {
               "source_name": "TechCrunch AI & Tech",
               "url": "https://techcrunch.com/2026/11/23/anthropic-launches-claude-ship-letting-ai-agents-review-fix-and-approve-code-changes",
+              "is_first_hand": false
+            },
+            {
+              "source_name": "Gizmodo",
+              "url": "https://news.google.com/rss/articles/CBMitgFBVV95cUxPRHk5S3NHTnc0MGJFNTlFbVdBRVhMRWFFUlozVzVrNk5lT0tsMHRfeW15ajY4SHptM0tCVkwtemNqYkJ0ekFGOW9IcWpCdjR6LVRFMHpUWmQ1QmFtcWtqbENhbzVYMVFNQm1iekh4YzJ3Wk5xNlJIVFNFLXVfbEVyamVDVWoyc1YyMW5mUDY4czRUODcyVmRaOExxelJHemwyRUVIdjlkWE5NUUw2S0IxUW1RdFZGdw?oc=5",
               "is_first_hand": false
             },
             {
@@ -976,11 +1069,6 @@
               "is_first_hand": false
             },
             {
-              "source_name": "Gizmodo",
-              "url": "https://news.google.com/rss/articles/CBMitgFBVV95cUxPRHk5S3NHTnc0MGJFNTlFbVdBRVhMRWFFUlozVzVrNk5lT0tsMHRfeW15ajY4SHptM0tCVkwtemNqYkJ0ekFGOW9IcWpCdjR6LVRFMHpUWmQ1QmFtcWtqbENhbzVYMVFNQm1iekh4YzJ3Wk5xNlJIVFNFLXVfbEVyamVDVWoyc1YyMW5mUDY4czRUODcyVmRaOExxelJHemwyRUVIdjlkWE5NUUw2S0IxUW1RdFZGdw?oc=5",
-              "is_first_hand": false
-            },
-            {
               "source_name": "MarkTechPost",
               "url": "https://news.google.com/rss/articles/CBMiigFBVV95cUxNVG1KWnZ3U0RzWUpsWUplSWlGLXBqaDNmOURyZjE0NW1qblJCa2cwSDh3cDNnY1hGZ3MxNGVreFVCWjlsTldla2NFdmhzczU0bzJHdndGUXVwV3VSTzNyVFVzbk9XQWljdzhWMkZZQmpTQzc1eFphb0xOcHpvQXZzbzFPWE9kQ1otOHfSAYoBQVVfeXFMTVRtSlp2d1NEc1lKbFlKZUlpRi1wamgzZjlEcmYxNDVtam5SQmtnMEg4d3AzZ2NYRmdzMTRla3hVQlo5bE5XZWtjRXZoc3M1NG8yR3Z3RlF1cFd1Uk8zclRVc25PV0FpY3c4VjJGWUJqU0M3NXhaYW9MTnB6b0F2c28xT1hPZENaLTh3?oc=5",
               "is_first_hand": false
@@ -990,11 +1078,15 @@
               "url": "https://wallstreetcn.com/livenews/3204490",
               "is_first_hand": false
             }
-          ]
+          ],
+          "milestone_dim": "flagship_release",
+          "milestone_dim_label": "旗舰模型发布",
+          "milestone_dim_label_en": "Flagship Model",
+          "is_recent_72h": true
         },
         {
           "id": "ai_raw_rss-marktechpost_e6b03fc6b923",
-          "date": "2026-11-24T08:02:39+08:00",
+          "date": "2026-11-24T11:08:34+08:00",
           "company_id": "anthropic",
           "company_name": "Anthropic",
           "region": "海外",
@@ -1002,7 +1094,7 @@
           "category_en": "Latest Release",
           "title": "Anthropic 推出用于 GitHub 拉取请求审查与修复的 Claude Ship",
           "title_en": "Anthropic Launches Claude Ship for GitHub Pull Request Review and Fixes",
-          "what_it_does": "Anthropic 的 Claude Ship 整合了代码审查、PR 管理员和 Claude 审批功能，用于审查、修复和批准 GitHub 拉取请求。代码审查现已正式发布（GA），其余两项功能处于...",
+          "what_it_does": "Anthropic 的 Claude Ship 整合了代码审查、PR 管理员和 Claude Approvals，用于审查、修复和批准 GitHub 的合并请求。代码审查功能已正式发布（GA），其余两个代理目前面向团队和企业用户进行公开…",
           "what_it_does_en": "Anthropic's Claude Ship bundles Code Review, PR Steward and Claude Approvals to review, fix and approve GitHub pull requests. Code Review is GA; the other 2 age",
           "who_cares": "",
           "limitations": "",
@@ -1024,8 +1116,28 @@
               "is_first_hand": false
             },
             {
+              "source_name": "Gizmodo",
+              "url": "https://news.google.com/rss/articles/CBMitgFBVV95cUxPRHk5S3NHTnc0MGJFNTlFbVdBRVhMRWFFUlozVzVrNk5lT0tsMHRfeW15ajY4SHptM0tCVkwtemNqYkJ0ekFGOW9IcWpCdjR6LVRFMHpUWmQ1QmFtcWtqbENhbzVYMVFNQm1iekh4YzJ3Wk5xNlJIVFNFLXVfbEVyamVDVWoyc1YyMW5mUDY4czRUODcyVmRaOExxelJHemwyRUVIdjlkWE5NUUw2S0IxUW1RdFZGdw?oc=5",
+              "is_first_hand": false
+            },
+            {
               "source_name": "TechCrunch",
               "url": "https://news.google.com/rss/articles/CBMiuwFBVV95cUxPOUdkSUFqUUdSaDIwclBOdjhNS2ltR3hsOW4tQTlMTzAzVjVrazZLN3J1eWJsYm02NDBOcUFlLXdoRV9CY3F2OHdwb215cm5mamdRZTBBS19keDhieXZiQ080SnJlTFVsNEpjNkEzMlBjOUhTSHNHTzZwNHJiYTBzSnpDemUwdFNxTXNDRHB3VEs5cnhIUTJpZ1FMd3Z1OTBXRG00Q0dlSmlqUW53eEd2dDJKaVJlRDVQdXFB?oc=5",
+              "is_first_hand": false
+            },
+            {
+              "source_name": "TechCrunch AI & Tech",
+              "url": "https://techcrunch.com/2026/11/23/anthropic-launches-claude-ship-letting-ai-agents-review-fix-and-approve-code-changes",
+              "is_first_hand": false
+            },
+            {
+              "source_name": "MarkTechPost",
+              "url": "https://news.google.com/rss/articles/CBMiigFBVV95cUxNVG1KWnZ3U0RzWUpsWUplSWlGLXBqaDNmOURyZjE0NW1qblJCa2cwSDh3cDNnY1hGZ3MxNGVreFVCWjlsTldla2NFdmhzczU0bzJHdndGUXVwV3VSTzNyVFVzbk9XQWljdzhWMkZZQmpTQzc1eFphb0xOcHpvQXZzbzFPWE9kQ1otOHfSAYoBQVVfeXFMTVRtSlp2d1NEc1lKbFlKZUlpRi1wamgzZjlEcmYxNDVtam5SQmtnMEg4d3AzZ2NYRmdzMTRla3hVQlo5bE5XZWtjRXZoc3M1NG8yR3Z3RlF1cFd1Uk8zclRVc25PV0FpY3c4VjJGWUJqU0M3NXhaYW9MTnB6b0F2c28xT1hPZENaLTh3?oc=5",
+              "is_first_hand": false
+            },
+            {
+              "source_name": "华尔街见闻 7×24 全球",
+              "url": "https://wallstreetcn.com/livenews/3204490",
               "is_first_hand": false
             }
           ]
@@ -1159,74 +1271,6 @@
           "milestone_dim_label": "商业化与安全治理",
           "milestone_dim_label_en": "Governance & Commercial",
           "is_recent_72h": true
-        },
-        {
-          "id": "ai_ev_evt_d68bdc590374",
-          "date": "2026-11-23T08:10:21+08:00",
-          "company_id": "anthropic",
-          "company_name": "Anthropic",
-          "region": "海外",
-          "category": "模型与产品",
-          "category_en": "Model & Product",
-          "title": "微软CEO纳德拉承认Claude Code仅半年动摇VS Code地位",
-          "title_en": "微软CEO纳德拉承认Claude Code仅半年动摇VS Code地位",
-          "what_it_does": "据Windows Latest报道，微软CEO萨提亚·纳德拉表示，Anthropic推出Claude Code后，开发者开始接受命令行形态，导致VS Code等传统IDE在大约六个月内失去了存在感，微软并未立刻拿出应对方案。",
-          "what_it_does_en": "微软CEO萨提亚·纳德拉坦言，Anthropic推出Claude Code后，开发者开始接受命令行形态，导致VS Code等传统IDE在约六个月内失去了存在感，微软尚未立即拿出应对方案。",
-          "who_cares": "",
-          "limitations": "",
-          "limitations_en": "",
-          "source_id": "aihot",
-          "source_name": "AIHOT 前沿",
-          "source_url": "https://aihot.news/items/rxwc1x34tzdkksi1jd57gsbfd",
-          "is_first_hand": false,
-          "source_tier": "wire_media",
-          "event_id": "evt_d68bdc590374",
-          "is_open_source": false,
-          "related_sources": [
-            {
-              "source_name": "AIHOT 前沿",
-              "url": "https://aihot.news/items/rxwc1x34tzdkksi1jd57gsbfd",
-              "is_first_hand": false
-            }
-          ],
-          "milestone_dim": "api_agent_eng",
-          "milestone_dim_label": "API 与 Agent 工程",
-          "milestone_dim_label_en": "API & Agent Eng",
-          "is_recent_72h": true
-        },
-        {
-          "id": "ai_ev_evt_dcfd95cf7405",
-          "date": "2026-11-22T21:13:22+08:00",
-          "company_id": "anthropic",
-          "company_name": "Anthropic",
-          "region": "海外",
-          "category": "模型与产品",
-          "category_en": "Model & Product",
-          "title": "Anthropic登陆纳斯达克市值突破2万亿美元，25位华人员工获益",
-          "title_en": "Anthropic登陆纳斯达克市值突破2万亿美元，25位华人员工获益",
-          "what_it_does": "11月19日，Claude背后的Anthropic登陆纳斯达克，盘中市值一度突破2万亿美元。招股书显示，截至9月30日员工期权账面收益合计约1190亿美元，加权平均行权价仅2.91美元，现任员工中至少25位华人赶上这轮股权跃迁。",
-          "what_it_does_en": "11月19日，Claude背后的Anthropic登陆纳斯达克，盘中市值一度突破2万亿美元。招股书显示，截至9月30日员工期权账面收益合计约1190亿美元，加权平均行权价仅2.91美元，现任员工中至少25位华人赶上这轮股权跃迁。",
-          "who_cares": "",
-          "limitations": "",
-          "limitations_en": "",
-          "source_id": "tencent-hot",
-          "source_name": "腾讯新闻综合早",
-          "source_url": "https://view.inews.qq.com/a/20261121A0BSSA00",
-          "is_first_hand": false,
-          "source_tier": "wire_media",
-          "event_id": "evt_dcfd95cf7405",
-          "is_open_source": false,
-          "milestone_dim": "flagship_release",
-          "milestone_dim_label": "旗舰模型发布",
-          "milestone_dim_label_en": "Flagship Model",
-          "is_recent_72h": true,
-          "related_sources": [
-            {
-              "source_name": "腾讯新闻综合早",
-              "url": "https://view.inews.qq.com/a/20261121A0BSSA00",
-              "is_first_hand": false
-            }
-          ]
         }
       ]
     },
@@ -1373,23 +1417,23 @@
           "is_recent_72h": true
         },
         {
-          "id": "ai_raw_rss-gnews-opensource-ai_ae5315c2a759",
+          "id": "ai_raw_rss-gnews-ai-models-en_b6467d8b7aaf",
           "date": "2026-11-24T06:12:00+08:00",
           "company_id": "openai",
           "company_name": "OpenAI",
           "region": "海外",
           "category": "最新动态",
           "category_en": "Latest Release",
-          "title": "思科与 OpenAI 联合推出 Shirudo 新项目，旨在保障智能体 AI 安全 - Yahoo! 财经加拿大",
-          "title_en": "Cisco and OpenAI Launch Shirudo, A New Project to Safeguard Agentic AI - Yahoo! Finance Canada",
+          "title": "Cisco 和 OpenAI 推出 Shirudo，一项旨在保护代理式 AI 的新项目",
+          "title_en": "Cisco and OpenAI Launch Shirudo, A New Project to Safeguard Agentic AI",
           "what_it_does": "",
           "what_it_does_en": "",
           "who_cares": "",
           "limitations": "",
           "limitations_en": "",
-          "source_id": "rss-gnews-opensource-ai",
-          "source_name": "Yahoo! Finance Canada",
-          "source_url": "https://news.google.com/rss/articles/CBMijAFBVV95cUxOSmM2dnZ2aFczaTgyVkM1aGx1QVRYZzJpUXpnMWpKZUFhSzhWcEtFQU5MWFYyTUZ0dFp0ei1JNTBndkcwckc0N3dNQ3pORG1OaDhMQTJYTzVRV3l5R1BuckFOSXlRa1piTllWZjZ3VjdOX29hVU5iZGlSU3ZINU42VW82STNOTGl3SkRabg?oc=5",
+          "source_id": "rss-gnews-ai-models-en",
+          "source_name": "PR Newswire",
+          "source_url": "https://news.google.com/rss/articles/CBMiwwFBVV95cUxPTlJlYkFSYUhlbmdwU3R1YWVVVDJtZldTYVQ2Yzljd3pRb1ZwMS1WZ0FGdE1VSl9IV1RodHQ4WWVsWEF2bEhpMll1TzN0MkdBSzVpejF0TEJBSlR6VHE5TUEyLWZFbFhYMzEwZy1SeTcyZ3BQVnFmTmM2NXA2bjRPWjhLQXlCc05ab1lyanQtXzJHelV3b3NSY0FOalRORlJlZnA2UzIwUEpNTXdmX1NaemdJbS1CaG1iVVFsMG9LZkhIalE?oc=5",
           "is_first_hand": false,
           "source_tier": "wire_media",
           "is_open_source": false,
@@ -1398,6 +1442,11 @@
           "milestone_dim_label_en": "API & Agent Eng",
           "is_recent_72h": true,
           "related_sources": [
+            {
+              "source_name": "PR Newswire",
+              "url": "https://news.google.com/rss/articles/CBMiwwFBVV95cUxPTlJlYkFSYUhlbmdwU3R1YWVVVDJtZldTYVQ2Yzljd3pRb1ZwMS1WZ0FGdE1VSl9IV1RodHQ4WWVsWEF2bEhpMll1TzN0MkdBSzVpejF0TEJBSlR6VHE5TUEyLWZFbFhYMzEwZy1SeTcyZ3BQVnFmTmM2NXA2bjRPWjhLQXlCc05ab1lyanQtXzJHelV3b3NSY0FOalRORlJlZnA2UzIwUEpNTXdmX1NaemdJbS1CaG1iVVFsMG9LZkhIalE?oc=5",
+              "is_first_hand": false
+            },
             {
               "source_name": "Yahoo! Finance Canada",
               "url": "https://news.google.com/rss/articles/CBMijAFBVV95cUxOSmM2dnZ2aFczaTgyVkM1aGx1QVRYZzJpUXpnMWpKZUFhSzhWcEtFQU5MWFYyTUZ0dFp0ei1JNTBndkcwckc0N3dNQ3pORG1OaDhMQTJYTzVRV3l5R1BuckFOSXlRa1piTllWZjZ3VjdOX29hVU5iZGlSU3ZINU42VW82STNOTGl3SkRabg?oc=5",
@@ -1414,11 +1463,6 @@
               "is_first_hand": false
             },
             {
-              "source_name": "PR Newswire",
-              "url": "https://news.google.com/rss/articles/CBMiwwFBVV95cUxPTlJlYkFSYUhlbmdwU3R1YWVVVDJtZldTYVQ2Yzljd3pRb1ZwMS1WZ0FGdE1VSl9IV1RodHQ4WWVsWEF2bEhpMll1TzN0MkdBSzVpejF0TEJBSlR6VHE5TUEyLWZFbFhYMzEwZy1SeTcyZ3BQVnFmTmM2NXA2bjRPWjhLQXlCc05ab1lyanQtXzJHelV3b3NSY0FOalRORlJlZnA2UzIwUEpNTXdmX1NaemdJbS1CaG1iVVFsMG9LZkhIalE?oc=5",
-              "is_first_hand": false
-            },
-            {
               "source_name": "Cisco Newsroom",
               "url": "https://news.google.com/rss/articles/CBMi1AFBVV95cUxNMTh2UVAyQ0xKeDdMcVNQTjFXUndsRHRZbXNIdWUyX20zSGRhY3FyMWNVOHdzaEpxV3B0Qy1kVmhzbm5XNjBRR19nMWJVMWJMWWZnV3psb1NvbVZkQzI0dzRPSThSNkcyNzBGd0pSNER5eUJXcC1NenVMUXZZWmwtaWVfUDdLZGFDcXJEalZZOUw4Z3JENHU3N2xqc3ozMnRLVHpiSWJubDdQbWNaMzdzbTQyeTdoWkdiSWpMMVdKLVp6SHptOU5SVERldk5adENkQ01tbw?oc=5",
               "is_first_hand": false
@@ -1426,46 +1470,8 @@
           ]
         },
         {
-          "id": "ai_raw_openai-news-rss_469681a1f5b2",
-          "date": "2026-11-24T05:25:57+08:00",
-          "company_id": "openai",
-          "company_name": "OpenAI",
-          "region": "海外",
-          "category": "开源突破",
-          "category_en": "Open Source",
-          "title": "OpenAI 与思科推出 Shirudo",
-          "title_en": "OpenAI and Cisco introduce Shirudo",
-          "what_it_does": "OpenAI与思科（Cisco）联合推出开源Linux运行时Shirudo，旨在帮助团队在部署补丁的同时保护运行中的系统。",
-          "what_it_does_en": "",
-          "who_cares": "",
-          "limitations": "",
-          "limitations_en": "",
-          "source_id": "openai-news-rss",
-          "source_name": "OpenAI 官方动态",
-          "source_url": "https://openai.com/index/introducing-shirudo",
-          "is_first_hand": true,
-          "source_tier": "first_party",
-          "is_open_source": true,
-          "milestone_dim": "open_source_eco",
-          "milestone_dim_label": "开源权重与生态",
-          "milestone_dim_label_en": "Open Source",
-          "is_recent_72h": true,
-          "related_sources": [
-            {
-              "source_name": "OpenAI 官方动态",
-              "url": "https://openai.com/index/introducing-shirudo",
-              "is_first_hand": true
-            },
-            {
-              "source_name": "Crypto Briefing",
-              "url": "https://news.google.com/rss/articles/CBMidEFVX3lxTE5YOHFEc1B2VVF2T0M0NThSZUNVVHNmbEhKdy0zZ1Q5QTBDaHRkQ3FJVGw1V2dVLXpGbERtbVYzZllYRW5JX2JsZjNYY3ZVNXNGOFluNVJ6OGo2RWdlaExzVEZaeG9OclctVW5jRUtMUUdTQ2Z2?oc=5",
-              "is_first_hand": false
-            }
-          ]
-        },
-        {
           "id": "ai_raw_sina-7x24_1e95d8b5a054",
-          "date": "2026-11-24T05:20:54+08:00",
+          "date": "2026-11-24T06:12:00+08:00",
           "company_id": "openai",
           "company_name": "OpenAI",
           "region": "海外",
@@ -1512,6 +1518,54 @@
             {
               "source_name": "Yahoo! Finance Canada",
               "url": "https://news.google.com/rss/articles/CBMijAFBVV95cUxOSmM2dnZ2aFczaTgyVkM1aGx1QVRYZzJpUXpnMWpKZUFhSzhWcEtFQU5MWFYyTUZ0dFp0ei1JNTBndkcwckc0N3dNQ3pORG1OaDhMQTJYTzVRV3l5R1BuckFOSXlRa1piTllWZjZ3VjdOX29hVU5iZGlSU3ZINU42VW82STNOTGl3SkRabg?oc=5",
+              "is_first_hand": false
+            },
+            {
+              "source_name": "WSJ",
+              "url": "https://news.google.com/rss/articles/CBMijgFBVV95cUxQQWRzSVl5NXdtMlRvTWxOYmItRm53SkNyVGdNOVhPSkZGMV82cHJhdWNYeDRrLVlUaUxPTC1QX0IyX2d4UkNKTkF1NVd3d21tcUc5QWk4Wm1qUWl3QlVxOFBJV3lpaWxreUxWaEdpRXZpR29YcUpsa1dJYkVGMDh4a0llVUZJaDBYa3ZsbWNR?oc=5",
+              "is_first_hand": false
+            },
+            {
+              "source_name": "Crypto Briefing",
+              "url": "https://news.google.com/rss/articles/CBMidEFVX3lxTE5YOHFEc1B2VVF2T0M0NThSZUNVVHNmbEhKdy0zZ1Q5QTBDaHRkQ3FJVGw1V2dVLXpGbERtbVYzZllYRW5JX2JsZjNYY3ZVNXNGOFluNVJ6OGo2RWdlaExzVEZaeG9OclctVW5jRUtMUUdTQ2Z2?oc=5",
+              "is_first_hand": false
+            }
+          ]
+        },
+        {
+          "id": "ai_raw_openai-news-rss_469681a1f5b2",
+          "date": "2026-11-24T05:25:57+08:00",
+          "company_id": "openai",
+          "company_name": "OpenAI",
+          "region": "海外",
+          "category": "开源突破",
+          "category_en": "Open Source",
+          "title": "OpenAI 与思科推出 Shirudo",
+          "title_en": "OpenAI and Cisco introduce Shirudo",
+          "what_it_does": "OpenAI与思科（Cisco）联合推出开源Linux运行时Shirudo，旨在帮助团队在部署补丁的同时保护运行中的系统。",
+          "what_it_does_en": "",
+          "who_cares": "",
+          "limitations": "",
+          "limitations_en": "",
+          "source_id": "openai-news-rss",
+          "source_name": "OpenAI 官方动态",
+          "source_url": "https://openai.com/index/introducing-shirudo",
+          "is_first_hand": true,
+          "source_tier": "first_party",
+          "is_open_source": true,
+          "milestone_dim": "open_source_eco",
+          "milestone_dim_label": "开源权重与生态",
+          "milestone_dim_label_en": "Open Source",
+          "is_recent_72h": true,
+          "related_sources": [
+            {
+              "source_name": "OpenAI 官方动态",
+              "url": "https://openai.com/index/introducing-shirudo",
+              "is_first_hand": true
+            },
+            {
+              "source_name": "Crypto Briefing",
+              "url": "https://news.google.com/rss/articles/CBMidEFVX3lxTE5YOHFEc1B2VVF2T0M0NThSZUNVVHNmbEhKdy0zZ1Q5QTBDaHRkQ3FJVGw1V2dVLXpGbERtbVYzZllYRW5JX2JsZjNYY3ZVNXNGOFluNVJ6OGo2RWdlaExzVEZaeG9OclctVW5jRUtMUUdTQ2Z2?oc=5",
               "is_first_hand": false
             }
           ]
@@ -1560,7 +1614,7 @@
           "title": "开源工具更新：OpenAI SDK v3.58.0",
           "title_en": "Open-source release: OpenAI SDK v3.58.0",
           "what_it_does": "OpenAI启动了大规模反蒸馏战役，通过模型训练、防护、检测和执法等分层方法对抗对抗性蒸馏，已将GPT-6.2 Astra的思考链提取成功率从54%降至0.2%。此外，OpenAI还在API中发布了GPT-Live-1.1全双工语音模型…",
-          "what_it_does_en": "{'name': 'OpenAI SDK', 'version': 'v3.58.0', 'notes': 'API 新增代理会话消费限额的设置与读取功能；明确并优化了补全选项计数的可选说明'}",
+          "what_it_does_en": "API 新增代理会话消费限额的设置与读取功能；明确并优化了补全选项计数的可选说明",
           "who_cares": "",
           "limitations": "许可证：Apache-2.0",
           "limitations_en": "License: Apache-2.0",
@@ -1881,14 +1935,14 @@
           "highlight": "支持企业高保密内网自部署深度研究 Agent 与复杂编程任务"
         }
       ],
-      "recent_count": 2,
-      "archive_count": 2,
-      "latest_date": "2026-11-20T16:47:53+08:00",
+      "recent_count": 3,
+      "archive_count": 3,
+      "latest_date": "2026-11-24T12:56:04+08:00",
       "latest_headline": "[HF 模型卡] moonshotai/Kimi-K3 更新 (自定义开源许可 (详见模型卡))",
       "items": [
         {
           "id": "ai_raw_huggingface-hub_f7c5131ed798",
-          "date": "2026-11-20T16:47:53+08:00",
+          "date": "2026-11-24T12:56:04+08:00",
           "company_id": "kimi",
           "company_name": "月之暗面 (Kimi)",
           "region": "国内",
@@ -1910,7 +1964,7 @@
           "milestone_dim": "open_source_eco",
           "milestone_dim_label": "开源权重与生态",
           "milestone_dim_label_en": "Open Source",
-          "is_recent_72h": false,
+          "is_recent_72h": true,
           "related_sources": [
             {
               "source_name": "Hugging Face 官方模型库",
@@ -1921,6 +1975,39 @@
               "source_name": "Hugging Face 官方模型库",
               "url": "https://huggingface.co/MiniMaxAI/MiniMax-H3",
               "is_first_hand": true
+            }
+          ]
+        },
+        {
+          "id": "ai_raw_rss-gnews-ai-models-en_024131e086e6",
+          "date": "2026-11-24T12:05:52+08:00",
+          "company_id": "kimi",
+          "company_name": "月之暗面 (Kimi)",
+          "region": "国内",
+          "category": "最新动态",
+          "category_en": "Latest Release",
+          "title": "2026年 Kimi 定价：方案、API 成本与免费层级",
+          "title_en": "Kimi Pricing 2026: Plans, API Costs & Free Tier",
+          "what_it_does": "",
+          "what_it_does_en": "",
+          "who_cares": "",
+          "limitations": "",
+          "limitations_en": "",
+          "source_id": "rss-gnews-ai-models-en",
+          "source_name": "Fello AI",
+          "source_url": "https://news.google.com/rss/articles/CBMiSEFVX3lxTE5ZUWVuVmFDM3VaOVdtNFItYkczaVZST2ZiOXYySzBWQVhCaWlGa2pidzVreUdEbGxYeVF2MERuZkdWcV85Qk4tbA?oc=5",
+          "is_first_hand": false,
+          "source_tier": "wire_media",
+          "is_open_source": false,
+          "milestone_dim": "api_agent_eng",
+          "milestone_dim_label": "API 与 Agent 工程",
+          "milestone_dim_label_en": "API & Agent Eng",
+          "is_recent_72h": true,
+          "related_sources": [
+            {
+              "source_name": "Fello AI",
+              "url": "https://news.google.com/rss/articles/CBMiSEFVX3lxTE5ZUWVuVmFDM3VaOVdtNFItYkczaVZST2ZiOXYySzBWQVhCaWlGa2pidzVreUdEbGxYeVF2MERuZkdWcV85Qk4tbA?oc=5",
+              "is_first_hand": false
             }
           ]
         },
@@ -2165,7 +2252,7 @@
         }
       ],
       "recent_count": 8,
-      "archive_count": 8,
+      "archive_count": 9,
       "latest_date": "2026-11-24T11:26:17+08:00",
       "latest_headline": "知乎宣布间接投资 DeepSeek，股价应声大涨 10%",
       "items": [
@@ -2189,7 +2276,7 @@
           "event_id": null,
           "is_open_source": false,
           "is_first_hand": false,
-          "source_tier": "realtime_wire",
+          "source_tier": "wire_media",
           "milestone_dim": "flagship_release",
           "milestone_dim_label": "旗舰模型发布",
           "milestone_dim_label_en": "Flagship Model",
@@ -2199,7 +2286,8 @@
               "url": "https://www.ithome.com/1/031/339.htm",
               "is_first_hand": false
             }
-          ]
+          ],
+          "is_recent_72h": true
         },
         {
           "id": "ai_raw_sina-7x24_59ec2ec1c0b9",
@@ -2699,7 +2787,7 @@
           "milestone_dim": "flagship_release",
           "milestone_dim_label": "旗舰模型发布",
           "milestone_dim_label_en": "Flagship Model",
-          "is_recent_72h": true,
+          "is_recent_72h": false,
           "related_sources": [
             {
               "source_name": "Fello AI",
@@ -3098,9 +3186,43 @@
       ],
       "recent_count": 8,
       "archive_count": 8,
-      "latest_date": "2026-11-24T05:30:44+08:00",
-      "latest_headline": "各州起诉 SpaceX，以阻止 Grok 生成儿童色情图片和复仇色情内容",
+      "latest_date": "2026-11-24T15:38:24+08:00",
+      "latest_headline": "美国两州起诉马斯克旗下SpaceX：指控Grok生成儿童性虐待材料",
       "items": [
+        {
+          "id": "ai_ev_evt_a5f28941bb88",
+          "date": "2026-11-24T15:38:24+08:00",
+          "company_id": "xai",
+          "company_name": "xAI / Grok",
+          "region": "海外",
+          "category": "模型与产品",
+          "category_en": "Model & Product",
+          "title": "美国两州起诉马斯克旗下SpaceX：指控Grok生成儿童性虐待材料",
+          "title_en": "美国两州起诉马斯克旗下SpaceX：指控Grok生成儿童性虐待材料",
+          "what_it_does": "2026-11-23 21:13发布于北京凤凰网官方账号 凤凰网科技讯 11月23日，据路透社报道，美国弗吉尼亚州和俄勒冈州已对埃隆·马斯克旗下SpaceX Super Intelligence提起诉讼，指控该公司从Grok图像生成功能…",
+          "what_it_does_en": "美国弗吉尼亚州和俄勒冈州对SpaceX旗下Super Intelligence提起诉讼，指控Grok未设防护生成违规内容。",
+          "who_cares": "",
+          "limitations": "",
+          "limitations_en": "",
+          "source_id": "tencent-hot",
+          "source_name": "腾讯新闻综合早",
+          "source_url": "https://view.inews.qq.com/a/20261123A0EWXM00",
+          "is_first_hand": false,
+          "source_tier": "wire_media",
+          "event_id": "evt_a5f28941bb88",
+          "is_open_source": false,
+          "related_sources": [
+            {
+              "source_name": "腾讯新闻综合早报",
+              "url": "https://view.inews.qq.com/a/20261123A0EWXM00",
+              "is_first_hand": false
+            }
+          ],
+          "milestone_dim": "commercial_governance",
+          "milestone_dim_label": "商业化与安全治理",
+          "milestone_dim_label_en": "Governance & Commercial",
+          "is_recent_72h": true
+        },
         {
           "id": "ai_ev_evt_312e9c10d5b6",
           "date": "2026-11-24T05:30:44+08:00",
@@ -3239,40 +3361,6 @@
               "is_first_hand": false
             }
           ]
-        },
-        {
-          "id": "ai_ev_evt_a5f28941bb88",
-          "date": "2026-11-23T21:13:32+08:00",
-          "company_id": "xai",
-          "company_name": "xAI / Grok",
-          "region": "海外",
-          "category": "模型与产品",
-          "category_en": "Model & Product",
-          "title": "美国两州起诉马斯克旗下SpaceX：指控Grok生成儿童性虐待材料",
-          "title_en": "美国两州起诉马斯克旗下SpaceX：指控Grok生成儿童性虐待材料",
-          "what_it_does": "2026-11-23 21:13发布于北京凤凰网官方账号 凤凰网科技讯 11月23日，据路透社报道，美国弗吉尼亚州和俄勒冈州已对埃隆·马斯克旗下SpaceX Super Intelligence提起诉讼，指控该公司从Grok图像生成功能…",
-          "what_it_does_en": "美国弗吉尼亚州和俄勒冈州对SpaceX旗下Super Intelligence提起诉讼，指控Grok未设防护生成违规内容。",
-          "who_cares": "",
-          "limitations": "",
-          "limitations_en": "",
-          "source_id": "tencent-hot",
-          "source_name": "腾讯新闻综合早",
-          "source_url": "https://view.inews.qq.com/a/20261123A0EWXM00",
-          "is_first_hand": false,
-          "source_tier": "wire_media",
-          "event_id": "evt_a5f28941bb88",
-          "is_open_source": false,
-          "related_sources": [
-            {
-              "source_name": "腾讯新闻综合早报",
-              "url": "https://view.inews.qq.com/a/20261123A0EWXM00",
-              "is_first_hand": false
-            }
-          ],
-          "milestone_dim": "commercial_governance",
-          "milestone_dim_label": "商业化与安全治理",
-          "milestone_dim_label_en": "Governance & Commercial",
-          "is_recent_72h": true
         },
         {
           "id": "ai_raw_rss-gnews-ai-models-en_7760560af67c",
@@ -3492,7 +3580,7 @@
           "title": "豆包旗下 AI 个人助理小豆开启邀请制公测",
           "title_en": "豆包旗下 AI 个人助理小豆开启邀请制公测",
           "what_it_does": "IT之家 11 月 24 日消息，豆包官方今天宣布“小豆”正式开启公测，采用邀请制开放。用户凭邀请码即可开启体验， 并获赠一定量免费额度 。IT之家注意到，小豆是豆包旗下的 AI 个人助理产品，采用对话式交互方式，在用户明确指令与授权范…",
-          "what_it_does_en": "字节跳动旗下应用“豆包”宣布开启AI个人助理产品“小豆”的公开测试，测试采用邀请制，未来其功能将逐步集成至豆包app中。用户可凭邀请码参与测试，并通过邀请好友获得更多测试额度。",
+          "what_it_does_en": "",
           "who_cares": "",
           "limitations": "",
           "limitations_en": "",
@@ -3510,6 +3598,16 @@
               "is_first_hand": false
             },
             {
+              "source_name": "AIHOT 前沿",
+              "url": "https://aihot.news/items/vihx23ecky4iwwqfrzv47xhad",
+              "is_first_hand": false
+            },
+            {
+              "source_name": "酷安",
+              "url": "https://www.coolapk.com/feed/75244188",
+              "is_first_hand": false
+            },
+            {
               "source_name": "华尔街见闻 7×24 全球",
               "url": "https://wallstreetcn.com/livenews/3204686",
               "is_first_hand": false
@@ -3517,11 +3615,6 @@
             {
               "source_name": "IT之家",
               "url": "https://www.ithome.com/1/031/329.htm",
-              "is_first_hand": false
-            },
-            {
-              "source_name": "AIHOT 前沿",
-              "url": "https://aihot.news/items/vihx23ecky4iwwqfrzv47xhad",
               "is_first_hand": false
             }
           ],
@@ -3721,19 +3814,19 @@
               "is_first_hand": false
             },
             {
-              "source_name": "ThePaper.cn",
-              "url": "https://news.google.com/rss/articles/CBMiYEFVX3lxTE91OWpEZXU1Um9vYVJKQlZCZlRIZFJoYmRkeElqX29TU0YxcnpaUnd5VnRzdXBuZi1NLTh1aTNLaElZMUFDd2szSndURjhzZHR6R1NxUUhjM1hieF9ycmdFZQ?oc=5",
-              "is_first_hand": false
-            },
-            {
               "source_name": "东方财富",
               "url": "https://news.google.com/rss/articles/CBMiZkFVX3lxTFB6eG5KVmpaOUdzTGZZSmtEcU9NTnViLTl6RjhWS014N2tfYUo4c3JJaWl6bUlLRnVDLXNQSmZNLUVhWFZoY1l1czZ1UkVYMEdyamk1aFQ1NnQ2bk16X0pmLVNabU5OUQ?oc=5",
               "is_first_hand": false
             },
             {
-              "source_name": "驱动之家",
-              "url": "https://news.google.com/rss/articles/CBMiWEFVX3lxTFBET1NDVWVpNlRoZTExT3FOdHQxR2Z4M0VMaGJGb240NmNVYWpNbmFfOS05OGZZUFNvZkpVVTlmbzBjWnRrWlBkNnJ4QkFEQjVTOTBjbzNQVW4?oc=5",
+              "source_name": "东方财富",
+              "url": "https://news.google.com/rss/articles/CBMiZkFVX3lxTE9hdGVyWEdBOGJ2TEc4WFE4bHdmSW45c1l3NjFGVDkwRUFHTUFXemxWdXdPTWxrQW9VeFdFMFQ0cTJxa1ZwS3NHakJYa2xsNjNJdXRoODljV1pfLVVTcmE4MzNFMWtIdw?oc=5",
               "is_first_hand": false
+            },
+            {
+              "source_name": "Zhipu AI 官方",
+              "url": "https://bigmodel.cn/",
+              "is_first_hand": true
             }
           ]
         },
@@ -4149,11 +4242,55 @@
           "highlight": "原生融合文本/图像/音频/视频理解与生成，支撑企业智算智能体"
         }
       ],
-      "recent_count": 2,
-      "archive_count": 2,
-      "latest_date": "2026-10-20T10:00:00+08:00",
-      "latest_headline": "百度文心发布 ERNIE 5.0 原生全模态旗舰并完善 ERNIE 4.5 Apache 2.0 开源家族（飞桨适配）",
+      "recent_count": 3,
+      "archive_count": 3,
+      "latest_date": "2026-11-24T14:59:54+08:00",
+      "latest_headline": "百度开源文心 5.5 Flash Preview：2800 亿参数 140 亿激活，Apache 2.0 协议上架 Hugging Face",
       "items": [
+        {
+          "id": "ai_ev_evt_fb006165a45f",
+          "date": "2026-11-24T14:59:54+08:00",
+          "company_id": "baidu_ernie",
+          "company_name": "百度文心 (ERNIE)",
+          "region": "国内",
+          "category": "开源突破",
+          "category_en": "Open Source",
+          "title": "百度开源文心 5.5 Flash Preview：2800 亿参数 140 亿激活，Apache 2.0 协议上架 Hugging Face",
+          "title_en": "百度开源文心 5.5 Flash Preview：2800 亿参数 140 亿激活，Apache 2.0 协议上架 Hugging Face",
+          "what_it_does": "IT之家 11 月 24 日消息，百度今日宣布文心 5.5 Flash Preview（ERNIE 5.5 Flash Preview）正式开源，采用 Apache 2.0 协议，模型权重与配套资源已上架 Hugging Face 和 …",
+          "what_it_does_en": "百度宣布文心 5.5 Flash Preview正式开源，采用Apache 2.0协议，模型权重与配套资源已上架Hugging Face和ModelScope。",
+          "who_cares": "",
+          "limitations": "",
+          "limitations_en": "",
+          "source_id": "ithome-rss",
+          "source_name": "IT之家 实时快讯",
+          "source_url": "https://www.ithome.com/1/031/501.htm",
+          "is_first_hand": false,
+          "source_tier": "wire_media",
+          "event_id": "evt_fb006165a45f",
+          "is_open_source": true,
+          "related_sources": [
+            {
+              "source_name": "IT之家 实时快讯",
+              "url": "https://www.ithome.com/1/031/501.htm",
+              "is_first_hand": false
+            },
+            {
+              "source_name": "AIHOT 前沿",
+              "url": "https://aihot.news/items/bdl58su5ht2g95lkkgi6iobrt",
+              "is_first_hand": false
+            },
+            {
+              "source_name": "AIHOT 前沿",
+              "url": "https://aihot.news/items/kk3rxrr3jn1tpvs5xmgu0t7z3",
+              "is_first_hand": false
+            }
+          ],
+          "milestone_dim": "open_source_eco",
+          "milestone_dim_label": "开源权重与生态",
+          "milestone_dim_label_en": "Open Source",
+          "is_recent_72h": true
+        },
         {
           "id": "ai_base_baidu_ernie5",
           "date": "2026-10-20T10:00:00+08:00",
@@ -4473,11 +4610,43 @@
           "highlight": "结合屏幕上下文感知与可验证零数据留存云集群完成复杂个人助理操作"
         }
       ],
-      "recent_count": 2,
+      "recent_count": 3,
       "archive_count": 2,
-      "latest_date": "2026-10-22T10:00:00+08:00",
-      "latest_headline": "Apple 推出新一代端侧 Foundation Models 与开源 MLX 统一内存推理栈，全面开放系统级 API",
+      "latest_date": "2026-11-24T14:52:22+08:00",
+      "latest_headline": "苹果新招聘曝光：为 AI 算力芯片打造“光速公路”",
       "items": [
+        {
+          "id": "ai_live_ithome-rss_47f36be9bd7d",
+          "date": "2026-11-24T14:52:22+08:00",
+          "company_id": "apple_ai",
+          "company_name": "Apple Intelligence",
+          "region": "海外",
+          "category": "模型与产品",
+          "category_en": "Model & Product",
+          "title": "苹果新招聘曝光：为 AI 算力芯片打造“光速公路”",
+          "title_en": "",
+          "what_it_does": "IT之家 11 月 24 日消息，科技媒体 MacRumors 昨日（11 月 23 日）发布博文， 报道称苹果正在招聘一名“硅光子工程项目经理”，负责其数据中心服务器芯片的光互连技术。IT之家注：光互连（Optical Interco…",
+          "what_it_does_en": "",
+          "who_cares": "",
+          "limitations": "",
+          "limitations_en": "",
+          "source_name": "IT之家 实时快讯",
+          "source_url": "https://www.ithome.com/1/031/499.htm",
+          "event_id": null,
+          "is_open_source": false,
+          "is_first_hand": false,
+          "source_tier": "realtime_wire",
+          "milestone_dim": "flagship_release",
+          "milestone_dim_label": "旗舰模型发布",
+          "milestone_dim_label_en": "Flagship Model",
+          "related_sources": [
+            {
+              "source_name": "IT之家 实时快讯",
+              "url": "https://www.ithome.com/1/031/499.htm",
+              "is_first_hand": false
+            }
+          ]
+        },
         {
           "id": "ai_base_apple_foundation_mlx",
           "date": "2026-10-22T10:00:00+08:00",
@@ -5124,12 +5293,108 @@
         }
       ],
       "recent_count": 8,
-      "archive_count": 40,
-      "latest_date": "2026-11-24T12:58:18+08:00",
-      "latest_headline": "商汤发布并开源 SenseNova U1.6 原生多模态模型，能自己修正图片错误",
+      "archive_count": 36,
+      "latest_date": "2026-11-24T15:02:04+08:00",
+      "latest_headline": "[GitHub Release] Ollama 发布 v0.40.18-rc0",
       "items": [
         {
-          "id": "ai_raw_ithome-rss_111275606d02",
+          "id": "ai_raw_github-releases_b03e5730de96",
+          "date": "2026-11-24T15:02:04+08:00",
+          "company_id": "indie_opensource",
+          "company_name": "独立实验室 & 开源黑马",
+          "region": "全球开源",
+          "category": "开源突破",
+          "category_en": "Open Source",
+          "title": "[GitHub Release] Ollama 发布 v0.40.18-rc0",
+          "title_en": "[GitHub Release] Ollama 发布 v0.40.18-rc0",
+          "what_it_does": "{'name': 'llama.cpp', 'version': 'b12669', 'notes': '量化工具新增目标文件大小与比特率的自动最优类型选择功能；重构帕累托优化、拉格朗日惩罚及量化检查函数'}",
+          "what_it_does_en": "版本 v0.40.18-rc0（Pre-release/RC | 许可: MIT）。",
+          "who_cares": "",
+          "limitations": "",
+          "limitations_en": "",
+          "source_id": "github-releases",
+          "source_name": "GitHub Releases 官方版本",
+          "source_url": "https://github.com/ollama/ollama/releases/tag/v0.40.18-rc0",
+          "is_first_hand": true,
+          "source_tier": "first_party",
+          "is_open_source": true,
+          "milestone_dim": "open_source_eco",
+          "milestone_dim_label": "开源权重与生态",
+          "milestone_dim_label_en": "Open Source",
+          "is_recent_72h": true,
+          "related_sources": [
+            {
+              "source_name": "GitHub Releases 官方版本",
+              "url": "https://github.com/ollama/ollama/releases/tag/v0.40.18-rc0",
+              "is_first_hand": true
+            },
+            {
+              "source_name": "GitHub Releases 官方版本",
+              "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12671",
+              "is_first_hand": true
+            },
+            {
+              "source_name": "GitHub Releases 官方版本",
+              "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12669",
+              "is_first_hand": true
+            }
+          ]
+        },
+        {
+          "id": "ai_tool_tool_gh_ggml-org_llama.cpp",
+          "date": "2026-11-24T15:02:04+08:00",
+          "company_id": "indie_opensource",
+          "company_name": "独立实验室 & 开源黑马",
+          "region": "全球开源",
+          "category": "开源工具/仓库",
+          "category_en": "Open-Source Repo",
+          "title": "开源工具更新：llama.cpp b12671",
+          "title_en": "Open-source release: llama.cpp b12671",
+          "what_it_does": "提供了macOS Apple Silicon (arm64) 和 Intel (x64) 版本支持；同时发布了iOS XCFramework，但Apple Silicon上的KleidiAI功能暂时禁用。",
+          "what_it_does_en": "优化了 Metal 后端的拼接内核，通过每线程组处理多行并采用四元素块连续拷贝，大幅提升了宽行处理时的内存带宽利用率；",
+          "who_cares": "",
+          "limitations": "许可证：MIT",
+          "limitations_en": "License: MIT",
+          "source_id": "github-releases",
+          "source_name": "GitHub Releases API",
+          "source_url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12671",
+          "is_first_hand": true,
+          "source_tier": "first_party",
+          "is_open_source": true,
+          "milestone_dim": "open_source_eco",
+          "milestone_dim_label": "开源权重与生态",
+          "milestone_dim_label_en": "Open Source",
+          "is_recent_72h": true,
+          "related_sources": [
+            {
+              "source_name": "GitHub Releases API",
+              "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12671",
+              "is_first_hand": true
+            },
+            {
+              "source_name": "GitHub Releases API",
+              "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12649",
+              "is_first_hand": true
+            },
+            {
+              "source_name": "GitHub Releases API",
+              "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12646",
+              "is_first_hand": true
+            },
+            {
+              "source_name": "GitHub Releases API",
+              "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12633",
+              "is_first_hand": true
+            },
+            {
+              "source_name": "GitHub Releases API",
+              "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12631",
+              "is_first_hand": true
+            }
+          ]
+        },
+        {
+          "id": "ai_raw_ithome_11c8a84697c1",
           "date": "2026-11-24T12:58:18+08:00",
           "company_id": "indie_opensource",
           "company_name": "独立实验室 & 开源黑马",
@@ -5139,12 +5404,12 @@
           "title": "商汤发布并开源 SenseNova U1.6 原生多模态模型，能自己修正图片错误",
           "title_en": "商汤发布并开源 SenseNova U1.6 原生多模态模型，能自己修正图片错误",
           "what_it_does": "IT之家 11 月 24 日消息，商汤科技今日发布并开源 SenseNova U1.6 原生多模态模型，延续了 U 系列的理解与生成统一范式， 首次为该系列的 8B 开源模型带来原生图像自修正 。开启自修正后，同一个模型可以先生成首稿，…",
-          "what_it_does_en": "IT之家 11 月 24 日消息，商汤科技今日发布并开源 SenseNova U1.6 原生多模态模型，延续了 U 系列的理解与生成统一范式， 首次为该系列的 8B 开源模型带来原生图像自修正 。开启自修正后，同一个模型可以先生成首稿，再对照原始提示检查画面，并根据发现的文字问题生成修正版。人像的光影、插画的笔触、海报",
+          "what_it_does_en": "",
           "who_cares": "",
           "limitations": "",
           "limitations_en": "",
-          "source_id": "ithome-rss",
-          "source_name": "IT之家 实时快讯",
+          "source_id": "",
+          "source_name": "IT之家",
           "source_url": "https://www.ithome.com/1/031/465.htm",
           "is_first_hand": false,
           "source_tier": "wire_media",
@@ -5155,7 +5420,7 @@
           "is_recent_72h": true,
           "related_sources": [
             {
-              "source_name": "IT之家 实时快讯",
+              "source_name": "IT之家",
               "url": "https://www.ithome.com/1/031/465.htm",
               "is_first_hand": false
             }
@@ -5320,39 +5585,6 @@
           "is_recent_72h": true
         },
         {
-          "id": "ai_raw_github-releases_3ed38f2d9274",
-          "date": "2026-11-24T10:38:41+08:00",
-          "company_id": "indie_opensource",
-          "company_name": "独立实验室 & 开源黑马",
-          "region": "全球开源",
-          "category": "开源突破",
-          "category_en": "Open Source",
-          "title": "[GitHub Release] llama.cpp 发布 b12669",
-          "title_en": "[GitHub Release] llama.cpp 发布 b12669",
-          "what_it_does": "{'name': 'llama.cpp', 'version': 'b12669', 'notes': '量化工具新增目标文件大小与比特率的自动最优类型选择功能；重构帕累托优化、拉格朗日惩罚及量化检查函数'}",
-          "what_it_does_en": "版本 b12669（Pre-release/RC | 许可: MIT）。quantize: add option to automatically choose optimal quant types to reach a file/bpw target size at lowest error；Refactor pa",
-          "who_cares": "",
-          "limitations": "",
-          "limitations_en": "",
-          "source_id": "github-releases",
-          "source_name": "GitHub Releases 官方版本",
-          "source_url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12669",
-          "is_first_hand": true,
-          "source_tier": "first_party",
-          "is_open_source": true,
-          "milestone_dim": "open_source_eco",
-          "milestone_dim_label": "开源权重与生态",
-          "milestone_dim_label_en": "Open Source",
-          "is_recent_72h": true,
-          "related_sources": [
-            {
-              "source_name": "GitHub Releases 官方版本",
-              "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12669",
-              "is_first_hand": true
-            }
-          ]
-        },
-        {
           "id": "ai_live_rss-9to5google_ccea646718e2",
           "date": "2026-11-24T04:25:00+08:00",
           "company_id": "indie_opensource",
@@ -5389,46 +5621,286 @@
             }
           ],
           "is_recent_72h": true
-        },
-        {
-          "id": "ai_raw_rss-gnews-opensource-ai_875eaa09452d",
-          "date": "2026-11-24T01:40:00+08:00",
-          "company_id": "indie_opensource",
-          "company_name": "独立实验室 & 开源黑马",
-          "region": "全球开源",
-          "category": "最新动态",
-          "category_en": "Latest Release",
-          "title": "meshIQ 推出用于中间件故障排查的 Neo AI 智能体",
-          "title_en": "meshIQ launches Neo AI agent for middleware troubleshooting",
-          "what_it_does": "",
-          "what_it_does_en": "",
-          "who_cares": "",
-          "limitations": "",
-          "limitations_en": "",
-          "source_id": "rss-gnews-opensource-ai",
-          "source_name": "IT Brief New Zealand",
-          "source_url": "https://news.google.com/rss/articles/CBMikAFBVV95cUxQVHhNRHZha05MbzBOdlpvWU5OSE1LazU1bmNKeHJ2WFA5RkJCU1A0MkNCclVUR3dmdTRoUzBBaGxXMnJEY3VLYV83aHo2WGdCVGZ1RWdPUFhRUDFRX09rbHYxM3RNdEUyOGhJbmFIbWxmN0ZnYXRpX1J4SEpFRjJkdGtsNG81bjc0YTh1X0dwbUk?oc=5",
-          "is_first_hand": false,
-          "source_tier": "wire_media",
-          "is_open_source": false,
-          "milestone_dim": "api_agent_eng",
-          "milestone_dim_label": "API 与 Agent 工程",
-          "milestone_dim_label_en": "API & Agent Eng",
-          "is_recent_72h": true,
-          "related_sources": [
-            {
-              "source_name": "IT Brief New Zealand",
-              "url": "https://news.google.com/rss/articles/CBMikAFBVV95cUxQVHhNRHZha05MbzBOdlpvWU5OSE1LazU1bmNKeHJ2WFA5RkJCU1A0MkNCclVUR3dmdTRoUzBBaGxXMnJEY3VLYV83aHo2WGdCVGZ1RWdPUFhRUDFRX09rbHYxM3RNdEUyOGhJbmFIbWxmN0ZnYXRpX1J4SEpFRjJkdGtsNG81bjc0YTh1X0dwbUk?oc=5",
-              "is_first_hand": false
-            }
-          ]
         }
       ]
     }
   ],
   "timeline": [
     {
-      "id": "ai_raw_ithome-rss_111275606d02",
+      "id": "ai_ev_evt_a5f28941bb88",
+      "date": "2026-11-24T15:38:24+08:00",
+      "company_id": "xai",
+      "company_name": "xAI / Grok",
+      "region": "海外",
+      "category": "模型与产品",
+      "category_en": "Model & Product",
+      "title": "美国两州起诉马斯克旗下SpaceX：指控Grok生成儿童性虐待材料",
+      "title_en": "美国两州起诉马斯克旗下SpaceX：指控Grok生成儿童性虐待材料",
+      "what_it_does": "2026-11-23 21:13发布于北京凤凰网官方账号 凤凰网科技讯 11月23日，据路透社报道，美国弗吉尼亚州和俄勒冈州已对埃隆·马斯克旗下SpaceX Super Intelligence提起诉讼，指控该公司从Grok图像生成功能…",
+      "what_it_does_en": "美国弗吉尼亚州和俄勒冈州对SpaceX旗下Super Intelligence提起诉讼，指控Grok未设防护生成违规内容。",
+      "who_cares": "",
+      "limitations": "",
+      "limitations_en": "",
+      "source_id": "tencent-hot",
+      "source_name": "腾讯新闻综合早",
+      "source_url": "https://view.inews.qq.com/a/20261123A0EWXM00",
+      "is_first_hand": false,
+      "source_tier": "wire_media",
+      "event_id": "evt_a5f28941bb88",
+      "is_open_source": false,
+      "related_sources": [
+        {
+          "source_name": "腾讯新闻综合早报",
+          "url": "https://view.inews.qq.com/a/20261123A0EWXM00",
+          "is_first_hand": false
+        }
+      ],
+      "milestone_dim": "commercial_governance",
+      "milestone_dim_label": "商业化与安全治理",
+      "milestone_dim_label_en": "Governance & Commercial",
+      "is_recent_72h": true
+    },
+    {
+      "id": "ai_ev_evt_262d868ee896",
+      "date": "2026-11-24T15:16:22+08:00",
+      "company_id": "anthropic",
+      "company_name": "Anthropic",
+      "region": "海外",
+      "category": "模型与产品",
+      "category_en": "Model & Product",
+      "title": "Anthropic CEO 阿莫迪十年前想法曝光：电子游戏或许能解决 AI 失业问题",
+      "title_en": "Anthropic CEO 阿莫迪十年前想法曝光：电子游戏或许能解决 AI 失业问题",
+      "what_it_does": "据科技媒体TweakTown报道，Anthropic CEO达里奥·阿莫迪十年前在OpenAI工作时曾认为沉浸式电子游戏或许能够缓解AI带来的白领失业问题。",
+      "what_it_does_en": "据科技媒体TweakTown报道，Anthropic CEO达里奥·阿莫迪十年前在OpenAI工作时曾认为沉浸式电子游戏或许能够缓解AI带来的白领失业问题。",
+      "who_cares": "",
+      "limitations": "",
+      "limitations_en": "",
+      "source_id": "ithome-rss",
+      "source_name": "IT之家 实时快讯",
+      "source_url": "https://www.ithome.com/1/031/512.htm",
+      "is_first_hand": false,
+      "source_tier": "wire_media",
+      "event_id": "evt_262d868ee896",
+      "is_open_source": false,
+      "related_sources": [
+        {
+          "source_name": "IT之家 实时快讯",
+          "url": "https://www.ithome.com/1/031/512.htm",
+          "is_first_hand": false
+        }
+      ],
+      "milestone_dim": "flagship_release",
+      "milestone_dim_label": "旗舰模型发布",
+      "milestone_dim_label_en": "Flagship Model",
+      "is_recent_72h": true
+    },
+    {
+      "id": "ai_raw_github-releases_b03e5730de96",
+      "date": "2026-11-24T15:02:04+08:00",
+      "company_id": "indie_opensource",
+      "company_name": "独立实验室 & 开源黑马",
+      "region": "全球开源",
+      "category": "开源突破",
+      "category_en": "Open Source",
+      "title": "[GitHub Release] Ollama 发布 v0.40.18-rc0",
+      "title_en": "[GitHub Release] Ollama 发布 v0.40.18-rc0",
+      "what_it_does": "{'name': 'llama.cpp', 'version': 'b12669', 'notes': '量化工具新增目标文件大小与比特率的自动最优类型选择功能；重构帕累托优化、拉格朗日惩罚及量化检查函数'}",
+      "what_it_does_en": "版本 v0.40.18-rc0（Pre-release/RC | 许可: MIT）。",
+      "who_cares": "",
+      "limitations": "",
+      "limitations_en": "",
+      "source_id": "github-releases",
+      "source_name": "GitHub Releases 官方版本",
+      "source_url": "https://github.com/ollama/ollama/releases/tag/v0.40.18-rc0",
+      "is_first_hand": true,
+      "source_tier": "first_party",
+      "is_open_source": true,
+      "milestone_dim": "open_source_eco",
+      "milestone_dim_label": "开源权重与生态",
+      "milestone_dim_label_en": "Open Source",
+      "is_recent_72h": true,
+      "related_sources": [
+        {
+          "source_name": "GitHub Releases 官方版本",
+          "url": "https://github.com/ollama/ollama/releases/tag/v0.40.18-rc0",
+          "is_first_hand": true
+        },
+        {
+          "source_name": "GitHub Releases 官方版本",
+          "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12671",
+          "is_first_hand": true
+        },
+        {
+          "source_name": "GitHub Releases 官方版本",
+          "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12669",
+          "is_first_hand": true
+        }
+      ]
+    },
+    {
+      "id": "ai_tool_tool_gh_ggml-org_llama.cpp",
+      "date": "2026-11-24T15:02:04+08:00",
+      "company_id": "indie_opensource",
+      "company_name": "独立实验室 & 开源黑马",
+      "region": "全球开源",
+      "category": "开源工具/仓库",
+      "category_en": "Open-Source Repo",
+      "title": "开源工具更新：llama.cpp b12671",
+      "title_en": "Open-source release: llama.cpp b12671",
+      "what_it_does": "提供了macOS Apple Silicon (arm64) 和 Intel (x64) 版本支持；同时发布了iOS XCFramework，但Apple Silicon上的KleidiAI功能暂时禁用。",
+      "what_it_does_en": "优化了 Metal 后端的拼接内核，通过每线程组处理多行并采用四元素块连续拷贝，大幅提升了宽行处理时的内存带宽利用率；",
+      "who_cares": "",
+      "limitations": "许可证：MIT",
+      "limitations_en": "License: MIT",
+      "source_id": "github-releases",
+      "source_name": "GitHub Releases API",
+      "source_url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12671",
+      "is_first_hand": true,
+      "source_tier": "first_party",
+      "is_open_source": true,
+      "milestone_dim": "open_source_eco",
+      "milestone_dim_label": "开源权重与生态",
+      "milestone_dim_label_en": "Open Source",
+      "is_recent_72h": true,
+      "related_sources": [
+        {
+          "source_name": "GitHub Releases API",
+          "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12671",
+          "is_first_hand": true
+        },
+        {
+          "source_name": "GitHub Releases API",
+          "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12649",
+          "is_first_hand": true
+        },
+        {
+          "source_name": "GitHub Releases API",
+          "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12646",
+          "is_first_hand": true
+        },
+        {
+          "source_name": "GitHub Releases API",
+          "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12633",
+          "is_first_hand": true
+        },
+        {
+          "source_name": "GitHub Releases API",
+          "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12631",
+          "is_first_hand": true
+        }
+      ]
+    },
+    {
+      "id": "ai_ev_evt_fb006165a45f",
+      "date": "2026-11-24T14:59:54+08:00",
+      "company_id": "baidu_ernie",
+      "company_name": "百度文心 (ERNIE)",
+      "region": "国内",
+      "category": "开源突破",
+      "category_en": "Open Source",
+      "title": "百度开源文心 5.5 Flash Preview：2800 亿参数 140 亿激活，Apache 2.0 协议上架 Hugging Face",
+      "title_en": "百度开源文心 5.5 Flash Preview：2800 亿参数 140 亿激活，Apache 2.0 协议上架 Hugging Face",
+      "what_it_does": "IT之家 11 月 24 日消息，百度今日宣布文心 5.5 Flash Preview（ERNIE 5.5 Flash Preview）正式开源，采用 Apache 2.0 协议，模型权重与配套资源已上架 Hugging Face 和 …",
+      "what_it_does_en": "百度宣布文心 5.5 Flash Preview正式开源，采用Apache 2.0协议，模型权重与配套资源已上架Hugging Face和ModelScope。",
+      "who_cares": "",
+      "limitations": "",
+      "limitations_en": "",
+      "source_id": "ithome-rss",
+      "source_name": "IT之家 实时快讯",
+      "source_url": "https://www.ithome.com/1/031/501.htm",
+      "is_first_hand": false,
+      "source_tier": "wire_media",
+      "event_id": "evt_fb006165a45f",
+      "is_open_source": true,
+      "related_sources": [
+        {
+          "source_name": "IT之家 实时快讯",
+          "url": "https://www.ithome.com/1/031/501.htm",
+          "is_first_hand": false
+        },
+        {
+          "source_name": "AIHOT 前沿",
+          "url": "https://aihot.news/items/bdl58su5ht2g95lkkgi6iobrt",
+          "is_first_hand": false
+        },
+        {
+          "source_name": "AIHOT 前沿",
+          "url": "https://aihot.news/items/kk3rxrr3jn1tpvs5xmgu0t7z3",
+          "is_first_hand": false
+        }
+      ],
+      "milestone_dim": "open_source_eco",
+      "milestone_dim_label": "开源权重与生态",
+      "milestone_dim_label_en": "Open Source",
+      "is_recent_72h": true
+    },
+    {
+      "id": "ai_live_ithome-rss_47f36be9bd7d",
+      "date": "2026-11-24T14:52:22+08:00",
+      "company_id": "apple_ai",
+      "company_name": "Apple Intelligence",
+      "region": "海外",
+      "category": "模型与产品",
+      "category_en": "Model & Product",
+      "title": "苹果新招聘曝光：为 AI 算力芯片打造“光速公路”",
+      "title_en": "",
+      "what_it_does": "IT之家 11 月 24 日消息，科技媒体 MacRumors 昨日（11 月 23 日）发布博文， 报道称苹果正在招聘一名“硅光子工程项目经理”，负责其数据中心服务器芯片的光互连技术。IT之家注：光互连（Optical Interco…",
+      "what_it_does_en": "",
+      "who_cares": "",
+      "limitations": "",
+      "limitations_en": "",
+      "source_name": "IT之家 实时快讯",
+      "source_url": "https://www.ithome.com/1/031/499.htm",
+      "event_id": null,
+      "is_open_source": false,
+      "is_first_hand": false,
+      "source_tier": "realtime_wire",
+      "milestone_dim": "flagship_release",
+      "milestone_dim_label": "旗舰模型发布",
+      "milestone_dim_label_en": "Flagship Model",
+      "related_sources": [
+        {
+          "source_name": "IT之家 实时快讯",
+          "url": "https://www.ithome.com/1/031/499.htm",
+          "is_first_hand": false
+        }
+      ]
+    },
+    {
+      "id": "ai_raw_rss-gnews-ai-models-en_2b740f4035b4",
+      "date": "2026-11-24T13:27:04+08:00",
+      "company_id": "anthropic",
+      "company_name": "Anthropic",
+      "region": "海外",
+      "category": "最新动态",
+      "category_en": "Latest Release",
+      "title": "Claude Fable 5.2 与 Mythos 5.2：基准测试与定价",
+      "title_en": "Claude Fable 5.2 and Mythos 5.2: Benchmarks and Pricing",
+      "what_it_does": "",
+      "what_it_does_en": "",
+      "who_cares": "",
+      "limitations": "",
+      "limitations_en": "",
+      "source_id": "rss-gnews-ai-models-en",
+      "source_name": "Fello AI",
+      "source_url": "https://news.google.com/rss/articles/CBMiTkFVX3lxTE1KeElxa0JKY3NHc1ljYXpMNHBtc1F6bk9rTUZSS2x0b3U4YnM3TW9nR0RHckZ5RmFSSmxiUi04MTJlWGpLSTlpaG96YXZRQQ?oc=5",
+      "is_first_hand": false,
+      "source_tier": "wire_media",
+      "is_open_source": false,
+      "milestone_dim": "research_breakthrough",
+      "milestone_dim_label": "算法与科研突破",
+      "milestone_dim_label_en": "Research & Math",
+      "is_recent_72h": true,
+      "related_sources": [
+        {
+          "source_name": "Fello AI",
+          "url": "https://news.google.com/rss/articles/CBMiTkFVX3lxTE1KeElxa0JKY3NHc1ljYXpMNHBtc1F6bk9rTUZSS2x0b3U4YnM3TW9nR0RHckZ5RmFSSmxiUi04MTJlWGpLSTlpaG96YXZRQQ?oc=5",
+          "is_first_hand": false
+        }
+      ]
+    },
+    {
+      "id": "ai_raw_ithome_11c8a84697c1",
       "date": "2026-11-24T12:58:18+08:00",
       "company_id": "indie_opensource",
       "company_name": "独立实验室 & 开源黑马",
@@ -5438,12 +5910,12 @@
       "title": "商汤发布并开源 SenseNova U1.6 原生多模态模型，能自己修正图片错误",
       "title_en": "商汤发布并开源 SenseNova U1.6 原生多模态模型，能自己修正图片错误",
       "what_it_does": "IT之家 11 月 24 日消息，商汤科技今日发布并开源 SenseNova U1.6 原生多模态模型，延续了 U 系列的理解与生成统一范式， 首次为该系列的 8B 开源模型带来原生图像自修正 。开启自修正后，同一个模型可以先生成首稿，…",
-      "what_it_does_en": "IT之家 11 月 24 日消息，商汤科技今日发布并开源 SenseNova U1.6 原生多模态模型，延续了 U 系列的理解与生成统一范式， 首次为该系列的 8B 开源模型带来原生图像自修正 。开启自修正后，同一个模型可以先生成首稿，再对照原始提示检查画面，并根据发现的文字问题生成修正版。人像的光影、插画的笔触、海报",
+      "what_it_does_en": "",
       "who_cares": "",
       "limitations": "",
       "limitations_en": "",
-      "source_id": "ithome-rss",
-      "source_name": "IT之家 实时快讯",
+      "source_id": "",
+      "source_name": "IT之家",
       "source_url": "https://www.ithome.com/1/031/465.htm",
       "is_first_hand": false,
       "source_tier": "wire_media",
@@ -5454,9 +5926,47 @@
       "is_recent_72h": true,
       "related_sources": [
         {
-          "source_name": "IT之家 实时快讯",
+          "source_name": "IT之家",
           "url": "https://www.ithome.com/1/031/465.htm",
           "is_first_hand": false
+        }
+      ]
+    },
+    {
+      "id": "ai_raw_huggingface-hub_f7c5131ed798",
+      "date": "2026-11-24T12:56:04+08:00",
+      "company_id": "kimi",
+      "company_name": "月之暗面 (Kimi)",
+      "region": "国内",
+      "category": "开源突破",
+      "category_en": "Open Source",
+      "title": "[HF 模型卡] moonshotai/Kimi-K3 更新 (自定义开源许可 (详见模型卡))",
+      "title_en": "[HF 模型卡] moonshotai/Kimi-K3 更新 (自定义开源许可 (详见模型卡))",
+      "what_it_does": "月之暗面 (Kimi) 旗下 Kimi-K3（代码工程专项）：图文多模态理解与对话生成；支持输入图像与文本并生成精准分析回复，适用于视觉问答、图表解析与多模态代理（近期下载 70.9 万次）",
+      "what_it_does_en": "Hugging Face 官方机构 moonshotai 更新模型 moonshotai/Kimi-K3（开源权重可用 (GA)，许可：自定义开源许可 (详见模型卡)，近期下载：708831）。",
+      "who_cares": "",
+      "limitations": "",
+      "limitations_en": "",
+      "source_id": "huggingface-hub",
+      "source_name": "Hugging Face 官方模型库",
+      "source_url": "https://huggingface.co/moonshotai/Kimi-K3",
+      "is_first_hand": true,
+      "source_tier": "first_party",
+      "is_open_source": true,
+      "milestone_dim": "open_source_eco",
+      "milestone_dim_label": "开源权重与生态",
+      "milestone_dim_label_en": "Open Source",
+      "is_recent_72h": true,
+      "related_sources": [
+        {
+          "source_name": "Hugging Face 官方模型库",
+          "url": "https://huggingface.co/moonshotai/Kimi-K3",
+          "is_first_hand": true
+        },
+        {
+          "source_name": "Hugging Face 官方模型库",
+          "url": "https://huggingface.co/MiniMaxAI/MiniMax-H3",
+          "is_first_hand": true
         }
       ]
     },
@@ -5515,7 +6025,7 @@
       "title": "豆包旗下 AI 个人助理小豆开启邀请制公测",
       "title_en": "豆包旗下 AI 个人助理小豆开启邀请制公测",
       "what_it_does": "IT之家 11 月 24 日消息，豆包官方今天宣布“小豆”正式开启公测，采用邀请制开放。用户凭邀请码即可开启体验， 并获赠一定量免费额度 。IT之家注意到，小豆是豆包旗下的 AI 个人助理产品，采用对话式交互方式，在用户明确指令与授权范…",
-      "what_it_does_en": "字节跳动旗下应用“豆包”宣布开启AI个人助理产品“小豆”的公开测试，测试采用邀请制，未来其功能将逐步集成至豆包app中。用户可凭邀请码参与测试，并通过邀请好友获得更多测试额度。",
+      "what_it_does_en": "",
       "who_cares": "",
       "limitations": "",
       "limitations_en": "",
@@ -5533,6 +6043,16 @@
           "is_first_hand": false
         },
         {
+          "source_name": "AIHOT 前沿",
+          "url": "https://aihot.news/items/vihx23ecky4iwwqfrzv47xhad",
+          "is_first_hand": false
+        },
+        {
+          "source_name": "酷安",
+          "url": "https://www.coolapk.com/feed/75244188",
+          "is_first_hand": false
+        },
+        {
           "source_name": "华尔街见闻 7×24 全球",
           "url": "https://wallstreetcn.com/livenews/3204686",
           "is_first_hand": false
@@ -5541,17 +6061,45 @@
           "source_name": "IT之家",
           "url": "https://www.ithome.com/1/031/329.htm",
           "is_first_hand": false
-        },
-        {
-          "source_name": "AIHOT 前沿",
-          "url": "https://aihot.news/items/vihx23ecky4iwwqfrzv47xhad",
-          "is_first_hand": false
         }
       ],
       "milestone_dim": "flagship_release",
       "milestone_dim_label": "旗舰模型发布",
       "milestone_dim_label_en": "Flagship Model",
       "is_recent_72h": true
+    },
+    {
+      "id": "ai_raw_rss-gnews-ai-models-en_024131e086e6",
+      "date": "2026-11-24T12:05:52+08:00",
+      "company_id": "kimi",
+      "company_name": "月之暗面 (Kimi)",
+      "region": "国内",
+      "category": "最新动态",
+      "category_en": "Latest Release",
+      "title": "2026年 Kimi 定价：方案、API 成本与免费层级",
+      "title_en": "Kimi Pricing 2026: Plans, API Costs & Free Tier",
+      "what_it_does": "",
+      "what_it_does_en": "",
+      "who_cares": "",
+      "limitations": "",
+      "limitations_en": "",
+      "source_id": "rss-gnews-ai-models-en",
+      "source_name": "Fello AI",
+      "source_url": "https://news.google.com/rss/articles/CBMiSEFVX3lxTE5ZUWVuVmFDM3VaOVdtNFItYkczaVZST2ZiOXYySzBWQVhCaWlGa2pidzVreUdEbGxYeVF2MERuZkdWcV85Qk4tbA?oc=5",
+      "is_first_hand": false,
+      "source_tier": "wire_media",
+      "is_open_source": false,
+      "milestone_dim": "api_agent_eng",
+      "milestone_dim_label": "API 与 Agent 工程",
+      "milestone_dim_label_en": "API & Agent Eng",
+      "is_recent_72h": true,
+      "related_sources": [
+        {
+          "source_name": "Fello AI",
+          "url": "https://news.google.com/rss/articles/CBMiSEFVX3lxTE5ZUWVuVmFDM3VaOVdtNFItYkczaVZST2ZiOXYySzBWQVhCaWlGa2pidzVreUdEbGxYeVF2MERuZkdWcV85Qk4tbA?oc=5",
+          "is_first_hand": false
+        }
+      ]
     },
     {
       "id": "ai_raw_ithome-rss_7573f1b827cc",
@@ -5606,7 +6154,7 @@
       "event_id": null,
       "is_open_source": false,
       "is_first_hand": false,
-      "source_tier": "realtime_wire",
+      "source_tier": "wire_media",
       "milestone_dim": "flagship_release",
       "milestone_dim_label": "旗舰模型发布",
       "milestone_dim_label_en": "Flagship Model",
@@ -5616,7 +6164,8 @@
           "url": "https://www.ithome.com/1/031/339.htm",
           "is_first_hand": false
         }
-      ]
+      ],
+      "is_recent_72h": true
     },
     {
       "id": "ai_raw_rss-gnews-ai-models-zh_117e064ab39c",
@@ -5661,11 +6210,11 @@
       "category_en": "Model & Product",
       "title": "Claude黎曼猜想证明引争议 阿尔珀格回应代码冗余",
       "title_en": "Claude黎曼猜想证明引争议 阿尔珀格回应代码冗余",
-      "what_it_does": "Lean官方社区和Mathlib证实，由Claude生成的1740万行黎曼猜想证明完全正确，并已通过多个独立验证器的验证，排除了AI作弊的可能性。此前Anthropic曾声称Claude已证明黎曼猜想，斯坦福大学也发布了人类完成的竞争性…",
+      "what_it_does": "Lean官方社区和Mathlib证实，由Claude生成的1740万行黎曼猜想证明引起广泛讨论，但是否完全严谨及存在代码冗余仍具争议，尚待数学界权威期刊与独立同行评审最终定论。此前Anthropic曾声称Claude已证明黎曼猜想，斯坦…",
       "what_it_does_en": "Claude在黎曼猜想证明过程中引发争议，阿尔珀格公开回应了关于代码冗余的相关质疑。",
       "who_cares": "",
-      "limitations": "",
-      "limitations_en": "",
+      "limitations": "相关形式化证明目前仍存在代码冗余及独立同行评审争议，尚未获得国际数学界公认定论，请注意区分阶段性新闻进展与正式学术认证边界。",
+      "limitations_en": "Formal proof claims remain under community scrutiny over code redundancy and await independent peer-reviewed verification.",
       "source_id": "rss-gnews-ai-models-zh",
       "source_name": "观点",
       "source_url": "https://news.google.com/rss/articles/CBMiYkFVX3lxTE1fMklzMWNiU2R4UzdSMkNIQ3FCMmxvNDNGdVRfY1RMUkpfZkZNWWwxRUZQeDNDYTVJZDdySkJ3MEg1NjgxdG8ySXZ1OWlQNHZhX3hKbTRqRE5ad2U4aG5RaXhB?oc=5",
@@ -5721,17 +6270,17 @@
       "is_recent_72h": true
     },
     {
-      "id": "ai_raw_techcrunch-rss_0f07e9351970",
+      "id": "ai_ev_evt_291aa6c1a1fb",
       "date": "2026-11-24T11:08:34+08:00",
       "company_id": "anthropic",
       "company_name": "Anthropic",
       "region": "海外",
-      "category": "最新动态",
-      "category_en": "Latest Release",
+      "category": "模型与产品",
+      "category_en": "Model & Product",
       "title": "Anthropic 推出 Claude Ship，允许 AI 代理审查、修复和批准代码更改",
       "title_en": "Anthropic launches Claude Ship, letting AI agents review, fix, and approve code changes",
       "what_it_does": "Anthropic 的 Claude Ship 整合了代码审查、PR 管理员和 Claude Approvals，用于审查、修复和批准 GitHub 的合并请求。代码审查功能已正式发布（GA），其余两个代理目前面向团队和企业用户进行公开…",
-      "what_it_does_en": "As AI-generated code piles up, Anthropic's new developer tools aim to eliminate another bottleneck by letting agents handle routine approvals.",
+      "what_it_does_en": "Anthropic's Claude Ship bundles Code Review, PR Steward and Claude Approvals to review, fix and approve GitHub pull requests. Code Review is GA; the other 2 agents are in public beta for Team and Enterprise.",
       "who_cares": "",
       "limitations": "",
       "limitations_en": "",
@@ -5740,15 +6289,17 @@
       "source_url": "https://techcrunch.com/2026/11/23/anthropic-launches-claude-ship-letting-ai-agents-review-fix-and-approve-code-changes",
       "is_first_hand": false,
       "source_tier": "wire_media",
+      "event_id": "evt_291aa6c1a1fb",
       "is_open_source": false,
-      "milestone_dim": "api_agent_eng",
-      "milestone_dim_label": "API 与 Agent 工程",
-      "milestone_dim_label_en": "API & Agent Eng",
-      "is_recent_72h": true,
       "related_sources": [
         {
           "source_name": "TechCrunch AI & Tech",
           "url": "https://techcrunch.com/2026/11/23/anthropic-launches-claude-ship-letting-ai-agents-review-fix-and-approve-code-changes",
+          "is_first_hand": false
+        },
+        {
+          "source_name": "Gizmodo",
+          "url": "https://news.google.com/rss/articles/CBMitgFBVV95cUxPRHk5S3NHTnc0MGJFNTlFbVdBRVhMRWFFUlozVzVrNk5lT0tsMHRfeW15ajY4SHptM0tCVkwtemNqYkJ0ekFGOW9IcWpCdjR6LVRFMHpUWmQ1QmFtcWtqbENhbzVYMVFNQm1iekh4YzJ3Wk5xNlJIVFNFLXVfbEVyamVDVWoyc1YyMW5mUDY4czRUODcyVmRaOExxelJHemwyRUVIdjlkWE5NUUw2S0IxUW1RdFZGdw?oc=5",
           "is_first_hand": false
         },
         {
@@ -5762,8 +6313,65 @@
           "is_first_hand": false
         },
         {
+          "source_name": "MarkTechPost",
+          "url": "https://news.google.com/rss/articles/CBMiigFBVV95cUxNVG1KWnZ3U0RzWUpsWUplSWlGLXBqaDNmOURyZjE0NW1qblJCa2cwSDh3cDNnY1hGZ3MxNGVreFVCWjlsTldla2NFdmhzczU0bzJHdndGUXVwV3VSTzNyVFVzbk9XQWljdzhWMkZZQmpTQzc1eFphb0xOcHpvQXZzbzFPWE9kQ1otOHfSAYoBQVVfeXFMTVRtSlp2d1NEc1lKbFlKZUlpRi1wamgzZjlEcmYxNDVtam5SQmtnMEg4d3AzZ2NYRmdzMTRla3hVQlo5bE5XZWtjRXZoc3M1NG8yR3Z3RlF1cFd1Uk8zclRVc25PV0FpY3c4VjJGWUJqU0M3NXhaYW9MTnB6b0F2c28xT1hPZENaLTh3?oc=5",
+          "is_first_hand": false
+        },
+        {
+          "source_name": "华尔街见闻 7×24 全球",
+          "url": "https://wallstreetcn.com/livenews/3204490",
+          "is_first_hand": false
+        }
+      ],
+      "milestone_dim": "flagship_release",
+      "milestone_dim_label": "旗舰模型发布",
+      "milestone_dim_label_en": "Flagship Model",
+      "is_recent_72h": true
+    },
+    {
+      "id": "ai_raw_rss-marktechpost_e6b03fc6b923",
+      "date": "2026-11-24T11:08:34+08:00",
+      "company_id": "anthropic",
+      "company_name": "Anthropic",
+      "region": "海外",
+      "category": "最新动态",
+      "category_en": "Latest Release",
+      "title": "Anthropic 推出用于 GitHub 拉取请求审查与修复的 Claude Ship",
+      "title_en": "Anthropic Launches Claude Ship for GitHub Pull Request Review and Fixes",
+      "what_it_does": "Anthropic 的 Claude Ship 整合了代码审查、PR 管理员和 Claude Approvals，用于审查、修复和批准 GitHub 的合并请求。代码审查功能已正式发布（GA），其余两个代理目前面向团队和企业用户进行公开…",
+      "what_it_does_en": "Anthropic's Claude Ship bundles Code Review, PR Steward and Claude Approvals to review, fix and approve GitHub pull requests. Code Review is GA; the other 2 age",
+      "who_cares": "",
+      "limitations": "",
+      "limitations_en": "",
+      "source_id": "rss-marktechpost",
+      "source_name": "MarkTechPost (AI论文/模型)",
+      "source_url": "https://www.marktechpost.com/2026/11/23/anthropic-claude-ship-pull-request-agents",
+      "is_first_hand": false,
+      "source_tier": "wire_media",
+      "is_open_source": false,
+      "milestone_dim": "flagship_release",
+      "milestone_dim_label": "旗舰模型发布",
+      "milestone_dim_label_en": "Flagship Model",
+      "is_recent_72h": true,
+      "related_sources": [
+        {
+          "source_name": "MarkTechPost (AI论文/模型)",
+          "url": "https://www.marktechpost.com/2026/11/23/anthropic-claude-ship-pull-request-agents",
+          "is_first_hand": false
+        },
+        {
           "source_name": "Gizmodo",
           "url": "https://news.google.com/rss/articles/CBMitgFBVV95cUxPRHk5S3NHTnc0MGJFNTlFbVdBRVhMRWFFUlozVzVrNk5lT0tsMHRfeW15ajY4SHptM0tCVkwtemNqYkJ0ekFGOW9IcWpCdjR6LVRFMHpUWmQ1QmFtcWtqbENhbzVYMVFNQm1iekh4YzJ3Wk5xNlJIVFNFLXVfbEVyamVDVWoyc1YyMW5mUDY4czRUODcyVmRaOExxelJHemwyRUVIdjlkWE5NUUw2S0IxUW1RdFZGdw?oc=5",
+          "is_first_hand": false
+        },
+        {
+          "source_name": "TechCrunch",
+          "url": "https://news.google.com/rss/articles/CBMiuwFBVV95cUxPOUdkSUFqUUdSaDIwclBOdjhNS2ltR3hsOW4tQTlMTzAzVjVrazZLN3J1eWJsYm02NDBOcUFlLXdoRV9CY3F2OHdwb215cm5mamdRZTBBS19keDhieXZiQ080SnJlTFVsNEpjNkEzMlBjOUhTSHNHTzZwNHJiYTBzSnpDemUwdFNxTXNDRHB3VEs5cnhIUTJpZ1FMd3Z1OTBXRG00Q0dlSmlqUW53eEd2dDJKaVJlRDVQdXFB?oc=5",
+          "is_first_hand": false
+        },
+        {
+          "source_name": "TechCrunch AI & Tech",
+          "url": "https://techcrunch.com/2026/11/23/anthropic-launches-claude-ship-letting-ai-agents-review-fix-and-approve-code-changes",
           "is_first_hand": false
         },
         {
@@ -5939,19 +6547,19 @@
           "is_first_hand": false
         },
         {
-          "source_name": "ThePaper.cn",
-          "url": "https://news.google.com/rss/articles/CBMiYEFVX3lxTE91OWpEZXU1Um9vYVJKQlZCZlRIZFJoYmRkeElqX29TU0YxcnpaUnd5VnRzdXBuZi1NLTh1aTNLaElZMUFDd2szSndURjhzZHR6R1NxUUhjM1hieF9ycmdFZQ?oc=5",
-          "is_first_hand": false
-        },
-        {
           "source_name": "东方财富",
           "url": "https://news.google.com/rss/articles/CBMiZkFVX3lxTFB6eG5KVmpaOUdzTGZZSmtEcU9NTnViLTl6RjhWS014N2tfYUo4c3JJaWl6bUlLRnVDLXNQSmZNLUVhWFZoY1l1czZ1UkVYMEdyamk1aFQ1NnQ2bk16X0pmLVNabU5OUQ?oc=5",
           "is_first_hand": false
         },
         {
-          "source_name": "驱动之家",
-          "url": "https://news.google.com/rss/articles/CBMiWEFVX3lxTFBET1NDVWVpNlRoZTExT3FOdHQxR2Z4M0VMaGJGb240NmNVYWpNbmFfOS05OGZZUFNvZkpVVTlmbzBjWnRrWlBkNnJ4QkFEQjVTOTBjbzNQVW4?oc=5",
+          "source_name": "东方财富",
+          "url": "https://news.google.com/rss/articles/CBMiZkFVX3lxTE9hdGVyWEdBOGJ2TEc4WFE4bHdmSW45c1l3NjFGVDkwRUFHTUFXemxWdXdPTWxrQW9VeFdFMFQ0cTJxa1ZwS3NHakJYa2xsNjNJdXRoODljV1pfLVVTcmE4MzNFMWtIdw?oc=5",
           "is_first_hand": false
+        },
+        {
+          "source_name": "Zhipu AI 官方",
+          "url": "https://bigmodel.cn/",
+          "is_first_hand": true
         }
       ]
     },
@@ -6003,77 +6611,6 @@
       "milestone_dim_label": "旗舰模型发布",
       "milestone_dim_label_en": "Flagship Model",
       "is_recent_72h": true
-    },
-    {
-      "id": "ai_raw_github-releases_3ed38f2d9274",
-      "date": "2026-11-24T10:38:41+08:00",
-      "company_id": "indie_opensource",
-      "company_name": "独立实验室 & 开源黑马",
-      "region": "全球开源",
-      "category": "开源突破",
-      "category_en": "Open Source",
-      "title": "[GitHub Release] llama.cpp 发布 b12669",
-      "title_en": "[GitHub Release] llama.cpp 发布 b12669",
-      "what_it_does": "{'name': 'llama.cpp', 'version': 'b12669', 'notes': '量化工具新增目标文件大小与比特率的自动最优类型选择功能；重构帕累托优化、拉格朗日惩罚及量化检查函数'}",
-      "what_it_does_en": "版本 b12669（Pre-release/RC | 许可: MIT）。quantize: add option to automatically choose optimal quant types to reach a file/bpw target size at lowest error；Refactor pa",
-      "who_cares": "",
-      "limitations": "",
-      "limitations_en": "",
-      "source_id": "github-releases",
-      "source_name": "GitHub Releases 官方版本",
-      "source_url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12669",
-      "is_first_hand": true,
-      "source_tier": "first_party",
-      "is_open_source": true,
-      "milestone_dim": "open_source_eco",
-      "milestone_dim_label": "开源权重与生态",
-      "milestone_dim_label_en": "Open Source",
-      "is_recent_72h": true,
-      "related_sources": [
-        {
-          "source_name": "GitHub Releases 官方版本",
-          "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12669",
-          "is_first_hand": true
-        }
-      ]
-    },
-    {
-      "id": "ai_raw_rss-marktechpost_e6b03fc6b923",
-      "date": "2026-11-24T08:02:39+08:00",
-      "company_id": "anthropic",
-      "company_name": "Anthropic",
-      "region": "海外",
-      "category": "最新动态",
-      "category_en": "Latest Release",
-      "title": "Anthropic 推出用于 GitHub 拉取请求审查与修复的 Claude Ship",
-      "title_en": "Anthropic Launches Claude Ship for GitHub Pull Request Review and Fixes",
-      "what_it_does": "Anthropic 的 Claude Ship 整合了代码审查、PR 管理员和 Claude 审批功能，用于审查、修复和批准 GitHub 拉取请求。代码审查现已正式发布（GA），其余两项功能处于...",
-      "what_it_does_en": "Anthropic's Claude Ship bundles Code Review, PR Steward and Claude Approvals to review, fix and approve GitHub pull requests. Code Review is GA; the other 2 age",
-      "who_cares": "",
-      "limitations": "",
-      "limitations_en": "",
-      "source_id": "rss-marktechpost",
-      "source_name": "MarkTechPost (AI论文/模型)",
-      "source_url": "https://www.marktechpost.com/2026/11/23/anthropic-claude-ship-pull-request-agents",
-      "is_first_hand": false,
-      "source_tier": "wire_media",
-      "is_open_source": false,
-      "milestone_dim": "flagship_release",
-      "milestone_dim_label": "旗舰模型发布",
-      "milestone_dim_label_en": "Flagship Model",
-      "is_recent_72h": true,
-      "related_sources": [
-        {
-          "source_name": "MarkTechPost (AI论文/模型)",
-          "url": "https://www.marktechpost.com/2026/11/23/anthropic-claude-ship-pull-request-agents",
-          "is_first_hand": false
-        },
-        {
-          "source_name": "TechCrunch",
-          "url": "https://news.google.com/rss/articles/CBMiuwFBVV95cUxPOUdkSUFqUUdSaDIwclBOdjhNS2ltR3hsOW4tQTlMTzAzVjVrazZLN3J1eWJsYm02NDBOcUFlLXdoRV9CY3F2OHdwb215cm5mamdRZTBBS19keDhieXZiQ080SnJlTFVsNEpjNkEzMlBjOUhTSHNHTzZwNHJiYTBzSnpDemUwdFNxTXNDRHB3VEs5cnhIUTJpZ1FMd3Z1OTBXRG00Q0dlSmlqUW53eEd2dDJKaVJlRDVQdXFB?oc=5",
-          "is_first_hand": false
-        }
-      ]
     },
     {
       "id": "ai_raw_rss-gnews-ai-models-zh_91d33ce60d62",
@@ -6158,23 +6695,23 @@
       "is_recent_72h": true
     },
     {
-      "id": "ai_raw_rss-gnews-opensource-ai_ae5315c2a759",
+      "id": "ai_raw_rss-gnews-ai-models-en_b6467d8b7aaf",
       "date": "2026-11-24T06:12:00+08:00",
       "company_id": "openai",
       "company_name": "OpenAI",
       "region": "海外",
       "category": "最新动态",
       "category_en": "Latest Release",
-      "title": "思科与 OpenAI 联合推出 Shirudo 新项目，旨在保障智能体 AI 安全 - Yahoo! 财经加拿大",
-      "title_en": "Cisco and OpenAI Launch Shirudo, A New Project to Safeguard Agentic AI - Yahoo! Finance Canada",
+      "title": "Cisco 和 OpenAI 推出 Shirudo，一项旨在保护代理式 AI 的新项目",
+      "title_en": "Cisco and OpenAI Launch Shirudo, A New Project to Safeguard Agentic AI",
       "what_it_does": "",
       "what_it_does_en": "",
       "who_cares": "",
       "limitations": "",
       "limitations_en": "",
-      "source_id": "rss-gnews-opensource-ai",
-      "source_name": "Yahoo! Finance Canada",
-      "source_url": "https://news.google.com/rss/articles/CBMijAFBVV95cUxOSmM2dnZ2aFczaTgyVkM1aGx1QVRYZzJpUXpnMWpKZUFhSzhWcEtFQU5MWFYyTUZ0dFp0ei1JNTBndkcwckc0N3dNQ3pORG1OaDhMQTJYTzVRV3l5R1BuckFOSXlRa1piTllWZjZ3VjdOX29hVU5iZGlSU3ZINU42VW82STNOTGl3SkRabg?oc=5",
+      "source_id": "rss-gnews-ai-models-en",
+      "source_name": "PR Newswire",
+      "source_url": "https://news.google.com/rss/articles/CBMiwwFBVV95cUxPTlJlYkFSYUhlbmdwU3R1YWVVVDJtZldTYVQ2Yzljd3pRb1ZwMS1WZ0FGdE1VSl9IV1RodHQ4WWVsWEF2bEhpMll1TzN0MkdBSzVpejF0TEJBSlR6VHE5TUEyLWZFbFhYMzEwZy1SeTcyZ3BQVnFmTmM2NXA2bjRPWjhLQXlCc05ab1lyanQtXzJHelV3b3NSY0FOalRORlJlZnA2UzIwUEpNTXdmX1NaemdJbS1CaG1iVVFsMG9LZkhIalE?oc=5",
       "is_first_hand": false,
       "source_tier": "wire_media",
       "is_open_source": false,
@@ -6183,6 +6720,11 @@
       "milestone_dim_label_en": "API & Agent Eng",
       "is_recent_72h": true,
       "related_sources": [
+        {
+          "source_name": "PR Newswire",
+          "url": "https://news.google.com/rss/articles/CBMiwwFBVV95cUxPTlJlYkFSYUhlbmdwU3R1YWVVVDJtZldTYVQ2Yzljd3pRb1ZwMS1WZ0FGdE1VSl9IV1RodHQ4WWVsWEF2bEhpMll1TzN0MkdBSzVpejF0TEJBSlR6VHE5TUEyLWZFbFhYMzEwZy1SeTcyZ3BQVnFmTmM2NXA2bjRPWjhLQXlCc05ab1lyanQtXzJHelV3b3NSY0FOalRORlJlZnA2UzIwUEpNTXdmX1NaemdJbS1CaG1iVVFsMG9LZkhIalE?oc=5",
+          "is_first_hand": false
+        },
         {
           "source_name": "Yahoo! Finance Canada",
           "url": "https://news.google.com/rss/articles/CBMijAFBVV95cUxOSmM2dnZ2aFczaTgyVkM1aGx1QVRYZzJpUXpnMWpKZUFhSzhWcEtFQU5MWFYyTUZ0dFp0ei1JNTBndkcwckc0N3dNQ3pORG1OaDhMQTJYTzVRV3l5R1BuckFOSXlRa1piTllWZjZ3VjdOX29hVU5iZGlSU3ZINU42VW82STNOTGl3SkRabg?oc=5",
@@ -6199,13 +6741,71 @@
           "is_first_hand": false
         },
         {
-          "source_name": "PR Newswire",
-          "url": "https://news.google.com/rss/articles/CBMiwwFBVV95cUxPTlJlYkFSYUhlbmdwU3R1YWVVVDJtZldTYVQ2Yzljd3pRb1ZwMS1WZ0FGdE1VSl9IV1RodHQ4WWVsWEF2bEhpMll1TzN0MkdBSzVpejF0TEJBSlR6VHE5TUEyLWZFbFhYMzEwZy1SeTcyZ3BQVnFmTmM2NXA2bjRPWjhLQXlCc05ab1lyanQtXzJHelV3b3NSY0FOalRORlJlZnA2UzIwUEpNTXdmX1NaemdJbS1CaG1iVVFsMG9LZkhIalE?oc=5",
+          "source_name": "Cisco Newsroom",
+          "url": "https://news.google.com/rss/articles/CBMi1AFBVV95cUxNMTh2UVAyQ0xKeDdMcVNQTjFXUndsRHRZbXNIdWUyX20zSGRhY3FyMWNVOHdzaEpxV3B0Qy1kVmhzbm5XNjBRR19nMWJVMWJMWWZnV3psb1NvbVZkQzI0dzRPSThSNkcyNzBGd0pSNER5eUJXcC1NenVMUXZZWmwtaWVfUDdLZGFDcXJEalZZOUw4Z3JENHU3N2xqc3ozMnRLVHpiSWJubDdQbWNaMzdzbTQyeTdoWkdiSWpMMVdKLVp6SHptOU5SVERldk5adENkQ01tbw?oc=5",
+          "is_first_hand": false
+        }
+      ]
+    },
+    {
+      "id": "ai_raw_sina-7x24_1e95d8b5a054",
+      "date": "2026-11-24T06:12:00+08:00",
+      "company_id": "openai",
+      "company_name": "OpenAI",
+      "region": "海外",
+      "category": "最新动态",
+      "category_en": "Latest Release",
+      "title": "思科与OpenAI推出Shirudo项目，旨在保障智能体AI安全。",
+      "title_en": "思科与OpenAI推出Shirudo项目，旨在保障智能体AI安全。",
+      "what_it_does": "",
+      "what_it_does_en": "",
+      "who_cares": "",
+      "limitations": "",
+      "limitations_en": "",
+      "source_id": "sina-7x24",
+      "source_name": "新浪财经 7×24 电",
+      "source_url": "https://finance.sina.cn/7x24/2026-11-24/detail-inizupfs0254627.d.html",
+      "is_first_hand": false,
+      "source_tier": "wire_media",
+      "is_open_source": false,
+      "milestone_dim": "api_agent_eng",
+      "milestone_dim_label": "API 与 Agent 工程",
+      "milestone_dim_label_en": "API & Agent Eng",
+      "is_recent_72h": true,
+      "related_sources": [
+        {
+          "source_name": "新浪财经 7×24 电",
+          "url": "https://finance.sina.cn/7x24/2026-11-24/detail-inizupfs0254627.d.html",
+          "is_first_hand": false
+        },
+        {
+          "source_name": "华尔街见闻 A股快讯",
+          "url": "https://wallstreetcn.com/livenews/3204515",
           "is_first_hand": false
         },
         {
           "source_name": "Cisco Newsroom",
           "url": "https://news.google.com/rss/articles/CBMi1AFBVV95cUxNMTh2UVAyQ0xKeDdMcVNQTjFXUndsRHRZbXNIdWUyX20zSGRhY3FyMWNVOHdzaEpxV3B0Qy1kVmhzbm5XNjBRR19nMWJVMWJMWWZnV3psb1NvbVZkQzI0dzRPSThSNkcyNzBGd0pSNER5eUJXcC1NenVMUXZZWmwtaWVfUDdLZGFDcXJEalZZOUw4Z3JENHU3N2xqc3ozMnRLVHpiSWJubDdQbWNaMzdzbTQyeTdoWkdiSWpMMVdKLVp6SHptOU5SVERldk5adENkQ01tbw?oc=5",
+          "is_first_hand": false
+        },
+        {
+          "source_name": "PR Newswire",
+          "url": "https://news.google.com/rss/articles/CBMiwwFBVV95cUxPTlJlYkFSYUhlbmdwU3R1YWVVVDJtZldTYVQ2Yzljd3pRb1ZwMS1WZ0FGdE1VSl9IV1RodHQ4WWVsWEF2bEhpMll1TzN0MkdBSzVpejF0TEJBSlR6VHE5TUEyLWZFbFhYMzEwZy1SeTcyZ3BQVnFmTmM2NXA2bjRPWjhLQXlCc05ab1lyanQtXzJHelV3b3NSY0FOalRORlJlZnA2UzIwUEpNTXdmX1NaemdJbS1CaG1iVVFsMG9LZkhIalE?oc=5",
+          "is_first_hand": false
+        },
+        {
+          "source_name": "Yahoo! Finance Canada",
+          "url": "https://news.google.com/rss/articles/CBMijAFBVV95cUxOSmM2dnZ2aFczaTgyVkM1aGx1QVRYZzJpUXpnMWpKZUFhSzhWcEtFQU5MWFYyTUZ0dFp0ei1JNTBndkcwckc0N3dNQ3pORG1OaDhMQTJYTzVRV3l5R1BuckFOSXlRa1piTllWZjZ3VjdOX29hVU5iZGlSU3ZINU42VW82STNOTGl3SkRabg?oc=5",
+          "is_first_hand": false
+        },
+        {
+          "source_name": "WSJ",
+          "url": "https://news.google.com/rss/articles/CBMijgFBVV95cUxQQWRzSVl5NXdtMlRvTWxOYmItRm53SkNyVGdNOVhPSkZGMV82cHJhdWNYeDRrLVlUaUxPTC1QX0IyX2d4UkNKTkF1NVd3d21tcUc5QWk4Wm1qUWl3QlVxOFBJV3lpaWxreUxWaEdpRXZpR29YcUpsa1dJYkVGMDh4a0llVUZJaDBYa3ZsbWNR?oc=5",
+          "is_first_hand": false
+        },
+        {
+          "source_name": "Crypto Briefing",
+          "url": "https://news.google.com/rss/articles/CBMidEFVX3lxTE5YOHFEc1B2VVF2T0M0NThSZUNVVHNmbEhKdy0zZ1Q5QTBDaHRkQ3FJVGw1V2dVLXpGbERtbVYzZllYRW5JX2JsZjNYY3ZVNXNGOFluNVJ6OGo2RWdlaExzVEZaeG9OclctVW5jRUtMUUdTQ2Z2?oc=5",
           "is_first_hand": false
         }
       ]
@@ -6283,59 +6883,6 @@
         {
           "source_name": "Crypto Briefing",
           "url": "https://news.google.com/rss/articles/CBMidEFVX3lxTE5YOHFEc1B2VVF2T0M0NThSZUNVVHNmbEhKdy0zZ1Q5QTBDaHRkQ3FJVGw1V2dVLXpGbERtbVYzZllYRW5JX2JsZjNYY3ZVNXNGOFluNVJ6OGo2RWdlaExzVEZaeG9OclctVW5jRUtMUUdTQ2Z2?oc=5",
-          "is_first_hand": false
-        }
-      ]
-    },
-    {
-      "id": "ai_raw_sina-7x24_1e95d8b5a054",
-      "date": "2026-11-24T05:20:54+08:00",
-      "company_id": "openai",
-      "company_name": "OpenAI",
-      "region": "海外",
-      "category": "最新动态",
-      "category_en": "Latest Release",
-      "title": "思科与OpenAI推出Shirudo项目，旨在保障智能体AI安全。",
-      "title_en": "思科与OpenAI推出Shirudo项目，旨在保障智能体AI安全。",
-      "what_it_does": "",
-      "what_it_does_en": "",
-      "who_cares": "",
-      "limitations": "",
-      "limitations_en": "",
-      "source_id": "sina-7x24",
-      "source_name": "新浪财经 7×24 电",
-      "source_url": "https://finance.sina.cn/7x24/2026-11-24/detail-inizupfs0254627.d.html",
-      "is_first_hand": false,
-      "source_tier": "wire_media",
-      "is_open_source": false,
-      "milestone_dim": "api_agent_eng",
-      "milestone_dim_label": "API 与 Agent 工程",
-      "milestone_dim_label_en": "API & Agent Eng",
-      "is_recent_72h": true,
-      "related_sources": [
-        {
-          "source_name": "新浪财经 7×24 电",
-          "url": "https://finance.sina.cn/7x24/2026-11-24/detail-inizupfs0254627.d.html",
-          "is_first_hand": false
-        },
-        {
-          "source_name": "华尔街见闻 A股快讯",
-          "url": "https://wallstreetcn.com/livenews/3204515",
-          "is_first_hand": false
-        },
-        {
-          "source_name": "Cisco Newsroom",
-          "url": "https://news.google.com/rss/articles/CBMi1AFBVV95cUxNMTh2UVAyQ0xKeDdMcVNQTjFXUndsRHRZbXNIdWUyX20zSGRhY3FyMWNVOHdzaEpxV3B0Qy1kVmhzbm5XNjBRR19nMWJVMWJMWWZnV3psb1NvbVZkQzI0dzRPSThSNkcyNzBGd0pSNER5eUJXcC1NenVMUXZZWmwtaWVfUDdLZGFDcXJEalZZOUw4Z3JENHU3N2xqc3ozMnRLVHpiSWJubDdQbWNaMzdzbTQyeTdoWkdiSWpMMVdKLVp6SHptOU5SVERldk5adENkQ01tbw?oc=5",
-          "is_first_hand": false
-        },
-        {
-          "source_name": "PR Newswire",
-          "url": "https://news.google.com/rss/articles/CBMiwwFBVV95cUxPTlJlYkFSYUhlbmdwU3R1YWVVVDJtZldTYVQ2Yzljd3pRb1ZwMS1WZ0FGdE1VSl9IV1RodHQ4WWVsWEF2bEhpMll1TzN0MkdBSzVpejF0TEJBSlR6VHE5TUEyLWZFbFhYMzEwZy1SeTcyZ3BQVnFmTmM2NXA2bjRPWjhLQXlCc05ab1lyanQtXzJHelV3b3NSY0FOalRORlJlZnA2UzIwUEpNTXdmX1NaemdJbS1CaG1iVVFsMG9LZkhIalE?oc=5",
-          "is_first_hand": false
-        },
-        {
-          "source_name": "Yahoo! Finance Canada",
-          "url": "https://news.google.com/rss/articles/CBMijAFBVV95cUxOSmM2dnZ2aFczaTgyVkM1aGx1QVRYZzJpUXpnMWpKZUFhSzhWcEtFQU5MWFYyTUZ0dFp0ei1JNTBndkcwckc0N3dNQ3pORG1OaDhMQTJYTzVRV3l5R1BuckFOSXlRa1piTllWZjZ3VjdOX29hVU5iZGlSU3ZINU42VW82STNOTGl3SkRabg?oc=5",
           "is_first_hand": false
         }
       ]
@@ -6574,7 +7121,7 @@
       "title": "开源工具更新：OpenAI SDK v3.58.0",
       "title_en": "Open-source release: OpenAI SDK v3.58.0",
       "what_it_does": "OpenAI启动了大规模反蒸馏战役，通过模型训练、防护、检测和执法等分层方法对抗对抗性蒸馏，已将GPT-6.2 Astra的思考链提取成功率从54%降至0.2%。此外，OpenAI还在API中发布了GPT-Live-1.1全双工语音模型…",
-      "what_it_does_en": "{'name': 'OpenAI SDK', 'version': 'v3.58.0', 'notes': 'API 新增代理会话消费限额的设置与读取功能；明确并优化了补全选项计数的可选说明'}",
+      "what_it_does_en": "API 新增代理会话消费限额的设置与读取功能；明确并优化了补全选项计数的可选说明",
       "who_cares": "",
       "limitations": "许可证：Apache-2.0",
       "limitations_en": "License: Apache-2.0",
@@ -6694,39 +7241,6 @@
         {
           "source_name": "Unite.AI",
           "url": "https://news.google.com/rss/articles/CBMijwFBVV95cUxOS2xrM2N0R0JKZjRxWlRfV3RuLXNBSmNrWGpIN3RtZmM4blZYN21uUF85UlhYMUZDdUxCdXNiWGtqeHo5TVRpQVRpT1lEbDZ5cEJxZHJtMjlNNmJ5NHhhVng3R2tfQTRMOVJYWjI0NVRvd0o3LXkwLW4zSjNTSUtJMjZ5REtnLUREV1dDdFg5Zw?oc=5",
-          "is_first_hand": false
-        }
-      ]
-    },
-    {
-      "id": "ai_raw_rss-gnews-opensource-ai_875eaa09452d",
-      "date": "2026-11-24T01:40:00+08:00",
-      "company_id": "indie_opensource",
-      "company_name": "独立实验室 & 开源黑马",
-      "region": "全球开源",
-      "category": "最新动态",
-      "category_en": "Latest Release",
-      "title": "meshIQ 推出用于中间件故障排查的 Neo AI 智能体",
-      "title_en": "meshIQ launches Neo AI agent for middleware troubleshooting",
-      "what_it_does": "",
-      "what_it_does_en": "",
-      "who_cares": "",
-      "limitations": "",
-      "limitations_en": "",
-      "source_id": "rss-gnews-opensource-ai",
-      "source_name": "IT Brief New Zealand",
-      "source_url": "https://news.google.com/rss/articles/CBMikAFBVV95cUxQVHhNRHZha05MbzBOdlpvWU5OSE1LazU1bmNKeHJ2WFA5RkJCU1A0MkNCclVUR3dmdTRoUzBBaGxXMnJEY3VLYV83aHo2WGdCVGZ1RWdPUFhRUDFRX09rbHYxM3RNdEUyOGhJbmFIbWxmN0ZnYXRpX1J4SEpFRjJkdGtsNG81bjc0YTh1X0dwbUk?oc=5",
-      "is_first_hand": false,
-      "source_tier": "wire_media",
-      "is_open_source": false,
-      "milestone_dim": "api_agent_eng",
-      "milestone_dim_label": "API 与 Agent 工程",
-      "milestone_dim_label_en": "API & Agent Eng",
-      "is_recent_72h": true,
-      "related_sources": [
-        {
-          "source_name": "IT Brief New Zealand",
-          "url": "https://news.google.com/rss/articles/CBMikAFBVV95cUxQVHhNRHZha05MbzBOdlpvWU5OSE1LazU1bmNKeHJ2WFA5RkJCU1A0MkNCclVUR3dmdTRoUzBBaGxXMnJEY3VLYV83aHo2WGdCVGZ1RWdPUFhRUDFRX09rbHYxM3RNdEUyOGhJbmFIbWxmN0ZnYXRpX1J4SEpFRjJkdGtsNG81bjc0YTh1X0dwbUk?oc=5",
           "is_first_hand": false
         }
       ]
@@ -6948,40 +7462,6 @@
           "is_first_hand": false
         }
       ]
-    },
-    {
-      "id": "ai_ev_evt_a5f28941bb88",
-      "date": "2026-11-23T21:13:32+08:00",
-      "company_id": "xai",
-      "company_name": "xAI / Grok",
-      "region": "海外",
-      "category": "模型与产品",
-      "category_en": "Model & Product",
-      "title": "美国两州起诉马斯克旗下SpaceX：指控Grok生成儿童性虐待材料",
-      "title_en": "美国两州起诉马斯克旗下SpaceX：指控Grok生成儿童性虐待材料",
-      "what_it_does": "2026-11-23 21:13发布于北京凤凰网官方账号 凤凰网科技讯 11月23日，据路透社报道，美国弗吉尼亚州和俄勒冈州已对埃隆·马斯克旗下SpaceX Super Intelligence提起诉讼，指控该公司从Grok图像生成功能…",
-      "what_it_does_en": "美国弗吉尼亚州和俄勒冈州对SpaceX旗下Super Intelligence提起诉讼，指控Grok未设防护生成违规内容。",
-      "who_cares": "",
-      "limitations": "",
-      "limitations_en": "",
-      "source_id": "tencent-hot",
-      "source_name": "腾讯新闻综合早",
-      "source_url": "https://view.inews.qq.com/a/20261123A0EWXM00",
-      "is_first_hand": false,
-      "source_tier": "wire_media",
-      "event_id": "evt_a5f28941bb88",
-      "is_open_source": false,
-      "related_sources": [
-        {
-          "source_name": "腾讯新闻综合早报",
-          "url": "https://view.inews.qq.com/a/20261123A0EWXM00",
-          "is_first_hand": false
-        }
-      ],
-      "milestone_dim": "commercial_governance",
-      "milestone_dim_label": "商业化与安全治理",
-      "milestone_dim_label_en": "Governance & Commercial",
-      "is_recent_72h": true
     },
     {
       "id": "ai_raw_rss-the-decoder_8da3607d1f60",
@@ -7408,40 +7888,6 @@
       ]
     },
     {
-      "id": "ai_ev_evt_d68bdc590374",
-      "date": "2026-11-23T08:10:21+08:00",
-      "company_id": "anthropic",
-      "company_name": "Anthropic",
-      "region": "海外",
-      "category": "模型与产品",
-      "category_en": "Model & Product",
-      "title": "微软CEO纳德拉承认Claude Code仅半年动摇VS Code地位",
-      "title_en": "微软CEO纳德拉承认Claude Code仅半年动摇VS Code地位",
-      "what_it_does": "据Windows Latest报道，微软CEO萨提亚·纳德拉表示，Anthropic推出Claude Code后，开发者开始接受命令行形态，导致VS Code等传统IDE在大约六个月内失去了存在感，微软并未立刻拿出应对方案。",
-      "what_it_does_en": "微软CEO萨提亚·纳德拉坦言，Anthropic推出Claude Code后，开发者开始接受命令行形态，导致VS Code等传统IDE在约六个月内失去了存在感，微软尚未立即拿出应对方案。",
-      "who_cares": "",
-      "limitations": "",
-      "limitations_en": "",
-      "source_id": "aihot",
-      "source_name": "AIHOT 前沿",
-      "source_url": "https://aihot.news/items/rxwc1x34tzdkksi1jd57gsbfd",
-      "is_first_hand": false,
-      "source_tier": "wire_media",
-      "event_id": "evt_d68bdc590374",
-      "is_open_source": false,
-      "related_sources": [
-        {
-          "source_name": "AIHOT 前沿",
-          "url": "https://aihot.news/items/rxwc1x34tzdkksi1jd57gsbfd",
-          "is_first_hand": false
-        }
-      ],
-      "milestone_dim": "api_agent_eng",
-      "milestone_dim_label": "API 与 Agent 工程",
-      "milestone_dim_label_en": "API & Agent Eng",
-      "is_recent_72h": true
-    },
-    {
       "id": "ai_ev_evt_2b69728528a8",
       "date": "2026-11-22T23:45:00+08:00",
       "company_id": "google",
@@ -7577,40 +8023,6 @@
       ]
     },
     {
-      "id": "ai_ev_evt_dcfd95cf7405",
-      "date": "2026-11-22T21:13:22+08:00",
-      "company_id": "anthropic",
-      "company_name": "Anthropic",
-      "region": "海外",
-      "category": "模型与产品",
-      "category_en": "Model & Product",
-      "title": "Anthropic登陆纳斯达克市值突破2万亿美元，25位华人员工获益",
-      "title_en": "Anthropic登陆纳斯达克市值突破2万亿美元，25位华人员工获益",
-      "what_it_does": "11月19日，Claude背后的Anthropic登陆纳斯达克，盘中市值一度突破2万亿美元。招股书显示，截至9月30日员工期权账面收益合计约1190亿美元，加权平均行权价仅2.91美元，现任员工中至少25位华人赶上这轮股权跃迁。",
-      "what_it_does_en": "11月19日，Claude背后的Anthropic登陆纳斯达克，盘中市值一度突破2万亿美元。招股书显示，截至9月30日员工期权账面收益合计约1190亿美元，加权平均行权价仅2.91美元，现任员工中至少25位华人赶上这轮股权跃迁。",
-      "who_cares": "",
-      "limitations": "",
-      "limitations_en": "",
-      "source_id": "tencent-hot",
-      "source_name": "腾讯新闻综合早",
-      "source_url": "https://view.inews.qq.com/a/20261121A0BSSA00",
-      "is_first_hand": false,
-      "source_tier": "wire_media",
-      "event_id": "evt_dcfd95cf7405",
-      "is_open_source": false,
-      "milestone_dim": "flagship_release",
-      "milestone_dim_label": "旗舰模型发布",
-      "milestone_dim_label_en": "Flagship Model",
-      "is_recent_72h": true,
-      "related_sources": [
-        {
-          "source_name": "腾讯新闻综合早",
-          "url": "https://view.inews.qq.com/a/20261121A0BSSA00",
-          "is_first_hand": false
-        }
-      ]
-    },
-    {
       "id": "ai_raw_google-ai-rss_e8ed5f1d17fd",
       "date": "2026-11-22T18:03:54+08:00",
       "company_id": "google",
@@ -7715,7 +8127,7 @@
       "milestone_dim": "flagship_release",
       "milestone_dim_label": "旗舰模型发布",
       "milestone_dim_label_en": "Flagship Model",
-      "is_recent_72h": true,
+      "is_recent_72h": false,
       "related_sources": [
         {
           "source_name": "Fello AI",
@@ -7821,44 +8233,6 @@
           "source_name": "MarkTechPost (AI论文/模型)",
           "url": "https://www.marktechpost.com/2026/11/20/nvidia-nemotron-labs-sigma-continuous-diffusion-language-model",
           "is_first_hand": false
-        }
-      ]
-    },
-    {
-      "id": "ai_raw_huggingface-hub_f7c5131ed798",
-      "date": "2026-11-20T16:47:53+08:00",
-      "company_id": "kimi",
-      "company_name": "月之暗面 (Kimi)",
-      "region": "国内",
-      "category": "开源突破",
-      "category_en": "Open Source",
-      "title": "[HF 模型卡] moonshotai/Kimi-K3 更新 (自定义开源许可 (详见模型卡))",
-      "title_en": "[HF 模型卡] moonshotai/Kimi-K3 更新 (自定义开源许可 (详见模型卡))",
-      "what_it_does": "月之暗面 (Kimi) 旗下 Kimi-K3（代码工程专项）：图文多模态理解与对话生成；支持输入图像与文本并生成精准分析回复，适用于视觉问答、图表解析与多模态代理（近期下载 70.9 万次）",
-      "what_it_does_en": "Hugging Face 官方机构 moonshotai 更新模型 moonshotai/Kimi-K3（开源权重可用 (GA)，许可：自定义开源许可 (详见模型卡)，近期下载：708831）。",
-      "who_cares": "",
-      "limitations": "",
-      "limitations_en": "",
-      "source_id": "huggingface-hub",
-      "source_name": "Hugging Face 官方模型库",
-      "source_url": "https://huggingface.co/moonshotai/Kimi-K3",
-      "is_first_hand": true,
-      "source_tier": "first_party",
-      "is_open_source": true,
-      "milestone_dim": "open_source_eco",
-      "milestone_dim_label": "开源权重与生态",
-      "milestone_dim_label_en": "Open Source",
-      "is_recent_72h": false,
-      "related_sources": [
-        {
-          "source_name": "Hugging Face 官方模型库",
-          "url": "https://huggingface.co/moonshotai/Kimi-K3",
-          "is_first_hand": true
-        },
-        {
-          "source_name": "Hugging Face 官方模型库",
-          "url": "https://huggingface.co/MiniMaxAI/MiniMax-H3",
-          "is_first_hand": true
         }
       ]
     },
@@ -8935,7 +9309,7 @@
       "pricing_input": "$5.00 / 1M",
       "pricing_output": "$25.00 / 1M",
       "weight_type": "闭源商用",
-      "strengths": "Claude Code 复杂多仓调试、MCP 生态原点、黎曼猜想等形式化证明实测顶尖",
+      "strengths": "Claude Code 复杂多仓调试、MCP 生态原点与形式化数学探索",
       "weaknesses": "API 价格处于第一梯队高位，并发与特定区域合规限制严格"
     },
     {
@@ -9069,5 +9443,5 @@
       "weaknesses": "核心旗舰文本底座尚未全面开放原始权重"
     }
   ],
-  "live_updated_at": "2026-11-24T14:02:23+08:00"
+  "live_updated_at": "2026-11-24T15:38:24+08:00"
 }
