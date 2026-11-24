@@ -1952,8 +1952,8 @@ def build_deterministic_events_from_fresh_clusters(
     *,
     prev_comments_doc: Optional[dict] = None,
     sec_entity_status: Optional[Dict[str, dict]] = None,
-    target_min: int = 10,
-    target_max: int = 12,
+    target_min: int = 12,
+    target_max: int = 15,
 ) -> Tuple[dict, dict, Dict[str, Any]]:
     """
     Engine A (0-AI Deterministic Core Base):
