@@ -1,6 +1,6 @@
 {
   "schema_version": "4.1",
-  "site_published_at": "2026-11-24T12:11:53+08:00",
+  "site_published_at": "2026-11-24T13:29:17+08:00",
   "smart": {
     "latest_batch_id": "smart-20261124-121151",
     "latest_path": "archives/smart/2026-11-24/12-11/",
@@ -81,14 +81,14 @@
     }
   },
   "raw": {
-    "latest_batch_id": "raw-20261124-112914",
-    "latest_path": "archives/raw/2026-11-24/11-29/",
-    "meta_path": "archives/raw/2026-11-24/11-29/meta.json",
-    "connectors_path": "archives/raw/2026-11-24/11-29/connectors.json",
-    "fetched_at": "2026-11-24T11:29:14+08:00",
-    "published_at": "2026-11-24T11:29:50+08:00",
+    "latest_batch_id": "raw-20261124-132903",
+    "latest_path": "archives/raw/2026-11-24/13-29/",
+    "meta_path": "archives/raw/2026-11-24/13-29/meta.json",
+    "connectors_path": "archives/raw/2026-11-24/13-29/connectors.json",
+    "fetched_at": "2026-11-24T13:29:03+08:00",
+    "published_at": "2026-11-24T13:29:17+08:00",
     "target_cadence_minutes": 15,
-    "schedule_source": "workflow_dispatch",
+    "schedule_source": "schedule",
     "status": "partial",
     "summary": {
       "configured_sources": 84,
@@ -97,28 +97,28 @@
       "error_sources": 2,
       "stale_sources": 0,
       "retired_sources": 5,
-      "total_raw_items": 1562,
+      "total_raw_items": 1554,
       "first_party_items": 23,
       "healthy_connectors": 7,
       "total_connectors": 7,
       "deep_fetched_enriched": 22,
-      "deduped_events": 1181
+      "deduped_events": 1167
     },
     "categories": {
       "finance": {
         "file": "data_finance.json",
-        "path": "archives/raw/2026-11-24/11-29/data_finance.json",
+        "path": "archives/raw/2026-11-24/13-29/data_finance.json",
         "status": "partial",
         "source_count": 20,
         "ok_sources": 19,
         "error_sources": 1,
         "empty_sources": 0,
         "stale_sources": 0,
-        "item_count": 397
+        "item_count": 388
       },
       "global": {
         "file": "data_global.json",
-        "path": "archives/raw/2026-11-24/11-29/data_global.json",
+        "path": "archives/raw/2026-11-24/13-29/data_global.json",
         "status": "partial",
         "source_count": 15,
         "ok_sources": 14,
@@ -129,18 +129,18 @@
       },
       "tech": {
         "file": "data_tech.json",
-        "path": "archives/raw/2026-11-24/11-29/data_tech.json",
+        "path": "archives/raw/2026-11-24/13-29/data_tech.json",
         "status": "ok",
         "source_count": 34,
         "ok_sources": 34,
         "error_sources": 0,
         "empty_sources": 0,
         "stale_sources": 0,
-        "item_count": 561
+        "item_count": 562
       },
       "general": {
         "file": "data_general.json",
-        "path": "archives/raw/2026-11-24/11-29/data_general.json",
+        "path": "archives/raw/2026-11-24/13-29/data_general.json",
         "status": "ok",
         "source_count": 15,
         "ok_sources": 15,
@@ -152,18 +152,18 @@
     }
   },
   "scheduler": {
-    "provider": "cloud_engine",
+    "provider": "cloud_runner",
     "raw_cron": "*/15 * * * *",
     "smart_cron": "15 */1 * * *",
-    "note": "云端全天候错峰智能采编与多源交叉核验。"
+    "note": "高频错峰调度（原始抓取每 15 分钟 / 深度研报每小时）；服务端静默增量同步。"
   },
   "connectors": {
     "latest_path": "data/connectors_latest.json",
-    "fetched_at": "2026-11-24T11:29:14+08:00",
+    "fetched_at": "2026-11-24T13:29:03+08:00",
     "summary": {
       "total_connectors": 7,
       "healthy_connectors": 7,
-      "total_first_party_items": 602,
+      "total_first_party_items": 599,
       "tech_tools_count": 31,
       "calendar_events_count": 5
     }
@@ -204,20 +204,26 @@
     "radar_count": 43
   },
   "degraded": true,
-  "alerts": [],
+  "alerts": [
+    {
+      "code": "raw_crawl_degraded",
+      "severity": "warning",
+      "message": "原始抓取状态：partial（错误源 2 个）"
+    }
+  ],
   "gemini_quota": {
     "total_configured_keys": 12,
     "healthy_keys": 12,
     "cooled_down_keys": 0,
     "exhausted_keys": 0,
-    "daily_calls_total": 70,
+    "daily_calls_total": 92,
     "date_utc": "2026-11-24",
-    "updated_at": "2026-11-24T04:11:53Z",
+    "updated_at": "2026-11-24T05:29:07Z",
     "keys": [
       {
         "slot": "KEY_TECH",
         "status": "healthy",
-        "daily_calls": 6,
+        "daily_calls": 8,
         "cooldown_until": null,
         "exhausted_until": null,
         "last_error_code": "RATE_LIMIT_429",
@@ -227,17 +233,17 @@
       {
         "slot": "KEY_GLOBAL",
         "status": "healthy",
-        "daily_calls": 5,
+        "daily_calls": 7,
         "cooldown_until": null,
         "exhausted_until": null,
         "last_error_code": "RATE_LIMIT_429",
         "last_error": "ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and ",
-        "last_success_at": "2026-11-24T03:45:03Z"
+        "last_success_at": "2026-11-24T04:12:56Z"
       },
       {
         "slot": "KEY_FINANCE",
         "status": "healthy",
-        "daily_calls": 6,
+        "daily_calls": 8,
         "cooldown_until": null,
         "exhausted_until": null,
         "last_error_code": "RATE_LIMIT_429",
@@ -247,7 +253,7 @@
       {
         "slot": "KEY_GENERAL",
         "status": "healthy",
-        "daily_calls": 6,
+        "daily_calls": 8,
         "cooldown_until": null,
         "exhausted_until": null,
         "last_error_code": "RATE_LIMIT_429",
@@ -257,7 +263,7 @@
       {
         "slot": "KEY_1",
         "status": "healthy",
-        "daily_calls": 6,
+        "daily_calls": 8,
         "cooldown_until": null,
         "exhausted_until": null,
         "last_error_code": "RATE_LIMIT_429",
@@ -267,7 +273,7 @@
       {
         "slot": "KEY_2",
         "status": "healthy",
-        "daily_calls": 6,
+        "daily_calls": 7,
         "cooldown_until": null,
         "exhausted_until": null,
         "last_error_code": "RATE_LIMIT_429",
@@ -277,7 +283,7 @@
       {
         "slot": "KEY_3",
         "status": "healthy",
-        "daily_calls": 5,
+        "daily_calls": 7,
         "cooldown_until": null,
         "exhausted_until": null,
         "last_error_code": "RATE_LIMIT_429",
@@ -287,17 +293,17 @@
       {
         "slot": "KEY_4",
         "status": "healthy",
-        "daily_calls": 6,
+        "daily_calls": 7,
         "cooldown_until": null,
         "exhausted_until": null,
-        "last_error_code": null,
-        "last_error": null,
+        "last_error_code": "RATE_LIMIT_429",
+        "last_error": "ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and ",
         "last_success_at": "2026-11-24T03:48:17Z"
       },
       {
         "slot": "KEY_5",
         "status": "healthy",
-        "daily_calls": 5,
+        "daily_calls": 7,
         "cooldown_until": null,
         "exhausted_until": null,
         "last_error_code": "RATE_LIMIT_429",
@@ -307,7 +313,7 @@
       {
         "slot": "KEY_6",
         "status": "healthy",
-        "daily_calls": 5,
+        "daily_calls": 7,
         "cooldown_until": null,
         "exhausted_until": null,
         "last_error_code": "RATE_LIMIT_429",
@@ -317,7 +323,7 @@
       {
         "slot": "KEY_7",
         "status": "healthy",
-        "daily_calls": 5,
+        "daily_calls": 7,
         "cooldown_until": null,
         "exhausted_until": null,
         "last_error_code": "RATE_LIMIT_429",
@@ -327,7 +333,7 @@
       {
         "slot": "KEY_8",
         "status": "healthy",
-        "daily_calls": 5,
+        "daily_calls": 6,
         "cooldown_until": null,
         "exhausted_until": null,
         "last_error_code": "RATE_LIMIT_429",
@@ -337,12 +343,12 @@
       {
         "slot": "GOOGLE_API_KEY",
         "status": "unconfigured",
-        "daily_calls": 4,
+        "daily_calls": 5,
         "cooldown_until": null,
         "exhausted_until": null,
         "last_error_code": null,
         "last_error": null,
-        "last_success_at": "2026-11-24T03:48:18Z"
+        "last_success_at": "2026-11-24T04:12:42Z"
       }
     ]
   },
@@ -351,14 +357,14 @@
     "healthy_keys": 12,
     "cooled_down_keys": 0,
     "exhausted_keys": 0,
-    "daily_calls_total": 70,
+    "daily_calls_total": 92,
     "date_utc": "2026-11-24",
-    "updated_at": "2026-11-24T04:11:53Z",
+    "updated_at": "2026-11-24T05:29:07Z",
     "keys": [
       {
         "slot": "KEY_TECH",
         "status": "healthy",
-        "daily_calls": 6,
+        "daily_calls": 8,
         "cooldown_until": null,
         "exhausted_until": null,
         "last_error_code": "RATE_LIMIT_429",
@@ -368,17 +374,17 @@
       {
         "slot": "KEY_GLOBAL",
         "status": "healthy",
-        "daily_calls": 5,
+        "daily_calls": 7,
         "cooldown_until": null,
         "exhausted_until": null,
         "last_error_code": "RATE_LIMIT_429",
         "last_error": "ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and ",
-        "last_success_at": "2026-11-24T03:45:03Z"
+        "last_success_at": "2026-11-24T04:12:56Z"
       },
       {
         "slot": "KEY_FINANCE",
         "status": "healthy",
-        "daily_calls": 6,
+        "daily_calls": 8,
         "cooldown_until": null,
         "exhausted_until": null,
         "last_error_code": "RATE_LIMIT_429",
@@ -388,7 +394,7 @@
       {
         "slot": "KEY_GENERAL",
         "status": "healthy",
-        "daily_calls": 6,
+        "daily_calls": 8,
         "cooldown_until": null,
         "exhausted_until": null,
         "last_error_code": "RATE_LIMIT_429",
@@ -398,7 +404,7 @@
       {
         "slot": "KEY_1",
         "status": "healthy",
-        "daily_calls": 6,
+        "daily_calls": 8,
         "cooldown_until": null,
         "exhausted_until": null,
         "last_error_code": "RATE_LIMIT_429",
@@ -408,7 +414,7 @@
       {
         "slot": "KEY_2",
         "status": "healthy",
-        "daily_calls": 6,
+        "daily_calls": 7,
         "cooldown_until": null,
         "exhausted_until": null,
         "last_error_code": "RATE_LIMIT_429",
@@ -418,7 +424,7 @@
       {
         "slot": "KEY_3",
         "status": "healthy",
-        "daily_calls": 5,
+        "daily_calls": 7,
         "cooldown_until": null,
         "exhausted_until": null,
         "last_error_code": "RATE_LIMIT_429",
@@ -428,17 +434,17 @@
       {
         "slot": "KEY_4",
         "status": "healthy",
-        "daily_calls": 6,
+        "daily_calls": 7,
         "cooldown_until": null,
         "exhausted_until": null,
-        "last_error_code": null,
-        "last_error": null,
+        "last_error_code": "RATE_LIMIT_429",
+        "last_error": "ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and ",
         "last_success_at": "2026-11-24T03:48:17Z"
       },
       {
         "slot": "KEY_5",
         "status": "healthy",
-        "daily_calls": 5,
+        "daily_calls": 7,
         "cooldown_until": null,
         "exhausted_until": null,
         "last_error_code": "RATE_LIMIT_429",
@@ -448,7 +454,7 @@
       {
         "slot": "KEY_6",
         "status": "healthy",
-        "daily_calls": 5,
+        "daily_calls": 7,
         "cooldown_until": null,
         "exhausted_until": null,
         "last_error_code": "RATE_LIMIT_429",
@@ -458,7 +464,7 @@
       {
         "slot": "KEY_7",
         "status": "healthy",
-        "daily_calls": 5,
+        "daily_calls": 7,
         "cooldown_until": null,
         "exhausted_until": null,
         "last_error_code": "RATE_LIMIT_429",
@@ -468,7 +474,7 @@
       {
         "slot": "KEY_8",
         "status": "healthy",
-        "daily_calls": 5,
+        "daily_calls": 6,
         "cooldown_until": null,
         "exhausted_until": null,
         "last_error_code": "RATE_LIMIT_429",
@@ -478,12 +484,12 @@
       {
         "slot": "GOOGLE_API_KEY",
         "status": "unconfigured",
-        "daily_calls": 4,
+        "daily_calls": 5,
         "cooldown_until": null,
         "exhausted_until": null,
         "last_error_code": null,
         "last_error": null,
-        "last_success_at": "2026-11-24T03:48:18Z"
+        "last_success_at": "2026-11-24T04:12:42Z"
       }
     ]
   }
