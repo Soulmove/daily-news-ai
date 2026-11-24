@@ -1,0 +1,2365 @@
+{
+  "schema_version": "4.2",
+  "batch_id": "smart-20261124-140223",
+  "input_batch_id": "raw-20261124-132903",
+  "input_cutoff_at": "2026-11-24T13:29:03+08:00",
+  "generated_at": "2026-11-24T14:02:23+08:00",
+  "published_at": "2026-11-24T14:04:07+08:00",
+  "category": "finance",
+  "category_label": "财经/市场",
+  "generation_mode": "ai_v3_mega_overlay",
+  "model_name": "gemini-3.1-flash-lite",
+  "quality_flags": [
+    "deterministic_fresh_base"
+  ],
+  "key_changes": [
+    {
+      "headline": "创业板半日涨超1%，机器人持续爆发，算力硬件反弹，恒科指高开低走跌1%，科网股集体回落",
+      "detail": "创业板指早盘一度涨超4%后回落，机器人概念股锋龙股份、福莱新材等20余股涨停，算力硬件中京电子实现4连板。",
+      "event_id": "evt_5c55e68164ea",
+      "storyline_id": "st_497a9451d294"
+    },
+    {
+      "headline": "A股金属钴概念走强，腾远钴业涨超9%，寒锐钴业、中钨高新、华友钴业、格林美、道氏技术等个股跟涨。消息面上，全球最大钴生产国刚果(金)将从11月30日起再次全面暂停钴出口，以应对国际市场供应过剩以及近几个月钴价持续下跌的局面。",
+      "detail": "刚果(金)宣布自11月30日起全面暂停钴出口，腾远钴业涨超9%，寒锐钴业等跟涨。",
+      "event_id": "evt_116ca2ae6fa6",
+      "storyline_id": "st_6c4948c62121"
+    },
+    {
+      "headline": "财联社11月24日电，央行在香港发行200亿元人民币3个月期央票，中标利率1.32%；在香港发行300亿元人民币1年期央票，中标利率1.41%。",
+      "detail": "央行在香港发行500亿元人民币央票 3个月期中标利率1.32% 观点网",
+      "event_id": "evt_95bae5b41bd7",
+      "storyline_id": "st_08fe83c3a5a5"
+    }
+  ],
+  "overview_sections": [
+    {
+      "title": "市场流动性与避险情绪",
+      "points": [
+        {
+          "text": "油价下行缓解通胀预期，美债收益率全线下移，资金在AI硬件与避险资产间剧烈轮动。",
+          "source_refs": []
+        }
+      ]
+    }
+  ],
+  "events": [
+    {
+      "schema_version": "4.1",
+      "event_id": "evt_5baeaf024a36",
+      "storyline_id": "st_cc929d1d51ed",
+      "article_ids": [
+        "rss-cnbc-tech_1a2553d74003",
+        "wallstreetcn-hot_3f7375799cc3",
+        "wallstreetcn-news_8983768f5b22"
+      ],
+      "legacy_event_ids": [],
+      "title": "黄仁勋重掌英伟达帅印！股价暴涨31%，市值单日增长近万亿",
+      "category": "finance",
+      "entities": [
+        "英伟达 (NVIDIA)"
+      ],
+      "entity_ids": [
+        "ent_nvidia"
+      ],
+      "entity_confidences": {
+        "英伟达 (NVIDIA)": 0.96
+      },
+      "matched_entities": [
+        {
+          "entity_id": "ent_nvidia",
+          "canonical_name": "英伟达 (NVIDIA)",
+          "entity_type": "company",
+          "sector": "半导体 / AI算力",
+          "matched_aliases": [
+            "黄仁勋",
+            "英伟达",
+            "nvidia"
+          ],
+          "tickers": [
+            {
+              "symbol": "NVDA",
+              "market": "US",
+              "exchange": "NASDAQ",
+              "currency": "USD",
+              "label": "NVDA.US (NASDAQ)"
+            }
+          ],
+          "reason": "正文/实体匹配关键词「黄仁勋 / 英伟达」",
+          "confidence": 0.96
+        }
+      ],
+      "importance": "medium",
+      "sentiment": "Bullish",
+      "special_note": null,
+      "material_stage": null,
+      "material_stage_label": null,
+      "material_stage_confidence": null,
+      "thumbnail_url": null,
+      "publisher_name": "CNBC Tech & AI",
+      "source_status": "ok",
+      "evidence_status": "multi_source",
+      "evidence_label": "多独立来源提及（待核官方全文）",
+      "evidence_status_reason": "已有 2 家独立媒体族提及（含摘要或正文首段）；多源转载不代表官方公告已证实",
+      "attribution_warning": null,
+      "regulatory_note": null,
+      "contradictions": [],
+      "downweight_reasons": [],
+      "quality_flags": [],
+      "material_depth": "title_and_excerpt",
+      "source_count": 3,
+      "platform_count": 3,
+      "independent_publisher_count": 2,
+      "reprint_count": 0,
+      "published_at": "2026-11-24T05:08:05+08:00",
+      "event_date": "2026-11-24",
+      "event_time": "2026-11-24T05:08:05+08:00",
+      "stale": false,
+      "event_date_source": "llm_extracted",
+      "is_stale_rehash": false,
+      "time_trust_level": "article_timestamp",
+      "time_confidence": "article_timestamp",
+      "first_discovered_at": "2026-11-24T11:29:14+08:00",
+      "first_reported_at": "2026-11-24T05:08:05+08:00",
+      "latest_fact_update_at": "2026-11-24T10:39:07+08:00",
+      "latest_reported_at": "2026-11-24T10:39:07+08:00",
+      "fetched_at": "2026-11-24T13:29:03+08:00",
+      "input_batch_id": "raw-20261124-132903",
+      "fact_summary": "英伟达董事会确认黄仁勋重返公司担任CEO，受此消息影响，英伟达股价单日暴涨31%，市值增长近万亿美元。",
+      "fact_atoms": [
+        {
+          "atom_id": "fa_4461878",
+          "subject": "英伟达 (NVIDIA)",
+          "metric_or_action": "黄仁勋重掌英伟达帅印！股价暴涨31%，市值单日增长近万亿",
+          "value": "31",
+          "unit": "%",
+          "period": "单次披露/未注明周期",
+          "scope": "新闻事件陈述",
+          "fact_status": "multi_source_reported",
+          "attribution": "CNBC Tech & AI",
+          "source_ref": "rss-cnbc-tech_1a2553d74003",
+          "source_url": "https://www.cnbc.com/2026/11/23/nvidia-jensen-huang-ceo.html",
+          "source_excerpt_or_locator": "The Nvidia board said it had input from senior levels of the U.S. government.",
+          "published_at": "2026-11-24T05:08:05+08:00",
+          "discovered_at": "2026-11-24T11:29:14+08:00",
+          "revision": 1
+        }
+      ],
+      "ai_analysis": "黄仁勋的回归被市场视为英伟达AI战略稳定性的核心保障，直接触发了大规模的空头回补与机构调仓。",
+      "unverified_claims": [],
+      "speculation_or_outlook": null,
+      "sources": [
+        {
+          "item_id": "rss-cnbc-tech_1a2553d74003",
+          "article_id": "rss-cnbc-tech_1a2553d74003",
+          "source_id": "rss-cnbc-tech",
+          "source_name": "CNBC Tech & AI",
+          "publisher_name": "CNBC Tech & AI",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "cnbc",
+          "is_reprint_copy": false,
+          "title": "Jensen Huang reinstated as Nvidia CEO. Stock skyrockets 31%",
+          "url": "https://www.cnbc.com/2026/11/23/nvidia-jensen-huang-ceo.html",
+          "published_at": "2026-11-24T05:08:05+08:00",
+          "published_at_source": "upstream_rfc2822",
+          "fetched_at": "2026-11-24T13:29:05+08:00",
+          "excerpt": "The Nvidia board said it had input from senior levels of the U.S. government.",
+          "thumbnail_url": null,
+          "deep_fetch_status": null,
+          "title_zh": "黄仁勋复任英伟达CEO，股价飙升31%"
+        },
+        {
+          "item_id": "wallstreetcn-hot_3f7375799cc3",
+          "article_id": "wallstreetcn-hot_3f7375799cc3",
+          "source_id": "wallstreetcn-hot",
+          "source_name": "华尔街见闻 · 最热",
+          "publisher_name": "华尔街见闻 · 最热",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "aggregator_lead",
+          "publisher_family": "wallstreetcn",
+          "is_reprint_copy": false,
+          "title": "黄仁勋重掌英伟达帅印！股价暴涨31%，市值单日增长近万亿",
+          "url": "https://wallstreetcn.com/articles/3786536",
+          "published_at": null,
+          "published_at_source": null,
+          "fetched_at": "2026-11-24T13:29:03+08:00",
+          "excerpt": null,
+          "thumbnail_url": null,
+          "deep_fetch_status": null
+        },
+        {
+          "item_id": "wallstreetcn-news_8983768f5b22",
+          "article_id": "wallstreetcn-news_8983768f5b22",
+          "source_id": "wallstreetcn-news",
+          "source_name": "华尔街见闻 · 资讯",
+          "publisher_name": "华尔街见闻 · 资讯",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "aggregator_lead",
+          "publisher_family": "wallstreetcn",
+          "is_reprint_copy": false,
+          "title": "英伟达一夜暴涨31%，空头跌懵了",
+          "url": "https://wallstreetcn.com/articles/3786564",
+          "published_at": "2026-11-24T10:39:07+08:00",
+          "published_at_source": "upstream_epoch",
+          "fetched_at": "2026-11-24T13:29:03+08:00",
+          "excerpt": null,
+          "thumbnail_url": null,
+          "deep_fetch_status": null
+        }
+      ],
+      "verification": {
+        "all_refs_valid": true,
+        "has_primary_url": true,
+        "rejected_refs": [],
+        "has_first_party": false
+      },
+      "followup": {
+        "is_continuing": true,
+        "prev_batch_id": "smart-20261124-121151",
+        "prev_event_id": "evt_5baeaf024a36",
+        "prev_title": "黄仁勋重掌英伟达帅印！股价暴涨31%，市值单日增长近万亿",
+        "delta_note": "新增 1 条跟进/转载出处（核心事实待对比差异）"
+      },
+      "is_new_in_batch": true,
+      "update_kind": "new_discovery",
+      "heavy_score": 92.0,
+      "radar_score": 82,
+      "severity_tier": "B",
+      "severity_label": "B级常规",
+      "summary_en": "The Nvidia board said it had input from senior levels of the U.S. government.",
+      "summary": "英伟达董事会确认黄仁勋重返公司担任CEO，受此消息影响，英伟达股价单日暴涨31%，市值增长近万亿美元。",
+      "summary_zh": "英伟达董事会确认黄仁勋重返公司担任CEO，受此消息影响，英伟达股价单日暴涨31%，市值增长近万亿美元。",
+      "deep_qa": [
+        {
+          "question": "黄仁勋重掌帅印对英伟达短期估值有何实质性支撑？",
+          "answer": "黄仁勋作为英伟达AI生态的灵魂人物，其回归消除了市场对公司战略执行力与核心技术路线的疑虑，直接修复了此前因管理层动荡导致的估值折价。",
+          "historical_parallel": "类似于乔布斯1997年回归苹果，市场对创始人回归带来的战略确定性给予了极高的溢价反馈。"
+        },
+        {
+          "question": "此次市值暴涨是否会引发美股科技板块的结构性泡沫风险？",
+          "answer": "短期内市值暴涨主要源于情绪修复与空头平仓，若后续财报无法支撑如此高额的估值扩张，可能导致板块波动加剧。",
+          "historical_parallel": "类似于2000年互联网泡沫时期，单一龙头企业的剧烈波动往往预示着板块整体估值逻辑的重构。"
+        }
+      ],
+      "ai_overlaid": true,
+      "translation_attempts": 0,
+      "translation_error": null,
+      "title_zh": "黄仁勋重掌英伟达帅印！股价暴涨31%，市值单日增长近万亿",
+      "translation_status": "native_zh",
+      "title_en": "Jensen Huang reinstated as Nvidia CEO. Stock skyrockets 31%",
+      "ai_analysis_en": ""
+    },
+    {
+      "schema_version": "4.1",
+      "event_id": "evt_5c55e68164ea",
+      "storyline_id": "st_497a9451d294",
+      "article_ids": [
+        "wscn-a-stock-channel_e39312ce55ee",
+        "wallstreetcn-news_c04864bd994f",
+        "cls-depth_744238b09b24",
+        "wallstreetcn-quick_0c017297298a"
+      ],
+      "legacy_event_ids": [],
+      "title": "创业板半日涨超1%，机器人持续爆发，算力硬件反弹，恒科指高开低走跌1%，科网股集体回落",
+      "category": "finance",
+      "entities": [],
+      "entity_ids": [],
+      "entity_confidences": {},
+      "matched_entities": [],
+      "importance": "high",
+      "sentiment": "Mixed",
+      "special_note": null,
+      "material_stage": null,
+      "material_stage_label": null,
+      "material_stage_confidence": null,
+      "thumbnail_url": null,
+      "publisher_name": "华尔街见闻 A股快讯",
+      "source_status": "ok",
+      "evidence_status": "multi_source",
+      "evidence_label": "多独立来源提及（待核官方全文）",
+      "evidence_status_reason": "已有 2 家独立媒体族（另识别 1 条高度相似转载）提及（含摘要或正文首段）；多源转载不代表官方公告已证实",
+      "attribution_warning": null,
+      "regulatory_note": null,
+      "contradictions": [],
+      "downweight_reasons": [],
+      "quality_flags": [],
+      "material_depth": "title_and_excerpt",
+      "source_count": 4,
+      "platform_count": 4,
+      "independent_publisher_count": 2,
+      "reprint_count": 1,
+      "published_at": "2026-11-24T11:30:47+08:00",
+      "event_date": "2026-11-24",
+      "event_time": "2026-11-24T11:30:47+08:00",
+      "stale": false,
+      "event_date_source": "llm_extracted",
+      "is_stale_rehash": false,
+      "time_trust_level": "article_timestamp",
+      "time_confidence": "article_timestamp",
+      "first_discovered_at": "2026-11-24T13:29:03+08:00",
+      "first_reported_at": "2026-11-24T11:30:47+08:00",
+      "latest_fact_update_at": "2026-11-24T12:26:50+08:00",
+      "latest_reported_at": "2026-11-24T12:26:50+08:00",
+      "fetched_at": "2026-11-24T13:29:03+08:00",
+      "input_batch_id": "raw-20261124-132903",
+      "fact_summary": "创业板指早盘一度涨超4%后回落，机器人概念股锋龙股份、福莱新材等20余股涨停，算力硬件中京电子实现4连板。",
+      "fact_atoms": [
+        {
+          "atom_id": "fa_93900702",
+          "subject": "相关主体",
+          "metric_or_action": "创业板半日涨超1%，机器人持续爆发，算力硬件反弹，恒科指高开低走跌1%，科网股集体回落",
+          "value": "1",
+          "unit": "%",
+          "period": "单次披露/未注明周期",
+          "scope": "新闻事件陈述",
+          "fact_status": "multi_source_reported",
+          "attribution": "华尔街见闻 A股快讯",
+          "source_ref": "wscn-a-stock-channel_e39312ce55ee",
+          "source_url": "https://wallstreetcn.com/livenews/3204670",
+          "source_excerpt_or_locator": "1、市场早间高开回落，创业板指一度涨超4%，随后涨幅震荡收窄。机器人概念延续涨势，锋龙股份、福莱新材、宁波东力等20余股涨停。算力硬件股集体反弹，中京电子4连板，工业富联触及涨停，天孚通信涨近8%。AI漫剧概念反复活跃，浙文影业、新炬网络、横店影视走出2连板。下跌方面，贵金属板块下挫，赤峰黄金、西部黄金等纷纷走低。个股涨多跌少，沪深京三市超3000股飘红，上",
+          "published_at": "2026-11-24T11:30:47+08:00",
+          "discovered_at": "2026-11-24T13:29:03+08:00",
+          "revision": 1
+        }
+      ],
+      "ai_analysis": "市场资金高度集中于AI硬件与机器人赛道，显示出投资者对算力基建确定性增长的追逐，但高位震荡反映了获利盘的抛压。",
+      "unverified_claims": [],
+      "speculation_or_outlook": null,
+      "sources": [
+        {
+          "item_id": "wscn-a-stock-channel_e39312ce55ee",
+          "article_id": "wscn-a-stock-channel_e39312ce55ee",
+          "source_id": "wscn-a-stock-channel",
+          "source_name": "华尔街见闻 A股快讯",
+          "publisher_name": "华尔街见闻 A股快讯",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "wallstreetcn",
+          "is_reprint_copy": false,
+          "title": "11月24日午间收评：创业板指半日涨1.9%，机器人概念股持续爆发",
+          "url": "https://wallstreetcn.com/livenews/3204670",
+          "published_at": "2026-11-24T11:30:47+08:00",
+          "published_at_source": "upstream_api",
+          "fetched_at": "2026-11-24T13:29:04+08:00",
+          "excerpt": "1、市场早间高开回落，创业板指一度涨超4%，随后涨幅震荡收窄。机器人概念延续涨势，锋龙股份、福莱新材、宁波东力等20余股涨停。算力硬件股集体反弹，中京电子4连板，工业富联触及涨停，天孚通信涨近8%。AI漫剧概念反复活跃，浙文影业、新炬网络、横店影视走出2连板。下跌方面，贵金属板块下挫，赤峰黄金、西部黄金等纷纷走低。个股涨多跌少，沪深京三市超3000股飘红，上午半天成交1.13万亿。午间收盘沪指涨0.47%，深成指涨0.92%，创业板涨1.9%。2、板块概念方面，消费电子、AI漫剧、半导体、算力硬件等板块领涨；贵金属、煤炭、券商、中药等板块领跌；",
+          "thumbnail_url": null,
+          "deep_fetch_status": null
+        },
+        {
+          "item_id": "wallstreetcn-news_c04864bd994f",
+          "article_id": "wallstreetcn-news_c04864bd994f",
+          "source_id": "wallstreetcn-news",
+          "source_name": "华尔街见闻 · 资讯",
+          "publisher_name": "华尔街见闻 · 资讯",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "aggregator_lead",
+          "publisher_family": "wallstreetcn",
+          "is_reprint_copy": false,
+          "title": "创业板半日涨超1%，机器人持续爆发，算力硬件反弹，恒科指高开低走跌1%，科网股集体回落",
+          "url": "https://wallstreetcn.com/articles/3786562",
+          "published_at": "2026-11-24T12:18:13+08:00",
+          "published_at_source": "upstream_epoch",
+          "fetched_at": "2026-11-24T13:29:03+08:00",
+          "excerpt": null,
+          "thumbnail_url": null,
+          "deep_fetch_status": null
+        },
+        {
+          "item_id": "cls-depth_744238b09b24",
+          "article_id": "cls-depth_744238b09b24",
+          "source_id": "cls-depth",
+          "source_name": "财联社 · 深度",
+          "publisher_name": "财联社 · 深度",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "aggregator_lead",
+          "publisher_family": "cls",
+          "is_reprint_copy": false,
+          "title": "【午报】创业板指高开低走涨近2%，全市场超3100股飘红，机器人概念股持续走强",
+          "url": "https://www.cls.cn/detail/2542702",
+          "published_at": "2026-11-24T12:26:50+08:00",
+          "published_at_source": "upstream_epoch",
+          "fetched_at": "2026-11-24T13:29:03+08:00",
+          "excerpt": null,
+          "thumbnail_url": null,
+          "deep_fetch_status": null
+        },
+        {
+          "item_id": "wallstreetcn-quick_0c017297298a",
+          "article_id": "wallstreetcn-quick_0c017297298a",
+          "source_id": "wallstreetcn-quick",
+          "source_name": "华尔街见闻 · 快讯",
+          "publisher_name": "华尔街见闻 · 快讯",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "aggregator_lead",
+          "publisher_family": "wallstreetcn",
+          "is_reprint_copy": true,
+          "title": "11月24日午间收评：创业板指半日涨1.9%，机器人概念股持续爆发",
+          "url": "https://wallstreetcn.com/livenews/3204671",
+          "published_at": "2026-11-24T11:30:47+08:00",
+          "published_at_source": "upstream_epoch",
+          "fetched_at": "2026-11-24T13:29:03+08:00",
+          "excerpt": null,
+          "thumbnail_url": null,
+          "deep_fetch_status": null
+        }
+      ],
+      "verification": {
+        "all_refs_valid": true,
+        "has_primary_url": true,
+        "rejected_refs": [],
+        "has_first_party": false
+      },
+      "followup": null,
+      "is_new_in_batch": true,
+      "update_kind": "new_discovery",
+      "heavy_score": 85.1,
+      "radar_score": 52,
+      "severity_tier": "S",
+      "severity_label": "S级重磅",
+      "heavy_reason_tag": "市场剧震",
+      "summary": "创业板指早盘一度涨超4%后回落，机器人概念股锋龙股份、福莱新材等20余股涨停，算力硬件中京电子实现4连板。",
+      "summary_zh": "创业板指早盘一度涨超4%后回落，机器人概念股锋龙股份、福莱新材等20余股涨停，算力硬件中京电子实现4连板。",
+      "deep_qa": [
+        {
+          "question": "机器人板块的持续爆发是否具备基本面支撑？",
+          "answer": "机器人板块的爆发主要源于AI大模型与硬件结合的落地预期，叠加算力硬件反弹带来的产业链协同效应，但短期涨幅过大需警惕估值回调风险。",
+          "historical_parallel": "2023年上半年AI大模型初期对算力硬件的拉动效应。"
+        },
+        {
+          "question": "恒科指与A股走势背离的原因是什么？",
+          "answer": "恒科指受科网股回落拖累，反映了离岸市场对全球流动性收紧及地缘政治风险的敏感度高于A股内需驱动板块。",
+          "historical_parallel": "2022年美联储加息周期中，港股与A股出现的阶段性估值分化。"
+        }
+      ],
+      "ai_overlaid": true,
+      "translation_attempts": 0,
+      "translation_error": null,
+      "title_zh": "创业板半日涨超1%，机器人持续爆发，算力硬件反弹，恒科指高开低走跌1%，科网股集体回落",
+      "translation_status": "native_zh",
+      "title_en": "",
+      "summary_en": "",
+      "ai_analysis_en": ""
+    },
+    {
+      "schema_version": "4.1",
+      "event_id": "evt_dcf514191a7a",
+      "storyline_id": "st_7da7497f59ae",
+      "article_ids": [
+        "wscn-us-stock-channel_b0852d92e684"
+      ],
+      "legacy_event_ids": [],
+      "title": "英伟达股价飙升重创空头，杠杆做空产品跌幅高达92%",
+      "category": "finance",
+      "entities": [
+        "英伟达 (NVIDIA)"
+      ],
+      "entity_ids": [
+        "ent_nvidia"
+      ],
+      "entity_confidences": {
+        "英伟达 (NVIDIA)": 0.96
+      },
+      "matched_entities": [
+        {
+          "entity_id": "ent_nvidia",
+          "canonical_name": "英伟达 (NVIDIA)",
+          "entity_type": "company",
+          "sector": "半导体 / AI算力",
+          "matched_aliases": [
+            "英伟达",
+            "黄仁勋",
+            "nvda"
+          ],
+          "tickers": [
+            {
+              "symbol": "NVDA",
+              "market": "US",
+              "exchange": "NASDAQ",
+              "currency": "USD",
+              "label": "NVDA.US (NASDAQ)"
+            }
+          ],
+          "reason": "正文/实体匹配关键词「英伟达 / 黄仁勋」",
+          "confidence": 0.96
+        }
+      ],
+      "importance": "high",
+      "sentiment": "Bullish",
+      "special_note": null,
+      "material_stage": null,
+      "material_stage_label": null,
+      "material_stage_confidence": null,
+      "thumbnail_url": null,
+      "publisher_name": "华尔街见闻 美股快讯",
+      "source_status": "ok",
+      "evidence_status": "single_source",
+      "evidence_label": "单一独立来源线索",
+      "evidence_status_reason": "目前仅见 1 家独立来源（共 1 条引用含转载，含摘要/首段），尚未见独立渠道交叉或官方确认",
+      "attribution_warning": null,
+      "regulatory_note": null,
+      "contradictions": [],
+      "downweight_reasons": [],
+      "quality_flags": [],
+      "material_depth": "title_and_excerpt",
+      "source_count": 1,
+      "platform_count": 1,
+      "independent_publisher_count": 1,
+      "reprint_count": 0,
+      "published_at": "2026-11-24T09:34:19+08:00",
+      "event_date": "2026-11-24",
+      "event_time": "2026-11-24T09:34:19+08:00",
+      "stale": false,
+      "event_date_source": "llm_extracted",
+      "is_stale_rehash": false,
+      "time_trust_level": "article_timestamp",
+      "time_confidence": "article_timestamp",
+      "first_discovered_at": "2026-11-24T11:29:14+08:00",
+      "first_reported_at": "2026-11-24T09:34:19+08:00",
+      "latest_fact_update_at": "2026-11-24T09:34:19+08:00",
+      "latest_reported_at": "2026-11-24T09:34:19+08:00",
+      "fetched_at": "2026-11-24T13:29:03+08:00",
+      "input_batch_id": "raw-20261124-132903",
+      "fact_summary": "英伟达股价暴涨导致做空产品GraniteShares 2x Short NVDA Daily ETF（NVD）单日跌幅达63%。",
+      "fact_atoms": [
+        {
+          "atom_id": "fa_88409844",
+          "subject": "英伟达 (NVIDIA)",
+          "metric_or_action": "英伟达股价飙升重创空头，杠杆做空产品跌幅高达92%",
+          "value": "92",
+          "unit": "%",
+          "period": "单次披露/未注明周期",
+          "scope": "新闻事件陈述",
+          "fact_status": "reported_unconfirmed_by_filing",
+          "attribution": "华尔街见闻 美股快讯",
+          "source_ref": "wscn-us-stock-channel_b0852d92e684",
+          "source_url": "https://wallstreetcn.com/livenews/3204627",
+          "source_excerpt_or_locator": "英伟达董事会恢复黄仁勋首席执行官职务后，该公司股价飙升。寻求提供英伟达单日表现两倍反向回报的GraniteShares 2x Short NVDA Daily ETF（代码NVD）暴跌63%。此前受益于英伟达遭遇抛售，截至上周五这只规模约1亿美元的基金今年累计上涨46%。欧洲市场的损失更为惨重，寻求提供英伟达单日表现三倍反向回报的GraniteShares ",
+          "published_at": "2026-11-24T09:34:19+08:00",
+          "discovered_at": "2026-11-24T11:29:14+08:00",
+          "revision": 1
+        }
+      ],
+      "ai_analysis": "杠杆做空工具在极端行情下的剧烈回撤，反映了市场对英伟达单边上涨趋势的严重误判，加剧了空头挤压效应。",
+      "unverified_claims": [],
+      "speculation_or_outlook": null,
+      "sources": [
+        {
+          "item_id": "wscn-us-stock-channel_b0852d92e684",
+          "article_id": "wscn-us-stock-channel_b0852d92e684",
+          "source_id": "wscn-us-stock-channel",
+          "source_name": "华尔街见闻 美股快讯",
+          "publisher_name": "华尔街见闻 美股快讯",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "wallstreetcn",
+          "is_reprint_copy": false,
+          "title": "英伟达股价飙升重创空头，杠杆做空产品跌幅高达92%",
+          "url": "https://wallstreetcn.com/livenews/3204627",
+          "published_at": "2026-11-24T09:34:19+08:00",
+          "published_at_source": "upstream_api",
+          "fetched_at": "2026-11-24T13:29:04+08:00",
+          "excerpt": "英伟达董事会恢复黄仁勋首席执行官职务后，该公司股价飙升。寻求提供英伟达单日表现两倍反向回报的GraniteShares 2x Short NVDA Daily ETF（代码NVD）暴跌63%。此前受益于英伟达遭遇抛售，截至上周五这只规模约1亿美元的基金今年累计上涨46%。欧洲市场的损失更为惨重，寻求提供英伟达单日表现三倍反向回报的GraniteShares 3x Short NVIDIA Daily ETP（代码3SNV）暴跌92%，Leverage Shares的一款产品（代码NV3S）下跌80%。",
+          "thumbnail_url": null,
+          "deep_fetch_status": null
+        }
+      ],
+      "verification": {
+        "all_refs_valid": true,
+        "has_primary_url": true,
+        "rejected_refs": [],
+        "has_first_party": false
+      },
+      "followup": {
+        "is_continuing": true,
+        "prev_batch_id": "smart-20261124-121151",
+        "prev_event_id": "evt_dcf514191a7a",
+        "prev_title": "英伟达股价飙升重创空头，杠杆做空产品跌幅高达92%",
+        "delta_note": "同一事件在最新批次出现表述修订或信息补充"
+      },
+      "is_new_in_batch": true,
+      "update_kind": "new_discovery",
+      "heavy_score": 71.3,
+      "radar_score": 76,
+      "severity_tier": "A",
+      "severity_label": "A级要闻",
+      "heavy_reason_tag": "市场剧震",
+      "summary": "英伟达股价暴涨导致做空产品GraniteShares 2x Short NVDA Daily ETF（NVD）单日跌幅达63%。",
+      "summary_zh": "英伟达股价暴涨导致做空产品GraniteShares 2x Short NVDA Daily ETF（NVD）单日跌幅达63%。",
+      "deep_qa": [
+        {
+          "question": "杠杆反向ETF在单边行情中为何会出现如此巨大的亏损？",
+          "answer": "杠杆反向ETF通过每日重置机制实现反向收益，在标的资产单日大幅上涨时，杠杆效应会成倍放大亏损。",
+          "historical_parallel": "类似于2021年散户抱团股行情中，做空特斯拉的杠杆产品遭遇的极端亏损情况。"
+        },
+        {
+          "question": "此次空头挤压对后续市场交易行为有何警示？",
+          "answer": "高杠杆做空工具在强趋势行情下具有极高的爆仓风险，促使机构投资者在AI相关资产配置中更加谨慎。",
+          "historical_parallel": "类似于2008年金融危机前夕，做空金融股的投资者在市场反弹中遭受的惨重损失。"
+        }
+      ],
+      "ai_overlaid": true,
+      "translation_attempts": 0,
+      "translation_error": null,
+      "title_zh": "英伟达股价飙升重创空头，杠杆做空产品跌幅高达92%",
+      "translation_status": "native_zh",
+      "title_en": "",
+      "summary_en": "",
+      "ai_analysis_en": ""
+    },
+    {
+      "schema_version": "4.1",
+      "event_id": "evt_5d0587e27093",
+      "storyline_id": "st_844618d7c902",
+      "article_ids": [
+        "sina-7x24_1d94ef3fa413",
+        "mktnews-flash_e817a3785781",
+        "jin10_522e3fd471cd",
+        "fastbull-express_82768897a526"
+      ],
+      "legacy_event_ids": [],
+      "title": "WTI原油日内下跌1%，现报80.50美元/桶。布伦特原油现跌0.8%。",
+      "category": "finance",
+      "entities": [
+        "地缘冲突、能源与大宗商品"
+      ],
+      "entity_ids": [
+        "ent_geopolitics_energy"
+      ],
+      "entity_confidences": {
+        "地缘冲突、能源与大宗商品": 0.86
+      },
+      "matched_entities": [
+        {
+          "entity_id": "ent_geopolitics_energy",
+          "canonical_name": "地缘冲突、能源与大宗商品",
+          "entity_type": "macro",
+          "sector": "能源安全与避险资产",
+          "matched_aliases": [
+            "原油"
+          ],
+          "tickers": [],
+          "reason": "正文/实体匹配关键词「原油」",
+          "confidence": 0.86
+        }
+      ],
+      "importance": "high",
+      "sentiment": "Mixed",
+      "special_note": null,
+      "material_stage": null,
+      "material_stage_label": null,
+      "material_stage_confidence": null,
+      "thumbnail_url": null,
+      "publisher_name": "新浪财经 7×24 电报",
+      "source_status": "ok",
+      "evidence_status": "multi_source",
+      "evidence_label": "多独立来源提及（待核官方全文）",
+      "evidence_status_reason": "已有 3 家独立媒体族（另识别 1 条高度相似转载）提及（含摘要或正文首段）；多源转载不代表官方公告已证实",
+      "attribution_warning": null,
+      "regulatory_note": null,
+      "contradictions": [],
+      "downweight_reasons": [],
+      "quality_flags": [],
+      "material_depth": "title_and_excerpt",
+      "source_count": 4,
+      "platform_count": 4,
+      "independent_publisher_count": 3,
+      "reprint_count": 1,
+      "published_at": "2026-11-24T13:06:15+08:00",
+      "event_date": "2026-11-24",
+      "event_time": "2026-11-24T13:06:15+08:00",
+      "stale": false,
+      "event_date_source": "llm_extracted",
+      "is_stale_rehash": false,
+      "time_trust_level": "article_timestamp",
+      "time_confidence": "article_timestamp",
+      "first_discovered_at": "2026-11-24T13:29:03+08:00",
+      "first_reported_at": "2026-11-24T13:06:15+08:00",
+      "latest_fact_update_at": "2026-11-24T13:22:45+08:00",
+      "latest_reported_at": "2026-11-24T13:22:45+08:00",
+      "fetched_at": "2026-11-24T13:29:03+08:00",
+      "input_batch_id": "raw-20261124-132903",
+      "fact_summary": "WTI原油日内下跌1%至80.50美元/桶，布伦特原油下跌0.8%。",
+      "fact_atoms": [
+        {
+          "atom_id": "fa_67925193",
+          "subject": "地缘冲突、能源与大宗商品",
+          "metric_or_action": "WTI原油日内下跌1%，现报80.50美元/桶。布伦特原油现跌0.8%。",
+          "value": "1",
+          "unit": "%",
+          "period": "单次披露/未注明周期",
+          "scope": "新闻事件陈述",
+          "fact_status": "multi_source_reported",
+          "attribution": "新浪财经 7×24 电报",
+          "source_ref": "sina-7x24_1d94ef3fa413",
+          "source_url": "https://finance.sina.cn/7x24/2026-11-24/detail-inizvecm2300608.d.html",
+          "source_excerpt_or_locator": "WTI原油日内跌1%，现报79.34美元/桶。",
+          "published_at": "2026-11-24T13:22:45+08:00",
+          "discovered_at": "2026-11-24T13:29:03+08:00",
+          "revision": 1
+        }
+      ],
+      "ai_analysis": "油价下跌直接缓解了通胀压力，为美联储政策转向提供了宽松空间，但地缘冲突的不确定性限制了跌幅。",
+      "unverified_claims": [],
+      "speculation_or_outlook": null,
+      "sources": [
+        {
+          "item_id": "sina-7x24_1d94ef3fa413",
+          "article_id": "sina-7x24_1d94ef3fa413",
+          "source_id": "sina-7x24",
+          "source_name": "新浪财经 7×24 电报",
+          "publisher_name": "新浪财经 7×24 电报",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "sina",
+          "is_reprint_copy": false,
+          "title": "WTI原油日内跌1%，现报79.34美元/桶。",
+          "url": "https://finance.sina.cn/7x24/2026-11-24/detail-inizvecm2300608.d.html",
+          "published_at": "2026-11-24T13:22:45+08:00",
+          "published_at_source": "upstream_api",
+          "fetched_at": "2026-11-24T13:29:04+08:00",
+          "excerpt": null,
+          "thumbnail_url": null,
+          "deep_fetch_status": null
+        },
+        {
+          "item_id": "mktnews-flash_e817a3785781",
+          "article_id": "mktnews-flash_e817a3785781",
+          "source_id": "mktnews-flash",
+          "source_name": "MKTNews 快讯",
+          "publisher_name": "MKTNews 快讯",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "aggregator_lead",
+          "publisher_family": "mktnews-flash",
+          "is_reprint_copy": false,
+          "title": "WTI crude fell 1% to $80.50/bbl, while Brent was down 0.8%.",
+          "url": "https://mktnews.net/flashDetail.html?id=01a20bf2-9923-7bbc-acca-816555af0fc8",
+          "published_at": "2026-11-24T13:06:17+08:00",
+          "published_at_source": "upstream_iso",
+          "fetched_at": "2026-11-24T13:29:03+08:00",
+          "excerpt": "WTI crude fell 1% to $80.50/bbl, while Brent was down 0.8%.",
+          "thumbnail_url": null,
+          "deep_fetch_status": null,
+          "title_zh": "WTI原油价格下跌1%至每桶80.50美元，布伦特原油下跌0.8%。"
+        },
+        {
+          "item_id": "jin10_522e3fd471cd",
+          "article_id": "jin10_522e3fd471cd",
+          "source_id": "jin10",
+          "source_name": "金十数据",
+          "publisher_name": "金十数据",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "aggregator_lead",
+          "publisher_family": "jin10",
+          "is_reprint_copy": false,
+          "title": "WTI原油日内下跌1%，现报80.50美元/桶。布伦特原油现跌0.8%。",
+          "url": "https://flash.jin10.com/detail/20261124130615018800",
+          "published_at": "2026-11-24T13:06:15+08:00",
+          "published_at_source": "upstream_epoch",
+          "fetched_at": "2026-11-24T13:29:03+08:00",
+          "excerpt": null,
+          "thumbnail_url": null,
+          "deep_fetch_status": null
+        },
+        {
+          "item_id": "fastbull-express_82768897a526",
+          "article_id": "fastbull-express_82768897a526",
+          "source_id": "fastbull-express",
+          "source_name": "法布财经 · 快讯",
+          "publisher_name": "法布财经 · 快讯",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "aggregator_lead",
+          "publisher_family": "fastbull",
+          "is_reprint_copy": true,
+          "title": "WTI原油日内下跌1%，现报80.50美元/桶。布伦特原油现跌0.8%。",
+          "url": "https://www.fastbull.com/cn/fastshort/4363134_1_1",
+          "published_at": "2026-11-24T13:06:17+08:00",
+          "published_at_source": "upstream_epoch",
+          "fetched_at": "2026-11-24T13:29:03+08:00",
+          "excerpt": null,
+          "thumbnail_url": null,
+          "deep_fetch_status": null
+        }
+      ],
+      "verification": {
+        "all_refs_valid": true,
+        "has_primary_url": true,
+        "rejected_refs": [],
+        "has_first_party": false
+      },
+      "followup": null,
+      "is_new_in_batch": true,
+      "update_kind": "new_discovery",
+      "heavy_score": 62.1,
+      "radar_score": 88,
+      "severity_tier": "A",
+      "severity_label": "A级要闻",
+      "heavy_reason_tag": "大宗与市场剧震",
+      "summary_en": "WTI crude fell 1% to $80.50/bbl, while Brent was down 0.8%.",
+      "summary": "WTI原油日内下跌1%至80.50美元/桶，布伦特原油下跌0.8%。",
+      "summary_zh": "WTI原油日内下跌1%至80.50美元/桶，布伦特原油下跌0.8%。",
+      "deep_qa": [
+        {
+          "question": "油价下跌对全球通胀预期的传导机制如何？",
+          "answer": "能源价格作为核心通胀的先行指标，其下行直接降低了运输与生产成本，有助于缓解美联储加息压力。",
+          "historical_parallel": "2022年下半年油价从高位回落对美国CPI数据的平抑作用。"
+        },
+        {
+          "question": "霍尔木兹海峡局势对油价的潜在影响？",
+          "answer": "地缘冲突带来的供应中断风险是油价的强支撑，一旦冲突升级，油价可能迅速反弹并抵消通胀缓解效应。",
+          "historical_parallel": "2019年沙特油田遇袭事件引发的油价短期剧烈波动。"
+        }
+      ],
+      "ai_overlaid": true,
+      "translation_attempts": 0,
+      "translation_error": null,
+      "title_zh": "WTI原油日内下跌1%，现报80.50美元/桶。布伦特原油现跌0.8%。",
+      "translation_status": "native_zh",
+      "title_en": "WTI crude fell 1% to $80.50/bbl, while Brent was down 0.8%.",
+      "ai_analysis_en": ""
+    },
+    {
+      "schema_version": "4.1",
+      "event_id": "evt_df3b88a4bc7b",
+      "storyline_id": "st_a13f7d812b38",
+      "article_ids": [
+        "wscn-us-stock-channel_2d29699b2b52",
+        "rss-gnews-markets-zh_01b68c274d46",
+        "cls-hot_2e83a6152eef"
+      ],
+      "legacy_event_ids": [],
+      "title": "美联储“三把手”放话：通胀持续过高，必要时或连续加息！",
+      "category": "finance",
+      "entities": [
+        "美联储 FOMC 与全球流动性"
+      ],
+      "entity_ids": [
+        "ent_macro_fomc"
+      ],
+      "entity_confidences": {
+        "美联储 FOMC 与全球流动性": 0.96
+      },
+      "matched_entities": [
+        {
+          "entity_id": "ent_macro_fomc",
+          "canonical_name": "美联储 FOMC 与全球流动性",
+          "entity_type": "macro",
+          "sector": "宏观利率与汇率",
+          "matched_aliases": [
+            "美联储",
+            "加息",
+            "fomc"
+          ],
+          "tickers": [],
+          "reason": "正文/实体匹配关键词「美联储 / 加息」",
+          "confidence": 0.96
+        }
+      ],
+      "importance": "medium",
+      "sentiment": "Mixed",
+      "special_note": null,
+      "material_stage": null,
+      "material_stage_label": null,
+      "material_stage_confidence": null,
+      "thumbnail_url": null,
+      "publisher_name": "华尔街见闻 美股快讯",
+      "source_status": "ok",
+      "evidence_status": "multi_source",
+      "evidence_label": "多独立来源提及（待核官方全文）",
+      "evidence_status_reason": "已有 2 家独立媒体族（另识别 1 条高度相似转载）提及（含摘要或正文首段）；多源转载不代表官方公告已证实",
+      "attribution_warning": null,
+      "regulatory_note": null,
+      "contradictions": [],
+      "downweight_reasons": [],
+      "quality_flags": [],
+      "material_depth": "title_and_excerpt",
+      "source_count": 3,
+      "platform_count": 3,
+      "independent_publisher_count": 2,
+      "reprint_count": 1,
+      "published_at": "2026-11-24T06:56:25+08:00",
+      "event_date": "2026-11-24",
+      "event_time": "2026-11-24T06:56:25+08:00",
+      "stale": false,
+      "event_date_source": "llm_extracted",
+      "is_stale_rehash": false,
+      "time_trust_level": "article_timestamp",
+      "time_confidence": "article_timestamp",
+      "first_discovered_at": "2026-11-24T11:29:14+08:00",
+      "first_reported_at": "2026-11-24T06:56:25+08:00",
+      "latest_fact_update_at": "2026-11-24T09:23:48+08:00",
+      "latest_reported_at": "2026-11-24T09:23:48+08:00",
+      "fetched_at": "2026-11-24T13:29:03+08:00",
+      "input_batch_id": "raw-20261124-132903",
+      "fact_summary": "美国纽约联储主席（享有FOMC永久投票权，号称美联储三把手）威廉姆斯：不排除FOMC在必要时连续加息的可能性。针对未来（多次）会议都不排除任何选项。数据将决定利率行动的时机和步伐。市场走势可能会在短期内逆转。金融条件的持续变化可能会影响需求。对增长前景仍然非常乐观。",
+      "fact_atoms": [
+        {
+          "atom_id": "fa_19845408",
+          "subject": "美联储 FOMC 与全球流动性",
+          "metric_or_action": "美联储“三把手”放话：通胀持续过高，必要时或连续加息！",
+          "value": null,
+          "unit": null,
+          "period": "单次披露/未注明周期",
+          "scope": "新闻事件陈述",
+          "fact_status": "multi_source_reported",
+          "attribution": "华尔街见闻 美股快讯",
+          "source_ref": "wscn-us-stock-channel_2d29699b2b52",
+          "source_url": "https://wallstreetcn.com/livenews/3204546",
+          "source_excerpt_or_locator": "美国纽约联储主席（享有FOMC永久投票权，号称美联储三把手）威廉姆斯：不排除FOMC在必要时连续加息的可能性。针对未来（多次）会议都不排除任何选项。数据将决定利率行动的时机和步伐。市场走势可能会在短期内逆转。金融条件的持续变化可能会影响需求。对增长前景仍然非常乐观。",
+          "published_at": "2026-11-24T06:56:25+08:00",
+          "discovered_at": "2026-11-24T11:29:14+08:00",
+          "revision": 1
+        }
+      ],
+      "ai_analysis": "该动态聚焦美联储 FOMC 与全球流动性核心变量变化，建议结合多方信源跟踪后续实质进展。",
+      "unverified_claims": [],
+      "speculation_or_outlook": null,
+      "sources": [
+        {
+          "item_id": "wscn-us-stock-channel_2d29699b2b52",
+          "article_id": "wscn-us-stock-channel_2d29699b2b52",
+          "source_id": "wscn-us-stock-channel",
+          "source_name": "华尔街见闻 美股快讯",
+          "publisher_name": "华尔街见闻 美股快讯",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "wallstreetcn",
+          "is_reprint_copy": false,
+          "title": "美联储三把手：如有需要，不排除连续加息的可能性",
+          "url": "https://wallstreetcn.com/livenews/3204546",
+          "published_at": "2026-11-24T06:56:25+08:00",
+          "published_at_source": "upstream_api",
+          "fetched_at": "2026-11-24T13:29:04+08:00",
+          "excerpt": "美国纽约联储主席（享有FOMC永久投票权，号称美联储三把手）威廉姆斯：不排除FOMC在必要时连续加息的可能性。针对未来（多次）会议都不排除任何选项。数据将决定利率行动的时机和步伐。市场走势可能会在短期内逆转。金融条件的持续变化可能会影响需求。对增长前景仍然非常乐观。",
+          "thumbnail_url": null,
+          "deep_fetch_status": null
+        },
+        {
+          "item_id": "rss-gnews-markets-zh_01b68c274d46",
+          "article_id": "rss-gnews-markets-zh_01b68c274d46",
+          "source_id": "rss-gnews-markets-zh",
+          "source_name": "东方财富网",
+          "publisher_name": "东方财富网",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "wap",
+          "is_reprint_copy": false,
+          "title": "美联储“三把手”放话：通胀持续过高 必要时或连续加息！",
+          "url": "https://news.google.com/rss/articles/CBMiYEFVX3lxTE5jNXVxdHlldDBuc0JLTk51R1RGaE80V3ZueEZBU2hPeXprZmZzTDk2YUJlRkZnMjdWVFh4QkVOekVfdEdBWFpCNm91QUUzRXZBdkUtc2EtelV6SHN1SVhDZA?oc=5",
+          "published_at": "2026-11-24T09:23:48+08:00",
+          "published_at_source": "upstream_rfc2822",
+          "fetched_at": "2026-11-24T13:29:05+08:00",
+          "excerpt": "美联储“三把手”放话：通胀持续过高 必要时或连续加息！ 东方财富网",
+          "thumbnail_url": null,
+          "deep_fetch_status": null
+        },
+        {
+          "item_id": "cls-hot_2e83a6152eef",
+          "article_id": "cls-hot_2e83a6152eef",
+          "source_id": "cls-hot",
+          "source_name": "财联社 · 热门",
+          "publisher_name": "财联社 · 热门",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "aggregator_lead",
+          "publisher_family": "cls",
+          "is_reprint_copy": true,
+          "title": "美联储“三把手”放话：通胀持续过高，必要时或连续加息！",
+          "url": "https://www.cls.cn/detail/2542480",
+          "published_at": null,
+          "published_at_source": null,
+          "fetched_at": "2026-11-24T13:29:03+08:00",
+          "excerpt": null,
+          "thumbnail_url": null,
+          "deep_fetch_status": null
+        }
+      ],
+      "verification": {
+        "all_refs_valid": true,
+        "has_primary_url": true,
+        "rejected_refs": [],
+        "has_first_party": false
+      },
+      "followup": {
+        "is_continuing": true,
+        "prev_batch_id": "smart-20261124-121151",
+        "prev_event_id": "evt_2db81c6ab4ea",
+        "prev_title": "美联储“三把手”：通胀仍未达标，需逐步采取行动，不排除连续加息的可能",
+        "delta_note": "同一事件在最新批次出现表述修订或信息补充"
+      },
+      "is_new_in_batch": true,
+      "update_kind": "new_discovery",
+      "heavy_score": 36.0,
+      "radar_score": 82,
+      "severity_tier": "B",
+      "severity_label": "B级常规",
+      "translation_attempts": 0,
+      "translation_error": null,
+      "title_zh": "美联储“三把手”放话：通胀持续过高，必要时或连续加息！",
+      "translation_status": "native_zh",
+      "summary_zh": "美国纽约联储主席（享有FOMC永久投票权，号称美联储三把手）威廉姆斯：不排除FOMC在必要时连续加息的可能性。针对未来（多次）会议都不排除任何选项。数据将决定利率行动的时机和步伐。市场走势可能会在短期内逆转。金融条件的持续变化可能会影响需求。对增长前景仍然非常乐观。",
+      "title_en": "",
+      "summary_en": "",
+      "ai_analysis_en": "",
+      "deep_qa": [
+        {
+          "question": "这项宏观与利率信号对全球资产定价有何实质影响？",
+          "answer": "直接作用于美元流动性预期与跨市场估值折现率：美国纽约联储主席（享有FOMC永久投票权，号称美联储三把手）威廉姆斯：不排除FOMC在必要时连续加息的可能性。针对未来（多次）会议都不排除任何选项。数据将决定利率行动的时机和步伐。",
+          "historical_parallel": "参考 2022~2024 年多轮美联储利率预期重定价周期，美债长端收益率与科技股估值在议息窗口前通常先行波动。"
+        },
+        {
+          "question": "市场正反分歧核心在哪里？",
+          "answer": "宽松派期待政策提前纠偏以缓释金融脆弱性；谨慎派关注通胀黏性与长期国债供给压力，等待核心 PCE 与非农确认。",
+          "historical_parallel": "历史紧缩与降息预期博弈期显示，核心 PCE 与非农数据落地后市场分歧才会逐步收敛。"
+        }
+      ]
+    },
+    {
+      "schema_version": "4.1",
+      "event_id": "evt_15699c09874d",
+      "storyline_id": "st_a7113867db3d",
+      "article_ids": [
+        "rss-gnews-markets-zh_ae24e8dab3f0"
+      ],
+      "legacy_event_ids": [],
+      "title": "国际油价大跌，黄金白银齐涨，英伟达代币飙涨近23%，加密货币近13万人爆仓",
+      "category": "finance",
+      "entities": [
+        "黄金 / 贵金属与避险资产",
+        "英伟达 (NVIDIA)",
+        "中信证券 / A股券商与资本市场"
+      ],
+      "entity_ids": [
+        "ent_gold_metals",
+        "ent_nvidia",
+        "ent_cn_brokers"
+      ],
+      "entity_confidences": {
+        "黄金 / 贵金属与避险资产": 0.86,
+        "英伟达 (NVIDIA)": 0.86,
+        "中信证券 / A股券商与资本市场": 0.86
+      },
+      "matched_entities": [
+        {
+          "entity_id": "ent_gold_metals",
+          "canonical_name": "黄金 / 贵金属与避险资产",
+          "entity_type": "industry",
+          "sector": "贵金属 / 大宗商品",
+          "matched_aliases": [
+            "黄金"
+          ],
+          "tickers": [
+            {
+              "symbol": "518880",
+              "market": "SH",
+              "exchange": "SSE",
+              "currency": "CNY",
+              "label": "518880.SH (SSE)"
+            },
+            {
+              "symbol": "GLD",
+              "market": "US",
+              "exchange": "NYSE",
+              "currency": "USD",
+              "label": "GLD.US (NYSE)"
+            }
+          ],
+          "reason": "正文/实体匹配关键词「黄金」",
+          "confidence": 0.86
+        },
+        {
+          "entity_id": "ent_nvidia",
+          "canonical_name": "英伟达 (NVIDIA)",
+          "entity_type": "company",
+          "sector": "半导体 / AI算力",
+          "matched_aliases": [
+            "英伟达"
+          ],
+          "tickers": [
+            {
+              "symbol": "NVDA",
+              "market": "US",
+              "exchange": "NASDAQ",
+              "currency": "USD",
+              "label": "NVDA.US (NASDAQ)"
+            }
+          ],
+          "reason": "正文/实体匹配关键词「英伟达」",
+          "confidence": 0.86
+        },
+        {
+          "entity_id": "ent_cn_brokers",
+          "canonical_name": "中信证券 / A股券商与资本市场",
+          "entity_type": "company",
+          "sector": "金融基础设施 / 券商",
+          "matched_aliases": [
+            "东方财富"
+          ],
+          "tickers": [
+            {
+              "symbol": "600030",
+              "market": "SH",
+              "exchange": "SSE",
+              "currency": "CNY",
+              "label": "600030.SH (SSE)"
+            }
+          ],
+          "reason": "正文/实体匹配关键词「东方财富」",
+          "confidence": 0.86
+        }
+      ],
+      "importance": "high",
+      "sentiment": "Mixed",
+      "special_note": null,
+      "material_stage": null,
+      "material_stage_label": null,
+      "material_stage_confidence": null,
+      "thumbnail_url": null,
+      "publisher_name": "东方财富网",
+      "source_status": "ok",
+      "evidence_status": "single_source",
+      "evidence_label": "单一独立来源线索",
+      "evidence_status_reason": "目前仅见 1 家独立来源（共 1 条引用含转载，含摘要/首段），尚未见独立渠道交叉或官方确认",
+      "attribution_warning": null,
+      "regulatory_note": null,
+      "contradictions": [],
+      "downweight_reasons": [],
+      "quality_flags": [],
+      "material_depth": "title_and_excerpt",
+      "source_count": 1,
+      "platform_count": 1,
+      "independent_publisher_count": 1,
+      "reprint_count": 0,
+      "published_at": "2026-11-24T11:53:19+08:00",
+      "event_date": "2026-11-24",
+      "event_time": "2026-11-24T11:53:19+08:00",
+      "stale": false,
+      "event_date_source": "llm_extracted",
+      "is_stale_rehash": false,
+      "time_trust_level": "article_timestamp",
+      "time_confidence": "article_timestamp",
+      "first_discovered_at": "2026-11-24T13:29:03+08:00",
+      "first_reported_at": "2026-11-24T11:53:19+08:00",
+      "latest_fact_update_at": "2026-11-24T11:53:19+08:00",
+      "latest_reported_at": "2026-11-24T11:53:19+08:00",
+      "fetched_at": "2026-11-24T13:29:03+08:00",
+      "input_batch_id": "raw-20261124-132903",
+      "fact_summary": "国际油价大跌，黄金白银齐涨，英伟达代币飙涨近23%，加密货币近13万人爆仓 东方财富网",
+      "fact_atoms": [
+        {
+          "atom_id": "fa_25300228",
+          "subject": "黄金 / 贵金属与避险资产",
+          "metric_or_action": "国际油价大跌，黄金白银齐涨，英伟达代币飙涨近23%，加密货币近13万人爆仓",
+          "value": "23",
+          "unit": "%",
+          "period": "单次披露/未注明周期",
+          "scope": "新闻事件陈述",
+          "fact_status": "reported_unconfirmed_by_filing",
+          "attribution": "东方财富网",
+          "source_ref": "rss-gnews-markets-zh_ae24e8dab3f0",
+          "source_url": "https://news.google.com/rss/articles/CBMiZkFVX3lxTE9aSDRISUsyMUR0Y0h5el9OUjVCX3piOEtRdGZvbE9zR2NVTWN6c3gzbTdVOUV4N09rZDlmMndRWkNxb2Q2ZGRKcXFlS2puaExWUlpLaC1IUVFPd3RKZHNkNENvR21tdw?oc=5",
+          "source_excerpt_or_locator": "国际油价大跌，黄金白银齐涨，英伟达代币飙涨近23%，加密货币近13万人爆仓 东方财富网",
+          "published_at": "2026-11-24T11:53:19+08:00",
+          "discovered_at": "2026-11-24T13:29:03+08:00",
+          "revision": 1
+        }
+      ],
+      "ai_analysis": "引发黄金 / 贵金属与避险资产 / 英伟达 (NVIDIA)估值与产业链联动重定价，需紧盯主力资金流向与官方后续披露。",
+      "unverified_claims": [],
+      "speculation_or_outlook": null,
+      "sources": [
+        {
+          "item_id": "rss-gnews-markets-zh_ae24e8dab3f0",
+          "article_id": "rss-gnews-markets-zh_ae24e8dab3f0",
+          "source_id": "rss-gnews-markets-zh",
+          "source_name": "东方财富网",
+          "publisher_name": "东方财富网",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "finance",
+          "is_reprint_copy": false,
+          "title": "国际油价大跌，黄金白银齐涨，英伟达代币飙涨近23%，加密货币近13万人爆仓",
+          "url": "https://news.google.com/rss/articles/CBMiZkFVX3lxTE9aSDRISUsyMUR0Y0h5el9OUjVCX3piOEtRdGZvbE9zR2NVTWN6c3gzbTdVOUV4N09rZDlmMndRWkNxb2Q2ZGRKcXFlS2puaExWUlpLaC1IUVFPd3RKZHNkNENvR21tdw?oc=5",
+          "published_at": "2026-11-24T11:53:19+08:00",
+          "published_at_source": "upstream_rfc2822",
+          "fetched_at": "2026-11-24T13:29:05+08:00",
+          "excerpt": "国际油价大跌，黄金白银齐涨，英伟达代币飙涨近23%，加密货币近13万人爆仓 东方财富网",
+          "thumbnail_url": null,
+          "deep_fetch_status": "empty_or_js_rendered"
+        }
+      ],
+      "verification": {
+        "all_refs_valid": true,
+        "has_primary_url": true,
+        "rejected_refs": [],
+        "has_first_party": false
+      },
+      "followup": null,
+      "is_new_in_batch": true,
+      "update_kind": "new_discovery",
+      "heavy_score": 71.3,
+      "radar_score": 76,
+      "severity_tier": "A",
+      "severity_label": "A级要闻",
+      "heavy_reason_tag": "大宗与市场剧震",
+      "translation_attempts": 0,
+      "translation_error": null,
+      "title_zh": "国际油价大跌，黄金白银齐涨，英伟达代币飙涨近23%，加密货币近13万人爆仓",
+      "translation_status": "native_zh",
+      "summary_zh": "国际油价大跌，黄金白银齐涨，英伟达代币飙涨近23%，加密货币近13万人爆仓 东方财富网",
+      "title_en": "",
+      "summary_en": "",
+      "ai_analysis_en": "",
+      "deep_qa": [
+        {
+          "question": "这件事对普通投资者与全球市场有何影响？",
+          "answer": "聚焦黄金 / 贵金属与避险资产 / 英伟达 (NVIDIA)避险溢价与美元实际利率再定价：国际油价大跌，黄金白银齐涨，英伟达代币飙涨近23%，加密货币近13万人爆仓 东方财富网。",
+          "historical_parallel": "参考历次 COMEX 金价高位急跌去杠杆窗口，通常需重点观察 10 年期美债实际利率 (TIPS) 企稳、商业银行风控提示与亚盘实物金买盘承接力度。"
+        },
+        {
+          "question": "后续判断企稳与趋势的核心观测指标是什么？",
+          "answer": "重点关注 COMEX 现货/期货仓位变化、10 年期美债实际利率 (TIPS) 走势、银行积存金风控节奏以及全球央行季度购金动向。",
+          "historical_parallel": "历史商品急跌后的首周反弹往往伴随多空筹码换手，需观察央行购金节奏与美元指数是否同步配合。"
+        }
+      ]
+    },
+    {
+      "schema_version": "4.1",
+      "event_id": "evt_95bae5b41bd7",
+      "storyline_id": "st_08fe83c3a5a5",
+      "article_ids": [
+        "rss-gnews-markets-zh_b1b1f0f52a8f",
+        "cls-telegraph_33e2fb60de31",
+        "fastbull-express_f07d2a8f07db"
+      ],
+      "legacy_event_ids": [],
+      "title": "财联社11月24日电，央行在香港发行200亿元人民币3个月期央票，中标利率1.32%；在香港发行300亿元人民币1年期央票，中标利率1.41%。",
+      "category": "finance",
+      "entities": [],
+      "entity_ids": [],
+      "entity_confidences": {},
+      "matched_entities": [],
+      "importance": "medium",
+      "sentiment": "Mixed",
+      "special_note": null,
+      "material_stage": null,
+      "material_stage_label": null,
+      "material_stage_confidence": null,
+      "thumbnail_url": null,
+      "publisher_name": "观点网",
+      "source_status": "ok",
+      "evidence_status": "multi_source",
+      "evidence_label": "多独立来源提及（待核官方全文）",
+      "evidence_status_reason": "已有 2 家独立媒体族（另识别 1 条高度相似转载）提及（含摘要或正文首段）；多源转载不代表官方公告已证实",
+      "attribution_warning": null,
+      "regulatory_note": null,
+      "contradictions": [],
+      "downweight_reasons": [],
+      "quality_flags": [],
+      "material_depth": "title_and_excerpt",
+      "source_count": 3,
+      "platform_count": 3,
+      "independent_publisher_count": 2,
+      "reprint_count": 1,
+      "published_at": "2026-11-24T12:36:10+08:00",
+      "event_date": "2026-11-24",
+      "event_time": "2026-11-24T12:36:10+08:00",
+      "stale": false,
+      "event_date_source": "llm_extracted",
+      "is_stale_rehash": false,
+      "time_trust_level": "article_timestamp",
+      "time_confidence": "article_timestamp",
+      "first_discovered_at": "2026-11-24T13:29:03+08:00",
+      "first_reported_at": "2026-11-24T12:36:10+08:00",
+      "latest_fact_update_at": "2026-11-24T12:59:02+08:00",
+      "latest_reported_at": "2026-11-24T12:59:02+08:00",
+      "fetched_at": "2026-11-24T13:29:03+08:00",
+      "input_batch_id": "raw-20261124-132903",
+      "fact_summary": "央行在香港发行500亿元人民币央票 3个月期中标利率1.32% 观点网",
+      "fact_atoms": [
+        {
+          "atom_id": "fa_66265203",
+          "subject": "相关主体",
+          "metric_or_action": "财联社11月24日电，央行在香港发行200亿元人民币3个月期央票，中标利率1.32%；在香港发行300亿元人民币1年期央票，中标利率1.41%。",
+          "value": "200",
+          "unit": "亿元",
+          "period": "单次披露/未注明周期",
+          "scope": "新闻事件陈述",
+          "fact_status": "multi_source_reported",
+          "attribution": "观点网",
+          "source_ref": "rss-gnews-markets-zh_b1b1f0f52a8f",
+          "source_url": "https://news.google.com/rss/articles/CBMiYkFVX3lxTFBPQ1RqOHA2b0lPbm9oWTZjMXBQZ0RTcHVUZjZsS2tOR3pIMlBvTHpkU3ZKMXJwR1pXczZhT0gtZ0lnSnJuMFJOYkNrUWtYWXpPbkpfN1BlOGh2X1pSeFhYc0Rn?oc=5",
+          "source_excerpt_or_locator": "央行在香港发行500亿元人民币央票 3个月期中标利率1.32% 观点网",
+          "published_at": "2026-11-24T12:59:02+08:00",
+          "discovered_at": "2026-11-24T13:29:03+08:00",
+          "revision": 1
+        }
+      ],
+      "ai_analysis": "该动态聚焦财经/市场核心变量变化，建议结合多方信源跟踪后续实质进展。",
+      "unverified_claims": [],
+      "speculation_or_outlook": null,
+      "sources": [
+        {
+          "item_id": "rss-gnews-markets-zh_b1b1f0f52a8f",
+          "article_id": "rss-gnews-markets-zh_b1b1f0f52a8f",
+          "source_id": "rss-gnews-markets-zh",
+          "source_name": "观点网",
+          "publisher_name": "观点网",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "guandian",
+          "is_reprint_copy": false,
+          "title": "央行在香港发行500亿元人民币央票 3个月期中标利率1.32%",
+          "url": "https://news.google.com/rss/articles/CBMiYkFVX3lxTFBPQ1RqOHA2b0lPbm9oWTZjMXBQZ0RTcHVUZjZsS2tOR3pIMlBvTHpkU3ZKMXJwR1pXczZhT0gtZ0lnSnJuMFJOYkNrUWtYWXpPbkpfN1BlOGh2X1pSeFhYc0Rn?oc=5",
+          "published_at": "2026-11-24T12:59:02+08:00",
+          "published_at_source": "upstream_rfc2822",
+          "fetched_at": "2026-11-24T13:29:05+08:00",
+          "excerpt": "央行在香港发行500亿元人民币央票 3个月期中标利率1.32% 观点网",
+          "thumbnail_url": null,
+          "deep_fetch_status": null
+        },
+        {
+          "item_id": "cls-telegraph_33e2fb60de31",
+          "article_id": "cls-telegraph_33e2fb60de31",
+          "source_id": "cls-telegraph",
+          "source_name": "财联社 · 电报",
+          "publisher_name": "财联社 · 电报",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "aggregator_lead",
+          "publisher_family": "cls",
+          "is_reprint_copy": false,
+          "title": "财联社11月24日电，央行在香港发行200亿元人民币3个月期央票，中标利率1.32%；在香港发行300亿元人民币1年期央票，中标利率1.41%。",
+          "url": "https://www.cls.cn/detail/2542707",
+          "published_at": "2026-11-24T12:36:10+08:00",
+          "published_at_source": "upstream_epoch",
+          "fetched_at": "2026-11-24T13:29:03+08:00",
+          "excerpt": null,
+          "thumbnail_url": null,
+          "deep_fetch_status": null
+        },
+        {
+          "item_id": "fastbull-express_f07d2a8f07db",
+          "article_id": "fastbull-express_f07d2a8f07db",
+          "source_id": "fastbull-express",
+          "source_name": "法布财经 · 快讯",
+          "publisher_name": "法布财经 · 快讯",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "aggregator_lead",
+          "publisher_family": "fastbull",
+          "is_reprint_copy": true,
+          "title": "中国央行在香港发行200亿元人民币3个月期央票，中标利率1.32%；在香港发行300亿元人民币1年期央票，中标利率1.41%。",
+          "url": "https://www.fastbull.com/cn/fastshort/4363117_204_1",
+          "published_at": "2026-11-24T12:36:39+08:00",
+          "published_at_source": "upstream_epoch",
+          "fetched_at": "2026-11-24T13:29:03+08:00",
+          "excerpt": null,
+          "thumbnail_url": null,
+          "deep_fetch_status": null
+        }
+      ],
+      "verification": {
+        "all_refs_valid": true,
+        "has_primary_url": true,
+        "rejected_refs": [],
+        "has_first_party": false
+      },
+      "followup": null,
+      "is_new_in_batch": true,
+      "update_kind": "new_discovery",
+      "heavy_score": 57.5,
+      "radar_score": 52,
+      "severity_tier": "B",
+      "severity_label": "B级常规",
+      "translation_attempts": 0,
+      "translation_error": null,
+      "title_zh": "财联社11月24日电，央行在香港发行200亿元人民币3个月期央票，中标利率1.32%；在香港发行300亿元人民币1年期央票，中标利率1.41%。",
+      "translation_status": "native_zh",
+      "summary_zh": "央行在香港发行500亿元人民币央票 3个月期中标利率1.32% 观点网",
+      "title_en": "",
+      "summary_en": "",
+      "ai_analysis_en": "",
+      "deep_qa": [
+        {
+          "question": "这项政策对普通投资者与 A 股行业有何实质影响？",
+          "answer": "核心作用于相关产业链流动性与估值预期：央行在香港发行500亿元人民币央票 3个月期中标利率1.32% 观点网。",
+          "historical_parallel": "参考 2023 年以来同类境内资本市场政策窗口，次日成交额承接强度是判断行情持续性的关键。"
+        },
+        {
+          "question": "市场正反分歧核心在哪里？",
+          "answer": "看多逻辑看重制度与成本边际改善；谨慎派关注基本面盈利兑现与后续配套细则衔接连续性。",
+          "historical_parallel": "2024 年 9 月增量政策落地后，具备基本面印证的核心板块持续跑赢纯概念题材。"
+        }
+      ]
+    },
+    {
+      "schema_version": "4.1",
+      "event_id": "evt_5c751dbd07f5",
+      "storyline_id": "st_d10729ec0480",
+      "article_ids": [
+        "jin10_d1e953a06244",
+        "wallstreetcn-quick_3cc8ebd728e3",
+        "cls-telegraph_ec4ad4b0daa2"
+      ],
+      "legacy_event_ids": [],
+      "title": "油价下跌缓解通胀担忧 美国国债价格上涨",
+      "category": "finance",
+      "entities": [
+        "美联储 FOMC 与全球流动性"
+      ],
+      "entity_ids": [
+        "ent_macro_fomc"
+      ],
+      "entity_confidences": {
+        "美联储 FOMC 与全球流动性": 0.86
+      },
+      "matched_entities": [
+        {
+          "entity_id": "ent_macro_fomc",
+          "canonical_name": "美联储 FOMC 与全球流动性",
+          "entity_type": "macro",
+          "sector": "宏观利率与汇率",
+          "matched_aliases": [
+            "美联储"
+          ],
+          "tickers": [],
+          "reason": "正文/实体匹配关键词「美联储」",
+          "confidence": 0.86
+        }
+      ],
+      "importance": "medium",
+      "sentiment": "Mixed",
+      "special_note": null,
+      "material_stage": null,
+      "material_stage_label": null,
+      "material_stage_confidence": null,
+      "thumbnail_url": null,
+      "publisher_name": "金十数据",
+      "source_status": "ok",
+      "evidence_status": "multi_source",
+      "evidence_label": "多独立来源提及（待核官方全文）",
+      "evidence_status_reason": "已有 2 家独立媒体族（另识别 1 条高度相似转载）提及（含摘要或正文首段）；多源转载不代表官方公告已证实",
+      "attribution_warning": null,
+      "regulatory_note": null,
+      "contradictions": [],
+      "downweight_reasons": [],
+      "quality_flags": [],
+      "material_depth": "title_and_excerpt",
+      "source_count": 3,
+      "platform_count": 3,
+      "independent_publisher_count": 2,
+      "reprint_count": 1,
+      "published_at": "2026-11-24T12:54:47+08:00",
+      "event_date": "2026-11-24",
+      "event_time": "2026-11-24T12:54:47+08:00",
+      "stale": false,
+      "event_date_source": "llm_extracted",
+      "is_stale_rehash": false,
+      "time_trust_level": "article_timestamp",
+      "time_confidence": "article_timestamp",
+      "first_discovered_at": "2026-11-24T13:29:03+08:00",
+      "first_reported_at": "2026-11-24T12:54:47+08:00",
+      "latest_fact_update_at": "2026-11-24T12:59:24+08:00",
+      "latest_reported_at": "2026-11-24T12:59:24+08:00",
+      "fetched_at": "2026-11-24T13:29:03+08:00",
+      "input_batch_id": "raw-20261124-132903",
+      "fact_summary": "金十数据11月24日讯，美国国债收益率曲线全线下移，油价下跌缓解了市场对通胀的担忧。基准10年期美债收益率，以及对美联储政策前景更为敏感的2年期收益率均下跌3个基点。受市场对结束美伊战争的努力持谨慎乐观态度影响，油价在前一交易日下跌超过3%。债券市场走势表明，相较于人工智能股票交易复苏通常会削弱避险资产需求，投资者目前更加关注能源价格下跌可能促使美联储放缓鹰派政策立场的前景。",
+      "fact_atoms": [
+        {
+          "atom_id": "fa_16591632",
+          "subject": "美联储 FOMC 与全球流动性",
+          "metric_or_action": "油价下跌缓解通胀担忧 美国国债价格上涨",
+          "value": "3",
+          "unit": "%",
+          "period": "单次披露/未注明周期",
+          "scope": "新闻事件陈述",
+          "fact_status": "multi_source_reported",
+          "attribution": "金十数据",
+          "source_ref": "jin10_d1e953a06244",
+          "source_url": "https://flash.jin10.com/detail/20261124125447460800",
+          "source_excerpt_or_locator": "金十数据11月24日讯，美国国债收益率曲线全线下移，油价下跌缓解了市场对通胀的担忧。基准10年期美债收益率，以及对美联储政策前景更为敏感的2年期收益率均下跌3个基点。受市场对结束美伊战争的努力持谨慎乐观态度影响，油价在前一交易日下跌超过3%。债券市场走势表明，相较于人工智能股票交易复苏通常会削弱避险资产需求，投资者目前更加关注能源价格下跌可能促使美联储放缓鹰",
+          "published_at": "2026-11-24T12:54:47+08:00",
+          "discovered_at": "2026-11-24T13:29:03+08:00",
+          "revision": 1
+        }
+      ],
+      "ai_analysis": "该动态聚焦美联储 FOMC 与全球流动性核心变量变化，建议结合多方信源跟踪后续实质进展。",
+      "unverified_claims": [],
+      "speculation_or_outlook": null,
+      "sources": [
+        {
+          "item_id": "jin10_d1e953a06244",
+          "article_id": "jin10_d1e953a06244",
+          "source_id": "jin10",
+          "source_name": "金十数据",
+          "publisher_name": "金十数据",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "aggregator_lead",
+          "publisher_family": "jin10",
+          "is_reprint_copy": false,
+          "title": "油价下跌缓解通胀担忧 美债收益率全线走低",
+          "url": "https://flash.jin10.com/detail/20261124125447460800",
+          "published_at": "2026-11-24T12:54:47+08:00",
+          "published_at_source": "upstream_epoch",
+          "fetched_at": "2026-11-24T13:29:03+08:00",
+          "excerpt": "金十数据11月24日讯，美国国债收益率曲线全线下移，油价下跌缓解了市场对通胀的担忧。基准10年期美债收益率，以及对美联储政策前景更为敏感的2年期收益率均下跌3个基点。受市场对结束美伊战争的努力持谨慎乐观态度影响，油价在前一交易日下跌超过3%。债券市场走势表明，相较于人工智能股票交易复苏通常会削弱避险资产需求，投资者目前更加关注能源价格下跌可能促使美联储放缓鹰派政策立场的前景。Lombard Odier高级宏观策略师Homin Lee表示：“尽管全球股市上涨，但能源市场供应中断前景以及美联储政策情景的变化，似乎正在推动债券收益率走低。”",
+          "thumbnail_url": null,
+          "deep_fetch_status": null
+        },
+        {
+          "item_id": "wallstreetcn-quick_3cc8ebd728e3",
+          "article_id": "wallstreetcn-quick_3cc8ebd728e3",
+          "source_id": "wallstreetcn-quick",
+          "source_name": "华尔街见闻 · 快讯",
+          "publisher_name": "华尔街见闻 · 快讯",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "aggregator_lead",
+          "publisher_family": "wallstreetcn",
+          "is_reprint_copy": false,
+          "title": "油价下跌缓解通胀担忧 美国国债价格上涨",
+          "url": "https://wallstreetcn.com/livenews/3204697",
+          "published_at": "2026-11-24T12:55:53+08:00",
+          "published_at_source": "upstream_epoch",
+          "fetched_at": "2026-11-24T13:29:03+08:00",
+          "excerpt": null,
+          "thumbnail_url": null,
+          "deep_fetch_status": null
+        },
+        {
+          "item_id": "cls-telegraph_ec4ad4b0daa2",
+          "article_id": "cls-telegraph_ec4ad4b0daa2",
+          "source_id": "cls-telegraph",
+          "source_name": "财联社 · 电报",
+          "publisher_name": "财联社 · 电报",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "aggregator_lead",
+          "publisher_family": "cls",
+          "is_reprint_copy": true,
+          "title": "油价下跌缓解通胀担忧 美国国债价格上涨",
+          "url": "https://www.cls.cn/detail/2542718",
+          "published_at": "2026-11-24T12:59:24+08:00",
+          "published_at_source": "upstream_epoch",
+          "fetched_at": "2026-11-24T13:29:03+08:00",
+          "excerpt": null,
+          "thumbnail_url": null,
+          "deep_fetch_status": null
+        }
+      ],
+      "verification": {
+        "all_refs_valid": true,
+        "has_primary_url": true,
+        "rejected_refs": [],
+        "has_first_party": false
+      },
+      "followup": null,
+      "is_new_in_batch": true,
+      "update_kind": "new_discovery",
+      "heavy_score": 41.4,
+      "radar_score": 82,
+      "severity_tier": "B",
+      "severity_label": "B级常规",
+      "translation_attempts": 0,
+      "translation_error": null,
+      "title_zh": "油价下跌缓解通胀担忧 美国国债价格上涨",
+      "translation_status": "native_zh",
+      "summary_zh": "金十数据11月24日讯，美国国债收益率曲线全线下移，油价下跌缓解了市场对通胀的担忧。基准10年期美债收益率，以及对美联储政策前景更为敏感的2年期收益率均下跌3个基点。受市场对结束美伊战争的努力持谨慎乐观态度影响，油价在前一交易日下跌超过3%。债券市场走势表明，相较于人工智能股票交易复苏通常会削弱避险资产需求，投资者目前更加关注能源价格下跌可能促使美联储放缓鹰派政策立场的前景。",
+      "title_en": "",
+      "summary_en": "",
+      "ai_analysis_en": "",
+      "deep_qa": [
+        {
+          "question": "这件事对普通投资者与全球市场有何影响？",
+          "answer": "聚焦美联储 FOMC 与全球流动性避险溢价与美元实际利率再定价：金十数据11月24日讯，美国国债收益率曲线全线下移，油价下跌缓解了市场对通胀的担忧。基准10年期美债收益率，以及对美联储政策前景更为敏感的2年期收益率均下跌3个基点。",
+          "historical_parallel": "参考历次 COMEX 金价高位急跌去杠杆窗口，通常需重点观察 10 年期美债实际利率 (TIPS) 企稳、商业银行风控提示与亚盘实物金买盘承接力度。"
+        },
+        {
+          "question": "后续判断企稳与趋势的核心观测指标是什么？",
+          "answer": "重点关注 COMEX 现货/期货仓位变化、10 年期美债实际利率 (TIPS) 走势、银行积存金风控节奏以及全球央行季度购金动向。",
+          "historical_parallel": "历史商品急跌后的首周反弹往往伴随多空筹码换手，需观察央行购金节奏与美元指数是否同步配合。"
+        }
+      ]
+    },
+    {
+      "schema_version": "4.1",
+      "event_id": "evt_116ca2ae6fa6",
+      "storyline_id": "st_6c4948c62121",
+      "article_ids": [
+        "sina-7x24_5b4821bb027a",
+        "fastbull-express_553465bf18da"
+      ],
+      "legacy_event_ids": [],
+      "title": "A股金属钴概念走强，腾远钴业涨超9%，寒锐钴业、中钨高新、华友钴业、格林美、道氏技术等个股跟涨。消息面上，全球最大钴生产国刚果(金)将从11月30日起再次全面暂停钴出口，以应对国际市场供应过剩以及近几个月钴价持续下跌的局面。",
+      "category": "finance",
+      "entities": [],
+      "entity_ids": [],
+      "entity_confidences": {},
+      "matched_entities": [],
+      "importance": "high",
+      "sentiment": "Mixed",
+      "special_note": null,
+      "material_stage": null,
+      "material_stage_label": null,
+      "material_stage_confidence": null,
+      "thumbnail_url": null,
+      "publisher_name": "新浪财经 7×24 电报",
+      "source_status": "ok",
+      "evidence_status": "multi_source",
+      "evidence_label": "多独立来源提及（待核官方全文）",
+      "evidence_status_reason": "已有 2 家独立媒体族提及（含摘要或正文首段）；多源转载不代表官方公告已证实",
+      "attribution_warning": null,
+      "regulatory_note": null,
+      "contradictions": [],
+      "downweight_reasons": [],
+      "quality_flags": [],
+      "material_depth": "title_and_excerpt",
+      "source_count": 2,
+      "platform_count": 2,
+      "independent_publisher_count": 2,
+      "reprint_count": 0,
+      "published_at": "2026-11-24T09:28:16+08:00",
+      "event_date": "2026-11-24",
+      "event_time": "2026-11-24T09:28:16+08:00",
+      "stale": false,
+      "event_date_source": "llm_extracted",
+      "is_stale_rehash": false,
+      "time_trust_level": "article_timestamp",
+      "time_confidence": "article_timestamp",
+      "first_discovered_at": "2026-11-24T13:29:03+08:00",
+      "first_reported_at": "2026-11-24T09:28:16+08:00",
+      "latest_fact_update_at": "2026-11-24T13:16:36+08:00",
+      "latest_reported_at": "2026-11-24T13:16:36+08:00",
+      "fetched_at": "2026-11-24T13:29:03+08:00",
+      "input_batch_id": "raw-20261124-132903",
+      "fact_summary": "刚果(金)宣布自11月30日起全面暂停钴出口，腾远钴业涨超9%，寒锐钴业等跟涨。",
+      "fact_atoms": [
+        {
+          "atom_id": "fa_38631694",
+          "subject": "相关主体",
+          "metric_or_action": "A股金属钴概念走强，腾远钴业涨超9%，寒锐钴业、中钨高新、华友钴业、格林美、道氏技术等个股跟涨。消息面上，全球最大钴生产国刚果(金)将从11月30日起再次全面暂停钴出口，以应对国际市场供应过剩以及近几个月钴价持续下跌的局面。",
+          "value": "9",
+          "unit": "%",
+          "period": "单次披露/未注明周期",
+          "scope": "新闻事件陈述",
+          "fact_status": "multi_source_reported",
+          "attribution": "新浪财经 7×24 电报",
+          "source_ref": "sina-7x24_5b4821bb027a",
+          "source_url": "https://finance.sina.cn/7x24/2026-11-24/detail-inizvecm2297135.d.html",
+          "source_excerpt_or_locator": "【钴业股走高 全球最大钴生产国刚果(金)将再次全面禁止钴出口】钴生产商股价周二走高，全球最大钴生产国刚果民主共和国将从本月底起再次禁止这种电池金属出口，以扭转钴价持续下滑的局面。在相关限制措施实施前，刚果（金）供应了全球约四分之三的矿产钴，其中大部分在中国精炼。周二上午，腾远钴业上涨逾10%，寒锐钴业涨近8%。华友钴业上涨近7%，格林美和力勤资源也纷纷走高。",
+          "published_at": "2026-11-24T13:16:36+08:00",
+          "discovered_at": "2026-11-24T13:29:03+08:00",
+          "revision": 1
+        }
+      ],
+      "ai_analysis": "作为全球钴供应核心，刚果(金)的出口禁令直接改变了供需预期，短期内将推高钴价并重塑电池金属供应链格局。",
+      "unverified_claims": [],
+      "speculation_or_outlook": null,
+      "sources": [
+        {
+          "item_id": "sina-7x24_5b4821bb027a",
+          "article_id": "sina-7x24_5b4821bb027a",
+          "source_id": "sina-7x24",
+          "source_name": "新浪财经 7×24 电报",
+          "publisher_name": "新浪财经 7×24 电报",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "sina",
+          "is_reprint_copy": false,
+          "title": "钴业股走高 全球最大钴生产国刚果(金)将再次全面禁止钴出口",
+          "url": "https://finance.sina.cn/7x24/2026-11-24/detail-inizvecm2297135.d.html",
+          "published_at": "2026-11-24T13:16:36+08:00",
+          "published_at_source": "upstream_api",
+          "fetched_at": "2026-11-24T13:29:04+08:00",
+          "excerpt": "【钴业股走高 全球最大钴生产国刚果(金)将再次全面禁止钴出口】钴生产商股价周二走高，全球最大钴生产国刚果民主共和国将从本月底起再次禁止这种电池金属出口，以扭转钴价持续下滑的局面。在相关限制措施实施前，刚果（金）供应了全球约四分之三的矿产钴，其中大部分在中国精炼。周二上午，腾远钴业上涨逾10%，寒锐钴业涨近8%。华友钴业上涨近7%，格林美和力勤资源也纷纷走高。该国监管机构ARECOMS周一在声明中表示，将从11月30日起暂停所有钴出口，直至另行通知。声明称，此举旨在“应对国际市场供应过剩，并推动市场实现可持续的再平衡”。",
+          "thumbnail_url": null,
+          "deep_fetch_status": null
+        },
+        {
+          "item_id": "fastbull-express_553465bf18da",
+          "article_id": "fastbull-express_553465bf18da",
+          "source_id": "fastbull-express",
+          "source_name": "法布财经 · 快讯",
+          "publisher_name": "法布财经 · 快讯",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "aggregator_lead",
+          "publisher_family": "fastbull",
+          "is_reprint_copy": false,
+          "title": "A股金属钴概念走强，腾远钴业涨超9%，寒锐钴业、中钨高新、华友钴业、格林美、道氏技术等个股跟涨。消息面上，全球最大钴生产国刚果(金)将从11月30日起再次全面暂停钴出口，以应对国际市场供应过剩以及近几个月钴价持续下跌的局面。",
+          "url": "https://www.fastbull.com/cn/fastshort/4363024_1_1",
+          "published_at": "2026-11-24T09:28:16+08:00",
+          "published_at_source": "upstream_epoch",
+          "fetched_at": "2026-11-24T13:29:03+08:00",
+          "excerpt": null,
+          "thumbnail_url": null,
+          "deep_fetch_status": null
+        }
+      ],
+      "verification": {
+        "all_refs_valid": true,
+        "has_primary_url": true,
+        "rejected_refs": [],
+        "has_first_party": false
+      },
+      "followup": null,
+      "is_new_in_batch": true,
+      "update_kind": "new_discovery",
+      "heavy_score": 66.7,
+      "radar_score": 52,
+      "severity_tier": "A",
+      "severity_label": "A级要闻",
+      "heavy_reason_tag": "市场剧震",
+      "summary": "刚果(金)宣布自11月30日起全面暂停钴出口，腾远钴业涨超9%，寒锐钴业等跟涨。",
+      "summary_zh": "刚果(金)宣布自11月30日起全面暂停钴出口，腾远钴业涨超9%，寒锐钴业等跟涨。",
+      "deep_qa": [
+        {
+          "question": "此次出口禁令对中国精炼钴产业的影响？",
+          "answer": "中国作为全球钴精炼中心，原材料供应受限将导致成本上升，迫使企业加速寻找替代材料或海外矿源布局。",
+          "historical_parallel": "2020年印尼禁止镍矿出口对全球不锈钢及电池产业的冲击。"
+        },
+        {
+          "question": "钴价持续下跌与供应过剩的矛盾如何解决？",
+          "answer": "通过行政手段强制减产是扭转价格颓势的直接方式，但长期需依赖下游电池技术路线的演变。",
+          "historical_parallel": "OPEC通过减产协议干预原油市场价格的逻辑。"
+        }
+      ],
+      "ai_overlaid": true,
+      "translation_attempts": 0,
+      "translation_error": null,
+      "title_zh": "A股金属钴概念走强，腾远钴业涨超9%，寒锐钴业、中钨高新、华友钴业、格林美、道氏技术等个股跟涨。消息面上，全球最大钴生产国刚果(金)将从11月30日起再次全面暂停钴出口，以应对国际市场供应过剩以及近几个月钴价持续下跌的局面。",
+      "translation_status": "native_zh",
+      "title_en": "",
+      "summary_en": "",
+      "ai_analysis_en": ""
+    },
+    {
+      "schema_version": "4.1",
+      "event_id": "evt_cc0d6d49222d",
+      "storyline_id": "st_2f0eb9742366",
+      "article_ids": [
+        "wscn-us-stock-channel_54879066b553",
+        "wallstreetcn-hot_bc3a30e98298"
+      ],
+      "legacy_event_ids": [],
+      "title": "华尔街见闻早餐FM-Radio | 2026年11月24日",
+      "category": "finance",
+      "entities": [
+        "英伟达 (NVIDIA)",
+        "黄金 / 贵金属与避险资产",
+        "地缘冲突、能源与大宗商品"
+      ],
+      "entity_ids": [
+        "ent_nvidia",
+        "ent_gold_metals",
+        "ent_geopolitics_energy"
+      ],
+      "entity_confidences": {
+        "英伟达 (NVIDIA)": 0.96,
+        "黄金 / 贵金属与避险资产": 0.86,
+        "地缘冲突、能源与大宗商品": 0.76
+      },
+      "matched_entities": [
+        {
+          "entity_id": "ent_nvidia",
+          "canonical_name": "英伟达 (NVIDIA)",
+          "entity_type": "company",
+          "sector": "半导体 / AI算力",
+          "matched_aliases": [
+            "黄仁勋",
+            "英伟达"
+          ],
+          "tickers": [
+            {
+              "symbol": "NVDA",
+              "market": "US",
+              "exchange": "NASDAQ",
+              "currency": "USD",
+              "label": "NVDA.US (NASDAQ)"
+            }
+          ],
+          "reason": "正文/实体匹配关键词「黄仁勋 / 英伟达」",
+          "confidence": 0.96
+        },
+        {
+          "entity_id": "ent_gold_metals",
+          "canonical_name": "黄金 / 贵金属与避险资产",
+          "entity_type": "industry",
+          "sector": "贵金属 / 大宗商品",
+          "matched_aliases": [
+            "黄金"
+          ],
+          "tickers": [
+            {
+              "symbol": "518880",
+              "market": "SH",
+              "exchange": "SSE",
+              "currency": "CNY",
+              "label": "518880.SH (SSE)"
+            },
+            {
+              "symbol": "GLD",
+              "market": "US",
+              "exchange": "NYSE",
+              "currency": "USD",
+              "label": "GLD.US (NYSE)"
+            }
+          ],
+          "reason": "正文/实体匹配关键词「黄金」",
+          "confidence": 0.86
+        },
+        {
+          "entity_id": "ent_geopolitics_energy",
+          "canonical_name": "地缘冲突、能源与大宗商品",
+          "entity_type": "macro",
+          "sector": "能源安全与避险资产",
+          "matched_aliases": [
+            "原油"
+          ],
+          "tickers": [],
+          "reason": "正文/实体匹配关键词「原油」",
+          "confidence": 0.76
+        }
+      ],
+      "importance": "high",
+      "sentiment": "Mixed",
+      "special_note": null,
+      "material_stage": null,
+      "material_stage_label": null,
+      "material_stage_confidence": null,
+      "thumbnail_url": "https://static.wscn.net/wscn/_static/share.png",
+      "publisher_name": "华尔街见闻 美股快讯",
+      "source_status": "ok",
+      "evidence_status": "single_source",
+      "evidence_label": "单一独立来源线索",
+      "evidence_status_reason": "目前仅见 1 家独立来源（共 2 条引用含转载，含摘要/首段），尚未见独立渠道交叉或官方确认",
+      "attribution_warning": null,
+      "regulatory_note": null,
+      "contradictions": [],
+      "downweight_reasons": [],
+      "quality_flags": [],
+      "material_depth": "title_and_excerpt",
+      "source_count": 2,
+      "platform_count": 2,
+      "independent_publisher_count": 1,
+      "reprint_count": 1,
+      "published_at": "2026-11-24T07:25:36+08:00",
+      "event_date": "2026-11-24",
+      "event_time": "2026-11-24T07:25:36+08:00",
+      "stale": false,
+      "event_date_source": "llm_extracted",
+      "is_stale_rehash": false,
+      "time_trust_level": "article_timestamp",
+      "time_confidence": "article_timestamp",
+      "first_discovered_at": "2026-11-24T11:29:14+08:00",
+      "first_reported_at": "2026-11-24T07:25:36+08:00",
+      "latest_fact_update_at": "2026-11-24T07:25:36+08:00",
+      "latest_reported_at": "2026-11-24T07:25:36+08:00",
+      "fetched_at": "2026-11-24T13:29:03+08:00",
+      "input_batch_id": "raw-20261124-132903",
+      "fact_summary": "2026年11月24日，英伟达股价暴涨31%，纳指大涨6.5%，芯片指数飙涨14%，黄金反弹近3%，WTI原油期货跌超4%。",
+      "fact_atoms": [
+        {
+          "atom_id": "fa_63150922",
+          "subject": "英伟达 (NVIDIA)",
+          "metric_or_action": "华尔街见闻早餐FM-Radio | 2026年11月24日",
+          "value": "6.5",
+          "unit": "%",
+          "period": "单次披露/未注明周期",
+          "scope": "新闻事件陈述",
+          "fact_status": "reported_unconfirmed_by_filing",
+          "attribution": "华尔街见闻 美股快讯",
+          "source_ref": "wscn-us-stock-channel_54879066b553",
+          "source_url": "https://wallstreetcn.com/livenews/3204553",
+          "source_excerpt_or_locator": "黄仁勋回归引爆美股空头回补，纳指大涨6.5%，英伟达暴涨31%，芯片指数飙涨14%；黄金反弹近3%，WTI原油期货跌超4%。黄仁勋重掌帅印，英伟达股价暴涨31%，市值单日增长近万亿。黄仁勋称”第二次担任CEO会做得更好”，重返英伟达总部，数百名员工夹道欢迎。特朗普火速力挺黄仁勋复职、自称“一手促成”，万斯被曝也介入幕后协调。中国监管部门要求券商在市场波动期间",
+          "published_at": "2026-11-24T07:25:36+08:00",
+          "discovered_at": "2026-11-24T11:29:14+08:00",
+          "revision": 1
+        }
+      ],
+      "ai_analysis": "黄仁勋回归引发的科技股狂欢带动了风险资产全面上涨，而原油下跌则反映了市场对能源需求前景的担忧。",
+      "unverified_claims": [],
+      "speculation_or_outlook": null,
+      "sources": [
+        {
+          "item_id": "wscn-us-stock-channel_54879066b553",
+          "article_id": "wscn-us-stock-channel_54879066b553",
+          "source_id": "wscn-us-stock-channel",
+          "source_name": "华尔街见闻 美股快讯",
+          "publisher_name": "华尔街见闻 美股快讯",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "wallstreetcn",
+          "is_reprint_copy": false,
+          "title": "华尔街见闻早餐 | 2026年11月24日",
+          "url": "https://wallstreetcn.com/livenews/3204553",
+          "published_at": "2026-11-24T07:25:36+08:00",
+          "published_at_source": "upstream_api",
+          "fetched_at": "2026-11-24T13:29:04+08:00",
+          "excerpt": "黄仁勋回归引爆美股空头回补，纳指大涨6.5%，英伟达暴涨31%，芯片指数飙涨14%；黄金反弹近3%，WTI原油期货跌超4%。黄仁勋重掌帅印，英伟达股价暴涨31%，市值单日增长近万亿。黄仁勋称”第二次担任CEO会做得更好”，重返英伟达总部，数百名员工夹道欢迎。特朗普火速力挺黄仁勋复职、自称“一手促成”，万斯被曝也介入幕后协调。中国监管部门要求券商在市场波动期间灵活调整最低维持担保比例与追保平仓安排，避免早盘尾市集中卖出冲击个股。美国11月综合PMI降至四个月低点，供应链瓶颈与成本压力持续。",
+          "thumbnail_url": "https://static.wscn.net/wscn/_static/share.png",
+          "deep_fetch_status": "meta_only"
+        },
+        {
+          "item_id": "wallstreetcn-hot_bc3a30e98298",
+          "article_id": "wallstreetcn-hot_bc3a30e98298",
+          "source_id": "wallstreetcn-hot",
+          "source_name": "华尔街见闻 · 最热",
+          "publisher_name": "华尔街见闻 · 最热",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "aggregator_lead",
+          "publisher_family": "wallstreetcn",
+          "is_reprint_copy": true,
+          "title": "华尔街见闻早餐FM-Radio | 2026年11月24日",
+          "url": "https://wallstreetcn.com/articles/3786555",
+          "published_at": null,
+          "published_at_source": null,
+          "fetched_at": "2026-11-24T13:29:03+08:00",
+          "excerpt": null,
+          "thumbnail_url": null,
+          "deep_fetch_status": null
+        }
+      ],
+      "verification": {
+        "all_refs_valid": true,
+        "has_primary_url": true,
+        "rejected_refs": [],
+        "has_first_party": false
+      },
+      "followup": {
+        "is_continuing": true,
+        "prev_batch_id": "smart-20261124-121151",
+        "prev_event_id": "evt_cc0d6d49222d",
+        "prev_title": "华尔街见闻早餐FM-Radio | 2026年11月24日",
+        "delta_note": "同一事件在最新批次出现表述修订或信息补充"
+      },
+      "is_new_in_batch": true,
+      "update_kind": "new_discovery",
+      "heavy_score": 56.0,
+      "radar_score": 76,
+      "severity_tier": "S",
+      "severity_label": "S级重磅",
+      "heavy_reason_tag": "大宗与市场剧震",
+      "summary": "2026年11月24日，英伟达股价暴涨31%，纳指大涨6.5%，芯片指数飙涨14%，黄金反弹近3%，WTI原油期货跌超4%。",
+      "summary_zh": "2026年11月24日，英伟达股价暴涨31%，纳指大涨6.5%，芯片指数飙涨14%，黄金反弹近3%，WTI原油期货跌超4%。",
+      "ai_overlaid": true,
+      "translation_attempts": 0,
+      "translation_error": null,
+      "title_zh": "华尔街见闻早餐FM-Radio | 2026年11月24日",
+      "translation_status": "native_zh",
+      "title_en": "",
+      "summary_en": "",
+      "ai_analysis_en": "",
+      "deep_qa": [
+        {
+          "question": "英伟达股价暴涨与大宗商品走势背离的原因是什么？",
+          "answer": "英伟达暴涨源于管理层回归带来的确定性溢价，而原油下跌反映了市场对全球工业需求放缓的担忧，黄金反弹则体现了避险情绪的升温。",
+          "historical_parallel": "类似于2000年互联网泡沫破裂前夕，科技股与传统能源股走势出现明显分化。"
+        }
+      ]
+    },
+    {
+      "schema_version": "4.1",
+      "event_id": "evt_b0db18e1352b",
+      "storyline_id": "st_7d7ebfbb32e2",
+      "article_ids": [
+        "wscn-a-stock-channel_22f20557f0cf",
+        "sina-7x24_656ae01975a0",
+        "cls-telegraph_7e7ade8d42ed"
+      ],
+      "legacy_event_ids": [],
+      "title": "英伟达和美国脑机接口公司合作 推进脑机接口高性能AI计算",
+      "category": "finance",
+      "entities": [
+        "英伟达 (NVIDIA)"
+      ],
+      "entity_ids": [
+        "ent_nvidia"
+      ],
+      "entity_confidences": {
+        "英伟达 (NVIDIA)": 0.86
+      },
+      "matched_entities": [
+        {
+          "entity_id": "ent_nvidia",
+          "canonical_name": "英伟达 (NVIDIA)",
+          "entity_type": "company",
+          "sector": "半导体 / AI算力",
+          "matched_aliases": [
+            "英伟达"
+          ],
+          "tickers": [
+            {
+              "symbol": "NVDA",
+              "market": "US",
+              "exchange": "NASDAQ",
+              "currency": "USD",
+              "label": "NVDA.US (NASDAQ)"
+            }
+          ],
+          "reason": "正文/实体匹配关键词「英伟达」",
+          "confidence": 0.86
+        }
+      ],
+      "importance": "medium",
+      "sentiment": "Mixed",
+      "special_note": null,
+      "material_stage": null,
+      "material_stage_label": null,
+      "material_stage_confidence": null,
+      "thumbnail_url": null,
+      "publisher_name": "华尔街见闻 A股快讯",
+      "source_status": "ok",
+      "evidence_status": "single_source",
+      "evidence_label": "单一独立来源线索",
+      "evidence_status_reason": "目前仅见 1 家独立来源（共 3 条引用含转载，含摘要/首段），尚未见独立渠道交叉或官方确认",
+      "attribution_warning": null,
+      "regulatory_note": null,
+      "contradictions": [],
+      "downweight_reasons": [],
+      "quality_flags": [],
+      "material_depth": "title_and_excerpt",
+      "source_count": 3,
+      "platform_count": 3,
+      "independent_publisher_count": 1,
+      "reprint_count": 2,
+      "published_at": "2026-11-24T13:13:26+08:00",
+      "event_date": "2026-11-24",
+      "event_time": "2026-11-24T13:13:26+08:00",
+      "stale": false,
+      "event_date_source": "llm_extracted",
+      "is_stale_rehash": false,
+      "time_trust_level": "article_timestamp",
+      "time_confidence": "article_timestamp",
+      "first_discovered_at": "2026-11-24T13:29:03+08:00",
+      "first_reported_at": "2026-11-24T13:13:26+08:00",
+      "latest_fact_update_at": "2026-11-24T13:15:09+08:00",
+      "latest_reported_at": "2026-11-24T13:15:09+08:00",
+      "fetched_at": "2026-11-24T13:29:03+08:00",
+      "input_batch_id": "raw-20261124-132903",
+      "fact_summary": "美国脑机接口公司Paradromics与英伟达达成技术合作，布局下一代脑机接口应用所需的高性能AI计算基础设施。Paradromics将把英伟达Holoscan与边缘计算技术整合进脑机接口开发体系。其中，双方计划将其AI程序内置于脑机接口平台中，以实现将思维更快转化为实时语音。",
+      "fact_atoms": [
+        {
+          "atom_id": "fa_34954277",
+          "subject": "英伟达 (NVIDIA)",
+          "metric_or_action": "英伟达和美国脑机接口公司合作 推进脑机接口高性能AI计算",
+          "value": null,
+          "unit": null,
+          "period": "单次披露/未注明周期",
+          "scope": "新闻事件陈述",
+          "fact_status": "reported_unconfirmed_by_filing",
+          "attribution": "华尔街见闻 A股快讯",
+          "source_ref": "wscn-a-stock-channel_22f20557f0cf",
+          "source_url": "https://wallstreetcn.com/livenews/3204701",
+          "source_excerpt_or_locator": "美国脑机接口公司Paradromics与英伟达达成技术合作，布局下一代脑机接口应用所需的高性能AI计算基础设施。Paradromics将把英伟达Holoscan与边缘计算技术整合进脑机接口开发体系。其中，双方计划将其AI程序内置于脑机接口平台中，以实现将思维更快转化为实时语音。合作将首先聚焦于基于脑机接口的语音恢复，包括直接从神经信号转化为语音，以及通过结合",
+          "published_at": "2026-11-24T13:13:39+08:00",
+          "discovered_at": "2026-11-24T13:29:03+08:00",
+          "revision": 1
+        }
+      ],
+      "ai_analysis": "引发英伟达 (NVIDIA)估值与产业链联动重定价，需紧盯主力资金流向与官方后续披露。",
+      "unverified_claims": [],
+      "speculation_or_outlook": null,
+      "sources": [
+        {
+          "item_id": "wscn-a-stock-channel_22f20557f0cf",
+          "article_id": "wscn-a-stock-channel_22f20557f0cf",
+          "source_id": "wscn-a-stock-channel",
+          "source_name": "华尔街见闻 A股快讯",
+          "publisher_name": "华尔街见闻 A股快讯",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "wallstreetcn",
+          "is_reprint_copy": false,
+          "title": "英伟达和美国脑机接口公司合作，推进脑机接口高性能AI计算",
+          "url": "https://wallstreetcn.com/livenews/3204701",
+          "published_at": "2026-11-24T13:13:39+08:00",
+          "published_at_source": "upstream_api",
+          "fetched_at": "2026-11-24T13:29:04+08:00",
+          "excerpt": "美国脑机接口公司Paradromics与英伟达达成技术合作，布局下一代脑机接口应用所需的高性能AI计算基础设施。Paradromics将把英伟达Holoscan与边缘计算技术整合进脑机接口开发体系。其中，双方计划将其AI程序内置于脑机接口平台中，以实现将思维更快转化为实时语音。合作将首先聚焦于基于脑机接口的语音恢复，包括直接从神经信号转化为语音，以及通过结合语言模型的多阶段“大脑—文本—语音”流程，相关工作将于今年启动。2027年，合作将进一步扩展至高自由度运动控制，并整合视觉—语言—动作模型，以实现与物理系统更具情境感知能力的交互。（证券时报）",
+          "thumbnail_url": null,
+          "deep_fetch_status": null
+        },
+        {
+          "item_id": "sina-7x24_656ae01975a0",
+          "article_id": "sina-7x24_656ae01975a0",
+          "source_id": "sina-7x24",
+          "source_name": "新浪财经 7×24 电报",
+          "publisher_name": "新浪财经 7×24 电报",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "sina",
+          "is_reprint_copy": true,
+          "title": "英伟达和美国脑机接口公司合作 推进脑机接口高性能AI计算",
+          "url": "https://finance.sina.cn/7x24/2026-11-24/detail-inizveck0168814.d.html",
+          "published_at": "2026-11-24T13:15:09+08:00",
+          "published_at_source": "upstream_api",
+          "fetched_at": "2026-11-24T13:29:04+08:00",
+          "excerpt": "【英伟达和美国脑机接口公司合作 推进脑机接口高性能AI计算】记者获悉，美国脑机接口公司Paradromics与英伟达达成技术合作，布局下一代脑机接口应用所需的高性能AI计算基础设施。Paradromics将把英伟达Holoscan与边缘计算技术整合进脑机接口开发体系。其中，双方计划将其AI程序内置于脑机接口平台中，以实现将思维更快转化为实时语音。合作将首先聚焦于基于脑机接口的语音恢复，包括直接从神经信号转化为语音，以及通过结合语言模型的多阶段“大脑—文本—语音”流程，相关工作将于今年启动。",
+          "thumbnail_url": null,
+          "deep_fetch_status": null
+        },
+        {
+          "item_id": "cls-telegraph_7e7ade8d42ed",
+          "article_id": "cls-telegraph_7e7ade8d42ed",
+          "source_id": "cls-telegraph",
+          "source_name": "财联社 · 电报",
+          "publisher_name": "财联社 · 电报",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "aggregator_lead",
+          "publisher_family": "cls",
+          "is_reprint_copy": true,
+          "title": "英伟达和美国脑机接口公司合作 推进脑机接口高性能AI计算",
+          "url": "https://www.cls.cn/detail/2542729",
+          "published_at": "2026-11-24T13:13:26+08:00",
+          "published_at_source": "upstream_epoch",
+          "fetched_at": "2026-11-24T13:29:03+08:00",
+          "excerpt": null,
+          "thumbnail_url": null,
+          "deep_fetch_status": null
+        }
+      ],
+      "verification": {
+        "all_refs_valid": true,
+        "has_primary_url": true,
+        "rejected_refs": [],
+        "has_first_party": false
+      },
+      "followup": null,
+      "is_new_in_batch": true,
+      "update_kind": "new_discovery",
+      "heavy_score": 36.8,
+      "radar_score": 76,
+      "severity_tier": "B",
+      "severity_label": "B级常规",
+      "translation_attempts": 0,
+      "translation_error": null,
+      "title_zh": "英伟达和美国脑机接口公司合作 推进脑机接口高性能AI计算",
+      "translation_status": "native_zh",
+      "summary_zh": "美国脑机接口公司Paradromics与英伟达达成技术合作，布局下一代脑机接口应用所需的高性能AI计算基础设施。Paradromics将把英伟达Holoscan与边缘计算技术整合进脑机接口开发体系。其中，双方计划将其AI程序内置于脑机接口平台中，以实现将思维更快转化为实时语音。",
+      "title_en": "",
+      "summary_en": "",
+      "ai_analysis_en": "",
+      "deep_qa": [
+        {
+          "question": "这次技术变化对普通开发者或用户意味着什么？",
+          "answer": "聚焦英伟达 (NVIDIA)能力边界与使用成本变化：美国脑机接口公司Paradromics与英伟达达成技术合作，布局下一代脑机接口应用所需的高性能AI计算基础设施。",
+          "historical_parallel": "历次大模型与算力架构迭代中，推理单价下探与生态开放通常在 1~2 个季度内显著拉动应用渗透率。"
+        },
+        {
+          "question": "该进展目前处于什么验证阶段？",
+          "answer": "需结合官方技术报告、独立第三方复现基准以及下游云厂与终端真实接入节奏交叉确认。",
+          "historical_parallel": "2025 年以来主流开源/闭源大模型竞赛证明，公开基准与真实开发者采用率决定商业化天花板。"
+        }
+      ]
+    },
+    {
+      "schema_version": "4.1",
+      "event_id": "evt_3d65140ad856",
+      "storyline_id": "st_97f2b3b34143",
+      "article_ids": [
+        "wscn-a-stock-channel_5563bfc07b52",
+        "rss-gnews-markets-zh_2bd07184a7cb"
+      ],
+      "legacy_event_ids": [],
+      "title": "金饰克价涨回1100元",
+      "category": "finance",
+      "entities": [
+        "黄金 / 贵金属与避险资产"
+      ],
+      "entity_ids": [
+        "ent_gold_metals"
+      ],
+      "entity_confidences": {
+        "黄金 / 贵金属与避险资产": 0.86
+      },
+      "matched_entities": [
+        {
+          "entity_id": "ent_gold_metals",
+          "canonical_name": "黄金 / 贵金属与避险资产",
+          "entity_type": "industry",
+          "sector": "贵金属 / 大宗商品",
+          "matched_aliases": [
+            "黄金"
+          ],
+          "tickers": [
+            {
+              "symbol": "518880",
+              "market": "SH",
+              "exchange": "SSE",
+              "currency": "CNY",
+              "label": "518880.SH (SSE)"
+            },
+            {
+              "symbol": "GLD",
+              "market": "US",
+              "exchange": "NYSE",
+              "currency": "USD",
+              "label": "GLD.US (NYSE)"
+            }
+          ],
+          "reason": "正文/实体匹配关键词「黄金」",
+          "confidence": 0.86
+        }
+      ],
+      "importance": "medium",
+      "sentiment": "Mixed",
+      "special_note": null,
+      "material_stage": null,
+      "material_stage_label": null,
+      "material_stage_confidence": null,
+      "thumbnail_url": null,
+      "publisher_name": "华尔街见闻 A股快讯",
+      "source_status": "ok",
+      "evidence_status": "multi_source",
+      "evidence_label": "多独立来源提及（待核官方全文）",
+      "evidence_status_reason": "已有 2 家独立媒体族提及（含摘要或正文首段）；多源转载不代表官方公告已证实",
+      "attribution_warning": null,
+      "regulatory_note": null,
+      "contradictions": [],
+      "downweight_reasons": [],
+      "quality_flags": [],
+      "material_depth": "title_and_excerpt",
+      "source_count": 2,
+      "platform_count": 2,
+      "independent_publisher_count": 2,
+      "reprint_count": 0,
+      "published_at": "2026-11-24T09:54:13+08:00",
+      "event_date": "2026-11-24",
+      "event_time": "2026-11-24T09:54:13+08:00",
+      "stale": false,
+      "event_date_source": "llm_extracted",
+      "is_stale_rehash": false,
+      "time_trust_level": "article_timestamp",
+      "time_confidence": "article_timestamp",
+      "first_discovered_at": "2026-11-24T13:29:03+08:00",
+      "first_reported_at": "2026-11-24T09:54:13+08:00",
+      "latest_fact_update_at": "2026-11-24T11:40:00+08:00",
+      "latest_reported_at": "2026-11-24T11:40:00+08:00",
+      "fetched_at": "2026-11-24T13:29:03+08:00",
+      "input_batch_id": "raw-20261124-132903",
+      "fact_summary": "11月24日，国内黄金饰品价格对比显示，多家黄金珠宝品牌公布的境内足金首饰价格较昨日有所上调，老庙黄金报价1098元/克，较昨日涨10元；周大福报价1103元/克，较昨日涨12元；老凤祥报价1100元/克，较昨日涨12元。（界面）",
+      "fact_atoms": [
+        {
+          "atom_id": "fa_37195156",
+          "subject": "黄金 / 贵金属与避险资产",
+          "metric_or_action": "金饰克价涨回1100元",
+          "value": null,
+          "unit": null,
+          "period": "单次披露/未注明周期",
+          "scope": "新闻事件陈述",
+          "fact_status": "multi_source_reported",
+          "attribution": "华尔街见闻 A股快讯",
+          "source_ref": "wscn-a-stock-channel_5563bfc07b52",
+          "source_url": "https://wallstreetcn.com/livenews/3204639",
+          "source_excerpt_or_locator": "11月24日，国内黄金饰品价格对比显示，多家黄金珠宝品牌公布的境内足金首饰价格较昨日有所上调，老庙黄金报价1098元/克，较昨日涨10元；周大福报价1103元/克，较昨日涨12元；老凤祥报价1100元/克，较昨日涨12元。（界面）",
+          "published_at": "2026-11-24T09:54:13+08:00",
+          "discovered_at": "2026-11-24T13:29:03+08:00",
+          "revision": 1
+        }
+      ],
+      "ai_analysis": "该动态聚焦黄金 / 贵金属与避险资产核心变量变化，建议结合多方信源跟踪后续实质进展。",
+      "unverified_claims": [],
+      "speculation_or_outlook": null,
+      "sources": [
+        {
+          "item_id": "wscn-a-stock-channel_5563bfc07b52",
+          "article_id": "wscn-a-stock-channel_5563bfc07b52",
+          "source_id": "wscn-a-stock-channel",
+          "source_name": "华尔街见闻 A股快讯",
+          "publisher_name": "华尔街见闻 A股快讯",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "wallstreetcn",
+          "is_reprint_copy": false,
+          "title": "金饰克价涨回1100元",
+          "url": "https://wallstreetcn.com/livenews/3204639",
+          "published_at": "2026-11-24T09:54:13+08:00",
+          "published_at_source": "upstream_api",
+          "fetched_at": "2026-11-24T13:29:04+08:00",
+          "excerpt": "11月24日，国内黄金饰品价格对比显示，多家黄金珠宝品牌公布的境内足金首饰价格较昨日有所上调，老庙黄金报价1098元/克，较昨日涨10元；周大福报价1103元/克，较昨日涨12元；老凤祥报价1100元/克，较昨日涨12元。（界面）",
+          "thumbnail_url": null,
+          "deep_fetch_status": null
+        },
+        {
+          "item_id": "rss-gnews-markets-zh_2bd07184a7cb",
+          "article_id": "rss-gnews-markets-zh_2bd07184a7cb",
+          "source_id": "rss-gnews-markets-zh",
+          "source_name": "21财经",
+          "publisher_name": "21财经",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "21jingji",
+          "is_reprint_copy": false,
+          "title": "黄金连涨两日！金饰克价涨回1100元",
+          "url": "https://news.google.com/rss/articles/CBMijwFBVV95cUxOYm4zeFlFaWRBTVFWM0ZQOXJnbGF1UERiR1I5SFk5NVBVTlB1TF9scDNGS2dPZV9yeHd3bktFWk5mMDZjNDUwZ21zX2ZsN0tuekZBNTlkVGRRZXNLWHd5VkZiOF90UWgzS1VNTHZET3FMZF9faTlsdE1saUQxcFRSc2JvWmtVa29mYUtmQ3o4Zw?oc=5",
+          "published_at": "2026-11-24T11:40:00+08:00",
+          "published_at_source": "upstream_rfc2822",
+          "fetched_at": "2026-11-24T13:29:05+08:00",
+          "excerpt": "黄金连涨两日！金饰克价涨回1100元 21财经",
+          "thumbnail_url": null,
+          "deep_fetch_status": null
+        }
+      ],
+      "verification": {
+        "all_refs_valid": true,
+        "has_primary_url": true,
+        "rejected_refs": [],
+        "has_first_party": false
+      },
+      "followup": null,
+      "is_new_in_batch": true,
+      "update_kind": "new_discovery",
+      "heavy_score": 41.4,
+      "radar_score": 82,
+      "severity_tier": "B",
+      "severity_label": "B级常规",
+      "translation_attempts": 0,
+      "translation_error": null,
+      "title_zh": "金饰克价涨回1100元",
+      "translation_status": "native_zh",
+      "summary_zh": "11月24日，国内黄金饰品价格对比显示，多家黄金珠宝品牌公布的境内足金首饰价格较昨日有所上调，老庙黄金报价1098元/克，较昨日涨10元；周大福报价1103元/克，较昨日涨12元；老凤祥报价1100元/克，较昨日涨12元。（界面）",
+      "title_en": "",
+      "summary_en": "",
+      "ai_analysis_en": "",
+      "deep_qa": [
+        {
+          "question": "事件对大宗物价、出行或外贸订单有何影响？",
+          "answer": "重点关注黄金 / 贵金属与避险资产引发的跨区域供应链、汇率与大宗品风险溢价变动：11月24日，国内黄金饰品价格对比显示，多家黄金珠宝品牌公布的境内足金首饰价格较昨日有所上调，老庙黄金报价1098元/克，较昨日涨10元；",
+          "historical_parallel": "历次跨区域地缘与贸易规则博弈多呈“首轮情绪脉冲，随后看实际封锁或关税文本落地决定持续性”轨迹。"
+        },
+        {
+          "question": "下一步决定走向的关键观测点是什么？",
+          "answer": "盯紧涉事官方下一轮正式公报与约束性细则落地。",
+          "historical_parallel": "若各方在后续窗口重回务实谈判，避险溢价与航运附加费通常较快收敛。"
+        }
+      ]
+    }
+  ]
+}
