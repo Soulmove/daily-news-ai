@@ -2890,7 +2890,7 @@ def build_v3_artifacts(
         },
     )
 
-    site_url = os.environ.get("SITE_PUBLIC_URL", "https://111.230.153.15/news/")
+    site_url = os.environ.get("SITE_PUBLIC_URL", "https://mirrorinfo.xyz/")
     site_base = site_url.rstrip("/") + "/"
     cal_ics_text, cal_ics_exported, cal_ics_skipped = _export_calendar_ics(
         calendar_items[:90], generated_at_iso=generated_at_iso, site_url=site_base

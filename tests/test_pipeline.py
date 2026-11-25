@@ -1413,7 +1413,7 @@ class V3PipelineRegressionTests(unittest.TestCase):
             self.assertTrue(str(by_pid["pred_seed_qwen_release_ga"]["due_at"]).startswith("2026-12-16"))
             feed_xml = (root / "feed.xml").read_text(encoding="utf-8")
             self.assertNotIn("soulmove.github.io", feed_xml)
-            self.assertIn("111.230.153.15", feed_xml)
+            self.assertIn("mirrorinfo.xyz", feed_xml)
 
             # Fast reconcile with refresh_sec=False must preserve TSMC 2026-10 actuals even when keyed by 10-digit CIK ("0001046179")
             for c, d in cat_docs.items():

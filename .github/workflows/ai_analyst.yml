@@ -109,15 +109,6 @@ jobs:
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: python scripts/send_digest.py
 
-      - name: 🚀 Optional Active Push to Legacy Private Server
-        if: success() && vars.DISABLE_TENCENT_PUSH != '1'
-        continue-on-error: true
-        env:
-          TENCENT_INGEST_URL: ${{ secrets.TENCENT_INGEST_URL }}
-          TENCENT_INGEST_TOKEN: ${{ secrets.TENCENT_INGEST_TOKEN }}
-          TRIGGER_PUSH: '1'
-        run: python scripts/push_to_tencent.py
-
       - name: 💾 Commit and push atomically
         run: |
           git config user.name 'AI Analyst'
