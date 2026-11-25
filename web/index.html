@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <title>镜信 · 一镜照见全球真实大事</title>
+  <meta name="description" content="镜信（MirrorBrief）：打破算法信息茧房，聚合全球真实大事、AI 进化榜与 A股/美股宏观传导推演。" />
+  <meta name="theme-color" content="#2563eb" />
+  <link rel="manifest" href="./manifest.webmanifest" />
+  <link rel="alternate" type="application/rss+xml" title="镜信 MirrorBrief RSS" href="./data/feed.xml" />
+  <link rel="icon" type="image/svg+xml" href="./icon.svg" />
+  <script>
+    try {
+      if (localStorage.getItem('darkMode') === 'true') {
+        document.documentElement.classList.add('dark')
+      }
+      if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
+        window.addEventListener('load', function () {
+          navigator.serviceWorker.register('./sw.js', { scope: './' }).catch(function () {})
+        })
+      }
+    } catch (_) {}
+  </script>
+</head>
+<body class="bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100">
+  <div id="app"></div>
+  <script type="module" src="./src/entries/briefing.ts"></script>
+</body>
+</html>

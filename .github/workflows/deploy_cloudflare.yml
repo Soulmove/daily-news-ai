@@ -1,0 +1,227 @@
+name: ☁️ Deploy MirrorBrief to Cloudflare (Pages + Worker + D1 + R2)
+
+on:
+  workflow_dispatch:
+    inputs:
+      deploy_worker:
+        description: 'Deploy Worker API & Cron (mirrorbrief-api)'
+        type: boolean
+        default: true
+      deploy_pages:
+        description: 'Build & Deploy Vue static frontend to Cloudflare Pages (mirrorbrief)'
+        type: boolean
+        default: true
+      apply_d1_migrations:
+        description: 'Apply D1 schema migrations (mirrorbrief-db)'
+        type: boolean
+        default: true
+      bootstrap_r2_full:
+        description: 'Full incremental sync of all data/ + archives/ to R2 (mirrorbrief-data)'
+        type: boolean
+        default: false
+      configure_domains:
+        description: 'Bind data.mirrorinfo.xyz (R2) + mirrorinfo.xyz & www (Pages) if zone active'
+        type: boolean
+        default: false
+      site_access_mode:
+        description: 'Access mode override (invite_only | private_gate | public)'
+        type: choice
+        options:
+          - invite_only
+          - private_gate
+          - public
+        default: invite_only
+  push:
+    branches:
+      - main
+    paths:
+      - 'web/**'
+      - 'worker/**'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'vite.config.ts'
+      - 'tsconfig.json'
+      - 'tailwind.config.js'
+      - 'postcss.config.js'
+      - 'scripts/sync-pages.mjs'
+      - '.github/workflows/deploy_cloudflare.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cloudflare-deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 🟢 Setup Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: 📦 Install Root & Worker Dependencies
+        run: |
+          npm ci
+          cd worker && npm ci
+
+      - name: 🧪 Verify Frontend & Worker Typecheck + Unit Tests
+        run: |
+          npx tsc --noEmit
+          npm test
+          cd worker
+          npm run typecheck
+          npm test
+
+      - name: 🗄️ Apply Cloudflare D1 Migrations (mirrorbrief-db)
+        if: github.event_name != 'workflow_dispatch' || github.event.inputs.apply_d1_migrations == 'true'
+        run: |
+          cd worker
+          npx wrangler d1 migrations apply mirrorbrief-db --remote
+
+      - name: 🔐 Sync Optional Worker Runtime Secrets
+        if: github.event_name != 'workflow_dispatch' || github.event.inputs.deploy_worker == 'true'
+        env:
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          DATA_ENCRYPTION_KEY: ${{ secrets.DATA_ENCRYPTION_KEY }}
+          ADMIN_BOOTSTRAP_USER: ${{ secrets.ADMIN_BOOTSTRAP_USER }}
+          ADMIN_BOOTSTRAP_PASS: ${{ secrets.ADMIN_BOOTSTRAP_PASS }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          RESEND_FROM: ${{ secrets.RESEND_FROM }}
+          SMS_WEBHOOK_URL: ${{ secrets.SMS_WEBHOOK_URL }}
+        run: |
+          python3 - <<'EOF'
+          import json, os, subprocess, tempfile
+          keys = [
+              "JWT_SECRET", "DATA_ENCRYPTION_KEY", "ADMIN_BOOTSTRAP_USER",
+              "ADMIN_BOOTSTRAP_PASS", "GEMINI_API_KEY", "RESEND_API_KEY",
+              "RESEND_FROM", "SMS_WEBHOOK_URL",
+          ]
+          payload = {k: os.environ[k].strip() for k in keys if os.environ.get(k, "").strip()}
+          if not payload:
+              print("No optional Worker runtime secrets in GitHub Secrets; keeping existing Wrangler secrets.")
+              raise SystemExit(0)
+          with tempfile.NamedTemporaryFile("w", suffix=".json", delete=False) as tf:
+              json.dump(payload, tf)
+              path = tf.name
+          try:
+              print(f"Syncing {len(payload)} Worker secret(s) via wrangler secret bulk...")
+              subprocess.run(["npx", "wrangler", "secret", "bulk", path], cwd="worker", check=True)
+          finally:
+              os.remove(path)
+          EOF
+
+      - name: ⚡ Deploy Cloudflare Worker (mirrorbrief-api)
+        if: github.event_name != 'workflow_dispatch' || github.event.inputs.deploy_worker == 'true'
+        run: |
+          cd worker
+          ACCESS_MODE="${{ github.event.inputs.site_access_mode || 'invite_only' }}"
+          npx wrangler deploy --var "SITE_ACCESS_MODE:${ACCESS_MODE}"
+
+      - name: 🏗️ Build Vue Static Frontend (with R2 Data Origin)
+        if: github.event_name != 'workflow_dispatch' || github.event.inputs.deploy_pages == 'true'
+        env:
+          VITE_DATA_BASE_URL: https://data.mirrorinfo.xyz
+        run: |
+          npx tsc --noEmit
+          npx vite build
+          test -f dist/index.html
+          test -f dist/robots.txt
+          if find dist -name '*.apk' | grep -q .; then
+            echo "ERROR: APK files must not be present in dist/"
+            exit 1
+          fi
+
+      - name: 🌐 Deploy Static Frontend to Cloudflare Pages (mirrorbrief)
+        if: github.event_name != 'workflow_dispatch' || github.event.inputs.deploy_pages == 'true'
+        run: |
+          npx wrangler pages project create mirrorbrief --production-branch=main || true
+          npx wrangler pages deploy dist --project-name=mirrorbrief --branch=main
+
+      - name: ☁️ Optional Full R2 Backfill (data/ + archives/)
+        if: github.event.inputs.bootstrap_r2_full == 'true'
+        env:
+          R2_BUCKET: ${{ secrets.R2_BUCKET }}
+          R2_ENDPOINT: ${{ secrets.R2_ENDPOINT }}
+          R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+        run: |
+          python3 -m pip install -r requirements.txt
+          python3 scripts/sync_to_r2.py --scope full --full-archives
+
+      - name: 🔗 Bind Custom Domains via Cloudflare API (when Zone Active)
+        if: github.event.inputs.configure_domains == 'true'
+        run: |
+          python3 - <<'EOF'
+          import json, os, urllib.error, urllib.request
+
+          token = os.environ["CLOUDFLARE_API_TOKEN"]
+          acct = os.environ["CLOUDFLARE_ACCOUNT_ID"]
+          zone = "affe70e3c21c0f77f1ce04be80ed62cc"
+
+          def cf_req(method, path, body=None):
+              req = urllib.request.Request(
+                  f"https://api.cloudflare.com/client/v4{path}",
+                  data=json.dumps(body).encode() if body is not None else None,
+                  method=method,
+                  headers={
+                      "Authorization": f"Bearer {token}",
+                      "Content-Type": "application/json",
+                  },
+              )
+              try:
+                  with urllib.request.urlopen(req, timeout=20) as r:
+                      return r.status, json.loads(r.read().decode())
+              except urllib.error.HTTPError as e:
+                  raw = e.read().decode()
+                  try:
+                      return e.code, json.loads(raw)
+                  except Exception:
+                      return e.code, {"raw": raw}
+
+          st, zdoc = cf_req("GET", f"/zones/{zone}")
+          zstat = ((zdoc.get("result") or {}).get("status")) if isinstance(zdoc, dict) else None
+          print(f"Zone status ({st}): {zstat}")
+          if zstat != "active":
+              raise SystemExit(f"Cloudflare zone mirrorinfo.xyz is currently '{zstat}' (waiting for NS propagation). Retry configure_domains once Active.")
+
+          # 1. Bind data.mirrorinfo.xyz to R2 bucket mirrorbrief-data
+          r2_st, r2_res = cf_req(
+              "POST",
+              f"/accounts/{acct}/r2/buckets/mirrorbrief-data/domains/custom",
+              {"domain": "data.mirrorinfo.xyz", "enabled": True, "zoneId": zone},
+          )
+          print("R2 custom domain:", r2_st, r2_res)
+
+          # 2. Attach mirrorinfo.xyz and www.mirrorinfo.xyz to Pages project mirrorbrief
+          for dom in ("mirrorinfo.xyz", "www.mirrorinfo.xyz"):
+              pg_st, pg_res = cf_req(
+                  "POST",
+                  f"/accounts/{acct}/pages/projects/mirrorbrief/domains",
+                  {"name": dom},
+              )
+              print(f"Pages domain {dom}:", pg_st, pg_res)
+
+          # 3. Ensure proxied CNAME records exist for apex & www
+          _, dns_list = cf_req("GET", f"/zones/{zone}/dns_records?per_page=100")
+          existing = {(r["name"], r["type"]) for r in (dns_list.get("result") or [])}
+          for rec_name in ("mirrorinfo.xyz", "www.mirrorinfo.xyz"):
+              if (rec_name, "CNAME") not in existing:
+                  d_st, d_res = cf_req(
+                      "POST",
+                      f"/zones/{zone}/dns_records",
+                      {"type": "CNAME", "name": rec_name, "content": "mirrorbrief.pages.dev", "proxied": True, "ttl": 1},
+                  )
+                  print(f"DNS CNAME {rec_name}:", d_st, d_res)
+          EOF

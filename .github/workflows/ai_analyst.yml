@@ -86,17 +86,31 @@ jobs:
               print(f"  - `{cat}`: status={info.get('status')}, fallback={info.get('is_fallback')}, items={info.get('item_count')}, verified={info.get('verified_count')}, needs_verification={info.get('needs_verification_count')}")
           EOF
 
-      - name: 📣 Optional Daily Digest Push (Webhook / Telegram)
+      - name: ☁️ Incremental Sync Briefing & Archives to Cloudflare R2
         if: success()
         continue-on-error: true
         env:
+          R2_BUCKET: ${{ secrets.R2_BUCKET }}
+          R2_ENDPOINT: ${{ secrets.R2_ENDPOINT }}
+          R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+        run: python scripts/sync_to_r2.py --scope full
+
+      - name: 📣 Optional Private Digest Push (Bark / Feishu / WeCom / Telegram)
+        if: success()
+        continue-on-error: true
+        env:
+          SITE_PUBLIC_URL: 'https://mirrorinfo.xyz/'
+          BARK_URL: ${{ secrets.BARK_URL }}
+          FEISHU_WEBHOOK: ${{ secrets.FEISHU_WEBHOOK }}
+          WECOM_WEBHOOK: ${{ secrets.WECOM_WEBHOOK }}
           DIGEST_WEBHOOK_URL: ${{ secrets.DIGEST_WEBHOOK_URL }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: python scripts/send_digest.py
 
-      - name: 🚀 Optional Active Push to Private Server
-        if: success()
+      - name: 🚀 Optional Active Push to Legacy Private Server
+        if: success() && vars.DISABLE_TENCENT_PUSH != '1'
         continue-on-error: true
         env:
           TENCENT_INGEST_URL: ${{ secrets.TENCENT_INGEST_URL }}

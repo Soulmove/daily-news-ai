@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <title>信源与实时监控 · 镜信</title>
+  <meta name="description" content="多源全网热点聚合阅读流、来源矩阵与信源更新健康状态诊断看板。" />
+  <meta name="theme-color" content="#2563eb" />
+  <link rel="manifest" href="./manifest.webmanifest" />
+  <link rel="alternate" type="application/rss+xml" title="镜信 MirrorBrief RSS" href="./data/feed.xml" />
+  <link rel="icon" type="image/svg+xml" href="./icon.svg" />
+  <script>
+    try {
+      if (localStorage.getItem('darkMode') === 'true') {
+        document.documentElement.classList.add('dark')
+      }
+      if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
+        window.addEventListener('load', function () {
+          navigator.serviceWorker.register('./sw.js', { scope: './' }).catch(function () {})
+        })
+      }
+    } catch (_) {}
+  </script>
+</head>
+<body class="bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100">
+  <div id="app"></div>
+  <script type="module" src="./src/entries/monitor.ts"></script>
+</body>
+</html>

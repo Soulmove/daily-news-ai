@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <title>使用帮助 FAQ · 镜信 (MirrorBrief)</title>
+  <meta name="description" content="镜信（MirrorBrief）使用帮助与常见问题：7×24 快讯、AI 进化榜、股市传导与账号云同步指引。" />
+  <meta name="theme-color" content="#0f172a" />
+  <link rel="manifest" href="./manifest.webmanifest" />
+  <link rel="icon" type="image/svg+xml" href="./icon.svg" />
+  <script>
+    try {
+      if (localStorage.getItem('darkMode') === 'true') {
+        document.documentElement.classList.add('dark')
+      }
+    } catch (_) {}
+  </script>
+</head>
+<body class="bg-[#F6F7F9] dark:bg-slate-950 text-slate-900 dark:text-slate-100">
+  <div id="app"></div>
+  <script type="module" src="./src/entries/help.ts"></script>
+</body>
+</html>

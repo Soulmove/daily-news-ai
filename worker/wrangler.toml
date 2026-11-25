@@ -1,0 +1,41 @@
+name = "mirrorbrief-api"
+main = "src/index.ts"
+compatibility_date = "2025-02-01"
+account_id = "c45b1ef339fe78d2cb7e664268506431"
+
+routes = [
+  { pattern = "mirrorinfo.xyz/api/*", zone_id = "affe70e3c21c0f77f1ce04be80ed62cc" },
+  { pattern = "www.mirrorinfo.xyz/api/*", zone_id = "affe70e3c21c0f77f1ce04be80ed62cc" }
+]
+
+[triggers]
+crons = ["*/2 * * * *"]
+
+[[d1_databases]]
+binding = "DB"
+database_name = "mirrorbrief-db"
+database_id = "6dd5742b-9f25-4ef1-a85c-4dfcd4cee4f6"
+migrations_dir = "migrations"
+
+[[r2_buckets]]
+binding = "R2_DATA"
+bucket_name = "mirrorbrief-data"
+
+[vars]
+SITE_ACCESS_MODE = "invite_only"
+SITE_PUBLIC_URL = "https://mirrorinfo.xyz"
+DATA_PUBLIC_BASE_URL = "https://data.mirrorinfo.xyz"
+ALLOWED_ORIGINS = "https://mirrorinfo.xyz,https://www.mirrorinfo.xyz"
+GEMINI_MODEL = "gemini-2.5-flash"
+
+# Required Worker Secrets (inject via `wrangler secret put` or GitHub Actions secret bulk):
+# - JWT_SECRET             (random >= 32 chars)
+# - DATA_ENCRYPTION_KEY    (random >= 32 chars for AES-256-GCM cloud sync & config encryption)
+# - ADMIN_BOOTSTRAP_USER   (optional, default "admin")
+# - ADMIN_BOOTSTRAP_PASS   (required on initial bootstrap to seed Level-1 super_admin)
+#
+# Optional Worker Secrets:
+# - GEMINI_API_KEY         (enables server-side Gemini grounded synthesis in /api/qa/ask)
+# - RESEND_API_KEY         (optional OTP email delivery via Resend API)
+# - RESEND_FROM            (optional sender e.g. "MirrorBrief <noreply@mirrorinfo.xyz>")
+# - SMS_WEBHOOK_URL        (optional OTP SMS webhook)

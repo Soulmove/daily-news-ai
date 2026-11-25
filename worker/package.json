@@ -1,0 +1,23 @@
+{
+  "name": "mirrorbrief-api",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "MirrorBrief (镜信) Cloudflare Worker API + D1 + R2 + 7x24 Wire Cron",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "d1:migrate:remote": "wrangler d1 migrations apply mirrorbrief-db --remote"
+  },
+  "dependencies": {
+    "hono": "^4.7.4"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20250214.0",
+    "typescript": "^5.8.3",
+    "vitest": "^3.1.4",
+    "wrangler": "^3.109.0"
+  }
+}

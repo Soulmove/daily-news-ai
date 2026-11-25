@@ -75,8 +75,18 @@ jobs:
           print(f'- **Items**: raw={s.get(\"total_raw_items\")}, deduped={s.get(\"deduped_events\")}, deep_enriched={s.get(\"deep_fetched_enriched\")}')
           " >> "$GITHUB_STEP_SUMMARY" || true
 
-      - name: 🚀 Optional Active Push to Private Server
+      - name: ☁️ Incremental Sync Raw & Wire to Cloudflare R2
         if: success()
+        continue-on-error: true
+        env:
+          R2_BUCKET: ${{ secrets.R2_BUCKET }}
+          R2_ENDPOINT: ${{ secrets.R2_ENDPOINT }}
+          R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+        run: python scripts/sync_to_r2.py --scope raw
+
+      - name: 🚀 Optional Active Push to Legacy Private Server
+        if: success() && vars.DISABLE_TENCENT_PUSH != '1'
         continue-on-error: true
         env:
           TENCENT_INGEST_URL: ${{ secrets.TENCENT_INGEST_URL }}

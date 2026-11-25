@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+  <script>
+    (function () {
+      try {
+        if (localStorage.getItem('darkMode') === 'true') {
+          document.documentElement.classList.add('dark');
+        }
+        var baseHref = location.pathname.indexOf('/news/') === 0 ? '/news/' : '/';
+        var b = document.createElement('base');
+        b.href = baseHref;
+        document.head.appendChild(b);
+      } catch (_) {}
+    })();
+  </script>
+  <title>这条路没有信息 · 镜信 MirrorBrief (404)</title>
+  <meta name="robots" content="noindex" />
+  <meta name="theme-color" content="#2563eb" />
+  <link rel="icon" type="image/svg+xml" href="./icon.svg" />
+</head>
+<body class="bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100">
+  <div id="app"></div>
+  <script type="module" src="./src/entries/notFound.ts"></script>
+</body>
+</html>

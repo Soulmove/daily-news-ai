@@ -1,0 +1,528 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --mobile-sticky-top: 48px;
+  }
+
+  html {
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "PingFang SC", "HarmonyOS Sans", "Noto Sans SC", "Hiragino Sans GB", sans-serif;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: #F8FAFC;
+    color: #1D1D1F;
+    @apply antialiased dark:bg-[#0B0F17] dark:text-[#F5F5F7];
+    overscroll-behavior-y: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  button,
+  a,
+  select,
+  input,
+  label {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  select.appearance-none {
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    appearance: none !important;
+    background-image: none !important;
+  }
+
+  select.appearance-none::-ms-expand {
+    display: none;
+  }
+
+  select.appearance-none::picker-icon {
+    display: none !important;
+  }
+
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-[#007AFF] dark:outline-[#0A84FF];
+  }
+
+  /* Hide native search clear button so only custom clear button appears */
+  input[type="search"]::-webkit-search-cancel-button,
+  input[type="search"]::-webkit-search-decoration,
+  input[type="search"]::-webkit-search-results-button,
+  input[type="search"]::-webkit-search-results-decoration {
+    display: none;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  input[type="search"]::-ms-clear,
+  input[type="search"]::-ms-reveal {
+    display: none;
+    width: 0;
+    height: 0;
+  }
+}
+
+@layer components {
+  .ios-glass {
+    background-color: rgba(255, 255, 255, 0.82);
+    backdrop-filter: saturate(180%) blur(20px);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+  }
+  .dark .ios-glass {
+    background-color: rgba(28, 28, 30, 0.82);
+  }
+
+  /* High-craft 16px grouped card with subtle 1px hairline border + layered elevation */
+  .ios-card {
+    background-color: #FFFFFF;
+    border-radius: 16px;
+    border: 1px solid rgba(15, 23, 42, 0.07);
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.03), 0 4px 12px rgba(15, 23, 42, 0.02);
+    transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
+  }
+  @media (hover: hover) {
+    .ios-card:hover {
+      box-shadow: 0 2px 6px rgba(15, 23, 42, 0.04), 0 8px 20px rgba(15, 23, 42, 0.04);
+    }
+  }
+  .dark .ios-card {
+    background-color: #131823;
+    border-color: rgba(255, 255, 255, 0.08);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+  }
+
+  .jx-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    height: 22px;
+    padding: 0 0.5rem;
+    border-radius: 9999px;
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1;
+    white-space: nowrap;
+  }
+
+  .jx-heavy-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 9999px;
+    background-color: #DC2626;
+    box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.18);
+    flex-shrink: 0;
+  }
+
+  .ios-surface-2 {
+    @apply bg-[#F5F5F7] dark:bg-[#2C2C2E] rounded-xl;
+  }
+
+  .ios-segmented {
+    @apply inline-flex items-center p-0.5 rounded-xl bg-black/[0.06] dark:bg-[#2C2C2E];
+  }
+
+  .ios-segmented-btn {
+    @apply relative inline-flex items-center justify-center rounded-[10px] text-[13px] font-semibold transition-all duration-200 whitespace-nowrap active:scale-[0.97];
+  }
+
+  @media (hover: hover) {
+    .ios-segmented-btn:hover:not(.ios-segmented-btn-active) {
+      transform: translateY(-0.5px);
+    }
+  }
+
+  .ios-segmented-btn-active {
+    @apply bg-white dark:bg-[#3A3A3C] text-zinc-950 dark:text-white shadow-[0_1px_3px_rgba(0,0,0,0.12)];
+  }
+
+  .ios-tap {
+    @apply transition-transform duration-150 active:scale-[0.97];
+  }
+
+  /* 1. Sonar Ripple Breathing Dot (Apple / Linear status pulse) */
+  .jx-sonar-dot {
+    position: relative;
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 9999px;
+    flex-shrink: 0;
+  }
+
+  .jx-sonar-dot::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 9999px;
+    background-color: inherit;
+    opacity: 0.75;
+    animation: sonar-ping 2.1s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+    pointer-events: none;
+  }
+
+  .jx-sonar-emerald {
+    background-color: #10b981;
+  }
+
+  .jx-sonar-red {
+    background-color: #dc2626;
+  }
+
+  .jx-sonar-amber {
+    background-color: #f59e0b;
+  }
+
+  .jx-sonar-blue {
+    background-color: #007aff;
+  }
+
+  .jx-sonar-white {
+    background-color: #ffffff;
+  }
+
+  /* Crimson breathing energy halo on Heavy / Breaking Flash capsules */
+  .jx-heavy-capsule {
+    animation: heavy-glow 2.6s ease-in-out infinite;
+  }
+
+  /* 2. Spring Pop & Ring Burst micro-interaction on interactive actions */
+  .jx-pop-target {
+    position: relative;
+    overflow: visible;
+  }
+
+  .jx-pop-active {
+    animation: spring-pop 420ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  }
+
+  .jx-burst-ring {
+    position: relative;
+  }
+
+  .jx-burst-ring::after {
+    content: "";
+    position: absolute;
+    inset: -3px;
+    border-radius: 9999px;
+    border: 2px solid currentColor;
+    opacity: 0;
+    pointer-events: none;
+    animation: ring-burst 480ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  }
+
+  /* 3. Market quote 700ms tick flash & smooth collapse reveal (mode-aware for CN red-up vs Intl green-up) */
+  .jx-tick-up {
+    animation: tick-flash-up 700ms ease-out both;
+  }
+
+  .jx-tick-down {
+    animation: tick-flash-down 700ms ease-out both;
+  }
+
+  html[data-market-color='cn'] .jx-tick-up {
+    animation: tick-flash-cn-up 700ms ease-out both;
+  }
+
+  html[data-market-color='cn'] .jx-tick-down {
+    animation: tick-flash-cn-down 700ms ease-out both;
+  }
+
+  .jx-odo-up {
+    animation: odo-in-up 280ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .jx-odo-down {
+    animation: odo-in-down 280ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .jx-collapse-reveal {
+    animation: jxCollapseIn 220ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .mobile-sticky-subbar {
+    position: relative;
+  }
+  @media (max-width: 767.98px) {
+    .mobile-sticky-subbar {
+      position: sticky;
+      top: var(--mobile-sticky-top, 48px);
+      z-index: 30;
+      transition: top 200ms ease, background-color 180ms ease;
+      border-radius: 14px;
+      padding: 6px 8px;
+      background-color: rgba(255, 255, 255, 0.92);
+      backdrop-filter: saturate(180%) blur(14px);
+      -webkit-backdrop-filter: saturate(180%) blur(14px);
+      border: 1px solid rgba(15, 23, 42, 0.06);
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+    }
+    .dark .mobile-sticky-subbar {
+      background-color: rgba(15, 20, 31, 0.92);
+      border-color: rgba(255, 255, 255, 0.08);
+    }
+    .scroll-fade-x {
+      scroll-snap-type: x proximity;
+      -webkit-mask-image: linear-gradient(to right, #000 0%, #000 calc(100% - 22px), transparent 100%);
+      mask-image: linear-gradient(to right, #000 0%, #000 calc(100% - 22px), transparent 100%);
+      padding-right: 18px;
+    }
+    .mobile-pressable {
+      transition: transform 100ms ease;
+    }
+    .mobile-pressable:active {
+      transform: scale(0.985);
+    }
+  }
+  html.android-shell .mobile-sticky-subbar {
+    position: sticky;
+    top: var(--mobile-sticky-top, 48px);
+    z-index: 30;
+    transition: top 200ms ease, background-color 180ms ease;
+    border-radius: 14px;
+    padding: 6px 8px;
+    background-color: rgba(255, 255, 255, 0.92);
+    backdrop-filter: saturate(180%) blur(14px);
+    -webkit-backdrop-filter: saturate(180%) blur(14px);
+    border: 1px solid rgba(15, 23, 42, 0.06);
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+  }
+  html.android-shell.dark .mobile-sticky-subbar {
+    background-color: rgba(15, 20, 31, 0.92);
+    border-color: rgba(255, 255, 255, 0.08);
+  }
+  html.android-shell .scroll-fade-x {
+    scroll-snap-type: x proximity;
+    -webkit-mask-image: linear-gradient(to right, #000 0%, #000 calc(100% - 22px), transparent 100%);
+    mask-image: linear-gradient(to right, #000 0%, #000 calc(100% - 22px), transparent 100%);
+    padding-right: 18px;
+  }
+  html.android-shell .mobile-pressable {
+    transition: transform 100ms ease;
+  }
+  html.android-shell .mobile-pressable:active {
+    transform: scale(0.985);
+  }
+
+  .mobile-quick-entry-strip,
+  .mobile-pull-indicator {
+    display: flex;
+  }
+  @media (min-width: 768px) {
+    .mobile-quick-entry-strip,
+    .mobile-pull-indicator {
+      display: none;
+    }
+  }
+  html.android-shell .mobile-quick-entry-strip,
+  html.android-shell .mobile-pull-indicator {
+    display: flex !important;
+  }
+
+  .ios-sheet-backdrop {
+    @apply fixed inset-0 z-50 bg-black/40 backdrop-blur-[2px] flex items-end lg:items-center justify-center;
+  }
+
+  .ios-sheet-panel {
+    @apply w-full lg:max-w-lg rounded-t-[20px] lg:rounded-[18px] bg-[#F5F5F7] dark:bg-[#1C1C1E] shadow-2xl overflow-hidden;
+  }
+
+  /* Right-side slide-over drawer on desktop (>=1024px), bottom sheet on mobile/tablet (<1024px) */
+  .mac-drawer-backdrop {
+    @apply fixed inset-0 z-50 bg-black/35 backdrop-blur-[2px] flex items-end lg:items-stretch lg:justify-end;
+  }
+
+  .mac-drawer-panel {
+    @apply w-full lg:w-[460px] xl:w-[520px] max-h-[88vh] lg:max-h-none lg:h-full rounded-t-[20px] lg:rounded-none lg:rounded-l-[18px] bg-white dark:bg-[#1C1C1E] shadow-2xl overflow-hidden flex flex-col;
+    animation: macDrawerIn 220ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  }
+}
+
+@keyframes iosFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes macDrawerIn {
+  from {
+    opacity: 0;
+    transform: translateX(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes sonar-ping {
+  0% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(2.5);
+    opacity: 0;
+  }
+}
+
+@keyframes heavy-glow {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.36), 0 1px 2px rgba(220, 38, 38, 0.25);
+  }
+  50% {
+    box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.08), 0 2px 10px rgba(220, 38, 38, 0.42);
+  }
+}
+
+@keyframes spring-pop {
+  0% {
+    transform: scale(1);
+  }
+  28% {
+    transform: scale(0.75);
+  }
+  65% {
+    transform: scale(1.32);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes ring-burst {
+  0% {
+    transform: scale(0.65);
+    opacity: 0.85;
+  }
+  100% {
+    transform: scale(2.15);
+    opacity: 0;
+  }
+}
+
+@keyframes tick-flash-up {
+  0% {
+    background-color: rgba(16, 185, 129, 0.28);
+  }
+  100% {
+    background-color: transparent;
+  }
+}
+
+@keyframes tick-flash-down {
+  0% {
+    background-color: rgba(239, 68, 68, 0.28);
+  }
+  100% {
+    background-color: transparent;
+  }
+}
+
+@keyframes tick-flash-cn-up {
+  0% {
+    background-color: rgba(244, 63, 94, 0.28);
+  }
+  100% {
+    background-color: transparent;
+  }
+}
+
+@keyframes tick-flash-cn-down {
+  0% {
+    background-color: rgba(16, 185, 129, 0.28);
+  }
+  100% {
+    background-color: transparent;
+  }
+}
+
+@keyframes odo-in-up {
+  0% {
+    opacity: 0.35;
+    transform: translateY(45%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes odo-in-down {
+  0% {
+    opacity: 0.35;
+    transform: translateY(-45%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes jxCollapseIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.ios-fade-in {
+  animation: iosFadeIn 180ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Keep mobile bottom nav & mobile layout intact in Android shell and phone landscape (e.g. 851x393) */
+html.android-shell .mobile-shell-nav {
+  display: block !important;
+}
+html.android-shell .desktop-shell-only {
+  display: none !important;
+}
+html.android-shell main#main-content {
+  padding-bottom: 5.5rem !important;
+}
+@media (max-height: 500px) and (max-width: 960px) and (orientation: landscape) {
+  .mobile-shell-nav {
+    display: block !important;
+  }
+  .desktop-shell-only {
+    display: none !important;
+  }
+  main#main-content {
+    padding-bottom: 5.5rem !important;
+  }
+}
+
+@layer utilities {
+  .tabular-nums {
+    font-variant-numeric: tabular-nums;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
