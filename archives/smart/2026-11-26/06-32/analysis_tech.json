@@ -1,0 +1,1615 @@
+{
+  "schema_version": "4.2",
+  "batch_id": "smart-20261126-063259",
+  "input_batch_id": "raw-20261126-063221",
+  "input_cutoff_at": "2026-11-26T06:32:21+08:00",
+  "generated_at": "2026-11-26T06:32:59+08:00",
+  "published_at": "2026-11-26T06:35:23+08:00",
+  "category": "tech",
+  "category_label": "科技/AI",
+  "generation_mode": "ai_v3_mega_overlay",
+  "model_name": "gemini-3.1-flash-lite",
+  "quality_flags": [
+    "deterministic_fresh_base"
+  ],
+  "key_changes": [
+    {
+      "headline": "Anthropic 将 Messages API 从 Python 迁移到 Rust，每请求 CPU 降低约 70%",
+      "detail": "Anthropic将Messages API从Python迁移至Rust，实现每请求CPU使用率降低约70%。",
+      "event_id": "evt_5e3dff725f21",
+      "storyline_id": "st_0711beb8de66"
+    },
+    {
+      "headline": "标普500指数下跌1.6%，纳斯达克100指数下跌2.9%。Anthropic股价转涨，此前一度跌9.5%。",
+      "detail": "标普500跌1.6%，纳指100跌2.9%，Anthropic股价盘中一度跌9.5%后转涨。",
+      "event_id": "evt_ce1e3f0f931c"
+    },
+    {
+      "headline": "FT 对比美国 CBO 与 Anthropic 的 AI 增长预测，GDP 差距达 10 万亿美元",
+      "detail": "FT对比美国国会预算办公室（CBO）与Anthropic的AI增长预测，显示GDP差距达10万亿美元。",
+      "event_id": "evt_8cb55e207c6d",
+      "storyline_id": "st_27ae8ce3b27d"
+    }
+  ],
+  "overview_sections": [
+    {
+      "title": "AI产业效率与估值博弈",
+      "points": [
+        {
+          "text": "AI公司在追求技术降本的同时，面临资本市场对其万亿估值逻辑的严苛审视。",
+          "source_refs": []
+        }
+      ]
+    }
+  ],
+  "events": [
+    {
+      "schema_version": "4.1",
+      "event_id": "evt_b048df1f6ce5",
+      "storyline_id": "st_488c73ee40b5",
+      "article_ids": [
+        "techcrunch-rss_a7927bfbc5c5",
+        "theverge-rss_94c6540ca1e2"
+      ],
+      "legacy_event_ids": [],
+      "title": "美国联邦通信委员会批准SpaceX在太空部署AI数据中心的计划",
+      "category": "tech",
+      "entities": [
+        "SpaceX / 特斯拉 / 马斯克生态"
+      ],
+      "entity_ids": [
+        "ent_spacex_tesla"
+      ],
+      "entity_confidences": {
+        "SpaceX / 特斯拉 / 马斯克生态": 0.86
+      },
+      "matched_entities": [
+        {
+          "entity_id": "ent_spacex_tesla",
+          "canonical_name": "SpaceX / 特斯拉 / 马斯克生态",
+          "entity_type": "company",
+          "sector": "商业航天、自动驾驶与 AI",
+          "matched_aliases": [
+            "spacex"
+          ],
+          "tickers": [
+            {
+              "symbol": "TSLA",
+              "market": "US",
+              "exchange": "NASDAQ",
+              "currency": "USD",
+              "label": "TSLA.US (NASDAQ)"
+            }
+          ],
+          "reason": "正文/实体匹配关键词「spacex」",
+          "confidence": 0.86
+        }
+      ],
+      "importance": "medium",
+      "sentiment": "Mixed",
+      "special_note": null,
+      "material_stage": null,
+      "material_stage_label": null,
+      "material_stage_confidence": null,
+      "thumbnail_url": null,
+      "publisher_name": "TechCrunch AI & Tech",
+      "source_status": "ok",
+      "evidence_status": "multi_source",
+      "evidence_label": "多独立来源提及（待核官方全文）",
+      "evidence_status_reason": "已有 2 家独立媒体族提及（含摘要或正文首段）；多源转载不代表官方公告已证实",
+      "attribution_warning": null,
+      "regulatory_note": null,
+      "contradictions": [],
+      "downweight_reasons": [],
+      "quality_flags": [],
+      "material_depth": "title_and_excerpt",
+      "source_count": 2,
+      "platform_count": 2,
+      "independent_publisher_count": 2,
+      "reprint_count": 0,
+      "published_at": "2026-11-26T01:44:51+08:00",
+      "event_date": "2026-11-26",
+      "event_time": "2026-11-26T01:44:51+08:00",
+      "stale": false,
+      "event_date_source": "llm_extracted",
+      "is_stale_rehash": false,
+      "time_trust_level": "article_timestamp",
+      "time_confidence": "article_timestamp",
+      "first_discovered_at": "2026-11-26T06:32:21+08:00",
+      "first_reported_at": "2026-11-26T01:44:51+08:00",
+      "latest_fact_update_at": "2026-11-26T04:56:44+08:00",
+      "latest_reported_at": "2026-11-26T04:56:44+08:00",
+      "fetched_at": "2026-11-26T06:32:21+08:00",
+      "input_batch_id": "raw-20261126-063221",
+      "fact_summary": "美国联邦通信委员会周三宣布，已授权马斯克旗下的SpaceX公司部署多达100万颗搭载AI芯片的卫星，作为该公司“星智”（Starmind）计划的一部分。",
+      "fact_atoms": [
+        {
+          "atom_id": "fa_14007751",
+          "subject": "SpaceX / 特斯拉 / 马斯克生态",
+          "metric_or_action": "FCC approves SpaceX plan to put AI data centers in space",
+          "value": null,
+          "unit": null,
+          "period": "单次披露/未注明周期",
+          "scope": "新闻事件陈述",
+          "fact_status": "multi_source_reported",
+          "attribution": "TechCrunch AI & Tech",
+          "source_ref": "techcrunch-rss_a7927bfbc5c5",
+          "source_url": "https://techcrunch.com/2026/11/25/fcc-approves-spacex-plan-to-put-ai-data-centers-in-space",
+          "source_excerpt_or_locator": "The FCC dismissed some of the key concerns raised by opponents, including potential threats to scientific research, because the agency determined they fell outside its regulatory a",
+          "published_at": "2026-11-26T04:56:44+08:00",
+          "discovered_at": "2026-11-26T06:32:21+08:00",
+          "revision": 1
+        }
+      ],
+      "ai_analysis": "反映SpaceX / 特斯拉 / 马斯克生态技术架构与商业落地节奏变化，实际效果仍待开发者生态与第三方实测验证。",
+      "unverified_claims": [],
+      "speculation_or_outlook": null,
+      "sources": [
+        {
+          "item_id": "techcrunch-rss_a7927bfbc5c5",
+          "article_id": "techcrunch-rss_a7927bfbc5c5",
+          "source_id": "techcrunch-rss",
+          "source_name": "TechCrunch AI & Tech",
+          "publisher_name": "TechCrunch AI & Tech",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "techcrunch",
+          "is_reprint_copy": false,
+          "title": "FCC approves SpaceX plan to put AI data centers in space",
+          "url": "https://techcrunch.com/2026/11/25/fcc-approves-spacex-plan-to-put-ai-data-centers-in-space",
+          "published_at": "2026-11-26T04:56:44+08:00",
+          "published_at_source": "upstream_rfc2822",
+          "fetched_at": "2026-11-26T06:32:22+08:00",
+          "excerpt": "The FCC dismissed some of the key concerns raised by opponents, including potential threats to scientific research, because the agency determined they fell outside its regulatory authority.",
+          "thumbnail_url": null,
+          "deep_fetch_status": null,
+          "title_zh": "美国联邦通信委员会批准SpaceX在太空部署AI数据中心的计划"
+        },
+        {
+          "item_id": "theverge-rss_94c6540ca1e2",
+          "article_id": "theverge-rss_94c6540ca1e2",
+          "source_id": "theverge-rss",
+          "source_name": "The Verge",
+          "publisher_name": "The Verge",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "theverge",
+          "is_reprint_copy": false,
+          "title": "FCC signs off on SpaceX’s plan to put up to 1 million data center satellites into space",
+          "url": "https://www.theverge.com/science/1042278/spacex-fcc-starmind-ai-space-data-centers",
+          "published_at": "2026-11-26T01:44:51+08:00",
+          "published_at_source": "upstream_iso",
+          "fetched_at": "2026-11-26T06:32:22+08:00",
+          "excerpt": "In an announcement on Wednesday, the FCC says it authorized SpaceX to deploy up to 1 million AI chip-equipped satellites as part of the Elon Musk-owned company's \"Starmind\" initiative.",
+          "thumbnail_url": null,
+          "deep_fetch_status": null,
+          "title_zh": "美国联邦通信委员会批准 SpaceX 部署最多 100 万颗数据中心卫星的计划"
+        }
+      ],
+      "verification": {
+        "all_refs_valid": true,
+        "has_primary_url": true,
+        "rejected_refs": [],
+        "has_first_party": false
+      },
+      "followup": null,
+      "is_new_in_batch": true,
+      "update_kind": "new_discovery",
+      "heavy_score": 57.5,
+      "radar_score": 82,
+      "severity_tier": "B",
+      "severity_label": "B级常规",
+      "title_en": "FCC approves SpaceX plan to put AI data centers in space",
+      "summary_en": "In an announcement on Wednesday, the FCC says it authorized SpaceX to deploy up to 1 million AI chip-equipped satellites as part of the Elon Musk-owned company's \"Starmind\" initiative.",
+      "summary": "美国联邦通信委员会周三宣布，已授权马斯克旗下的SpaceX公司部署多达100万颗搭载AI芯片的卫星，作为该公司“星智”（Starmind）计划的一部分。",
+      "summary_zh": "美国联邦通信委员会周三宣布，已授权马斯克旗下的SpaceX公司部署多达100万颗搭载AI芯片的卫星，作为该公司“星智”（Starmind）计划的一部分。",
+      "translation_attempts": 0,
+      "translation_error": null,
+      "title_zh": "美国联邦通信委员会批准SpaceX在太空部署AI数据中心的计划",
+      "translation_status": "native_zh",
+      "ai_analysis_en": "",
+      "deep_qa": [
+        {
+          "question": "这次技术变化对普通开发者或用户意味着什么？",
+          "answer": "聚焦SpaceX / 特斯拉 / 马斯克生态能力边界与使用成本变化：美国联邦通信委员会周三宣布，已授权马斯克旗下的SpaceX公司部署多达100万颗搭载AI芯片的卫星，作为该公司“星智”（Starmind）计划的一部分。",
+          "historical_parallel": "历次大模型与算力架构迭代中，推理单价下探与生态开放通常在 1~2 个季度内显著拉动应用渗透率。"
+        },
+        {
+          "question": "该进展目前处于什么验证阶段？",
+          "answer": "需结合官方技术报告、独立第三方复现基准以及下游云厂与终端真实接入节奏交叉确认。",
+          "historical_parallel": "2025 年以来主流开源/闭源大模型竞赛证明，公开基准与真实开发者采用率决定商业化天花板。"
+        }
+      ]
+    },
+    {
+      "schema_version": "4.1",
+      "event_id": "evt_1e905c2e4ec8",
+      "storyline_id": "st_8fdb3a86df7e",
+      "article_ids": [
+        "scmp-rss_334ba4da4c7b",
+        "techcrunch-rss_9f1472dde648",
+        "techcrunch-rss_6eb315da6c5b"
+      ],
+      "legacy_event_ids": [],
+      "title": "黄仁勋违反了英伟达的行为准则，他的员工可能不会忘记这一点",
+      "category": "tech",
+      "entities": [
+        "英伟达 (NVIDIA)"
+      ],
+      "entity_ids": [
+        "ent_nvidia"
+      ],
+      "entity_confidences": {
+        "英伟达 (NVIDIA)": 0.96
+      },
+      "matched_entities": [
+        {
+          "entity_id": "ent_nvidia",
+          "canonical_name": "英伟达 (NVIDIA)",
+          "entity_type": "company",
+          "sector": "半导体 / AI算力",
+          "matched_aliases": [
+            "jensen huang",
+            "nvidia"
+          ],
+          "tickers": [
+            {
+              "symbol": "NVDA",
+              "market": "US",
+              "exchange": "NASDAQ",
+              "currency": "USD",
+              "label": "NVDA.US (NASDAQ)"
+            }
+          ],
+          "reason": "正文/实体匹配关键词「jensen huang / nvidia」",
+          "confidence": 0.96
+        }
+      ],
+      "importance": "medium",
+      "sentiment": "Mixed",
+      "special_note": null,
+      "material_stage": null,
+      "material_stage_label": null,
+      "material_stage_confidence": null,
+      "thumbnail_url": "https://cdn.i-scmp.com/sites/default/files/styles/1280x720/public/d8/images/canvas/2026/11/24/d67adf04-1e00-4c5e-98d2-ba34002cf3ad_aa390131.jpg?itok=ViYDITwj&v=1795517881",
+      "publisher_name": "南华早报 SCMP",
+      "source_status": "ok",
+      "evidence_status": "multi_source",
+      "evidence_label": "多独立来源提及（待核官方全文）",
+      "evidence_status_reason": "已有 2 家独立媒体族提及（含摘要或正文首段）；多源转载不代表官方公告已证实",
+      "attribution_warning": null,
+      "regulatory_note": null,
+      "contradictions": [],
+      "downweight_reasons": [],
+      "quality_flags": [],
+      "material_depth": "title_and_excerpt",
+      "source_count": 3,
+      "platform_count": 2,
+      "independent_publisher_count": 2,
+      "reprint_count": 0,
+      "published_at": "2026-11-24T22:00:06+08:00",
+      "event_date": "2026-11-26",
+      "event_time": "2026-11-24T22:00:06+08:00",
+      "stale": false,
+      "event_date_source": "llm_extracted",
+      "is_stale_rehash": false,
+      "time_trust_level": "article_timestamp",
+      "time_confidence": "article_timestamp",
+      "first_discovered_at": "2026-11-26T06:32:21+08:00",
+      "first_reported_at": "2026-11-24T22:00:06+08:00",
+      "latest_fact_update_at": "2026-11-26T03:54:57+08:00",
+      "latest_reported_at": "2026-11-26T03:54:57+08:00",
+      "fetched_at": "2026-11-26T06:32:21+08:00",
+      "input_batch_id": "raw-20261126-063221",
+      "fact_summary": "黄仁勋重任英伟达CEO可能会使华盛顿对华政策复杂化，进一步拉大白宫急于稳定对华关系与即将上任、准备采取强硬态度的民主党国会之间的分歧……",
+      "fact_atoms": [
+        {
+          "atom_id": "fa_14127824",
+          "subject": "英伟达 (NVIDIA)",
+          "metric_or_action": "Jensen Huang broke Nvidia’s code of conduct, and his employees may not forget it",
+          "value": null,
+          "unit": null,
+          "period": "单次披露/未注明周期",
+          "scope": "新闻事件陈述",
+          "fact_status": "multi_source_reported",
+          "attribution": "南华早报 SCMP",
+          "source_ref": "scmp-rss_334ba4da4c7b",
+          "source_url": "https://www.scmp.com/news/china/diplomacy/article/3375631/how-jensen-huangs-nvidia-return-could-deepen-us-rift-over-china-chip-curbs",
+          "source_excerpt_or_locator": "Jensen Huang’s return as Nvidia CEO could complicate Washington’s China policy, widening the gap between a White House keen to steady ties with Beijing and an incoming Democratic-l",
+          "published_at": "2026-11-24T22:00:06+08:00",
+          "discovered_at": "2026-11-26T06:32:21+08:00",
+          "revision": 1
+        }
+      ],
+      "ai_analysis": "反映英伟达 (NVIDIA)技术架构与商业落地节奏变化，实际效果仍待开发者生态与第三方实测验证。",
+      "unverified_claims": [],
+      "speculation_or_outlook": null,
+      "sources": [
+        {
+          "item_id": "scmp-rss_334ba4da4c7b",
+          "article_id": "scmp-rss_334ba4da4c7b",
+          "source_id": "scmp-rss",
+          "source_name": "南华早报 SCMP",
+          "publisher_name": "南华早报 SCMP",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "scmp-rss",
+          "is_reprint_copy": false,
+          "title": "How Jensen Huang’s Nvidia return could deepen US rift over China chip curbs",
+          "url": "https://www.scmp.com/news/china/diplomacy/article/3375631/how-jensen-huangs-nvidia-return-could-deepen-us-rift-over-china-chip-curbs",
+          "published_at": "2026-11-24T22:00:06+08:00",
+          "published_at_source": "upstream_rfc2822",
+          "fetched_at": "2026-11-26T06:32:22+08:00",
+          "excerpt": "Jensen Huang’s return as Nvidia CEO could complicate Washington’s China policy, widening the gap between a White House keen to steady ties with Beijing and an incoming Democratic-led Congress poised to tighten chip curbs.",
+          "thumbnail_url": "https://cdn.i-scmp.com/sites/default/files/styles/1280x720/public/d8/images/canvas/2026/11/24/d67adf04-1e00-4c5e-98d2-ba34002cf3ad_aa390131.jpg?itok=ViYDITwj&v=1795517881",
+          "deep_fetch_status": null,
+          "title_zh": "黄仁勋重返英伟达将如何加剧美国在对华芯片限制上的分歧"
+        },
+        {
+          "item_id": "techcrunch-rss_9f1472dde648",
+          "article_id": "techcrunch-rss_9f1472dde648",
+          "source_id": "techcrunch-rss",
+          "source_name": "TechCrunch AI & Tech",
+          "publisher_name": "TechCrunch AI & Tech",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "techcrunch",
+          "is_reprint_copy": false,
+          "title": "Jensen Huang broke Nvidia’s code of conduct, and his employees may not forget it",
+          "url": "https://techcrunch.com/2026/11/25/jensen-huang-broke-nvidias-code-of-conduct-and-his-employees-may-not-forget-it",
+          "published_at": "2026-11-26T03:54:57+08:00",
+          "published_at_source": "upstream_rfc2822",
+          "fetched_at": "2026-11-26T06:32:22+08:00",
+          "excerpt": "Most codes of conduct serve as a reflection of corporate culture. In Nvidia's case, that could have consequences.",
+          "thumbnail_url": null,
+          "deep_fetch_status": null,
+          "title_zh": "黄仁勋违反了英伟达的行为准则，他的员工可能不会忘记这一点"
+        },
+        {
+          "item_id": "techcrunch-rss_6eb315da6c5b",
+          "article_id": "techcrunch-rss_6eb315da6c5b",
+          "source_id": "techcrunch-rss",
+          "source_name": "TechCrunch AI & Tech",
+          "publisher_name": "TechCrunch AI & Tech",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "techcrunch",
+          "is_reprint_copy": false,
+          "title": "The questions Jensen Huang and Nvidia will still have to answer about Megaspeed",
+          "url": "https://techcrunch.com/2026/11/25/the-questions-jensen-huang-and-nvidia-will-still-have-to-answer-about-megaspeed",
+          "published_at": "2026-11-25T21:00:00+08:00",
+          "published_at_source": "upstream_rfc2822",
+          "fetched_at": "2026-11-26T06:32:22+08:00",
+          "excerpt": "The central question for investigators is what Nvidia knew about where those chips ended up and whether Huang's affair with a Megaspeed executive gave the company reason to doubt Megaspeed's assurances.",
+          "thumbnail_url": null,
+          "deep_fetch_status": null,
+          "title_zh": "黄仁勋与英伟达在“巨型速度”项目上仍需回答的问题"
+        }
+      ],
+      "verification": {
+        "all_refs_valid": true,
+        "has_primary_url": true,
+        "rejected_refs": [],
+        "has_first_party": false
+      },
+      "followup": null,
+      "is_new_in_batch": true,
+      "update_kind": "new_discovery",
+      "heavy_score": 50.0,
+      "radar_score": 82,
+      "severity_tier": "B",
+      "severity_label": "B级常规",
+      "title_en": "Jensen Huang broke Nvidia's code of conduct, and his employees may not forget it",
+      "summary_en": "Jensen Huang's return as Nvidia CEO could complicate Washington's China policy, widening the gap between a White House keen to steady ties with Beijing and an incoming Democratic-led Congress poised to…",
+      "summary": "黄仁勋重任英伟达CEO可能会使华盛顿对华政策复杂化，进一步拉大白宫急于稳定对华关系与即将上任、准备采取强硬态度的民主党国会之间的分歧……",
+      "summary_zh": "黄仁勋重任英伟达CEO可能会使华盛顿对华政策复杂化，进一步拉大白宫急于稳定对华关系与即将上任、准备采取强硬态度的民主党国会之间的分歧……",
+      "translation_attempts": 0,
+      "translation_error": null,
+      "title_zh": "黄仁勋违反了英伟达的行为准则，他的员工可能不会忘记这一点",
+      "translation_status": "native_zh",
+      "ai_analysis_en": "",
+      "deep_qa": [
+        {
+          "question": "这次技术变化对普通开发者或用户意味着什么？",
+          "answer": "聚焦英伟达 (NVIDIA)能力边界与使用成本变化：黄仁勋重任英伟达CEO可能会使华盛顿对华政策复杂化，进一步拉大白宫急于稳定对华关系与即将上任、准备采取强硬态度的民主党国会之间的分歧……。",
+          "historical_parallel": "历次大模型与算力架构迭代中，推理单价下探与生态开放通常在 1~2 个季度内显著拉动应用渗透率。"
+        },
+        {
+          "question": "该进展目前处于什么验证阶段？",
+          "answer": "需结合官方技术报告、独立第三方复现基准以及下游云厂与终端真实接入节奏交叉确认。",
+          "historical_parallel": "2025 年以来主流开源/闭源大模型竞赛证明，公开基准与真实开发者采用率决定商业化天花板。"
+        }
+      ]
+    },
+    {
+      "schema_version": "4.1",
+      "event_id": "evt_121bb6daa9b6",
+      "storyline_id": "st_a059c4280eaa",
+      "article_ids": [
+        "rss-the-decoder_94f0634a773f",
+        "aihot_0b89fd2289ea"
+      ],
+      "legacy_event_ids": [],
+      "title": "Anthropic CEO Dario Amodei 称把社会治理交给 AI 是个坏主意",
+      "category": "tech",
+      "entities": [
+        "Anthropic / Claude"
+      ],
+      "entity_ids": [
+        "ent_anthropic"
+      ],
+      "entity_confidences": {
+        "Anthropic / Claude": 0.86
+      },
+      "matched_entities": [
+        {
+          "entity_id": "ent_anthropic",
+          "canonical_name": "Anthropic / Claude",
+          "entity_type": "company",
+          "sector": "AI 模型与安全",
+          "matched_aliases": [
+            "anthropic"
+          ],
+          "tickers": [],
+          "reason": "正文/实体匹配关键词「anthropic」",
+          "confidence": 0.86
+        }
+      ],
+      "importance": "medium",
+      "sentiment": "Mixed",
+      "special_note": null,
+      "material_stage": null,
+      "material_stage_label": null,
+      "material_stage_confidence": null,
+      "thumbnail_url": "https://the-decoder.com/wp-content/uploads/2026/09/anthropic_amodei.png",
+      "publisher_name": "The Decoder (AI前沿)",
+      "source_status": "ok",
+      "evidence_status": "multi_source",
+      "evidence_label": "多独立来源提及（待核官方全文）",
+      "evidence_status_reason": "已有 2 家独立媒体族提及（含摘要或正文首段）；多源转载不代表官方公告已证实",
+      "attribution_warning": null,
+      "regulatory_note": null,
+      "contradictions": [],
+      "downweight_reasons": [],
+      "quality_flags": [],
+      "material_depth": "title_and_excerpt",
+      "source_count": 2,
+      "platform_count": 2,
+      "independent_publisher_count": 2,
+      "reprint_count": 0,
+      "published_at": "2026-11-26T04:15:50+08:00",
+      "event_date": "2026-11-26",
+      "event_time": "2026-11-26T04:15:50+08:00",
+      "stale": false,
+      "event_date_source": "llm_extracted",
+      "is_stale_rehash": false,
+      "time_trust_level": "article_timestamp",
+      "time_confidence": "article_timestamp",
+      "first_discovered_at": "2026-11-26T06:32:21+08:00",
+      "first_reported_at": "2026-11-26T04:15:50+08:00",
+      "latest_fact_update_at": "2026-11-26T04:15:50+08:00",
+      "latest_reported_at": "2026-11-26T04:15:50+08:00",
+      "fetched_at": "2026-11-26T06:32:21+08:00",
+      "input_batch_id": "raw-20261126-063221",
+      "fact_summary": "Anthropic首席执行官达里奥·阿莫代伊（Dario Amodei）反驳了Axios的一篇报道，该报道称部分员工认为人类会将权力交给超级智能系统。阿莫代伊表示，“将治理权交给AI是一个糟糕的主意。”",
+      "fact_atoms": [
+        {
+          "atom_id": "fa_92888380",
+          "subject": "Anthropic / Claude",
+          "metric_or_action": "Anthropic CEO Dario Amodei 称把社会治理交给 AI 是个坏主意",
+          "value": null,
+          "unit": null,
+          "period": "单次披露/未注明周期",
+          "scope": "新闻事件陈述",
+          "fact_status": "multi_source_reported",
+          "attribution": "The Decoder (AI前沿)",
+          "source_ref": "rss-the-decoder_94f0634a773f",
+          "source_url": "https://the-decoder.com/anthropic-ceo-dario-amodei-says-letting-ai-govern-society-would-be-a-bad-idea",
+          "source_excerpt_or_locator": "Anthropic CEO Dario Amodei is pushing back on an Axios report saying some employees believe humanity will hand power to superintelligent systems. Amodei says \"turning over governan",
+          "published_at": "2026-11-26T04:15:50+08:00",
+          "discovered_at": "2026-11-26T06:32:21+08:00",
+          "revision": 1
+        }
+      ],
+      "ai_analysis": "反映Anthropic / Claude技术架构与商业落地节奏变化，实际效果仍待开发者生态与第三方实测验证。",
+      "unverified_claims": [],
+      "speculation_or_outlook": null,
+      "sources": [
+        {
+          "item_id": "rss-the-decoder_94f0634a773f",
+          "article_id": "rss-the-decoder_94f0634a773f",
+          "source_id": "rss-the-decoder",
+          "source_name": "The Decoder (AI前沿)",
+          "publisher_name": "The Decoder (AI前沿)",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "thedecoder",
+          "is_reprint_copy": false,
+          "title": "Anthropic CEO Dario Amodei says letting AI govern society would be \"a bad idea\"",
+          "url": "https://the-decoder.com/anthropic-ceo-dario-amodei-says-letting-ai-govern-society-would-be-a-bad-idea",
+          "published_at": "2026-11-26T04:15:50+08:00",
+          "published_at_source": "upstream_rfc2822",
+          "fetched_at": "2026-11-26T06:32:24+08:00",
+          "excerpt": "Anthropic CEO Dario Amodei is pushing back on an Axios report saying some employees believe humanity will hand power to superintelligent systems. Amodei says \"turning over governance to AI is a bad idea.\" The article Anthropic CEO Dario Amodei says letting AI…",
+          "thumbnail_url": "https://the-decoder.com/wp-content/uploads/2026/09/anthropic_amodei.png",
+          "deep_fetch_status": null,
+          "title_zh": "Anthropic 首席执行官达里奥·阿莫代伊表示，让人工智能统治社会将是“一个糟糕的主意”"
+        },
+        {
+          "item_id": "aihot_0b89fd2289ea",
+          "article_id": "aihot_0b89fd2289ea",
+          "source_id": "aihot",
+          "source_name": "AIHOT 前沿",
+          "publisher_name": "AIHOT 前沿",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "aggregator_lead",
+          "publisher_family": "aihot",
+          "is_reprint_copy": false,
+          "title": "Anthropic CEO Dario Amodei 称把社会治理交给 AI 是个坏主意",
+          "url": "https://aihot.news/items/zw6z5pavhs3ogid1zm14nu1xi",
+          "published_at": "2026-11-26T04:15:50+08:00",
+          "published_at_source": "upstream_rfc2822",
+          "fetched_at": "2026-11-26T06:32:21+08:00",
+          "excerpt": null,
+          "thumbnail_url": null,
+          "deep_fetch_status": null
+        }
+      ],
+      "verification": {
+        "all_refs_valid": true,
+        "has_primary_url": true,
+        "rejected_refs": [],
+        "has_first_party": false
+      },
+      "followup": null,
+      "is_new_in_batch": true,
+      "update_kind": "new_discovery",
+      "heavy_score": 57.5,
+      "radar_score": 82,
+      "severity_tier": "B",
+      "severity_label": "B级常规",
+      "summary_en": "Anthropic CEO Dario Amodei is pushing back on an Axios report saying some employees believe humanity will hand power to superintelligent systems. Amodei says \"turning over governance to AI is a bad idea.",
+      "summary": "Anthropic首席执行官达里奥·阿莫代伊（Dario Amodei）反驳了Axios的一篇报道，该报道称部分员工认为人类会将权力交给超级智能系统。阿莫代伊表示，“将治理权交给AI是一个糟糕的主意。”",
+      "summary_zh": "Anthropic首席执行官达里奥·阿莫代伊（Dario Amodei）反驳了Axios的一篇报道，该报道称部分员工认为人类会将权力交给超级智能系统。阿莫代伊表示，“将治理权交给AI是一个糟糕的主意。”",
+      "translation_attempts": 0,
+      "translation_error": null,
+      "title_zh": "Anthropic CEO Dario Amodei 称把社会治理交给 AI 是个坏主意",
+      "translation_status": "native_zh",
+      "title_en": "Anthropic CEO Dario Amodei says letting AI govern society would be \"a bad idea\"",
+      "ai_analysis_en": "",
+      "deep_qa": [
+        {
+          "question": "这次技术变化对普通开发者或用户意味着什么？",
+          "answer": "聚焦Anthropic / Claude能力边界与使用成本变化：Anthropic首席执行官达里奥·阿莫代伊（Dario Amodei）反驳了Axios的一篇报道，该报道称部分员工认为人类会将权力交给超级智能系统。",
+          "historical_parallel": "历次大模型与算力架构迭代中，推理单价下探与生态开放通常在 1~2 个季度内显著拉动应用渗透率。"
+        },
+        {
+          "question": "该进展目前处于什么验证阶段？",
+          "answer": "需结合官方技术报告、独立第三方复现基准以及下游云厂与终端真实接入节奏交叉确认。",
+          "historical_parallel": "2025 年以来主流开源/闭源大模型竞赛证明，公开基准与真实开发者采用率决定商业化天花板。"
+        }
+      ]
+    },
+    {
+      "schema_version": "4.1",
+      "event_id": "evt_ce1e3f0f931c",
+      "storyline_id": "st_f93b194678a9",
+      "article_ids": [
+        "wscn-a-stock-channel_d5f8b1225d4f"
+      ],
+      "legacy_event_ids": [],
+      "title": "标普500指数下跌1.6%，纳斯达克100指数下跌2.9%。Anthropic股价转涨，此前一度跌9.5%。",
+      "category": "tech",
+      "entities": [
+        "Anthropic / Claude"
+      ],
+      "entity_ids": [
+        "ent_anthropic"
+      ],
+      "entity_confidences": {
+        "Anthropic / Claude": 0.86
+      },
+      "matched_entities": [
+        {
+          "entity_id": "ent_anthropic",
+          "canonical_name": "Anthropic / Claude",
+          "entity_type": "company",
+          "sector": "AI 模型与安全",
+          "matched_aliases": [
+            "anthropic"
+          ],
+          "tickers": [],
+          "reason": "正文/实体匹配关键词「anthropic」",
+          "confidence": 0.86
+        }
+      ],
+      "importance": "high",
+      "sentiment": "Mixed",
+      "special_note": null,
+      "material_stage": null,
+      "material_stage_label": null,
+      "material_stage_confidence": null,
+      "thumbnail_url": null,
+      "publisher_name": "华尔街见闻 A股快讯",
+      "source_status": "ok",
+      "evidence_status": "single_source",
+      "evidence_label": "单一独立来源线索",
+      "evidence_status_reason": "目前仅见 1 家独立来源（共 1 条引用含转载，含摘要/首段），尚未见独立渠道交叉或官方确认",
+      "attribution_warning": null,
+      "regulatory_note": null,
+      "contradictions": [],
+      "downweight_reasons": [],
+      "quality_flags": [],
+      "material_depth": "title_and_excerpt",
+      "source_count": 1,
+      "platform_count": 1,
+      "independent_publisher_count": 1,
+      "reprint_count": 0,
+      "published_at": "2026-11-26T01:12:21+08:00",
+      "event_date": "2026-11-26",
+      "event_time": "2026-11-26T01:12:21+08:00",
+      "stale": false,
+      "event_date_source": "llm_extracted",
+      "is_stale_rehash": false,
+      "time_trust_level": "article_timestamp",
+      "time_confidence": "article_timestamp",
+      "first_discovered_at": "2026-11-26T06:32:21+08:00",
+      "first_reported_at": "2026-11-26T01:12:21+08:00",
+      "latest_fact_update_at": "2026-11-26T01:12:21+08:00",
+      "latest_reported_at": "2026-11-26T01:12:21+08:00",
+      "fetched_at": "2026-11-26T06:32:21+08:00",
+      "input_batch_id": "raw-20261126-063221",
+      "fact_summary": "标普500跌1.6%，纳指100跌2.9%，Anthropic股价盘中一度跌9.5%后转涨。",
+      "fact_atoms": [
+        {
+          "atom_id": "fa_15939822",
+          "subject": "Anthropic / Claude",
+          "metric_or_action": "标普500指数下跌1.6%，纳斯达克100指数下跌2.9%。Anthropic股价转涨，此前一度跌9.5%。",
+          "value": "1.6",
+          "unit": "%",
+          "period": "单次披露/未注明周期",
+          "scope": "新闻事件陈述",
+          "fact_status": "reported_unconfirmed_by_filing",
+          "attribution": "华尔街见闻 A股快讯",
+          "source_ref": "wscn-a-stock-channel_d5f8b1225d4f",
+          "source_url": "https://wallstreetcn.com/livenews/3205865",
+          "source_excerpt_or_locator": "标普500指数下跌1.6%，纳斯达克100指数下跌2.9%。Anthropic股价转涨，此前一度跌9.5%。纳斯达克金龙中国指数涨超0.5%，BOSS直聘涨10.75%，老虎证券涨9.09%，理想汽车涨7.57%，宝尊电商涨6.97%，名创优品涨4.81%。",
+          "published_at": "2026-11-26T01:12:21+08:00",
+          "discovered_at": "2026-11-26T06:32:21+08:00",
+          "revision": 1
+        }
+      ],
+      "ai_analysis": "AI初创公司股价的高波动性反映了市场对其商业化落地能力与高估值匹配度的深度分歧。",
+      "unverified_claims": [],
+      "speculation_or_outlook": null,
+      "sources": [
+        {
+          "item_id": "wscn-a-stock-channel_d5f8b1225d4f",
+          "article_id": "wscn-a-stock-channel_d5f8b1225d4f",
+          "source_id": "wscn-a-stock-channel",
+          "source_name": "华尔街见闻 A股快讯",
+          "publisher_name": "华尔街见闻 A股快讯",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "wallstreetcn",
+          "is_reprint_copy": false,
+          "title": "标普500指数下跌1.6%，纳斯达克100指数下跌2.9%。Anthropic股价转涨，此前一度跌9.5%。",
+          "url": "https://wallstreetcn.com/livenews/3205865",
+          "published_at": "2026-11-26T01:12:21+08:00",
+          "published_at_source": "upstream_api",
+          "fetched_at": "2026-11-26T06:32:22+08:00",
+          "excerpt": "标普500指数下跌1.6%，纳斯达克100指数下跌2.9%。Anthropic股价转涨，此前一度跌9.5%。纳斯达克金龙中国指数涨超0.5%，BOSS直聘涨10.75%，老虎证券涨9.09%，理想汽车涨7.57%，宝尊电商涨6.97%，名创优品涨4.81%。",
+          "thumbnail_url": null,
+          "deep_fetch_status": null
+        }
+      ],
+      "verification": {
+        "all_refs_valid": true,
+        "has_primary_url": true,
+        "rejected_refs": [],
+        "has_first_party": false
+      },
+      "followup": null,
+      "is_new_in_batch": true,
+      "update_kind": "new_discovery",
+      "heavy_score": 62.1,
+      "radar_score": 76,
+      "severity_tier": "A",
+      "severity_label": "A级要闻",
+      "heavy_reason_tag": "巨头重大变动",
+      "summary": "标普500跌1.6%，纳指100跌2.9%，Anthropic股价盘中一度跌9.5%后转涨。",
+      "summary_zh": "标普500跌1.6%，纳指100跌2.9%，Anthropic股价盘中一度跌9.5%后转涨。",
+      "deep_qa": [
+        {
+          "question": "Anthropic股价盘中反转的动力是什么？",
+          "answer": "可能源于机构投资者在低位进行的技术性买入，或对AI基础设施降本增效进展的积极解读。",
+          "historical_parallel": "类似于2023年AI板块初期波动时的机构博弈。"
+        },
+        {
+          "question": "AI板块整体回调对后续融资有何影响？",
+          "answer": "估值回调将迫使AI公司从追求规模转向追求盈利能力，融资门槛将大幅提高。",
+          "historical_parallel": "类似于2000年互联网泡沫破裂后的行业洗牌。"
+        }
+      ],
+      "ai_overlaid": true,
+      "translation_attempts": 0,
+      "translation_error": null,
+      "title_zh": "标普500指数下跌1.6%，纳斯达克100指数下跌2.9%。Anthropic股价转涨，此前一度跌9.5%。",
+      "translation_status": "native_zh",
+      "title_en": "",
+      "summary_en": "",
+      "ai_analysis_en": ""
+    },
+    {
+      "schema_version": "4.1",
+      "event_id": "evt_5e3dff725f21",
+      "storyline_id": "st_0711beb8de66",
+      "article_ids": [
+        "aihot_f39de380a2de"
+      ],
+      "legacy_event_ids": [],
+      "title": "Anthropic 将 Messages API 从 Python 迁移到 Rust，每请求 CPU 降低约 70%",
+      "category": "tech",
+      "entities": [
+        "Anthropic / Claude"
+      ],
+      "entity_ids": [
+        "ent_anthropic"
+      ],
+      "entity_confidences": {
+        "Anthropic / Claude": 0.86
+      },
+      "matched_entities": [
+        {
+          "entity_id": "ent_anthropic",
+          "canonical_name": "Anthropic / Claude",
+          "entity_type": "company",
+          "sector": "AI 模型与安全",
+          "matched_aliases": [
+            "anthropic"
+          ],
+          "tickers": [],
+          "reason": "正文/实体匹配关键词「anthropic」",
+          "confidence": 0.86
+        }
+      ],
+      "importance": "high",
+      "sentiment": "Mixed",
+      "special_note": null,
+      "material_stage": null,
+      "material_stage_label": null,
+      "material_stage_confidence": null,
+      "thumbnail_url": null,
+      "publisher_name": "AIHOT 前沿",
+      "source_status": "ok",
+      "evidence_status": "single_source",
+      "evidence_label": "单一独立来源线索",
+      "evidence_status_reason": "目前仅见 1 家独立来源（共 1 条引用含转载，仅基于标题素材），尚未见独立渠道交叉或官方确认",
+      "attribution_warning": null,
+      "regulatory_note": null,
+      "contradictions": [],
+      "downweight_reasons": [
+        "仅含标题素材 (-8)"
+      ],
+      "quality_flags": [],
+      "material_depth": "title_only",
+      "source_count": 1,
+      "platform_count": 1,
+      "independent_publisher_count": 1,
+      "reprint_count": 0,
+      "published_at": "2026-11-26T04:52:14+08:00",
+      "event_date": "2026-11-26",
+      "event_time": "2026-11-26T04:52:14+08:00",
+      "stale": false,
+      "event_date_source": "llm_extracted",
+      "is_stale_rehash": false,
+      "time_trust_level": "article_timestamp",
+      "time_confidence": "article_timestamp",
+      "first_discovered_at": "2026-11-26T06:32:21+08:00",
+      "first_reported_at": "2026-11-26T04:52:14+08:00",
+      "latest_fact_update_at": "2026-11-26T04:52:14+08:00",
+      "latest_reported_at": "2026-11-26T04:52:14+08:00",
+      "fetched_at": "2026-11-26T06:32:21+08:00",
+      "input_batch_id": "raw-20261126-063221",
+      "fact_summary": "Anthropic将Messages API从Python迁移至Rust，实现每请求CPU使用率降低约70%。",
+      "fact_atoms": [
+        {
+          "atom_id": "fa_85521165",
+          "subject": "Anthropic / Claude",
+          "metric_or_action": "Anthropic 将 Messages API 从 Python 迁移到 Rust，每请求 CPU 降低约 70%",
+          "value": "70",
+          "unit": "%",
+          "period": "单次披露/未注明周期",
+          "scope": "新闻事件陈述",
+          "fact_status": "reported_unconfirmed_by_filing",
+          "attribution": "AIHOT 前沿",
+          "source_ref": "aihot_f39de380a2de",
+          "source_url": "https://aihot.news/items/ro9d102qwfkzisnd7ppd8wex8",
+          "source_excerpt_or_locator": "Anthropic 将 Messages API 从 Python 迁移到 Rust，每请求 CPU 降低约 70%",
+          "published_at": "2026-11-26T04:52:14+08:00",
+          "discovered_at": "2026-11-26T06:32:21+08:00",
+          "revision": 1
+        }
+      ],
+      "ai_analysis": "通过底层语言优化降低算力成本，是AI公司在推理成本高企背景下提升毛利率的关键路径。",
+      "unverified_claims": [],
+      "speculation_or_outlook": null,
+      "sources": [
+        {
+          "item_id": "aihot_f39de380a2de",
+          "article_id": "aihot_f39de380a2de",
+          "source_id": "aihot",
+          "source_name": "AIHOT 前沿",
+          "publisher_name": "AIHOT 前沿",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "aggregator_lead",
+          "publisher_family": "aihot",
+          "is_reprint_copy": false,
+          "title": "Anthropic 将 Messages API 从 Python 迁移到 Rust，每请求 CPU 降低约 70%",
+          "url": "https://aihot.news/items/ro9d102qwfkzisnd7ppd8wex8",
+          "published_at": "2026-11-26T04:52:14+08:00",
+          "published_at_source": "upstream_rfc2822",
+          "fetched_at": "2026-11-26T06:32:21+08:00",
+          "excerpt": null,
+          "thumbnail_url": null,
+          "deep_fetch_status": null
+        }
+      ],
+      "verification": {
+        "all_refs_valid": true,
+        "has_primary_url": true,
+        "rejected_refs": [],
+        "has_first_party": false
+      },
+      "followup": null,
+      "is_new_in_batch": true,
+      "update_kind": "new_discovery",
+      "heavy_score": 71.3,
+      "radar_score": 53,
+      "severity_tier": "A",
+      "severity_label": "A级要闻",
+      "heavy_reason_tag": "巨头重大变动",
+      "summary": "Anthropic将Messages API从Python迁移至Rust，实现每请求CPU使用率降低约70%。",
+      "summary_zh": "Anthropic将Messages API从Python迁移至Rust，实现每请求CPU使用率降低约70%。",
+      "deep_qa": [
+        {
+          "question": "Rust语言在AI推理中的优势为何？",
+          "answer": "Rust提供内存安全与高性能并发能力，能显著减少AI推理过程中的资源浪费。",
+          "historical_parallel": "类似于早期云计算公司从Java迁移至Go以提升并发处理效率。"
+        },
+        {
+          "question": "此举对Anthropic的竞争格局有何影响？",
+          "answer": "降低推理成本意味着在同等定价下拥有更高的利润空间，或在价格战中具备更强的防御力。",
+          "historical_parallel": "类似于云服务商通过自研芯片降低运营成本的策略。"
+        }
+      ],
+      "ai_overlaid": true,
+      "translation_attempts": 0,
+      "translation_error": null,
+      "title_zh": "Anthropic 将 Messages API 从 Python 迁移到 Rust，每请求 CPU 降低约 70%",
+      "translation_status": "native_zh",
+      "title_en": "",
+      "summary_en": "",
+      "ai_analysis_en": ""
+    },
+    {
+      "schema_version": "4.1",
+      "event_id": "evt_7d698b39c5b9",
+      "storyline_id": "st_2333e67084ae",
+      "article_ids": [
+        "rss-gnews-ai-models-zh_1d554a94432b"
+      ],
+      "legacy_event_ids": [],
+      "title": "Anthropic上市四日破发，AI大模型万亿美元估值逻辑承压",
+      "category": "tech",
+      "entities": [
+        "Anthropic / Claude"
+      ],
+      "entity_ids": [
+        "ent_anthropic"
+      ],
+      "entity_confidences": {
+        "Anthropic / Claude": 0.86
+      },
+      "matched_entities": [
+        {
+          "entity_id": "ent_anthropic",
+          "canonical_name": "Anthropic / Claude",
+          "entity_type": "company",
+          "sector": "AI 模型与安全",
+          "matched_aliases": [
+            "anthropic"
+          ],
+          "tickers": [],
+          "reason": "正文/实体匹配关键词「anthropic」",
+          "confidence": 0.86
+        }
+      ],
+      "importance": "medium",
+      "sentiment": "Mixed",
+      "special_note": null,
+      "material_stage": null,
+      "material_stage_label": null,
+      "material_stage_confidence": null,
+      "thumbnail_url": null,
+      "publisher_name": "虎嗅",
+      "source_status": "ok",
+      "evidence_status": "single_source",
+      "evidence_label": "单一独立来源线索",
+      "evidence_status_reason": "目前仅见 1 家独立来源（共 1 条引用含转载，含摘要/首段），尚未见独立渠道交叉或官方确认",
+      "attribution_warning": null,
+      "regulatory_note": null,
+      "contradictions": [],
+      "downweight_reasons": [],
+      "quality_flags": [],
+      "material_depth": "title_and_excerpt",
+      "source_count": 1,
+      "platform_count": 1,
+      "independent_publisher_count": 1,
+      "reprint_count": 0,
+      "published_at": "2026-11-25T19:58:48+08:00",
+      "event_date": "2026-11-25",
+      "event_time": "2026-11-25T19:58:48+08:00",
+      "stale": false,
+      "event_date_source": "llm_extracted",
+      "is_stale_rehash": false,
+      "time_trust_level": "article_timestamp",
+      "time_confidence": "article_timestamp",
+      "first_discovered_at": "2026-11-26T06:32:21+08:00",
+      "first_reported_at": "2026-11-25T19:58:48+08:00",
+      "latest_fact_update_at": "2026-11-25T19:58:48+08:00",
+      "latest_reported_at": "2026-11-25T19:58:48+08:00",
+      "fetched_at": "2026-11-26T06:32:21+08:00",
+      "input_batch_id": "raw-20261126-063221",
+      "fact_summary": "Anthropic上市四日破发，AI大模型万亿美元估值逻辑承压 虎嗅",
+      "fact_atoms": [
+        {
+          "atom_id": "fa_55776124",
+          "subject": "Anthropic / Claude",
+          "metric_or_action": "Anthropic上市四日破发，AI大模型万亿美元估值逻辑承压",
+          "value": null,
+          "unit": null,
+          "period": "单次披露/未注明周期",
+          "scope": "新闻事件陈述",
+          "fact_status": "reported_unconfirmed_by_filing",
+          "attribution": "虎嗅",
+          "source_ref": "rss-gnews-ai-models-zh_1d554a94432b",
+          "source_url": "https://news.google.com/rss/articles/CBMiVEFVX3lxTE5EYm03djNrZXhPSTdHOE5WVC1DZlJUU2hSRFBpUHZMVzVnaDBNWTUxb3NWWDAwcUYyMVdRTlpfUmt2dDA0Q1VobXdTbTlJVy1pVnFXVg?oc=5",
+          "source_excerpt_or_locator": "Anthropic上市四日破发，AI大模型万亿美元估值逻辑承压 虎嗅",
+          "published_at": "2026-11-25T19:58:48+08:00",
+          "discovered_at": "2026-11-26T06:32:21+08:00",
+          "revision": 1
+        }
+      ],
+      "ai_analysis": "反映Anthropic / Claude技术架构与商业落地节奏变化，实际效果仍待开发者生态与第三方实测验证。",
+      "unverified_claims": [],
+      "speculation_or_outlook": null,
+      "sources": [
+        {
+          "item_id": "rss-gnews-ai-models-zh_1d554a94432b",
+          "article_id": "rss-gnews-ai-models-zh_1d554a94432b",
+          "source_id": "rss-gnews-ai-models-zh",
+          "source_name": "虎嗅",
+          "publisher_name": "虎嗅",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "huxiu",
+          "is_reprint_copy": false,
+          "title": "Anthropic上市四日破发，AI大模型万亿美元估值逻辑承压",
+          "url": "https://news.google.com/rss/articles/CBMiVEFVX3lxTE5EYm03djNrZXhPSTdHOE5WVC1DZlJUU2hSRFBpUHZMVzVnaDBNWTUxb3NWWDAwcUYyMVdRTlpfUmt2dDA0Q1VobXdTbTlJVy1pVnFXVg?oc=5",
+          "published_at": "2026-11-25T19:58:48+08:00",
+          "published_at_source": "upstream_rfc2822",
+          "fetched_at": "2026-11-26T06:32:24+08:00",
+          "excerpt": "Anthropic上市四日破发，AI大模型万亿美元估值逻辑承压 虎嗅",
+          "thumbnail_url": null,
+          "deep_fetch_status": null
+        }
+      ],
+      "verification": {
+        "all_refs_valid": true,
+        "has_primary_url": true,
+        "rejected_refs": [],
+        "has_first_party": false
+      },
+      "followup": null,
+      "is_new_in_batch": true,
+      "update_kind": "new_discovery",
+      "heavy_score": 56.0,
+      "radar_score": 76,
+      "severity_tier": "B",
+      "severity_label": "B级常规",
+      "translation_attempts": 0,
+      "translation_error": null,
+      "title_zh": "Anthropic上市四日破发，AI大模型万亿美元估值逻辑承压",
+      "translation_status": "native_zh",
+      "summary_zh": "Anthropic上市四日破发，AI大模型万亿美元估值逻辑承压 虎嗅",
+      "title_en": "",
+      "summary_en": "",
+      "ai_analysis_en": ""
+    },
+    {
+      "schema_version": "4.1",
+      "event_id": "evt_19463942422d",
+      "storyline_id": "st_b00e34ea7e00",
+      "article_ids": [
+        "theverge-rss_078889d29a01"
+      ],
+      "legacy_event_ids": [],
+      "title": "谷歌关于定制AI视频流的专利描绘了娱乐业黯淡的未来",
+      "category": "tech",
+      "entities": [],
+      "entity_ids": [
+        "ent_google"
+      ],
+      "entity_confidences": {
+        "Google / DeepMind / Gemini": 0.86
+      },
+      "matched_entities": [
+        {
+          "entity_id": "ent_google",
+          "canonical_name": "Google / DeepMind / Gemini",
+          "entity_type": "company",
+          "sector": "AI 模型与云基础设施",
+          "matched_aliases": [
+            "google"
+          ],
+          "tickers": [
+            {
+              "symbol": "GOOGL",
+              "market": "US",
+              "exchange": "NASDAQ",
+              "currency": "USD",
+              "label": "GOOGL.US (NASDAQ)"
+            }
+          ],
+          "reason": "正文/实体匹配关键词「google」",
+          "confidence": 0.86
+        }
+      ],
+      "importance": "medium",
+      "sentiment": "Mixed",
+      "special_note": null,
+      "material_stage": null,
+      "material_stage_label": null,
+      "material_stage_confidence": null,
+      "thumbnail_url": null,
+      "publisher_name": "The Verge",
+      "source_status": "ok",
+      "evidence_status": "single_source",
+      "evidence_label": "单一独立来源线索",
+      "evidence_status_reason": "目前仅见 1 家独立来源（共 1 条引用含转载，含摘要/首段），尚未见独立渠道交叉或官方确认",
+      "attribution_warning": null,
+      "regulatory_note": null,
+      "contradictions": [],
+      "downweight_reasons": [],
+      "quality_flags": [],
+      "material_depth": "title_and_excerpt",
+      "source_count": 1,
+      "platform_count": 1,
+      "independent_publisher_count": 1,
+      "reprint_count": 0,
+      "published_at": "2026-11-26T05:51:26+08:00",
+      "event_date": "2026-11-26",
+      "event_time": "2026-11-26T05:51:26+08:00",
+      "stale": false,
+      "event_date_source": "llm_extracted",
+      "is_stale_rehash": false,
+      "time_trust_level": "article_timestamp",
+      "time_confidence": "article_timestamp",
+      "first_discovered_at": "2026-11-26T06:32:21+08:00",
+      "first_reported_at": "2026-11-26T05:51:26+08:00",
+      "latest_fact_update_at": "2026-11-26T05:51:26+08:00",
+      "latest_reported_at": "2026-11-26T05:51:26+08:00",
+      "fetched_at": "2026-11-26T06:32:21+08:00",
+      "input_batch_id": "raw-20261126-063221",
+      "fact_summary": "去年，谷歌申请了一项名为“我的频道”（My Channel）的系统专利，旨在根据公司掌握的信息，创建充满个性化、AI生成的视频和广告的信息流……",
+      "fact_atoms": [
+        {
+          "atom_id": "fa_63712991",
+          "subject": "Google / DeepMind / Gemini",
+          "metric_or_action": "Google’s patent for custom AI video feeds paints a bleak picture of entertainment’s future",
+          "value": null,
+          "unit": null,
+          "period": "单次披露/未注明周期",
+          "scope": "新闻事件陈述",
+          "fact_status": "reported_unconfirmed_by_filing",
+          "attribution": "The Verge",
+          "source_ref": "theverge-rss_078889d29a01",
+          "source_url": "https://www.theverge.com/entertainment/1042221/google-my-channel-ai-video-patent",
+          "source_excerpt_or_locator": "Last year, Google filed a patent for a system called My Channel that's designed to create feeds filled with personalized, AI-generated videos and advertisements based on informatio",
+          "published_at": "2026-11-26T05:51:26+08:00",
+          "discovered_at": "2026-11-26T06:32:21+08:00",
+          "revision": 1
+        }
+      ],
+      "ai_analysis": "反映Google / DeepMind / Gemini技术架构与商业落地节奏变化，实际效果仍待开发者生态与第三方实测验证。",
+      "unverified_claims": [],
+      "speculation_or_outlook": null,
+      "sources": [
+        {
+          "item_id": "theverge-rss_078889d29a01",
+          "article_id": "theverge-rss_078889d29a01",
+          "source_id": "theverge-rss",
+          "source_name": "The Verge",
+          "publisher_name": "The Verge",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "theverge",
+          "is_reprint_copy": false,
+          "title": "Google’s patent for custom AI video feeds paints a bleak picture of entertainment’s future",
+          "url": "https://www.theverge.com/entertainment/1042221/google-my-channel-ai-video-patent",
+          "published_at": "2026-11-26T05:51:26+08:00",
+          "published_at_source": "upstream_iso",
+          "fetched_at": "2026-11-26T06:32:22+08:00",
+          "excerpt": "Last year, Google filed a patent for a system called My Channel that's designed to create feeds filled with personalized, AI-generated videos and advertisements based on information the company knows about its users.",
+          "thumbnail_url": null,
+          "deep_fetch_status": null,
+          "title_zh": "谷歌关于定制AI视频流的专利描绘了娱乐业黯淡的未来"
+        }
+      ],
+      "verification": {
+        "all_refs_valid": true,
+        "has_primary_url": true,
+        "rejected_refs": [],
+        "has_first_party": false
+      },
+      "followup": null,
+      "is_new_in_batch": true,
+      "update_kind": "new_discovery",
+      "heavy_score": 36.8,
+      "radar_score": 76,
+      "severity_tier": "B",
+      "severity_label": "B级常规",
+      "title_en": "Google's patent for custom AI video feeds paints a bleak picture of entertainment's future",
+      "summary_en": "Last year, Google filed a patent for a system called My Channel that's designed to create feeds filled with personalized, AI-generated videos and advertisements based on information the company knows about…",
+      "summary": "去年，谷歌申请了一项名为“我的频道”（My Channel）的系统专利，旨在根据公司掌握的信息，创建充满个性化、AI生成的视频和广告的信息流……",
+      "summary_zh": "去年，谷歌申请了一项名为“我的频道”（My Channel）的系统专利，旨在根据公司掌握的信息，创建充满个性化、AI生成的视频和广告的信息流……",
+      "translation_attempts": 0,
+      "translation_error": null,
+      "title_zh": "谷歌关于定制AI视频流的专利描绘了娱乐业黯淡的未来",
+      "translation_status": "native_zh",
+      "ai_analysis_en": ""
+    },
+    {
+      "schema_version": "4.1",
+      "event_id": "evt_0e9944ae6596",
+      "storyline_id": "st_66e67287e8f7",
+      "article_ids": [
+        "techcrunch-rss_e71df8008bfd"
+      ],
+      "legacy_event_ids": [],
+      "title": "OpenAI在合并聊天与工作功能后表示，ChatGPT重度用户可能会更快达到使用限制",
+      "category": "tech",
+      "entities": [
+        "OpenAI"
+      ],
+      "entity_ids": [
+        "ent_openai"
+      ],
+      "entity_confidences": {
+        "OpenAI": 0.99
+      },
+      "matched_entities": [
+        {
+          "entity_id": "ent_openai",
+          "canonical_name": "OpenAI",
+          "entity_type": "company",
+          "sector": "AI 模型与应用",
+          "matched_aliases": [
+            "openai",
+            "chatgpt"
+          ],
+          "tickers": [],
+          "reason": "正文/实体匹配关键词「openai / chatgpt」",
+          "confidence": 0.99
+        }
+      ],
+      "importance": "medium",
+      "sentiment": "Mixed",
+      "special_note": null,
+      "material_stage": null,
+      "material_stage_label": null,
+      "material_stage_confidence": null,
+      "thumbnail_url": null,
+      "publisher_name": "TechCrunch AI & Tech",
+      "source_status": "ok",
+      "evidence_status": "single_source",
+      "evidence_label": "单一独立来源线索",
+      "evidence_status_reason": "目前仅见 1 家独立来源（共 1 条引用含转载，含摘要/首段），尚未见独立渠道交叉或官方确认",
+      "attribution_warning": null,
+      "regulatory_note": null,
+      "contradictions": [],
+      "downweight_reasons": [],
+      "quality_flags": [],
+      "material_depth": "title_and_excerpt",
+      "source_count": 1,
+      "platform_count": 1,
+      "independent_publisher_count": 1,
+      "reprint_count": 0,
+      "published_at": "2026-11-26T04:03:27+08:00",
+      "event_date": "2026-11-26",
+      "event_time": "2026-11-26T04:03:27+08:00",
+      "stale": false,
+      "event_date_source": "llm_extracted",
+      "is_stale_rehash": false,
+      "time_trust_level": "article_timestamp",
+      "time_confidence": "article_timestamp",
+      "first_discovered_at": "2026-11-26T06:32:21+08:00",
+      "first_reported_at": "2026-11-26T04:03:27+08:00",
+      "latest_fact_update_at": "2026-11-26T04:03:27+08:00",
+      "latest_reported_at": "2026-11-26T04:03:27+08:00",
+      "fetched_at": "2026-11-26T06:32:21+08:00",
+      "input_batch_id": "raw-20261126-063221",
+      "fact_summary": "随着将Chat和Work体验合二为一，OpenAI将在ChatGPT中引入统一的使用额度计量标准。",
+      "fact_atoms": [
+        {
+          "atom_id": "fa_23103627",
+          "subject": "OpenAI",
+          "metric_or_action": "OpenAI says heavy ChatGPT users may hit limits sooner as it merges Chat and Work",
+          "value": null,
+          "unit": null,
+          "period": "单次披露/未注明周期",
+          "scope": "新闻事件陈述",
+          "fact_status": "reported_unconfirmed_by_filing",
+          "attribution": "TechCrunch AI & Tech",
+          "source_ref": "techcrunch-rss_e71df8008bfd",
+          "source_url": "https://techcrunch.com/2026/11/25/openai-says-heavy-chatgpt-users-may-hit-limits-sooner-as-it-merges-chat-and-work",
+          "source_excerpt_or_locator": "OpenAI will introduce a single usage meter across ChatGPT as it combines the Chat and Work experiences.",
+          "published_at": "2026-11-26T04:03:27+08:00",
+          "discovered_at": "2026-11-26T06:32:21+08:00",
+          "revision": 1
+        }
+      ],
+      "ai_analysis": "反映OpenAI技术架构与商业落地节奏变化，实际效果仍待开发者生态与第三方实测验证。",
+      "unverified_claims": [],
+      "speculation_or_outlook": null,
+      "sources": [
+        {
+          "item_id": "techcrunch-rss_e71df8008bfd",
+          "article_id": "techcrunch-rss_e71df8008bfd",
+          "source_id": "techcrunch-rss",
+          "source_name": "TechCrunch AI & Tech",
+          "publisher_name": "TechCrunch AI & Tech",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "techcrunch",
+          "is_reprint_copy": false,
+          "title": "OpenAI says heavy ChatGPT users may hit limits sooner as it merges Chat and Work",
+          "url": "https://techcrunch.com/2026/11/25/openai-says-heavy-chatgpt-users-may-hit-limits-sooner-as-it-merges-chat-and-work",
+          "published_at": "2026-11-26T04:03:27+08:00",
+          "published_at_source": "upstream_rfc2822",
+          "fetched_at": "2026-11-26T06:32:22+08:00",
+          "excerpt": "OpenAI will introduce a single usage meter across ChatGPT as it combines the Chat and Work experiences.",
+          "thumbnail_url": null,
+          "deep_fetch_status": null,
+          "title_zh": "OpenAI在合并聊天与工作功能后表示，ChatGPT重度用户可能会更快达到使用限制"
+        }
+      ],
+      "verification": {
+        "all_refs_valid": true,
+        "has_primary_url": true,
+        "rejected_refs": [],
+        "has_first_party": false
+      },
+      "followup": null,
+      "is_new_in_batch": true,
+      "update_kind": "new_discovery",
+      "heavy_score": 36.8,
+      "radar_score": 76,
+      "severity_tier": "B",
+      "severity_label": "B级常规",
+      "title_en": "OpenAI says heavy ChatGPT users may hit limits sooner as it merges Chat and Work",
+      "summary_en": "OpenAI will introduce a single usage meter across ChatGPT as it combines the Chat and Work experiences.",
+      "summary": "随着将Chat和Work体验合二为一，OpenAI将在ChatGPT中引入统一的使用额度计量标准。",
+      "summary_zh": "随着将Chat和Work体验合二为一，OpenAI将在ChatGPT中引入统一的使用额度计量标准。",
+      "translation_attempts": 0,
+      "translation_error": null,
+      "title_zh": "OpenAI在合并聊天与工作功能后表示，ChatGPT重度用户可能会更快达到使用限制",
+      "translation_status": "native_zh",
+      "ai_analysis_en": ""
+    },
+    {
+      "schema_version": "4.1",
+      "event_id": "evt_d00f55e9fd6d",
+      "storyline_id": "st_c5cd7e62d30a",
+      "article_ids": [
+        "techcrunch-rss_fd2b294f3a11"
+      ],
+      "legacy_event_ids": [],
+      "title": "Anthropic的达里奥·阿莫代伊称关于向AI交出人类控制权的指控“荒谬”",
+      "category": "tech",
+      "entities": [
+        "Anthropic / Claude"
+      ],
+      "entity_ids": [
+        "ent_anthropic"
+      ],
+      "entity_confidences": {
+        "Anthropic / Claude": 0.86
+      },
+      "matched_entities": [
+        {
+          "entity_id": "ent_anthropic",
+          "canonical_name": "Anthropic / Claude",
+          "entity_type": "company",
+          "sector": "AI 模型与安全",
+          "matched_aliases": [
+            "anthropic"
+          ],
+          "tickers": [],
+          "reason": "正文/实体匹配关键词「anthropic」",
+          "confidence": 0.86
+        }
+      ],
+      "importance": "medium",
+      "sentiment": "Mixed",
+      "special_note": null,
+      "material_stage": null,
+      "material_stage_label": null,
+      "material_stage_confidence": null,
+      "thumbnail_url": null,
+      "publisher_name": "TechCrunch AI & Tech",
+      "source_status": "ok",
+      "evidence_status": "single_source",
+      "evidence_label": "单一独立来源线索",
+      "evidence_status_reason": "目前仅见 1 家独立来源（共 1 条引用含转载，含摘要/首段），尚未见独立渠道交叉或官方确认",
+      "attribution_warning": null,
+      "regulatory_note": null,
+      "contradictions": [],
+      "downweight_reasons": [],
+      "quality_flags": [],
+      "material_depth": "title_and_excerpt",
+      "source_count": 1,
+      "platform_count": 1,
+      "independent_publisher_count": 1,
+      "reprint_count": 0,
+      "published_at": "2026-11-26T03:44:24+08:00",
+      "event_date": "2026-11-26",
+      "event_time": "2026-11-26T03:44:24+08:00",
+      "stale": false,
+      "event_date_source": "llm_extracted",
+      "is_stale_rehash": false,
+      "time_trust_level": "article_timestamp",
+      "time_confidence": "article_timestamp",
+      "first_discovered_at": "2026-11-26T06:32:21+08:00",
+      "first_reported_at": "2026-11-26T03:44:24+08:00",
+      "latest_fact_update_at": "2026-11-26T03:44:24+08:00",
+      "latest_reported_at": "2026-11-26T03:44:24+08:00",
+      "fetched_at": "2026-11-26T06:32:21+08:00",
+      "input_batch_id": "raw-20261126-063221",
+      "fact_summary": "Anthropic首席执行官达里奥·阿莫代伊回击了竞争对手的指责，即他赞成将人类自主权拱手让给AI，尽管领先的AI公司正越来越多地实现自身研究和模型开发的自动化。",
+      "fact_atoms": [
+        {
+          "atom_id": "fa_1499883",
+          "subject": "Anthropic / Claude",
+          "metric_or_action": "Anthropic’s Dario Amodei calls accusations of surrendering human control to AI ‘absurd’",
+          "value": null,
+          "unit": null,
+          "period": "单次披露/未注明周期",
+          "scope": "新闻事件陈述",
+          "fact_status": "reported_unconfirmed_by_filing",
+          "attribution": "TechCrunch AI & Tech",
+          "source_ref": "techcrunch-rss_fd2b294f3a11",
+          "source_url": "https://techcrunch.com/2026/11/25/anthropics-dario-amodei-calls-accusations-of-surrendering-human-control-to-ai-absurd",
+          "source_excerpt_or_locator": "Anthropic CEO Dario Amodei pushes back against rivals’ accusations that he favors surrendering human agency to AI, even as leading AI companies increasingly automate their own rese",
+          "published_at": "2026-11-26T03:44:24+08:00",
+          "discovered_at": "2026-11-26T06:32:21+08:00",
+          "revision": 1
+        }
+      ],
+      "ai_analysis": "反映Anthropic / Claude技术架构与商业落地节奏变化，实际效果仍待开发者生态与第三方实测验证。",
+      "unverified_claims": [],
+      "speculation_or_outlook": null,
+      "sources": [
+        {
+          "item_id": "techcrunch-rss_fd2b294f3a11",
+          "article_id": "techcrunch-rss_fd2b294f3a11",
+          "source_id": "techcrunch-rss",
+          "source_name": "TechCrunch AI & Tech",
+          "publisher_name": "TechCrunch AI & Tech",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "techcrunch",
+          "is_reprint_copy": false,
+          "title": "Anthropic’s Dario Amodei calls accusations of surrendering human control to AI ‘absurd’",
+          "url": "https://techcrunch.com/2026/11/25/anthropics-dario-amodei-calls-accusations-of-surrendering-human-control-to-ai-absurd",
+          "published_at": "2026-11-26T03:44:24+08:00",
+          "published_at_source": "upstream_rfc2822",
+          "fetched_at": "2026-11-26T06:32:22+08:00",
+          "excerpt": "Anthropic CEO Dario Amodei pushes back against rivals’ accusations that he favors surrendering human agency to AI, even as leading AI companies increasingly automate their own research and model development.",
+          "thumbnail_url": null,
+          "deep_fetch_status": null,
+          "title_zh": "Anthropic的达里奥·阿莫代伊称关于向AI交出人类控制权的指控“荒谬”"
+        }
+      ],
+      "verification": {
+        "all_refs_valid": true,
+        "has_primary_url": true,
+        "rejected_refs": [],
+        "has_first_party": false
+      },
+      "followup": null,
+      "is_new_in_batch": true,
+      "update_kind": "new_discovery",
+      "heavy_score": 36.8,
+      "radar_score": 76,
+      "severity_tier": "B",
+      "severity_label": "B级常规",
+      "title_en": "Anthropic's Dario Amodei calls accusations of surrendering human control to AI ‘absurd’",
+      "summary_en": "Anthropic CEO Dario Amodei pushes back against rivals’ accusations that he favors surrendering human agency to AI, even as leading AI companies increasingly automate their own research and model development.",
+      "summary": "Anthropic首席执行官达里奥·阿莫代伊回击了竞争对手的指责，即他赞成将人类自主权拱手让给AI，尽管领先的AI公司正越来越多地实现自身研究和模型开发的自动化。",
+      "summary_zh": "Anthropic首席执行官达里奥·阿莫代伊回击了竞争对手的指责，即他赞成将人类自主权拱手让给AI，尽管领先的AI公司正越来越多地实现自身研究和模型开发的自动化。",
+      "translation_attempts": 0,
+      "translation_error": null,
+      "title_zh": "Anthropic的达里奥·阿莫代伊称关于向AI交出人类控制权的指控“荒谬”",
+      "translation_status": "native_zh",
+      "ai_analysis_en": ""
+    },
+    {
+      "schema_version": "4.1",
+      "event_id": "evt_8cb55e207c6d",
+      "storyline_id": "st_27ae8ce3b27d",
+      "article_ids": [
+        "aihot_0812f2142bb3"
+      ],
+      "legacy_event_ids": [],
+      "title": "FT 对比美国 CBO 与 Anthropic 的 AI 增长预测，GDP 差距达 10 万亿美元",
+      "category": "tech",
+      "entities": [
+        "Anthropic / Claude"
+      ],
+      "entity_ids": [
+        "ent_anthropic"
+      ],
+      "entity_confidences": {
+        "Anthropic / Claude": 0.86
+      },
+      "matched_entities": [
+        {
+          "entity_id": "ent_anthropic",
+          "canonical_name": "Anthropic / Claude",
+          "entity_type": "company",
+          "sector": "AI 模型与安全",
+          "matched_aliases": [
+            "anthropic"
+          ],
+          "tickers": [],
+          "reason": "正文/实体匹配关键词「anthropic」",
+          "confidence": 0.86
+        }
+      ],
+      "importance": "high",
+      "sentiment": "Mixed",
+      "special_note": null,
+      "material_stage": null,
+      "material_stage_label": null,
+      "material_stage_confidence": null,
+      "thumbnail_url": null,
+      "publisher_name": "AIHOT 前沿",
+      "source_status": "ok",
+      "evidence_status": "single_source",
+      "evidence_label": "单一独立来源线索",
+      "evidence_status_reason": "目前仅见 1 家独立来源（共 1 条引用含转载，仅基于标题素材），尚未见独立渠道交叉或官方确认",
+      "attribution_warning": null,
+      "regulatory_note": null,
+      "contradictions": [],
+      "downweight_reasons": [
+        "仅含标题素材 (-8)"
+      ],
+      "quality_flags": [],
+      "material_depth": "title_only",
+      "source_count": 1,
+      "platform_count": 1,
+      "independent_publisher_count": 1,
+      "reprint_count": 0,
+      "published_at": "2026-11-26T05:53:41+08:00",
+      "event_date": "2026-11-26",
+      "event_time": "2026-11-26T05:53:41+08:00",
+      "stale": false,
+      "event_date_source": "llm_extracted",
+      "is_stale_rehash": false,
+      "time_trust_level": "article_timestamp",
+      "time_confidence": "article_timestamp",
+      "first_discovered_at": "2026-11-26T06:32:21+08:00",
+      "first_reported_at": "2026-11-26T05:53:41+08:00",
+      "latest_fact_update_at": "2026-11-26T05:53:41+08:00",
+      "latest_reported_at": "2026-11-26T05:53:41+08:00",
+      "fetched_at": "2026-11-26T06:32:21+08:00",
+      "input_batch_id": "raw-20261126-063221",
+      "fact_summary": "FT对比美国国会预算办公室（CBO）与Anthropic的AI增长预测，显示GDP差距达10万亿美元。",
+      "fact_atoms": [
+        {
+          "atom_id": "fa_51581504",
+          "subject": "Anthropic / Claude",
+          "metric_or_action": "FT 对比美国 CBO 与 Anthropic 的 AI 增长预测，GDP 差距达 10 万亿美元",
+          "value": null,
+          "unit": null,
+          "period": "单次披露/未注明周期",
+          "scope": "新闻事件陈述",
+          "fact_status": "reported_unconfirmed_by_filing",
+          "attribution": "AIHOT 前沿",
+          "source_ref": "aihot_0812f2142bb3",
+          "source_url": "https://aihot.news/items/p96wd7j7pkvhev2q0u886iiy4",
+          "source_excerpt_or_locator": "FT 对比美国 CBO 与 Anthropic 的 AI 增长预测，GDP 差距达 10 万亿美元",
+          "published_at": "2026-11-26T05:53:41+08:00",
+          "discovered_at": "2026-11-26T06:32:21+08:00",
+          "revision": 1
+        }
+      ],
+      "ai_analysis": "AI对宏观经济的贡献存在巨大认知偏差，这种不确定性是当前AI资产定价的核心风险来源。",
+      "unverified_claims": [],
+      "speculation_or_outlook": null,
+      "sources": [
+        {
+          "item_id": "aihot_0812f2142bb3",
+          "article_id": "aihot_0812f2142bb3",
+          "source_id": "aihot",
+          "source_name": "AIHOT 前沿",
+          "publisher_name": "AIHOT 前沿",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "aggregator_lead",
+          "publisher_family": "aihot",
+          "is_reprint_copy": false,
+          "title": "FT 对比美国 CBO 与 Anthropic 的 AI 增长预测，GDP 差距达 10 万亿美元",
+          "url": "https://aihot.news/items/p96wd7j7pkvhev2q0u886iiy4",
+          "published_at": "2026-11-26T05:53:41+08:00",
+          "published_at_source": "upstream_rfc2822",
+          "fetched_at": "2026-11-26T06:32:21+08:00",
+          "excerpt": null,
+          "thumbnail_url": null,
+          "deep_fetch_status": null
+        }
+      ],
+      "verification": {
+        "all_refs_valid": true,
+        "has_primary_url": true,
+        "rejected_refs": [],
+        "has_first_party": false
+      },
+      "followup": null,
+      "is_new_in_batch": true,
+      "update_kind": "new_discovery",
+      "heavy_score": 64.4,
+      "radar_score": 53,
+      "severity_tier": "A",
+      "severity_label": "A级要闻",
+      "heavy_reason_tag": "巨头重大变动",
+      "summary": "FT对比美国国会预算办公室（CBO）与Anthropic的AI增长预测，显示GDP差距达10万亿美元。",
+      "summary_zh": "FT对比美国国会预算办公室（CBO）与Anthropic的AI增长预测，显示GDP差距达10万亿美元。",
+      "deep_qa": [
+        {
+          "question": "为何CBO与Anthropic的预测差异如此巨大？",
+          "answer": "CBO基于传统生产力模型，而Anthropic基于AI带来的指数级生产力跃迁假设。",
+          "historical_parallel": "类似于1990年代末对互联网经济增长潜力的不同评估。"
+        },
+        {
+          "question": "这种预测差距如何影响政策制定？",
+          "answer": "巨大的差距可能导致监管机构在AI税收与产业扶持政策上陷入犹豫，增加政策不确定性。",
+          "historical_parallel": "类似于早期对自动化技术替代就业影响的争议。"
+        }
+      ],
+      "ai_overlaid": true,
+      "translation_attempts": 0,
+      "translation_error": null,
+      "title_zh": "FT 对比美国 CBO 与 Anthropic 的 AI 增长预测，GDP 差距达 10 万亿美元",
+      "translation_status": "native_zh",
+      "title_en": "",
+      "summary_en": "",
+      "ai_analysis_en": ""
+    }
+  ]
+}
