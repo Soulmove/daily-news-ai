@@ -18,7 +18,10 @@ CREATE TABLE IF NOT EXISTS users (
     created_at TEXT NOT NULL,
     last_login_at TEXT,
     last_login_ip TEXT,
-    login_count INTEGER NOT NULL DEFAULT 0
+    login_count INTEGER NOT NULL DEFAULT 0,
+    invited_by_user_id INTEGER,
+    invited_by_code TEXT NOT NULL DEFAULT '',
+    extra_qa_quota INTEGER NOT NULL DEFAULT 0
 );
 CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
 CREATE INDEX IF NOT EXISTS idx_users_phone ON users(phone);
@@ -132,9 +135,45 @@ CREATE TABLE IF NOT EXISTS invite_codes (
     used_by_user_id INTEGER,
     used_by_username TEXT NOT NULL DEFAULT '',
     used_at TEXT NOT NULL DEFAULT '',
-    revoked INTEGER NOT NULL DEFAULT 0
+    revoked INTEGER NOT NULL DEFAULT 0,
+    owner_user_id INTEGER
 );
 CREATE INDEX IF NOT EXISTS idx_invite_codes_state ON invite_codes(revoked, used_by_user_id, created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_invite_codes_owner ON invite_codes(owner_user_id, id DESC);
+
+-- Stage-3 scarcity invite waitlist
+CREATE TABLE IF NOT EXISTS invite_waitlist (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    contact TEXT NOT NULL,
+    focus_areas TEXT NOT NULL DEFAULT '',
+    note TEXT NOT NULL DEFAULT '',
+    status TEXT NOT NULL DEFAULT 'pending',
+    assigned_code TEXT NOT NULL DEFAULT '',
+    ip TEXT NOT NULL DEFAULT '',
+    created_at TEXT NOT NULL,
+    reviewed_at TEXT NOT NULL DEFAULT ''
+);
+CREATE INDEX IF NOT EXISTS idx_invite_waitlist_status ON invite_waitlist(status, id DESC);
+
+-- Structured 1-click content reactions (zero open-text UGC risk)
+CREATE TABLE IF NOT EXISTS content_reactions (
+    target_type TEXT NOT NULL,
+    target_id TEXT NOT NULL,
+    reaction_key TEXT NOT NULL,
+    count INTEGER NOT NULL DEFAULT 0,
+    updated_at TEXT NOT NULL,
+    PRIMARY KEY (target_type, target_id, reaction_key)
+);
+
+CREATE TABLE IF NOT EXISTS content_reaction_votes (
+    target_type TEXT NOT NULL,
+    target_id TEXT NOT NULL,
+    voter_key TEXT NOT NULL,
+    reaction_key TEXT NOT NULL,
+    updated_at TEXT NOT NULL,
+    PRIMARY KEY (target_type, target_id, voter_key)
+);
+CREATE INDEX IF NOT EXISTS idx_reaction_votes_target ON content_reaction_votes(target_type, target_id);
 
 -- Sliding-window D1 rate limit buckets
 CREATE TABLE IF NOT EXISTS rate_limits (

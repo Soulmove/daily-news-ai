@@ -1,19 +1,24 @@
 <script setup lang="ts">
 import { computed, ref, toRef, watch } from 'vue'
-import { Calendar, Cloud, KeyRound, LogOut, Mail, Phone, Shield, Sun, User, X } from 'lucide-vue-next'
+import { Calendar, Check, ChevronDown, Cloud, Copy, Gift, KeyRound, LogOut, Mail, Phone, Shield, Sparkles, Sun, User, Users, X } from 'lucide-vue-next'
 import DialogDirtyGuard from './DialogDirtyGuard.vue'
 import UserAvatar from './UserAvatar.vue'
 import {
   ApiValidationError,
   apiBindContact,
   apiChangePassword,
+  apiCreateMyInvite,
+  apiFetchMyInvites,
   apiLogin,
   apiRegister,
   apiResetPassword,
   apiSendCode,
+  apiSubmitWaitlist,
   apiUpdatePreferences,
   isAdminRole,
   type AuthSession,
+  type MyInvitesResponse,
+  type PublicSiteSettings,
   type SiteAccessMode,
 } from '../core/auth'
 import { useDialogBehavior } from '../core/dialog'
@@ -29,12 +34,18 @@ const props = withDefaults(
     syncBusy: boolean
     morningBrief?: MorningBriefSummary | null
     initialSection?: 'profile' | 'security' | null
+    initialMode?: 'login' | 'register' | null
+    initialRefCode?: string
+    siteSettings?: PublicSiteSettings | null
     accessMode?: SiteAccessMode
     allowClose?: boolean
   }>(),
   {
     accessMode: 'invite_only',
     allowClose: true,
+    initialMode: null,
+    initialRefCode: '',
+    siteSettings: null,
   },
 )
 
@@ -53,6 +64,21 @@ const password = ref('')
 const displayName = ref('')
 const regContact = ref('')
 const inviteCode = ref('')
+const showOptionalProfile = ref(false)
+
+// Stage 3/4 scarcity waitlist mini form
+const waitlistOpen = ref(false)
+const waitlistContact = ref('')
+const waitlistFocusAreas = ref<string[]>(['宏观央行'])
+const waitlistNote = ref('')
+const waitlistBusy = ref(false)
+const waitlistDone = ref(false)
+const waitlistError = ref('')
+
+// Logged-in User Referral Panel
+const myInvites = ref<MyInvitesResponse | null>(null)
+const myInvitesBusy = ref(false)
+const copiedInviteCode = ref('')
 
 const forgotTarget = ref('')
 const forgotCode = ref('')
@@ -72,7 +98,18 @@ const errorMsg = ref('')
 const okMsg = ref('')
 const fieldErrors = ref<{ username?: string; password?: string; contact?: string; invite_code?: string }>({})
 
-const requiresInviteCode = computed(() => props.accessMode === 'invite_only' || props.accessMode === 'private_gate')
+const effectiveAccessMode = computed<SiteAccessMode>(
+  () => props.siteSettings?.access_mode ?? props.accessMode ?? 'invite_only',
+)
+const requiresInviteCode = computed(
+  () => effectiveAccessMode.value === 'invite_only' || effectiveAccessMode.value === 'private_gate',
+)
+const userReferralEnabled = computed(() => Boolean(props.siteSettings?.user_referral_enabled))
+const showInviteFieldOnRegister = computed(
+  () => requiresInviteCode.value || (effectiveAccessMode.value === 'public' && userReferralEnabled.value),
+)
+const referralBonusQuota = computed(() => Math.max(0, Number(props.siteSettings?.referral_bonus_qa_quota ?? 15)))
+const inviteWaitlistEnabled = computed(() => Boolean(props.siteSettings?.invite_waitlist_enabled))
 
 const hasDirtyForm = computed(() => {
   if (props.session) {
@@ -108,25 +145,108 @@ function clearFieldErrors() {
 }
 
 watch(
-  () => props.isOpen,
-  (open) => {
+  () => [props.isOpen, props.session?.token],
+  ([open, tok]) => {
     if (open) {
       errorMsg.value = ''
       okMsg.value = ''
       clearFieldErrors()
       password.value = ''
       regContact.value = ''
-      inviteCode.value = ''
+      inviteCode.value = props.initialRefCode ? props.initialRefCode.trim().toUpperCase() : ''
+      showOptionalProfile.value = false
+      waitlistOpen.value = false
+      waitlistError.value = ''
+      waitlistDone.value = false
       forgotCode.value = ''
       forgotNewPassword.value = ''
       bindCode.value = ''
       currentPassword.value = ''
       newPassword.value = ''
+      if (!tok && (props.initialMode === 'register' || props.initialMode === 'login')) {
+        mode.value = props.initialMode
+      } else if (!tok && props.initialRefCode) {
+        mode.value = 'register'
+      }
       showPwForm.value = props.initialSection === 'security'
-      showBindForm.value = props.initialSection === 'security' && Boolean(props.session && !props.session.user.email && !props.session.user.phone)
+      showBindForm.value =
+        props.initialSection === 'security' &&
+        Boolean(props.session && !props.session.user.email && !props.session.user.phone)
+      if (tok && userReferralEnabled.value) {
+        void loadMyInvites(String(tok))
+      }
     }
   },
 )
+
+async function loadMyInvites(token: string) {
+  myInvitesBusy.value = true
+  try {
+    myInvites.value = await apiFetchMyInvites(token)
+  } catch {
+    // non-fatal
+  } finally {
+    myInvitesBusy.value = false
+  }
+}
+
+async function generateMyInvite() {
+  if (!props.session || myInvitesBusy.value) return
+  myInvitesBusy.value = true
+  errorMsg.value = ''
+  try {
+    const res = await apiCreateMyInvite(props.session.token)
+    myInvites.value = res
+    okMsg.value = t('已生成新的专属邀请码！点击右侧即可复制邀请链接。', 'Generated your personal invite code!')
+  } catch (err) {
+    errorMsg.value = err instanceof Error ? err.message : t('生成邀请码失败', 'Failed to generate invite')
+  } finally {
+    myInvitesBusy.value = false
+  }
+}
+
+function copyReferralInviteUrl(code: string) {
+  const origin = typeof window !== 'undefined' ? window.location.origin : 'https://mirrorinfo.xyz'
+  const url = `${origin}/?ref=${encodeURIComponent(code)}`
+  navigator.clipboard?.writeText(url).catch(() => {})
+  copiedInviteCode.value = code
+  setTimeout(() => {
+    if (copiedInviteCode.value === code) copiedInviteCode.value = ''
+  }, 2000)
+}
+
+function toggleWaitlistFocus(area: string) {
+  if (waitlistFocusAreas.value.includes(area)) {
+    waitlistFocusAreas.value = waitlistFocusAreas.value.filter((a) => a !== area)
+  } else {
+    waitlistFocusAreas.value = [...waitlistFocusAreas.value, area]
+  }
+}
+
+async function submitWaitlistForm() {
+  if (waitlistBusy.value) return
+  waitlistError.value = ''
+  const contact = waitlistContact.value.trim()
+  if (contact.length < 3) {
+    waitlistError.value = t('请填写有效的邮箱、手机号或微信号', 'Please provide a valid email, phone, or WeChat ID')
+    return
+  }
+  waitlistBusy.value = true
+  try {
+    await apiSubmitWaitlist({
+      contact,
+      focus_areas: waitlistFocusAreas.value,
+      note: waitlistNote.value.trim(),
+    })
+    waitlistDone.value = true
+    waitlistContact.value = ''
+    waitlistNote.value = ''
+  } catch (err) {
+    waitlistError.value = err instanceof Error ? err.message : t('提交失败，请稍后再试', 'Submission failed')
+  } finally {
+    waitlistBusy.value = false
+  }
+}
 
 function roleLabel(role?: string): string {
   if (role === 'super_admin') return t('超级管理员', 'Super Admin')
@@ -400,8 +520,11 @@ async function toggleEmailDigest() {
                 <div class="font-bold text-slate-900 dark:text-white truncate">
                   {{ session.user.display_name || session.user.username }}
                 </div>
-                <div class="flex items-center gap-2 mt-0.5">
+                <div class="flex flex-wrap items-center gap-2 mt-0.5">
                   <span class="text-xs font-mono text-slate-500 truncate">@{{ session.user.username }}</span>
+                  <span class="px-1.5 py-0.5 rounded bg-[#007AFF]/10 text-[#007AFF] dark:text-[#0A84FF] text-[10.5px] font-bold tabular-nums">
+                    {{ t(`第 #${session.user.member_number || session.user.id} 号镜信观察员`, `Observer #${session.user.member_number || session.user.id}`) }}
+                  </span>
                   <button
                     type="button"
                     @click="emit('open-avatar-picker')"
@@ -462,6 +585,71 @@ async function toggleEmailDigest() {
 
           <p class="text-xs text-emerald-700 dark:text-emerald-300">
             {{ t('最近云端同步：', 'Last Cloud Sync: ') }}{{ lastSyncedAt ? lastSyncedAt.slice(0, 19).replace('T', ' ') : t('已连接云端', 'Connected') }}
+          </p>
+        </div>
+
+        <!-- User Referral Panel (active when siteSettings.user_referral_enabled === true) -->
+        <div
+          v-if="userReferralEnabled"
+          class="rounded-xl border border-[#007AFF]/25 bg-[#007AFF]/[0.05] dark:bg-[#0A84FF]/10 p-3.5 space-y-2.5 text-xs"
+          data-testid="user-referral-panel"
+        >
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <div class="font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
+              <Gift class="w-4 h-4 text-[#007AFF]" />
+              <span>{{ t('我的专属邀请码与权益', 'My Referral Invites & Bonus') }}</span>
+            </div>
+            <span class="text-[11px] font-semibold text-[#007AFF] dark:text-[#0A84FF] tabular-nums">
+              {{ t(`已邀 ${myInvites?.invited_count ?? 0} 人 · 额外 +${session.user.extra_qa_quota || myInvites?.extra_qa_quota || 0} 次/日`, `Invited ${myInvites?.invited_count ?? 0} · +${session.user.extra_qa_quota || myInvites?.extra_qa_quota || 0}/day`) }}
+            </span>
+          </div>
+
+          <div class="flex items-center justify-between gap-2 text-[11px] text-slate-600 dark:text-slate-300">
+            <span>
+              {{ t(`已生成 ${myInvites?.generated_count ?? 0}/${myInvites?.quota ?? 3} 个 · 剩余 ${myInvites?.remaining_quota ?? 3} 个名额`, `${myInvites?.generated_count ?? 0}/${myInvites?.quota ?? 3} generated · ${myInvites?.remaining_quota ?? 3} left`) }}
+            </span>
+            <button
+              type="button"
+              :disabled="myInvitesBusy || (myInvites !== null && myInvites.remaining_quota <= 0)"
+              @click="generateMyInvite"
+              class="px-2.5 py-1 rounded-lg bg-[#007AFF] text-white font-semibold hover:bg-[#0066D6] disabled:opacity-50 shrink-0"
+            >
+              {{ myInvitesBusy ? t('生成中...', 'Generating...') : t('生成邀请码', 'Generate Code') }}
+            </button>
+          </div>
+
+          <div v-if="myInvites && myInvites.items.length > 0" class="space-y-1.5 pt-0.5">
+            <div
+              v-for="inv in myInvites.items"
+              :key="inv.code"
+              class="flex items-center justify-between gap-2 px-2.5 py-1.5 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700"
+            >
+              <div class="min-w-0 flex items-center gap-2">
+                <span class="font-mono font-bold text-slate-900 dark:text-white">{{ inv.code }}</span>
+                <span
+                  v-if="inv.used_by_user_id !== null"
+                  class="text-[10.5px] text-emerald-600 dark:text-emerald-400 font-medium truncate"
+                >
+                  {{ t(`已被 @${inv.used_by_username} 使用`, `Used by @${inv.used_by_username}`) }}
+                </span>
+                <span v-else class="text-[10.5px] text-amber-600 dark:text-amber-400 font-medium">
+                  {{ t('待使用', 'Unused') }}
+                </span>
+              </div>
+              <button
+                v-if="inv.used_by_user_id === null"
+                type="button"
+                @click="copyReferralInviteUrl(inv.code)"
+                class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 text-[11px] font-medium shrink-0"
+              >
+                <Check v-if="copiedInviteCode === inv.code" class="w-3 h-3 text-emerald-500" />
+                <Copy v-else class="w-3 h-3" />
+                <span>{{ copiedInviteCode === inv.code ? t('已复制链接', 'Copied') : t('复制链接', 'Copy Link') }}</span>
+              </button>
+            </div>
+          </div>
+          <p v-else class="text-[11px] text-slate-500 dark:text-slate-400">
+            {{ t(`每邀 1 位好友通过专属链接注册，双方每日免费 AI 额度同时 +${myInvites?.bonus_qa_quota ?? referralBonusQuota} 次。`, `Both you and your friend get +${myInvites?.bonus_qa_quota ?? referralBonusQuota} daily AI Q&As when redeemed.`) }}
           </p>
         </div>
 
@@ -700,55 +888,6 @@ async function toggleEmailDigest() {
               {{ fieldErrors.username }}
             </p>
           </div>
-          <div v-if="mode === 'register' && requiresInviteCode">
-            <label class="block text-xs font-medium text-slate-600 dark:text-slate-300 mb-1">
-              {{ t('一次性邀请码（必填）', 'One-Time Invite Code (Required)') }}
-            </label>
-            <input
-              v-model="inviteCode"
-              type="text"
-              autocomplete="off"
-              :placeholder="t('请输入管理员发放的邀请码，如 MB-XXXX-XXXX', 'Enter invite code (e.g. MB-XXXX-XXXX)')"
-              @input="fieldErrors.invite_code = undefined"
-              class="w-full h-10 px-3 rounded-xl border bg-white dark:bg-slate-800 font-mono text-sm text-slate-900 dark:text-white uppercase"
-              :class="fieldErrors.invite_code ? 'border-red-500 dark:border-red-500' : 'border-slate-300 dark:border-slate-700'"
-            />
-            <p v-if="fieldErrors.invite_code" class="mt-1 text-xs text-red-600 dark:text-red-400">
-              {{ fieldErrors.invite_code }}
-            </p>
-          </div>
-          <div v-if="mode === 'register'">
-            <label class="block text-xs font-medium text-slate-600 dark:text-slate-300 mb-1">
-              {{ t('昵称（可选）', 'Display Name (Optional)') }}
-            </label>
-            <input
-              v-model="displayName"
-              type="text"
-              :placeholder="t('例如：阿滨', 'e.g. Alex')"
-              class="w-full h-10 px-3 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm text-slate-900 dark:text-white"
-            />
-          </div>
-          <div v-if="mode === 'register'">
-            <div class="flex flex-wrap items-center justify-between gap-1 mb-1">
-              <label class="text-xs font-medium text-slate-600 dark:text-slate-300">
-                {{ t('绑定手机号或邮箱（可选）', 'Phone or Email (Optional)') }}
-              </label>
-              <span class="text-[11px] text-slate-400">
-                {{ t('建议绑定：未绑定将无法找回密码和云端数据', 'Recommended: required for password & cloud data recovery') }}
-              </span>
-            </div>
-            <input
-              v-model="regContact"
-              type="text"
-              :placeholder="t('选填手机号或邮箱地址（免验证码直接绑定）', 'Optional phone or email (no OTP needed)')"
-              @input="fieldErrors.contact = undefined"
-              class="w-full h-10 px-3 rounded-xl border bg-white dark:bg-slate-800 text-sm text-slate-900 dark:text-white"
-              :class="fieldErrors.contact ? 'border-red-500 dark:border-red-500' : 'border-slate-300 dark:border-slate-700'"
-            />
-            <p v-if="fieldErrors.contact" class="mt-1 text-xs text-red-600 dark:text-red-400">
-              {{ fieldErrors.contact }}
-            </p>
-          </div>
           <div>
             <div class="flex items-center justify-between mb-1">
               <label class="block text-xs font-medium text-slate-600 dark:text-slate-300">{{ t('密码', 'Password') }}</label>
@@ -773,6 +912,135 @@ async function toggleEmailDigest() {
             <p v-if="fieldErrors.password" class="mt-1 text-xs text-red-600 dark:text-red-400">
               {{ fieldErrors.password }}
             </p>
+          </div>
+
+          <div v-if="mode === 'register' && showInviteFieldOnRegister" class="space-y-1">
+            <div class="flex flex-wrap items-center justify-between gap-1">
+              <label class="block text-xs font-medium text-slate-600 dark:text-slate-300">
+                {{
+                  requiresInviteCode
+                    ? t('一次性邀请码（必填）', 'One-Time Invite Code (Required)')
+                    : t('老用户邀请码（选填）', 'Referral Invite Code (Optional)')
+                }}
+              </label>
+              <span v-if="!requiresInviteCode && referralBonusQuota > 0" class="text-[11px] font-medium text-emerald-600 dark:text-emerald-400">
+                {{ t(`双方获赠每日 +${referralBonusQuota} 次 AI 额度`, `+${referralBonusQuota} daily AI quota for both`) }}
+              </span>
+            </div>
+            <input
+              v-model="inviteCode"
+              type="text"
+              autocomplete="off"
+              :placeholder="
+                requiresInviteCode
+                  ? t('请输入管理员或好友发放的邀请码，如 MB-XXXX-XXXX', 'Enter invite code (e.g. MB-XXXX-XXXX)')
+                  : t('填写老用户邀请码（可留空跳过）', 'Optional friend invite code (skip if none)')
+              "
+              @input="fieldErrors.invite_code = undefined"
+              class="w-full h-10 px-3 rounded-xl border bg-white dark:bg-slate-800 font-mono text-sm text-slate-900 dark:text-white uppercase"
+              :class="fieldErrors.invite_code ? 'border-red-500 dark:border-red-500' : 'border-slate-300 dark:border-slate-700'"
+            />
+            <p v-if="!requiresInviteCode && referralBonusQuota > 0" class="text-[11px] text-slate-500 dark:text-slate-400">
+              {{ t(`填写老用户邀请码，双方同时获赠每日 +${referralBonusQuota} 次 AI 投研额度`, `Enter a friend’s code to give both of you +${referralBonusQuota} daily AI Q&As`) }}
+            </p>
+            <p v-if="fieldErrors.invite_code" class="text-xs text-red-600 dark:text-red-400">
+              {{ fieldErrors.invite_code }}
+            </p>
+
+            <!-- Waitlist application entry for invite_only / private_gate when waitlist enabled -->
+            <div v-if="requiresInviteCode && inviteWaitlistEnabled" class="pt-1">
+              <button
+                type="button"
+                @click="waitlistOpen = !waitlistOpen"
+                class="text-xs font-semibold text-[#007AFF] dark:text-[#0A84FF] hover:underline"
+              >
+                {{ waitlistOpen ? t('收起候补申请', 'Hide Waitlist Form') : t('没有邀请码？点此申请今日限量候补席位', 'No invite code? Apply for today’s waitlist') }}
+              </button>
+              <div
+                v-if="waitlistOpen"
+                class="mt-2 rounded-xl border border-[#007AFF]/25 bg-[#007AFF]/[0.04] p-3 space-y-2 text-xs"
+              >
+                <div v-if="waitlistDone" class="text-emerald-700 dark:text-emerald-300 font-semibold">
+                  {{ t('已收到你的候补席位申请！审核通过后将签发专属邀请码并与你联系。', 'Application received! We will contact you with an invite code once approved.') }}
+                </div>
+                <template v-else>
+                  <input
+                    v-model="waitlistContact"
+                    type="text"
+                    :placeholder="t('联系方式（邮箱 / 手机号 / 微信号）', 'Contact (email / phone / WeChat)')"
+                    class="w-full h-9 px-2.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900"
+                  />
+                  <div class="flex flex-wrap gap-1.5">
+                    <button
+                      v-for="area in ['宏观央行', 'A股/美股', 'AI前沿', '地缘跟踪']"
+                      :key="area"
+                      type="button"
+                      @click="toggleWaitlistFocus(area)"
+                      class="px-2 py-0.5 rounded-full border text-[11px]"
+                      :class="waitlistFocusAreas.includes(area) ? 'bg-[#007AFF] text-white border-[#007AFF]' : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300'"
+                    >
+                      {{ area }}
+                    </button>
+                  </div>
+                  <input
+                    v-model="waitlistNote"
+                    type="text"
+                    :placeholder="t('简短备注：你的投研场景（选填）', 'Short note (optional)')"
+                    class="w-full h-9 px-2.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900"
+                  />
+                  <p v-if="waitlistError" class="text-red-600 dark:text-red-400">{{ waitlistError }}</p>
+                  <button
+                    type="button"
+                    :disabled="waitlistBusy"
+                    @click="submitWaitlistForm"
+                    class="w-full h-8 rounded-lg bg-[#007AFF] text-white font-semibold disabled:opacity-60"
+                  >
+                    {{ waitlistBusy ? t('提交中...', 'Submitting...') : t('提交候补席位申请', 'Submit Waitlist Request') }}
+                  </button>
+                </template>
+              </div>
+            </div>
+          </div>
+
+          <!-- Collapsible Optional Profile Info to minimize registration friction -->
+          <div v-if="mode === 'register'" class="pt-0.5">
+            <button
+              type="button"
+              @click="showOptionalProfile = !showOptionalProfile"
+              class="inline-flex items-center gap-1 text-xs font-medium text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200"
+            >
+              <ChevronDown class="w-3.5 h-3.5 transition-transform" :class="{ 'rotate-180': showOptionalProfile }" />
+              <span>{{ t('完善资料（可选，用于找回密码）', 'Additional profile info (optional, for password recovery)') }}</span>
+            </button>
+            <div v-if="showOptionalProfile" class="mt-2 space-y-2.5 pl-2 border-l-2 border-slate-200 dark:border-slate-700">
+              <div>
+                <label class="block text-xs font-medium text-slate-600 dark:text-slate-300 mb-1">
+                  {{ t('昵称（可选）', 'Display Name (Optional)') }}
+                </label>
+                <input
+                  v-model="displayName"
+                  type="text"
+                  :placeholder="t('例如：阿滨', 'e.g. Alex')"
+                  class="w-full h-9 px-3 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs text-slate-900 dark:text-white"
+                />
+              </div>
+              <div>
+                <label class="block text-xs font-medium text-slate-600 dark:text-slate-300 mb-1">
+                  {{ t('绑定手机号或邮箱（可选）', 'Phone or Email (Optional)') }}
+                </label>
+                <input
+                  v-model="regContact"
+                  type="text"
+                  :placeholder="t('选填手机号或邮箱地址（用于找回密码）', 'Optional phone or email (for recovery)')"
+                  @input="fieldErrors.contact = undefined"
+                  class="w-full h-9 px-3 rounded-xl border bg-white dark:bg-slate-800 text-xs text-slate-900 dark:text-white"
+                  :class="fieldErrors.contact ? 'border-red-500 dark:border-red-500' : 'border-slate-300 dark:border-slate-700'"
+                />
+                <p v-if="fieldErrors.contact" class="mt-1 text-xs text-red-600 dark:text-red-400">
+                  {{ fieldErrors.contact }}
+                </p>
+              </div>
+            </div>
           </div>
         </div>
 

@@ -13,6 +13,7 @@ import {
   History,
   Info,
   Layers,
+  Share2,
   Target,
   X,
 } from 'lucide-vue-next'
@@ -24,6 +25,7 @@ import { getApiBase } from '../../core/auth'
 import { extractHeadlineQualifiers, resolveEvidenceTierBadge } from '../../core/evidence'
 import { pickBiText, t, translatePortfolioSector, translateSourceName } from '../../core/i18n'
 import { normalizeExternalUrl } from '../../core/legacyAdapter'
+import { getReactionSummary, loadReactionsBatch, toggleStructuredReaction } from '../../core/reactionsStore'
 import { matchesSmartQuery } from '../../core/search'
 import { globalQuotesStore, refreshGlobalQuotes } from '../../core/quotesStore'
 import { extractShanghaiParts } from '../../core/time'
@@ -55,6 +57,7 @@ const props = defineProps<{
   nowMs?: number
   loading?: boolean
   initialPortfolioOnly?: boolean
+  openPortfolioNonce?: number
   researchNotes?: ResearchNote[]
 }>()
 
@@ -64,6 +67,14 @@ const emit = defineEmits<{
   (e: 'open-notes'): void
   (e: 'clear-search'): void
   (e: 'portfolio-changed', cfg: PortfolioConfig, matchedCount?: number): void
+  (e: 'open-portfolio-share-card', summary: {
+    matchedCount: number
+    bullishCount: number
+    bearishCount: number
+    neutralCount: number
+    symbolsLabel: string
+    takeaways: { title: string; polarity: 'positive' | 'negative' | 'neutral'; summary: string }[]
+  }): void
 }>()
 
 function countItemNotes(item: EventMarketImpact): number {
@@ -113,6 +124,14 @@ watch(
     if (val) {
       portfolioPanelOpen.value = true
       onlyPortfolioHits.value = true
+    }
+  },
+)
+watch(
+  () => props.openPortfolioNonce,
+  (val) => {
+    if (val && val > 0) {
+      portfolioPanelOpen.value = true
     }
   },
 )
@@ -350,6 +369,63 @@ function mergedQuoteList(item: EventMarketImpact): MarketQuoteItem[] {
   const list = item.realized_quotes || []
   return list.map((q) => liveQuotesMap.value[q.ticker] || q)
 }
+
+function openPortfolioRadarShareCard() {
+  const matchedItems = baseFilteredWithoutPortfolio.value.filter((it) => portfolioMatchMap.value[it.id]?.matched)
+  const pool = matchedItems.length > 0 ? matchedItems : baseFilteredWithoutPortfolio.value.slice(0, 6)
+  let bullishCount = 0
+  let bearishCount = 0
+  let neutralCount = 0
+  const takeaways = pool.slice(0, 3).map((it) => {
+    const m = portfolioMatchMap.value[it.id]
+    const pol: 'positive' | 'negative' | 'neutral' = m?.matched
+      ? m.avgDelta > 0.2
+        ? 'positive'
+        : m.avgDelta < -0.2
+          ? 'negative'
+          : 'neutral'
+      : it.polarity === 'bullish'
+        ? 'positive'
+        : it.polarity === 'bearish'
+          ? 'negative'
+          : 'neutral'
+    if (pol === 'positive') bullishCount += 1
+    else if (pol === 'negative') bearishCount += 1
+    else neutralCount += 1
+    return {
+      title: pickBiText(it.event_title, it.event_title_en),
+      polarity: pol,
+      summary: pickBiText(it.one_liner, it.one_liner_en),
+    }
+  })
+  // Count across full pool as well
+  if (pool.length > 3) {
+    for (const it of pool.slice(3)) {
+      const m = portfolioMatchMap.value[it.id]
+      if ((m?.matched && m.avgDelta > 0.2) || (!m?.matched && it.polarity === 'bullish')) bullishCount += 1
+      else if ((m?.matched && m.avgDelta < -0.2) || (!m?.matched && it.polarity === 'bearish')) bearishCount += 1
+      else neutralCount += 1
+    }
+  }
+  const labels = [...portfolio.value.sectors, ...portfolio.value.tickers].slice(0, 5)
+  emit('open-portfolio-share-card', {
+    matchedCount: portfolioMatchedCount.value,
+    bullishCount,
+    bearishCount,
+    neutralCount,
+    symbolsLabel: labels.length > 0 ? labels.join(' · ') : t('全市场重点板块雷达', 'Cross-Market Sector Radar'),
+    takeaways,
+  })
+}
+
+watch(
+  () => baseFilteredWithoutPortfolio.value.map((x) => x.id).join(','),
+  (csv) => {
+    if (!csv) return
+    void loadReactionsBatch('finance', csv.split(','))
+  },
+  { immediate: true },
+)
 </script>
 
 <template>
@@ -582,6 +658,15 @@ function mergedQuoteList(item: EventMarketImpact): MarketQuoteItem[] {
             class="px-3 h-9 rounded-lg bg-slate-900 dark:bg-indigo-600 text-white font-semibold"
           >
             {{ t('保存标的', 'Save Tickers') }}
+          </button>
+          <button
+            type="button"
+            @click="openPortfolioRadarShareCard"
+            class="inline-flex items-center gap-1.5 px-3 h-9 rounded-lg border border-indigo-300 dark:border-indigo-700 bg-white dark:bg-slate-900 text-indigo-700 dark:text-indigo-300 font-semibold hover:bg-indigo-50 dark:hover:bg-indigo-950/50 whitespace-nowrap"
+            data-testid="generate-portfolio-radar-btn"
+          >
+            <Share2 class="w-3.5 h-3.5" :stroke-width="1.75" />
+            <span>{{ t('生成今日持仓体检图', 'Generate Radar Poster') }}</span>
           </button>
         </div>
       </div>
@@ -927,6 +1012,56 @@ function mergedQuoteList(item: EventMarketImpact): MarketQuoteItem[] {
               <ChevronUp v-if="expandedId === item.id" class="w-3.5 h-3.5" />
               <ChevronDown v-else class="w-3.5 h-3.5" />
             </button>
+          </div>
+
+          <!-- Zero-UGC 1-Click Market Sentiment Reaction Bar -->
+          <div class="pt-1.5 space-y-1">
+            <div class="flex flex-wrap items-center justify-between gap-1.5 text-[11px]">
+              <span class="text-zinc-400 font-medium shrink-0">{{ t('市场共识判断：', 'Market View:') }}</span>
+              <div class="flex flex-wrap items-center gap-1.5">
+                <button
+                  v-for="opt in ([
+                    { key: 'bullish_cat', label: t('看多催化', 'Bullish'), activeCls: 'bg-rose-600 text-white border-rose-600' },
+                    { key: 'bearish_hedge', label: t('利空避险', 'Bearish'), activeCls: 'bg-emerald-600 text-white border-emerald-600' },
+                    { key: 'priced_in', label: t('已计价', 'Priced In'), activeCls: 'bg-zinc-700 text-white border-zinc-700 dark:bg-zinc-600' },
+                  ] as const)"
+                  :key="opt.key"
+                  type="button"
+                  @click.stop="void toggleStructuredReaction('finance', item.id, opt.key)"
+                  class="ios-tap inline-flex items-center gap-1 px-2 min-h-[26px] rounded-full border text-[11px] font-medium transition-colors"
+                  :class="
+                    getReactionSummary('finance', item.id).my_reaction === opt.key
+                      ? opt.activeCls
+                      : 'border-black/[0.08] dark:border-white/[0.1] bg-[#F5F5F7] dark:bg-[#2C2C2E] text-zinc-600 dark:text-zinc-300 hover:border-[#007AFF]/40'
+                  "
+                >
+                  <span>{{ opt.label }}</span>
+                  <span
+                    v-if="(getReactionSummary('finance', item.id).counts[opt.key] || 0) > 0"
+                    class="font-mono text-[10px] opacity-85 tabular-nums"
+                  >
+                    {{ getReactionSummary('finance', item.id).counts[opt.key] }}
+                  </span>
+                </button>
+              </div>
+            </div>
+            <div
+              v-if="getReactionSummary('finance', item.id).total > 0"
+              class="h-1 rounded-full overflow-hidden flex bg-black/[0.05] dark:bg-white/[0.08]"
+            >
+              <div
+                class="bg-rose-500 transition-all"
+                :style="{ width: `${Math.round(((getReactionSummary('finance', item.id).counts.bullish_cat || 0) / getReactionSummary('finance', item.id).total) * 100)}%` }"
+              />
+              <div
+                class="bg-emerald-500 transition-all"
+                :style="{ width: `${Math.round(((getReactionSummary('finance', item.id).counts.bearish_hedge || 0) / getReactionSummary('finance', item.id).total) * 100)}%` }"
+              />
+              <div
+                class="bg-zinc-400 transition-all"
+                :style="{ width: `${Math.round(((getReactionSummary('finance', item.id).counts.priced_in || 0) / getReactionSummary('finance', item.id).total) * 100)}%` }"
+              />
+            </div>
           </div>
 
           <!-- Expanded 4-Dimension V9 Deep Research Drawer -->

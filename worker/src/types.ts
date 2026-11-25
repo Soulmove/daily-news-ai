@@ -1,4 +1,9 @@
 export type AccessMode = 'private_gate' | 'invite_only' | 'public'
+export type GrowthStage =
+  | 'stage_1_cold_start'
+  | 'stage_2_soft_invite'
+  | 'stage_3_scarcity_invite'
+  | 'stage_4_elite_circle'
 export type UserRole = 'super_admin' | 'admin' | 'user'
 
 export interface Env {
@@ -37,10 +42,14 @@ export interface UserRow {
   last_login_at: string | null
   last_login_ip: string | null
   login_count: number
+  invited_by_user_id?: number | null
+  invited_by_code?: string
+  extra_qa_quota?: number
 }
 
 export interface PublicUser {
   id: number
+  member_number: number
   username: string
   display_name: string
   email: string
@@ -52,6 +61,8 @@ export interface PublicUser {
   created_at: string
   last_login_at: string | null
   login_count: number
+  extra_qa_quota: number
+  invited_by_code: string
 }
 
 export interface AuthClaims {
@@ -83,6 +94,29 @@ export interface InviteCodeRow {
   used_by_username: string
   used_at: string
   revoked: number
+  owner_user_id?: number | null
+}
+
+export interface WaitlistRow {
+  id: number
+  contact: string
+  focus_areas: string
+  note: string
+  status: string
+  assigned_code: string
+  ip: string
+  created_at: string
+  reviewed_at: string
+}
+
+export type ReactionTargetType = 'event' | 'finance' | 'prediction'
+
+export interface ReactionSummary {
+  target_type: ReactionTargetType
+  target_id: string
+  counts: Record<string, number>
+  total: number
+  my_reaction: string | null
 }
 
 export interface LiveWireItem {

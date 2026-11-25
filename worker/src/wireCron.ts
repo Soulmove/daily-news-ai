@@ -21,8 +21,10 @@ const PROMO_FLUFF_RE =
 
 const HEAVY_GEO_RE =
   /(?:宣布停火|达成停火|停火协议|签署协议|开战|正式宣战|击落|遇袭|空袭|导弹袭击|关闭海峡|封锁航道|全面制裁|紧急状态|核武|军演|战机|航母)/i
+const LOCAL_GOV_ROUTINE_RE =
+  /(?:省委书记|省委常委|省长|副省长|市委书记|市长|副市长|区委书记|区长|县委书记|县长|省政协|市政协).{0,24}(?:会见|调研|考察|座谈|签约|致辞|出席|强调)|(?:会见|接待).{0,20}(?:董事长|总裁|CEO|一行|代表团)/i
 const HEAVY_GOV_RE =
-  /(?:习近平|特朗普|普京|拜登|鲍威尔|美联储(?:宣布|决定|维持|加息|降息)|国务院|证监会|发改委|财政部|商务部|央行(?:宣布|决定|降息|降准))/i
+  /(?:中美元首|习近平|国务院总理|国务院常务会议|国常会|国务院(?:印发|发布|公布|批准|决定|出台)|证监会(?:发布|出台|宣布|印发)|发改委(?:发布|印发|宣布)|财政部(?:印发|宣布|发行|下达)|商务部(?:发布|宣布|决定|裁定|出台)|中国人民银行|中国央行|央行(?:宣布|决定|下调|上调|降息|降准)|美联储(?:宣布|决定|维持|加息|降息)|FOMC|鲍威尔|欧央行|欧洲央行|日本央行|特朗普(?:宣布|签署|下令)|白宫(?:宣布|发表声明))/i
 const HEAVY_MKT_RE =
   /(?:纳指|标普|道指|沪指|恒生|英伟达|台积电|原油|布伦特|黄金).*(?:\d+(?:\.\d+)?%|\d+美元|历史新高|熔断|暴涨|暴跌|重挫|飙升)/i
 
@@ -109,16 +111,21 @@ function inferSeverityAndTag(
   baseImportant: boolean,
 ): { tier: 'S' | 'A' | 'B'; reasonTag: string | null } {
   const text = `${title} ${content}`
+  const isLocalRoutine = LOCAL_GOV_ROUTINE_RE.test(text)
   if (HEAVY_GEO_RE.test(text)) {
     return { tier: 'S', reasonTag: '地缘与军事突发' }
   }
-  if (HEAVY_GOV_RE.test(text) && (baseImportant || /\d|宣布|决定|签署|批准|关税|降息|加息/.test(text))) {
+  if (
+    !isLocalRoutine &&
+    HEAVY_GOV_RE.test(text) &&
+    (baseImportant || /\d|宣布|决定|签署|批准|印发|出台|下调|关税|降息|加息/.test(text))
+  ) {
     return { tier: 'A', reasonTag: '元首/央行表态' }
   }
-  if (HEAVY_MKT_RE.test(text)) {
+  if (!isLocalRoutine && HEAVY_MKT_RE.test(text)) {
     return { tier: 'A', reasonTag: '大宗与市场剧震' }
   }
-  if (baseImportant) {
+  if (!isLocalRoutine && baseImportant) {
     return { tier: 'A', reasonTag: '重磅' }
   }
   return { tier: 'B', reasonTag: null }

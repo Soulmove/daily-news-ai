@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
-import { CheckCircle2, ChevronDown, ChevronRight, HelpCircle, History, Plus, RotateCcw, Scale, Share2, ThumbsDown, ThumbsUp, Trash2, Trophy, Users } from 'lucide-vue-next'
+import { computed, ref, watch } from 'vue'
+import { Check, CheckCircle2, ChevronDown, ChevronRight, Copy, HelpCircle, History, Plus, RotateCcw, Scale, Share2, Sparkles, ThumbsDown, ThumbsUp, Trash2, Trophy, Users } from 'lucide-vue-next'
 import EmptySearchState from '../EmptySearchState.vue'
 import OdometerNumber from '../OdometerNumber.vue'
 import SmartTime from '../SmartTime.vue'
 import { pickBiText, t } from '../../core/i18n'
 import { normalizeExternalUrl } from '../../core/legacyAdapter'
+import { getReactionSummary, loadReactionsBatch, toggleStructuredReaction } from '../../core/reactionsStore'
 import { matchesSmartQuery } from '../../core/search'
 import type { PredictionStance } from '../../core/storage'
 import { computeLiveDomainLeaderboard, computePredictionStats, inferPredictionCategory, type PredictionCategory } from '../../core/v3Logic'
@@ -18,6 +19,10 @@ const props = defineProps<{
   localPredictionIds?: Set<string>
   stances?: Record<string, PredictionStance>
   crowdStats?: Record<string, CrowdPredictionStat>
+  crowdMinUnlock?: number
+  guestStagedVotes?: Record<string, number>
+  incomingPkChallenge?: { predId: string; prob: number; ref?: string } | null
+  isLoggedIn?: boolean
   isAdmin?: boolean
   nowMs?: number
 }>()
@@ -28,6 +33,8 @@ const emit = defineEmits<{
   (e: 'settle-prediction', payload: { predictionId: string; outcome: 'correct' | 'incorrect' | 'indeterminate'; evidenceUrl: string; note: string }): void
   (e: 'set-prediction-stance', payload: { predictionId: string; stance: PredictionStance }): void
   (e: 'vote-crowd', payload: { predictionId: string; probPct: number }): void
+  (e: 'open-share-pk', payload: { rec: PredictionRecord; probPct: number }): void
+  (e: 'dismiss-pk-banner'): void
   (e: 'delete-prediction', predictionId: string): void
   (e: 'reset-local-predictions'): void
   (e: 'clear-search'): void
@@ -61,7 +68,48 @@ const revProb = ref(50)
 const voteDrafts = ref<Record<string, number>>({})
 const stanceBurstKey = ref('')
 const voteBurstPid = ref('')
+const pkCopiedPid = ref('')
 let burstTimer: ReturnType<typeof setTimeout> | null = null
+
+const effectiveMinUnlock = computed(() => Math.max(1, Number(props.crowdMinUnlock ?? 3)))
+
+function minVotesForRec(pid: string): number {
+  return Math.max(1, Number(props.crowdStats?.[pid]?.min_votes ?? effectiveMinUnlock.value))
+}
+
+function buildPkShareUrl(pid: string, probPct: number): string {
+  if (typeof window === 'undefined') return ''
+  const u = new URL(window.location.href)
+  u.search = ''
+  u.searchParams.set('tab', 'calendar')
+  u.searchParams.set('pred', pid)
+  u.searchParams.set('p', String(Math.round(probPct)))
+  return u.toString()
+}
+
+function copyPkLink(rec: PredictionRecord) {
+  const url = buildPkShareUrl(rec.prediction_id, getVoteDraft(rec))
+  if (url) navigator.clipboard?.writeText(url).catch(() => {})
+  pkCopiedPid.value = rec.prediction_id
+  setTimeout(() => {
+    if (pkCopiedPid.value === rec.prediction_id) pkCopiedPid.value = ''
+  }, 2000)
+}
+
+function scrollToPrediction(pid: string) {
+  if (typeof document === 'undefined') return
+  const el = document.getElementById(`pred-card-${pid}`)
+  el?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+}
+
+watch(
+  () => props.predictions.map((p) => p.prediction_id).join(','),
+  (csv) => {
+    if (!csv) return
+    void loadReactionsBatch('prediction', csv.split(','))
+  },
+  { immediate: true },
+)
 
 function triggerStanceClick(predictionId: string, stance: PredictionStance) {
   stanceBurstKey.value = `${predictionId}:${stance}`
@@ -70,6 +118,7 @@ function triggerStanceClick(predictionId: string, stance: PredictionStance) {
     stanceBurstKey.value = ''
     voteBurstPid.value = ''
   }, 500)
+  void toggleStructuredReaction('prediction', predictionId, stance)
   emit('set-prediction-stance', { predictionId, stance })
 }
 
@@ -88,6 +137,8 @@ function getVoteDraft(rec: PredictionRecord): number {
   if (typeof voteDrafts.value[pid] === 'number') return voteDrafts.value[pid]
   const uProb = props.crowdStats?.[pid]?.user_prob_pct
   if (typeof uProb === 'number') return Math.round(uProb)
+  const staged = props.guestStagedVotes?.[pid]
+  if (typeof staged === 'number') return Math.round(staged)
   return Math.max(5, Math.min(95, Math.round(rec.probability_pct / 5) * 5))
 }
 
@@ -525,11 +576,49 @@ function submitSettle(id: string) {
       @reset="categoryFilter = 'all'; emit('clear-search')"
     />
 
-    <div v-else class="grid grid-cols-1 xl:grid-cols-2 gap-3">
+    <div v-else class="space-y-3">
+      <!-- Friend PK Challenge Banner (?tab=calendar&pred=<id>&p=<prob>) -->
+      <div
+        v-if="incomingPkChallenge"
+        class="rounded-2xl border border-[#007AFF]/30 bg-[#007AFF]/8 dark:bg-[#0A84FF]/12 px-4 py-3 flex flex-wrap items-center justify-between gap-2.5 text-xs"
+        data-testid="pk-challenge-banner"
+      >
+        <div class="flex items-center gap-2 min-w-0">
+          <Sparkles class="w-4 h-4 text-[#007AFF] dark:text-[#0A84FF] shrink-0" :stroke-width="1.75" />
+          <span class="font-semibold text-zinc-900 dark:text-white leading-snug">
+            {{
+              t(
+                `你的好友对本题给出了 ${incomingPkChallenge.prob}% 概率预判，来给出你的判断看开奖谁更准`,
+                `Your friend forecasted ${incomingPkChallenge.prob}% on this question — drag the slider below to compare!`,
+              )
+            }}
+          </span>
+        </div>
+        <div class="flex items-center gap-2 shrink-0">
+          <button
+            type="button"
+            @click="categoryFilter = 'all'; scrollToPrediction(incomingPkChallenge.predId)"
+            class="px-3 py-1.5 rounded-xl bg-[#007AFF] text-white font-semibold"
+          >
+            {{ t('定位题目', 'Jump to Card') }}
+          </button>
+          <button
+            type="button"
+            @click="emit('dismiss-pk-banner')"
+            class="px-2 py-1.5 rounded-xl text-zinc-500 hover:bg-black/[0.05] dark:hover:bg-white/[0.08]"
+          >
+            {{ t('收起', 'Dismiss') }}
+          </button>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 xl:grid-cols-2 gap-3">
       <article
         v-for="rec in filteredRecords"
         :key="rec.prediction_id"
-        class="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-3.5 sm:p-4 flex flex-col justify-between gap-3"
+        :id="`pred-card-${rec.prediction_id}`"
+        class="rounded-xl border bg-white dark:bg-slate-900 p-3.5 sm:p-4 flex flex-col justify-between gap-3"
+        :class="incomingPkChallenge?.predId === rec.prediction_id ? 'border-[#007AFF] ring-2 ring-[#007AFF]/20' : 'border-slate-200 dark:border-slate-800'"
       >
         <div class="space-y-3">
           <!-- Section 1: Question Header + Countdown + Benchmark Badge -->
@@ -625,7 +714,7 @@ function submitSettle(id: string) {
               />
             </div>
 
-            <!-- Crowd Consensus Probability (strictly >= 10 users gate) & User Interactive Slider -->
+            <!-- Crowd Consensus Probability (dynamic D1 unlock threshold) & Interactive Slider -->
             <div
               v-if="rec.mode === 'live' && !rec.settlement"
               class="pt-2 mt-1 border-t border-slate-200/70 dark:border-slate-700/70 space-y-1.5"
@@ -640,7 +729,12 @@ function submitSettle(id: string) {
                   {{ t(`群众均值 ${props.crowdStats[rec.prediction_id].crowd_avg_pct}%（${props.crowdStats[rec.prediction_id].vote_count} 人参与）`, `Avg ${props.crowdStats[rec.prediction_id].crowd_avg_pct}% (${props.crowdStats[rec.prediction_id].vote_count} voters)`) }}
                 </span>
                 <span v-else class="font-medium text-amber-700 dark:text-amber-300">
-                  {{ t(`群众概率收集阶段（${props.crowdStats?.[rec.prediction_id]?.vote_count || 0}/10 人已投票 · 满 10 人后解锁均值）`, `Collecting votes (${props.crowdStats?.[rec.prediction_id]?.vote_count || 0}/10 to unlock mean)`) }}
+                  {{
+                    t(
+                      `已收 ${props.crowdStats?.[rec.prediction_id]?.vote_count || 0}/${minVotesForRec(rec.prediction_id)} 份预判，再邀 ${Math.max(1, minVotesForRec(rec.prediction_id) - (props.crowdStats?.[rec.prediction_id]?.vote_count || 0))} 位好友投票立即解锁全站均值！`,
+                      `${props.crowdStats?.[rec.prediction_id]?.vote_count || 0}/${minVotesForRec(rec.prediction_id)} votes — invite ${Math.max(1, minVotesForRec(rec.prediction_id) - (props.crowdStats?.[rec.prediction_id]?.vote_count || 0))} more to unlock!`,
+                    )
+                  }}
                 </span>
               </div>
               <div class="relative h-1.5 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden">
@@ -652,7 +746,7 @@ function submitSettle(id: string) {
                 <div
                   v-else
                   class="h-full rounded-full bg-amber-400 transition-all"
-                  :style="{ width: `${Math.min(100, (props.crowdStats?.[rec.prediction_id]?.vote_count || 0) * 10)}%` }"
+                  :style="{ width: `${Math.min(100, Math.round(((props.crowdStats?.[rec.prediction_id]?.vote_count || 0) / minVotesForRec(rec.prediction_id)) * 100))}%` }"
                 />
               </div>
               <div class="flex flex-wrap items-center gap-2 pt-0.5">
@@ -677,6 +771,39 @@ function submitSettle(id: string) {
                 >
                   {{ props.crowdStats?.[rec.prediction_id]?.user_prob_pct != null ? t('更新我的投票', 'Update Vote') : t('提交我的概率预判', 'Submit Vote') }}
                 </button>
+              </div>
+              <div class="flex flex-wrap items-center justify-between gap-2 pt-0.5 text-[11px]">
+                <span
+                  v-if="!isLoggedIn && props.guestStagedVotes?.[rec.prediction_id] !== undefined"
+                  class="px-2 py-0.5 rounded-md bg-blue-500/12 text-[#007AFF] dark:text-[#0A84FF] font-semibold tabular-nums"
+                  data-testid="guest-staged-vote-pill"
+                >
+                  {{ t(`已暂存你的预判：${props.guestStagedVotes[rec.prediction_id]}% · 登录后计入胜率战绩`, `Staged: ${props.guestStagedVotes[rec.prediction_id]}% · Sign in to lock record`) }}
+                </span>
+                <span v-else-if="props.crowdStats?.[rec.prediction_id]?.user_prob_pct != null" class="text-emerald-600 dark:text-emerald-400 font-semibold tabular-nums">
+                  {{ t(`已计入共识：${props.crowdStats[rec.prediction_id].user_prob_pct}%`, `Locked: ${props.crowdStats[rec.prediction_id].user_prob_pct}%`) }}
+                </span>
+                <span v-else class="text-slate-400">{{ t('拖动滑块参与预判对赌', 'Slide to forecast') }}</span>
+
+                <div class="flex items-center gap-1.5">
+                  <button
+                    type="button"
+                    @click="copyPkLink(rec)"
+                    class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:border-[#007AFF]/40 whitespace-nowrap"
+                  >
+                    <Check v-if="pkCopiedPid === rec.prediction_id" class="w-3 h-3 text-emerald-500" />
+                    <Copy v-else class="w-3 h-3" />
+                    <span>{{ pkCopiedPid === rec.prediction_id ? t('已复制 PK 链接', 'Copied') : t('复制 PK 链接', 'Copy PK Link') }}</span>
+                  </button>
+                  <button
+                    type="button"
+                    @click="emit('open-share-pk', { rec, probPct: getVoteDraft(rec) })"
+                    class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-indigo-600 text-white font-semibold hover:bg-indigo-700 whitespace-nowrap"
+                  >
+                    <Share2 class="w-3 h-3" />
+                    <span>{{ t('生成 PK 卡', 'PK Poster') }}</span>
+                  </button>
+                </div>
               </div>
             </div>
 
@@ -772,83 +899,113 @@ function submitSettle(id: string) {
           </div>
         </div>
 
-        <div class="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-slate-100 dark:border-slate-800 text-xs">
-          <!-- 1-Click Stance Vote (Cloud Synced) -->
-          <div v-if="rec.mode === 'live' && !rec.settlement" class="flex items-center gap-1">
-            <button
-              type="button"
-              @click="triggerStanceClick(rec.prediction_id, 'agree')"
-              class="jx-pop-target inline-flex items-center gap-1 px-2 min-h-[28px] rounded-lg border text-[11px] font-medium transition-all"
-              :class="[
-                props.stances?.[rec.prediction_id] === 'agree' ? 'bg-emerald-600 text-white border-emerald-600' : 'border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800',
-                stanceBurstKey === `${rec.prediction_id}:agree` ? 'jx-pop-active jx-burst-ring text-emerald-500' : '',
-              ]"
+        <div class="pt-2 border-t border-slate-100 dark:border-slate-800 space-y-2 text-xs">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <!-- 1-Click Stance Vote (Server Aggregated + Live Ratio Bar) -->
+            <div v-if="rec.mode === 'live' && !rec.settlement" class="flex items-center gap-1">
+              <button
+                type="button"
+                @click="triggerStanceClick(rec.prediction_id, 'agree')"
+                class="jx-pop-target inline-flex items-center gap-1 px-2 min-h-[28px] rounded-lg border text-[11px] font-medium transition-all"
+                :class="[
+                  (getReactionSummary('prediction', rec.prediction_id).my_reaction || props.stances?.[rec.prediction_id]) === 'agree' ? 'bg-emerald-600 text-white border-emerald-600' : 'border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800',
+                  stanceBurstKey === `${rec.prediction_id}:agree` ? 'jx-pop-active jx-burst-ring text-emerald-500' : '',
+                ]"
+              >
+                <ThumbsUp class="w-3 h-3 shrink-0" :stroke-width="1.75" :class="{ 'fill-current': (getReactionSummary('prediction', rec.prediction_id).my_reaction || props.stances?.[rec.prediction_id]) === 'agree' }" />
+                <span>{{ t('赞同', 'Agree') }}</span>
+                <span v-if="(getReactionSummary('prediction', rec.prediction_id).counts.agree || 0) > 0" class="font-mono text-[10px] opacity-85 tabular-nums">
+                  {{ getReactionSummary('prediction', rec.prediction_id).counts.agree }}
+                </span>
+              </button>
+              <button
+                type="button"
+                @click="triggerStanceClick(rec.prediction_id, 'disagree')"
+                class="jx-pop-target inline-flex items-center gap-1 px-2 min-h-[28px] rounded-lg border text-[11px] font-medium transition-all"
+                :class="[
+                  (getReactionSummary('prediction', rec.prediction_id).my_reaction || props.stances?.[rec.prediction_id]) === 'disagree' ? 'bg-rose-600 text-white border-rose-600' : 'border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800',
+                  stanceBurstKey === `${rec.prediction_id}:disagree` ? 'jx-pop-active jx-burst-ring text-rose-500' : '',
+                ]"
+              >
+                <ThumbsDown class="w-3 h-3 shrink-0" :stroke-width="1.75" :class="{ 'fill-current': (getReactionSummary('prediction', rec.prediction_id).my_reaction || props.stances?.[rec.prediction_id]) === 'disagree' }" />
+                <span>{{ t('反对', 'Disagree') }}</span>
+                <span v-if="(getReactionSummary('prediction', rec.prediction_id).counts.disagree || 0) > 0" class="font-mono text-[10px] opacity-85 tabular-nums">
+                  {{ getReactionSummary('prediction', rec.prediction_id).counts.disagree }}
+                </span>
+              </button>
+              <button
+                type="button"
+                @click="triggerStanceClick(rec.prediction_id, 'neutral')"
+                class="jx-pop-target inline-flex items-center gap-1 px-2 min-h-[28px] rounded-lg border text-[11px] font-medium transition-all"
+                :class="[
+                  (getReactionSummary('prediction', rec.prediction_id).my_reaction || props.stances?.[rec.prediction_id]) === 'neutral' ? 'bg-slate-800 text-white border-slate-800 dark:bg-blue-600 dark:border-blue-600' : 'border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800',
+                  stanceBurstKey === `${rec.prediction_id}:neutral` ? 'jx-pop-active jx-burst-ring text-blue-500' : '',
+                ]"
+              >
+                <Scale class="w-3 h-3 shrink-0" :stroke-width="1.75" />
+                <span>{{ t('观望', 'Hold') }}</span>
+                <span v-if="(getReactionSummary('prediction', rec.prediction_id).counts.neutral || 0) > 0" class="font-mono text-[10px] opacity-85 tabular-nums">
+                  {{ getReactionSummary('prediction', rec.prediction_id).counts.neutral }}
+                </span>
+              </button>
+            </div>
+
+            <div
+              v-if="isAdmin || rec.prediction_id.startsWith('pred_user_')"
+              class="flex flex-wrap items-center gap-1.5 ml-auto"
             >
-              <ThumbsUp class="w-3 h-3 shrink-0" :stroke-width="1.75" :class="{ 'fill-current': props.stances?.[rec.prediction_id] === 'agree' }" />
-              <span>{{ t('赞同', 'Agree') }}</span>
-            </button>
-            <button
-              type="button"
-              @click="triggerStanceClick(rec.prediction_id, 'disagree')"
-              class="jx-pop-target inline-flex items-center gap-1 px-2 min-h-[28px] rounded-lg border text-[11px] font-medium transition-all"
-              :class="[
-                props.stances?.[rec.prediction_id] === 'disagree' ? 'bg-rose-600 text-white border-rose-600' : 'border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800',
-                stanceBurstKey === `${rec.prediction_id}:disagree` ? 'jx-pop-active jx-burst-ring text-rose-500' : '',
-              ]"
+              <button
+                type="button"
+                @click="openRevise(rec)"
+                class="px-2.5 min-h-[30px] rounded-lg border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800"
+              >
+                {{ t('修订 (留v1)', 'Revise') }}
+              </button>
+              <button
+                type="button"
+                @click="openSettle(rec)"
+                class="px-2.5 min-h-[30px] rounded-lg border border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-50 dark:hover:bg-emerald-950/50"
+              >
+                {{ rec.settlement ? t('重算', 'Re-resolve') : t('结算', 'Resolve') }}
+              </button>
+              <button
+                v-if="props.localPredictionIds?.has(rec.prediction_id)"
+                type="button"
+                @click="emit('delete-prediction', rec.prediction_id)"
+                class="inline-flex items-center gap-1 px-2.5 min-h-[30px] rounded-lg border border-red-200 dark:border-red-900 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/40"
+                :aria-label="rec.prediction_id.startsWith('pred_user_') ? t('删除自建假设', 'Delete Custom') : t('还原默认状态', 'Restore Default')"
+              >
+                <Trash2 class="w-3.5 h-3.5" />
+              </button>
+            </div>
+            <span
+              v-else
+              class="ml-auto text-[11px] text-slate-400"
             >
-              <ThumbsDown class="w-3 h-3 shrink-0" :stroke-width="1.75" :class="{ 'fill-current': props.stances?.[rec.prediction_id] === 'disagree' }" />
-              <span>{{ t('反对', 'Disagree') }}</span>
-            </button>
-            <button
-              type="button"
-              @click="triggerStanceClick(rec.prediction_id, 'neutral')"
-              class="jx-pop-target inline-flex items-center gap-1 px-2 min-h-[28px] rounded-lg border text-[11px] font-medium transition-all"
-              :class="[
-                props.stances?.[rec.prediction_id] === 'neutral' ? 'bg-slate-800 text-white border-slate-800 dark:bg-blue-600 dark:border-blue-600' : 'border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800',
-                stanceBurstKey === `${rec.prediction_id}:neutral` ? 'jx-pop-active jx-burst-ring text-blue-500' : '',
-              ]"
-            >
-              <Scale class="w-3 h-3 shrink-0" :stroke-width="1.75" />
-              <span>{{ t('观望', 'Hold') }}</span>
-            </button>
+              {{ rec.settlement ? t('已由系统客观核验结案', 'Verified & settled automatically') : t('支持上方一键投票记录立场', 'Click Agree / Disagree / Hold to record stance') }}
+            </span>
           </div>
 
           <div
-            v-if="isAdmin || rec.prediction_id.startsWith('pred_user_')"
-            class="flex flex-wrap items-center gap-1.5 ml-auto"
+            v-if="getReactionSummary('prediction', rec.prediction_id).total > 0"
+            class="h-1 rounded-full overflow-hidden flex bg-slate-100 dark:bg-slate-800"
           >
-            <button
-              type="button"
-              @click="openRevise(rec)"
-              class="px-2.5 min-h-[30px] rounded-lg border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800"
-            >
-              {{ t('修订 (留v1)', 'Revise') }}
-            </button>
-            <button
-              type="button"
-              @click="openSettle(rec)"
-              class="px-2.5 min-h-[30px] rounded-lg border border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-50 dark:hover:bg-emerald-950/50"
-            >
-              {{ rec.settlement ? t('重算', 'Re-resolve') : t('结算', 'Resolve') }}
-            </button>
-            <button
-              v-if="props.localPredictionIds?.has(rec.prediction_id)"
-              type="button"
-              @click="emit('delete-prediction', rec.prediction_id)"
-              class="inline-flex items-center gap-1 px-2.5 min-h-[30px] rounded-lg border border-red-200 dark:border-red-900 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/40"
-              :aria-label="rec.prediction_id.startsWith('pred_user_') ? t('删除自建假设', 'Delete Custom') : t('还原默认状态', 'Restore Default')"
-            >
-              <Trash2 class="w-3.5 h-3.5" />
-            </button>
+            <div
+              class="bg-emerald-500 transition-all"
+              :style="{ width: `${Math.round(((getReactionSummary('prediction', rec.prediction_id).counts.agree || 0) / getReactionSummary('prediction', rec.prediction_id).total) * 100)}%` }"
+            />
+            <div
+              class="bg-rose-500 transition-all"
+              :style="{ width: `${Math.round(((getReactionSummary('prediction', rec.prediction_id).counts.disagree || 0) / getReactionSummary('prediction', rec.prediction_id).total) * 100)}%` }"
+            />
+            <div
+              class="bg-blue-500 transition-all"
+              :style="{ width: `${Math.round(((getReactionSummary('prediction', rec.prediction_id).counts.neutral || 0) / getReactionSummary('prediction', rec.prediction_id).total) * 100)}%` }"
+            />
           </div>
-          <span
-            v-else
-            class="ml-auto text-[11px] text-slate-400"
-          >
-            {{ rec.settlement ? t('已由系统客观核验结案', 'Verified & settled automatically') : t('支持上方一键投票记录立场', 'Click Agree / Disagree / Hold to record stance') }}
-          </span>
         </div>
       </article>
+      </div>
     </div>
   </section>
 </template>

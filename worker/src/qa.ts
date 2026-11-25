@@ -1,3 +1,4 @@
+import { getSiteSettings } from './db'
 import { checkAndHitRateLimit } from './rateLimit'
 import type { Env } from './types'
 
@@ -50,22 +51,55 @@ export interface QaRequestBody {
 export async function handleQaAsk(
   env: Env,
   body: QaRequestBody,
-  opts: { clientIp: string; userId?: number | null },
+  opts: { clientIp: string; userId?: number | null; deviceId?: string; extraQaQuota?: number },
 ): Promise<{ status: number; payload: Record<string, unknown> }> {
   const qRaw = (body.question || '').trim()
   if (qRaw.length < 2) {
     return { status: 400, payload: { detail: '请至少输入 2 个字的检索或问答问题' } }
   }
 
-  const rlKey = opts.userId ? `uid:${opts.userId}` : `ip:${opts.clientIp}`
+  const settings = await getSiteSettings(env.DB, env.SITE_ACCESS_MODE)
+  const guestLimit = Math.max(0, Math.min(100, Number(settings.guest_qa_daily_limit ?? 5)))
+  const authBaseLimit = Math.max(1, Math.min(500, Number(settings.auth_qa_daily_limit ?? 30)))
+  const extraBonus = Math.max(0, Math.round(Number(opts.extraQaQuota ?? 0)))
+  const dailyLimit = opts.userId ? authBaseLimit + extraBonus : guestLimit
+
+  if (!opts.userId && dailyLimit <= 0) {
+    return {
+      status: 429,
+      payload: {
+        detail: '当前未开放游客免费 AI 证据问答，请登录后使用',
+        quota_exhausted: true,
+        remaining_quota: 0,
+        daily_limit: 0,
+      },
+    }
+  }
+
+  const cleanDev = (opts.deviceId || '').trim().slice(0, 80)
+  const rlKey = opts.userId
+    ? `uid:${opts.userId}`
+    : cleanDev
+      ? `dev:${cleanDev}`
+      : `ip:${opts.clientIp}`
   const rl = await checkAndHitRateLimit(env.DB, {
-    scope: 'qa_ask',
+    scope: 'qa_ask_daily',
     key: rlKey,
-    limit: opts.userId ? 40 : 20,
-    windowSec: 600,
+    limit: dailyLimit,
+    windowSec: 86_400,
   })
   if (!rl.allowed) {
-    return { status: 429, payload: { detail: '提问频率过高，请稍后再试' } }
+    return {
+      status: 429,
+      payload: {
+        detail: opts.userId
+          ? `今日 ${dailyLimit} 次 AI 证据问答额度已用完，请明日再试`
+          : `游客每日免费 ${dailyLimit} 次 AI 证据问答额度已用完，登录立即扩容`,
+        quota_exhausted: true,
+        remaining_quota: 0,
+        daily_limit: dailyLimit,
+      },
+    }
   }
 
   const lang = String(body.lang || '').toLowerCase().startsWith('en') ? 'en' : 'zh'
@@ -227,6 +261,8 @@ export async function handleQaAsk(
                 ],
                 engineMode: 'server_llm',
                 modelUsed: modelName,
+                remaining_quota: rl.remaining,
+                daily_limit: dailyLimit,
               },
             }
           }
@@ -282,6 +318,8 @@ export async function handleQaAsk(
       ],
       engineMode: 'grounded_synthesis',
       modelUsed: 'worker-grounded-rag',
+      remaining_quota: rl.remaining,
+      daily_limit: dailyLimit,
     },
   }
 }

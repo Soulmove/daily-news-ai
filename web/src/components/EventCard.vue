@@ -33,6 +33,7 @@ import {
 import { formatShanghaiDateTime } from '../core/time'
 import { extractHeadlineQualifiers, resolveEvidenceTierBadge } from '../core/evidence'
 import { normalizeExternalUrl } from '../core/legacyAdapter'
+import { getReactionSummary, toggleStructuredReaction } from '../core/reactionsStore'
 import { buildThreeColumnPerspectives } from '../core/thumbnails'
 import { getConfidentEntities } from '../core/v3Logic'
 import {
@@ -846,6 +847,56 @@ function runSheetAction(fn: () => void) {
             >
               # {{ translateEntityName(ent.name) }}
             </button>
+          </div>
+
+          <!-- Zero-UGC Structured 1-Click Signal Reaction Bar -->
+          <div class="pt-2 border-t border-black/[0.05] dark:border-white/[0.06] space-y-1.5">
+            <div class="flex flex-wrap items-center justify-between gap-2 text-[11px]">
+              <span class="text-zinc-400 font-medium shrink-0">{{ t('信源含金量判断：', 'Signal Rating:') }}</span>
+              <div class="flex flex-wrap items-center gap-1.5">
+                <button
+                  v-for="opt in ([
+                    { key: 'heavy', label: t('真重磅', 'Heavy'), activeCls: 'bg-rose-600 text-white border-rose-600' },
+                    { key: 'track', label: t('持续跟踪', 'Track'), activeCls: 'bg-[#007AFF] text-white border-[#007AFF]' },
+                    { key: 'noise', label: t('噪音', 'Noise'), activeCls: 'bg-zinc-700 text-white border-zinc-700 dark:bg-zinc-600' },
+                  ] as const)"
+                  :key="opt.key"
+                  type="button"
+                  @click.stop="triggerHaptic(8); void toggleStructuredReaction('event', event.event_id, opt.key)"
+                  class="ios-tap inline-flex items-center gap-1 px-2.5 min-h-[28px] rounded-full border text-[11px] font-medium transition-colors"
+                  :class="
+                    getReactionSummary('event', event.event_id).my_reaction === opt.key
+                      ? opt.activeCls
+                      : 'border-black/[0.08] dark:border-white/[0.1] bg-white dark:bg-[#2C2C2E] text-zinc-600 dark:text-zinc-300 hover:border-[#007AFF]/40'
+                  "
+                >
+                  <span>{{ opt.label }}</span>
+                  <span
+                    v-if="(getReactionSummary('event', event.event_id).counts[opt.key] || 0) > 0"
+                    class="font-mono text-[10px] opacity-85 tabular-nums"
+                  >
+                    {{ getReactionSummary('event', event.event_id).counts[opt.key] }}
+                  </span>
+                </button>
+              </div>
+            </div>
+            <div
+              v-if="getReactionSummary('event', event.event_id).total > 0"
+              class="h-1 rounded-full overflow-hidden flex bg-black/[0.05] dark:bg-white/[0.08]"
+            >
+              <div
+                class="bg-rose-500 transition-all"
+                :style="{ width: `${Math.round(((getReactionSummary('event', event.event_id).counts.heavy || 0) / getReactionSummary('event', event.event_id).total) * 100)}%` }"
+              />
+              <div
+                class="bg-[#007AFF] transition-all"
+                :style="{ width: `${Math.round(((getReactionSummary('event', event.event_id).counts.track || 0) / getReactionSummary('event', event.event_id).total) * 100)}%` }"
+              />
+              <div
+                class="bg-zinc-400 transition-all"
+                :style="{ width: `${Math.round(((getReactionSummary('event', event.event_id).counts.noise || 0) / getReactionSummary('event', event.event_id).total) * 100)}%` }"
+              />
+            </div>
           </div>
         </div>
 

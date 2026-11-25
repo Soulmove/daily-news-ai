@@ -2,6 +2,7 @@ import { Hono } from 'hono'
 import { requireAdmin, requireSuperAdmin } from '../authMiddleware'
 import { nowShanghaiIso, verifyPassword } from '../crypto'
 import {
+  GROWTH_SUPER_ADMIN_KEYS,
   adminUpdateUser,
   createInviteCodes,
   createUser,
@@ -13,6 +14,7 @@ import {
   getUserPlainPassword,
   getUserState,
   isValidAccessMode,
+  isValidGrowthStage,
   listInviteCodes,
   listUsersWithStats,
   logAudit,
@@ -25,13 +27,16 @@ import {
   deleteFeedback,
   getEditorialOverridesDoc,
   getPushConfig,
+  getWaitlistEntryById,
   listAuditLogs,
   listFeedback,
   listPushLogs,
+  listWaitlistEntries,
   logPush,
   savePushConfig,
   titleFingerprint,
   updateFeedback,
+  updateWaitlistEntryStatus,
   upsertEditorialOverride,
 } from '../dbExtras'
 import { QUOTES_CACHE_KEY, fetchAndBuildMarketQuotes, getDefaultEdgeCache } from '../quotes'
@@ -366,14 +371,19 @@ adminRoutes.get('/site-settings', async (c) => {
 adminRoutes.put('/site-settings', async (c) => {
   const admin = c.get('user')!
   const body = (await c.req.json().catch(() => ({}))) as Record<string, unknown>
+  const hasSuperKey = Object.keys(body).some(
+    (k) => GROWTH_SUPER_ADMIN_KEYS.has(k) && body[k] !== undefined,
+  )
+  if (hasSuperKey && admin.role !== 'super_admin') {
+    return c.json({ detail: '仅一级最高管理员可修改全站访问门禁模式与阶段营销策略' }, 403)
+  }
+
   const hasAccessMode = Object.prototype.hasOwnProperty.call(body, 'access_mode') && body.access_mode !== undefined
+  const hasGrowthStage = Object.prototype.hasOwnProperty.call(body, 'growth_stage') && body.growth_stage !== undefined
   let oldMode: AccessMode | null = null
   let newMode: AccessMode | null = null
 
   if (hasAccessMode) {
-    if (admin.role !== 'super_admin') {
-      return c.json({ detail: '仅一级最高管理员可修改全站访问门禁模式' }, 403)
-    }
     const rawMode = typeof body.access_mode === 'string' ? body.access_mode.trim() : ''
     if (!isValidAccessMode(rawMode)) {
       return c.json({ detail: '无效的访问门禁模式，仅支持 public / invite_only / private_gate' }, 400)
@@ -383,12 +393,26 @@ adminRoutes.put('/site-settings', async (c) => {
     body.access_mode = rawMode
   }
 
+  if (hasGrowthStage) {
+    const rawStage = typeof body.growth_stage === 'string' ? body.growth_stage.trim() : ''
+    if (!isValidGrowthStage(rawStage)) {
+      return c.json(
+        {
+          detail:
+            '无效的增长阶段，仅支持 stage_1_cold_start / stage_2_soft_invite / stage_3_scarcity_invite / stage_4_elite_circle',
+        },
+        400,
+      )
+    }
+    body.growth_stage = rawStage
+  }
+
   const res = await saveSiteSettings(c.env.DB, body, c.env.SITE_ACCESS_MODE)
   await logAudit(c.env.DB, {
     action: 'admin_update_site_settings',
     userId: admin.id,
     username: admin.username,
-    detail: `Updated settings keys=${Object.keys(body).sort().join(',')}`,
+    detail: `Updated settings keys=${Object.keys(body).sort().join(',')} stage=${String(res.growth_stage)}`,
     ip: c.get('clientIp'),
   })
   if (hasAccessMode && oldMode && newMode && oldMode !== newMode) {
@@ -401,6 +425,65 @@ adminRoutes.put('/site-settings', async (c) => {
     })
   }
   return c.json({ ok: true, ...res })
+})
+
+// ---------------- Stage 3/4 Invite Waitlist Management ----------------
+
+adminRoutes.get('/waitlist', async (c) => {
+  const statusFilter = (c.req.query('status') || '').trim()
+  const limit = Number(c.req.query('limit') || 100)
+  const items = await listWaitlistEntries(c.env.DB, { statusFilter, limit })
+  return c.json({ items })
+})
+
+adminRoutes.post('/waitlist/:id/approve', async (c) => {
+  const admin = c.get('user')!
+  const id = Number(c.req.param('id'))
+  const existing = await getWaitlistEntryById(c.env.DB, id)
+  if (!existing) return c.json({ detail: '候补申请记录不存在' }, 404)
+  if (existing.status === 'approved' && existing.assigned_code) {
+    return c.json({ ok: true, item: existing, code: existing.assigned_code })
+  }
+  const codes = await createInviteCodes(c.env.DB, {
+    count: 1,
+    note: `候补批准#${id}(${existing.contact.slice(0, 24)})`,
+    expiresInDays: 30,
+    createdBy: admin.username,
+  })
+  const assignedCode = codes[0]?.code || ''
+  const updated = await updateWaitlistEntryStatus(c.env.DB, {
+    id,
+    status: 'approved',
+    assignedCode,
+  })
+  await logAudit(c.env.DB, {
+    action: 'admin_approve_waitlist',
+    userId: admin.id,
+    username: admin.username,
+    detail: `Approved waitlist #${id} contact=${existing.contact.slice(0, 48)} code=${assignedCode}`,
+    ip: c.get('clientIp'),
+  })
+  return c.json({ ok: true, item: updated, code: assignedCode })
+})
+
+adminRoutes.post('/waitlist/:id/reject', async (c) => {
+  const admin = c.get('user')!
+  const id = Number(c.req.param('id'))
+  const existing = await getWaitlistEntryById(c.env.DB, id)
+  if (!existing) return c.json({ detail: '候补申请记录不存在' }, 404)
+  const updated = await updateWaitlistEntryStatus(c.env.DB, {
+    id,
+    status: 'rejected',
+    assignedCode: '',
+  })
+  await logAudit(c.env.DB, {
+    action: 'admin_reject_waitlist',
+    userId: admin.id,
+    username: admin.username,
+    detail: `Rejected waitlist #${id} contact=${existing.contact.slice(0, 48)}`,
+    ip: c.get('clientIp'),
+  })
+  return c.json({ ok: true, item: updated })
 })
 
 // ---------------- Feedback Admin ----------------

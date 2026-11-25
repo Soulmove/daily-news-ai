@@ -13,6 +13,7 @@ export function isAdminRole(role?: string | null): boolean {
 
 export interface AuthUser {
   id: number
+  member_number?: number
   username: string
   display_name: string
   email: string
@@ -24,11 +25,14 @@ export interface AuthUser {
   created_at: string
   last_login_at: string | null
   login_count: number
+  extra_qa_quota?: number
+  invited_by_code?: string
 }
 
 export interface AuthSession {
   token: string
   user: AuthUser
+  referral_bonus_granted?: number
 }
 
 export interface CloudSyncCounts {
@@ -605,6 +609,11 @@ export async function apiAdminSyncNow(
 }
 
 export type SiteAccessMode = 'private_gate' | 'invite_only' | 'public'
+export type GrowthStage =
+  | 'stage_1_cold_start'
+  | 'stage_2_soft_invite'
+  | 'stage_3_scarcity_invite'
+  | 'stage_4_elite_circle'
 
 export interface PublicSiteSettings {
   monitor_public: boolean
@@ -621,6 +630,16 @@ export interface PublicSiteSettings {
   site_banner_enabled?: boolean
   site_banner_text?: string
   site_banner_tone?: 'info' | 'warning' | 'important' | string
+  growth_stage?: GrowthStage
+  welcome_hero_enabled?: boolean
+  soft_auth_prompts_enabled?: boolean
+  guest_qa_daily_limit?: number
+  auth_qa_daily_limit?: number
+  crowd_vote_min_unlock?: number
+  user_referral_enabled?: boolean
+  user_invite_quota?: number
+  referral_bonus_qa_quota?: number
+  invite_waitlist_enabled?: boolean
 }
 
 export async function apiGetPublicSettings(): Promise<PublicSiteSettings> {
@@ -629,9 +648,22 @@ export async function apiGetPublicSettings(): Promise<PublicSiteSettings> {
   } catch {
     return {
       monitor_public: false,
+      access_mode: 'public',
+      invite_required: false,
+      login_required: false,
       feedback_enabled: true,
       feedback_notice: '欢迎反馈页面问题、数据纠错或功能建议，镜信编辑团队将尽快查阅并回复。',
       feedback_daily_limit: 5,
+      growth_stage: 'stage_1_cold_start',
+      welcome_hero_enabled: true,
+      soft_auth_prompts_enabled: true,
+      guest_qa_daily_limit: 5,
+      auth_qa_daily_limit: 30,
+      crowd_vote_min_unlock: 3,
+      user_referral_enabled: false,
+      user_invite_quota: 3,
+      referral_bonus_qa_quota: 15,
+      invite_waitlist_enabled: false,
     }
   }
 }
@@ -768,4 +800,117 @@ export async function apiAdminCreateInviteCodes(
 
 export async function apiAdminRevokeInviteCode(token: string, code: string): Promise<{ ok: boolean }> {
   return apiRequest(`/api/admin/invite-codes/${encodeURIComponent(code)}`, { method: 'DELETE' }, token)
+}
+
+// ---------------- User Referral Invites, Waitlist & Structured Reactions ----------------
+
+export interface MyInvitesResponse {
+  enabled: boolean
+  member_number: number
+  quota: number
+  generated_count: number
+  remaining_quota: number
+  invited_count: number
+  bonus_qa_quota: number
+  extra_qa_quota?: number
+  items: AdminInviteCodeRow[]
+}
+
+export async function apiFetchMyInvites(token: string): Promise<MyInvitesResponse> {
+  return apiRequest('/api/auth/my-invites', { method: 'GET' }, token)
+}
+
+export async function apiCreateMyInvite(token: string): Promise<MyInvitesResponse & { ok: boolean; item: AdminInviteCodeRow | null }> {
+  return apiRequest('/api/auth/my-invites', { method: 'POST' }, token)
+}
+
+export interface WaitlistEntryRow {
+  id: number
+  contact: string
+  focus_areas: string
+  note: string
+  status: 'pending' | 'approved' | 'rejected' | string
+  assigned_code: string
+  ip: string
+  created_at: string
+  reviewed_at: string
+}
+
+export async function apiSubmitWaitlist(body: {
+  contact: string
+  focus_areas: string | string[]
+  note?: string
+}): Promise<{ ok: boolean; id: number; status: string }> {
+  return apiRequest('/api/public/waitlist', {
+    method: 'POST',
+    headers: { 'X-Device-ID': getOrCreateDeviceId() },
+    body: JSON.stringify(body),
+  })
+}
+
+export async function apiAdminListWaitlist(
+  token: string,
+  status = '',
+): Promise<{ items: WaitlistEntryRow[] }> {
+  const qs = status ? `?status=${encodeURIComponent(status)}` : ''
+  return apiRequest(`/api/admin/waitlist${qs}`, { method: 'GET' }, token)
+}
+
+export async function apiAdminApproveWaitlist(
+  token: string,
+  id: number,
+): Promise<{ ok: boolean; item: WaitlistEntryRow; code: string }> {
+  return apiRequest(`/api/admin/waitlist/${id}/approve`, { method: 'POST' }, token)
+}
+
+export async function apiAdminRejectWaitlist(
+  token: string,
+  id: number,
+): Promise<{ ok: boolean; item: WaitlistEntryRow }> {
+  return apiRequest(`/api/admin/waitlist/${id}/reject`, { method: 'POST' }, token)
+}
+
+export type ReactionTargetType = 'event' | 'finance' | 'prediction'
+
+export interface ReactionSummary {
+  target_type: ReactionTargetType
+  target_id: string
+  counts: Record<string, number>
+  total: number
+  my_reaction: string | null
+}
+
+export async function apiFetchReactionsBatch(
+  targetType: ReactionTargetType,
+  ids: string[],
+  token?: string | null,
+): Promise<{ target_type: ReactionTargetType; items: Record<string, ReactionSummary> }> {
+  const cleanIds = Array.from(new Set(ids.map((s) => s.trim()).filter(Boolean))).slice(0, 100)
+  if (cleanIds.length === 0) {
+    return { target_type: targetType, items: {} }
+  }
+  const qs = `target_type=${encodeURIComponent(targetType)}&ids=${encodeURIComponent(cleanIds.join(','))}`
+  return apiRequest(
+    `/api/reactions/batch?${qs}`,
+    {
+      method: 'GET',
+      headers: { 'X-Device-ID': getOrCreateDeviceId() },
+    },
+    token || undefined,
+  )
+}
+
+export async function apiSubmitReaction(
+  body: { target_type: ReactionTargetType; target_id: string; reaction_key: string },
+  token?: string | null,
+): Promise<{ ok: boolean; item: ReactionSummary }> {
+  return apiRequest(
+    '/api/reactions',
+    {
+      method: 'POST',
+      headers: { 'X-Device-ID': getOrCreateDeviceId() },
+      body: JSON.stringify(body),
+    },
+    token || undefined,
+  )
 }

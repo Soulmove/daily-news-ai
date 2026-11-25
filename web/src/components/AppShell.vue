@@ -76,7 +76,7 @@ const emit = defineEmits<{
   (e: 'open-history'): void
   (e: 'open-bookmarks'): void
   (e: 'refresh'): void
-  (e: 'open-auth', section?: 'profile' | 'security'): void
+  (e: 'open-auth', section?: 'profile' | 'security' | 'login' | 'register'): void
   (e: 'request-logout'): void
   (e: 'market-color-changed', isRedUpNow: boolean): void
   (e: 'open-search'): void
@@ -209,11 +209,20 @@ const shortUpdateLabel = computed(() => {
   const ms = parseTimestampMs(props.updatedAtIso)
   if (ms === null) return ''
   const diffMin = Math.max(0, Math.floor(((props.nowMs ?? Date.now()) - ms) / 60_000))
-  if (diffMin < 1) return t('刚刚', 'now')
-  if (diffMin < 60) return `${diffMin}m`
+  if (diffMin < 1) return t('刚刚更新', 'Updated just now')
+  if (diffMin < 60) return t(`${diffMin}m前更新`, `Updated ${diffMin}m ago`)
   const h = Math.floor(diffMin / 60)
-  if (h < 24) return `${h}h`
-  return `${Math.floor(h / 24)}d`
+  if (h < 24) return t(`${h}h前更新`, `Updated ${h}h ago`)
+  const d = Math.floor(h / 24)
+  return t(`${d}d前更新`, `Updated ${d}d ago`)
+})
+
+const updatedTooltipLabel = computed(() => {
+  if (!props.updatedAtIso) return t('查看批次更新明细', 'View batch update details')
+  return t(
+    `最近数据更新：${formatShanghaiDateTime(props.updatedAtIso, false)}（点击查看批次明细）`,
+    `Last updated: ${formatShanghaiDateTime(props.updatedAtIso, false)} (Click for batch details)`,
+  )
 })
 
 function feedbackStatusBadge(st: string): { label: string; cls: string } {
@@ -394,7 +403,8 @@ onUnmounted(() => {
               type="button"
               @click="emit('open-batch-info')"
               class="inline-flex items-center gap-1 min-h-[44px] md:min-h-[34px] px-1 sm:px-1.5 rounded-lg text-[11px] sm:text-[12px] text-zinc-500 dark:text-zinc-400 hover:bg-black/[0.04] dark:hover:bg-white/[0.06] transition-colors shrink-0 whitespace-nowrap"
-              :aria-label="t('查看批次更新明细', 'View batch update details')"
+              :title="updatedTooltipLabel"
+              :aria-label="updatedTooltipLabel"
             >
               <span class="jx-sonar-dot" :class="statusDotClass" />
               <span class="tabular-nums font-medium">{{ shortUpdateLabel }}</span>
@@ -430,11 +440,24 @@ onUnmounted(() => {
               v-if="showQaButton"
               type="button"
               @click="emit('open-qa')"
-              class="ios-tap inline-flex items-center justify-center w-10 h-10 sm:w-11 sm:h-11 md:w-8 md:h-8 rounded-xl md:rounded-lg text-[#007AFF] dark:text-[#0A84FF] hover:bg-[#007AFF]/10 transition-colors"
+              class="ios-tap inline-flex items-center justify-center gap-1 w-10 h-10 sm:w-11 sm:h-11 md:w-auto md:h-8 md:px-2.5 rounded-xl md:rounded-lg text-[#007AFF] dark:text-[#0A84FF] hover:bg-[#007AFF]/10 transition-colors shrink-0 whitespace-nowrap"
               :title="t('AI 证据问答', 'AI Evidence Q&A')"
               :aria-label="t('AI 证据问答', 'AI Evidence Q&A')"
             >
-              <Sparkles class="w-[18px] h-[18px] md:w-4 md:h-4" :stroke-width="1.5" />
+              <Sparkles class="w-[18px] h-[18px] md:w-3.5 md:h-3.5 shrink-0" :stroke-width="1.5" />
+              <span class="hidden md:inline text-[12px] font-semibold">{{ t('AI 问答', 'AI Q&A') }}</span>
+            </button>
+
+            <button
+              v-if="showAuthButton && !effectiveUser"
+              type="button"
+              @click="emit('open-auth', 'login')"
+              class="ios-tap inline-flex items-center justify-center gap-1 h-8 px-2.5 sm:px-3 rounded-xl md:rounded-lg bg-[#007AFF] hover:bg-[#0066D6] text-white text-[12px] font-semibold transition-colors shrink-0 whitespace-nowrap shadow-xs"
+              data-testid="topbar-login-register-btn"
+            >
+              <User class="w-3.5 h-3.5 hidden sm:inline shrink-0" :stroke-width="1.75" />
+              <span class="sm:hidden">{{ t('登录', 'Sign In') }}</span>
+              <span class="hidden sm:inline">{{ t('登录 / 注册', 'Sign In / Up') }}</span>
             </button>
 
             <!-- Dark / Light Toggle (desktop topbar only; on mobile lives inside Menu / Me tab) -->

@@ -5250,6 +5250,21 @@ class V3PipelineRegressionTests(unittest.TestCase):
             for v in nvda_p["versions"]:
                 self.assertNotIn("2026-11-12", json.dumps(v, ensure_ascii=False))
 
+    def test_heavy_classifier_excludes_local_official_routine_meetings(self):
+        from pipeline.heavy_classifier import is_heavy_noise_excluded, infer_heavy_reason_tag
+
+        local_title = "某省省委书记会见跨国企业董事长一行并座谈"
+        self.assertTrue(is_heavy_noise_excluded(local_title))
+        self.assertNotEqual(infer_heavy_reason_tag(local_title), "元首/央行表态")
+
+        local_mayor = "某某市长会见新能源汽车集团总裁并签署框架协议"
+        self.assertTrue(is_heavy_noise_excluded(local_mayor))
+        self.assertNotEqual(infer_heavy_reason_tag(local_mayor), "元首/央行表态")
+
+        fomc_title = "美联储FOMC维持基准利率不变，鲍威尔称仍需观察通胀走势"
+        self.assertFalse(is_heavy_noise_excluded(fomc_title))
+        self.assertEqual(infer_heavy_reason_tag(fomc_title), "元首/央行表态")
+
 
 if __name__ == "__main__":
     unittest.main()

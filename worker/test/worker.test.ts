@@ -102,8 +102,9 @@ class MockR2Bucket {
 }
 
 function createTestEnv(overrides: Partial<Env> = {}): { env: Env; r2: MockR2Bucket; db: MockD1Database } {
-  const schemaPath = resolve(__dirname, '../migrations/0001_init.sql')
-  const schemaSql = readFileSync(schemaPath, 'utf-8')
+  const schemaPath1 = resolve(__dirname, '../migrations/0001_init.sql')
+  const schemaPath2 = resolve(__dirname, '../migrations/0002_growth_and_interactions.sql')
+  const schemaSql = `${readFileSync(schemaPath1, 'utf-8')}\n${readFileSync(schemaPath2, 'utf-8')}`
   const db = new MockD1Database(schemaSql)
   const r2 = new MockR2Bucket()
   const env: Env = {
@@ -664,5 +665,432 @@ describe('MirrorBrief Worker Crypto & API Suite', () => {
     expect(modeLogs.some((d) => d.includes('invite_only -> public'))).toBe(true)
     expect(modeLogs.some((d) => d.includes('public -> private_gate'))).toBe(true)
     expect(modeLogs.some((d) => d.includes('private_gate -> invite_only'))).toBe(true)
+  })
+
+  it('supports 4-stage growth presets, RBAC 403, dynamic QA & crowd thresholds, referrals, waitlist & reactions', async () => {
+    const { env, r2 } = createTestEnv({ SITE_ACCESS_MODE: 'public' })
+    const app = createWorkerApp()
+
+    await r2.put(
+      'data/manifest.json',
+      JSON.stringify({
+        generated_at: '2026-11-25T10:00:00+08:00',
+        smart: { generated_at: '2026-11-25T10:00:00+08:00' },
+      }),
+    )
+    await r2.put(
+      'analysis_finance.json',
+      JSON.stringify({
+        events: [
+          {
+            event_id: 'ev_fomc_1',
+            title: '美联储维持基准利率不变并释放年内降息信号',
+            fact_summary: 'FOMC 声明称通胀继续朝 2% 回落。',
+            sources: [{ source_name: '路透社', url: 'https://example.com/fomc' }],
+            latest_reported_at: '2026-11-25T09:00:00+08:00',
+          },
+        ],
+      }),
+    )
+
+    // Seed super_admin & sub-admin ('admin')
+    const adminLogin = await app.request(
+      'https://mirrorinfo.xyz/api/auth/login',
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username: 'admin', password: 'AdminPass123!' }),
+      },
+      env,
+    )
+    expect(adminLogin.status).toBe(200)
+    const superSess = (await adminLogin.json()) as { token: string }
+
+    const createSub = await app.request(
+      'https://mirrorinfo.xyz/api/admin/users',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${superSess.token}`,
+        },
+        body: JSON.stringify({ username: 'ops_mgr', password: 'OpsPassword123', role: 'admin' }),
+      },
+      env,
+    )
+    expect(createSub.status).toBe(200)
+
+    const opsLogin = await app.request(
+      'https://mirrorinfo.xyz/api/auth/login',
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username: 'ops_mgr', password: 'OpsPassword123' }),
+      },
+      env,
+    )
+    const opsSess = (await opsLogin.json()) as { token: string }
+
+    // 1. Sub-admin gets 403 when touching growth settings; super_admin succeeds & public/settings updates live
+    const subDenied = await app.request(
+      'https://mirrorinfo.xyz/api/admin/site-settings',
+      {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${opsSess.token}`,
+        },
+        body: JSON.stringify({ guest_qa_daily_limit: 9 }),
+      },
+      env,
+    )
+    expect(subDenied.status).toBe(403)
+
+    // Configure Stage 1 with tight QA limit = 2 and crowd unlock = 2
+    const saveStage1 = await app.request(
+      'https://mirrorinfo.xyz/api/admin/site-settings',
+      {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${superSess.token}`,
+        },
+        body: JSON.stringify({
+          growth_stage: 'stage_1_cold_start',
+          access_mode: 'public',
+          welcome_hero_enabled: true,
+          soft_auth_prompts_enabled: true,
+          guest_qa_daily_limit: 2,
+          crowd_vote_min_unlock: 2,
+          user_referral_enabled: false,
+          invite_waitlist_enabled: false,
+        }),
+      },
+      env,
+    )
+    expect(saveStage1.status).toBe(200)
+    const pubSettingsRes = await app.request('https://mirrorinfo.xyz/api/public/settings', {}, env)
+    expect(pubSettingsRes.status).toBe(200)
+    expect(await pubSettingsRes.json()).toMatchObject({
+      growth_stage: 'stage_1_cold_start',
+      guest_qa_daily_limit: 2,
+      crowd_vote_min_unlock: 2,
+      user_referral_enabled: false,
+    })
+
+    // 2. Dynamic guest_qa_daily_limit = 2 -> 2 succeed with decreasing remaining_quota, 3rd returns 429 quota_exhausted
+    for (const expectedRemaining of [1, 0]) {
+      const qaOk = await app.request(
+        'https://mirrorinfo.xyz/api/qa/ask',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'cf-connecting-ip': '203.0.113.10',
+            'X-Device-ID': 'guest-qa-dev-1',
+          },
+          body: JSON.stringify({ question: '美联储最新利率与通胀判断是什么？', lang: 'zh' }),
+        },
+        env,
+      )
+      expect(qaOk.status).toBe(200)
+      expect(await qaOk.json()).toMatchObject({
+        remaining_quota: expectedRemaining,
+        daily_limit: 2,
+      })
+    }
+
+    const qaBlocked = await app.request(
+      'https://mirrorinfo.xyz/api/qa/ask',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'cf-connecting-ip': '203.0.113.10',
+          'X-Device-ID': 'guest-qa-dev-1',
+        },
+        body: JSON.stringify({ question: '第三次追问超限测试', lang: 'zh' }),
+      },
+      env,
+    )
+    expect(qaBlocked.status).toBe(429)
+    expect(await qaBlocked.json()).toMatchObject({
+      quota_exhausted: true,
+      remaining_quota: 0,
+      daily_limit: 2,
+    })
+
+    // 3. Stage 2 Soft Invite + Dual Quota Bonus + No-code registration still open + dynamic crowd_vote_min_unlock=2
+    const saveStage2 = await app.request(
+      'https://mirrorinfo.xyz/api/admin/site-settings',
+      {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${superSess.token}`,
+        },
+        body: JSON.stringify({
+          growth_stage: 'stage_2_soft_invite',
+          access_mode: 'public',
+          crowd_vote_min_unlock: 2,
+          user_referral_enabled: true,
+          user_invite_quota: 1,
+          referral_bonus_qa_quota: 15,
+        }),
+      },
+      env,
+    )
+    expect(saveStage2.status).toBe(200)
+
+    // Register User A without code (public mode allows optional)
+    const regUserA = await app.request(
+      'https://mirrorinfo.xyz/api/auth/register',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'cf-connecting-ip': '203.0.113.21',
+          'X-Device-ID': 'ref-dev-a',
+        },
+        body: JSON.stringify({ username: 'alpha_user', password: 'Password123' }),
+      },
+      env,
+    )
+    expect(regUserA.status).toBe(200)
+    const sessA = (await regUserA.json()) as { token: string; user: { id: number; member_number: number } }
+    expect(sessA.user.member_number).toBe(sessA.user.id)
+
+    // User A creates 1 referral invite code (quota=1); 2nd attempt hits quota error
+    const mkInv1 = await app.request(
+      'https://mirrorinfo.xyz/api/auth/my-invites',
+      {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${sessA.token}` },
+      },
+      env,
+    )
+    expect(mkInv1.status).toBe(200)
+    const inv1Body = (await mkInv1.json()) as { item: { code: string }; remaining_quota: number }
+    expect(inv1Body.remaining_quota).toBe(0)
+    const refCode = inv1Body.item.code
+
+    const mkInv2 = await app.request(
+      'https://mirrorinfo.xyz/api/auth/my-invites',
+      {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${sessA.token}` },
+      },
+      env,
+    )
+    expect(mkInv2.status).toBe(400)
+
+    // User B registers in Stage 2 WITH optional referral code -> BOTH A & B gain +15 extra_qa_quota
+    const regUserB = await app.request(
+      'https://mirrorinfo.xyz/api/auth/register',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'cf-connecting-ip': '203.0.113.22',
+          'X-Device-ID': 'ref-dev-b',
+        },
+        body: JSON.stringify({ username: 'beta_user', password: 'Password123', invite_code: refCode }),
+      },
+      env,
+    )
+    expect(regUserB.status).toBe(200)
+    const sessB = (await regUserB.json()) as {
+      token: string
+      referral_bonus_granted: number
+      user: { extra_qa_quota: number; invited_by_code: string }
+    }
+    expect(sessB.referral_bonus_granted).toBe(15)
+    expect(sessB.user.extra_qa_quota).toBe(15)
+    expect(sessB.user.invited_by_code).toBe(refCode)
+
+    const meA = await app.request(
+      'https://mirrorinfo.xyz/api/auth/me',
+      { headers: { Authorization: `Bearer ${sessA.token}` } },
+      env,
+    )
+    const meABody = (await meA.json()) as { user: { extra_qa_quota: number } }
+    expect(meABody.user.extra_qa_quota).toBe(15)
+
+    // Test crowd consensus threshold = 2: 1st vote keeps locked, 2nd vote unlocks crowd_avg_pct
+    const voteA = await app.request(
+      'https://mirrorinfo.xyz/api/predictions/pred_test_1/vote',
+      {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${sessA.token}`,
+        },
+        body: JSON.stringify({ prob_pct: 70 }),
+      },
+      env,
+    )
+    expect(voteA.status).toBe(200)
+    expect(((await voteA.json()) as { item: { unlocked: boolean; crowd_avg_pct: number | null } }).item).toMatchObject({
+      unlocked: false,
+      crowd_avg_pct: null,
+    })
+
+    const voteB = await app.request(
+      'https://mirrorinfo.xyz/api/predictions/pred_test_1/vote',
+      {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${sessB.token}`,
+        },
+        body: JSON.stringify({ prob_pct: 80 }),
+      },
+      env,
+    )
+    expect(voteB.status).toBe(200)
+    expect(((await voteB.json()) as { item: { unlocked: boolean; crowd_avg_pct: number } }).item).toMatchObject({
+      unlocked: true,
+      crowd_avg_pct: 75,
+    })
+
+    // 4. Stage 3 invite_only + waitlist submit -> admin approve -> applicant registers with assigned code
+    const saveStage3 = await app.request(
+      'https://mirrorinfo.xyz/api/admin/site-settings',
+      {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${superSess.token}`,
+        },
+        body: JSON.stringify({
+          growth_stage: 'stage_3_scarcity_invite',
+          access_mode: 'invite_only',
+          invite_waitlist_enabled: true,
+        }),
+      },
+      env,
+    )
+    expect(saveStage3.status).toBe(200)
+
+    const submitWl = await app.request(
+      'https://mirrorinfo.xyz/api/public/waitlist',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'cf-connecting-ip': '203.0.113.30',
+        },
+        body: JSON.stringify({
+          contact: 'gamma@mirrorinfo.xyz',
+          focus_areas: ['宏观央行', 'AI前沿'],
+          note: '关注利率与半导体传导',
+        }),
+      },
+      env,
+    )
+    expect(submitWl.status).toBe(200)
+    const wlBody = (await submitWl.json()) as { ok: boolean; id: number }
+
+    const approveWl = await app.request(
+      `https://mirrorinfo.xyz/api/admin/waitlist/${wlBody.id}/approve`,
+      {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${superSess.token}` },
+      },
+      env,
+    )
+    expect(approveWl.status).toBe(200)
+    const approvedData = (await approveWl.json()) as { code: string }
+    expect(approvedData.code).toMatch(/^MB-/)
+
+    const regFromWaitlist = await app.request(
+      'https://mirrorinfo.xyz/api/auth/register',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'cf-connecting-ip': '203.0.113.31',
+          'X-Device-ID': 'ref-dev-gamma',
+        },
+        body: JSON.stringify({
+          username: 'gamma_user',
+          password: 'Password123',
+          invite_code: approvedData.code,
+        }),
+      },
+      env,
+    )
+    expect(regFromWaitlist.status).toBe(200)
+
+    // 5. Reactions: guest dedup/switch, user dedup, invalid key -> 400
+    const badReact = await app.request(
+      'https://mirrorinfo.xyz/api/reactions',
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-Device-ID': 'react-dev-1' },
+        body: JSON.stringify({ target_type: 'event', target_id: 'ev_fomc_1', reaction_key: 'invalid_key' }),
+      },
+      env,
+    )
+    expect(badReact.status).toBe(400)
+
+    const r1 = await app.request(
+      'https://mirrorinfo.xyz/api/reactions',
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-Device-ID': 'react-dev-1' },
+        body: JSON.stringify({ target_type: 'event', target_id: 'ev_fomc_1', reaction_key: 'heavy' }),
+      },
+      env,
+    )
+    expect(r1.status).toBe(200)
+    expect(((await r1.json()) as { item: { counts: Record<string, number>; my_reaction: string } }).item).toMatchObject({
+      counts: { heavy: 1, track: 0, noise: 0 },
+      my_reaction: 'heavy',
+    })
+
+    // Same guest switches from 'heavy' to 'track' -> heavy decrements to 0, track becomes 1
+    const rSwitch = await app.request(
+      'https://mirrorinfo.xyz/api/reactions',
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-Device-ID': 'react-dev-1' },
+        body: JSON.stringify({ target_type: 'event', target_id: 'ev_fomc_1', reaction_key: 'track' }),
+      },
+      env,
+    )
+    expect(((await rSwitch.json()) as { item: { counts: Record<string, number>; total: number } }).item).toMatchObject({
+      counts: { heavy: 0, track: 1, noise: 0 },
+      total: 1,
+    })
+
+    // Authenticated user A votes 'heavy', then batch fetch sees both
+    const rUserA = await app.request(
+      'https://mirrorinfo.xyz/api/reactions',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${sessA.token}`,
+        },
+        body: JSON.stringify({ target_type: 'event', target_id: 'ev_fomc_1', reaction_key: 'heavy' }),
+      },
+      env,
+    )
+    expect(rUserA.status).toBe(200)
+
+    const rBatch = await app.request(
+      'https://mirrorinfo.xyz/api/reactions/batch?target_type=event&ids=ev_fomc_1',
+      {
+        headers: { Authorization: `Bearer ${sessA.token}` },
+      },
+      env,
+    )
+    expect(rBatch.status).toBe(200)
+    expect(((await rBatch.json()) as { items: Record<string, { counts: Record<string, number>; total: number; my_reaction: string }> }).items.ev_fomc_1).toMatchObject({
+      counts: { heavy: 1, track: 1, noise: 0 },
+      total: 2,
+      my_reaction: 'heavy',
+    })
   })
 })

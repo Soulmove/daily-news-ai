@@ -25,6 +25,7 @@ import SmartTime from '../SmartTime.vue'
 import TopicSpotlight from './TopicSpotlight.vue'
 import { appLang, pickBiText, t } from '../../core/i18n'
 import { centerPillIntoView } from '../../core/dom'
+import { computeEchoChamberReport, computeWeeklyReadingReport } from '../../core/readingProgress'
 import { isEventRead } from '../../core/storage'
 import { formatShanghaiDateOnly, parseTimestampMs } from '../../core/time'
 import {
@@ -132,6 +133,7 @@ const emit = defineEmits<{
   (e: 'switch-tab', tab: 'calendar' | 'predictions' | 'tracking' | 'briefing' | 'wire'): void
   (e: 'clear-search'): void
   (e: 'open-auth'): void
+  (e: 'open-echo-share-card'): void
 }>()
 
 const filterDrawerOpen = ref(false)
@@ -763,7 +765,39 @@ const activeBreakingHighlights = computed<BreakingHighlightItem[]>(() => {
   const filteredBh = (props.breakingHighlights || []).filter(
     (bh) => !props.mutedSet.has(bh.id) && !(bh.id && props.mutedSet.has(bh.id.replace(/^brk_/, ''))),
   )
+  // P0 noise reduction: cap home breaking banners to at most 1 genuine S-tier item so Lead Story stays above the fold on mobile & desktop.
   return filterActiveBreakingHighlights(filteredBh, topEvents, props.nowMs)
+    .filter((bh) => bh.severity_tier === 'S')
+    .slice(0, 1)
+})
+
+const COCOON_DOMAIN_META: Record<'finance' | 'global' | 'tech' | 'general', { label: string; labelEn: string; colorClass: string }> = {
+  finance: { label: '财经金融', labelEn: 'Finance', colorClass: 'bg-rose-500' },
+  global: { label: '国际政治', labelEn: 'Global', colorClass: 'bg-amber-500' },
+  tech: { label: '科技AI', labelEn: 'Tech & AI', colorClass: 'bg-[#007AFF]' },
+  general: { label: '综合要闻', labelEn: 'General', colorClass: 'bg-emerald-500' },
+}
+
+const cocoonDiversityPanel = computed(() => {
+  // Touch reactive read deps so panel refreshes live when events are marked read
+  void props.todayReadCount
+  void props.readIds.size
+  const echo = computeEchoChamberReport(props.nowMs)
+  const weekly = computeWeeklyReadingReport(props.nowMs)
+  const bars = weekly.categoryDistribution.map((c) => ({
+    category: c.category,
+    label: t(COCOON_DOMAIN_META[c.category].label, COCOON_DOMAIN_META[c.category].labelEn),
+    colorClass: COCOON_DOMAIN_META[c.category].colorClass,
+    count: c.count,
+    pct: c.pct,
+  }))
+  const unlockReads = Math.max(echo.totalCategorizedReads, props.todayReadCount ?? 0)
+  return {
+    echo,
+    bars,
+    unlockReads,
+    canShare: echo.diversityScore !== null && echo.totalCategorizedReads >= 2,
+  }
 })
 </script>
 
@@ -1006,12 +1040,61 @@ const activeBreakingHighlights = computed<BreakingHighlightItem[]>(() => {
       </div>
     </div>
 
-    <!-- Restored 破茧 (Cross-Domain Blindspot Discovery) View -->
+    <!-- Restored 破茧 (Cross-Domain Blindspot Discovery + Exposed Echo-Chamber Diversity Card) View -->
     <div v-else-if="todaySection === 'cocoon'" class="ios-fade-in space-y-2.5" data-testid="today-cocoon-panel">
-      <div class="ios-card px-3.5 py-2.5 flex items-center justify-between gap-2 text-xs">
-        <div class="flex items-center gap-2 text-zinc-700 dark:text-zinc-200 font-medium">
-          <Compass class="w-4 h-4 text-[#007AFF] shrink-0" :stroke-width="1.75" />
-          <span>{{ t('破茧跨界视界：跳过关注词过滤，直接呈现在您关注领域之外的高独立信源事件', 'Cocoon Discovery: High-signal events outside your watchlist across macro, finance, tech & society') }}</span>
+      <!-- Exposed 视野分布 & 信息茧房诊断海报入口 (Canvas Card 3) -->
+      <div class="ios-card px-3.5 py-3 space-y-2.5" data-testid="cocoon-diversity-card">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <div class="flex items-center gap-2 min-w-0">
+            <Compass class="w-4 h-4 text-[#007AFF] shrink-0" :stroke-width="1.75" />
+            <div class="min-w-0">
+              <div class="text-xs font-bold text-zinc-900 dark:text-white flex items-center gap-2">
+                <span>{{ t('我的视野分布与信息茧房诊断', 'Vision Balance & Echo-Chamber Diagnosis') }}</span>
+                <span
+                  v-if="cocoonDiversityPanel.echo.diversityScore !== null"
+                  class="px-1.5 py-0.5 rounded-md bg-violet-500/12 text-violet-700 dark:text-violet-300 text-[10.5px] font-bold tabular-nums"
+                >
+                  {{ cocoonDiversityPanel.echo.diversityScore }}/100 · {{ t(cocoonDiversityPanel.echo.statusLabel, cocoonDiversityPanel.echo.statusLabelEn) }}
+                </span>
+              </div>
+              <p class="text-[11px] text-zinc-500 dark:text-zinc-400">
+                {{ t(cocoonDiversityPanel.echo.recommendation, cocoonDiversityPanel.echo.recommendationEn) }}
+              </p>
+            </div>
+          </div>
+
+          <button
+            v-if="cocoonDiversityPanel.canShare"
+            type="button"
+            @click="emit('open-echo-share-card')"
+            class="ios-tap inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-violet-600 hover:bg-violet-700 text-white text-[11px] font-semibold shrink-0 whitespace-nowrap"
+            data-testid="cocoon-share-card-btn"
+          >
+            <Sparkles class="w-3.5 h-3.5" :stroke-width="1.75" />
+            <span>{{ t('生成我的信息茧房诊断报告', 'Generate Echo Diagnosis Poster') }}</span>
+          </button>
+          <span
+            v-else
+            class="px-2.5 py-1 rounded-xl bg-[#F2F2F7] dark:bg-[#2C2C2E] text-[11px] font-medium text-zinc-600 dark:text-zinc-300 shrink-0 tabular-nums"
+          >
+            {{ t(`已读 ${cocoonDiversityPanel.unlockReads}/2 条即可生成诊断海报`, `Read ${cocoonDiversityPanel.unlockReads}/2 to unlock poster`) }}
+          </span>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-0.5">
+          <div
+            v-for="bar in cocoonDiversityPanel.bars"
+            :key="bar.category"
+            class="rounded-xl bg-[#F5F5F7] dark:bg-[#2C2C2E] px-2.5 py-1.5 space-y-1"
+          >
+            <div class="flex items-center justify-between text-[11px]">
+              <span class="font-medium text-zinc-700 dark:text-zinc-200">{{ bar.label }}</span>
+              <span class="font-mono tabular-nums text-zinc-500 dark:text-zinc-400">{{ bar.pct }}%</span>
+            </div>
+            <div class="h-1.5 rounded-full bg-black/[0.06] dark:bg-white/[0.08] overflow-hidden">
+              <div class="h-full rounded-full transition-all" :class="bar.colorClass" :style="{ width: `${Math.max(bar.pct > 0 ? 6 : 0, bar.pct)}%` }" />
+            </div>
+          </div>
         </div>
       </div>
       <div v-if="blindspotDiscovery.length > 0" class="ios-card divide-y divide-black/[0.06] dark:divide-white/[0.08] overflow-hidden">
@@ -1143,26 +1226,26 @@ const activeBreakingHighlights = computed<BreakingHighlightItem[]>(() => {
 
     <!-- Primary Top Feed: Fast-Track S-Tier Breaking + #1 Lead Story + iOS Inset Grouped List (#2+ incl. interwoven Cross-Domain Blindspot Cards) -->
     <div v-else class="space-y-2.5">
-      <!-- Fast-Track S-Tier Breaking Promotion (surfaces major policy/regulatory wires within minutes without waiting for 3h AI batch) -->
+      <!-- Fast-Track S-Tier Breaking Promotion (capped at max 1 compact banner so Lead Story renders above the fold) -->
       <div
         v-if="activeBreakingHighlights.length > 0"
-        class="space-y-2"
+        class="space-y-1.5"
         data-testid="fast-track-breaking-card"
       >
         <div
           v-for="bh in activeBreakingHighlights"
           :key="bh.id"
-          class="ios-card border border-rose-500/25 bg-gradient-to-br from-rose-50/90 via-white to-white dark:from-rose-950/35 dark:via-[#1C1C1E] dark:to-[#1C1C1E] px-3.5 py-3 space-y-2"
+          class="ios-card border border-rose-500/25 bg-gradient-to-br from-rose-50/90 via-white to-white dark:from-rose-950/35 dark:via-[#1C1C1E] dark:to-[#1C1C1E] px-3 py-2.5 space-y-1.5"
         >
           <div class="flex items-center justify-between gap-2 text-[11px]">
-            <div class="flex items-center gap-1.5 min-w-0">
+            <div class="flex flex-wrap items-center gap-x-1.5 gap-y-0.5 min-w-0">
               <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-[#DC2626] text-white font-bold tracking-tight shrink-0 whitespace-nowrap">
                 <span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
                 <span>{{ t(bh.breaking_label || '刚刚突发 · 重磅', 'BREAKING · HEAVY') }}</span>
               </span>
-              <span class="font-medium text-rose-700 dark:text-rose-300 truncate">{{ bh.source_name }}</span>
-              <span class="text-zinc-300 dark:text-zinc-600">·</span>
-              <SmartTime :iso="bh.published_at" :now-ms="nowMs" class="text-zinc-500 dark:text-zinc-400 tabular-nums shrink-0" />
+              <span class="font-medium text-rose-700 dark:text-rose-300 shrink-0 whitespace-nowrap">{{ bh.source_name }}</span>
+              <span class="text-zinc-300 dark:text-zinc-600 shrink-0">·</span>
+              <SmartTime :iso="bh.published_at" :now-ms="nowMs" class="text-zinc-500 dark:text-zinc-400 tabular-nums shrink-0 whitespace-nowrap" />
             </div>
             <button
               type="button"
@@ -1178,25 +1261,13 @@ const activeBreakingHighlights = computed<BreakingHighlightItem[]>(() => {
             target="_blank"
             rel="noopener noreferrer"
             @click.stop
-            class="block text-[16px] sm:text-[17px] font-bold text-zinc-950 dark:text-white leading-[1.35] hover:text-[#007AFF] dark:hover:text-[#0A84FF] transition-colors"
+            class="block text-[14.5px] sm:text-[15.5px] font-bold text-zinc-950 dark:text-white leading-[1.35] line-clamp-2 hover:text-[#007AFF] dark:hover:text-[#0A84FF] transition-colors"
           >
             {{ bh.title }}
           </a>
-          <h3 v-else class="text-[16px] sm:text-[17px] font-bold text-zinc-950 dark:text-white leading-[1.35]">
+          <h3 v-else class="text-[14.5px] sm:text-[15.5px] font-bold text-zinc-950 dark:text-white leading-[1.35] line-clamp-2">
             {{ bh.title }}
           </h3>
-          <p v-if="bh.excerpt && bh.excerpt !== bh.title" class="text-[13px] text-zinc-600 dark:text-zinc-300 line-clamp-2 leading-[1.45]">
-            {{ bh.excerpt }}
-          </p>
-          <div v-if="(bh.related_titles?.length || 0) > 0" class="flex flex-wrap gap-1.5 pt-0.5">
-            <span
-              v-for="(rt, ridx) in bh.related_titles?.slice(0, 3)"
-              :key="ridx"
-              class="inline-flex items-center px-2 py-0.5 rounded-lg bg-rose-500/[0.08] text-rose-800 dark:text-rose-200 text-[11px] max-w-full truncate"
-            >
-              + {{ rt }}
-            </span>
-          </div>
         </div>
       </div>
 

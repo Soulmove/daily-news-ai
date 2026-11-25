@@ -53,7 +53,9 @@ import AuthModal from '../components/AuthModal.vue'
 import AvatarPickerModal from '../components/AvatarPickerModal.vue'
 import EmptySearchState from '../components/EmptySearchState.vue'
 import LoadingSkeleton from '../components/LoadingSkeleton.vue'
+import ShareCardModal, { type ShareCardPayload } from '../components/ShareCardModal.vue'
 import SmartTime from '../components/SmartTime.vue'
+import SoftAuthPromptModal, { type SoftAuthScenario } from '../components/SoftAuthPromptModal.vue'
 import { appLang, pickBiText, syncHtmlLangAttr, t, toggleAppLang, translateEntityName } from '../core/i18n'
 import { useDialogBehavior } from '../core/dialog'
 import { lockBodyScroll, triggerHaptic, unlockBodyScroll } from '../core/uiPrefs'
@@ -65,6 +67,8 @@ import {
 } from '../core/quotesStore'
 import { normalizeExternalUrl } from '../core/legacyAdapter'
 import {
+  computeEchoChamberReport,
+  computeWeeklyReadingReport,
   getTodayShanghaiDate,
   loadDailyReadingState,
   recordEventReadInHistory,
@@ -72,6 +76,7 @@ import {
   saveDailyReadingState,
   syncDailyStateToHistory,
 } from '../core/readingProgress'
+import { invalidateReactionsCache, loadReactionsBatch } from '../core/reactionsStore'
 import {
   isOnboardingCompleted,
   setOnboardingCompleted,
@@ -1108,6 +1113,142 @@ async function loadTools(forceFresh = false) {
 }
 
 const crowdStatsMap = ref<Record<string, CrowdPredictionStat>>({})
+const GUEST_STAGED_VOTES_KEY = 'mirrorbrief_guest_staged_votes_v1'
+const WELCOME_HERO_DISMISSED_KEY = 'mirrorbrief_welcome_hero_dismissed_v1'
+const PENDING_REF_STORAGE_KEY = 'mirrorbrief_pending_ref_v1'
+
+function loadGuestStagedVotes(): Record<string, number> {
+  if (typeof window === 'undefined') return {}
+  try {
+    const raw = window.localStorage.getItem(GUEST_STAGED_VOTES_KEY)
+    if (!raw) return {}
+    const parsed = JSON.parse(raw) as Record<string, number>
+    return parsed && typeof parsed === 'object' ? parsed : {}
+  } catch {
+    return {}
+  }
+}
+
+function saveGuestStagedVotes(map: Record<string, number>) {
+  if (typeof window === 'undefined') return
+  try {
+    window.localStorage.setItem(GUEST_STAGED_VOTES_KEY, JSON.stringify(map))
+  } catch {
+    // ignore
+  }
+}
+
+const guestStagedVotes = ref<Record<string, number>>(loadGuestStagedVotes())
+const welcomeHeroDismissed = ref<boolean>(
+  typeof window !== 'undefined' && window.localStorage.getItem(WELCOME_HERO_DISMISSED_KEY) === '1',
+)
+const pendingRefCode = ref<string>(
+  typeof window !== 'undefined' ? (window.localStorage.getItem(PENDING_REF_STORAGE_KEY) || '') : '',
+)
+const incomingPkChallenge = ref<{ predId: string; prob: number; ref?: string } | null>(null)
+const financeOpenPortfolioNonce = ref(0)
+const softAuthPromptOpen = ref(false)
+const softAuthScenario = ref<SoftAuthScenario>('portfolio_saved')
+const shareCardOpen = ref(false)
+const shareCardPayload = ref<ShareCardPayload | null>(null)
+let portfolioSoftPromptShown = false
+
+function dismissWelcomeHero() {
+  welcomeHeroDismissed.value = true
+  if (typeof window !== 'undefined') {
+    try {
+      window.localStorage.setItem(WELCOME_HERO_DISMISSED_KEY, '1')
+    } catch {
+      // ignore
+    }
+  }
+}
+
+function triggerSoftAuth(scenario: SoftAuthScenario) {
+  if (authSession.value) return
+  if (siteSettings.value.soft_auth_prompts_enabled === false) return
+  softAuthScenario.value = scenario
+  softAuthPromptOpen.value = true
+}
+
+function openPredictionPkShareCard(payload: { rec: PredictionRecord; probPct: number }) {
+  const pid = payload.rec.prediction_id
+  const origin = typeof window !== 'undefined' ? window.location.origin : 'https://mirrorinfo.xyz'
+  const u = new URL(origin)
+  u.searchParams.set('tab', 'calendar')
+  u.searchParams.set('pred', pid)
+  u.searchParams.set('p', String(Math.round(payload.probPct)))
+  if (authSession.value?.user?.username) {
+    u.searchParams.set('ref', authSession.value.user.username)
+  } else if (pendingRefCode.value) {
+    u.searchParams.set('ref', pendingRefCode.value)
+  }
+  const stat = crowdStatsMap.value[pid]
+  const minVotes = Math.max(1, Number(stat?.min_votes ?? siteSettings.value.crowd_vote_min_unlock ?? 3))
+  shareCardPayload.value = {
+    kind: 'prediction_pk',
+    predictionId: pid,
+    question: pickBiText(payload.rec.question, (payload.rec as unknown as { question_en?: string }).question_en) || payload.rec.title,
+    userProbPct: payload.probPct,
+    deadlineLabel: formatShanghaiDateTime(payload.rec.due_at, false),
+    voteCount: Number(stat?.vote_count ?? (guestStagedVotes.value[pid] !== undefined ? 1 : 0)),
+    minVotes,
+    crowdAvgPct: stat?.unlocked && typeof stat.crowd_avg_pct === 'number' ? stat.crowd_avg_pct : null,
+    shareUrl: u.toString(),
+  }
+  shareCardOpen.value = true
+}
+
+function openPortfolioShareCard(summary: {
+  matchedCount: number
+  bullishCount: number
+  bearishCount: number
+  neutralCount: number
+  symbolsLabel: string
+  takeaways: { title: string; polarity: 'positive' | 'negative' | 'neutral'; summary: string }[]
+}) {
+  const origin = typeof window !== 'undefined' ? window.location.origin : 'https://mirrorinfo.xyz'
+  const u = new URL(origin)
+  u.searchParams.set('tab', 'finance')
+  shareCardPayload.value = {
+    kind: 'portfolio_radar',
+    ...summary,
+    shareUrl: u.toString(),
+  }
+  shareCardOpen.value = true
+}
+
+function openEchoChamberShareCard() {
+  const echo = computeEchoChamberReport(nowMs.value)
+  const weekly = computeWeeklyReadingReport(nowMs.value)
+  const colorHex: Record<CategoryKey, string> = {
+    finance: '#F43F5E',
+    global: '#F59E0B',
+    tech: '#3B82F6',
+    general: '#10B981',
+  }
+  const catLabelMap: Record<CategoryKey, string> = {
+    finance: t('财经金融', 'Finance'),
+    global: t('国际政治', 'Global'),
+    tech: t('科技AI', 'Tech & AI'),
+    general: t('综合要闻', 'General'),
+  }
+  const origin = typeof window !== 'undefined' ? window.location.origin : 'https://mirrorinfo.xyz'
+  shareCardPayload.value = {
+    kind: 'echo_chamber',
+    diversityScore: echo.diversityScore ?? 0,
+    statusLabel: t(echo.statusLabel, echo.statusLabelEn),
+    totalReads: echo.totalCategorizedReads,
+    distribution: weekly.categoryDistribution.map((c) => ({
+      label: catLabelMap[c.category],
+      pct: c.pct,
+      color: colorHex[c.category],
+    })),
+    recommendation: t(echo.recommendation, echo.recommendationEn),
+    shareUrl: origin,
+  }
+  shareCardOpen.value = true
+}
 
 async function loadCrowdStats() {
   try {
@@ -1120,8 +1261,17 @@ async function loadCrowdStats() {
 
 async function handleVotePredictionCrowd(payload: { predictionId: string; probPct: number }) {
   if (!authSession.value?.token) {
-    authModalOpen.value = true
-    notifyToast(t('登录后即可参与群众概率投票（匿名计入总票数与均值）', 'Sign in to submit your probability vote'))
+    // Guest UX unified (P0-4): stage vote locally first, then prompt soft registration without hard-blocking slider
+    const nextStaged = { ...guestStagedVotes.value, [payload.predictionId]: payload.probPct }
+    guestStagedVotes.value = nextStaged
+    saveGuestStagedVotes(nextStaged)
+    notifyToast(
+      t(
+        `已暂存你的 ${payload.probPct}% 预判，登录后正式锁定战绩`,
+        `Staged ${payload.probPct}% forecast locally — sign in to lock record`,
+      ),
+    )
+    triggerSoftAuth('prediction_vote')
     return
   }
   try {
@@ -1131,10 +1281,20 @@ async function handleVotePredictionCrowd(payload: { predictionId: string; probPc
     }
     const stat = res.item || crowdStatsMap.value[payload.predictionId]
     const cnt = stat?.vote_count || 1
+    const minNeed = Math.max(1, Number(stat?.min_votes ?? res.min_votes ?? siteSettings.value.crowd_vote_min_unlock ?? 3))
     const msg = stat?.unlocked
       ? t(`已记录 ${payload.probPct}%（共 ${cnt} 人参与，群众均值 ${stat.crowd_avg_pct}%）`, `Vote ${payload.probPct}% saved (${cnt} voters · avg ${stat.crowd_avg_pct}%)`)
-      : t(`已记录 ${payload.probPct}%（当前 ${cnt}/10 人，满 10 人解锁群众均值）`, `Vote ${payload.probPct}% saved (${cnt}/10 to unlock crowd avg)`)
-    notifyToast(msg)
+      : t(`已记录 ${payload.probPct}%（已收 ${cnt}/${minNeed} 份，邀好友立即解锁均值）`, `Vote ${payload.probPct}% saved (${cnt}/${minNeed} to unlock crowd avg)`)
+    const rec = mergedPredictions.value.find((p) => p.prediction_id === payload.predictionId)
+    notifyToast(
+      msg,
+      rec
+        ? {
+            actionLabel: t('生成 PK 卡', 'Share PK Card'),
+            onAction: () => openPredictionPkShareCard({ rec, probPct: payload.probPct }),
+          }
+        : undefined,
+    )
   } catch (err) {
     notifyToast(err instanceof Error ? err.message : t('投票提交失败，请稍后重试', 'Vote submission failed'))
   }
@@ -1805,10 +1965,18 @@ const desktopNavItems = computed(() => [
   { id: 'today' as WorkbenchTab, label: t('今日要闻', 'Today'), shortLabel: t('要闻', 'Today'), icon: Compass, count: !loadingAllCats.value && allCatsReady.value ? canonicalTodayEvents.value.length : 0 },
   { id: 'wire' as WorkbenchTab, label: t('7×24 快讯', 'Live Wire'), shortLabel: t('快讯', 'Live'), icon: Radio, count: effectiveLiveWireDoc.value?.total || 0 },
   { id: 'finance' as WorkbenchTab, label: t('股市传导', 'Markets'), shortLabel: t('股市', 'Markets'), icon: TrendingUp, count: financeImpactDoc.value?.event_impacts?.length || 0 },
-  { id: 'ai_progress' as WorkbenchTab, label: t('AI 前沿', 'AI Frontier'), shortLabel: t('AI 前沿', 'AI'), icon: Bot, count: aiProgressDoc.value?.timeline.length || manifest.value?.v3?.ai_progress_count || 0 },
-  { id: 'calendar' as WorkbenchTab, label: t('日程与前瞻', 'Outlook'), shortLabel: t('日程', 'Outlook'), icon: Calendar, count: calendarTabTotalCount.value || 0 },
+  { id: 'ai_progress' as WorkbenchTab, label: t('AI 前沿', 'AI Frontier'), shortLabel: t('AI前沿', 'AI'), icon: Bot, count: aiProgressDoc.value?.timeline.length || manifest.value?.v3?.ai_progress_count || 0 },
+  { id: 'calendar' as WorkbenchTab, label: t('预测日程', 'Forecasts'), shortLabel: t('预测', 'Pred'), icon: Calendar, count: calendarTabTotalCount.value || 0 },
   { id: 'tracking' as WorkbenchTab, label: t('事件追踪', 'Tracking'), shortLabel: t('追踪', 'Track'), icon: GitBranch, count: Object.keys(storylinesMap.value).length || manifest.value?.v3?.storylines_count || 0 },
 ])
+
+watch(
+  () => allLoadedEvents.value.slice(0, 80).map((e) => e.event_id).join(','),
+  (csv) => {
+    if (!csv) return
+    void loadReactionsBatch('event', csv.split(','), { token: authSession.value?.token ?? null })
+  },
+)
 
 interface CommandItem {
   id: string
@@ -2318,6 +2486,9 @@ function handleSaveCardNote(payload: { event: SmartEvent; content: string }) {
       ? t('事件笔记已保存并同步云端', 'Event note saved & synced')
       : t('事件笔记已保存至本地', 'Event note saved locally'),
   )
+  if (!authSession.value && researchNotes.value.length >= 2) {
+    triggerSoftAuth('second_note')
+  }
 }
 
 function toggleSetKey(kind: 'muted' | 'downweighted' | 'read_later', key: string) {
@@ -2777,6 +2948,9 @@ function handleSaveResearchNote(note: ResearchNote) {
       ? t('研究笔记已保存并将同步至云端', 'Research note saved & synced to cloud')
       : t('研究笔记已保存至本机浏览器（登录后可跨设备同步）', 'Research note saved locally (sign in to sync)'),
   )
+  if (!authSession.value && researchNotes.value.length >= 2) {
+    triggerSoftAuth('second_note')
+  }
 }
 
 function executeDeleteResearchNote(noteId: string) {
@@ -3199,6 +3373,7 @@ watch(manifest, (m) => {
 const authSession = ref<AuthSession | null>(loadAuthSession())
 const authModalOpen = ref(false)
 const authModalSection = ref<'profile' | 'security' | undefined>(undefined)
+const authModalMode = ref<'login' | 'register' | null>(null)
 const openWatchlistNonce = ref(0)
 const avatarPickerOpen = ref(false)
 
@@ -3233,8 +3408,14 @@ function runConfirmedAction() {
   }
 }
 
-function openAuthModal(section?: 'profile' | 'security') {
-  authModalSection.value = section
+function openAuthModal(section?: 'profile' | 'security' | 'login' | 'register') {
+  if (section === 'login' || section === 'register') {
+    authModalSection.value = undefined
+    authModalMode.value = section
+  } else {
+    authModalMode.value = null
+    authModalSection.value = section
+  }
   authModalOpen.value = true
 }
 
@@ -3261,6 +3442,10 @@ function handlePortfolioChanged(cfg: PortfolioConfig, hitCount?: number) {
         `Watchlist tickers saved · ${hitCount} transmission hits`,
       ),
     )
+  }
+  if (!authSession.value && !portfolioSoftPromptShown) {
+    portfolioSoftPromptShown = true
+    triggerSoftAuth('portfolio_saved')
   }
 }
 
@@ -3382,12 +3567,35 @@ async function handleAuthenticated(sess: AuthSession) {
   if (sess.user.avatar) {
     userAvatar.value = saveUserAvatar(sess.user.avatar)
   }
-  notifyToast(
-    t(
-      `欢迎回来，${sess.user.display_name || sess.user.username}！正在同步加密云端数据...`,
-      `Welcome back, ${sess.user.display_name || sess.user.username}! Syncing cloud data...`,
-    ),
-  )
+  invalidateReactionsCache()
+  const stagedEntries = Object.entries(guestStagedVotes.value)
+  if (stagedEntries.length > 0) {
+    for (const [pid, prob] of stagedEntries) {
+      try {
+        await apiSubmitPredictionVote(sess.token, pid, prob)
+      } catch {
+        // ignore single prediction flush failure
+      }
+    }
+    guestStagedVotes.value = {}
+    saveGuestStagedVotes({})
+    void loadCrowdStats()
+  }
+  if (sess.referral_bonus_granted && sess.referral_bonus_granted > 0) {
+    notifyToast(
+      t(
+        `欢迎加入！已兑现邀请码，您与邀请人同时获赠每日 +${sess.referral_bonus_granted} 次 AI 问答额度`,
+        `Welcome! Invite redeemed — both accounts received +${sess.referral_bonus_granted} daily AI Q&As`,
+      ),
+    )
+  } else {
+    notifyToast(
+      t(
+        `欢迎回来，${sess.user.display_name || sess.user.username}！正在同步加密云端数据...`,
+        `Welcome back, ${sess.user.display_name || sess.user.username}! Syncing cloud data...`,
+      ),
+    )
+  }
   await pullOrInitCloudState(false)
   if (!workbenchStarted) {
     startLiveWorkbench()
@@ -3548,8 +3756,27 @@ watch([siteSettingsLoaded, isPrivateGateLocked], ([loaded, locked]) => {
 onMounted(async () => {
   syncHtmlLangAttr()
   applyDarkClass(isDark.value)
-  if (typeof window !== 'undefined' && hasInvalidBriefingUrlParams(window.location.search)) {
-    syncUrl(true)
+  if (typeof window !== 'undefined') {
+    const urlParams = new URLSearchParams(window.location.search)
+    const refParam = (urlParams.get('ref') || '').trim().toUpperCase()
+    if (refParam) {
+      pendingRefCode.value = refParam
+      try {
+        window.localStorage.setItem(PENDING_REF_STORAGE_KEY, refParam)
+      } catch {
+        // ignore
+      }
+    }
+    const pkPred = (urlParams.get('pred') || '').trim()
+    const pkProb = Number(urlParams.get('p'))
+    if (pkPred && Number.isFinite(pkProb) && pkProb >= 5 && pkProb <= 95) {
+      incomingPkChallenge.value = { predId: pkPred, prob: Math.round(pkProb), ref: refParam || undefined }
+      activeTab.value = 'calendar'
+      scheduleSubView.value = 'predictions'
+    }
+    if (hasInvalidBriefingUrlParams(window.location.search) || refParam || pkPred) {
+      syncUrl(true)
+    }
   }
   if (authSession.value) {
     try {
@@ -3639,6 +3866,9 @@ onBeforeUnmount(() => {
       :is-open="true"
       :allow-close="false"
       :access-mode="siteAccessMode"
+      :site-settings="siteSettings"
+      :initial-ref-code="pendingRefCode"
+      :initial-mode="authModalMode"
       :session="null"
       :last-synced-at="null"
       :sync-busy="false"
@@ -4023,6 +4253,59 @@ onBeforeUnmount(() => {
 
       <!-- TAB 1: Personalized My Today Workbench -->
       <template v-if="activeTab === 'today'">
+        <!-- Cold-Start 30-Second Value Hero (guest-only, compact & permanently dismissible) -->
+        <section
+          v-if="siteSettings.welcome_hero_enabled !== false && !authSession && !welcomeHeroDismissed"
+          class="ios-card border border-[#007AFF]/20 bg-gradient-to-br from-[#007AFF]/[0.06] via-white to-white dark:from-[#0A84FF]/[0.12] dark:via-[#1C1C1E] dark:to-[#1C1C1E] px-3.5 py-3 space-y-2 relative"
+          data-testid="welcome-value-hero"
+        >
+          <button
+            type="button"
+            @click="dismissWelcomeHero"
+            class="absolute top-2.5 right-2.5 w-7 h-7 inline-flex items-center justify-center rounded-full text-zinc-400 hover:bg-black/[0.06] dark:hover:bg-white/[0.08] hover:text-zinc-700 dark:hover:text-zinc-200 transition-colors"
+            :aria-label="t('关闭欢迎指引', 'Dismiss welcome banner')"
+          >
+            <X class="w-4 h-4" :stroke-width="1.5" />
+          </button>
+          <div class="pr-8 space-y-0.5">
+            <h2 class="text-[14px] sm:text-[15px] font-bold text-zinc-950 dark:text-white leading-snug">
+              {{ t('3 分钟看透全球大事，直接算清对 A股 / 美股的影响', 'Understand global news in 3 mins — quantify direct A-Share & US equity impact') }}
+            </h2>
+            <p class="text-[11.5px] text-zinc-500 dark:text-zinc-400">
+              {{ t('75+ 路一手信源交叉核验 · 免费 AI 证据问答 · 持仓宏观传导推演', '75+ verified first-hand feeds · Free AI evidence Q&A · Portfolio macro radar') }}
+            </p>
+          </div>
+          <div class="flex flex-wrap items-center gap-1.5 text-[11.5px]">
+            <button
+              type="button"
+              @click="financeInitialPortfolioOnly = false; financeOpenPortfolioNonce += 1; void switchTab('finance')"
+              class="ios-tap inline-flex items-center gap-1 px-2.5 min-h-[30px] rounded-full bg-[#007AFF] hover:bg-[#0066D6] text-white font-semibold whitespace-nowrap transition-colors"
+              data-testid="hero-pill-portfolio"
+            >
+              <TrendingUp class="w-3.5 h-3.5 shrink-0" :stroke-width="1.75" />
+              <span>{{ t('测测今日大事对我的持仓影响 →', 'Test Portfolio Impact →') }}</span>
+            </button>
+            <button
+              type="button"
+              @click="openQaGlobal"
+              class="ios-tap inline-flex items-center gap-1 px-2.5 min-h-[30px] rounded-full bg-white dark:bg-[#2C2C2E] border border-[#007AFF]/25 text-[#007AFF] dark:text-[#0A84FF] font-semibold hover:bg-[#007AFF]/10 whitespace-nowrap transition-colors"
+              data-testid="hero-pill-qa"
+            >
+              <Sparkles class="w-3.5 h-3.5 shrink-0" :stroke-width="1.75" />
+              <span>{{ t('免费向 AI 证据库提问', 'Ask AI Evidence DB Free') }}</span>
+            </button>
+            <button
+              type="button"
+              @click="scheduleSubView = 'predictions'; void loadPredictions(); void switchTab('calendar')"
+              class="ios-tap inline-flex items-center gap-1 px-2.5 min-h-[30px] rounded-full bg-[#F2F2F7] dark:bg-[#2C2C2E] text-zinc-700 dark:text-zinc-200 font-semibold hover:bg-black/[0.06] dark:hover:bg-white/[0.1] whitespace-nowrap transition-colors"
+              data-testid="hero-pill-predict"
+            >
+              <Scale class="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" :stroke-width="1.75" />
+              <span>{{ t('押一题本周大事概率', 'Forecast This Week') }}</span>
+            </button>
+          </div>
+        </section>
+
         <LoadingSkeleton
           v-if="(loadingCat || loadingAllCats) && allLoadedEvents.length === 0"
           variant="cards"
@@ -4094,6 +4377,7 @@ onBeforeUnmount(() => {
           @switch-tab="switchTab"
           @clear-search="clearFilters"
           @open-auth="openAuthModal()"
+          @open-echo-share-card="openEchoChamberShareCard"
         >
           <template #pillars>
             <div class="space-y-3">
@@ -4632,12 +4916,14 @@ onBeforeUnmount(() => {
           :now-ms="nowMs"
           :loading="!financeImpactLoaded"
           :initial-portfolio-only="financeInitialPortfolioOnly"
+          :open-portfolio-nonce="financeOpenPortfolioNonce"
           :research-notes="researchNotes"
           @jump-event-id="handleJumpToEventId"
           @mark-read-event-id="handleMarkSingleRead"
           @open-notes="openLibraryModal('notes')"
           @clear-search="clearFilters"
           @portfolio-changed="handlePortfolioChanged"
+          @open-portfolio-share-card="openPortfolioShareCard"
         />
       </template>
 
@@ -4732,6 +5018,10 @@ onBeforeUnmount(() => {
               :local-prediction-ids="localPredictionIdSet"
               :stances="predictionStances"
               :crowd-stats="crowdStatsMap"
+              :crowd-min-unlock="siteSettings.crowd_vote_min_unlock ?? 3"
+              :guest-staged-votes="guestStagedVotes"
+              :incoming-pk-challenge="incomingPkChallenge"
+              :is-logged-in="Boolean(authSession)"
               :is-admin="isAdminRole(authSession?.user?.role)"
               :now-ms="nowMs"
               @create-prediction="handleCreatePrediction"
@@ -4739,6 +5029,8 @@ onBeforeUnmount(() => {
               @settle-prediction="handleSettlePrediction"
               @set-prediction-stance="handleSetPredictionStance"
               @vote-crowd="handleVotePredictionCrowd"
+              @open-share-pk="openPredictionPkShareCard"
+              @dismiss-pk-banner="incomingPkChallenge = null"
               @delete-prediction="handleDeletePrediction"
               @reset-local-predictions="handleResetLocalPredictions"
               @clear-search="clearFilters"
@@ -4862,9 +5154,15 @@ onBeforeUnmount(() => {
       :data-cutoff-at="activeDoc?.input_cutoff_at || manifest?.smart.input_cutoff_at"
       :saved-notes="researchNotes"
       :is-logged-in="Boolean(authSession)"
+      :auth-token="authSession?.token ?? null"
+      :guest-daily-limit="siteSettings.guest_qa_daily_limit ?? 5"
+      :auth-daily-limit="siteSettings.auth_qa_daily_limit ?? 30"
+      :extra-qa-quota="authSession?.user?.extra_qa_quota ?? 0"
+      :now-ms="nowMs"
       @close="qaModalOpen = false"
       @save-note="handleSaveResearchNote"
       @delete-note="handleDeleteResearchNote"
+      @quota-exhausted="triggerSoftAuth('qa_quota')"
     />
 
     <!-- Workbench Toast Feedback (Apple Frosted Glass Micro-Toast) -->
@@ -5340,16 +5638,32 @@ onBeforeUnmount(() => {
       :is-open="authModalOpen"
       :session="authSession"
       :access-mode="siteAccessMode"
+      :site-settings="siteSettings"
+      :initial-ref-code="pendingRefCode"
+      :initial-mode="authModalMode"
       :user-avatar="userAvatar"
       :last-synced-at="lastSyncedAt"
       :sync-busy="cloudSyncBusy"
       :morning-brief="morningBriefSummary"
       :initial-section="authModalSection"
-      @close="authModalOpen = false; authModalSection = undefined"
+      @close="authModalOpen = false; authModalSection = undefined; authModalMode = null"
       @authenticated="handleAuthenticated"
       @logout="handleLogout"
       @sync-now="pushCurrentStateToCloud(false)"
       @open-avatar-picker="avatarPickerOpen = true"
+    />
+
+    <SoftAuthPromptModal
+      :is-open="softAuthPromptOpen"
+      :scenario="softAuthScenario"
+      @close="softAuthPromptOpen = false"
+      @open-auth="(m) => { softAuthPromptOpen = false; openAuthModal(m) }"
+    />
+
+    <ShareCardModal
+      :is-open="shareCardOpen"
+      :payload="shareCardPayload"
+      @close="shareCardOpen = false"
     />
 
     <!-- Secondary Action Confirmation Modal (Sign Out / Delete Note / Remove Bookmark) -->

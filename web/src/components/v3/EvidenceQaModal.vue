@@ -30,6 +30,10 @@ const props = defineProps<{
   dataCutoffAt?: string | null
   savedNotes: ResearchNote[]
   isLoggedIn?: boolean
+  authToken?: string | null
+  guestDailyLimit?: number
+  authDailyLimit?: number
+  extraQaQuota?: number
   nowMs?: number
 }>()
 
@@ -37,15 +41,41 @@ const emit = defineEmits<{
   (e: 'close'): void
   (e: 'save-note', note: ResearchNote): void
   (e: 'delete-note', noteId: string): void
+  (e: 'quota-exhausted', detail?: { remaining_quota?: number; daily_limit?: number }): void
 }>()
 
 const dialogEl = ref<HTMLElement | null>(null)
-const defaultQuestion = computed(() =>
-  props.contextTopic
-    ? t(`请梳理「${props.contextTopic.title}」的最新时间线、核心行程与潜在影响`, `Summarize timeline, itinerary & impact of "${props.contextTopic.title}"`)
-    : t('近7天有哪些核心变化与未决分歧？', 'What are the key changes and unresolved conflicts in the past 7 days?'),
+const hasScopedContext = computed(() =>
+  Boolean(props.contextEvent || props.contextStoryline || props.contextEntity || props.contextTopic),
 )
-const question = ref(defaultQuestion.value)
+const defaultQuestion = computed(() => {
+  if (props.contextTopic) {
+    return t(
+      `请梳理「${props.contextTopic.title}」的最新时间线、核心行程与潜在影响`,
+      `Summarize timeline, itinerary & impact of "${props.contextTopic.title}"`,
+    )
+  }
+  if (props.contextEvent) {
+    return t(
+      `请核验「${props.contextEvent.title}」的核心事实与信源证据边界`,
+      `Verify key facts and source evidence boundaries for "${props.contextEvent.title}"`,
+    )
+  }
+  if (props.contextStoryline) {
+    return t(
+      `主线「${props.contextStoryline.title}」近期有哪些关键进展与未决分歧？`,
+      `What are key developments and conflicts in "${props.contextStoryline.title}"?`,
+    )
+  }
+  if (props.contextEntity) {
+    return t(
+      `实体「${props.contextEntity.canonical_name}」近期核心事件与验证节点是什么？`,
+      `Key recent developments and catalysts for "${props.contextEntity.canonical_name}"?`,
+    )
+  }
+  return ''
+})
+const question = ref('')
 const userEditedQuestion = ref(false)
 const response = ref<EvidenceQaResponse | null>(null)
 const savedBanner = ref(false)
@@ -56,6 +86,53 @@ const showKeySettings = ref(false)
 const aiConfig = ref<AiClientConfig>(loadAiClientConfig())
 const hasLiveKey = computed(() => Boolean(aiConfig.value.apiKey.trim()))
 const effectiveNowMs = computed(() => props.nowMs ?? Date.now())
+
+const serverRemainingQuota = ref<number | null>(null)
+const serverDailyLimit = ref<number | null>(null)
+const effectiveDailyLimit = computed(() => {
+  if (serverDailyLimit.value !== null) return serverDailyLimit.value
+  if (props.isLoggedIn) {
+    return Math.max(1, Number(props.authDailyLimit ?? 30) + Math.max(0, Number(props.extraQaQuota ?? 0)))
+  }
+  return Math.max(0, Number(props.guestDailyLimit ?? 5))
+})
+
+const quickPromptChips = computed(() => {
+  if (props.contextEvent || props.contextStoryline || props.contextEntity || props.contextTopic) {
+    return [
+      {
+        label: t('核心事实与信源可信度？', 'Core Facts & Source Reliability?'),
+        query: t('这件事的核心事实与信源可信度如何？', 'What are the core facts and source reliability of this item?'),
+      },
+      {
+        label: t('对 A股 / 美股哪些板块直接传导？', 'Direct A-Share / US Sector Impact?'),
+        query: t('对 A股/美股哪些板块或标的产生直接传导？', 'Which A-share or US sectors/tickers are directly impacted?'),
+      },
+      {
+        label: t('后续验证节点与证伪条件？', 'Validation Milestones & Invalidation?'),
+        query: t('后续最关键的验证节点与证伪条件是什么？', 'What are the key validation milestones and invalidation triggers?'),
+      },
+    ]
+  }
+  return [
+    {
+      label: t('近7天核心变化与未决分歧？', '7-Day Core Changes & Conflicts?'),
+      query: t('近7天有哪些核心变化与未决分歧？', 'What are the key changes and unresolved conflicts in the past 7 days?'),
+    },
+    {
+      label: t('特朗普访华 / APEC 行程？', 'Trump Visit / APEC?'),
+      query: t('特朗普访华与深圳APEC最新行程进展是什么？', 'What is the latest on Trump visit & APEC Shenzhen?'),
+    },
+    {
+      label: t('今日宏观与股市核心主线？', 'Macro & Equity Core Themes?'),
+      query: t('今日宏观政策、美联储利率与A股美股核心传导主线是什么？', 'What are today’s core macro, Fed, A-share and US equity drivers?'),
+    },
+    {
+      label: t('证伪条件与验证节点？', 'Invalidation & Catalysts?'),
+      query: t('未来一周最重要的验证节点与证伪条件是什么？', 'What are the most important upcoming catalysts and invalidation triggers?'),
+    },
+  ]
+})
 
 const hasDirtyForm = computed(() =>
   Boolean(showKeySettings.value || (userEditedQuestion.value && question.value.trim() && question.value.trim() !== defaultQuestion.value)),
@@ -92,8 +169,8 @@ function clearAiKey() {
   liveError.value = null
 }
 
-async function askNow(customQ?: string, forceLocal = false) {
-  if (customQ) {
+async function askNow(customQ?: string, forceLocalOnly = false) {
+  if (customQ !== undefined) {
     question.value = customQ
     userEditedQuestion.value = false
   }
@@ -109,31 +186,49 @@ async function askNow(customQ?: string, forceLocal = false) {
     calendarEvents: props.calendarEvents,
     dataCutoffAt: props.dataCutoffAt,
   }
-  if (forceLocal) {
-    response.value = answerQuestionBounded(question.value, ctx)
+  const effectiveSeedQ = question.value.trim() || defaultQuestion.value || t('本批次核心要点核验', 'Current batch verification')
+  if (forceLocalOnly) {
+    response.value = answerQuestionBounded(effectiveSeedQ, ctx)
+    askingLive.value = false
+    return
   }
+
+  let qForServer = question.value.trim()
+  if (!qForServer) return
+  if (props.contextEvent && !qForServer.includes(props.contextEvent.title.slice(0, 10))) {
+    qForServer = `针对事件「${props.contextEvent.title}」：${qForServer}`
+  }
+
   askingLive.value = true
   try {
-    const qText = question.value.trim()
-    const res = await askEvidenceQa(qText, aiConfig.value, ctx, {
+    const res = await askEvidenceQa(qForServer, aiConfig.value, ctx, {
       forceLocal: false,
       history: qaHistory.value.slice(-6),
+      authToken: props.authToken ?? undefined,
     })
-    response.value = res
-    if (!forceLocal && qText) {
-      qaHistory.value = [
-        ...qaHistory.value.slice(-4),
-        { role: 'user', content: qText },
-        { role: 'assistant', content: res.answerMarkdown.slice(0, 600) },
-      ]
+    if (res.remaining_quota !== undefined) serverRemainingQuota.value = res.remaining_quota
+    if (res.daily_limit !== undefined) serverDailyLimit.value = res.daily_limit
+    if (res.quota_exhausted || res.engineMode === 'quota_exhausted') {
+      liveError.value = res.errorDetail || t('免费 AI 研报额度已用完，请登录后继续使用。', 'Daily AI Q&A quota reached — sign in to unlock more.')
+      emit('quota-exhausted', {
+        remaining_quota: res.remaining_quota ?? 0,
+        daily_limit: res.daily_limit ?? effectiveDailyLimit.value,
+      })
+      return
     }
+    response.value = res
+    qaHistory.value = [
+      ...qaHistory.value.slice(-4),
+      { role: 'user', content: qForServer },
+      { role: 'assistant', content: res.answerMarkdown.slice(0, 600) },
+    ]
     return
   } catch (err) {
     liveError.value = t(
       `${err instanceof Error ? err.message : '问答请求失败'}，已自动回退至本地多源证据研判。`,
       `${err instanceof Error ? err.message : 'Q&A request failed'} — fell back to local evidence synthesis.`,
     )
-    response.value = answerQuestionBounded(question.value, ctx)
+    response.value = answerQuestionBounded(qForServer, ctx)
   } finally {
     askingLive.value = false
   }
@@ -183,8 +278,16 @@ watch(
   ([open]) => {
     if (open) {
       userEditedQuestion.value = false
-      question.value = defaultQuestion.value
-      void askNow(undefined, true)
+      liveError.value = null
+      qaHistory.value = []
+      if (hasScopedContext.value) {
+        // Event/Dossier/Topic verification mode: show local structured evidence first; NEVER overwrite with a global query.
+        question.value = ''
+        void askNow(undefined, true)
+      } else {
+        question.value = ''
+        response.value = null
+      }
     }
   },
 )
@@ -239,6 +342,23 @@ function saveAsNote() {
             <h2 id="qa-modal-title" class="text-[16px] font-semibold text-zinc-950 dark:text-white truncate">
               {{ hasLiveKey ? t(`AI 问答 (${aiConfig.model})`, `AI Q&A (${aiConfig.model})`) : t('AI 证据问答', 'Evidence Q&A') }}
             </h2>
+            <span
+              v-if="!hasLiveKey"
+              class="px-2 py-0.5 rounded-full text-[10.5px] font-semibold tabular-nums shrink-0 whitespace-nowrap"
+              :class="
+                serverRemainingQuota === 0
+                  ? 'bg-rose-500/12 text-rose-600 dark:text-rose-400'
+                  : 'bg-[#007AFF]/10 text-[#007AFF] dark:text-[#0A84FF]'
+              "
+            >
+              {{
+                serverRemainingQuota !== null
+                  ? t(`今日剩余 ${serverRemainingQuota}/${effectiveDailyLimit} 次`, `${serverRemainingQuota}/${effectiveDailyLimit} left today`)
+                  : isLoggedIn
+                    ? t(`每日 ${effectiveDailyLimit} 次`, `${effectiveDailyLimit}/day`)
+                    : t(`游客每日免费 ${effectiveDailyLimit} 次`, `${effectiveDailyLimit} free/day`)
+              }}
+            </span>
             <button
               type="button"
               @click="showKeySettings = !showKeySettings"
@@ -342,18 +462,19 @@ function saveAsNote() {
           </details>
         </div>
 
+        <div class="rounded-xl bg-[#F5F5F7] dark:bg-[#2C2C2E]/80 px-3 py-2 text-[11.5px] font-medium text-zinc-700 dark:text-zinc-200 flex items-center justify-between gap-2">
+          <span class="truncate">{{ t('当前核验范围：', 'Scope: ') }}{{ scopeLabel }}</span>
+        </div>
+
         <div class="flex flex-wrap gap-1.5 text-xs">
-          <button type="button" @click="askNow(t('特朗普访华与深圳APEC最新行程进展是什么？', 'What is the latest on Trump visit & APEC Shenzhen?'))" class="px-2.5 py-1 rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800">
-            {{ t('特朗普访华 / APEC 行程？', 'Trump Visit / APEC?') }}
-          </button>
-          <button type="button" @click="askNow(t('近7天有哪些核心变化？', 'What changed over the past 7 days?'))" class="px-2.5 py-1 rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800">
-            {{ t('近7天有哪些核心变化？', '7-Day Core Changes?') }}
-          </button>
-          <button type="button" @click="askNow(t('主要正反依据和分歧在哪里？', 'What are the bull/bear arguments and conflicts?'))" class="px-2.5 py-1 rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800">
-            {{ t('正反依据与分歧在哪里？', 'Evidence & Conflicts?') }}
-          </button>
-          <button type="button" @click="askNow(t('证伪条件与下个验证节点是什么？', 'What are the invalidation triggers & next catalysts?'))" class="px-2.5 py-1 rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800">
-            {{ t('证伪条件与验证节点？', 'Invalidation & Catalysts?') }}
+          <button
+            v-for="chip in quickPromptChips"
+            :key="chip.query"
+            type="button"
+            @click="askNow(chip.query)"
+            class="px-2.5 py-1 rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-left"
+          >
+            {{ chip.label }}
           </button>
         </div>
 
@@ -362,7 +483,7 @@ function saveAsNote() {
             v-model="question"
             @input="userEditedQuestion = true"
             type="text"
-            :placeholder="t('输入想核查的问题或关键词（如 特朗普行程 / 英伟达 / 美联储 / Qwen）...', 'Ask a question or keyword (e.g. APEC / NVDA / FOMC / Qwen)...')"
+            :placeholder="hasScopedContext ? t('针对当前事件继续追问（如：是否已获官方证实 / 受益标的有哪些）...', 'Follow up on this event...') : t('输入想核查的问题或关键词（如 特朗普行程 / 英伟达 / 美联储 / Qwen）...', 'Ask a question or keyword (e.g. APEC / NVDA / FOMC / Qwen)...')"
             :aria-label="t('证据问答输入', 'Evidence Q&A question')"
             class="min-w-0 flex-1 h-10 px-3 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-xs sm:text-sm text-slate-900 dark:text-white"
           />

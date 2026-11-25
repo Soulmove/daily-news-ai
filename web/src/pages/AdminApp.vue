@@ -35,6 +35,7 @@ import DialogDirtyGuard from '../components/DialogDirtyGuard.vue'
 import UserAvatar from '../components/UserAvatar.vue'
 import { useDialogBehavior } from '../core/dialog'
 import {
+  apiAdminApproveWaitlist,
   apiAdminAuditLogs,
   apiAdminContentList,
   apiAdminCreateInviteCodes,
@@ -45,10 +46,12 @@ import {
   apiAdminGetPushConfig,
   apiAdminGetSiteSettings,
   apiAdminInviteCodes,
+  apiAdminListWaitlist,
   apiAdminOverview,
   apiAdminPatchUser,
   apiAdminPushLogs,
   apiAdminPushTest,
+  apiAdminRejectWaitlist,
   apiAdminRevealUserPassword,
   apiAdminRevokeInviteCode,
   apiAdminSaveEditorialOverride,
@@ -71,9 +74,11 @@ import {
   type AdminUserRow,
   type AuthSession,
   type FeedbackRecordItem,
+  type GrowthStage,
   type PublicSiteSettings,
   type SiteAccessMode,
   type UserRole,
+  type WaitlistEntryRow,
 } from '../core/auth'
 import type { EditorialOverridesDoc } from '../core/overrides'
 import { readDarkMode, writeDarkMode } from '../core/storage'
@@ -126,10 +131,47 @@ const siteSettingsForm = ref<PublicSiteSettings>({
   site_banner_enabled: false,
   site_banner_text: '',
   site_banner_tone: 'info',
+  growth_stage: 'stage_1_cold_start',
+  welcome_hero_enabled: true,
+  soft_auth_prompts_enabled: true,
+  guest_qa_daily_limit: 5,
+  auth_qa_daily_limit: 30,
+  crowd_vote_min_unlock: 3,
+  user_referral_enabled: false,
+  user_invite_quota: 3,
+  referral_bonus_qa_quota: 15,
+  invite_waitlist_enabled: false,
 })
 
-const accessModeDraft = ref<SiteAccessMode>('invite_only')
+interface GrowthControlDraft {
+  growth_stage: GrowthStage
+  access_mode: SiteAccessMode
+  welcome_hero_enabled: boolean
+  soft_auth_prompts_enabled: boolean
+  guest_qa_daily_limit: number
+  auth_qa_daily_limit: number
+  crowd_vote_min_unlock: number
+  user_referral_enabled: boolean
+  user_invite_quota: number
+  referral_bonus_qa_quota: number
+  invite_waitlist_enabled: boolean
+}
+
+const growthDraft = ref<GrowthControlDraft>({
+  growth_stage: 'stage_1_cold_start',
+  access_mode: 'invite_only',
+  welcome_hero_enabled: true,
+  soft_auth_prompts_enabled: true,
+  guest_qa_daily_limit: 5,
+  auth_qa_daily_limit: 30,
+  crowd_vote_min_unlock: 3,
+  user_referral_enabled: false,
+  user_invite_quota: 3,
+  referral_bonus_qa_quota: 15,
+  invite_waitlist_enabled: false,
+})
 const privateGateConfirmOpen = ref(false)
+const waitlistItems = ref<WaitlistEntryRow[]>([])
 
 // Feedback inbox state
 const feedbackStatusFilter = ref<string>('')
@@ -233,6 +275,125 @@ const currentAccessMode = computed<SiteAccessMode>(() => {
   if (m === 'public' || m === 'invite_only' || m === 'private_gate') return m
   return 'invite_only'
 })
+
+function buildGrowthDraftFromSettings(s: PublicSiteSettings): GrowthControlDraft {
+  return {
+    growth_stage:
+      s.growth_stage === 'stage_1_cold_start' ||
+      s.growth_stage === 'stage_2_soft_invite' ||
+      s.growth_stage === 'stage_3_scarcity_invite' ||
+      s.growth_stage === 'stage_4_elite_circle'
+        ? s.growth_stage
+        : 'stage_1_cold_start',
+    access_mode:
+      s.access_mode === 'public' || s.access_mode === 'invite_only' || s.access_mode === 'private_gate'
+        ? s.access_mode
+        : 'invite_only',
+    welcome_hero_enabled: s.welcome_hero_enabled !== false,
+    soft_auth_prompts_enabled: s.soft_auth_prompts_enabled !== false,
+    guest_qa_daily_limit: Number(s.guest_qa_daily_limit ?? 5),
+    auth_qa_daily_limit: Number(s.auth_qa_daily_limit ?? 30),
+    crowd_vote_min_unlock: Number(s.crowd_vote_min_unlock ?? 3),
+    user_referral_enabled: Boolean(s.user_referral_enabled),
+    user_invite_quota: Number(s.user_invite_quota ?? 3),
+    referral_bonus_qa_quota: Number(s.referral_bonus_qa_quota ?? 15),
+    invite_waitlist_enabled: Boolean(s.invite_waitlist_enabled),
+  }
+}
+
+const GROWTH_STAGE_PRESETS: ReadonlyArray<{
+  stage: GrowthStage
+  title: string
+  subtitle: string
+  patch: Partial<GrowthControlDraft>
+}> = [
+  {
+    stage: 'stage_1_cold_start',
+    title: '阶段一：前期冷启动',
+    subtitle: '开放免登录体验 + 首屏 3 胶囊 + 3 人投票即解锁共识',
+    patch: {
+      growth_stage: 'stage_1_cold_start',
+      access_mode: 'public',
+      welcome_hero_enabled: true,
+      soft_auth_prompts_enabled: true,
+      guest_qa_daily_limit: 5,
+      crowd_vote_min_unlock: 3,
+      user_referral_enabled: false,
+      invite_waitlist_enabled: false,
+    },
+  },
+  {
+    stage: 'stage_2_soft_invite',
+    title: '阶段二：中期软邀请裂变',
+    subtitle: '仍免码注册，选填老用户邀请码双方每日 +15 次 AI 额度',
+    patch: {
+      growth_stage: 'stage_2_soft_invite',
+      access_mode: 'public',
+      welcome_hero_enabled: true,
+      soft_auth_prompts_enabled: true,
+      guest_qa_daily_limit: 5,
+      crowd_vote_min_unlock: 5,
+      user_referral_enabled: true,
+      user_invite_quota: 3,
+      referral_bonus_qa_quota: 15,
+      invite_waitlist_enabled: false,
+    },
+  },
+  {
+    stage: 'stage_3_scarcity_invite',
+    title: '阶段三：后期稀缺邀请制',
+    subtitle: '凭码注册 + 开启无码访客候补申请 + 提高共识解锁门槛',
+    patch: {
+      growth_stage: 'stage_3_scarcity_invite',
+      access_mode: 'invite_only',
+      welcome_hero_enabled: true,
+      soft_auth_prompts_enabled: true,
+      guest_qa_daily_limit: 3,
+      crowd_vote_min_unlock: 10,
+      user_referral_enabled: true,
+      user_invite_quota: 2,
+      invite_waitlist_enabled: true,
+    },
+  },
+  {
+    stage: 'stage_4_elite_circle',
+    title: '阶段四：大后期私有门禁',
+    subtitle: '全站未登录拦截 + 仅凭邀请码或候补审批准入',
+    patch: {
+      growth_stage: 'stage_4_elite_circle',
+      access_mode: 'private_gate',
+      user_referral_enabled: true,
+      invite_waitlist_enabled: true,
+    },
+  },
+]
+
+function applyStagePresetDraft(stage: GrowthStage) {
+  const preset = GROWTH_STAGE_PRESETS.find((p) => p.stage === stage)
+  if (!preset) return
+  growthDraft.value = {
+    ...growthDraft.value,
+    ...preset.patch,
+  }
+  showToast(`已预填充「${preset.title}」参数草稿，请核对下方高亮变更项后点击「保存生效」`)
+}
+
+const currentLiveGrowth = computed(() => buildGrowthDraftFromSettings(siteSettingsForm.value))
+
+const changedGrowthKeys = computed<Set<keyof GrowthControlDraft>>(() => {
+  const out = new Set<keyof GrowthControlDraft>()
+  const cur = currentLiveGrowth.value
+  const d = growthDraft.value
+  for (const k of Object.keys(d) as Array<keyof GrowthControlDraft>) {
+    if (d[k] !== cur[k]) out.add(k)
+  }
+  return out
+})
+
+function stageShortLabel(st?: GrowthStage): string {
+  const found = GROWTH_STAGE_PRESETS.find((p) => p.stage === st)
+  return found ? found.title : '阶段一：前期冷启动'
+}
 
 const ACCESS_MODE_OPTIONS: ReadonlyArray<{
   value: SiteAccessMode
@@ -414,7 +575,7 @@ async function loadAllAdminData() {
   authError.value = ''
   try {
     const token = session.value.token
-    const [ov, ul, pc, pl, al, ss, fb, ct, invRes] = await Promise.all([
+    const [ov, ul, pc, pl, al, ss, fb, ct, invRes, wlRes] = await Promise.all([
       apiAdminOverview(token),
       apiAdminUsers(token),
       apiAdminGetPushConfig(token),
@@ -424,8 +585,10 @@ async function loadAllAdminData() {
       apiAdminFeedbackList(token, feedbackStatusFilter.value),
       apiAdminContentList(token),
       apiAdminInviteCodes(token).catch(() => ({ items: [] })),
+      apiAdminListWaitlist(token).catch(() => ({ items: [] })),
     ])
     inviteCodes.value = invRes.items || []
+    waitlistItems.value = wlRes.items || []
     overview.value = ov
     users.value = ul.users
     pushConfig.value = pc.config
@@ -447,8 +610,18 @@ async function loadAllAdminData() {
       site_banner_enabled: Boolean(ss.site_banner_enabled),
       site_banner_text: ss.site_banner_text || '',
       site_banner_tone: ss.site_banner_tone || 'info',
+      growth_stage: ss.growth_stage || 'stage_1_cold_start',
+      welcome_hero_enabled: ss.welcome_hero_enabled !== false,
+      soft_auth_prompts_enabled: ss.soft_auth_prompts_enabled !== false,
+      guest_qa_daily_limit: ss.guest_qa_daily_limit ?? 5,
+      auth_qa_daily_limit: ss.auth_qa_daily_limit ?? 30,
+      crowd_vote_min_unlock: ss.crowd_vote_min_unlock ?? 3,
+      user_referral_enabled: Boolean(ss.user_referral_enabled),
+      user_invite_quota: ss.user_invite_quota ?? 3,
+      referral_bonus_qa_quota: ss.referral_bonus_qa_quota ?? 15,
+      invite_waitlist_enabled: Boolean(ss.invite_waitlist_enabled),
     }
-    accessModeDraft.value = currentAccessMode.value
+    growthDraft.value = buildGrowthDraftFromSettings(siteSettingsForm.value)
     feedbackItems.value = fb.items || []
     const drafts: Record<number, { status: string; admin_reply: string }> = {}
     for (const item of feedbackItems.value) {
@@ -646,7 +819,7 @@ async function saveSiteSettingsPartial(patch: Partial<PublicSiteSettings>, succe
       ...siteSettingsForm.value,
       ...res,
     }
-    accessModeDraft.value = currentAccessMode.value
+    growthDraft.value = buildGrowthDraftFromSettings(siteSettingsForm.value)
     showToast(successMsg)
   } catch (err) {
     showToast(err instanceof Error ? err.message : '设置保存失败')
@@ -655,24 +828,24 @@ async function saveSiteSettingsPartial(patch: Partial<PublicSiteSettings>, succe
   }
 }
 
-function handleRequestSaveAccessMode() {
+function handleRequestSaveGrowthConsole() {
   if (!isSuperAdmin.value) {
-    showToast('仅一级最高管理员可修改全站访问门禁模式')
+    showToast('仅一级最高管理员可修改全站访问门禁与营销增长策略')
     return
   }
-  if (accessModeDraft.value === 'private_gate' && currentAccessMode.value !== 'private_gate') {
+  if (growthDraft.value.access_mode === 'private_gate' && currentAccessMode.value !== 'private_gate') {
     privateGateConfirmOpen.value = true
     return
   }
-  void executeSaveAccessMode()
+  void executeSaveGrowthConsole()
 }
 
-async function executeSaveAccessMode() {
+async function executeSaveGrowthConsole() {
   privateGateConfirmOpen.value = false
-  const targetMode = accessModeDraft.value
+  const payload = { ...growthDraft.value }
   await saveSiteSettingsPartial(
-    { access_mode: targetMode },
-    `全站访问门禁模式已切换为「${accessModeMeta(targetMode).shortLabel}」，保存后全站实时生效，无需重新部署。`,
+    payload,
+    `阶段式营销与门禁策略已保存（${stageShortLabel(payload.growth_stage)} · ${accessModeMeta(payload.access_mode).shortLabel}），全站实时生效！`,
   )
   if (session.value) {
     apiAdminAuditLogs(session.value.token, 100)
@@ -680,6 +853,44 @@ async function executeSaveAccessMode() {
         auditLogs.value = res.logs
       })
       .catch(() => {})
+  }
+}
+
+function resetGrowthDraft() {
+  growthDraft.value = buildGrowthDraftFromSettings(siteSettingsForm.value)
+}
+
+async function handleApproveWaitlist(row: WaitlistEntryRow) {
+  if (!session.value) return
+  busyAction.value = true
+  try {
+    const res = await apiAdminApproveWaitlist(session.value.token, row.id)
+    showToast(`已批准 #${row.id}（${row.contact}），签发邀请码：${res.code}`)
+    const [wlRes, invRes] = await Promise.all([
+      apiAdminListWaitlist(session.value.token),
+      apiAdminInviteCodes(session.value.token),
+    ])
+    waitlistItems.value = wlRes.items || []
+    inviteCodes.value = invRes.items || []
+  } catch (err) {
+    showToast(err instanceof Error ? err.message : '批准失败')
+  } finally {
+    busyAction.value = false
+  }
+}
+
+async function handleRejectWaitlist(row: WaitlistEntryRow) {
+  if (!session.value) return
+  busyAction.value = true
+  try {
+    await apiAdminRejectWaitlist(session.value.token, row.id)
+    showToast(`已拒绝候补申请 #${row.id}`)
+    const wlRes = await apiAdminListWaitlist(session.value.token)
+    waitlistItems.value = wlRes.items || []
+  } catch (err) {
+    showToast(err instanceof Error ? err.message : '操作失败')
+  } finally {
+    busyAction.value = false
   }
 }
 
@@ -1167,46 +1378,83 @@ onMounted(() => {
             </div>
           </div>
 
-          <!-- Global Site Access Mode Control -->
-          <div class="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 space-y-4 text-xs sm:text-sm">
+          <!-- Staged Marketing & Global Access Mode Console -->
+          <div class="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 space-y-5 text-xs sm:text-sm" data-testid="growth-console-card">
             <div class="flex flex-wrap items-start justify-between gap-3">
               <div class="space-y-1">
                 <div class="flex flex-wrap items-center gap-2">
                   <Shield class="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
-                  <h2 class="font-bold text-slate-900 dark:text-white">全站访问门禁模式</h2>
+                  <h2 class="font-bold text-slate-900 dark:text-white">阶段式营销与门禁总控台</h2>
                   <span
                     class="px-2 py-0.5 rounded-full text-[11px] font-semibold"
                     :class="accessModeMeta(currentAccessMode).badgeClass"
                   >
-                    当前生效：{{ accessModeMeta(currentAccessMode).shortLabel }}
+                    {{ stageShortLabel(siteSettingsForm.growth_stage) }} · {{ accessModeMeta(currentAccessMode).shortLabel }}
                   </span>
                 </div>
                 <p class="text-xs text-slate-500">
-                  保存后全站实时生效，无需重新部署，且后续自动部署不会覆盖后台选定的模式。
+                  支持一键预填四阶段营销预设或微调任意单点参数（仅预填充草稿并高亮差异，需确认保存后全站热生效，自动部署不会覆盖）。
                 </p>
+              </div>
+              <span
+                v-if="changedGrowthKeys.size > 0"
+                class="px-2.5 py-1 rounded-full bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300 text-xs font-semibold shrink-0"
+              >
+                有 {{ changedGrowthKeys.size }} 项草稿待保存
+              </span>
+            </div>
+
+            <!-- 4-Stage One-Click Draft Presets -->
+            <div class="space-y-2">
+              <div class="text-xs font-bold text-slate-700 dark:text-slate-200">一键预填运营阶段预设（先预填草稿，再由管理员确认保存）</div>
+              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 text-xs">
+                <button
+                  v-for="preset in GROWTH_STAGE_PRESETS"
+                  :key="preset.stage"
+                  type="button"
+                  :disabled="!isSuperAdmin || busyAction"
+                  @click="applyStagePresetDraft(preset.stage)"
+                  class="text-left rounded-xl border p-3 space-y-1 transition-all disabled:opacity-60"
+                  :class="
+                    growthDraft.growth_stage === preset.stage
+                      ? 'border-indigo-500 bg-indigo-50/70 dark:bg-indigo-950/30 ring-1 ring-indigo-500'
+                      : 'border-slate-200 dark:border-slate-800 hover:border-indigo-300 dark:hover:border-indigo-700'
+                  "
+                >
+                  <div class="font-bold text-slate-900 dark:text-white flex items-center justify-between gap-1">
+                    <span>{{ preset.title }}</span>
+                    <span
+                      v-if="siteSettingsForm.growth_stage === preset.stage"
+                      class="px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300 text-[10px]"
+                    >线上运行</span>
+                  </div>
+                  <p class="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed">{{ preset.subtitle }}</p>
+                </button>
               </div>
             </div>
 
+            <!-- Site Access Mode 3-Way Selector -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
               <label
                 v-for="opt in ACCESS_MODE_OPTIONS"
                 :key="opt.value"
                 class="relative rounded-xl border p-3.5 transition-all flex flex-col justify-between gap-2"
                 :class="[
-                  accessModeDraft === opt.value
+                  growthDraft.access_mode === opt.value
                     ? opt.value === 'private_gate'
                       ? 'border-rose-500 bg-rose-50/50 dark:bg-rose-950/20 ring-1 ring-rose-500'
                       : opt.value === 'public'
                         ? 'border-emerald-500 bg-emerald-50/50 dark:bg-emerald-950/20 ring-1 ring-emerald-500'
                         : 'border-indigo-500 bg-indigo-50/50 dark:bg-indigo-950/20 ring-1 ring-indigo-500'
                     : 'border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700',
+                  changedGrowthKeys.has('access_mode') && growthDraft.access_mode === opt.value ? 'ring-2 ring-amber-500' : '',
                   !isSuperAdmin ? 'opacity-70 cursor-not-allowed' : 'cursor-pointer',
                 ]"
               >
                 <div class="flex items-start justify-between gap-2">
                   <div class="flex items-center gap-2">
                     <input
-                      v-model="accessModeDraft"
+                      v-model="growthDraft.access_mode"
                       type="radio"
                       name="site_access_mode"
                       :value="opt.value"
@@ -1238,26 +1486,123 @@ onMounted(() => {
               </label>
             </div>
 
+            <!-- Granular Growth Toggles & Numeric Limits -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 text-xs pt-1 border-t border-slate-100 dark:border-slate-800">
+              <label
+                class="rounded-xl border p-3 flex items-start justify-between gap-2 cursor-pointer"
+                :class="changedGrowthKeys.has('welcome_hero_enabled') ? 'border-amber-400 bg-amber-50/60 dark:bg-amber-950/20' : 'border-slate-200 dark:border-slate-800'"
+              >
+                <div>
+                  <div class="font-bold text-slate-900 dark:text-white">新访客 3 秒价值条</div>
+                  <div class="text-[11px] text-slate-500">对未登录新访客展示首屏 3 个体验胶囊</div>
+                </div>
+                <input v-model="growthDraft.welcome_hero_enabled" :disabled="!isSuperAdmin" type="checkbox" class="rounded w-4 h-4 text-indigo-600 mt-0.5" />
+              </label>
+
+              <label
+                class="rounded-xl border p-3 flex items-start justify-between gap-2 cursor-pointer"
+                :class="changedGrowthKeys.has('soft_auth_prompts_enabled') ? 'border-amber-400 bg-amber-50/60 dark:bg-amber-950/20' : 'border-slate-200 dark:border-slate-800'"
+              >
+                <div>
+                  <div class="font-bold text-slate-900 dark:text-white">场景化软注册引导</div>
+                  <div class="text-[11px] text-slate-500">保存持仓 / 投票 / 额度用尽时温和引导登录</div>
+                </div>
+                <input v-model="growthDraft.soft_auth_prompts_enabled" :disabled="!isSuperAdmin" type="checkbox" class="rounded w-4 h-4 text-indigo-600 mt-0.5" />
+              </label>
+
+              <label
+                class="rounded-xl border p-3 flex items-start justify-between gap-2 cursor-pointer"
+                :class="changedGrowthKeys.has('user_referral_enabled') ? 'border-amber-400 bg-amber-50/60 dark:bg-amber-950/20' : 'border-slate-200 dark:border-slate-800'"
+              >
+                <div>
+                  <div class="font-bold text-slate-900 dark:text-white">用户裂变发码功能</div>
+                  <div class="text-[11px] text-slate-500">开启后登录用户可在账号中心生成专属邀请链接</div>
+                </div>
+                <input v-model="growthDraft.user_referral_enabled" :disabled="!isSuperAdmin" type="checkbox" class="rounded w-4 h-4 text-indigo-600 mt-0.5" />
+              </label>
+
+              <label
+                class="rounded-xl border p-3 flex items-start justify-between gap-2 cursor-pointer"
+                :class="changedGrowthKeys.has('invite_waitlist_enabled') ? 'border-amber-400 bg-amber-50/60 dark:bg-amber-950/20' : 'border-slate-200 dark:border-slate-800'"
+              >
+                <div>
+                  <div class="font-bold text-slate-900 dark:text-white">开启无码候补申请</div>
+                  <div class="text-[11px] text-slate-500">邀请制下允许无码访客提交候补席位申请</div>
+                </div>
+                <input v-model="growthDraft.invite_waitlist_enabled" :disabled="!isSuperAdmin" type="checkbox" class="rounded w-4 h-4 text-indigo-600 mt-0.5" />
+              </label>
+
+              <div
+                class="rounded-xl border p-3 space-y-1"
+                :class="changedGrowthKeys.has('guest_qa_daily_limit') ? 'border-amber-400 bg-amber-50/60 dark:bg-amber-950/20' : 'border-slate-200 dark:border-slate-800'"
+              >
+                <label class="block font-bold text-slate-900 dark:text-white">游客每日 AI 问答限额（0~100）</label>
+                <input v-model.number="growthDraft.guest_qa_daily_limit" :disabled="!isSuperAdmin" type="number" min="0" max="100" class="w-full h-8 px-2.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 font-mono" />
+              </div>
+
+              <div
+                class="rounded-xl border p-3 space-y-1"
+                :class="changedGrowthKeys.has('auth_qa_daily_limit') ? 'border-amber-400 bg-amber-50/60 dark:bg-amber-950/20' : 'border-slate-200 dark:border-slate-800'"
+              >
+                <label class="block font-bold text-slate-900 dark:text-white">登录用户每日 AI 基础额度（1~500）</label>
+                <input v-model.number="growthDraft.auth_qa_daily_limit" :disabled="!isSuperAdmin" type="number" min="1" max="500" class="w-full h-8 px-2.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 font-mono" />
+              </div>
+
+              <div
+                class="rounded-xl border p-3 space-y-1"
+                :class="changedGrowthKeys.has('crowd_vote_min_unlock') ? 'border-amber-400 bg-amber-50/60 dark:bg-amber-950/20' : 'border-slate-200 dark:border-slate-800'"
+              >
+                <label class="block font-bold text-slate-900 dark:text-white">前瞻共识解锁人数门槛（1~50）</label>
+                <input v-model.number="growthDraft.crowd_vote_min_unlock" :disabled="!isSuperAdmin" type="number" min="1" max="50" class="w-full h-8 px-2.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 font-mono" />
+              </div>
+
+              <div
+                class="rounded-xl border p-3 space-y-1"
+                :class="changedGrowthKeys.has('user_invite_quota') ? 'border-amber-400 bg-amber-50/60 dark:bg-amber-950/20' : 'border-slate-200 dark:border-slate-800'"
+              >
+                <label class="block font-bold text-slate-900 dark:text-white">单用户可生成邀请码上限（0~50）</label>
+                <input v-model.number="growthDraft.user_invite_quota" :disabled="!isSuperAdmin" type="number" min="0" max="50" class="w-full h-8 px-2.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 font-mono" />
+              </div>
+
+              <div
+                class="rounded-xl border p-3 space-y-1"
+                :class="changedGrowthKeys.has('referral_bonus_qa_quota') ? 'border-amber-400 bg-amber-50/60 dark:bg-amber-950/20' : 'border-slate-200 dark:border-slate-800'"
+              >
+                <label class="block font-bold text-slate-900 dark:text-white">邀请双方 AI 额度加成（0~100）</label>
+                <input v-model.number="growthDraft.referral_bonus_qa_quota" :disabled="!isSuperAdmin" type="number" min="0" max="100" class="w-full h-8 px-2.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 font-mono" />
+              </div>
+            </div>
+
             <div class="flex flex-wrap items-center justify-between gap-3 pt-1 text-xs">
               <div v-if="!isSuperAdmin" class="inline-flex items-center gap-1.5 text-amber-700 dark:text-amber-300 font-medium">
                 <AlertTriangle class="w-3.5 h-3.5 shrink-0" />
-                <span>仅一级最高管理员可切换全站访问门禁模式（当前为只读预览）</span>
+                <span>仅一级最高管理员可修改全站访问门禁与营销增长策略（当前为只读预览）</span>
               </div>
               <div v-else class="text-slate-500">
-                <span v-if="accessModeDraft !== currentAccessMode" class="text-amber-700 dark:text-amber-300 font-semibold">
-                  待保存变更：{{ accessModeMeta(currentAccessMode).shortLabel }} → {{ accessModeMeta(accessModeDraft).shortLabel }}
+                <span v-if="changedGrowthKeys.size > 0" class="text-amber-700 dark:text-amber-300 font-semibold">
+                  已标亮 {{ changedGrowthKeys.size }} 项待保存变更（{{ Array.from(changedGrowthKeys).join(', ') }}）
                 </span>
-                <span v-else>保存后全站实时生效，无需重新部署。</span>
+                <span v-else>所有阶段营销与门禁配置与线上保持一致。</span>
               </div>
-              <button
-                type="button"
-                :disabled="busyAction || !isSuperAdmin || accessModeDraft === currentAccessMode"
-                @click="handleRequestSaveAccessMode"
-                class="px-4 py-2 rounded-xl font-semibold text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                :class="accessModeDraft === 'private_gate' ? 'bg-rose-600 hover:bg-rose-700' : 'bg-indigo-600 hover:bg-indigo-700'"
-              >
-                {{ busyAction ? '保存中...' : '保存门禁模式' }}
-              </button>
+              <div class="flex items-center gap-2">
+                <button
+                  v-if="isSuperAdmin && changedGrowthKeys.size > 0"
+                  type="button"
+                  @click="resetGrowthDraft"
+                  class="px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 font-medium hover:bg-slate-50 dark:hover:bg-slate-800"
+                >
+                  放弃草稿
+                </button>
+                <button
+                  type="button"
+                  :disabled="busyAction || !isSuperAdmin || changedGrowthKeys.size === 0"
+                  @click="handleRequestSaveGrowthConsole"
+                  class="px-4 py-2 rounded-xl font-semibold text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  :class="growthDraft.access_mode === 'private_gate' ? 'bg-rose-600 hover:bg-rose-700' : 'bg-indigo-600 hover:bg-indigo-700'"
+                >
+                  {{ busyAction ? '保存中...' : '保存阶段与门禁配置' }}
+                </button>
+              </div>
             </div>
           </div>
 
@@ -1823,6 +2168,84 @@ onMounted(() => {
             </div>
           </div>
 
+          <!-- Waitlist Applications Panel -->
+          <div
+            v-if="siteSettingsForm.invite_waitlist_enabled || waitlistItems.length > 0"
+            class="rounded-2xl border border-amber-200/80 dark:border-amber-900/70 bg-white dark:bg-slate-900 p-4 sm:p-5 space-y-3 text-xs"
+            data-testid="admin-waitlist-panel"
+          >
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <div>
+                <h2 class="text-sm sm:text-base font-bold text-slate-900 dark:text-white">
+                  候补席位申请列表 ({{ waitlistItems.filter((w) => w.status === 'pending').length }} 待审批 / 共 {{ waitlistItems.length }})
+                </h2>
+                <p class="text-slate-500">阶段三/四无邀请码访客提交的候补席位申请，点击「通过并自动发码」一键生成并绑定一次性邀请码。</p>
+              </div>
+            </div>
+            <div v-if="waitlistItems.length === 0" class="py-4 text-center text-slate-400">暂无候补席位申请记录</div>
+            <div v-else class="space-y-2 max-h-72 overflow-y-auto">
+              <div
+                v-for="wl in waitlistItems"
+                :key="wl.id"
+                class="rounded-xl border border-slate-200 dark:border-slate-800 p-3 flex flex-wrap items-center justify-between gap-3"
+              >
+                <div class="min-w-0 space-y-1">
+                  <div class="flex flex-wrap items-center gap-2">
+                    <span class="font-mono font-bold text-slate-800 dark:text-white">#{{ wl.id }}</span>
+                    <span class="font-semibold text-slate-900 dark:text-white">{{ wl.contact }}</span>
+                    <span
+                      class="px-2 py-0.5 rounded-full text-[10.5px] font-semibold"
+                      :class="
+                        wl.status === 'approved'
+                          ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300'
+                          : wl.status === 'rejected'
+                            ? 'bg-slate-200 text-slate-600 dark:bg-slate-800 dark:text-slate-400'
+                            : 'bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300'
+                      "
+                    >
+                      {{ wl.status === 'approved' ? '已签发邀请码' : wl.status === 'rejected' ? '已拒绝' : '待审批' }}
+                    </span>
+                    <span v-if="wl.focus_areas" class="text-[11px] text-indigo-600 dark:text-indigo-400">{{ wl.focus_areas }}</span>
+                  </div>
+                  <p v-if="wl.note" class="text-[11px] text-slate-500">{{ wl.note }}</p>
+                </div>
+                <div class="flex items-center gap-2 shrink-0">
+                  <template v-if="wl.status === 'approved' && wl.assigned_code">
+                    <span class="font-mono font-bold px-2.5 py-1 rounded-lg bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
+                      {{ wl.assigned_code }}
+                    </span>
+                    <button
+                      type="button"
+                      @click="copyInviteText(wl.assigned_code)"
+                      class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800"
+                    >
+                      <Copy class="w-3 h-3" />
+                      <span>复制</span>
+                    </button>
+                  </template>
+                  <template v-else-if="wl.status === 'pending'">
+                    <button
+                      type="button"
+                      :disabled="busyAction"
+                      @click="handleApproveWaitlist(wl)"
+                      class="px-3 py-1.5 rounded-lg bg-emerald-600 text-white font-semibold hover:bg-emerald-700"
+                    >
+                      通过并自动发码
+                    </button>
+                    <button
+                      type="button"
+                      :disabled="busyAction"
+                      @click="handleRejectWaitlist(wl)"
+                      class="px-2.5 py-1.5 rounded-lg border border-rose-200 dark:border-rose-800 text-rose-600 hover:bg-rose-50"
+                    >
+                      拒绝
+                    </button>
+                  </template>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <div class="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4 sm:p-5 space-y-3">
           <div class="flex flex-wrap items-center justify-between gap-2">
             <div>
@@ -2280,7 +2703,7 @@ onMounted(() => {
           <div class="flex justify-end gap-2 pt-1 text-xs">
             <button
               type="button"
-              @click="privateGateConfirmOpen = false; accessModeDraft = currentAccessMode"
+              @click="privateGateConfirmOpen = false; growthDraft.access_mode = currentAccessMode"
               class="px-3.5 py-2 rounded-lg border border-slate-200 dark:border-slate-700 font-medium"
             >
               取消
@@ -2288,7 +2711,7 @@ onMounted(() => {
             <button
               type="button"
               :disabled="busyAction"
-              @click="executeSaveAccessMode"
+              @click="executeSaveGrowthConsole"
               class="px-4 py-2 rounded-lg bg-rose-600 text-white font-semibold hover:bg-rose-700 disabled:opacity-60"
             >
               {{ busyAction ? '切换中...' : '确认切换为全站私有门禁' }}

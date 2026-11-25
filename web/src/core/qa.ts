@@ -7,7 +7,7 @@ import type {
   StorylineDossier,
 } from './types'
 import { formatShanghaiDateTime } from './time'
-import { getApiBase } from './auth'
+import { getApiBase, getOrCreateDeviceId, loadAuthSession } from './auth'
 import { appLang, truncateAtSentence } from './i18n'
 import { normalizeExternalUrl } from './legacyAdapter'
 
@@ -16,8 +16,12 @@ export interface EvidenceQaResponse {
   evidenceUrls: { label: string; url: string }[]
   dataCutoffAt: string
   missingDisclosures: string[]
-  engineMode?: 'local_retrieval' | 'live_llm' | 'server_llm' | 'grounded_synthesis'
+  engineMode?: 'local_retrieval' | 'live_llm' | 'server_llm' | 'grounded_synthesis' | 'quota_exhausted'
   modelUsed?: string
+  remaining_quota?: number
+  daily_limit?: number
+  quota_exhausted?: boolean
+  errorDetail?: string
 }
 
 export interface QaContextBundle {
@@ -457,7 +461,7 @@ export async function askEvidenceQa(
   question: string,
   config: AiClientConfig,
   context: QaContextBundle,
-  options?: { forceLocal?: boolean; history?: { role: string; content: string }[] },
+  options?: { forceLocal?: boolean; history?: { role: string; content: string }[]; authToken?: string | null },
 ): Promise<EvidenceQaResponse> {
   if (!options?.forceLocal && config.apiKey.trim()) {
     return callLiveLlmQa(question, config, context)
@@ -476,9 +480,17 @@ export async function askEvidenceQa(
         context.entity?.entity_id ||
         context.event?.event_id ||
         null
+      const token = options?.authToken ?? loadAuthSession()?.token ?? null
+      const headers: Record<string, string> = {
+        'Content-Type': 'application/json',
+        'X-Device-ID': getOrCreateDeviceId(),
+      }
+      if (token) {
+        headers.Authorization = `Bearer ${token}`
+      }
       const resp = await fetch(`${getApiBase()}/api/qa/ask`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers,
         body: JSON.stringify({
           question,
           target_type: targetType,
@@ -487,6 +499,25 @@ export async function askEvidenceQa(
           history: options?.history || [],
         }),
       })
+      if (resp.status === 429) {
+        const errData = (await resp.json().catch(() => ({}))) as {
+          detail?: string
+          quota_exhausted?: boolean
+          remaining_quota?: number
+          daily_limit?: number
+        }
+        return {
+          answerMarkdown: '',
+          evidenceUrls: [],
+          dataCutoffAt: context.dataCutoffAt ? formatShanghaiDateTime(context.dataCutoffAt, false) : '',
+          missingDisclosures: [],
+          engineMode: 'quota_exhausted',
+          remaining_quota: Number(errData.remaining_quota ?? 0),
+          daily_limit: Number(errData.daily_limit ?? 0),
+          quota_exhausted: Boolean(errData.quota_exhausted ?? true),
+          errorDetail: errData.detail || '今日免费 AI 证据问答额度已用完',
+        }
+      }
       if (resp.ok) {
         const data = (await resp.json()) as EvidenceQaResponse
         if (data?.answerMarkdown) {

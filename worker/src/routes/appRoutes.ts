@@ -3,15 +3,22 @@ import { requireUser } from '../authMiddleware'
 import { nowShanghaiIso } from '../crypto'
 import { getSiteSettings, getUserState, logAudit, sanitizeAvatarValue, saveUserState } from '../db'
 import {
+  ALLOWED_REACTION_KEYS,
   countRecentFeedback,
+  createWaitlistEntry,
   getEditorialOverridesDoc,
   getPredictionCrowdStats,
+  getReactionsBatch,
+  isValidReactionKey,
+  isValidReactionTargetType,
   listUserFeedback,
   saveFeedback,
+  upsertContentReaction,
   upsertPredictionVote,
 } from '../dbExtras'
 import { handleQaAsk, type QaRequestBody } from '../qa'
 import { QUOTES_CACHE_KEY, fetchAndBuildMarketQuotes, getDefaultEdgeCache } from '../quotes'
+import { checkAndHitRateLimit } from '../rateLimit'
 import type { Env, HonoVariables } from '../types'
 import { AI_PROGRESS_CACHE_KEY, WIRE_CACHE_KEY, getWireLatestDoc } from '../wireCron'
 
@@ -273,9 +280,11 @@ publicAndCoreRoutes.put('/user/state', requireUser, async (c) => {
 
 publicAndCoreRoutes.get('/predictions/crowd', async (c) => {
   const user = c.get('user')
+  const settings = await getSiteSettings(c.env.DB, c.env.SITE_ACCESS_MODE)
+  const minUnlock = Math.max(1, Math.min(50, Number(settings.crowd_vote_min_unlock ?? 3)))
   const stats = await getPredictionCrowdStats(c.env.DB, {
     userId: user ? user.id : null,
-    minVotes: 10,
+    minVotes: minUnlock,
   })
   return c.json(stats, 200, { 'Cache-Control': 'no-store' })
 })
@@ -291,8 +300,10 @@ publicAndCoreRoutes.put('/predictions/:predictionId/vote', requireUser, async (c
   if (!Number.isFinite(prob) || prob < 5 || prob > 95) {
     return c.json({ detail: '概率值须在 5 至 95 之间' }, 422)
   }
+  const settings = await getSiteSettings(c.env.DB, c.env.SITE_ACCESS_MODE)
+  const minUnlock = Math.max(1, Math.min(50, Number(settings.crowd_vote_min_unlock ?? 3)))
   await upsertPredictionVote(c.env.DB, { predictionId: pid, userId: user.id, probPct: prob })
-  const stats = await getPredictionCrowdStats(c.env.DB, { userId: user.id, minVotes: 10 })
+  const stats = await getPredictionCrowdStats(c.env.DB, { userId: user.id, minVotes: minUnlock })
   return c.json(
     {
       ok: true,
@@ -367,6 +378,117 @@ publicAndCoreRoutes.get('/feedback/mine', async (c) => {
   return c.json({ items })
 })
 
+// ---------------- Waitlist Application (Stage 3/4) ----------------
+
+publicAndCoreRoutes.post('/public/waitlist', async (c) => {
+  const settings = await getSiteSettings(c.env.DB, c.env.SITE_ACCESS_MODE)
+  if (!settings.invite_waitlist_enabled) {
+    return c.json({ detail: '当前未开放候补席位申请，请联系邀请人或管理员' }, 403)
+  }
+  const ip = c.get('clientIp')
+  const rl = await checkAndHitRateLimit(c.env.DB, {
+    scope: 'waitlist_submit',
+    key: ip,
+    limit: 5,
+    windowSec: 3600,
+  })
+  if (!rl.allowed) {
+    return c.json({ detail: '提交过于频繁，请 1 小时后再试' }, 429)
+  }
+  const body = (await c.req.json().catch(() => ({}))) as {
+    contact?: string
+    focus_areas?: string | string[]
+    note?: string
+  }
+  const contact = (body.contact || '').trim()
+  if (contact.length < 3 || contact.length > 160) {
+    return c.json({ detail: '请填写有效的联系方式（邮箱、手机号或微信号，至少 3 个字符）' }, 400)
+  }
+  const focusAreas = Array.isArray(body.focus_areas)
+    ? body.focus_areas.map((s) => String(s || '').trim()).filter(Boolean).join('、')
+    : String(body.focus_areas || '').trim()
+  const row = await createWaitlistEntry(c.env.DB, {
+    contact,
+    focusAreas,
+    note: String(body.note || '').trim(),
+    ip,
+  })
+  await logAudit(c.env.DB, {
+    action: 'public_waitlist_submit',
+    username: contact.slice(0, 48),
+    detail: `Waitlist #${row.id} focus=${focusAreas.slice(0, 80)}`,
+    ip,
+  })
+  return c.json({ ok: true, id: row.id, status: row.status })
+})
+
+// ---------------- Structured 1-Click Reactions (Zero Open-Text UGC) ----------------
+
+function resolveReactionVoterKey(c: {
+  get: ((k: 'user') => { id: number } | null) & ((k: 'deviceId') => string) & ((k: 'clientIp') => string)
+}): string {
+  const user = c.get('user')
+  if (user) return `u:${user.id}`
+  const dev = (c.get('deviceId') || '').trim()
+  if (dev && dev !== 'anonymous') return `dev:${dev.slice(0, 80)}`
+  return `ip:${(c.get('clientIp') || 'unknown').slice(0, 64)}`
+}
+
+publicAndCoreRoutes.get('/reactions/batch', async (c) => {
+  const rawType = (c.req.query('target_type') || '').trim()
+  if (!isValidReactionTargetType(rawType)) {
+    return c.json({ detail: '无效的 target_type，仅支持 event / finance / prediction' }, 400)
+  }
+  const idsRaw = (c.req.query('ids') || '').trim()
+  const ids = idsRaw
+    .split(',')
+    .map((s) => s.trim())
+    .filter(Boolean)
+  const voterKey = resolveReactionVoterKey(c)
+  const items = await getReactionsBatch(c.env.DB, {
+    targetType: rawType,
+    ids,
+    voterKey,
+  })
+  return c.json(
+    {
+      target_type: rawType,
+      allowed_keys: ALLOWED_REACTION_KEYS[rawType],
+      items,
+    },
+    200,
+    { 'Cache-Control': 'no-store' },
+  )
+})
+
+publicAndCoreRoutes.post('/reactions', async (c) => {
+  const body = (await c.req.json().catch(() => ({}))) as {
+    target_type?: string
+    target_id?: string
+    reaction_key?: string
+  }
+  const rawType = (body.target_type || '').trim()
+  const targetId = (body.target_id || '').trim()
+  const reactionKey = (body.reaction_key || '').trim()
+  if (!isValidReactionTargetType(rawType)) {
+    return c.json({ detail: '无效的 target_type，仅支持 event / finance / prediction' }, 400)
+  }
+  if (!targetId || targetId.length > 120) {
+    return c.json({ detail: '无效的 target_id' }, 400)
+  }
+  if (!isValidReactionKey(rawType, reactionKey)) {
+    return c.json({ detail: `无效的表态键值 ${reactionKey}` }, 400)
+  }
+  const voterKey = resolveReactionVoterKey(c)
+  const item = await upsertContentReaction(c.env.DB, {
+    targetType: rawType,
+    targetId,
+    voterKey,
+    reactionKey,
+  })
+  return c.json({ ok: true, item }, 200, { 'Cache-Control': 'no-store' })
+})
+
 // ---------------- Evidence Q&A ----------------
 
 publicAndCoreRoutes.post('/qa/ask', async (c) => {
@@ -375,6 +497,8 @@ publicAndCoreRoutes.post('/qa/ask', async (c) => {
   const result = await handleQaAsk(c.env, body, {
     clientIp: c.get('clientIp'),
     userId: user ? user.id : null,
+    deviceId: c.get('deviceId'),
+    extraQaQuota: user ? Number(user.extra_qa_quota ?? 0) : 0,
   })
   return c.json(result.payload, result.status as 200 | 400 | 429)
 })

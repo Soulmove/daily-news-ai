@@ -366,12 +366,12 @@ function clearAll() {
               wireReadIdSet.has(row.item.id) && expandedId !== row.item.id ? 'opacity-65' : '',
             ]"
           >
-            <!-- Fixed-Width Desktop Timestamp Column (>=164px + 16px gap, never overlaps headline) -->
-            <div class="flex items-center justify-between gap-2 sm:flex-col sm:items-start sm:justify-start sm:gap-0.5 sm:w-[164px] sm:min-w-[164px] sm:shrink-0 sm:pr-2 text-[11px] overflow-hidden">
-              <div class="flex items-center gap-1.5 min-w-0 max-w-full">
+            <!-- Fixed-Width Desktop Timestamp Column (>=164px + 16px gap, never overlaps headline; mobile wraps source badge cleanly without 1-char truncation) -->
+            <div class="flex items-start justify-between gap-2 sm:flex-col sm:items-start sm:justify-start sm:gap-0.5 sm:w-[164px] sm:min-w-[164px] sm:shrink-0 sm:pr-2 text-[11px]">
+              <div class="flex flex-wrap items-center gap-x-1.5 gap-y-0.5 min-w-0 flex-1">
                 <span
                   v-if="row.item.id === filtered[0]?.id"
-                  class="jx-sonar-dot"
+                  class="jx-sonar-dot shrink-0"
                   :class="row.item.importance === 'high' ? 'jx-sonar-red' : 'jx-sonar-blue'"
                 />
                 <span
@@ -385,8 +385,11 @@ function clearAll() {
                 >
                   <SmartTime :iso="row.item.published_at" :ingested-iso="row.item.fetched_at" :now-ms="effectiveNowMs" />
                 </span>
-                <span class="sm:hidden text-zinc-400 truncate">
-                  {{ catLabel(row.item.category) }} · {{ translateSourceName(row.item.source_name, row.item.title) }}
+                <span class="sm:hidden text-zinc-400 shrink-0 whitespace-nowrap">
+                  {{ catLabel(row.item.category) }}
+                </span>
+                <span class="sm:hidden px-1.5 py-0.5 rounded bg-black/[0.04] dark:bg-white/[0.08] text-zinc-600 dark:text-zinc-300 font-medium shrink-0 whitespace-nowrap">
+                  {{ translateSourceName(row.item.source_name, row.item.title) }}
                 </span>
               </div>
               <span class="hidden sm:block text-[10.5px] text-zinc-400 dark:text-zinc-500 truncate max-w-full">

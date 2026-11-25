@@ -5,13 +5,19 @@ import {
   authenticateUser,
   bindUserContact,
   consumeInviteCode,
+  countUserInviteCodes,
+  countUserInvitedCount,
+  createInviteCodes,
   createUser,
   createVerificationCode,
+  getSiteSettings,
   getUserByContact,
   getUserById,
   getUserByUsername,
   getUserState,
+  listUserInviteCodes,
   logAudit,
+  recordUserReferralAndBonus,
   toPublicUser,
   updatePassword,
   updateUserPreferences,
@@ -158,16 +164,18 @@ authRoutes.post('/register', async (c) => {
     return c.json({ detail: rlErr }, 429)
   }
 
-  let matchedInviteId: number | null = null
+  const settings = await getSiteSettings(c.env.DB, c.env.SITE_ACCESS_MODE)
+  const rawInvite = (body.invite_code || body.inviteCode || '').trim()
+  let matchedInvite: Awaited<ReturnType<typeof validateInviteCode>> = null
+
   if (accessMode === 'invite_only' || accessMode === 'private_gate') {
-    const rawInvite = (body.invite_code || body.inviteCode || '').trim()
     if (!rawInvite) {
       return c.json(
         {
           detail: [
             {
               loc: ['body', 'invite_code'],
-              msg: '当前系统处于邀请注册模式，请填写管理员发放的一次性邀请码',
+              msg: '当前系统处于邀请注册模式，请填写管理员或好友发放的一次性邀请码',
               type: 'value_error',
             },
           ],
@@ -185,7 +193,13 @@ authRoutes.post('/register', async (c) => {
       })
       return c.json({ detail: '邀请码无效、已被使用或已过期，请联系管理员获取新邀请码' }, 403)
     }
-    matchedInviteId = validInv.id
+    matchedInvite = validInv
+  } else if (rawInvite) {
+    const validInv = await validateInviteCode(c.env.DB, rawInvite)
+    if (!validInv) {
+      return c.json({ detail: '所填邀请码无效、已被使用或已过期（开放注册模式下可留空直接注册）' }, 403)
+    }
+    matchedInvite = validInv
   }
 
   if (!uname || !pw || !pw.trim()) {
@@ -241,9 +255,11 @@ authRoutes.post('/register', async (c) => {
     ip,
   })
 
-  if (matchedInviteId !== null) {
+  let finalUser = user
+  let referralBonusGranted = 0
+  if (matchedInvite !== null) {
     const consumed = await consumeInviteCode(c.env.DB, {
-      codeId: matchedInviteId,
+      codeId: matchedInvite.id,
       userId: user.id,
       username: user.username,
     })
@@ -252,14 +268,103 @@ authRoutes.post('/register', async (c) => {
       await c.env.DB.prepare('DELETE FROM users WHERE id = ?1').bind(user.id).run()
       return c.json({ detail: '该邀请码已被抢先使用，请联系管理员获取新邀请码' }, 409)
     }
+    const bonusQuota =
+      accessMode === 'public' || matchedInvite.owner_user_id != null
+        ? Math.max(0, Number(settings.referral_bonus_qa_quota ?? 15))
+        : 0
+    await recordUserReferralAndBonus(c.env.DB, {
+      inviteeUserId: user.id,
+      inviterUserId: matchedInvite.owner_user_id ?? null,
+      inviteCode: matchedInvite.code,
+      bonusQuota,
+    })
+    referralBonusGranted = bonusQuota
+    finalUser = (await getUserById(c.env.DB, user.id)) ?? user
+    await logAudit(c.env.DB, {
+      action: 'register_invite_redeemed',
+      userId: user.id,
+      username: user.username,
+      detail: `Redeemed code=${matchedInvite.code} owner_uid=${matchedInvite.owner_user_id ?? 'admin'} bonus=${bonusQuota}`,
+      ip,
+    })
   }
 
   await recordRegistrationGuard(c.env.DB, ip, deviceId)
   const token = await signJwt(
-    { sub: user.id, username: user.username, role: user.role, ver: user.token_version },
+    { sub: finalUser.id, username: finalUser.username, role: finalUser.role, ver: finalUser.token_version },
     c.env.JWT_SECRET,
   )
-  return c.json({ token, user: toPublicUser(user) })
+  return c.json({
+    token,
+    user: toPublicUser(finalUser),
+    referral_bonus_granted: referralBonusGranted,
+  })
+})
+
+authRoutes.get('/my-invites', requireUser, async (c) => {
+  const user = c.get('user')!
+  const settings = await getSiteSettings(c.env.DB, c.env.SITE_ACCESS_MODE)
+  const quota = Math.max(0, Number(settings.user_invite_quota ?? 3))
+  const [items, generatedCount, invitedCount] = await Promise.all([
+    listUserInviteCodes(c.env.DB, user.id),
+    countUserInviteCodes(c.env.DB, user.id),
+    countUserInvitedCount(c.env.DB, user.id),
+  ])
+  return c.json(
+    {
+      enabled: Boolean(settings.user_referral_enabled),
+      member_number: Number(user.id),
+      quota,
+      generated_count: generatedCount,
+      remaining_quota: Math.max(0, quota - generatedCount),
+      invited_count: invitedCount,
+      bonus_qa_quota: Math.max(0, Number(settings.referral_bonus_qa_quota ?? 15)),
+      extra_qa_quota: Math.max(0, Number(user.extra_qa_quota ?? 0)),
+      items,
+    },
+    200,
+    { 'Cache-Control': 'no-store' },
+  )
+})
+
+authRoutes.post('/my-invites', requireUser, async (c) => {
+  const user = c.get('user')!
+  const settings = await getSiteSettings(c.env.DB, c.env.SITE_ACCESS_MODE)
+  if (!settings.user_referral_enabled) {
+    return c.json({ detail: '当前阶段暂未开放普通用户生成专属邀请码，敬请期待' }, 403)
+  }
+  const quota = Math.max(0, Number(settings.user_invite_quota ?? 3))
+  const generatedCount = await countUserInviteCodes(c.env.DB, user.id)
+  if (generatedCount >= quota) {
+    return c.json({ detail: `您已用完个人 ${quota} 个专属邀请码配额` }, 400)
+  }
+  const created = await createInviteCodes(c.env.DB, {
+    count: 1,
+    note: `用户@${user.username}邀请`,
+    expiresInDays: 30,
+    createdBy: user.username,
+    ownerUserId: user.id,
+  })
+  const items = await listUserInviteCodes(c.env.DB, user.id)
+  const invitedCount = await countUserInvitedCount(c.env.DB, user.id)
+  await logAudit(c.env.DB, {
+    action: 'user_create_invite_code',
+    userId: user.id,
+    username: user.username,
+    detail: `Generated personal invite code=${created[0]?.code || ''}`,
+    ip: c.get('clientIp'),
+  })
+  return c.json({
+    ok: true,
+    item: created[0] || null,
+    member_number: Number(user.id),
+    quota,
+    generated_count: generatedCount + created.length,
+    remaining_quota: Math.max(0, quota - generatedCount - created.length),
+    invited_count: invitedCount,
+    bonus_qa_quota: Math.max(0, Number(settings.referral_bonus_qa_quota ?? 15)),
+    items,
+  })
 })
 
 authRoutes.post('/login', async (c) => {

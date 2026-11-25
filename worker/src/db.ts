@@ -11,6 +11,7 @@ import type {
   AccessMode,
   CloudSyncCounts,
   Env,
+  GrowthStage,
   InviteCodeRow,
   PublicUser,
   UserRole,
@@ -36,8 +37,10 @@ export function sanitizeAvatarValue(raw: unknown): string {
 }
 
 export function toPublicUser(u: UserRow): PublicUser {
+  const uid = Number(u.id)
   return {
-    id: Number(u.id),
+    id: uid,
+    member_number: uid,
     username: u.username,
     display_name: u.display_name || '',
     email: u.email || '',
@@ -49,6 +52,8 @@ export function toPublicUser(u: UserRow): PublicUser {
     created_at: u.created_at,
     last_login_at: u.last_login_at ?? null,
     login_count: Number(u.login_count ?? 0),
+    extra_qa_quota: Number(u.extra_qa_quota ?? 0),
+    invited_by_code: u.invited_by_code || '',
   }
 }
 
@@ -666,6 +671,40 @@ export async function getAdminStats(db: D1Database): Promise<Record<string, numb
   }
 }
 
+export const GROWTH_STAGE_VALUES: readonly GrowthStage[] = [
+  'stage_1_cold_start',
+  'stage_2_soft_invite',
+  'stage_3_scarcity_invite',
+  'stage_4_elite_circle',
+]
+
+export const GROWTH_SUPER_ADMIN_KEYS = new Set<string>([
+  'access_mode',
+  'growth_stage',
+  'welcome_hero_enabled',
+  'soft_auth_prompts_enabled',
+  'guest_qa_daily_limit',
+  'auth_qa_daily_limit',
+  'crowd_vote_min_unlock',
+  'user_referral_enabled',
+  'user_invite_quota',
+  'referral_bonus_qa_quota',
+  'invite_waitlist_enabled',
+])
+
+export function isValidGrowthStage(raw: unknown): raw is GrowthStage {
+  return typeof raw === 'string' && (GROWTH_STAGE_VALUES as readonly string[]).includes(raw)
+}
+
+const INT_SETTING_BOUNDS: Record<string, { min: number; max: number; fallback: number }> = {
+  feedback_daily_limit: { min: 1, max: 100, fallback: 5 },
+  guest_qa_daily_limit: { min: 0, max: 100, fallback: 5 },
+  auth_qa_daily_limit: { min: 1, max: 500, fallback: 30 },
+  crowd_vote_min_unlock: { min: 1, max: 50, fallback: 3 },
+  user_invite_quota: { min: 0, max: 50, fallback: 3 },
+  referral_bonus_qa_quota: { min: 0, max: 100, fallback: 15 },
+}
+
 export function isValidAccessMode(raw: unknown): raw is AccessMode {
   return typeof raw === 'string' && (raw === 'public' || raw === 'invite_only' || raw === 'private_gate')
 }
@@ -702,8 +741,26 @@ export async function getSiteSettings(db: D1Database, envFallback?: string): Pro
     site_banner_enabled: false,
     site_banner_text: '',
     site_banner_tone: 'info',
+    growth_stage: 'stage_1_cold_start',
+    welcome_hero_enabled: true,
+    soft_auth_prompts_enabled: true,
+    guest_qa_daily_limit: 5,
+    auth_qa_daily_limit: 30,
+    crowd_vote_min_unlock: 3,
+    user_referral_enabled: false,
+    user_invite_quota: 3,
+    referral_bonus_qa_quota: 15,
+    invite_waitlist_enabled: false,
   }
-  const boolKeys = new Set(['monitor_public', 'feedback_enabled', 'site_banner_enabled'])
+  const boolKeys = new Set([
+    'monitor_public',
+    'feedback_enabled',
+    'site_banner_enabled',
+    'welcome_hero_enabled',
+    'soft_auth_prompts_enabled',
+    'user_referral_enabled',
+    'invite_waitlist_enabled',
+  ])
   const rows = await db.prepare('SELECT key, value FROM site_settings').all<{ key: string; value: string }>()
   let dbAccessModeRaw = ''
   for (const r of rows.results || []) {
@@ -714,9 +771,15 @@ export async function getSiteSettings(db: D1Database, envFallback?: string): Pro
     if (!(r.key in defaults)) continue
     if (boolKeys.has(r.key)) {
       defaults[r.key] = ['true', '1', 'yes'].includes(String(r.value).toLowerCase())
-    } else if (r.key === 'feedback_daily_limit') {
+    } else if (r.key in INT_SETTING_BOUNDS) {
+      const bound = INT_SETTING_BOUNDS[r.key]
       const n = Number(r.value)
-      if (Number.isFinite(n)) defaults[r.key] = Math.max(1, Math.min(100, Math.round(n)))
+      if (Number.isFinite(n)) {
+        defaults[r.key] = Math.max(bound.min, Math.min(bound.max, Math.round(n)))
+      }
+    } else if (r.key === 'growth_stage') {
+      const stRaw = String(r.value || '').trim()
+      if (isValidGrowthStage(stRaw)) defaults[r.key] = stRaw
     } else {
       defaults[r.key] = String(r.value)
     }
@@ -753,11 +816,22 @@ export async function saveSiteSettings(
       current.access_mode = candidate
       current.invite_required = candidate !== 'public'
       current.login_required = candidate === 'private_gate'
-    } else if (typeof v === 'boolean') {
-      serialized = v ? 'true' : 'false'
-      current[k] = v
-    } else if (k === 'feedback_daily_limit') {
-      const n = Math.max(1, Math.min(100, Math.round(Number(v) || 5)))
+    } else if (k === 'growth_stage') {
+      const candidate = typeof v === 'string' ? v.trim() : ''
+      if (!isValidGrowthStage(candidate)) continue
+      serialized = candidate
+      current.growth_stage = candidate
+    } else if (typeof current[k] === 'boolean') {
+      const boolVal =
+        typeof v === 'boolean' ? v : ['true', '1', 'yes'].includes(String(v).trim().toLowerCase())
+      serialized = boolVal ? 'true' : 'false'
+      current[k] = boolVal
+    } else if (k in INT_SETTING_BOUNDS) {
+      const bound = INT_SETTING_BOUNDS[k]
+      const rawNum = Number(v)
+      const n = Number.isFinite(rawNum)
+        ? Math.max(bound.min, Math.min(bound.max, Math.round(rawNum)))
+        : bound.fallback
       serialized = String(n)
       current[k] = n
     } else if (k === 'site_banner_tone') {
@@ -786,11 +860,17 @@ export async function saveSiteSettings(
   return { ...current, updated_at: ts }
 }
 
-// ---------------- Invite Codes (invite_only & private_gate) ----------------
+// ---------------- Invite Codes (invite_only & private_gate & user referrals) ----------------
 
 export async function createInviteCodes(
   db: D1Database,
-  opts: { count?: number; note?: string; expiresInDays?: number | null; createdBy: string },
+  opts: {
+    count?: number
+    note?: string
+    expiresInDays?: number | null
+    createdBy: string
+    ownerUserId?: number | null
+  },
 ): Promise<InviteCodeRow[]> {
   const count = Math.max(1, Math.min(50, Math.round(opts.count ?? 1)))
   const note = (opts.note || '').trim().slice(0, 120)
@@ -799,21 +879,75 @@ export async function createInviteCodes(
     opts.expiresInDays && opts.expiresInDays > 0
       ? nowShanghaiIso(opts.expiresInDays * 86_400_000)
       : ''
+  const ownerId = opts.ownerUserId ?? null
 
   const created: InviteCodeRow[] = []
   for (let i = 0; i < count; i++) {
     const code = generateInviteCode()
     const row = await db
       .prepare(
-        `INSERT INTO invite_codes (code, note, created_by, created_at, expires_at, revoked)
-         VALUES (?1, ?2, ?3, ?4, ?5, 0)
+        `INSERT INTO invite_codes (code, note, created_by, created_at, expires_at, revoked, owner_user_id)
+         VALUES (?1, ?2, ?3, ?4, ?5, 0, ?6)
          RETURNING *`,
       )
-      .bind(code, note, opts.createdBy.slice(0, 48), createdAt, expiresAt)
+      .bind(code, note, opts.createdBy.slice(0, 48), createdAt, expiresAt, ownerId)
       .first<InviteCodeRow>()
     if (row) created.push(row)
   }
   return created
+}
+
+export async function listUserInviteCodes(db: D1Database, ownerUserId: number): Promise<InviteCodeRow[]> {
+  const rows = await db
+    .prepare('SELECT * FROM invite_codes WHERE owner_user_id = ?1 ORDER BY id DESC LIMIT 100')
+    .bind(ownerUserId)
+    .all<InviteCodeRow>()
+  return rows.results || []
+}
+
+export async function countUserInviteCodes(db: D1Database, ownerUserId: number): Promise<number> {
+  const row = await db
+    .prepare('SELECT COUNT(*) AS cnt FROM invite_codes WHERE owner_user_id = ?1')
+    .bind(ownerUserId)
+    .first<{ cnt: number }>()
+  return Number(row?.cnt ?? 0)
+}
+
+export async function countUserInvitedCount(db: D1Database, ownerUserId: number): Promise<number> {
+  const row = await db
+    .prepare('SELECT COUNT(*) AS cnt FROM users WHERE invited_by_user_id = ?1')
+    .bind(ownerUserId)
+    .first<{ cnt: number }>()
+  return Number(row?.cnt ?? 0)
+}
+
+export async function recordUserReferralAndBonus(
+  db: D1Database,
+  opts: {
+    inviteeUserId: number
+    inviterUserId: number | null
+    inviteCode: string
+    bonusQuota: number
+  },
+): Promise<void> {
+  const bonus = Math.max(0, Math.round(opts.bonusQuota))
+  await db
+    .prepare(
+      `UPDATE users
+       SET invited_by_user_id = ?1,
+           invited_by_code = ?2,
+           extra_qa_quota = COALESCE(extra_qa_quota, 0) + ?3
+       WHERE id = ?4`,
+    )
+    .bind(opts.inviterUserId, opts.inviteCode.trim().toUpperCase().slice(0, 40), bonus, opts.inviteeUserId)
+    .run()
+
+  if (opts.inviterUserId !== null && opts.inviterUserId !== opts.inviteeUserId && bonus > 0) {
+    await db
+      .prepare('UPDATE users SET extra_qa_quota = COALESCE(extra_qa_quota, 0) + ?1 WHERE id = ?2')
+      .bind(bonus, opts.inviterUserId)
+      .run()
+  }
 }
 
 export async function listInviteCodes(db: D1Database, limit = 100): Promise<InviteCodeRow[]> {

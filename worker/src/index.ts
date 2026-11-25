@@ -12,6 +12,7 @@ const PRIVATE_GATE_PUBLIC_ALLOWLIST = new Set([
   '/api/health',
   '/api/public/settings',
   '/api/public/access-config',
+  '/api/public/waitlist',
   '/api/auth/login',
   '/api/auth/register',
   '/api/auth/send-code',

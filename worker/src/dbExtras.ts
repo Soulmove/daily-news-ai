@@ -466,3 +466,235 @@ export async function deleteEditorialOverride(
   const doc = await getEditorialOverridesDoc(db)
   return { removed: Number(res.meta?.changes ?? 0) > 0, doc }
 }
+
+// ---------------- Invite Waitlist (Stage 3/4 Scarcity Application) ----------------
+
+import type { ReactionSummary, ReactionTargetType, WaitlistRow } from './types'
+
+export async function createWaitlistEntry(
+  db: D1Database,
+  opts: { contact: string; focusAreas?: string; note?: string; ip?: string },
+): Promise<WaitlistRow> {
+  const ts = nowShanghaiIso()
+  const row = await db
+    .prepare(
+      `INSERT INTO invite_waitlist (contact, focus_areas, note, status, assigned_code, ip, created_at, reviewed_at)
+       VALUES (?1, ?2, ?3, 'pending', '', ?4, ?5, '')
+       RETURNING *`,
+    )
+    .bind(
+      opts.contact.trim().slice(0, 160),
+      (opts.focusAreas || '').trim().slice(0, 200),
+      (opts.note || '').trim().slice(0, 300),
+      (opts.ip || '').trim().slice(0, 64),
+      ts,
+    )
+    .first<WaitlistRow>()
+  if (!row) {
+    throw new Error('Failed to create waitlist record')
+  }
+  return row
+}
+
+export async function listWaitlistEntries(
+  db: D1Database,
+  opts: { statusFilter?: string; limit?: number } = {},
+): Promise<WaitlistRow[]> {
+  const lim = Math.max(1, Math.min(200, opts.limit ?? 100))
+  const st = (opts.statusFilter || '').trim()
+  if (st) {
+    const rows = await db
+      .prepare('SELECT * FROM invite_waitlist WHERE status = ?1 ORDER BY id DESC LIMIT ?2')
+      .bind(st, lim)
+      .all<WaitlistRow>()
+    return rows.results || []
+  }
+  const rows = await db
+    .prepare('SELECT * FROM invite_waitlist ORDER BY id DESC LIMIT ?1')
+    .bind(lim)
+    .all<WaitlistRow>()
+  return rows.results || []
+}
+
+export async function getWaitlistEntryById(db: D1Database, id: number): Promise<WaitlistRow | null> {
+  return (await db.prepare('SELECT * FROM invite_waitlist WHERE id = ?1 LIMIT 1').bind(id).first<WaitlistRow>()) ?? null
+}
+
+export async function updateWaitlistEntryStatus(
+  db: D1Database,
+  opts: { id: number; status: 'approved' | 'rejected'; assignedCode?: string },
+): Promise<WaitlistRow | null> {
+  const ts = nowShanghaiIso()
+  return (
+    (await db
+      .prepare(
+        `UPDATE invite_waitlist
+         SET status = ?1, assigned_code = ?2, reviewed_at = ?3
+         WHERE id = ?4
+         RETURNING *`,
+      )
+      .bind(opts.status, (opts.assignedCode || '').trim().toUpperCase().slice(0, 40), ts, opts.id)
+      .first<WaitlistRow>()) ?? null
+  )
+}
+
+// ---------------- Structured 1-Click Content Reactions (Zero Open-Text UGC) ----------------
+
+export const ALLOWED_REACTION_KEYS: Record<ReactionTargetType, readonly string[]> = {
+  event: ['heavy', 'track', 'noise'],
+  finance: ['bullish_cat', 'bearish_hedge', 'priced_in'],
+  prediction: ['agree', 'disagree', 'neutral'],
+}
+
+export function isValidReactionTargetType(raw: string): raw is ReactionTargetType {
+  return raw === 'event' || raw === 'finance' || raw === 'prediction'
+}
+
+export function isValidReactionKey(targetType: ReactionTargetType, reactionKey: string): boolean {
+  return ALLOWED_REACTION_KEYS[targetType].includes(reactionKey)
+}
+
+function emptyCountsMap(targetType: ReactionTargetType): Record<string, number> {
+  const out: Record<string, number> = {}
+  for (const k of ALLOWED_REACTION_KEYS[targetType]) {
+    out[k] = 0
+  }
+  return out
+}
+
+export async function getReactionsBatch(
+  db: D1Database,
+  opts: { targetType: ReactionTargetType; ids: string[]; voterKey: string },
+): Promise<Record<string, ReactionSummary>> {
+  const cleanIds = Array.from(
+    new Set(opts.ids.map((s) => s.trim().slice(0, 120)).filter(Boolean)),
+  ).slice(0, 100)
+
+  const items: Record<string, ReactionSummary> = {}
+  for (const tid of cleanIds) {
+    items[tid] = {
+      target_type: opts.targetType,
+      target_id: tid,
+      counts: emptyCountsMap(opts.targetType),
+      total: 0,
+      my_reaction: null,
+    }
+  }
+  if (cleanIds.length === 0) return items
+
+  const placeholders = cleanIds.map((_, idx) => `?${idx + 2}`).join(', ')
+  const [countRows, myRows] = await Promise.all([
+    db
+      .prepare(
+        `SELECT target_id, reaction_key, count
+         FROM content_reactions
+         WHERE target_type = ?1 AND target_id IN (${placeholders})`,
+      )
+      .bind(opts.targetType, ...cleanIds)
+      .all<{ target_id: string; reaction_key: string; count: number }>(),
+    db
+      .prepare(
+        `SELECT target_id, reaction_key
+         FROM content_reaction_votes
+         WHERE target_type = ?1 AND voter_key = ?2 AND target_id IN (${cleanIds
+           .map((_, idx) => `?${idx + 3}`)
+           .join(', ')})`,
+      )
+      .bind(opts.targetType, opts.voterKey, ...cleanIds)
+      .all<{ target_id: string; reaction_key: string }>(),
+  ])
+
+  for (const r of countRows.results || []) {
+    const entry = items[r.target_id]
+    if (!entry) continue
+    if (r.reaction_key in entry.counts) {
+      entry.counts[r.reaction_key] = Math.max(0, Number(r.count ?? 0))
+    }
+  }
+  for (const r of myRows.results || []) {
+    const entry = items[r.target_id]
+    if (!entry) continue
+    entry.my_reaction = r.reaction_key
+  }
+  for (const entry of Object.values(items)) {
+    entry.total = Object.values(entry.counts).reduce((acc, n) => acc + n, 0)
+  }
+
+  return items
+}
+
+export async function upsertContentReaction(
+  db: D1Database,
+  opts: {
+    targetType: ReactionTargetType
+    targetId: string
+    voterKey: string
+    reactionKey: string
+  },
+): Promise<ReactionSummary> {
+  const targetId = opts.targetId.trim().slice(0, 120)
+  const voterKey = opts.voterKey.trim().slice(0, 128)
+  const ts = nowShanghaiIso()
+
+  const existing = await db
+    .prepare(
+      `SELECT reaction_key
+       FROM content_reaction_votes
+       WHERE target_type = ?1 AND target_id = ?2 AND voter_key = ?3
+       LIMIT 1`,
+    )
+    .bind(opts.targetType, targetId, voterKey)
+    .first<{ reaction_key: string }>()
+
+  const prevKey = existing?.reaction_key || null
+  if (prevKey !== opts.reactionKey) {
+    const stmts: D1PreparedStatement[] = []
+    if (prevKey) {
+      stmts.push(
+        db
+          .prepare(
+            `UPDATE content_reactions
+             SET count = MAX(0, count - 1), updated_at = ?4
+             WHERE target_type = ?1 AND target_id = ?2 AND reaction_key = ?3`,
+          )
+          .bind(opts.targetType, targetId, prevKey, ts),
+      )
+    }
+    stmts.push(
+      db
+        .prepare(
+          `INSERT INTO content_reactions (target_type, target_id, reaction_key, count, updated_at)
+           VALUES (?1, ?2, ?3, 1, ?4)
+           ON CONFLICT(target_type, target_id, reaction_key) DO UPDATE SET
+             count = count + 1,
+             updated_at = excluded.updated_at`,
+        )
+        .bind(opts.targetType, targetId, opts.reactionKey, ts),
+      db
+        .prepare(
+          `INSERT INTO content_reaction_votes (target_type, target_id, voter_key, reaction_key, updated_at)
+           VALUES (?1, ?2, ?3, ?4, ?5)
+           ON CONFLICT(target_type, target_id, voter_key) DO UPDATE SET
+             reaction_key = excluded.reaction_key,
+             updated_at = excluded.updated_at`,
+        )
+        .bind(opts.targetType, targetId, voterKey, opts.reactionKey, ts),
+    )
+    await db.batch(stmts)
+  }
+
+  const res = await getReactionsBatch(db, {
+    targetType: opts.targetType,
+    ids: [targetId],
+    voterKey,
+  })
+  return (
+    res[targetId] ?? {
+      target_type: opts.targetType,
+      target_id: targetId,
+      counts: emptyCountsMap(opts.targetType),
+      total: 0,
+      my_reaction: opts.reactionKey,
+    }
+  )
+}
