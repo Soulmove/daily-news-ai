@@ -1,0 +1,2013 @@
+{
+  "schema_version": "4.2",
+  "batch_id": "smart-20261125-102924",
+  "input_batch_id": "raw-20261125-102902",
+  "input_cutoff_at": "2026-11-25T10:29:02+08:00",
+  "generated_at": "2026-11-25T10:29:24+08:00",
+  "published_at": "2026-11-25T10:31:33+08:00",
+  "category": "global",
+  "category_label": "国际/宏观",
+  "generation_mode": "ai_v3_mega_overlay",
+  "model_name": "gemini-3.1-flash-lite",
+  "quality_flags": [
+    "deterministic_fresh_base"
+  ],
+  "key_changes": [
+    {
+      "headline": "三星电子跌幅扩大至9%，SK海力士跌8.6%。",
+      "detail": "韩国KOSPI指数跌幅扩大至5%，三星电子和SK海力士跌幅均超7%。",
+      "event_id": "evt_fa85779fb9ff"
+    },
+    {
+      "headline": "恒指高开0.15%，报22252.81点；恒生科技指数跌0.41%。华虹宏力跌超8%，MINIMAX跌超6%，智谱跌近5%。",
+      "detail": "恒生科技指数跌0.41%，华虹宏力跌超8%，智谱跌近5%。",
+      "event_id": "evt_77c482faaf3a"
+    },
+    {
+      "headline": "[美联储] 2026年10月19日和10月28日理事会贴现率会议纪要",
+      "detail": "美联储发布2026年10月19日和10月28日理事会贴现率会议纪要。",
+      "event_id": "evt_c303521a61cd",
+      "storyline_id": "st_61f3647ba0d0"
+    }
+  ],
+  "overview_sections": [
+    {
+      "title": "地缘与宏观风险",
+      "points": [
+        {
+          "text": "全球半导体产业链受英伟达事件及地缘政治影响出现剧烈震荡，美联储政策纪要成为市场关注焦点。",
+          "source_refs": []
+        }
+      ]
+    }
+  ],
+  "events": [
+    {
+      "schema_version": "4.1",
+      "event_id": "evt_fa85779fb9ff",
+      "storyline_id": "st_d1a02757eb77",
+      "article_ids": [
+        "rss-gnews-world-zh_75ace0746fb6",
+        "wscn-global-channel_d94fd4c91ea4"
+      ],
+      "legacy_event_ids": [],
+      "title": "三星电子跌幅扩大至9%，SK海力士跌8.6%。",
+      "category": "global",
+      "entities": [
+        "中信证券 / A股券商与资本市场"
+      ],
+      "entity_ids": [
+        "ent_memory_chips",
+        "ent_cn_brokers",
+        "ent_google"
+      ],
+      "entity_confidences": {
+        "存储芯片 (DRAM / HBM / NAND)": 0.86,
+        "中信证券 / A股券商与资本市场": 0.86,
+        "Google / DeepMind / Gemini": 0.86
+      },
+      "matched_entities": [
+        {
+          "entity_id": "ent_memory_chips",
+          "canonical_name": "存储芯片 (DRAM / HBM / NAND)",
+          "entity_type": "industry",
+          "sector": "半导体",
+          "matched_aliases": [
+            "sk海力士"
+          ],
+          "tickers": [
+            {
+              "symbol": "MU",
+              "market": "US",
+              "exchange": "NASDAQ",
+              "currency": "USD",
+              "label": "MU.US (NASDAQ)"
+            }
+          ],
+          "reason": "正文/实体匹配关键词「sk海力士」",
+          "confidence": 0.86
+        },
+        {
+          "entity_id": "ent_cn_brokers",
+          "canonical_name": "中信证券 / A股券商与资本市场",
+          "entity_type": "company",
+          "sector": "金融基础设施 / 券商",
+          "matched_aliases": [
+            "东方财富"
+          ],
+          "tickers": [
+            {
+              "symbol": "600030",
+              "market": "SH",
+              "exchange": "SSE",
+              "currency": "CNY",
+              "label": "600030.SH (SSE)"
+            }
+          ],
+          "reason": "正文/实体匹配关键词「东方财富」",
+          "confidence": 0.86
+        },
+        {
+          "entity_id": "ent_google",
+          "canonical_name": "Google / DeepMind / Gemini",
+          "entity_type": "company",
+          "sector": "AI 模型与云基础设施",
+          "matched_aliases": [
+            "google"
+          ],
+          "tickers": [
+            {
+              "symbol": "GOOGL",
+              "market": "US",
+              "exchange": "NASDAQ",
+              "currency": "USD",
+              "label": "GOOGL.US (NASDAQ)"
+            }
+          ],
+          "reason": "正文/实体匹配关键词「google」",
+          "confidence": 0.86
+        }
+      ],
+      "importance": "high",
+      "sentiment": "Mixed",
+      "special_note": null,
+      "material_stage": null,
+      "material_stage_label": null,
+      "material_stage_confidence": null,
+      "thumbnail_url": null,
+      "publisher_name": "东方财富网",
+      "source_status": "ok",
+      "evidence_status": "multi_source",
+      "evidence_label": "多独立来源提及（待核官方全文）",
+      "evidence_status_reason": "已有 2 家独立媒体族提及（含摘要或正文首段）；多源转载不代表官方公告已证实",
+      "attribution_warning": null,
+      "regulatory_note": null,
+      "contradictions": [],
+      "downweight_reasons": [],
+      "quality_flags": [],
+      "material_depth": "title_and_excerpt",
+      "source_count": 2,
+      "platform_count": 2,
+      "independent_publisher_count": 2,
+      "reprint_count": 0,
+      "published_at": "2026-11-25T08:34:31+08:00",
+      "event_date": "2026-11-25",
+      "event_time": "2026-11-25T08:34:31+08:00",
+      "stale": false,
+      "event_date_source": "llm_extracted",
+      "is_stale_rehash": false,
+      "time_trust_level": "article_timestamp",
+      "time_confidence": "article_timestamp",
+      "first_discovered_at": "2026-11-25T10:29:02+08:00",
+      "first_reported_at": "2026-11-25T08:34:31+08:00",
+      "latest_fact_update_at": "2026-11-25T10:21:46+08:00",
+      "latest_reported_at": "2026-11-25T10:21:46+08:00",
+      "fetched_at": "2026-11-25T10:29:02+08:00",
+      "input_batch_id": "raw-20261125-102902",
+      "fact_summary": "韩国KOSPI指数跌幅扩大至5%，三星电子和SK海力士跌幅均超7%。",
+      "fact_atoms": [
+        {
+          "atom_id": "fa_23859933",
+          "subject": "中信证券 / A股券商与资本市场",
+          "metric_or_action": "三星电子跌幅扩大至9%，SK海力士跌8.6%。",
+          "value": "9",
+          "unit": "%",
+          "period": "单次披露/未注明周期",
+          "scope": "新闻事件陈述",
+          "fact_status": "multi_source_reported",
+          "attribution": "东方财富网",
+          "source_ref": "rss-gnews-world-zh_75ace0746fb6",
+          "source_url": "https://news.google.com/rss/articles/CBMiZkFVX3lxTE4wSE1TN1h0UXIxOVN6RW1jY0RkUzhTSy1EdWpDQk43dkJEY191OENQbDVpdE01ZTlTRDhabGxLbUF1TmRLTk9XVDVrREdTckI5STlDX2FiQjJ0bXVxRzljaE14RGlEQQ?oc=5",
+          "source_excerpt_or_locator": "韩国KOSPI指数跌幅扩大至5%，三星电子和SK海力士均跌超7% 东方财富网 在Google 新闻上查看更多头条新闻和观点",
+          "published_at": "2026-11-25T08:34:31+08:00",
+          "discovered_at": "2026-11-25T10:29:02+08:00",
+          "revision": 1
+        }
+      ],
+      "ai_analysis": "作为全球半导体风向标，韩企大跌预示着全球AI硬件需求预期正在经历剧烈的去泡沫化过程。",
+      "unverified_claims": [],
+      "speculation_or_outlook": null,
+      "sources": [
+        {
+          "item_id": "rss-gnews-world-zh_75ace0746fb6",
+          "article_id": "rss-gnews-world-zh_75ace0746fb6",
+          "source_id": "rss-gnews-world-zh",
+          "source_name": "东方财富网",
+          "publisher_name": "东方财富网",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "finance",
+          "is_reprint_copy": false,
+          "title": "韩国KOSPI指数跌幅扩大至5%，三星电子和SK海力士均跌超7%",
+          "url": "https://news.google.com/rss/articles/CBMiZkFVX3lxTE4wSE1TN1h0UXIxOVN6RW1jY0RkUzhTSy1EdWpDQk43dkJEY191OENQbDVpdE01ZTlTRDhabGxLbUF1TmRLTk9XVDVrREdTckI5STlDX2FiQjJ0bXVxRzljaE14RGlEQQ?oc=5",
+          "published_at": "2026-11-25T08:34:31+08:00",
+          "published_at_source": "upstream_rfc2822",
+          "fetched_at": "2026-11-25T10:29:05+08:00",
+          "excerpt": "韩国KOSPI指数跌幅扩大至5%，三星电子和SK海力士均跌超7% 东方财富网 在Google 新闻上查看更多头条新闻和观点",
+          "thumbnail_url": null,
+          "deep_fetch_status": "empty_or_js_rendered"
+        },
+        {
+          "item_id": "wscn-global-channel_d94fd4c91ea4",
+          "article_id": "wscn-global-channel_d94fd4c91ea4",
+          "source_id": "wscn-global-channel",
+          "source_name": "华尔街见闻 7×24 全球",
+          "publisher_name": "华尔街见闻 7×24 全球",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "wallstreetcn",
+          "is_reprint_copy": false,
+          "title": "三星电子跌幅扩大至9%，SK海力士跌8.6%。",
+          "url": "https://wallstreetcn.com/livenews/3205361",
+          "published_at": "2026-11-25T10:21:46+08:00",
+          "published_at_source": "upstream_api",
+          "fetched_at": "2026-11-25T10:29:03+08:00",
+          "excerpt": null,
+          "thumbnail_url": null,
+          "deep_fetch_status": null
+        }
+      ],
+      "verification": {
+        "all_refs_valid": true,
+        "has_primary_url": true,
+        "rejected_refs": [],
+        "has_first_party": false
+      },
+      "followup": null,
+      "is_new_in_batch": true,
+      "update_kind": "new_discovery",
+      "heavy_score": 66.7,
+      "radar_score": 82,
+      "severity_tier": "A",
+      "severity_label": "A级要闻",
+      "heavy_reason_tag": "市场剧震",
+      "summary": "韩国KOSPI指数跌幅扩大至5%，三星电子和SK海力士跌幅均超7%。",
+      "summary_zh": "韩国KOSPI指数跌幅扩大至5%，三星电子和SK海力士跌幅均超7%。",
+      "deep_qa": [
+        {
+          "question": "三星与海力士大跌对全球供应链有何影响？",
+          "answer": "作为存储芯片核心供应商，其股价大跌反映了下游AI服务器需求放缓的担忧，将直接压制全球半导体板块估值。",
+          "historical_parallel": "类似于2000年互联网泡沫破裂初期，半导体硬件需求预期从过热转向冷清的转折点。"
+        }
+      ],
+      "ai_overlaid": true,
+      "translation_attempts": 0,
+      "translation_error": null,
+      "title_zh": "三星电子跌幅扩大至9%，SK海力士跌8.6%。",
+      "translation_status": "native_zh",
+      "title_en": "",
+      "summary_en": "",
+      "ai_analysis_en": ""
+    },
+    {
+      "schema_version": "4.1",
+      "event_id": "evt_06dec987265e",
+      "storyline_id": "st_56d88eab31a0",
+      "article_ids": [
+        "scmp-rss_334ba4da4c7b",
+        "bbc-world-rss_8c9d5867908b",
+        "rss-gnews-reuters-bloomberg_aa91fdd07aca"
+      ],
+      "legacy_event_ids": [],
+      "title": "黄仁勋的回归给中国领导人上了怎样一课：关于特朗普",
+      "category": "global",
+      "entities": [
+        "英伟达 (NVIDIA)"
+      ],
+      "entity_ids": [
+        "ent_nvidia"
+      ],
+      "entity_confidences": {
+        "英伟达 (NVIDIA)": 0.96
+      },
+      "matched_entities": [
+        {
+          "entity_id": "ent_nvidia",
+          "canonical_name": "英伟达 (NVIDIA)",
+          "entity_type": "company",
+          "sector": "半导体 / AI算力",
+          "matched_aliases": [
+            "jensen huang",
+            "nvidia"
+          ],
+          "tickers": [
+            {
+              "symbol": "NVDA",
+              "market": "US",
+              "exchange": "NASDAQ",
+              "currency": "USD",
+              "label": "NVDA.US (NASDAQ)"
+            }
+          ],
+          "reason": "正文/实体匹配关键词「jensen huang / nvidia」",
+          "confidence": 0.96
+        }
+      ],
+      "importance": "medium",
+      "sentiment": "Mixed",
+      "special_note": null,
+      "material_stage": null,
+      "material_stage_label": null,
+      "material_stage_confidence": null,
+      "thumbnail_url": "https://cdn.i-scmp.com/sites/default/files/styles/1280x720/public/d8/images/canvas/2026/11/24/d67adf04-1e00-4c5e-98d2-ba34002cf3ad_aa390131.jpg?itok=ViYDITwj&v=1795517881",
+      "publisher_name": "南华早报 SCMP",
+      "source_status": "ok",
+      "evidence_status": "multi_source",
+      "evidence_label": "多独立来源提及（待核官方全文）",
+      "evidence_status_reason": "已有 3 家独立媒体族提及（含摘要或正文首段）；多源转载不代表官方公告已证实",
+      "attribution_warning": null,
+      "regulatory_note": null,
+      "contradictions": [],
+      "downweight_reasons": [],
+      "quality_flags": [],
+      "material_depth": "title_and_excerpt",
+      "source_count": 3,
+      "platform_count": 3,
+      "independent_publisher_count": 3,
+      "reprint_count": 0,
+      "published_at": "2026-11-24T15:26:27+08:00",
+      "event_date": "2026-11-24",
+      "event_time": "2026-11-24T15:26:27+08:00",
+      "stale": false,
+      "event_date_source": "llm_extracted",
+      "is_stale_rehash": false,
+      "time_trust_level": "article_timestamp",
+      "time_confidence": "article_timestamp",
+      "first_discovered_at": "2026-11-25T10:29:02+08:00",
+      "first_reported_at": "2026-11-24T15:26:27+08:00",
+      "latest_fact_update_at": "2026-11-25T07:59:28+08:00",
+      "latest_reported_at": "2026-11-25T07:59:28+08:00",
+      "fetched_at": "2026-11-25T10:29:02+08:00",
+      "input_batch_id": "raw-20261125-102902",
+      "fact_summary": "黄仁勋重任英伟达CEO可能会使华盛顿对华政策复杂化，进一步拉大白宫急于稳定对华关系与即将上任、准备采取强硬态度的民主党国会之间的分歧……",
+      "fact_atoms": [
+        {
+          "atom_id": "fa_11120770",
+          "subject": "英伟达 (NVIDIA)",
+          "metric_or_action": "What Jensen Huang's return teaches China's Xi about Trump",
+          "value": null,
+          "unit": null,
+          "period": "单次披露/未注明周期",
+          "scope": "新闻事件陈述",
+          "fact_status": "multi_source_reported",
+          "attribution": "南华早报 SCMP",
+          "source_ref": "scmp-rss_334ba4da4c7b",
+          "source_url": "https://www.scmp.com/news/china/diplomacy/article/3375631/how-jensen-huangs-nvidia-return-could-deepen-us-rift-over-china-chip-curbs",
+          "source_excerpt_or_locator": "Jensen Huang’s return as Nvidia CEO could complicate Washington’s China policy, widening the gap between a White House keen to steady ties with Beijing and an incoming Democratic-l",
+          "published_at": "2026-11-24T22:00:06+08:00",
+          "discovered_at": "2026-11-25T10:29:02+08:00",
+          "revision": 1
+        }
+      ],
+      "ai_analysis": "牵动英伟达 (NVIDIA)跨区风险溢价与供应链预期，重点跟踪涉事各方下一轮官方通报。",
+      "unverified_claims": [],
+      "speculation_or_outlook": null,
+      "sources": [
+        {
+          "item_id": "scmp-rss_334ba4da4c7b",
+          "article_id": "scmp-rss_334ba4da4c7b",
+          "source_id": "scmp-rss",
+          "source_name": "南华早报 SCMP",
+          "publisher_name": "南华早报 SCMP",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "scmp",
+          "is_reprint_copy": false,
+          "title": "How Jensen Huang’s Nvidia return could deepen US rift over China chip curbs",
+          "url": "https://www.scmp.com/news/china/diplomacy/article/3375631/how-jensen-huangs-nvidia-return-could-deepen-us-rift-over-china-chip-curbs",
+          "published_at": "2026-11-24T22:00:06+08:00",
+          "published_at_source": "upstream_rfc2822",
+          "fetched_at": "2026-11-25T10:29:03+08:00",
+          "excerpt": "Jensen Huang’s return as Nvidia CEO could complicate Washington’s China policy, widening the gap between a White House keen to steady ties with Beijing and an incoming Democratic-led Congress poised to tighten chip curbs.",
+          "thumbnail_url": "https://cdn.i-scmp.com/sites/default/files/styles/1280x720/public/d8/images/canvas/2026/11/24/d67adf04-1e00-4c5e-98d2-ba34002cf3ad_aa390131.jpg?itok=ViYDITwj&v=1795517881",
+          "deep_fetch_status": null,
+          "title_zh": "黄仁勋重返英伟达将如何加剧美国在对华芯片限制上的分歧"
+        },
+        {
+          "item_id": "bbc-world-rss_8c9d5867908b",
+          "article_id": "bbc-world-rss_8c9d5867908b",
+          "source_id": "bbc-world-rss",
+          "source_name": "BBC News World",
+          "publisher_name": "BBC News World",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "bbc",
+          "is_reprint_copy": false,
+          "title": "What Jensen Huang's return teaches China's Xi about Trump",
+          "url": "https://www.bbc.co.uk/news/articles/c63rgpy50x98o?at_medium=RSS&at_campaign=rss",
+          "published_at": "2026-11-24T15:26:27+08:00",
+          "published_at_source": "upstream_rfc2822",
+          "fetched_at": "2026-11-25T10:29:03+08:00",
+          "excerpt": "Huang being back at the helm of Nvidia is no guarantee of relief for Beijing.",
+          "thumbnail_url": null,
+          "deep_fetch_status": null,
+          "title_zh": "黄仁勋的回归给中国领导人上了怎样一课：关于特朗普"
+        },
+        {
+          "item_id": "rss-gnews-reuters-bloomberg_aa91fdd07aca",
+          "article_id": "rss-gnews-reuters-bloomberg_aa91fdd07aca",
+          "source_id": "rss-gnews-reuters-bloomberg",
+          "source_name": "Reuters",
+          "publisher_name": "Reuters",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "reuters",
+          "is_reprint_copy": false,
+          "title": "Huang's return to Nvidia brings open-weight AI debate to forefront in Washington",
+          "url": "https://news.google.com/rss/articles/CBMiugFBVV95cUxQcE80eU84aDZfY24tLUhfMURrVFZHdkt3UHZuNjcxOXA3MUdWU0ZXUV9Od0d2QUJUWVFtZEN4X19BekxhdUFzcUNlVFYtZVdiMHgtTEFPQWtxU2xIS2NwUW1HVzJkUjNRS2tiMkJEa1ltcG42enk0czYyQXNjN0xibUd1SFNGU3pzd1diLWxDcFlmUVVqUmRoNVJ5VzVDNUVmMDJNRmxTY2dJSjJ3MGk4UUNhTk9DaGNLQ1E?oc=5",
+          "published_at": "2026-11-25T07:59:28+08:00",
+          "published_at_source": "upstream_rfc2822",
+          "fetched_at": "2026-11-25T10:29:05+08:00",
+          "excerpt": "Huang's return to Nvidia brings open-weight AI debate to forefront in Washington Reuters",
+          "thumbnail_url": null,
+          "deep_fetch_status": null,
+          "title_zh": "黄仁勋重返英伟达，将开源权重AI之争推向华盛顿风口浪尖"
+        }
+      ],
+      "verification": {
+        "all_refs_valid": true,
+        "has_primary_url": true,
+        "rejected_refs": [],
+        "has_first_party": false
+      },
+      "followup": null,
+      "is_new_in_batch": true,
+      "update_kind": "new_discovery",
+      "heavy_score": 54.0,
+      "radar_score": 88,
+      "severity_tier": "B",
+      "severity_label": "B级常规",
+      "title_en": "What Jensen Huang's return teaches China's Xi about Trump",
+      "summary_en": "Jensen Huang's return as Nvidia CEO could complicate Washington's China policy, widening the gap between a White House keen to steady ties with Beijing and an incoming Democratic-led Congress poised to…",
+      "summary": "黄仁勋重任英伟达CEO可能会使华盛顿对华政策复杂化，进一步拉大白宫急于稳定对华关系与即将上任、准备采取强硬态度的民主党国会之间的分歧……",
+      "summary_zh": "黄仁勋重任英伟达CEO可能会使华盛顿对华政策复杂化，进一步拉大白宫急于稳定对华关系与即将上任、准备采取强硬态度的民主党国会之间的分歧……",
+      "translation_attempts": 0,
+      "translation_error": null,
+      "title_zh": "黄仁勋的回归给中国领导人上了怎样一课：关于特朗普",
+      "translation_status": "native_zh",
+      "ai_analysis_en": "",
+      "deep_qa": [
+        {
+          "question": "黄仁勋重任英伟达CEO对中美科技外交格局将产生何种实质性冲击？",
+          "answer": "黄仁勋作为产业领袖兼具灵活的商业斡旋能力，其回归可能会在白宫对华出口管制政策与国会强硬立法之间制造更多的政策博弈空间。这迫使华盛顿在维持供应链稳定和国家安全之间寻求新的平衡。",
+          "historical_parallel": "20世纪80年代美苏半导体竞争时期，硅谷商业巨头曾多次联合向白宫施压，要求放宽对特定民用技术的出口限制以维持全球市场份额。"
+        }
+      ]
+    },
+    {
+      "schema_version": "4.1",
+      "event_id": "evt_f320fcf0dd2e",
+      "storyline_id": "st_c488391a42b0",
+      "article_ids": [
+        "sputniknewscn_10db4fc13398",
+        "cankaoxiaoxi_1b27cc922065",
+        "kaopu_3bca468085dc"
+      ],
+      "legacy_event_ids": [],
+      "title": "伊朗外交官：只要美国实施封锁 伊朗就反对船只通过霍尔木兹海峡",
+      "category": "global",
+      "entities": [
+        "地缘冲突、能源与大宗商品"
+      ],
+      "entity_ids": [
+        "ent_geopolitics_energy"
+      ],
+      "entity_confidences": {
+        "地缘冲突、能源与大宗商品": 0.96
+      },
+      "matched_entities": [
+        {
+          "entity_id": "ent_geopolitics_energy",
+          "canonical_name": "地缘冲突、能源与大宗商品",
+          "entity_type": "macro",
+          "sector": "能源安全与避险资产",
+          "matched_aliases": [
+            "伊朗",
+            "霍尔木兹"
+          ],
+          "tickers": [],
+          "reason": "正文/实体匹配关键词「伊朗 / 霍尔木兹」",
+          "confidence": 0.96
+        }
+      ],
+      "importance": "medium",
+      "sentiment": "Mixed",
+      "special_note": null,
+      "material_stage": null,
+      "material_stage_label": null,
+      "material_stage_confidence": null,
+      "thumbnail_url": null,
+      "publisher_name": "卫星通讯社",
+      "source_status": "ok",
+      "evidence_status": "multi_source",
+      "evidence_label": "多独立来源提及（待核官方全文）",
+      "evidence_status_reason": "已有 3 家独立媒体族提及（仅基于标题素材）；多源转载不代表官方公告已证实",
+      "attribution_warning": null,
+      "regulatory_note": null,
+      "contradictions": [],
+      "downweight_reasons": [
+        "仅含标题素材 (-8)"
+      ],
+      "quality_flags": [],
+      "material_depth": "title_only",
+      "source_count": 3,
+      "platform_count": 3,
+      "independent_publisher_count": 3,
+      "reprint_count": 0,
+      "published_at": "2026-11-24T17:15:10+08:00",
+      "event_date": "2026-11-25",
+      "event_time": "2026-11-24T17:15:10+08:00",
+      "stale": false,
+      "event_date_source": "llm_extracted",
+      "is_stale_rehash": false,
+      "time_trust_level": "article_timestamp",
+      "time_confidence": "article_timestamp",
+      "first_discovered_at": "2026-11-25T10:29:02+08:00",
+      "first_reported_at": "2026-11-24T17:15:10+08:00",
+      "latest_fact_update_at": "2026-11-25T07:08:14+08:00",
+      "latest_reported_at": "2026-11-25T07:08:14+08:00",
+      "fetched_at": "2026-11-25T10:29:02+08:00",
+      "input_batch_id": "raw-20261125-102902",
+      "fact_summary": "伊朗外交官：只要美国实施封锁 伊朗就反对船只通过霍尔木兹海峡",
+      "fact_atoms": [
+        {
+          "atom_id": "fa_42375862",
+          "subject": "地缘冲突、能源与大宗商品",
+          "metric_or_action": "伊朗外交官：只要美国实施封锁 伊朗就反对船只通过霍尔木兹海峡",
+          "value": null,
+          "unit": null,
+          "period": "单次披露/未注明周期",
+          "scope": "新闻事件陈述",
+          "fact_status": "multi_source_reported",
+          "attribution": "卫星通讯社",
+          "source_ref": "sputniknewscn_10db4fc13398",
+          "source_url": "https://sputniknews.cn/20261125/1074330861.html",
+          "source_excerpt_or_locator": "伊朗外交官：只要美国实施封锁 伊朗就反对船只通过霍尔木兹海峡",
+          "published_at": "2026-11-25T07:08:14+08:00",
+          "discovered_at": "2026-11-25T10:29:02+08:00",
+          "revision": 1
+        }
+      ],
+      "ai_analysis": "牵动地缘冲突、能源与大宗商品跨区风险溢价与供应链预期，重点跟踪涉事各方下一轮官方通报。",
+      "unverified_claims": [],
+      "speculation_or_outlook": null,
+      "sources": [
+        {
+          "item_id": "sputniknewscn_10db4fc13398",
+          "article_id": "sputniknewscn_10db4fc13398",
+          "source_id": "sputniknewscn",
+          "source_name": "卫星通讯社",
+          "publisher_name": "卫星通讯社",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "aggregator_lead",
+          "publisher_family": "sputniknewscn",
+          "is_reprint_copy": false,
+          "title": "伊朗外交官：只要美国实施封锁 伊朗就反对船只通过霍尔木兹海峡",
+          "url": "https://sputniknews.cn/20261125/1074330861.html",
+          "published_at": "2026-11-25T07:08:14+08:00",
+          "published_at_source": "upstream_epoch",
+          "fetched_at": "2026-11-25T10:29:02+08:00",
+          "excerpt": null,
+          "thumbnail_url": null,
+          "deep_fetch_status": null
+        },
+        {
+          "item_id": "cankaoxiaoxi_1b27cc922065",
+          "article_id": "cankaoxiaoxi_1b27cc922065",
+          "source_id": "cankaoxiaoxi",
+          "source_name": "参考消息",
+          "publisher_name": "参考消息",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "aggregator_lead",
+          "publisher_family": "cankaoxiaoxi",
+          "is_reprint_copy": false,
+          "title": "游泳选手为反战横渡霍尔木兹海峡",
+          "url": "https://ckxxapp.ckxx.net/pages/2026/11/24/bffa918ac5e34f209451428da6aa9c5c.html",
+          "published_at": "2026-11-24T17:15:10+08:00",
+          "published_at_source": "upstream_epoch",
+          "fetched_at": "2026-11-25T10:29:02+08:00",
+          "excerpt": null,
+          "thumbnail_url": null,
+          "deep_fetch_status": null
+        },
+        {
+          "item_id": "kaopu_3bca468085dc",
+          "article_id": "kaopu_3bca468085dc",
+          "source_id": "kaopu",
+          "source_name": "靠谱新闻",
+          "publisher_name": "靠谱新闻",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "aggregator_lead",
+          "publisher_family": "kaopu",
+          "is_reprint_copy": false,
+          "title": "据报霍尔木兹海峡再传油轮遇袭消息",
+          "url": "https://kaopu.news/story/2026-11-24/hormuz-tanker-attack-reports-06762c",
+          "published_at": "2026-11-25T06:35:29+08:00",
+          "published_at_source": "upstream_rfc2822",
+          "fetched_at": "2026-11-25T10:29:02+08:00",
+          "excerpt": null,
+          "thumbnail_url": null,
+          "deep_fetch_status": null
+        }
+      ],
+      "verification": {
+        "all_refs_valid": true,
+        "has_primary_url": true,
+        "rejected_refs": [],
+        "has_first_party": false
+      },
+      "followup": null,
+      "is_new_in_batch": true,
+      "update_kind": "new_discovery",
+      "heavy_score": 54.0,
+      "radar_score": 65,
+      "severity_tier": "B",
+      "severity_label": "B级常规",
+      "translation_attempts": 0,
+      "translation_error": null,
+      "title_zh": "伊朗外交官：只要美国实施封锁 伊朗就反对船只通过霍尔木兹海峡",
+      "translation_status": "native_zh",
+      "summary_zh": "伊朗外交官：只要美国实施封锁 伊朗就反对船只通过霍尔木兹海峡",
+      "title_en": "",
+      "summary_en": "",
+      "ai_analysis_en": "",
+      "deep_qa": [
+        {
+          "question": "伊朗威胁封锁霍尔木兹海峡对全球能源供应链和地缘政治意味着什么？",
+          "answer": "霍尔木兹海峡作为全球最重要的石油运输咽喉，任何实质性封锁或军事对峙都将直接导致国际原油期货价格暴涨，并引发全球能源供应链重组与通胀预期急剧升温。",
+          "historical_parallel": "1980年代两伊战争期间的“油轮战”曾导致海峡航运险情频发，当时美国海军曾出面为波斯湾油轮护航以保障石油供应链安全。"
+        }
+      ]
+    },
+    {
+      "schema_version": "4.1",
+      "event_id": "evt_77c482faaf3a",
+      "storyline_id": "st_151a0ec2c231",
+      "article_ids": [
+        "wscn-global-channel_cd2f758a0fb4"
+      ],
+      "legacy_event_ids": [],
+      "title": "恒指高开0.15%，报22252.81点；恒生科技指数跌0.41%。华虹宏力跌超8%，MINIMAX跌超6%，智谱跌近5%。",
+      "category": "global",
+      "entities": [
+        "智谱 AI (GLM)"
+      ],
+      "entity_ids": [
+        "ent_zhipu"
+      ],
+      "entity_confidences": {
+        "智谱 AI (GLM)": 0.86
+      },
+      "matched_entities": [
+        {
+          "entity_id": "ent_zhipu",
+          "canonical_name": "智谱 AI (GLM)",
+          "entity_type": "tech",
+          "sector": "AI 模型与开源推理",
+          "matched_aliases": [
+            "智谱"
+          ],
+          "tickers": [],
+          "reason": "正文/实体匹配关键词「智谱」",
+          "confidence": 0.86
+        }
+      ],
+      "importance": "high",
+      "sentiment": "Mixed",
+      "special_note": null,
+      "material_stage": null,
+      "material_stage_label": null,
+      "material_stage_confidence": null,
+      "thumbnail_url": null,
+      "publisher_name": "华尔街见闻 7×24 全球",
+      "source_status": "ok",
+      "evidence_status": "single_source",
+      "evidence_label": "单一独立来源线索",
+      "evidence_status_reason": "目前仅见 1 家独立来源（共 1 条引用含转载，仅基于标题素材），尚未见独立渠道交叉或官方确认",
+      "attribution_warning": null,
+      "regulatory_note": null,
+      "contradictions": [],
+      "downweight_reasons": [
+        "仅含标题素材 (-8)"
+      ],
+      "quality_flags": [],
+      "material_depth": "title_only",
+      "source_count": 1,
+      "platform_count": 1,
+      "independent_publisher_count": 1,
+      "reprint_count": 0,
+      "published_at": "2026-11-25T09:21:59+08:00",
+      "event_date": "2026-11-25",
+      "event_time": "2026-11-25T09:21:59+08:00",
+      "stale": false,
+      "event_date_source": "llm_extracted",
+      "is_stale_rehash": false,
+      "time_trust_level": "article_timestamp",
+      "time_confidence": "article_timestamp",
+      "first_discovered_at": "2026-11-25T10:29:02+08:00",
+      "first_reported_at": "2026-11-25T09:21:59+08:00",
+      "latest_fact_update_at": "2026-11-25T09:21:59+08:00",
+      "latest_reported_at": "2026-11-25T09:21:59+08:00",
+      "fetched_at": "2026-11-25T10:29:02+08:00",
+      "input_batch_id": "raw-20261125-102902",
+      "fact_summary": "恒生科技指数跌0.41%，华虹宏力跌超8%，智谱跌近5%。",
+      "fact_atoms": [
+        {
+          "atom_id": "fa_73757084",
+          "subject": "智谱 AI (GLM)",
+          "metric_or_action": "恒指高开0.15%，报22252.81点；恒生科技指数跌0.41%。华虹宏力跌超8%，MINIMAX跌超6%，智谱跌近5%。",
+          "value": "0.15",
+          "unit": "%",
+          "period": "单次披露/未注明周期",
+          "scope": "新闻事件陈述",
+          "fact_status": "reported_unconfirmed_by_filing",
+          "attribution": "华尔街见闻 7×24 全球",
+          "source_ref": "wscn-global-channel_cd2f758a0fb4",
+          "source_url": "https://wallstreetcn.com/livenews/3205322",
+          "source_excerpt_or_locator": "恒指高开0.15%，报22252.81点；恒生科技指数跌0.41%。华虹宏力跌超8%，MINIMAX跌超6%，智谱跌近5%。",
+          "published_at": "2026-11-25T09:21:59+08:00",
+          "discovered_at": "2026-11-25T10:29:02+08:00",
+          "revision": 1
+        }
+      ],
+      "ai_analysis": "港股科技板块受美股AI交易退潮及本地流动性收紧双重挤压，呈现明显的估值回调压力。",
+      "unverified_claims": [],
+      "speculation_or_outlook": null,
+      "sources": [
+        {
+          "item_id": "wscn-global-channel_cd2f758a0fb4",
+          "article_id": "wscn-global-channel_cd2f758a0fb4",
+          "source_id": "wscn-global-channel",
+          "source_name": "华尔街见闻 7×24 全球",
+          "publisher_name": "华尔街见闻 7×24 全球",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "wallstreetcn",
+          "is_reprint_copy": false,
+          "title": "恒指高开0.15%，报22252.81点；恒生科技指数跌0.41%。华虹宏力跌超8%，MINIMAX跌超6%，智谱跌近5%。",
+          "url": "https://wallstreetcn.com/livenews/3205322",
+          "published_at": "2026-11-25T09:21:59+08:00",
+          "published_at_source": "upstream_api",
+          "fetched_at": "2026-11-25T10:29:03+08:00",
+          "excerpt": null,
+          "thumbnail_url": null,
+          "deep_fetch_status": null
+        }
+      ],
+      "verification": {
+        "all_refs_valid": true,
+        "has_primary_url": true,
+        "rejected_refs": [],
+        "has_first_party": false
+      },
+      "followup": null,
+      "is_new_in_batch": true,
+      "update_kind": "new_discovery",
+      "heavy_score": 62.1,
+      "radar_score": 53,
+      "severity_tier": "S",
+      "severity_label": "S级重磅",
+      "heavy_reason_tag": "市场剧震",
+      "summary": "恒生科技指数跌0.41%，华虹宏力跌超8%，智谱跌近5%。",
+      "summary_zh": "恒生科技指数跌0.41%，华虹宏力跌超8%，智谱跌近5%。",
+      "deep_qa": [
+        {
+          "question": "华虹宏力等半导体股为何跌幅居前？",
+          "answer": "受全球半导体周期下行预期及地缘政治对晶圆代工产能限制的担忧，资金选择获利了结或避险。",
+          "historical_parallel": "类似于2022年全球半导体周期见顶时，代工企业估值随需求预期下调的过程。"
+        }
+      ],
+      "ai_overlaid": true,
+      "translation_attempts": 0,
+      "translation_error": null,
+      "title_zh": "恒指高开0.15%，报22252.81点；恒生科技指数跌0.41%。华虹宏力跌超8%，MINIMAX跌超6%，智谱跌近5%。",
+      "translation_status": "native_zh",
+      "title_en": "",
+      "summary_en": "",
+      "ai_analysis_en": ""
+    },
+    {
+      "schema_version": "4.1",
+      "event_id": "evt_f604fdb65c88",
+      "storyline_id": "st_1aec06ad3ec6",
+      "article_ids": [
+        "scmp-rss_cd5bd8ba845a"
+      ],
+      "legacy_event_ids": [],
+      "title": "深圳的两位军阀与一位求和者",
+      "category": "global",
+      "entities": [],
+      "entity_ids": [],
+      "entity_confidences": {},
+      "matched_entities": [],
+      "importance": "normal",
+      "sentiment": "Mixed",
+      "special_note": null,
+      "material_stage": null,
+      "material_stage_label": null,
+      "material_stage_confidence": null,
+      "thumbnail_url": "https://cdn.i-scmp.com/sites/default/files/styles/1280x720/public/d8/images/canvas/2026/11/23/1f766a23-e23c-42fc-9b55-91f1fc240200_f83143d9.jpg?itok=VrrqBYEP&v=1795404754",
+      "publisher_name": "南华早报 SCMP",
+      "source_status": "ok",
+      "evidence_status": "single_source",
+      "evidence_label": "单一独立来源线索",
+      "evidence_status_reason": "目前仅见 1 家独立来源（共 1 条引用含转载，含摘要/首段），尚未见独立渠道交叉或官方确认",
+      "attribution_warning": null,
+      "regulatory_note": null,
+      "contradictions": [],
+      "downweight_reasons": [],
+      "quality_flags": [],
+      "material_depth": "title_and_excerpt",
+      "source_count": 1,
+      "platform_count": 1,
+      "independent_publisher_count": 1,
+      "reprint_count": 0,
+      "published_at": "2026-11-25T09:30:10+08:00",
+      "event_date": "2026-11-25",
+      "event_time": "2026-11-25T09:30:10+08:00",
+      "stale": false,
+      "event_date_source": "llm_extracted",
+      "is_stale_rehash": false,
+      "time_trust_level": "article_timestamp",
+      "time_confidence": "article_timestamp",
+      "first_discovered_at": "2026-11-25T10:29:02+08:00",
+      "first_reported_at": "2026-11-25T09:30:10+08:00",
+      "latest_fact_update_at": "2026-11-25T09:30:10+08:00",
+      "latest_reported_at": "2026-11-25T09:30:10+08:00",
+      "fetched_at": "2026-11-25T10:29:02+08:00",
+      "input_batch_id": "raw-20261125-102902",
+      "fact_summary": "苏珊·格拉瑟在《纽约客》题为《两位独裁者与一位患有独裁艳羡症的美国总统》的文章中指出，美国总统唐纳德·特朗普与习近平主席及俄罗斯总统的三边峰会……",
+      "fact_atoms": [
+        {
+          "atom_id": "fa_55703926",
+          "subject": "相关主体",
+          "metric_or_action": "2 warlords and a peace-seeker in Shenzhen",
+          "value": null,
+          "unit": null,
+          "period": "单次披露/未注明周期",
+          "scope": "新闻事件陈述",
+          "fact_status": "reported_unconfirmed_by_filing",
+          "attribution": "南华早报 SCMP",
+          "source_ref": "scmp-rss_cd5bd8ba845a",
+          "source_url": "https://www.scmp.com/opinion/china-opinion/article/3375418/two-warlords-and-peace-seeker-shenzhen",
+          "source_excerpt_or_locator": "In her article “Two autocrats and an American president with autocrat envy”, Susan Glasser argues in The New Yorker that US President Donald Trump’s trilateral summit with Presiden",
+          "published_at": "2026-11-25T09:30:10+08:00",
+          "discovered_at": "2026-11-25T10:29:02+08:00",
+          "revision": 1
+        }
+      ],
+      "ai_analysis": "牵动中美外交与元首峰会跨区风险溢价与供应链预期，重点跟踪涉事各方下一轮官方通报。",
+      "unverified_claims": [],
+      "speculation_or_outlook": null,
+      "sources": [
+        {
+          "item_id": "scmp-rss_cd5bd8ba845a",
+          "article_id": "scmp-rss_cd5bd8ba845a",
+          "source_id": "scmp-rss",
+          "source_name": "南华早报 SCMP",
+          "publisher_name": "南华早报 SCMP",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "scmp",
+          "is_reprint_copy": false,
+          "title": "2 warlords and a peace-seeker in Shenzhen",
+          "url": "https://www.scmp.com/opinion/china-opinion/article/3375418/two-warlords-and-peace-seeker-shenzhen",
+          "published_at": "2026-11-25T09:30:10+08:00",
+          "published_at_source": "upstream_rfc2822",
+          "fetched_at": "2026-11-25T10:29:03+08:00",
+          "excerpt": "In her article “Two autocrats and an American president with autocrat envy”, Susan Glasser argues in The New Yorker that US President Donald Trump’s trilateral summit with President Xi Jinping and Russian President Vladimir Putin in…",
+          "thumbnail_url": "https://cdn.i-scmp.com/sites/default/files/styles/1280x720/public/d8/images/canvas/2026/11/23/1f766a23-e23c-42fc-9b55-91f1fc240200_f83143d9.jpg?itok=VrrqBYEP&v=1795404754",
+          "deep_fetch_status": null,
+          "title_zh": "深圳的两位军阀与一位求和者"
+        }
+      ],
+      "verification": {
+        "all_refs_valid": true,
+        "has_primary_url": true,
+        "rejected_refs": [],
+        "has_first_party": false
+      },
+      "followup": null,
+      "is_new_in_batch": true,
+      "update_kind": "new_discovery",
+      "heavy_score": 20.7,
+      "radar_score": 46,
+      "severity_tier": "B",
+      "severity_label": "B级常规",
+      "title_en": "2 warlords and a peace-seeker in Shenzhen",
+      "summary_en": "In her article “Two autocrats and an American president with autocrat envy”, Susan Glasser argues in The New Yorker that US President Donald Trump's trilateral summit with President Xi Jinping and Russian…",
+      "summary": "苏珊·格拉瑟在《纽约客》题为《两位独裁者与一位患有独裁艳羡症的美国总统》的文章中指出，美国总统唐纳德·特朗普与习近平主席及俄罗斯总统的三边峰会……",
+      "summary_zh": "苏珊·格拉瑟在《纽约客》题为《两位独裁者与一位患有独裁艳羡症的美国总统》的文章中指出，美国总统唐纳德·特朗普与习近平主席及俄罗斯总统的三边峰会……",
+      "translation_attempts": 0,
+      "translation_error": null,
+      "title_zh": "深圳的两位军阀与一位求和者",
+      "translation_status": "native_zh",
+      "ai_analysis_en": ""
+    },
+    {
+      "schema_version": "4.1",
+      "event_id": "evt_3037bd0444ac",
+      "storyline_id": "st_a0185c44ec10",
+      "article_ids": [
+        "zaobao_f26366129133",
+        "kaopu_aad210b6d8a4"
+      ],
+      "legacy_event_ids": [],
+      "title": "黄仁勋闪电复职引发争议 民主党誓彻查英伟达与特朗普政府",
+      "category": "global",
+      "entities": [
+        "英伟达 (NVIDIA)"
+      ],
+      "entity_ids": [
+        "ent_nvidia"
+      ],
+      "entity_confidences": {
+        "英伟达 (NVIDIA)": 0.96
+      },
+      "matched_entities": [
+        {
+          "entity_id": "ent_nvidia",
+          "canonical_name": "英伟达 (NVIDIA)",
+          "entity_type": "company",
+          "sector": "半导体 / AI算力",
+          "matched_aliases": [
+            "黄仁勋",
+            "英伟达"
+          ],
+          "tickers": [
+            {
+              "symbol": "NVDA",
+              "market": "US",
+              "exchange": "NASDAQ",
+              "currency": "USD",
+              "label": "NVDA.US (NASDAQ)"
+            }
+          ],
+          "reason": "正文/实体匹配关键词「黄仁勋 / 英伟达」",
+          "confidence": 0.96
+        }
+      ],
+      "importance": "medium",
+      "sentiment": "Mixed",
+      "special_note": null,
+      "material_stage": null,
+      "material_stage_label": null,
+      "material_stage_confidence": null,
+      "thumbnail_url": null,
+      "publisher_name": "联合早报",
+      "source_status": "ok",
+      "evidence_status": "multi_source",
+      "evidence_label": "多独立来源提及（待核官方全文）",
+      "evidence_status_reason": "已有 2 家独立媒体族提及（仅基于标题素材）；多源转载不代表官方公告已证实",
+      "attribution_warning": null,
+      "regulatory_note": null,
+      "contradictions": [],
+      "downweight_reasons": [
+        "仅含标题素材 (-8)"
+      ],
+      "quality_flags": [],
+      "material_depth": "title_only",
+      "source_count": 2,
+      "platform_count": 2,
+      "independent_publisher_count": 2,
+      "reprint_count": 0,
+      "published_at": "2026-11-25T00:39:43+08:00",
+      "event_date": "2026-11-25",
+      "event_time": "2026-11-25T00:39:43+08:00",
+      "stale": false,
+      "event_date_source": "llm_extracted",
+      "is_stale_rehash": false,
+      "time_trust_level": "article_timestamp",
+      "time_confidence": "article_timestamp",
+      "first_discovered_at": "2026-11-25T10:29:02+08:00",
+      "first_reported_at": "2026-11-25T00:39:43+08:00",
+      "latest_fact_update_at": "2026-11-25T07:36:21+08:00",
+      "latest_reported_at": "2026-11-25T07:36:21+08:00",
+      "fetched_at": "2026-11-25T10:29:02+08:00",
+      "input_batch_id": "raw-20261125-102902",
+      "fact_summary": "黄仁勋闪电复职引发争议 民主党誓彻查英伟达与特朗普政府",
+      "fact_atoms": [
+        {
+          "atom_id": "fa_90223984",
+          "subject": "英伟达 (NVIDIA)",
+          "metric_or_action": "黄仁勋闪电复职引发争议 民主党誓彻查英伟达与特朗普政府",
+          "value": null,
+          "unit": null,
+          "period": "单次披露/未注明周期",
+          "scope": "新闻事件陈述",
+          "fact_status": "multi_source_reported",
+          "attribution": "联合早报",
+          "source_ref": "zaobao_f26366129133",
+          "source_url": "https://www.zaochenbao.com/news/politics/202611/2586146.html",
+          "source_excerpt_or_locator": "黄仁勋闪电复职引发争议 民主党誓彻查英伟达与特朗普政府",
+          "published_at": "2026-11-25T07:36:21+08:00",
+          "discovered_at": "2026-11-25T10:29:02+08:00",
+          "revision": 1
+        }
+      ],
+      "ai_analysis": "引发英伟达 (NVIDIA)估值与产业链联动重定价，需紧盯主力资金流向与官方后续披露。",
+      "unverified_claims": [],
+      "speculation_or_outlook": null,
+      "sources": [
+        {
+          "item_id": "zaobao_f26366129133",
+          "article_id": "zaobao_f26366129133",
+          "source_id": "zaobao",
+          "source_name": "联合早报",
+          "publisher_name": "联合早报",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "aggregator_lead",
+          "publisher_family": "zaobao",
+          "is_reprint_copy": false,
+          "title": "黄仁勋闪电复职引发争议 民主党誓彻查英伟达与特朗普政府",
+          "url": "https://www.zaochenbao.com/news/politics/202611/2586146.html",
+          "published_at": "2026-11-25T07:36:21+08:00",
+          "published_at_source": "upstream_local_cst",
+          "fetched_at": "2026-11-25T10:29:02+08:00",
+          "excerpt": null,
+          "thumbnail_url": null,
+          "deep_fetch_status": null
+        },
+        {
+          "item_id": "kaopu_aad210b6d8a4",
+          "article_id": "kaopu_aad210b6d8a4",
+          "source_id": "kaopu",
+          "source_name": "靠谱新闻",
+          "publisher_name": "靠谱新闻",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "aggregator_lead",
+          "publisher_family": "kaopu",
+          "is_reprint_copy": false,
+          "title": "舒默称民主党若掌控国会将调查英伟达及特朗普政府",
+          "url": "https://kaopu.news/story/2026-11-24/us-stocks-open-lower-nvidia-sinks-94b8c2",
+          "published_at": "2026-11-25T00:39:43+08:00",
+          "published_at_source": "upstream_rfc2822",
+          "fetched_at": "2026-11-25T10:29:02+08:00",
+          "excerpt": null,
+          "thumbnail_url": null,
+          "deep_fetch_status": null
+        }
+      ],
+      "verification": {
+        "all_refs_valid": true,
+        "has_primary_url": true,
+        "rejected_refs": [],
+        "has_first_party": false
+      },
+      "followup": null,
+      "is_new_in_batch": true,
+      "update_kind": "new_discovery",
+      "heavy_score": 50.0,
+      "radar_score": 59,
+      "severity_tier": "B",
+      "severity_label": "B级常规",
+      "translation_attempts": 0,
+      "translation_error": null,
+      "title_zh": "黄仁勋闪电复职引发争议 民主党誓彻查英伟达与特朗普政府",
+      "translation_status": "native_zh",
+      "summary_zh": "黄仁勋闪电复职引发争议 民主党誓彻查英伟达与特朗普政府",
+      "title_en": "",
+      "summary_en": "",
+      "ai_analysis_en": "",
+      "deep_qa": [
+        {
+          "question": "事件对大宗物价、出行或外贸订单有何影响？",
+          "answer": "重点关注英伟达 (NVIDIA)引发的跨区域供应链、汇率与大宗品风险溢价变动：黄仁勋闪电复职引发争议 民主党誓彻查英伟达与特朗普政府。",
+          "historical_parallel": "历次跨区域地缘与贸易规则博弈多呈“首轮情绪脉冲，随后看实际封锁或关税文本落地决定持续性”轨迹。"
+        },
+        {
+          "question": "下一步决定走向的关键观测点是什么？",
+          "answer": "盯紧涉事官方下一轮正式公报与约束性细则落地。",
+          "historical_parallel": "若各方在后续窗口重回务实谈判，避险溢价与航运附加费通常较快收敛。"
+        }
+      ]
+    },
+    {
+      "schema_version": "4.1",
+      "event_id": "evt_07b65eb3ef20",
+      "storyline_id": "st_705bb6120cea",
+      "article_ids": [
+        "rss-gnews-world-zh_fe5fc1451709"
+      ],
+      "legacy_event_ids": [],
+      "title": "普京：必将回应乌对俄燃料能源设施的袭击--国际",
+      "category": "global",
+      "entities": [
+        "地缘冲突、能源与大宗商品"
+      ],
+      "entity_ids": [
+        "ent_geopolitics_energy",
+        "ent_google"
+      ],
+      "entity_confidences": {
+        "地缘冲突、能源与大宗商品": 0.86,
+        "Google / DeepMind / Gemini": 0.86
+      },
+      "matched_entities": [
+        {
+          "entity_id": "ent_geopolitics_energy",
+          "canonical_name": "地缘冲突、能源与大宗商品",
+          "entity_type": "macro",
+          "sector": "能源安全与避险资产",
+          "matched_aliases": [
+            "普京"
+          ],
+          "tickers": [],
+          "reason": "正文/实体匹配关键词「普京」",
+          "confidence": 0.86
+        },
+        {
+          "entity_id": "ent_google",
+          "canonical_name": "Google / DeepMind / Gemini",
+          "entity_type": "company",
+          "sector": "AI 模型与云基础设施",
+          "matched_aliases": [
+            "google"
+          ],
+          "tickers": [
+            {
+              "symbol": "GOOGL",
+              "market": "US",
+              "exchange": "NASDAQ",
+              "currency": "USD",
+              "label": "GOOGL.US (NASDAQ)"
+            }
+          ],
+          "reason": "正文/实体匹配关键词「google」",
+          "confidence": 0.86
+        }
+      ],
+      "importance": "medium",
+      "sentiment": "Mixed",
+      "special_note": null,
+      "material_stage": null,
+      "material_stage_label": null,
+      "material_stage_confidence": null,
+      "thumbnail_url": null,
+      "publisher_name": "人民网",
+      "source_status": "ok",
+      "evidence_status": "single_source",
+      "evidence_label": "单一独立来源线索",
+      "evidence_status_reason": "目前仅见 1 家独立来源（共 1 条引用含转载，含摘要/首段），尚未见独立渠道交叉或官方确认",
+      "attribution_warning": null,
+      "regulatory_note": null,
+      "contradictions": [],
+      "downweight_reasons": [],
+      "quality_flags": [],
+      "material_depth": "title_and_excerpt",
+      "source_count": 1,
+      "platform_count": 1,
+      "independent_publisher_count": 1,
+      "reprint_count": 0,
+      "published_at": "2026-11-25T08:37:00+08:00",
+      "event_date": "2026-11-25",
+      "event_time": "2026-11-25T08:37:00+08:00",
+      "stale": false,
+      "event_date_source": "llm_extracted",
+      "is_stale_rehash": false,
+      "time_trust_level": "article_timestamp",
+      "time_confidence": "article_timestamp",
+      "first_discovered_at": "2026-11-25T10:29:02+08:00",
+      "first_reported_at": "2026-11-25T08:37:00+08:00",
+      "latest_fact_update_at": "2026-11-25T08:37:00+08:00",
+      "latest_reported_at": "2026-11-25T08:37:00+08:00",
+      "fetched_at": "2026-11-25T10:29:02+08:00",
+      "input_batch_id": "raw-20261125-102902",
+      "fact_summary": "普京：必将回应乌对俄燃料能源设施的袭击--国际 人民网 在Google 新闻上查看更多头条新闻和观点",
+      "fact_atoms": [
+        {
+          "atom_id": "fa_63468524",
+          "subject": "地缘冲突、能源与大宗商品",
+          "metric_or_action": "普京：必将回应乌对俄燃料能源设施的袭击--国际",
+          "value": null,
+          "unit": null,
+          "period": "单次披露/未注明周期",
+          "scope": "新闻事件陈述",
+          "fact_status": "reported_unconfirmed_by_filing",
+          "attribution": "人民网",
+          "source_ref": "rss-gnews-world-zh_fe5fc1451709",
+          "source_url": "https://news.google.com/rss/articles/CBMibEFVX3lxTE1EME1WSURMc0FiSEk1SjR4WFNzZ3NFWXVXMFFaUGVBZWJ4cHdKV1NFVkpybXhpckRqZTNCd3B6YjY5b2c1T2JvSFJKMmotMkhYbE9PUW5EMzRmUWRZX3hmN0JqSk5RWXpOU1owSA?oc=5",
+          "source_excerpt_or_locator": "普京：必将回应乌对俄燃料能源设施的袭击--国际 人民网 在Google 新闻上查看更多头条新闻和观点",
+          "published_at": "2026-11-25T08:37:00+08:00",
+          "discovered_at": "2026-11-25T10:29:02+08:00",
+          "revision": 1
+        }
+      ],
+      "ai_analysis": "牵动地缘冲突、能源与大宗商品 / Google / DeepMind / Gemini跨区风险溢价与供应链预期，重点跟踪涉事各方下一轮官方通报。",
+      "unverified_claims": [],
+      "speculation_or_outlook": null,
+      "sources": [
+        {
+          "item_id": "rss-gnews-world-zh_fe5fc1451709",
+          "article_id": "rss-gnews-world-zh_fe5fc1451709",
+          "source_id": "rss-gnews-world-zh",
+          "source_name": "人民网",
+          "publisher_name": "人民网",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "world",
+          "is_reprint_copy": false,
+          "title": "普京：必将回应乌对俄燃料能源设施的袭击--国际",
+          "url": "https://news.google.com/rss/articles/CBMibEFVX3lxTE1EME1WSURMc0FiSEk1SjR4WFNzZ3NFWXVXMFFaUGVBZWJ4cHdKV1NFVkpybXhpckRqZTNCd3B6YjY5b2c1T2JvSFJKMmotMkhYbE9PUW5EMzRmUWRZX3hmN0JqSk5RWXpOU1owSA?oc=5",
+          "published_at": "2026-11-25T08:37:00+08:00",
+          "published_at_source": "upstream_rfc2822",
+          "fetched_at": "2026-11-25T10:29:05+08:00",
+          "excerpt": "普京：必将回应乌对俄燃料能源设施的袭击--国际 人民网 在Google 新闻上查看更多头条新闻和观点",
+          "thumbnail_url": null,
+          "deep_fetch_status": "empty_or_js_rendered"
+        }
+      ],
+      "verification": {
+        "all_refs_valid": true,
+        "has_primary_url": true,
+        "rejected_refs": [],
+        "has_first_party": false
+      },
+      "followup": null,
+      "is_new_in_batch": true,
+      "update_kind": "new_discovery",
+      "heavy_score": 20.7,
+      "radar_score": 76,
+      "severity_tier": "B",
+      "severity_label": "B级常规",
+      "translation_attempts": 0,
+      "translation_error": null,
+      "title_zh": "普京：必将回应乌对俄燃料能源设施的袭击--国际",
+      "translation_status": "native_zh",
+      "summary_zh": "普京：必将回应乌对俄燃料能源设施的袭击--国际 人民网 在Google 新闻上查看更多头条新闻和观点",
+      "title_en": "",
+      "summary_en": "",
+      "ai_analysis_en": ""
+    },
+    {
+      "schema_version": "4.1",
+      "event_id": "evt_c303521a61cd",
+      "storyline_id": "st_61f3647ba0d0",
+      "article_ids": [
+        "fed-fomc_5e979b2e8a75"
+      ],
+      "legacy_event_ids": [],
+      "title": "[美联储] 2026年10月19日和10月28日理事会贴现率会议纪要",
+      "category": "global",
+      "entities": [
+        "美联储 FOMC 与全球流动性"
+      ],
+      "entity_ids": [
+        "ent_macro_fomc"
+      ],
+      "entity_confidences": {
+        "美联储 FOMC 与全球流动性": 0.68
+      },
+      "matched_entities": [
+        {
+          "entity_id": "ent_macro_fomc",
+          "canonical_name": "美联储 FOMC 与全球流动性",
+          "entity_type": "macro",
+          "sector": "宏观利率与汇率",
+          "matched_aliases": [
+            "fed"
+          ],
+          "tickers": [],
+          "reason": "正文/实体匹配关键词「fed」",
+          "confidence": 0.68
+        }
+      ],
+      "importance": "high",
+      "sentiment": "Mixed",
+      "special_note": null,
+      "material_stage": null,
+      "material_stage_label": null,
+      "material_stage_confidence": null,
+      "thumbnail_url": null,
+      "publisher_name": "美联储 (Federal Reserve) 官方发布",
+      "source_status": "ok",
+      "evidence_status": "official_confirmed",
+      "evidence_label": "一手官方/披露已证实",
+      "evidence_status_reason": "包含官方/监管/代码仓库一手出处（独立来源 1 家），请仍以原文披露范围为准",
+      "attribution_warning": null,
+      "regulatory_note": null,
+      "contradictions": [],
+      "downweight_reasons": [],
+      "quality_flags": [],
+      "material_depth": "first_party_or_metadata",
+      "source_count": 1,
+      "platform_count": 1,
+      "independent_publisher_count": 1,
+      "reprint_count": 0,
+      "published_at": "2026-11-25T03:00:00+08:00",
+      "event_date": "2026-11-25",
+      "event_time": "2026-11-25T03:00:00+08:00",
+      "stale": false,
+      "event_date_source": "llm_extracted",
+      "is_stale_rehash": false,
+      "time_trust_level": "verified_official",
+      "time_confidence": "verified_official",
+      "first_discovered_at": "2026-11-25T10:29:02+08:00",
+      "first_reported_at": "2026-11-25T03:00:00+08:00",
+      "latest_fact_update_at": "2026-11-25T03:00:00+08:00",
+      "latest_reported_at": "2026-11-25T03:00:00+08:00",
+      "fetched_at": "2026-11-25T10:29:02+08:00",
+      "input_batch_id": "raw-20261125-102902",
+      "fact_summary": "美联储发布2026年10月19日和10月28日理事会贴现率会议纪要。",
+      "fact_atoms": [
+        {
+          "atom_id": "fa_65108765",
+          "subject": "美联储 FOMC 与全球流动性",
+          "metric_or_action": "[Fed] Minutes of the Board's discount rate meetings on October 19 and October 28, 2026",
+          "value": null,
+          "unit": null,
+          "period": "单次披露/未注明周期",
+          "scope": "新闻事件陈述",
+          "fact_status": "first_party_confirmed",
+          "attribution": "美联储 (Federal Reserve) 官方发布",
+          "source_ref": "fed-fomc_5e979b2e8a75",
+          "source_url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20261124a.htm",
+          "source_excerpt_or_locator": "Minutes of the Board&#39;s discount rate meetings on October 19 and October 28, 2026",
+          "published_at": "2026-11-25T03:00:00+08:00",
+          "discovered_at": "2026-11-25T10:29:02+08:00",
+          "revision": 1
+        }
+      ],
+      "ai_analysis": "纪要内容将揭示美联储内部对当前通胀与就业平衡的最新分歧，是判断后续利率路径的关键依据。",
+      "unverified_claims": [],
+      "speculation_or_outlook": null,
+      "sources": [
+        {
+          "item_id": "fed-fomc_5e979b2e8a75",
+          "article_id": "fed-fomc_5e979b2e8a75",
+          "source_id": "fed-fomc",
+          "source_name": "美联储 (Federal Reserve) 官方发布",
+          "publisher_name": "美联储 (Federal Reserve) 官方发布",
+          "source_status": "ok",
+          "source_kind": "regulatory_release",
+          "source_tier": "first_party",
+          "publisher_family": "federalreserve",
+          "is_reprint_copy": false,
+          "title": "[Fed] Minutes of the Board's discount rate meetings on October 19 and October 28, 2026",
+          "url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20261124a.htm",
+          "published_at": "2026-11-25T03:00:00+08:00",
+          "published_at_source": "fed_rss",
+          "fetched_at": "2026-11-25T08:59:29+08:00",
+          "excerpt": "Minutes of the Board&#39;s discount rate meetings on October 19 and October 28, 2026",
+          "thumbnail_url": null,
+          "deep_fetch_status": null,
+          "title_zh": "[美联储] 2026年10月19日和10月28日理事会贴现率会议纪要"
+        }
+      ],
+      "verification": {
+        "all_refs_valid": true,
+        "has_primary_url": true,
+        "rejected_refs": [],
+        "has_first_party": true
+      },
+      "followup": null,
+      "is_new_in_batch": true,
+      "update_kind": "new_discovery",
+      "heavy_score": 46.0,
+      "radar_score": 81,
+      "severity_tier": "A",
+      "severity_label": "A级要闻",
+      "heavy_reason_tag": "巨头重大变动",
+      "title_en": "Minutes of the Board's discount rate meetings on October 19 and October 28, 2026",
+      "summary_en": "Minutes of the Board&#39;s discount rate meetings on October 19 and October 28, 2026",
+      "summary": "美联储发布2026年10月19日和10月28日理事会贴现率会议纪要。",
+      "summary_zh": "美联储发布2026年10月19日和10月28日理事会贴现率会议纪要。",
+      "deep_qa": [
+        {
+          "question": "贴现率会议纪要对市场有何指引作用？",
+          "answer": "贴现率反映了商业银行对流动性的需求，纪要中的细节有助于市场判断美联储对金融系统稳定性的评估。",
+          "historical_parallel": "类似于2008年金融危机前夕，贴现率纪要中关于流动性压力的讨论成为市场预警信号。"
+        }
+      ],
+      "ai_overlaid": true,
+      "translation_attempts": 0,
+      "translation_error": null,
+      "title_zh": "[美联储] 2026年10月19日和10月28日理事会贴现率会议纪要",
+      "translation_status": "native_zh",
+      "ai_analysis_en": ""
+    },
+    {
+      "schema_version": "4.1",
+      "event_id": "evt_6d9fa1fadded",
+      "storyline_id": "st_8f28061ac984",
+      "article_ids": [
+        "scmp-rss_8269d506854a"
+      ],
+      "legacy_event_ids": [],
+      "title": "为什么中国选择一位退休外交官在亚太经合组织会议上迎接高市早苗？",
+      "category": "global",
+      "entities": [
+        "APEC / 重大国际峰会与经贸协定"
+      ],
+      "entity_ids": [
+        "ent_apec_g20_summits"
+      ],
+      "entity_confidences": {
+        "APEC / 重大国际峰会与经贸协定": 0.86
+      },
+      "matched_entities": [
+        {
+          "entity_id": "ent_apec_g20_summits",
+          "canonical_name": "APEC / 重大国际峰会与经贸协定",
+          "entity_type": "macro",
+          "sector": "全球治理与多边经贸",
+          "matched_aliases": [
+            "apec"
+          ],
+          "tickers": [],
+          "reason": "正文/实体匹配关键词「apec」",
+          "confidence": 0.86
+        }
+      ],
+      "importance": "medium",
+      "sentiment": "Mixed",
+      "special_note": null,
+      "material_stage": null,
+      "material_stage_label": null,
+      "material_stage_confidence": null,
+      "thumbnail_url": "https://cdn.i-scmp.com/sites/default/files/styles/1280x720/public/d8/images/canvas/2026/11/24/6b336152-66b1-42c4-b871-a715f98e0b2e_36b6fe42.jpg?itok=OHfUkkaM&v=1795519285",
+      "publisher_name": "南华早报 SCMP",
+      "source_status": "ok",
+      "evidence_status": "single_source",
+      "evidence_label": "单一独立来源线索",
+      "evidence_status_reason": "目前仅见 1 家独立来源（共 1 条引用含转载，含摘要/首段），尚未见独立渠道交叉或官方确认",
+      "attribution_warning": null,
+      "regulatory_note": null,
+      "contradictions": [],
+      "downweight_reasons": [],
+      "quality_flags": [],
+      "material_depth": "title_and_excerpt",
+      "source_count": 1,
+      "platform_count": 1,
+      "independent_publisher_count": 1,
+      "reprint_count": 0,
+      "published_at": "2026-11-24T20:00:08+08:00",
+      "event_date": "2026-11-24",
+      "event_time": "2026-11-24T20:00:08+08:00",
+      "stale": false,
+      "event_date_source": "llm_extracted",
+      "is_stale_rehash": false,
+      "time_trust_level": "article_timestamp",
+      "time_confidence": "article_timestamp",
+      "first_discovered_at": "2026-11-25T10:29:02+08:00",
+      "first_reported_at": "2026-11-24T20:00:08+08:00",
+      "latest_fact_update_at": "2026-11-24T20:00:08+08:00",
+      "latest_reported_at": "2026-11-24T20:00:08+08:00",
+      "fetched_at": "2026-11-25T10:29:02+08:00",
+      "input_batch_id": "raw-20261125-102902",
+      "fact_summary": "上周，当日本首相高市早苗抵达和离开APEC主办城市深圳时，退休外交官张启月在红毯旁迎送。",
+      "fact_atoms": [
+        {
+          "atom_id": "fa_28014969",
+          "subject": "APEC / 重大国际峰会与经贸协定",
+          "metric_or_action": "Why did China choose a retired diplomat to welcome Sanae Takaichi to Apec?",
+          "value": null,
+          "unit": null,
+          "period": "季度口径",
+          "scope": "新闻事件陈述",
+          "fact_status": "reported_unconfirmed_by_filing",
+          "attribution": "南华早报 SCMP",
+          "source_ref": "scmp-rss_8269d506854a",
+          "source_url": "https://www.scmp.com/news/china/diplomacy/article/3375637/why-did-china-choose-retired-diplomat-welcome-sanae-takaichi-apec",
+          "source_excerpt_or_locator": "When Japanese Prime Minister Sanae Takaichi arrived and left the Apec host city Shenzhen last week, retired diplomat Zhang Qiyue was there on the red carpet for the greeting and se",
+          "published_at": "2026-11-24T20:00:08+08:00",
+          "discovered_at": "2026-11-25T10:29:02+08:00",
+          "revision": 1
+        }
+      ],
+      "ai_analysis": "牵动APEC / 重大国际峰会与经贸协定跨区风险溢价与供应链预期，重点跟踪涉事各方下一轮官方通报。",
+      "unverified_claims": [],
+      "speculation_or_outlook": null,
+      "sources": [
+        {
+          "item_id": "scmp-rss_8269d506854a",
+          "article_id": "scmp-rss_8269d506854a",
+          "source_id": "scmp-rss",
+          "source_name": "南华早报 SCMP",
+          "publisher_name": "南华早报 SCMP",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "scmp",
+          "is_reprint_copy": false,
+          "title": "Why did China choose a retired diplomat to welcome Sanae Takaichi to Apec?",
+          "url": "https://www.scmp.com/news/china/diplomacy/article/3375637/why-did-china-choose-retired-diplomat-welcome-sanae-takaichi-apec",
+          "published_at": "2026-11-24T20:00:08+08:00",
+          "published_at_source": "upstream_rfc2822",
+          "fetched_at": "2026-11-25T10:29:03+08:00",
+          "excerpt": "When Japanese Prime Minister Sanae Takaichi arrived and left the Apec host city Shenzhen last week, retired diplomat Zhang Qiyue was there on the red carpet for the greeting and send-off.",
+          "thumbnail_url": "https://cdn.i-scmp.com/sites/default/files/styles/1280x720/public/d8/images/canvas/2026/11/24/6b336152-66b1-42c4-b871-a715f98e0b2e_36b6fe42.jpg?itok=OHfUkkaM&v=1795519285",
+          "deep_fetch_status": null,
+          "title_zh": "为什么中国选择一位退休外交官在亚太经合组织会议上迎接高市早苗？"
+        }
+      ],
+      "verification": {
+        "all_refs_valid": true,
+        "has_primary_url": true,
+        "rejected_refs": [],
+        "has_first_party": false
+      },
+      "followup": null,
+      "is_new_in_batch": true,
+      "update_kind": "new_discovery",
+      "heavy_score": 18.0,
+      "radar_score": 76,
+      "severity_tier": "B",
+      "severity_label": "B级常规",
+      "title_en": "Why did China choose a retired diplomat to welcome Sanae Takaichi to Apec?",
+      "summary_en": "When Japanese Prime Minister Sanae Takaichi arrived and left the Apec host city Shenzhen last week, retired diplomat Zhang Qiyue was there on the red carpet for the greeting and send-off.",
+      "summary": "上周，当日本首相高市早苗抵达和离开APEC主办城市深圳时，退休外交官张启月在红毯旁迎送。",
+      "summary_zh": "上周，当日本首相高市早苗抵达和离开APEC主办城市深圳时，退休外交官张启月在红毯旁迎送。",
+      "translation_attempts": 0,
+      "translation_error": null,
+      "title_zh": "为什么中国选择一位退休外交官在亚太经合组织会议上迎接高市早苗？",
+      "translation_status": "native_zh",
+      "ai_analysis_en": ""
+    },
+    {
+      "schema_version": "4.1",
+      "event_id": "evt_bc3c2f7f5d33",
+      "storyline_id": "st_ef47c13cffff",
+      "article_ids": [
+        "rss-gnews-world-zh_691959884820",
+        "sputniknewscn_b8dffc92bad7"
+      ],
+      "legacy_event_ids": [],
+      "title": "媒体：美国中情局和国家情报总监办公室发现非机密信息遭泄露",
+      "category": "global",
+      "entities": [],
+      "entity_ids": [],
+      "entity_confidences": {},
+      "matched_entities": [],
+      "importance": "normal",
+      "sentiment": "Mixed",
+      "special_note": null,
+      "material_stage": null,
+      "material_stage_label": null,
+      "material_stage_confidence": null,
+      "thumbnail_url": null,
+      "publisher_name": "英为财情 Investing.com",
+      "source_status": "ok",
+      "evidence_status": "multi_source",
+      "evidence_label": "多独立来源提及（待核官方全文）",
+      "evidence_status_reason": "已有 2 家独立媒体族提及（含摘要或正文首段）；多源转载不代表官方公告已证实",
+      "attribution_warning": null,
+      "regulatory_note": null,
+      "contradictions": [],
+      "downweight_reasons": [],
+      "quality_flags": [],
+      "material_depth": "title_and_excerpt",
+      "source_count": 2,
+      "platform_count": 2,
+      "independent_publisher_count": 2,
+      "reprint_count": 0,
+      "published_at": "2026-11-25T06:52:00+08:00",
+      "event_date": "2026-11-25",
+      "event_time": "2026-11-25T06:52:00+08:00",
+      "stale": false,
+      "event_date_source": "llm_extracted",
+      "is_stale_rehash": false,
+      "time_trust_level": "article_timestamp",
+      "time_confidence": "article_timestamp",
+      "first_discovered_at": "2026-11-25T10:29:02+08:00",
+      "first_reported_at": "2026-11-25T06:52:00+08:00",
+      "latest_fact_update_at": "2026-11-25T10:23:27+08:00",
+      "latest_reported_at": "2026-11-25T10:23:27+08:00",
+      "fetched_at": "2026-11-25T10:29:02+08:00",
+      "input_batch_id": "raw-20261125-102902",
+      "fact_summary": "黑客入侵美国中情局与国家情报总监办公室非密级情报系统 提供者 Investing.com 英为财情 Investing.com 美媒爆料：美国中情局和国家情报总监办公室疑遭“黑客攻击”，没有机密信息受到影响 Sohu FBI数据库疑遭黑客入侵，特朗普称或有“积极一面”-市场参考 金十数据 《纽约时报》报道：CIA和ODNI发现数据泄露，部分非机密信息遭曝光 Mezha.net 美国中央情报局和国家情报总监办公室开源…",
+      "fact_atoms": [
+        {
+          "atom_id": "fa_54411038",
+          "subject": "相关主体",
+          "metric_or_action": "媒体：美国中情局和国家情报总监办公室发现非机密信息遭泄露",
+          "value": null,
+          "unit": null,
+          "period": "单次披露/未注明周期",
+          "scope": "新闻事件陈述",
+          "fact_status": "reported_unconfirmed_by_filing",
+          "attribution": "英为财情 Investing.com",
+          "source_ref": "rss-gnews-world-zh_691959884820",
+          "source_url": "https://news.google.com/rss/articles/CBMiakFVX3lxTE5hMkhVUXRKTXlEeTdqVlgySHNOZkQ0YTRCSjhabUpPQmxjY25JV183OWdPa3d0eFNpZi1EdzFkU0oyNFhVbHh0VTFtUjUxYllXS0ZSWkRLWGdDWkxkVGREOHFTUkxac0xjSEE?oc=5",
+          "source_excerpt_or_locator": "黑客入侵美国中情局与国家情报总监办公室非密级情报系统 提供者 Investing.com 英为财情 Investing.com 美媒爆料：美国中情局和国家情报总监办公室疑遭“黑客攻击”，没有机密信息受到影响 Sohu FBI数据库疑遭黑客入侵，特朗普称或有“积极一面”-市场参考 金十数据 《纽约时报》报道：CIA和ODNI发现数据泄露，部分非机密信息遭曝光 ",
+          "published_at": "2026-11-25T06:52:00+08:00",
+          "discovered_at": "2026-11-25T10:29:02+08:00",
+          "revision": 1
+        }
+      ],
+      "ai_analysis": "反映国际/宏观技术架构与商业落地节奏变化，实际效果仍待开发者生态与第三方实测验证。",
+      "unverified_claims": [],
+      "speculation_or_outlook": null,
+      "sources": [
+        {
+          "item_id": "rss-gnews-world-zh_691959884820",
+          "article_id": "rss-gnews-world-zh_691959884820",
+          "source_id": "rss-gnews-world-zh",
+          "source_name": "英为财情 Investing.com",
+          "publisher_name": "英为财情 Investing.com",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "cn",
+          "is_reprint_copy": false,
+          "title": "黑客入侵美国中情局与国家情报总监办公室非密级情报系统 提供者 Investing.com",
+          "url": "https://news.google.com/rss/articles/CBMiakFVX3lxTE5hMkhVUXRKTXlEeTdqVlgySHNOZkQ0YTRCSjhabUpPQmxjY25JV183OWdPa3d0eFNpZi1EdzFkU0oyNFhVbHh0VTFtUjUxYllXS0ZSWkRLWGdDWkxkVGREOHFTUkxac0xjSEE?oc=5",
+          "published_at": "2026-11-25T06:52:00+08:00",
+          "published_at_source": "upstream_rfc2822",
+          "fetched_at": "2026-11-25T10:29:05+08:00",
+          "excerpt": "黑客入侵美国中情局与国家情报总监办公室非密级情报系统 提供者 Investing.com 英为财情 Investing.com 美媒爆料：美国中情局和国家情报总监办公室疑遭“黑客攻击”，没有机密信息受到影响 Sohu FBI数据库疑遭黑客入侵，特朗普称或有“积极一面”-市场参考 金十数据 《纽约时报》报道：CIA和ODNI发现数据泄露，部分非机密信息遭曝光 Mezha.net 美国中央情报局和国家情报总监办公室开源情报系统疑遭网络入侵_天维新闻频道 - Skykiwi.com SKYKIWI",
+          "thumbnail_url": null,
+          "deep_fetch_status": null
+        },
+        {
+          "item_id": "sputniknewscn_b8dffc92bad7",
+          "article_id": "sputniknewscn_b8dffc92bad7",
+          "source_id": "sputniknewscn",
+          "source_name": "卫星通讯社",
+          "publisher_name": "卫星通讯社",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "aggregator_lead",
+          "publisher_family": "sputniknewscn",
+          "is_reprint_copy": false,
+          "title": "媒体：美国中情局和国家情报总监办公室发现非机密信息遭泄露",
+          "url": "https://sputniknews.cn/20261125/1074334917.html",
+          "published_at": "2026-11-25T10:23:27+08:00",
+          "published_at_source": "upstream_epoch",
+          "fetched_at": "2026-11-25T10:29:02+08:00",
+          "excerpt": null,
+          "thumbnail_url": null,
+          "deep_fetch_status": null
+        }
+      ],
+      "verification": {
+        "all_refs_valid": true,
+        "has_primary_url": true,
+        "rejected_refs": [],
+        "has_first_party": false
+      },
+      "followup": null,
+      "is_new_in_batch": true,
+      "update_kind": "new_discovery",
+      "heavy_score": 41.4,
+      "radar_score": 52,
+      "severity_tier": "B",
+      "severity_label": "B级常规",
+      "translation_attempts": 0,
+      "translation_error": null,
+      "title_zh": "媒体：美国中情局和国家情报总监办公室发现非机密信息遭泄露",
+      "translation_status": "native_zh",
+      "summary_zh": "黑客入侵美国中情局与国家情报总监办公室非密级情报系统 提供者 Investing.com 英为财情 Investing.com 美媒爆料：美国中情局和国家情报总监办公室疑遭“黑客攻击”，没有机密信息受到影响 Sohu FBI数据库疑遭黑客入侵，特朗普称或有“积极一面”-市场参考 金十数据 《纽约时报》报道：CIA和ODNI发现数据泄露，部分非机密信息遭曝光 Mezha.net 美国中央情报局和国家情报总监办公室开源…",
+      "title_en": "",
+      "summary_en": "",
+      "ai_analysis_en": "",
+      "deep_qa": [
+        {
+          "question": "事件对大宗物价、出行或外贸订单有何影响？",
+          "answer": "重点关注相关产业链引发的跨区域供应链、汇率与大宗品风险溢价变动：黑客入侵美国中情局与国家情报总监办公室非密级情报系统 提供者 Investing.com 英为财情 Investing.",
+          "historical_parallel": "历次跨区域地缘与贸易规则博弈多呈“首轮情绪脉冲，随后看实际封锁或关税文本落地决定持续性”轨迹。"
+        },
+        {
+          "question": "下一步决定走向的关键观测点是什么？",
+          "answer": "盯紧涉事官方下一轮正式公报与约束性细则落地。",
+          "historical_parallel": "若各方在后续窗口重回务实谈判，避险溢价与航运附加费通常较快收敛。"
+        }
+      ]
+    },
+    {
+      "schema_version": "4.1",
+      "event_id": "evt_4848351b06b9",
+      "storyline_id": "st_872bfb38c195",
+      "article_ids": [
+        "zaobao_5fbb5988c1ff",
+        "sputniknewscn_5153e3959729"
+      ],
+      "legacy_event_ids": [],
+      "title": "华为在美被裁定10项刑事罪名成立 将提出上诉",
+      "category": "global",
+      "entities": [
+        "华为 / 盘古 / 昇腾"
+      ],
+      "entity_ids": [
+        "ent_huawei"
+      ],
+      "entity_confidences": {
+        "华为 / 盘古 / 昇腾": 0.86
+      },
+      "matched_entities": [
+        {
+          "entity_id": "ent_huawei",
+          "canonical_name": "华为 / 盘古 / 昇腾",
+          "entity_type": "company",
+          "sector": "AI 模型与算力底座",
+          "matched_aliases": [
+            "华为"
+          ],
+          "tickers": [],
+          "reason": "正文/实体匹配关键词「华为」",
+          "confidence": 0.86
+        }
+      ],
+      "importance": "medium",
+      "sentiment": "Mixed",
+      "special_note": null,
+      "material_stage": null,
+      "material_stage_label": null,
+      "material_stage_confidence": null,
+      "thumbnail_url": null,
+      "publisher_name": "联合早报",
+      "source_status": "ok",
+      "evidence_status": "multi_source",
+      "evidence_label": "多独立来源提及（待核官方全文）",
+      "evidence_status_reason": "已有 2 家独立媒体族提及（仅基于标题素材）；多源转载不代表官方公告已证实",
+      "attribution_warning": null,
+      "regulatory_note": null,
+      "contradictions": [],
+      "downweight_reasons": [
+        "仅含标题素材 (-8)"
+      ],
+      "quality_flags": [],
+      "material_depth": "title_only",
+      "source_count": 2,
+      "platform_count": 2,
+      "independent_publisher_count": 2,
+      "reprint_count": 0,
+      "published_at": "2026-11-25T07:35:57+08:00",
+      "event_date": "2026-11-25",
+      "event_time": "2026-11-25T07:35:57+08:00",
+      "stale": false,
+      "event_date_source": "llm_extracted",
+      "is_stale_rehash": false,
+      "time_trust_level": "article_timestamp",
+      "time_confidence": "article_timestamp",
+      "first_discovered_at": "2026-11-25T10:29:02+08:00",
+      "first_reported_at": "2026-11-25T07:35:57+08:00",
+      "latest_fact_update_at": "2026-11-25T08:28:09+08:00",
+      "latest_reported_at": "2026-11-25T08:28:09+08:00",
+      "fetched_at": "2026-11-25T10:29:02+08:00",
+      "input_batch_id": "raw-20261125-102902",
+      "fact_summary": "华为在美被裁定10项刑事罪名成立 将提出上诉",
+      "fact_atoms": [
+        {
+          "atom_id": "fa_1484594",
+          "subject": "华为 / 盘古 / 昇腾",
+          "metric_or_action": "华为在美被裁定10项刑事罪名成立 将提出上诉",
+          "value": null,
+          "unit": null,
+          "period": "单次披露/未注明周期",
+          "scope": "新闻事件陈述",
+          "fact_status": "multi_source_reported",
+          "attribution": "联合早报",
+          "source_ref": "zaobao_5fbb5988c1ff",
+          "source_url": "https://www.zaochenbao.com/news/china/202611/2586142.html",
+          "source_excerpt_or_locator": "华为在美被裁定10项刑事罪名成立 将提出上诉",
+          "published_at": "2026-11-25T07:35:57+08:00",
+          "discovered_at": "2026-11-25T10:29:02+08:00",
+          "revision": 1
+        }
+      ],
+      "ai_analysis": "牵动华为 / 盘古 / 昇腾跨区风险溢价与供应链预期，重点跟踪涉事各方下一轮官方通报。",
+      "unverified_claims": [],
+      "speculation_or_outlook": null,
+      "sources": [
+        {
+          "item_id": "zaobao_5fbb5988c1ff",
+          "article_id": "zaobao_5fbb5988c1ff",
+          "source_id": "zaobao",
+          "source_name": "联合早报",
+          "publisher_name": "联合早报",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "aggregator_lead",
+          "publisher_family": "zaobao",
+          "is_reprint_copy": false,
+          "title": "华为在美被裁定10项刑事罪名成立 将提出上诉",
+          "url": "https://www.zaochenbao.com/news/china/202611/2586142.html",
+          "published_at": "2026-11-25T07:35:57+08:00",
+          "published_at_source": "upstream_local_cst",
+          "fetched_at": "2026-11-25T10:29:02+08:00",
+          "excerpt": null,
+          "thumbnail_url": null,
+          "deep_fetch_status": null
+        },
+        {
+          "item_id": "sputniknewscn_5153e3959729",
+          "article_id": "sputniknewscn_5153e3959729",
+          "source_id": "sputniknewscn",
+          "source_name": "卫星通讯社",
+          "publisher_name": "卫星通讯社",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "aggregator_lead",
+          "publisher_family": "sputniknewscn",
+          "is_reprint_copy": false,
+          "title": "美国陪审团裁定华为在涉伊朗制裁和窃取技术案中罪名成立",
+          "url": "https://sputniknews.cn/20261125/1074332366.html",
+          "published_at": "2026-11-25T08:28:09+08:00",
+          "published_at_source": "upstream_epoch",
+          "fetched_at": "2026-11-25T10:29:02+08:00",
+          "excerpt": null,
+          "thumbnail_url": null,
+          "deep_fetch_status": null
+        }
+      ],
+      "verification": {
+        "all_refs_valid": true,
+        "has_primary_url": true,
+        "rejected_refs": [],
+        "has_first_party": false
+      },
+      "followup": null,
+      "is_new_in_batch": true,
+      "update_kind": "new_discovery",
+      "heavy_score": 41.4,
+      "radar_score": 59,
+      "severity_tier": "B",
+      "severity_label": "B级常规",
+      "translation_attempts": 0,
+      "translation_error": null,
+      "title_zh": "华为在美被裁定10项刑事罪名成立 将提出上诉",
+      "translation_status": "native_zh",
+      "summary_zh": "华为在美被裁定10项刑事罪名成立 将提出上诉",
+      "title_en": "",
+      "summary_en": "",
+      "ai_analysis_en": "",
+      "deep_qa": [
+        {
+          "question": "事件对大宗物价、出行或外贸订单有何影响？",
+          "answer": "重点关注华为 / 盘古 / 昇腾引发的跨区域供应链、汇率与大宗品风险溢价变动：华为在美被裁定10项刑事罪名成立 将提出上诉。",
+          "historical_parallel": "历次跨区域地缘与贸易规则博弈多呈“首轮情绪脉冲，随后看实际封锁或关税文本落地决定持续性”轨迹。"
+        },
+        {
+          "question": "下一步决定走向的关键观测点是什么？",
+          "answer": "盯紧涉事官方下一轮正式公报与约束性细则落地。",
+          "historical_parallel": "若各方在后续窗口重回务实谈判，避险溢价与航运附加费通常较快收敛。"
+        }
+      ]
+    },
+    {
+      "schema_version": "4.1",
+      "event_id": "evt_fc2d443865f1",
+      "storyline_id": "st_2f838ff81e73",
+      "article_ids": [
+        "zaobao_b047a7a29075"
+      ],
+      "legacy_event_ids": [],
+      "title": "中日领导人APEC期间未会谈 日媒：两国关系短期难改善",
+      "category": "global",
+      "entities": [
+        "APEC / 重大国际峰会与经贸协定",
+        "中美外交与元首峰会"
+      ],
+      "entity_ids": [
+        "ent_apec_g20_summits",
+        "ent_us_china_diplomacy"
+      ],
+      "entity_confidences": {
+        "APEC / 重大国际峰会与经贸协定": 0.86,
+        "中美外交与元首峰会": 0.92
+      },
+      "matched_entities": [
+        {
+          "entity_id": "ent_apec_g20_summits",
+          "canonical_name": "APEC / 重大国际峰会与经贸协定",
+          "entity_type": "macro",
+          "sector": "全球治理与多边经贸",
+          "matched_aliases": [
+            "apec"
+          ],
+          "tickers": [],
+          "reason": "正文/实体匹配关键词「apec」",
+          "confidence": 0.86
+        },
+        {
+          "entity_id": "ent_us_china_diplomacy",
+          "canonical_name": "中美外交与元首峰会",
+          "entity_type": "macro",
+          "sector": "国际关系与地缘宏观",
+          "matched_aliases": [
+            "习近平"
+          ],
+          "tickers": [],
+          "reason": "正文/实体匹配关键词「习近平」",
+          "confidence": 0.92
+        }
+      ],
+      "importance": "medium",
+      "sentiment": "Mixed",
+      "special_note": null,
+      "material_stage": null,
+      "material_stage_label": null,
+      "material_stage_confidence": null,
+      "thumbnail_url": null,
+      "publisher_name": "联合早报",
+      "source_status": "ok",
+      "evidence_status": "single_source",
+      "evidence_label": "单一独立来源线索",
+      "evidence_status_reason": "目前仅见 1 家独立来源（共 1 条引用含转载，含摘要/首段），尚未见独立渠道交叉或官方确认",
+      "attribution_warning": null,
+      "regulatory_note": null,
+      "contradictions": [],
+      "downweight_reasons": [],
+      "quality_flags": [],
+      "material_depth": "title_and_excerpt",
+      "source_count": 1,
+      "platform_count": 1,
+      "independent_publisher_count": 1,
+      "reprint_count": 0,
+      "published_at": "2026-11-25T08:52:21+08:00",
+      "event_date": "2026-11-25",
+      "event_time": "2026-11-25T08:52:21+08:00",
+      "stale": false,
+      "event_date_source": "llm_extracted",
+      "is_stale_rehash": false,
+      "time_trust_level": "article_timestamp",
+      "time_confidence": "article_timestamp",
+      "first_discovered_at": "2026-11-25T10:29:02+08:00",
+      "first_reported_at": "2026-11-25T08:52:21+08:00",
+      "latest_fact_update_at": "2026-11-25T08:52:21+08:00",
+      "latest_reported_at": "2026-11-25T08:52:21+08:00",
+      "fetched_at": "2026-11-25T10:29:02+08:00",
+      "input_batch_id": "raw-20261125-102902",
+      "fact_summary": "日本首相高市早苗在深圳出席亚太经济合作组织（APEC）峰会期间，未能与中国国家主席习近平举行会谈。日本媒体分析认为，错失中国主办国际会议的对话契机后，两国关系短期内恐难改善。 据日本共同社报道，高市去年11月发表“台湾有事”论后，中日关系跌入冰点",
+      "fact_atoms": [
+        {
+          "atom_id": "fa_70397707",
+          "subject": "APEC / 重大国际峰会与经贸协定",
+          "metric_or_action": "中日领导人APEC期间未会谈 日媒：两国关系短期难改善",
+          "value": null,
+          "unit": null,
+          "period": "单次披露/未注明周期",
+          "scope": "新闻事件陈述",
+          "fact_status": "reported_unconfirmed_by_filing",
+          "attribution": "联合早报",
+          "source_ref": "zaobao_b047a7a29075",
+          "source_url": "https://www.zaochenbao.com/news/china/202611/2586156.html",
+          "source_excerpt_or_locator": "日本首相高市早苗在深圳出席亚太经济合作组织（APEC）峰会期间，未能与中国国家主席习近平举行会谈。日本媒体分析认为，错失中国主办国际会议的对话契机后，两国关系短期内恐难改善。 据日本共同社报道，高市去年11月发表“台湾有事”论后，中日关系跌入冰点",
+          "published_at": "2026-11-25T08:52:21+08:00",
+          "discovered_at": "2026-11-25T10:29:02+08:00",
+          "revision": 1
+        }
+      ],
+      "ai_analysis": "牵动APEC / 重大国际峰会与经贸协定 / 中美外交与元首峰会跨区风险溢价与供应链预期，重点跟踪涉事各方下一轮官方通报。",
+      "unverified_claims": [],
+      "speculation_or_outlook": null,
+      "sources": [
+        {
+          "item_id": "zaobao_b047a7a29075",
+          "article_id": "zaobao_b047a7a29075",
+          "source_id": "zaobao",
+          "source_name": "联合早报",
+          "publisher_name": "联合早报",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "aggregator_lead",
+          "publisher_family": "zaobao",
+          "is_reprint_copy": false,
+          "title": "中日领导人APEC期间未会谈 日媒：两国关系短期难改善",
+          "url": "https://www.zaochenbao.com/news/china/202611/2586156.html",
+          "published_at": "2026-11-25T08:52:21+08:00",
+          "published_at_source": "upstream_local_cst",
+          "fetched_at": "2026-11-25T10:29:02+08:00",
+          "excerpt": "日本首相高市早苗在深圳出席亚太经济合作组织（APEC）峰会期间，未能与中国国家主席习近平举行会谈。日本媒体分析认为，错失中国主办国际会议的对话契机后，两国关系短期内恐难改善。 据日本共同社报道，高市去年11月发表“台湾有事”论后，中日关系跌入冰点",
+          "thumbnail_url": null,
+          "deep_fetch_status": "meta_only"
+        }
+      ],
+      "verification": {
+        "all_refs_valid": true,
+        "has_primary_url": true,
+        "rejected_refs": [],
+        "has_first_party": false
+      },
+      "followup": null,
+      "is_new_in_batch": true,
+      "update_kind": "new_discovery",
+      "heavy_score": 20.7,
+      "radar_score": 76,
+      "severity_tier": "B",
+      "severity_label": "B级常规",
+      "translation_attempts": 0,
+      "translation_error": null,
+      "title_zh": "中日领导人APEC期间未会谈 日媒：两国关系短期难改善",
+      "translation_status": "native_zh",
+      "summary_zh": "日本首相高市早苗在深圳出席亚太经济合作组织（APEC）峰会期间，未能与中国国家主席习近平举行会谈。日本媒体分析认为，错失中国主办国际会议的对话契机后，两国关系短期内恐难改善。 据日本共同社报道，高市去年11月发表“台湾有事”论后，中日关系跌入冰点",
+      "title_en": "",
+      "summary_en": "",
+      "ai_analysis_en": ""
+    }
+  ]
+}

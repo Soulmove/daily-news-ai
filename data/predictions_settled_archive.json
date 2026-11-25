@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "updated_at": "2026-11-25T01:44:38+08:00",
+  "updated_at": "2026-11-25T10:29:24+08:00",
   "settled": {
     "pred_seed_nvda_sec_502": {
       "prediction_id": "pred_seed_nvda_sec_502",
@@ -87,6 +87,58 @@
         "evidence_title": "NVIDIA Form 8-K (Item 5.02, 2026-11-23) 及多源权威报道证实黄仁勋复职 CEO",
         "note": "2026-11-23 英伟达董事会正式恢复黄仁勋 CEO 职务并提交 SEC 8-K，预测在截止日前提前命中！",
         "brier_score": 0.1225
+      }
+    },
+    "pred_live_shenzhou24_launch": {
+      "prediction_id": "pred_live_shenzhou24_launch",
+      "mode": "live",
+      "status": "settled",
+      "category": "global_space",
+      "title": "神舟二十四号载人飞船能否在 11 月 26 日前顺利发射入轨并对接空间站？",
+      "title_en": "Will Shenzhou-24 launch and dock with the space station before Nov 26?",
+      "target_entity_id": "ent_china_aerospace",
+      "target_entity": "中国载人航天工程 (CMSA)",
+      "question": "11 月 26 日前，新华社或中国载人航天工程官网是否宣布神舟二十四号发射成功并顺利对接？",
+      "question_en": "By Nov 26, 2026, will CMSA/Xinhua confirm Shenzhou-24 launched and docked successfully?",
+      "created_at": "2026-11-23T17:07:49+08:00",
+      "due_at": "2026-11-26T22:00:00+08:00",
+      "win_rule": "新华社或中国载人航天官方宣布“发射圆满成功”且顺利对接空间站",
+      "lose_rule": "11 月 26 日前官方宣布推迟发射或任务出现异常中止",
+      "indeterminate_rule": "发射窗口受气象推迟且新日期未定",
+      "supporting_evidence": [
+        "酒泉发射场已完成转场与发射前总检，官方已公布 11 月 25 日上午发射窗口"
+      ],
+      "opposing_evidence": [
+        "航天发射受高空风切变与气象条件临期变动影响较大"
+      ],
+      "core_assumption": "以中国载人航天工程办公室与新华社正式通稿为准",
+      "invalidation_trigger": "官方宣布取消或无限期推迟本次发射",
+      "probability_pct": 88,
+      "probability_note": "基于公开官方日程与权威信源建立的客观验证观察题，事件实锤或到期后自动核验开奖",
+      "current_judgment": "官方及主流媒体已通报神舟二十四号发射入轨并顺利对接空间站，预测在窗口期内提前命中！",
+      "versions": [
+        {
+          "version": 1,
+          "updated_at": "2026-11-23T17:07:49+08:00",
+          "judgment": "等待发射窗口官方倒计时与新华社通报",
+          "probability_pct": 88,
+          "reason": "由近期航天发射催化节点自动立项"
+        },
+        {
+          "version": 2,
+          "updated_at": "2026-11-25T10:29:24+08:00",
+          "judgment": "官方及主流媒体已通报神舟二十四号发射入轨并顺利对接空间站，预测在窗口期内提前命中！",
+          "probability_pct": 100,
+          "reason": "事件实锤达成开奖条件，自动结算完成"
+        }
+      ],
+      "settlement": {
+        "outcome": "correct",
+        "settled_at": "2026-11-25T10:29:24+08:00",
+        "evidence_url": "https://www.thepaper.cn/newsDetail_forward_34545247",
+        "evidence_title": "直播丨神舟二十四号载人飞船发射取得圆满成功",
+        "note": "官方及主流媒体已通报神舟二十四号发射入轨并顺利对接空间站，预测在窗口期内提前命中！",
+        "brier_score": 0.0144
       }
     }
   }
