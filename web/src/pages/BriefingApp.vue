@@ -338,7 +338,7 @@ const todaySection = ref<'feed' | 'pillars' | 'topics' | 'cocoon'>(
 )
 const onlyBlindspot = ref<boolean>(false)
 const aiSubView = ref<'tracker' | 'tools'>(initialUrl.tab === 'tools' ? 'tools' : 'tracker')
-const scheduleSubView = ref<'calendar' | 'predictions'>(initialUrl.tab === 'predictions' ? 'predictions' : 'calendar')
+const scheduleSubView = ref<'calendar' | 'predictions'>(initialUrl.tab === 'calendar' && !initialUrl.pred ? 'calendar' : 'predictions')
 const libraryTab = ref<'saved' | 'read_later' | 'notes'>('saved')
 const menuCloseNonce = ref(0)
 const activeCategory = ref<CategoryKey>(initialUrl.cat)
@@ -525,6 +525,7 @@ const qaContextEvent = ref<SmartEvent | null>(null)
 const qaContextStoryline = ref<StorylineDossier | null>(null)
 const qaContextEntity = ref<EntityProfile | null>(null)
 const qaContextTopic = ref<MajorTopicSpotlight | null>(null)
+const qaContextPrompt = ref<string | null>(null)
 interface ToastPayload {
   text: string
   actionLabel?: string
@@ -1370,18 +1371,23 @@ function openEchoChamberShareCard() {
   shareCardOpen.value = true
 }
 
+function getCategoryLabel(cat: CategoryKey | string): string {
+  const meta = CATEGORIES.find((c) => c.id === cat)
+  return appLang.value === 'en' ? (meta?.nameEn || String(cat)) : (meta?.name || String(cat))
+}
+
 function openEventBriefShareCard(ev: SmartEvent) {
   const origin = typeof window !== 'undefined' ? window.location.origin : 'https://mirrorinfo.xyz'
   const cols = buildThreeColumnPerspectives(ev, commentsByCatForCards.value[ev.category] || [])
-  const catMeta = CATEGORIES[ev.category]
-  const primarySrc = ev.sources[0]
+  const sources = Array.isArray(ev.sources) ? ev.sources : []
+  const primarySrc = sources[0]
   shareCardPayload.value = {
     kind: 'event_brief',
     eventId: ev.event_id,
     title: pickBiText(ev.title_zh || ev.title, ev.title_en || ev.title),
-    categoryLabel: appLang.value === 'en' ? catMeta.nameEn : catMeta.name,
+    categoryLabel: getCategoryLabel(ev.category),
     sourceName: primarySrc?.publisher_name || primarySrc?.source_name || t('多源交叉核验', 'Cross-Checked'),
-    sourceCount: ev.sources.length,
+    sourceCount: sources.length,
     officialPoints: cols.find((c) => c.lane === 'official')?.points.slice(0, 2) || [],
     bullishPoints: cols.find((c) => c.lane === 'bullish')?.points.slice(0, 2) || [],
     bearishPoints: cols.find((c) => c.lane === 'bearish')?.points.slice(0, 2) || [],
@@ -1620,7 +1626,13 @@ async function ensureDataForTab(tab: WorkbenchTab, forceFresh = false) {
   } else if (tab === 'tracking') {
     await Promise.all([loadStorylines(forceFresh), loadEntities(forceFresh)])
   } else if (tab === 'calendar' || tab === 'predictions') {
-    await Promise.all([loadCalendar(forceFresh), loadPredictions(forceFresh)])
+    await Promise.all([
+      loadPredictions(forceFresh),
+      loadCalendar(forceFresh),
+      ensureAllCategoriesLoaded(forceFresh),
+      loadFinanceImpact(forceFresh),
+      loadLiveWire(forceFresh),
+    ])
   } else {
     await Promise.all([
       ensureAllCategoriesLoaded(forceFresh),
@@ -1880,6 +1892,14 @@ function scrollToTop() {
 function handleBottomTabClick(tab: WorkbenchTab) {
   triggerHaptic(10)
   menuCloseNonce.value += 1
+  if (tab === 'predictions') {
+    if (activeTab.value === 'calendar' && scheduleSubView.value === 'predictions') {
+      scrollToTop()
+      return
+    }
+    void switchTab('predictions')
+    return
+  }
   if (activeTab.value === tab) {
     scrollToTop()
     return
@@ -2186,7 +2206,7 @@ const desktopNavItems = computed(() => [
   { id: 'wire' as WorkbenchTab, label: t('7×24 快讯', 'Live Wire'), shortLabel: t('快讯', 'Live'), icon: Radio, count: effectiveLiveWireDoc.value?.total || 0 },
   { id: 'finance' as WorkbenchTab, label: t('股市传导', 'Markets'), shortLabel: t('股市', 'Markets'), icon: TrendingUp, count: financeImpactDoc.value?.event_impacts?.length || 0 },
   { id: 'ai_progress' as WorkbenchTab, label: t('AI 前沿', 'AI Frontier'), shortLabel: t('AI前沿', 'AI'), icon: Bot, count: aiProgressDoc.value?.timeline.length || manifest.value?.v3?.ai_progress_count || 0 },
-  { id: 'calendar' as WorkbenchTab, label: t('预测日程', 'Forecasts'), shortLabel: t('预测', 'Pred'), icon: Calendar, count: calendarTabTotalCount.value || 0 },
+  { id: 'predictions' as WorkbenchTab, label: t('预测日程', 'Forecasts'), shortLabel: t('预测', 'Pred'), icon: Target, count: mergedPredictions.value.length || calendarTabTotalCount.value || 0 },
   { id: 'tracking' as WorkbenchTab, label: t('事件追踪', 'Tracking'), shortLabel: t('追踪', 'Track'), icon: GitBranch, count: Object.keys(storylinesMap.value).length || manifest.value?.v3?.storylines_count || 0 },
 ])
 
@@ -3022,6 +3042,7 @@ function openQaGlobal() {
   qaContextStoryline.value = null
   qaContextEntity.value = null
   qaContextTopic.value = null
+  qaContextPrompt.value = null
   qaModalOpen.value = true
 }
 
@@ -3031,6 +3052,7 @@ function openQaForEvent(ev: SmartEvent) {
   qaContextStoryline.value = null
   qaContextEntity.value = null
   qaContextTopic.value = null
+  qaContextPrompt.value = null
   qaModalOpen.value = true
 }
 
@@ -3040,6 +3062,7 @@ function openQaForStoryline(dossier: StorylineDossier) {
   qaContextStoryline.value = dossier
   qaContextEntity.value = null
   qaContextTopic.value = null
+  qaContextPrompt.value = null
   qaModalOpen.value = true
 }
 
@@ -3049,6 +3072,7 @@ function openQaForEntity(entity: EntityProfile) {
   qaContextStoryline.value = null
   qaContextEntity.value = entity
   qaContextTopic.value = null
+  qaContextPrompt.value = null
   qaModalOpen.value = true
 }
 
@@ -3058,6 +3082,20 @@ function openQaForTopic(topic: MajorTopicSpotlight) {
   qaContextStoryline.value = null
   qaContextEntity.value = null
   qaContextTopic.value = topic
+  qaContextPrompt.value = null
+  qaModalOpen.value = true
+}
+
+function openQaForPrediction(rec: PredictionRecord) {
+  void Promise.all([ensureAllCategoriesLoaded(), loadFinanceImpact(), loadLiveWire()])
+  qaContextEvent.value = null
+  qaContextStoryline.value = null
+  qaContextEntity.value = null
+  qaContextTopic.value = null
+  qaContextPrompt.value = t(
+    `请结合站内最新一手报道、快讯与市场传导数据，帮我研判预测题「${rec.title}」（判定条件：${rec.win_rule || rec.question}），分别总结正反两方核心依据。`,
+    `Using the latest verified news, wires, and market impacts on this site, analyze "${rec.title}" (Win criteria: ${rec.win_rule || rec.question}) with bullish and bearish arguments.`,
+  )
   qaModalOpen.value = true
 }
 
@@ -4285,12 +4323,12 @@ onBeforeUnmount(() => {
               :key="item.id"
               type="button"
               @click="switchTab(item.id)"
-              :aria-current="activeTab === item.id ? 'page' : undefined"
+              :aria-current="(activeTab === item.id || (item.id === 'predictions' && activeTab === 'calendar')) ? 'page' : undefined"
               :title="item.label"
               class="ios-tap w-full min-h-[38px] px-2.5 rounded-xl flex items-center gap-2.5 text-[13px] transition-colors"
               :class="[
                 sidebarCollapsed ? 'justify-center' : 'justify-center lg:justify-between',
-                activeTab === item.id
+                (activeTab === item.id || (item.id === 'predictions' && activeTab === 'calendar'))
                   ? 'bg-[#007AFF] text-white font-semibold shadow-xs'
                   : 'text-zinc-700 dark:text-zinc-300 hover:bg-black/[0.05] dark:hover:bg-white/[0.07] font-medium',
               ]"
@@ -4302,7 +4340,7 @@ onBeforeUnmount(() => {
               <span
                 v-if="!sidebarCollapsed && item.count > 0"
                 class="hidden lg:inline-flex text-[11px] tabular-nums px-1.5 py-0.2 rounded-md"
-                :class="activeTab === item.id ? 'bg-white/20 text-white' : 'text-zinc-400'"
+                :class="(activeTab === item.id || (item.id === 'predictions' && activeTab === 'calendar')) ? 'bg-white/20 text-white' : 'text-zinc-400'"
               >
                 {{ item.count }}
               </span>
@@ -5210,19 +5248,19 @@ onBeforeUnmount(() => {
           <div class="ios-segmented">
             <button
               type="button"
-              @click="scheduleSubView = 'calendar'"
-              class="ios-segmented-btn min-h-[34px] px-3.5"
-              :class="scheduleSubView === 'calendar' ? 'ios-segmented-btn-active' : 'text-zinc-600 dark:text-zinc-400'"
-            >
-              {{ t(`催化日程 (${calendarTabTotalCount})`, `Calendar (${calendarTabTotalCount})`) }}
-            </button>
-            <button
-              type="button"
               @click="scheduleSubView = 'predictions'; void loadPredictions()"
               class="ios-segmented-btn min-h-[34px] px-3.5"
               :class="scheduleSubView === 'predictions' ? 'ios-segmented-btn-active' : 'text-zinc-600 dark:text-zinc-400'"
             >
               {{ t(`前瞻验证 (${mergedPredictions.length})`, `Predictions (${mergedPredictions.length})`) }}
+            </button>
+            <button
+              type="button"
+              @click="scheduleSubView = 'calendar'"
+              class="ios-segmented-btn min-h-[34px] px-3.5"
+              :class="scheduleSubView === 'calendar' ? 'ios-segmented-btn-active' : 'text-zinc-600 dark:text-zinc-400'"
+            >
+              {{ t(`催化日程 (${calendarTabTotalCount})`, `Calendar (${calendarTabTotalCount})`) }}
             </button>
           </div>
 
@@ -5263,16 +5301,21 @@ onBeforeUnmount(() => {
               :allowed-reason-tags="arenaReasonTags"
               :prediction-proposals-enabled="siteSettings.prediction_proposals_enabled !== false"
               :season-key="arenaSeasonKey"
+              :all-events="allLoadedEvents"
+              :live-wire-items="effectiveLiveWireDoc?.items || []"
+              :finance-impacts="financeImpactDoc?.event_impacts || []"
               :is-logged-in="Boolean(authSession)"
               :is-admin="isAdminRole(authSession?.user?.role)"
               :now-ms="nowMs"
               @create-prediction="handleCreatePrediction"
               @submit-proposal="handleSubmitPredictionProposal"
-              @revise-prediction="handleRevisePrediction"
               @settle-prediction="handleSettlePrediction"
               @set-prediction-stance="handleSetPredictionStance"
               @vote-crowd="handleVotePredictionCrowd"
               @open-share-pk="openPredictionPkShareCard"
+              @open-qa-prediction="openQaForPrediction"
+              @jump-event="(ev) => { focusedEventModalEvent = ev }"
+              @open-finance-search="(kw) => { if (kw) searchQuery = kw; void switchTab('finance') }"
               @dismiss-pk-banner="incomingPkChallenge = null; syncUrl(true)"
               @open-auth="openAuthModal('login')"
               @delete-prediction="handleDeletePrediction"
@@ -5392,6 +5435,7 @@ onBeforeUnmount(() => {
       :context-storyline="qaContextStoryline"
       :context-entity="qaContextEntity"
       :context-topic="qaContextTopic"
+      :context-prompt="qaContextPrompt"
       :all-events="allLoadedEvents"
       :topics="majorTopics"
       :calendar-events="mergedServerCalendarEvents"
@@ -5927,7 +5971,7 @@ onBeforeUnmount(() => {
           <div class="flex items-center justify-between gap-2 pb-2 border-b border-black/[0.06] dark:border-white/[0.08]">
             <div class="inline-flex items-center gap-2 min-w-0">
               <span class="px-2 py-0.5 rounded-full text-[11px] font-semibold bg-[#007AFF]/12 text-[#007AFF] dark:text-[#0A84FF]">
-                {{ appLang === 'en' ? CATEGORIES[focusedEventModalEvent.category].nameEn : CATEGORIES[focusedEventModalEvent.category].name }}
+                {{ getCategoryLabel(focusedEventModalEvent.category) }}
               </span>
               <span class="text-xs font-semibold text-zinc-700 dark:text-zinc-200 truncate">
                 {{ t('精读直达聚焦视图', 'Shared Event Focus') }}
@@ -6593,7 +6637,7 @@ onBeforeUnmount(() => {
         </button>
         <button
           type="button"
-          @click="scheduleSubView = 'predictions'; void loadPredictions(); handleBottomTabClick('calendar')"
+          @click="handleBottomTabClick('predictions')"
           :aria-current="activeTab === 'calendar' ? 'page' : undefined"
           class="ios-tap flex flex-col items-center justify-center gap-0.5 min-h-[48px] py-1 rounded-xl transition-colors"
           :class="activeTab === 'calendar' ? 'text-[#007AFF] dark:text-[#0A84FF]' : 'text-zinc-500 dark:text-zinc-400'"

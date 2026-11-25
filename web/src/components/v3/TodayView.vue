@@ -148,20 +148,6 @@ const wirePulseExpanded = ref(false)
 const antiEchoMode = ref(false)
 const expandedEventIds = ref<Set<string>>(new Set())
 
-watch(
-  () => props.highlightedEventId,
-  (hid) => {
-    if (!hid) return
-    const next = new Set(expandedEventIds.value)
-    next.add(hid)
-    expandedEventIds.value = next
-    if (sortedFallbackList.value.some((x) => x.event.event_id === hid)) {
-      showAllNonMatched.value = true
-    }
-  },
-  { immediate: true },
-)
-
 // Freeze read baseline for lead-story ordering during active session so markRead never re-sorts or collapses cards!
 const sessionReadIds = ref<Set<string>>(new Set(props.readIds))
 const sessionLegacyReadTitles = ref<Set<string>>(new Set(props.legacyReadTitles))
@@ -693,6 +679,20 @@ const sortedFallbackList = computed(() => {
   return orderedEvents.map((ev) => byId.get(ev.event_id)!).filter(Boolean)
 })
 
+watch(
+  [() => props.highlightedEventId, () => sortedFallbackList.value.length],
+  ([hid]) => {
+    if (!hid) return
+    const next = new Set(expandedEventIds.value)
+    next.add(hid)
+    expandedEventIds.value = next
+    if (sortedFallbackList.value.some((x) => x.event.event_id === hid)) {
+      showAllNonMatched.value = true
+    }
+  },
+  { immediate: true },
+)
+
 const pagedFallback = computed(() =>
   paginateItems(sortedFallbackList.value, props.searchQuery?.trim() ? visibleLimit.value : Math.max(12, visibleLimit.value)),
 )
@@ -822,10 +822,10 @@ const cocoonDiversityPanel = computed(() => {
   <section class="space-y-2.5" :aria-label="t('今日要闻', 'Today Top Stories')">
     <!-- Responsive Smart-Sticky Sub-Bar (fits 360px/393px ZH & EN cleanly; sticks on <768px & Android) -->
     <div
-      class="mobile-sticky-subbar flex flex-wrap items-center justify-between gap-y-1.5 gap-x-1.5 px-0.5"
+      class="mobile-sticky-subbar flex items-center justify-between gap-x-1.5 px-0.5"
       data-testid="today-sticky-subbar"
     >
-      <div class="flex items-center gap-0.5 sm:gap-1 min-w-0">
+      <div class="flex items-center gap-0.5 sm:gap-1 min-w-0 overflow-x-auto no-scrollbar">
         <button
           v-for="sec in ([
             { id: 'feed', label: t('精选', 'Top'), show: true },
@@ -852,19 +852,15 @@ const cocoonDiversityPanel = computed(() => {
             {{ topicsUnseenBadgeCount }}
           </span>
         </button>
-      </div>
 
-      <div
-        v-if="todaySection === 'feed' && heavyTodayCount > 0"
-        class="order-3 sm:order-2 basis-full sm:basis-auto sm:mr-auto flex items-center"
-      >
         <button
+          v-if="heavyTodayCount > 0"
           type="button"
-          @click="onlyHeavy = !onlyHeavy"
-          :aria-pressed="onlyHeavy"
-          class="inline-flex items-center gap-1.5 min-h-[30px] px-2.5 rounded-full text-[11.5px] font-bold whitespace-nowrap shrink-0 transition-all"
+          @click="if (todaySection !== 'feed') { todaySection = 'feed'; onlyHeavy = true } else { onlyHeavy = !onlyHeavy }"
+          :aria-pressed="todaySection === 'feed' && onlyHeavy"
+          class="inline-flex items-center gap-1.5 min-h-[30px] px-2 sm:px-2.5 rounded-full text-[11.5px] font-bold whitespace-nowrap shrink-0 transition-all ml-0.5"
           :class="
-            onlyHeavy
+            todaySection === 'feed' && onlyHeavy
               ? 'bg-[#DC2626] text-white shadow-xs jx-heavy-capsule'
               : 'bg-red-50 dark:bg-red-950/35 text-[#DC2626] dark:text-red-300 border border-red-200 dark:border-red-900/70 hover:bg-red-100'
           "
@@ -872,13 +868,13 @@ const cocoonDiversityPanel = computed(() => {
         >
           <span
             class="jx-sonar-dot"
-            :class="onlyHeavy ? 'jx-sonar-white' : 'jx-sonar-red'"
+            :class="todaySection === 'feed' && onlyHeavy ? 'jx-sonar-white' : 'jx-sonar-red'"
           />
-          <span>{{ t(`今日重磅 (${heavyTodayCount})`, `Top Stories (${heavyTodayCount})`) }}</span>
+          <span>{{ t(`重磅 (${heavyTodayCount})`, `Heavy (${heavyTodayCount})`) }}</span>
         </button>
       </div>
 
-      <div class="order-2 sm:order-3 flex items-center gap-1 shrink-0">
+      <div class="flex items-center gap-1 shrink-0">
         <!-- Mark all visible unread as read -->
         <button
           v-if="todaySection === 'feed' && visibleUnreadEvents.length > 0"

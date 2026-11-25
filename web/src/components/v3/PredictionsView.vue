@@ -2,6 +2,7 @@
 import { computed, ref, watch } from 'vue'
 import {
   Award,
+  BookOpen,
   Check,
   CheckCircle2,
   ChevronDown,
@@ -10,8 +11,10 @@ import {
   Copy,
   Flame,
   HelpCircle,
-  History,
+  LineChart,
   Lock,
+  MessageSquareText,
+  Newspaper,
   Plus,
   RotateCcw,
   Scale,
@@ -21,6 +24,7 @@ import {
   ThumbsDown,
   ThumbsUp,
   Trash2,
+  TrendingUp,
   Trophy,
   Users,
   Zap,
@@ -32,11 +36,19 @@ import UserAvatar from '../UserAvatar.vue'
 import type { ArenaLeaderboardRow, UserPredictionProfile } from '../../core/auth'
 import { pickBiText, t } from '../../core/i18n'
 import { normalizeExternalUrl } from '../../core/legacyAdapter'
+import { globalQuotesStore } from '../../core/quotesStore'
 import { getReactionSummary, loadReactionsBatch, toggleStructuredReaction } from '../../core/reactionsStore'
 import { matchesSmartQuery } from '../../core/search'
 import type { PredictionStance } from '../../core/storage'
 import { computeLiveDomainLeaderboard, computePredictionStats, inferPredictionCategory, type PredictionCategory } from '../../core/v3Logic'
-import type { CrowdPredictionStat, PredictionRecord } from '../../core/types'
+import type {
+  CrowdPredictionStat,
+  EventMarketImpact,
+  LiveWireItem,
+  MarketQuoteItem,
+  PredictionRecord,
+  SmartEvent,
+} from '../../core/types'
 
 const DEFAULT_REASON_TAGS = ['流动性驱动', '业绩超预期', '市场已计价', '政策博弈', '逆向情绪']
 
@@ -55,6 +67,9 @@ const props = defineProps<{
   allowedReasonTags?: string[]
   predictionProposalsEnabled?: boolean
   seasonKey?: string
+  allEvents?: SmartEvent[]
+  liveWireItems?: LiveWireItem[]
+  financeImpacts?: EventMarketImpact[]
   isLoggedIn?: boolean
   isAdmin?: boolean
   nowMs?: number
@@ -63,11 +78,13 @@ const props = defineProps<{
 const emit = defineEmits<{
   (e: 'create-prediction', record: PredictionRecord): void
   (e: 'submit-proposal', body: { category: string; title: string; question: string; win_rule: string; lose_rule: string; due_at: string }): void
-  (e: 'revise-prediction', payload: { predictionId: string; newJudgment: string; newProbPct: number; reason: string }): void
   (e: 'settle-prediction', payload: { predictionId: string; outcome: 'correct' | 'incorrect' | 'indeterminate'; evidenceUrl: string; note: string }): void
   (e: 'set-prediction-stance', payload: { predictionId: string; stance: PredictionStance }): void
   (e: 'vote-crowd', payload: { predictionId: string; probPct: number; reasonTag?: string }): void
   (e: 'open-share-pk', payload: { rec: PredictionRecord; probPct: number }): void
+  (e: 'open-qa-prediction', rec: PredictionRecord): void
+  (e: 'jump-event', ev: SmartEvent): void
+  (e: 'open-finance-search', keyword: string): void
   (e: 'dismiss-pk-banner'): void
   (e: 'open-auth'): void
   (e: 'delete-prediction', predictionId: string): void
@@ -80,10 +97,9 @@ const showLeaderboard = ref(true)
 const arenaBoardOpen = ref(true)
 const summaryOpenMobile = ref(false)
 const brierHelpOpen = ref(false)
-const expandedVersionIds = ref<Set<string>>(new Set())
+const expandedResearchIds = ref<Set<string>>(new Set())
 const leaderboardCopied = ref(false)
 const showNewForm = ref(false)
-const revisingId = ref<string | null>(null)
 const settlingId = ref<string | null>(null)
 const sprintIdx = ref(0)
 const effectiveNowMs = computed(() => props.nowMs ?? Date.now())
@@ -102,9 +118,6 @@ const fInvalid = ref('')
 const fJudg = ref('')
 const submitToArenaPool = ref(true)
 
-const revJudg = ref('')
-const revProb = ref(50)
-const revReason = ref('')
 const voteDrafts = ref<Record<string, number>>({})
 const reasonDrafts = ref<Record<string, string>>({})
 const stanceBurstKey = ref('')
@@ -300,28 +313,139 @@ const currentSprintRec = computed<PredictionRecord | null>(() => {
 function submitSprintAndAdvance() {
   const rec = currentSprintRec.value
   if (!rec || isRecLocked(rec)) return
+  const alreadyDoneAll = sprintDoneCount.value >= sprintQuestions.value.length
   triggerVoteClick(rec)
-  if (sprintQuestions.value.length > 1) {
+  if (!alreadyDoneAll && sprintQuestions.value.length > 1) {
     sprintIdx.value = (sprintIdx.value + 1) % sprintQuestions.value.length
   }
 }
 
-function toggleVersionExpand(id: string) {
-  const next = new Set(expandedVersionIds.value)
+function toggleResearchExpand(id: string) {
+  const next = new Set(expandedResearchIds.value)
   if (next.has(id)) next.delete(id)
   else next.add(id)
-  expandedVersionIds.value = next
+  expandedResearchIds.value = next
 }
 
-function versionTrailSummary(rec: PredictionRecord): string {
-  const vers = rec.versions || []
-  if (vers.length <= 1) {
-    const v0 = vers[0]
-    return v0 ? `v1 (${v0.probability_pct}%) · ${t('点击展开初始底稿', 'Tap to view baseline v1')}` : ''
+function openSprintResearch(rec: PredictionRecord) {
+  const next = new Set(expandedResearchIds.value)
+  next.add(rec.prediction_id)
+  expandedResearchIds.value = next
+  scrollToPrediction(rec.prediction_id)
+}
+
+const DOMAIN_TERM_GROUPS: Array<{ kw: string[]; label: string }> = [
+  { kw: ['上证', '000001', 'a股', '沪指', '中国股市', '央行', '降准'], label: '上证指数' },
+  { kw: ['英伟达', 'nvda', '芯片', '算力', 'gpu', '半导体'], label: '英伟达' },
+  { kw: ['纳指', '纳斯达克', 'ixic', '美股', '标普'], label: '美股' },
+  { kw: ['黄金', 'xau', 'xauusd', 'gc=f', '金价', '避险'], label: '黄金' },
+  { kw: ['美联储', 'fomc', '降息', '加息', '通胀', 'cpi', '利率'], label: '美联储' },
+  { kw: ['claude', 'anthropic', 'openai', 'gpt', 'gemini', '大模型', 'ai'], label: 'AI' },
+  { kw: ['原油', '油价', '霍尔木兹', 'opec', '地缘', '中东'], label: '原油' },
+]
+
+function extractPredictionKeywords(rec: PredictionRecord): string[] {
+  const tokens: string[] = []
+  const hay = `${rec.title} ${rec.question} ${rec.target_entity || ''} ${rec.ticker || ''}`.toLowerCase()
+  if (rec.ticker) tokens.push(rec.ticker.toLowerCase())
+  if (rec.target_entity) tokens.push(rec.target_entity.toLowerCase())
+  for (const grp of DOMAIN_TERM_GROUPS) {
+    if (grp.kw.some((k) => hay.includes(k))) {
+      for (const k of grp.kw) tokens.push(k)
+    }
   }
-  const first = vers[0]
-  const last = vers[vers.length - 1]
-  return `v1 (${first.probability_pct}%) → v${last.version} (${last.probability_pct}%) · ${t(`点击展开 ${vers.length} 次观点演变`, `Tap for ${vers.length} revisions`)}`
+  const enWords = hay.match(/[a-z]{3,}/g) || []
+  for (const w of enWords) {
+    if (!['the', 'and', 'for', 'will', 'this', 'with', 'from', 'live', 'replay', 'open'].includes(w)) {
+      tokens.push(w)
+    }
+  }
+  return Array.from(new Set(tokens)).slice(0, 12)
+}
+
+function extractPrimaryKeyword(rec: PredictionRecord): string {
+  const hay = `${rec.title} ${rec.question} ${rec.target_entity || ''} ${rec.ticker || ''}`.toLowerCase()
+  for (const grp of DOMAIN_TERM_GROUPS) {
+    if (grp.kw.some((k) => hay.includes(k))) return grp.label
+  }
+  if (rec.target_entity && !rec.target_entity.includes('自定义')) return rec.target_entity
+  return rec.ticker || ''
+}
+
+function resolveQuoteForPrediction(rec: PredictionRecord): MarketQuoteItem | null {
+  const map = globalQuotesStore.quotesMap.value
+  const list = globalQuotesStore.indices.value
+  const candidates: string[] = []
+  if (rec.ticker) candidates.push(rec.ticker, rec.ticker.toUpperCase())
+  const hay = `${rec.title} ${rec.question}`.toLowerCase()
+  if (hay.includes('上证') || hay.includes('000001')) candidates.push('000001.SH')
+  if (hay.includes('英伟达') || hay.includes('nvda')) candidates.push('NVDA')
+  if (hay.includes('纳指') || hay.includes('纳斯达克') || hay.includes('ixic')) candidates.push('IXIC')
+  if (hay.includes('黄金') || hay.includes('xau') || hay.includes('gc=f')) candidates.push('XAUUSD', 'GC=F', '518880.SH')
+  for (const key of candidates) {
+    const hit = map[key] || list.find((it) => it.ticker.toUpperCase() === key.toUpperCase())
+    if (hit && Number.isFinite(Number(hit.price)) && Number(hit.price) > 0) return hit
+  }
+  return null
+}
+
+function buildPredictionResearchPack(rec: PredictionRecord) {
+  const kws = extractPredictionKeywords(rec)
+  const primaryKeyword = extractPrimaryKeyword(rec)
+  const liveQuote = resolveQuoteForPrediction(rec)
+  const refTarget = Number(rec.target_price ?? rec.base_price ?? 0)
+  const targetGapPct =
+    liveQuote && refTarget > 0
+      ? Number((((Number(liveQuote.price) - refTarget) / refTarget) * 100).toFixed(2))
+      : null
+
+  const catPref = inferPredictionCategory(rec)
+  const preferredCat =
+    catPref === 'tech_ai' ? 'tech' : catPref === 'global_space' ? 'global' : 'finance'
+
+  const scoredEvents = (props.allEvents || [])
+    .map((ev) => {
+      const hay = `${ev.title_zh || ev.title} ${ev.fact_summary || ev.summary || ''} ${(ev.entities || []).join(' ')}`.toLowerCase()
+      let score = 0
+      for (const kw of kws) {
+        if (hay.includes(kw)) score += 3
+      }
+      if (ev.category === preferredCat) score += 1
+      if (ev.severity_tier === 'S' || ev.importance === 'high') score += 1
+      return { ev, score }
+    })
+    .filter((x) => x.score >= 3 || (kws.length === 0 && x.ev.category === preferredCat))
+    .sort((a, b) => b.score - a.score)
+  const matchedEvents =
+    scoredEvents.length > 0
+      ? scoredEvents.slice(0, 3).map((x) => x.ev)
+      : (props.allEvents || []).filter((e) => e.category === preferredCat).slice(0, 2)
+
+  const matchedImpacts = (props.financeImpacts || [])
+    .filter((imp) => {
+      const hay = `${imp.event_title} ${imp.tag} ${imp.one_liner} ${imp.category}`.toLowerCase()
+      return kws.some((kw) => hay.includes(kw))
+    })
+    .slice(0, 2)
+
+  const matchedWire = (props.liveWireItems || [])
+    .filter((w) => {
+      const hay = `${w.title} ${w.excerpt} ${w.tag}`.toLowerCase()
+      return kws.some((kw) => hay.includes(kw))
+    })
+    .slice(0, 2)
+
+  return {
+    liveQuote,
+    refTarget: refTarget > 0 ? refTarget : null,
+    targetGapPct,
+    matchedEvents,
+    matchedImpacts,
+    matchedWire,
+    primaryKeyword,
+    supporting: (rec.supporting_evidence || []).slice(0, 3),
+    opposing: (rec.opposing_evidence || []).slice(0, 3),
+  }
 }
 
 function formatDueCountdown(dueIso: string): string {
@@ -462,27 +586,8 @@ function submitNew() {
   showNewForm.value = false
 }
 
-function openRevise(rec: PredictionRecord) {
-  revisingId.value = rec.prediction_id
-  settlingId.value = null
-  revJudg.value = rec.current_judgment
-  revProb.value = rec.probability_pct
-  revReason.value = ''
-}
-
-function submitRevise(id: string) {
-  emit('revise-prediction', {
-    predictionId: id,
-    newJudgment: revJudg.value.trim(),
-    newProbPct: Math.min(99, Math.max(1, Number(revProb.value) || 50)),
-    reason: revReason.value.trim() || t('根据最新公开证据调整判断', 'Updated based on latest public evidence'),
-  })
-  revisingId.value = null
-}
-
 function openSettle(rec: PredictionRecord) {
   settlingId.value = rec.prediction_id
-  revisingId.value = null
   setOutcome.value = 'correct'
   setUrl.value = ''
   setNote.value = ''
@@ -721,14 +826,36 @@ function submitSettle(id: string) {
                 {{ tag }}
               </button>
             </div>
-            <div class="flex items-center gap-1.5 ml-auto">
+            <div class="flex flex-wrap items-center gap-1.5 ml-auto">
+              <button
+                type="button"
+                @click="emit('open-qa-prediction', currentSprintRec)"
+                class="inline-flex items-center gap-1 px-2.5 min-h-[32px] rounded-xl border border-blue-200 dark:border-blue-800 text-[#007AFF] dark:text-[#64D2FF] font-semibold hover:bg-blue-50 dark:hover:bg-blue-950/30"
+              >
+                <MessageSquareText class="w-3.5 h-3.5" />
+                <span>{{ t('AI 查证据', 'Ask AI') }}</span>
+              </button>
+              <button
+                type="button"
+                @click="openSprintResearch(currentSprintRec)"
+                class="inline-flex items-center gap-1 px-2.5 min-h-[32px] rounded-xl border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 font-semibold hover:bg-slate-50 dark:hover:bg-slate-800"
+              >
+                <BookOpen class="w-3.5 h-3.5" />
+                <span>{{ t('看关联数据', 'Data') }}</span>
+              </button>
               <button
                 type="button"
                 @click="submitSprintAndAdvance"
                 class="px-3 min-h-[32px] rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold"
                 data-testid="sprint-submit-btn"
               >
-                {{ t('提交并下一题', 'Submit & Next') }}
+                {{
+                  sprintDoneCount >= sprintQuestions.length
+                    ? t('修改预测', 'Edit Forecast')
+                    : hasUserForecasted(currentSprintRec.prediction_id)
+                      ? t('修改并下一题', 'Update & Next')
+                      : t('提交并下一题', 'Submit & Next')
+                }}
               </button>
               <button
                 v-if="sprintDoneCount >= sprintQuestions.length"
@@ -1395,31 +1522,185 @@ function submitSettle(id: string) {
             </div>
           </div>
 
-          <!-- Version Evolution History -->
-          <div class="rounded-lg bg-slate-50 dark:bg-slate-800/50 border border-slate-200/80 dark:border-slate-700/80 text-xs overflow-hidden">
-            <button
-              type="button"
-              @click="toggleVersionExpand(rec.prediction_id)"
-              class="w-full px-2.5 py-2 flex items-center justify-between gap-2 text-left hover:bg-slate-100/70 dark:hover:bg-slate-800"
-              :aria-expanded="expandedVersionIds.has(rec.prediction_id)"
+          <!-- Prediction Research Assistant: Live Quote + Matched News + Transmission + AI Q&A -->
+          <div class="rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200/80 dark:border-slate-700/80 text-xs overflow-hidden">
+            <div class="px-2.5 py-2 flex flex-wrap items-center justify-between gap-2">
+              <button
+                type="button"
+                @click="toggleResearchExpand(rec.prediction_id)"
+                class="inline-flex items-center gap-1.5 min-w-0 text-left hover:text-[#007AFF] dark:hover:text-[#64D2FF]"
+                :aria-expanded="expandedResearchIds.has(rec.prediction_id)"
+              >
+                <LineChart class="w-3.5 h-3.5 text-[#007AFF] shrink-0" />
+                <span class="font-semibold text-slate-800 dark:text-slate-100 shrink-0">
+                  {{ t('辅助研判 · 关联情报与行情数据', 'Research Context · News & Quotes') }}
+                </span>
+                <span
+                  v-if="buildPredictionResearchPack(rec).liveQuote"
+                  class="px-1.5 py-0.5 rounded bg-blue-500/12 text-[#007AFF] dark:text-[#64D2FF] font-mono text-[10.5px] tabular-nums"
+                >
+                  {{ buildPredictionResearchPack(rec).liveQuote!.ticker }}
+                  {{ buildPredictionResearchPack(rec).liveQuote!.price }}
+                  <template v-if="buildPredictionResearchPack(rec).targetGapPct !== null">
+                    ({{ buildPredictionResearchPack(rec).targetGapPct! >= 0 ? '+' : '' }}{{ buildPredictionResearchPack(rec).targetGapPct }}%)
+                  </template>
+                </span>
+                <span v-else class="text-[11px] text-slate-500 dark:text-slate-400">
+                  {{
+                    t(
+                      `关联 ${buildPredictionResearchPack(rec).matchedEvents.length} 要闻 · ${buildPredictionResearchPack(rec).matchedImpacts.length} 传导`,
+                      `${buildPredictionResearchPack(rec).matchedEvents.length} news · ${buildPredictionResearchPack(rec).matchedImpacts.length} markets`,
+                    )
+                  }}
+                </span>
+                <component :is="expandedResearchIds.has(rec.prediction_id) ? ChevronDown : ChevronRight" class="w-3.5 h-3.5 text-slate-400 shrink-0" />
+              </button>
+
+              <div class="flex flex-wrap items-center gap-1.5 ml-auto">
+                <button
+                  type="button"
+                  @click="emit('open-qa-prediction', rec)"
+                  class="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-white dark:bg-slate-900 border border-blue-200 dark:border-blue-800 text-[#007AFF] dark:text-[#64D2FF] font-semibold hover:bg-blue-50 dark:hover:bg-blue-950/30 whitespace-nowrap"
+                >
+                  <MessageSquareText class="w-3 h-3" />
+                  <span>{{ t('问 AI 证据', 'Ask AI') }}</span>
+                </button>
+                <button
+                  type="button"
+                  @click="emit('open-finance-search', buildPredictionResearchPack(rec).primaryKeyword)"
+                  class="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 font-medium hover:border-[#007AFF]/40 whitespace-nowrap"
+                >
+                  <TrendingUp class="w-3 h-3 text-amber-500" />
+                  <span>{{ t('去股市传导分析', 'Markets Map') }}</span>
+                </button>
+                <button
+                  type="button"
+                  @click="toggleResearchExpand(rec.prediction_id)"
+                  class="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-slate-200/70 dark:bg-slate-700/70 text-slate-700 dark:text-slate-200 font-semibold hover:opacity-90 whitespace-nowrap"
+                >
+                  <BookOpen class="w-3 h-3" />
+                  <span>{{ expandedResearchIds.has(rec.prediction_id) ? t('收起研判', 'Collapse') : t('展开数据', 'Expand') }}</span>
+                </button>
+              </div>
+            </div>
+
+            <div
+              v-if="expandedResearchIds.has(rec.prediction_id)"
+              class="px-3 pb-3 pt-2 border-t border-slate-200/70 dark:border-slate-700/70 space-y-2.5 bg-white/60 dark:bg-slate-900/40"
+              data-testid="prediction-research-panel"
             >
-              <span class="inline-flex items-center gap-1.5 min-w-0">
-                <History class="w-3.5 h-3.5 text-slate-500 shrink-0" />
-                <span class="font-semibold text-slate-700 dark:text-slate-200 shrink-0">{{ t(`版本修订轨迹 (${rec.versions.length} 版)`, `Revisions (${rec.versions.length})`) }}</span>
-                <span class="text-[11px] text-slate-500 dark:text-slate-400 truncate">{{ versionTrailSummary(rec) }}</span>
-              </span>
-              <component :is="expandedVersionIds.has(rec.prediction_id) ? ChevronDown : ChevronRight" class="w-3.5 h-3.5 text-slate-400 shrink-0" />
-            </button>
-            <ul
-              v-if="expandedVersionIds.has(rec.prediction_id)"
-              class="px-2.5 pb-2.5 pt-1 border-t border-slate-200/70 dark:border-slate-700/70 space-y-1.5"
-            >
-              <li v-for="v in rec.versions" :key="v.version" class="text-[11px] text-slate-600 dark:text-slate-300 leading-relaxed">
-                <strong class="font-mono text-slate-900 dark:text-white">v{{ v.version }}</strong>
-                ({{ v.probability_pct }}% · <SmartTime :iso="v.updated_at" :now-ms="effectiveNowMs" />):
-                {{ cleanPredText(v.judgment) }} — <span class="text-slate-500">{{ cleanPredText(v.reason) }}</span>
-              </li>
-            </ul>
+              <!-- 1. Real-time Market Reference vs Threshold -->
+              <div
+                v-if="buildPredictionResearchPack(rec).liveQuote"
+                class="rounded-lg bg-blue-50/70 dark:bg-blue-950/30 border border-blue-200/80 dark:border-blue-900/70 px-2.5 py-2 flex flex-wrap items-center justify-between gap-2 text-[11.5px]"
+              >
+                <div class="font-semibold text-slate-800 dark:text-slate-100">
+                  {{ buildPredictionResearchPack(rec).liveQuote!.name || buildPredictionResearchPack(rec).liveQuote!.ticker }}
+                  <span class="font-mono text-[#007AFF] dark:text-[#64D2FF] ml-1">
+                    {{ buildPredictionResearchPack(rec).liveQuote!.price }}
+                  </span>
+                  <span
+                    class="font-mono ml-1.5"
+                    :class="Number(buildPredictionResearchPack(rec).liveQuote!.pct_change ?? 0) >= 0 ? 'text-rose-600 dark:text-rose-400' : 'text-emerald-600 dark:text-emerald-400'"
+                  >
+                    {{ Number(buildPredictionResearchPack(rec).liveQuote!.pct_change ?? 0) >= 0 ? '+' : '' }}{{ Number(buildPredictionResearchPack(rec).liveQuote!.pct_change ?? 0).toFixed(2) }}%
+                  </span>
+                </div>
+                <div v-if="buildPredictionResearchPack(rec).refTarget !== null" class="text-slate-600 dark:text-slate-300 font-mono tabular-nums">
+                  {{ t(`目标参考线：${buildPredictionResearchPack(rec).refTarget}`, `Threshold: ${buildPredictionResearchPack(rec).refTarget}`) }}
+                  <span v-if="buildPredictionResearchPack(rec).targetGapPct !== null" class="ml-1 font-bold">
+                    ({{ buildPredictionResearchPack(rec).targetGapPct! >= 0 ? t('已高于基准', 'Above') : t('仍低于基准', 'Below') }} {{ Math.abs(buildPredictionResearchPack(rec).targetGapPct!) }}%)
+                  </span>
+                </div>
+              </div>
+
+              <!-- 2. Core Assumption & Supporting / Opposing Bullets -->
+              <div
+                v-if="rec.core_assumption || buildPredictionResearchPack(rec).supporting.length > 0 || buildPredictionResearchPack(rec).opposing.length > 0"
+                class="grid grid-cols-1 md:grid-cols-2 gap-2 text-[11.5px]"
+              >
+                <div v-if="buildPredictionResearchPack(rec).supporting.length > 0 || rec.core_assumption" class="rounded-lg bg-emerald-50/60 dark:bg-emerald-950/20 border border-emerald-200/70 dark:border-emerald-900/60 p-2 space-y-1">
+                  <div class="font-bold text-emerald-800 dark:text-emerald-300">{{ t('正方核心依据与假设', 'Bullish Evidence & Thesis') }}</div>
+                  <p v-if="rec.core_assumption" class="text-slate-700 dark:text-slate-200">{{ cleanPredText(rec.core_assumption) }}</p>
+                  <ul v-if="buildPredictionResearchPack(rec).supporting.length > 0" class="list-disc pl-4 space-y-0.5 text-slate-600 dark:text-slate-300">
+                    <li v-for="(s, sIdx) in buildPredictionResearchPack(rec).supporting" :key="sIdx">{{ cleanPredText(s) }}</li>
+                  </ul>
+                </div>
+                <div v-if="buildPredictionResearchPack(rec).opposing.length > 0 || rec.invalidation_trigger" class="rounded-lg bg-rose-50/60 dark:bg-rose-950/20 border border-rose-200/70 dark:border-rose-900/60 p-2 space-y-1">
+                  <div class="font-bold text-rose-800 dark:text-rose-300">{{ t('反方疑点与证伪条件', 'Bearish Risks & Invalidation') }}</div>
+                  <p v-if="rec.invalidation_trigger" class="text-slate-700 dark:text-slate-200">{{ cleanPredText(rec.invalidation_trigger) }}</p>
+                  <ul v-if="buildPredictionResearchPack(rec).opposing.length > 0" class="list-disc pl-4 space-y-0.5 text-slate-600 dark:text-slate-300">
+                    <li v-for="(o, oIdx) in buildPredictionResearchPack(rec).opposing" :key="oIdx">{{ cleanPredText(o) }}</li>
+                  </ul>
+                </div>
+              </div>
+
+              <!-- 3. Matched In-Site Verified News Briefings -->
+              <div v-if="buildPredictionResearchPack(rec).matchedEvents.length > 0" class="space-y-1.5">
+                <div class="inline-flex items-center gap-1 font-bold text-slate-700 dark:text-slate-200 text-[11px]">
+                  <Newspaper class="w-3.5 h-3.5 text-[#007AFF]" />
+                  <span>{{ t('站内关联已核验要闻（点击弹窗精读后即可回来下注）', 'Related Verified News (Tap to read in overlay)') }}</span>
+                </div>
+                <div class="space-y-1.5">
+                  <div
+                    v-for="ev in buildPredictionResearchPack(rec).matchedEvents"
+                    :key="`pr-ev-${rec.prediction_id}-${ev.event_id}`"
+                    class="rounded-lg border border-slate-200/80 dark:border-slate-700/80 bg-white dark:bg-slate-900 p-2 flex items-start justify-between gap-2"
+                  >
+                    <div class="min-w-0 space-y-0.5">
+                      <div class="font-semibold text-slate-900 dark:text-white leading-snug">
+                        {{ pickBiText(ev.title_zh || ev.title, ev.title_en || ev.title) }}
+                      </div>
+                      <p class="text-[11px] text-slate-500 dark:text-slate-400 line-clamp-2">
+                        {{ ev.fact_summary || ev.summary }}
+                      </p>
+                    </div>
+                    <button
+                      type="button"
+                      @click="emit('jump-event', ev)"
+                      class="px-2 py-1 rounded-md bg-[#007AFF]/10 text-[#007AFF] dark:text-[#64D2FF] text-[11px] font-semibold hover:bg-[#007AFF]/15 shrink-0 whitespace-nowrap"
+                    >
+                      {{ t('精读全文', 'Read') }}
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 4. Matched Market Transmission & Live Wire -->
+              <div
+                v-if="buildPredictionResearchPack(rec).matchedImpacts.length > 0 || buildPredictionResearchPack(rec).matchedWire.length > 0"
+                class="grid grid-cols-1 md:grid-cols-2 gap-2"
+              >
+                <div
+                  v-for="imp in buildPredictionResearchPack(rec).matchedImpacts"
+                  :key="`pr-imp-${rec.prediction_id}-${imp.id}`"
+                  class="rounded-lg border border-amber-200/70 dark:border-amber-900/60 bg-amber-50/40 dark:bg-amber-950/20 p-2 space-y-1 text-[11px]"
+                >
+                  <div class="flex items-center justify-between gap-1">
+                    <span class="font-bold text-amber-800 dark:text-amber-300 truncate">{{ imp.tag }} · {{ imp.event_title }}</span>
+                    <button
+                      type="button"
+                      @click="emit('open-finance-search', imp.tag || buildPredictionResearchPack(rec).primaryKeyword)"
+                      class="text-[#007AFF] font-semibold shrink-0 hover:underline"
+                    >
+                      {{ t('查看传导', 'Impact') }}
+                    </button>
+                  </div>
+                  <p class="text-slate-600 dark:text-slate-300 line-clamp-2">{{ imp.one_liner }}</p>
+                </div>
+                <div
+                  v-for="wire in buildPredictionResearchPack(rec).matchedWire"
+                  :key="`pr-w-${rec.prediction_id}-${wire.id}`"
+                  class="rounded-lg border border-slate-200/80 dark:border-slate-700/80 bg-white dark:bg-slate-900 p-2 space-y-0.5 text-[11px]"
+                >
+                  <div class="font-semibold text-slate-800 dark:text-slate-100 line-clamp-1">{{ wire.title }}</div>
+                  <div class="text-slate-500 dark:text-slate-400 flex items-center justify-between gap-2">
+                    <span>{{ wire.source_name }}</span>
+                    <SmartTime :iso="wire.published_at" :now-ms="effectiveNowMs" />
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
 
           <div v-if="rec.settlement" class="rounded-lg bg-emerald-50/70 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-900 p-2.5 text-xs space-y-1">
@@ -1441,18 +1722,6 @@ function submitSettle(id: string) {
               >
                 {{ t('查看核验出处', 'Verify Source') }}
               </a>
-            </div>
-          </div>
-
-          <div v-if="revisingId === rec.prediction_id" class="p-3 rounded-xl border border-blue-200 bg-blue-50/50 dark:bg-blue-950/30 space-y-2 text-xs">
-            <div class="grid grid-cols-1 sm:grid-cols-4 gap-2">
-              <input v-model="revJudg" type="text" :placeholder="t('新判断陈述', 'Revised judgment')" class="sm:col-span-3 px-2.5 py-1.5 rounded border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900" />
-              <input v-model.number="revProb" type="number" min="1" max="99" class="px-2.5 py-1.5 rounded border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900" />
-            </div>
-            <input v-model="revReason" type="text" :placeholder="t('修改依据', 'Reason for revision')" class="w-full px-2.5 py-1.5 rounded border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900" />
-            <div class="flex gap-2">
-              <button type="button" @click="submitRevise(rec.prediction_id)" class="px-3 py-1 rounded bg-blue-600 text-white font-semibold">{{ t('保留旧版并写入新版本', 'Append New Version') }}</button>
-              <button type="button" @click="revisingId = null" class="px-3 py-1 rounded border border-slate-300">{{ t('取消', 'Cancel') }}</button>
             </div>
           </div>
 
@@ -1528,13 +1797,6 @@ function submitSettle(id: string) {
               v-if="isAdmin || rec.prediction_id.startsWith('pred_user_')"
               class="flex flex-wrap items-center gap-1.5 ml-auto"
             >
-              <button
-                type="button"
-                @click="openRevise(rec)"
-                class="px-2.5 min-h-[30px] rounded-lg border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800"
-              >
-                {{ t('修订 (留v1)', 'Revise') }}
-              </button>
               <button
                 v-if="rec.prediction_id.startsWith('pred_user_') || !rec.source_type || rec.source_type === 'seed'"
                 type="button"

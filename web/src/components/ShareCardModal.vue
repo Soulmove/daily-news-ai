@@ -412,14 +412,18 @@ function renderCard() {
       ctx.fillText(st.label, bx + 18, statY + 86)
     })
 
-    let curY = 402
+    ctx.fillStyle = 'rgba(148, 163, 184, 0.88)'
+    ctx.font = '13px "Inter", "PingFang SC", "Microsoft YaHei", sans-serif'
+    ctx.fillText('（按所选持仓板块映射方向统计，与单条快讯全市场情绪标签可能存在视角差异）', 68, statY + 124)
+
+    let curY = 418
     ctx.fillStyle = 'rgba(255, 255, 255, 0.58)'
     ctx.font = '15px "Inter", "PingFang SC", "Microsoft YaHei", sans-serif'
     ctx.fillText('今日核心传导结论（扫码对照自选股灵敏度）', 68, curY)
-    curY += 18
+    curY += 16
 
     data.takeaways.slice(0, 3).forEach((item, idx) => {
-      drawRoundRect(ctx, 68, curY, W - 136, 104, 16)
+      drawRoundRect(ctx, 68, curY, W - 136, 98, 16)
       ctx.fillStyle = 'rgba(255, 255, 255, 0.05)'
       ctx.fill()
       ctx.fillStyle =
@@ -427,11 +431,11 @@ function renderCard() {
       ctx.font = 'bold 16px "Inter", "PingFang SC", "Microsoft YaHei", sans-serif'
       const tag = item.polarity === 'positive' ? '[利好]' : item.polarity === 'negative' ? '[承压]' : '[分化]'
       const tagNote = item.tags && item.tags.length > 0 ? ` · ${item.tags.slice(0, 2).join('/')}` : ''
-      drawWrappedText(ctx, `${idx + 1}. ${tag} ${item.title}${tagNote}`, 86, curY + 30, W - 172, 22, 1)
+      drawWrappedText(ctx, `${idx + 1}. ${tag} ${item.title}${tagNote}`, 86, curY + 28, W - 172, 22, 1)
       ctx.fillStyle = 'rgba(255, 255, 255, 0.8)'
       ctx.font = '14.5px "Inter", "PingFang SC", "Microsoft YaHei", sans-serif'
-      drawWrappedText(ctx, item.summary, 86, curY + 58, W - 172, 21, 2)
-      curY += 116
+      drawWrappedText(ctx, item.summary, 86, curY + 54, W - 172, 21, 2)
+      curY += 108
     })
   } else if (data.kind === 'echo_chamber') {
     ctx.fillStyle = '#A78BFA'

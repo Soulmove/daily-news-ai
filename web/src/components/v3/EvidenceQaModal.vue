@@ -24,6 +24,7 @@ const props = defineProps<{
   contextStoryline?: StorylineDossier | null
   contextEntity?: EntityProfile | null
   contextTopic?: MajorTopicSpotlight | null
+  contextPrompt?: string | null
   allEvents: SmartEvent[]
   topics?: MajorTopicSpotlight[]
   calendarEvents?: CatalystEvent[]
@@ -46,9 +47,12 @@ const emit = defineEmits<{
 
 const dialogEl = ref<HTMLElement | null>(null)
 const hasScopedContext = computed(() =>
-  Boolean(props.contextEvent || props.contextStoryline || props.contextEntity || props.contextTopic),
+  Boolean(props.contextEvent || props.contextStoryline || props.contextEntity || props.contextTopic || props.contextPrompt),
 )
 const defaultQuestion = computed(() => {
+  if (props.contextPrompt) {
+    return props.contextPrompt
+  }
   if (props.contextTopic) {
     return t(
       `请梳理「${props.contextTopic.title}」的最新时间线、核心行程与潜在影响`,
@@ -147,6 +151,7 @@ const { dirtyConfirmOpen, onBackdropClick, onCloseButton, confirmDirtyDiscard, c
   })
 
 const scopeLabel = computed(() => {
+  if (props.contextPrompt) return t('预测分析助手：结合站内全部情报与传导数据', 'Prediction Research Assistant')
   if (props.contextTopic) return `${t('超级专题：', 'Topic: ')}${props.contextTopic.title}`
   if (props.contextStoryline) return `${t('事件档案：', 'Dossier: ')}${props.contextStoryline.title}`
   if (props.contextEntity) return `${t('实体档案：', 'Entity: ')}${props.contextEntity.canonical_name}`
@@ -274,15 +279,15 @@ function parseAnswerBlocks(md: string): { kind: 'h3' | 'bullet' | 'p'; text: str
 }
 
 watch(
-  () => [props.isOpen, props.contextEvent?.event_id, props.contextStoryline?.storyline_id, props.contextEntity?.entity_id, props.contextTopic?.topic_id],
+  () => [props.isOpen, props.contextEvent?.event_id, props.contextStoryline?.storyline_id, props.contextEntity?.entity_id, props.contextTopic?.topic_id, props.contextPrompt],
   ([open]) => {
     if (open) {
       userEditedQuestion.value = false
       liveError.value = null
       qaHistory.value = []
       if (hasScopedContext.value) {
-        // Event/Dossier/Topic verification mode: show local structured evidence first; NEVER overwrite with a global query.
-        question.value = ''
+        // Event/Dossier/Topic/Prediction verification mode: show local structured evidence first; prefill prompt if provided.
+        question.value = props.contextPrompt ? props.contextPrompt : ''
         void askNow(undefined, true)
       } else {
         question.value = ''
