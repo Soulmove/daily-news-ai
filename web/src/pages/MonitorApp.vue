@@ -68,6 +68,7 @@ import {
 const isDark = ref(readDarkMode())
 const monitorAccessChecked = ref(false)
 const monitorAccessAllowed = ref(false)
+const monitorDenyReason = ref<'private_gate' | 'admin_only'>('admin_only')
 const nowMs = ref(Date.now())
 let clockTimer: ReturnType<typeof setInterval> | null = null
 let pollTimer: ReturnType<typeof setInterval> | null = null
@@ -444,7 +445,13 @@ onMounted(() => {
   const sess = loadAuthSession()
   const isAdm = isAdminRole(sess?.user.role)
   void apiGetPublicSettings().then((s) => {
-    monitorAccessAllowed.value = Boolean(s.monitor_public || isAdm)
+    if (s.access_mode === 'private_gate' && !sess) {
+      monitorDenyReason.value = 'private_gate'
+      monitorAccessAllowed.value = false
+    } else {
+      monitorDenyReason.value = 'admin_only'
+      monitorAccessAllowed.value = Boolean(s.monitor_public || isAdm)
+    }
     monitorAccessChecked.value = true
     if (monitorAccessAllowed.value) {
       void loadData(false)
@@ -531,14 +538,26 @@ onBeforeUnmount(() => {
       v-if="monitorAccessChecked && !monitorAccessAllowed"
       class="max-w-lg mx-auto mt-10 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 text-center space-y-3 shadow-sm"
     >
-      <h1 class="text-lg font-bold text-slate-900 dark:text-white">情报监控页当前仅对管理员开放</h1>
-      <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
-        管理员可在私有后台一键切换是否向普通用户公开此监控页面；如果您是管理员，请先登录管理员账号。
-      </p>
-      <div class="flex items-center justify-center gap-2.5 pt-2 text-xs font-semibold">
-        <a href="./index.html" class="px-4 py-2 rounded-xl bg-indigo-600 text-white hover:bg-indigo-700">返回镜信首页</a>
-        <a href="./admin.html" class="px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800">管理员登录</a>
-      </div>
+      <template v-if="monitorDenyReason === 'private_gate'">
+        <h1 class="text-lg font-bold text-slate-900 dark:text-white">全站已启用私有门禁，请先登录</h1>
+        <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
+          当前站点处于受控私有访问模式，未登录访客无法查看情报监控页面；请前往首页登录已有账号，或凭管理员发放的一次性邀请码注册后再查看。
+        </p>
+        <div class="flex items-center justify-center gap-2.5 pt-2 text-xs font-semibold">
+          <a href="./index.html" class="px-4 py-2 rounded-xl bg-indigo-600 text-white hover:bg-indigo-700">前往首页登录</a>
+          <a href="./admin.html" class="px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800">管理员登录</a>
+        </div>
+      </template>
+      <template v-else>
+        <h1 class="text-lg font-bold text-slate-900 dark:text-white">情报监控页当前仅对管理员开放</h1>
+        <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
+          管理员可在私有后台一键切换是否向普通用户公开此监控页面；如果您是管理员，请先登录管理员账号。
+        </p>
+        <div class="flex items-center justify-center gap-2.5 pt-2 text-xs font-semibold">
+          <a href="./index.html" class="px-4 py-2 rounded-xl bg-indigo-600 text-white hover:bg-indigo-700">返回镜信首页</a>
+          <a href="./admin.html" class="px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800">管理员登录</a>
+        </div>
+      </template>
     </div>
 
     <div v-else-if="monitorAccessChecked" class="space-y-4 sm:space-y-5">

@@ -6,11 +6,13 @@ import {
   createInviteCodes,
   createUser,
   getAdminStats,
+  getEffectiveAccessMode,
   getSiteSettings,
   getUserById,
   getUserByUsername,
   getUserPlainPassword,
   getUserState,
+  isValidAccessMode,
   listInviteCodes,
   listUsersWithStats,
   logAudit,
@@ -33,7 +35,7 @@ import {
   upsertEditorialOverride,
 } from '../dbExtras'
 import { QUOTES_CACHE_KEY, fetchAndBuildMarketQuotes, getDefaultEdgeCache } from '../quotes'
-import type { Env, HonoVariables, UserRole } from '../types'
+import type { AccessMode, Env, HonoVariables, UserRole } from '../types'
 import { getWireLatestDoc, runWireCron } from '../wireCron'
 
 const USERNAME_RE = /^[A-Za-z0-9_\u4e00-\u9fa5]{3,32}$/
@@ -356,13 +358,32 @@ adminRoutes.get('/push-logs', async (c) => {
 })
 
 adminRoutes.get('/site-settings', async (c) => {
-  return c.json(await getSiteSettings(c.env.DB))
+  return c.json(await getSiteSettings(c.env.DB, c.env.SITE_ACCESS_MODE), 200, {
+    'Cache-Control': 'no-store',
+  })
 })
 
 adminRoutes.put('/site-settings', async (c) => {
   const admin = c.get('user')!
   const body = (await c.req.json().catch(() => ({}))) as Record<string, unknown>
-  const res = await saveSiteSettings(c.env.DB, body)
+  const hasAccessMode = Object.prototype.hasOwnProperty.call(body, 'access_mode') && body.access_mode !== undefined
+  let oldMode: AccessMode | null = null
+  let newMode: AccessMode | null = null
+
+  if (hasAccessMode) {
+    if (admin.role !== 'super_admin') {
+      return c.json({ detail: '仅一级最高管理员可修改全站访问门禁模式' }, 403)
+    }
+    const rawMode = typeof body.access_mode === 'string' ? body.access_mode.trim() : ''
+    if (!isValidAccessMode(rawMode)) {
+      return c.json({ detail: '无效的访问门禁模式，仅支持 public / invite_only / private_gate' }, 400)
+    }
+    oldMode = await getEffectiveAccessMode(c.env.DB, c.env.SITE_ACCESS_MODE)
+    newMode = rawMode
+    body.access_mode = rawMode
+  }
+
+  const res = await saveSiteSettings(c.env.DB, body, c.env.SITE_ACCESS_MODE)
   await logAudit(c.env.DB, {
     action: 'admin_update_site_settings',
     userId: admin.id,
@@ -370,6 +391,15 @@ adminRoutes.put('/site-settings', async (c) => {
     detail: `Updated settings keys=${Object.keys(body).sort().join(',')}`,
     ip: c.get('clientIp'),
   })
+  if (hasAccessMode && oldMode && newMode && oldMode !== newMode) {
+    await logAudit(c.env.DB, {
+      action: 'admin_change_access_mode',
+      userId: admin.id,
+      username: admin.username,
+      detail: `全站访问门禁模式变更：${oldMode} -> ${newMode}`,
+      ip: c.get('clientIp'),
+    })
+  }
   return c.json({ ok: true, ...res })
 })
 

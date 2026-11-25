@@ -610,6 +610,7 @@ export interface PublicSiteSettings {
   monitor_public: boolean
   access_mode?: SiteAccessMode
   invite_required?: boolean
+  login_required?: boolean
   feedback_enabled?: boolean
   feedback_notice?: string
   feedback_contact_wechat?: string

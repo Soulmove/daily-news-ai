@@ -24,7 +24,7 @@ on:
         type: boolean
         default: false
       site_access_mode:
-        description: 'Access mode override (invite_only | private_gate | public)'
+        description: 'Initial fallback access mode when D1 site_settings.access_mode is unset (invite_only | private_gate | public)'
         type: choice
         options:
           - invite_only

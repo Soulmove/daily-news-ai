@@ -345,4 +345,324 @@ describe('MirrorBrief Worker Crypto & API Suite', () => {
     const body = (await resp.json()) as { status: string; quotes: Record<string, { price: number }> }
     expect(body.quotes['000001.SH'].price).toBe(3350.12)
   })
+
+  it('falls back to env.SITE_ACCESS_MODE (and invite_only default) when D1 site_settings.access_mode is unset', async () => {
+    const publicSetup = createTestEnv({ SITE_ACCESS_MODE: 'public' })
+    const appPublic = createWorkerApp()
+
+    const pubSettings = await appPublic.request('https://mirrorinfo.xyz/api/public/settings', {}, publicSetup.env)
+    expect(pubSettings.status).toBe(200)
+    expect(pubSettings.headers.get('cache-control')).toBe('no-store')
+    expect(await pubSettings.json()).toMatchObject({
+      access_mode: 'public',
+      invite_required: false,
+      login_required: false,
+    })
+
+    const pubAccess = await appPublic.request('https://mirrorinfo.xyz/api/public/access-config', {}, publicSetup.env)
+    expect(pubAccess.status).toBe(200)
+    expect(pubAccess.headers.get('cache-control')).toBe('no-store')
+    expect(await pubAccess.json()).toMatchObject({
+      access_mode: 'public',
+      invite_required: false,
+      login_required: false,
+    })
+
+    const defaultSetup = createTestEnv({ SITE_ACCESS_MODE: undefined })
+    const appDefault = createWorkerApp()
+    const defSettings = await appDefault.request('https://mirrorinfo.xyz/api/public/settings', {}, defaultSetup.env)
+    expect(defSettings.status).toBe(200)
+    expect(await defSettings.json()).toMatchObject({
+      access_mode: 'invite_only',
+      invite_required: true,
+      login_required: false,
+    })
+
+    const defAccess = await appDefault.request('https://mirrorinfo.xyz/api/public/access-config', {}, defaultSetup.env)
+    expect(defAccess.status).toBe(200)
+    expect(await defAccess.json()).toMatchObject({
+      access_mode: 'invite_only',
+      invite_required: true,
+      login_required: false,
+    })
+  })
+
+  it('allows super_admin to dynamically switch access_mode in D1 with live enforcement, RBAC/validation guards, and audit logs', async () => {
+    const { env, r2, db } = createTestEnv({ SITE_ACCESS_MODE: 'invite_only' })
+    await r2.put('data/live_wire.json', { status: 'ok', items: [{ id: 'w1', title: 'Live wire item' }] })
+    const app = createWorkerApp()
+
+    // 1. Login as super_admin
+    const superLogin = await app.request(
+      'https://mirrorinfo.xyz/api/auth/login',
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username: 'admin', password: 'AdminPass123!' }),
+      },
+      env,
+    )
+    expect(superLogin.status).toBe(200)
+    const superSess = (await superLogin.json()) as { token: string }
+
+    // 2. Create Level-2 admin and login
+    const createOps = await app.request(
+      'https://mirrorinfo.xyz/api/admin/users',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${superSess.token}`,
+        },
+        body: JSON.stringify({ username: 'opsadmin', password: 'OpsPass123!', role: 'admin' }),
+      },
+      env,
+    )
+    expect(createOps.status).toBe(200)
+
+    const opsLogin = await app.request(
+      'https://mirrorinfo.xyz/api/auth/login',
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username: 'opsadmin', password: 'OpsPass123!' }),
+      },
+      env,
+    )
+    expect(opsLogin.status).toBe(200)
+    const opsSess = (await opsLogin.json()) as { token: string }
+
+    // 3. Level-2 admin cannot change access_mode -> 403
+    const opsForbidden = await app.request(
+      'https://mirrorinfo.xyz/api/admin/site-settings',
+      {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${opsSess.token}`,
+        },
+        body: JSON.stringify({ access_mode: 'public' }),
+      },
+      env,
+    )
+    expect(opsForbidden.status).toBe(403)
+    const opsErr = (await opsForbidden.json()) as { detail: string }
+    expect(opsErr.detail).toContain('仅一级最高管理员可修改全站访问门禁模式')
+
+    // 4. Invalid mode or empty mode returns 400
+    for (const badVal of ['invalid_mode', '']) {
+      const badResp = await app.request(
+        'https://mirrorinfo.xyz/api/admin/site-settings',
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${superSess.token}`,
+          },
+          body: JSON.stringify({ access_mode: badVal }),
+        },
+        env,
+      )
+      expect(badResp.status).toBe(400)
+    }
+
+    // 5. Initial mode (invite_only): register without invite code returns 422
+    const initRegNoInv = await app.request(
+      'https://mirrorinfo.xyz/api/auth/register',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'cf-connecting-ip': '198.51.100.1',
+          'X-Device-ID': 'mode-test-dev-1',
+        },
+        body: JSON.stringify({ username: 'guest_inv_1', password: 'Password123' }),
+      },
+      env,
+    )
+    expect(initRegNoInv.status).toBe(422)
+
+    // 6. Switch to 'public' -> live immediately without rebuilding Worker
+    const toPublic = await app.request(
+      'https://mirrorinfo.xyz/api/admin/site-settings',
+      {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${superSess.token}`,
+        },
+        body: JSON.stringify({ access_mode: 'public' }),
+      },
+      env,
+    )
+    expect(toPublic.status).toBe(200)
+    expect(await toPublic.json()).toMatchObject({
+      ok: true,
+      access_mode: 'public',
+      invite_required: false,
+      login_required: false,
+    })
+
+    for (const path of ['/api/public/settings', '/api/public/access-config']) {
+      const r = await app.request(`https://mirrorinfo.xyz${path}`, {}, env)
+      expect(r.status).toBe(200)
+      expect(await r.json()).toMatchObject({
+        access_mode: 'public',
+        invite_required: false,
+        login_required: false,
+      })
+    }
+    const adminCheckPub = await app.request(
+      'https://mirrorinfo.xyz/api/admin/site-settings',
+      { headers: { Authorization: `Bearer ${superSess.token}` } },
+      env,
+    )
+    expect(adminCheckPub.status).toBe(200)
+    expect(await adminCheckPub.json()).toMatchObject({
+      access_mode: 'public',
+      invite_required: false,
+      login_required: false,
+    })
+
+    // Register without invite code succeeds immediately under 'public'
+    const pubReg = await app.request(
+      'https://mirrorinfo.xyz/api/auth/register',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'cf-connecting-ip': '198.51.100.2',
+          'X-Device-ID': 'mode-test-dev-2',
+        },
+        body: JSON.stringify({ username: 'open_user_1', password: 'Password123' }),
+      },
+      env,
+    )
+    expect(pubReg.status).toBe(200)
+
+    // 7. Switch to 'private_gate' -> live immediately
+    const toPrivate = await app.request(
+      'https://mirrorinfo.xyz/api/admin/site-settings',
+      {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${superSess.token}`,
+        },
+        body: JSON.stringify({ access_mode: 'private_gate' }),
+      },
+      env,
+    )
+    expect(toPrivate.status).toBe(200)
+    expect(await toPrivate.json()).toMatchObject({
+      ok: true,
+      access_mode: 'private_gate',
+      invite_required: true,
+      login_required: true,
+    })
+
+    for (const path of ['/api/public/settings', '/api/public/access-config']) {
+      const r = await app.request(`https://mirrorinfo.xyz${path}`, {}, env)
+      expect(r.status).toBe(200)
+      expect(await r.json()).toMatchObject({
+        access_mode: 'private_gate',
+        invite_required: true,
+        login_required: true,
+      })
+    }
+
+    const gatedWire = await app.request('https://mirrorinfo.xyz/api/wire/latest', {}, env)
+    expect(gatedWire.status).toBe(401)
+    const authedWire = await app.request(
+      'https://mirrorinfo.xyz/api/wire/latest',
+      { headers: { Authorization: `Bearer ${superSess.token}` } },
+      env,
+    )
+    expect(authedWire.status).toBe(200)
+
+    const privRegNoInv = await app.request(
+      'https://mirrorinfo.xyz/api/auth/register',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'cf-connecting-ip': '198.51.100.3',
+          'X-Device-ID': 'mode-test-dev-3',
+        },
+        body: JSON.stringify({ username: 'guest_priv_1', password: 'Password123' }),
+      },
+      env,
+    )
+    expect(privRegNoInv.status).toBe(422)
+
+    // 8. Updating another setting preserves D1 access_mode and never stores derived keys
+    const patchOther = await app.request(
+      'https://mirrorinfo.xyz/api/admin/site-settings',
+      {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${superSess.token}`,
+        },
+        body: JSON.stringify({ monitor_public: true }),
+      },
+      env,
+    )
+    expect(patchOther.status).toBe(200)
+    expect(await patchOther.json()).toMatchObject({
+      monitor_public: true,
+      access_mode: 'private_gate',
+      invite_required: true,
+      login_required: true,
+    })
+    const derivedRows = db.sqlite
+      .prepare("SELECT key FROM site_settings WHERE key IN ('invite_required', 'login_required')")
+      .all() as Array<{ key: string }>
+    expect(derivedRows).toHaveLength(0)
+
+    // 9. Switch back to 'invite_only' -> unauthenticated wire opens again, register requires invite
+    const toInvite = await app.request(
+      'https://mirrorinfo.xyz/api/admin/site-settings',
+      {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${superSess.token}`,
+        },
+        body: JSON.stringify({ access_mode: 'invite_only' }),
+      },
+      env,
+    )
+    expect(toInvite.status).toBe(200)
+
+    const openWire = await app.request('https://mirrorinfo.xyz/api/wire/latest', {}, env)
+    expect(openWire.status).toBe(200)
+    const invRegNoCode = await app.request(
+      'https://mirrorinfo.xyz/api/auth/register',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'cf-connecting-ip': '198.51.100.4',
+          'X-Device-ID': 'mode-test-dev-4',
+        },
+        body: JSON.stringify({ username: 'guest_inv_2', password: 'Password123' }),
+      },
+      env,
+    )
+    expect(invRegNoCode.status).toBe(422)
+
+    // 10. Audit logs contain clear access_mode transition records
+    const auditResp = await app.request(
+      'https://mirrorinfo.xyz/api/admin/audit-logs?limit=50',
+      { headers: { Authorization: `Bearer ${superSess.token}` } },
+      env,
+    )
+    expect(auditResp.status).toBe(200)
+    const { logs } = (await auditResp.json()) as { logs: Array<{ action: string; detail: string }> }
+    const modeLogs = logs.filter((l) => l.action === 'admin_change_access_mode').map((l) => l.detail)
+    expect(modeLogs.some((d) => d.includes('invite_only -> public'))).toBe(true)
+    expect(modeLogs.some((d) => d.includes('public -> private_gate'))).toBe(true)
+    expect(modeLogs.some((d) => d.includes('private_gate -> invite_only'))).toBe(true)
+  })
 })

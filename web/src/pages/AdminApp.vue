@@ -2,12 +2,16 @@
 import { computed, onMounted, ref } from 'vue'
 import {
   Activity,
+  AlertTriangle,
+  ArrowRight,
   Bell,
+  CheckCircle2,
   Copy,
   Database,
   Eye,
   EyeOff,
   FileEdit,
+  Globe,
   KeyRound,
   Lock,
   LogOut,
@@ -68,6 +72,7 @@ import {
   type AuthSession,
   type FeedbackRecordItem,
   type PublicSiteSettings,
+  type SiteAccessMode,
   type UserRole,
 } from '../core/auth'
 import type { EditorialOverridesDoc } from '../core/overrides'
@@ -108,6 +113,9 @@ const pushConfig = ref<AdminPushConfig>({
 
 const siteSettingsForm = ref<PublicSiteSettings>({
   monitor_public: false,
+  access_mode: 'invite_only',
+  invite_required: true,
+  login_required: false,
   feedback_enabled: true,
   feedback_notice: '欢迎反馈页面问题、数据纠错或功能建议，镜信编辑团队将尽快查阅并回复。',
   feedback_contact_wechat: '',
@@ -119,6 +127,9 @@ const siteSettingsForm = ref<PublicSiteSettings>({
   site_banner_text: '',
   site_banner_tone: 'info',
 })
+
+const accessModeDraft = ref<SiteAccessMode>('invite_only')
+const privateGateConfirmOpen = ref(false)
 
 // Feedback inbox state
 const feedbackStatusFilter = ref<string>('')
@@ -217,6 +228,60 @@ const {
 const isAdmin = computed(() => isAdminRole(session.value?.user.role))
 const isSuperAdmin = computed(() => session.value?.user.role === 'super_admin')
 
+const currentAccessMode = computed<SiteAccessMode>(() => {
+  const m = siteSettingsForm.value.access_mode
+  if (m === 'public' || m === 'invite_only' || m === 'private_gate') return m
+  return 'invite_only'
+})
+
+const ACCESS_MODE_OPTIONS: ReadonlyArray<{
+  value: SiteAccessMode
+  title: string
+  badge: string
+  summary: string
+}> = [
+  {
+    value: 'public',
+    title: '完全开放（public）',
+    badge: '自由浏览与注册',
+    summary: '访客可直接浏览资讯，并自由注册账号（无需邀请码）。',
+  },
+  {
+    value: 'invite_only',
+    title: '邀请制注册（invite_only · 推荐）',
+    badge: '推荐',
+    summary: '访客可浏览公开资讯，但新账号注册必须凭管理员发放的一次性邀请码；已注册/迁移老账号可正常登录。',
+  },
+  {
+    value: 'private_gate',
+    title: '全站私有门禁（private_gate）',
+    badge: '最高隔离',
+    summary: '未登录访客无法查看内容与接口数据，必须先使用已有账号登录或凭邀请码注册后才能进入。',
+  },
+]
+
+function accessModeMeta(mode: SiteAccessMode) {
+  if (mode === 'public') {
+    return {
+      shortLabel: '完全开放（public）',
+      badgeClass: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300',
+      inviteHint: '当前全站处于「完全开放」模式：新用户可自由注册，无需填写邀请码（下列邀请码仅在切换为邀请制或私有门禁后生效）。',
+    }
+  }
+  if (mode === 'private_gate') {
+    return {
+      shortLabel: '全站私有门禁（private_gate）',
+      badgeClass: 'bg-rose-100 text-rose-700 dark:bg-rose-950/60 dark:text-rose-300',
+      inviteHint: '当前全站处于「全站私有门禁」模式：未登录访客无法查看任何站内数据，必须凭现有账号登录或使用下列一次性邀请码注册后方可进入。',
+    }
+  }
+  return {
+    shortLabel: '邀请制注册（invite_only）',
+    badgeClass: 'bg-indigo-100 text-indigo-700 dark:bg-indigo-950/60 dark:text-indigo-300',
+    inviteHint: '当前全站处于「邀请制注册」模式：访客可浏览公开资讯，但所有新用户注册必须消耗下方的 1 个有效一次性邀请码。',
+  }
+}
+
 const filteredUsers = computed(() => {
   const q = userSearch.value.trim().toLowerCase()
   if (!q) return users.value
@@ -270,6 +335,7 @@ function formatAuditAction(act: unknown): string {
   const s = String(act || '')
   if (s === 'cron_sync_github' || s === 'cron_cloud_sync') return '云端数据自动同步 (cron_cloud_sync)'
   if (s === 'admin_manual_sync') return '管理员手动同步 (admin_manual_sync)'
+  if (s === 'admin_change_access_mode') return '修改全站访问门禁模式 (admin_change_access_mode)'
   return s
 }
 
@@ -368,6 +434,9 @@ async function loadAllAdminData() {
     monitorPublic.value = Boolean(ss.monitor_public)
     siteSettingsForm.value = {
       monitor_public: Boolean(ss.monitor_public),
+      access_mode: ss.access_mode === 'public' || ss.access_mode === 'invite_only' || ss.access_mode === 'private_gate' ? ss.access_mode : 'invite_only',
+      invite_required: ss.invite_required !== undefined ? Boolean(ss.invite_required) : ss.access_mode !== 'public',
+      login_required: ss.login_required !== undefined ? Boolean(ss.login_required) : ss.access_mode === 'private_gate',
       feedback_enabled: ss.feedback_enabled !== false,
       feedback_notice: ss.feedback_notice || '',
       feedback_contact_wechat: ss.feedback_contact_wechat || '',
@@ -379,6 +448,7 @@ async function loadAllAdminData() {
       site_banner_text: ss.site_banner_text || '',
       site_banner_tone: ss.site_banner_tone || 'info',
     }
+    accessModeDraft.value = currentAccessMode.value
     feedbackItems.value = fb.items || []
     const drafts: Record<number, { status: string; admin_reply: string }> = {}
     for (const item of feedbackItems.value) {
@@ -576,11 +646,40 @@ async function saveSiteSettingsPartial(patch: Partial<PublicSiteSettings>, succe
       ...siteSettingsForm.value,
       ...res,
     }
+    accessModeDraft.value = currentAccessMode.value
     showToast(successMsg)
   } catch (err) {
     showToast(err instanceof Error ? err.message : '设置保存失败')
   } finally {
     busyAction.value = false
+  }
+}
+
+function handleRequestSaveAccessMode() {
+  if (!isSuperAdmin.value) {
+    showToast('仅一级最高管理员可修改全站访问门禁模式')
+    return
+  }
+  if (accessModeDraft.value === 'private_gate' && currentAccessMode.value !== 'private_gate') {
+    privateGateConfirmOpen.value = true
+    return
+  }
+  void executeSaveAccessMode()
+}
+
+async function executeSaveAccessMode() {
+  privateGateConfirmOpen.value = false
+  const targetMode = accessModeDraft.value
+  await saveSiteSettingsPartial(
+    { access_mode: targetMode },
+    `全站访问门禁模式已切换为「${accessModeMeta(targetMode).shortLabel}」，保存后全站实时生效，无需重新部署。`,
+  )
+  if (session.value) {
+    apiAdminAuditLogs(session.value.token, 100)
+      .then((res) => {
+        auditLogs.value = res.logs
+      })
+      .catch(() => {})
   }
 }
 
@@ -1068,6 +1167,100 @@ onMounted(() => {
             </div>
           </div>
 
+          <!-- Global Site Access Mode Control -->
+          <div class="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 space-y-4 text-xs sm:text-sm">
+            <div class="flex flex-wrap items-start justify-between gap-3">
+              <div class="space-y-1">
+                <div class="flex flex-wrap items-center gap-2">
+                  <Shield class="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
+                  <h2 class="font-bold text-slate-900 dark:text-white">全站访问门禁模式</h2>
+                  <span
+                    class="px-2 py-0.5 rounded-full text-[11px] font-semibold"
+                    :class="accessModeMeta(currentAccessMode).badgeClass"
+                  >
+                    当前生效：{{ accessModeMeta(currentAccessMode).shortLabel }}
+                  </span>
+                </div>
+                <p class="text-xs text-slate-500">
+                  保存后全站实时生效，无需重新部署，且后续自动部署不会覆盖后台选定的模式。
+                </p>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+              <label
+                v-for="opt in ACCESS_MODE_OPTIONS"
+                :key="opt.value"
+                class="relative rounded-xl border p-3.5 transition-all flex flex-col justify-between gap-2"
+                :class="[
+                  accessModeDraft === opt.value
+                    ? opt.value === 'private_gate'
+                      ? 'border-rose-500 bg-rose-50/50 dark:bg-rose-950/20 ring-1 ring-rose-500'
+                      : opt.value === 'public'
+                        ? 'border-emerald-500 bg-emerald-50/50 dark:bg-emerald-950/20 ring-1 ring-emerald-500'
+                        : 'border-indigo-500 bg-indigo-50/50 dark:bg-indigo-950/20 ring-1 ring-indigo-500'
+                    : 'border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700',
+                  !isSuperAdmin ? 'opacity-70 cursor-not-allowed' : 'cursor-pointer',
+                ]"
+              >
+                <div class="flex items-start justify-between gap-2">
+                  <div class="flex items-center gap-2">
+                    <input
+                      v-model="accessModeDraft"
+                      type="radio"
+                      name="site_access_mode"
+                      :value="opt.value"
+                      :disabled="!isSuperAdmin || busyAction"
+                      class="mt-0.5 text-indigo-600 focus:ring-indigo-500"
+                    />
+                    <Globe v-if="opt.value === 'public'" class="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
+                    <Ticket v-else-if="opt.value === 'invite_only'" class="w-4 h-4 text-indigo-600 dark:text-indigo-400 shrink-0" />
+                    <Lock v-else class="w-4 h-4 text-rose-600 dark:text-rose-400 shrink-0" />
+                    <span class="font-bold text-slate-900 dark:text-white text-xs sm:text-sm">{{ opt.title }}</span>
+                  </div>
+                  <span
+                    class="px-1.5 py-0.5 rounded text-[10px] font-semibold shrink-0"
+                    :class="accessModeMeta(opt.value).badgeClass"
+                  >
+                    {{ opt.badge }}
+                  </span>
+                </div>
+                <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed pl-6">
+                  {{ opt.summary }}
+                </p>
+                <div
+                  v-if="currentAccessMode === opt.value"
+                  class="pl-6 inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-700 dark:text-emerald-300"
+                >
+                  <CheckCircle2 class="w-3.5 h-3.5" />
+                  <span>正在运行</span>
+                </div>
+              </label>
+            </div>
+
+            <div class="flex flex-wrap items-center justify-between gap-3 pt-1 text-xs">
+              <div v-if="!isSuperAdmin" class="inline-flex items-center gap-1.5 text-amber-700 dark:text-amber-300 font-medium">
+                <AlertTriangle class="w-3.5 h-3.5 shrink-0" />
+                <span>仅一级最高管理员可切换全站访问门禁模式（当前为只读预览）</span>
+              </div>
+              <div v-else class="text-slate-500">
+                <span v-if="accessModeDraft !== currentAccessMode" class="text-amber-700 dark:text-amber-300 font-semibold">
+                  待保存变更：{{ accessModeMeta(currentAccessMode).shortLabel }} → {{ accessModeMeta(accessModeDraft).shortLabel }}
+                </span>
+                <span v-else>保存后全站实时生效，无需重新部署。</span>
+              </div>
+              <button
+                type="button"
+                :disabled="busyAction || !isSuperAdmin || accessModeDraft === currentAccessMode"
+                @click="handleRequestSaveAccessMode"
+                class="px-4 py-2 rounded-xl font-semibold text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                :class="accessModeDraft === 'private_gate' ? 'bg-rose-600 hover:bg-rose-700' : 'bg-indigo-600 hover:bg-indigo-700'"
+              >
+                {{ busyAction ? '保存中...' : '保存门禁模式' }}
+              </button>
+            </div>
+          </div>
+
           <!-- Admin Visibility Switch for Monitor Page -->
           <div class="rounded-2xl border border-indigo-200/80 dark:border-indigo-900/70 bg-white dark:bg-slate-900 p-5 flex flex-wrap items-center justify-between gap-3 text-xs sm:text-sm">
             <div class="space-y-1">
@@ -1525,6 +1718,35 @@ onMounted(() => {
 
         <!-- Tab 4: Users, Invite Codes & Tiered Admin Management -->
         <section v-if="activeTab === 'users'" class="space-y-4">
+          <!-- Current Site Access Mode Status Banner -->
+          <div class="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4 flex flex-wrap items-center justify-between gap-3 text-xs">
+            <div class="flex items-start gap-2.5">
+              <Shield class="w-4 h-4 text-indigo-600 dark:text-indigo-400 mt-0.5 shrink-0" />
+              <div class="space-y-1">
+                <div class="flex flex-wrap items-center gap-2">
+                  <span class="font-bold text-slate-900 dark:text-white">全站访问门禁状态</span>
+                  <span
+                    class="px-2 py-0.5 rounded-full text-[11px] font-semibold"
+                    :class="accessModeMeta(currentAccessMode).badgeClass"
+                  >
+                    {{ accessModeMeta(currentAccessMode).shortLabel }}
+                  </span>
+                </div>
+                <p class="text-slate-500 dark:text-slate-400">
+                  {{ accessModeMeta(currentAccessMode).inviteHint }}
+                </p>
+              </div>
+            </div>
+            <button
+              type="button"
+              @click="activeTab = 'overview'"
+              class="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 font-semibold hover:bg-slate-50 dark:hover:bg-slate-800 shrink-0"
+            >
+              <span>前往运营总览切换门禁模式</span>
+              <ArrowRight class="w-3.5 h-3.5" />
+            </button>
+          </div>
+
           <!-- One-Time Invite Code Generator Card -->
           <div class="rounded-2xl border border-indigo-200/80 dark:border-indigo-900/70 bg-white dark:bg-slate-900 p-4 sm:p-5 space-y-3 text-xs">
             <div class="flex flex-wrap items-center justify-between gap-2">
@@ -2033,6 +2255,45 @@ onMounted(() => {
             @confirm="confirmResetDiscard"
             @cancel="cancelResetDiscard"
           />
+        </div>
+      </div>
+
+      <!-- Private Gate Secondary Confirmation Modal -->
+      <div
+        v-if="privateGateConfirmOpen && isSuperAdmin"
+        class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-xs"
+        @click.self="privateGateConfirmOpen = false"
+      >
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="admin-private-gate-confirm-title"
+          class="w-full max-w-md rounded-2xl bg-white dark:bg-slate-900 border border-rose-200 dark:border-rose-900 p-5 space-y-3 shadow-2xl text-sm"
+        >
+          <div class="flex items-center gap-2 text-rose-600 dark:text-rose-400 font-bold">
+            <AlertTriangle class="w-5 h-5 shrink-0" />
+            <h3 id="admin-private-gate-confirm-title">确认切换为「全站私有门禁」模式？</h3>
+          </div>
+          <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+            保存后将<strong>立即全站生效（无需重新部署）</strong>：所有未登录访客将无法查看资讯主页、情报监控与 API 接口数据，必须使用已有账号登录或凭一次性邀请码注册后方可访问。
+          </p>
+          <div class="flex justify-end gap-2 pt-1 text-xs">
+            <button
+              type="button"
+              @click="privateGateConfirmOpen = false; accessModeDraft = currentAccessMode"
+              class="px-3.5 py-2 rounded-lg border border-slate-200 dark:border-slate-700 font-medium"
+            >
+              取消
+            </button>
+            <button
+              type="button"
+              :disabled="busyAction"
+              @click="executeSaveAccessMode"
+              class="px-4 py-2 rounded-lg bg-rose-600 text-white font-semibold hover:bg-rose-700 disabled:opacity-60"
+            >
+              {{ busyAction ? '切换中...' : '确认切换为全站私有门禁' }}
+            </button>
+          </div>
         </div>
       </div>
     </div>

@@ -1,5 +1,5 @@
 import { Hono } from 'hono'
-import { requireUser, resolveAccessMode } from '../authMiddleware'
+import { requireUser } from '../authMiddleware'
 import { signJwt, verifyPassword } from '../crypto'
 import {
   authenticateUser,
@@ -131,7 +131,7 @@ authRoutes.post('/send-code', async (c) => {
 authRoutes.post('/register', async (c) => {
   const ip = c.get('clientIp')
   const deviceId = c.get('deviceId')
-  const accessMode = resolveAccessMode(c.env.SITE_ACCESS_MODE)
+  const accessMode = c.get('accessMode')
 
   const body = (await c.req.json().catch(() => ({}))) as {
     username?: string

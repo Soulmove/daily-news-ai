@@ -8,6 +8,7 @@ import {
   verifyPassword,
 } from './crypto'
 import type {
+  AccessMode,
   CloudSyncCounts,
   Env,
   InviteCodeRow,
@@ -665,7 +666,30 @@ export async function getAdminStats(db: D1Database): Promise<Record<string, numb
   }
 }
 
-export async function getSiteSettings(db: D1Database): Promise<Record<string, unknown>> {
+export function isValidAccessMode(raw: unknown): raw is AccessMode {
+  return typeof raw === 'string' && (raw === 'public' || raw === 'invite_only' || raw === 'private_gate')
+}
+
+export function resolveAccessMode(raw?: string): AccessMode {
+  const clean = (raw || '').trim().toLowerCase()
+  if (clean === 'private_gate' || clean === 'invite_only' || clean === 'public') {
+    return clean
+  }
+  return 'invite_only'
+}
+
+export async function getEffectiveAccessMode(db: D1Database, envFallback?: string): Promise<AccessMode> {
+  const row = await db
+    .prepare("SELECT value FROM site_settings WHERE key = 'access_mode' LIMIT 1")
+    .first<{ value: string }>()
+  const clean = (row?.value || '').trim().toLowerCase()
+  if (clean === 'public' || clean === 'invite_only' || clean === 'private_gate') {
+    return clean
+  }
+  return resolveAccessMode(envFallback)
+}
+
+export async function getSiteSettings(db: D1Database, envFallback?: string): Promise<Record<string, unknown>> {
   const defaults: Record<string, unknown> = {
     monitor_public: false,
     feedback_enabled: true,
@@ -681,7 +705,12 @@ export async function getSiteSettings(db: D1Database): Promise<Record<string, un
   }
   const boolKeys = new Set(['monitor_public', 'feedback_enabled', 'site_banner_enabled'])
   const rows = await db.prepare('SELECT key, value FROM site_settings').all<{ key: string; value: string }>()
+  let dbAccessModeRaw = ''
   for (const r of rows.results || []) {
+    if (r.key === 'access_mode') {
+      dbAccessModeRaw = String(r.value || '')
+      continue
+    }
     if (!(r.key in defaults)) continue
     if (boolKeys.has(r.key)) {
       defaults[r.key] = ['true', '1', 'yes'].includes(String(r.value).toLowerCase())
@@ -692,21 +721,39 @@ export async function getSiteSettings(db: D1Database): Promise<Record<string, un
       defaults[r.key] = String(r.value)
     }
   }
-  return defaults
+  const normalizedDbMode = dbAccessModeRaw.trim().toLowerCase()
+  const accessMode: AccessMode = isValidAccessMode(normalizedDbMode)
+    ? normalizedDbMode
+    : resolveAccessMode(envFallback)
+  return {
+    ...defaults,
+    access_mode: accessMode,
+    invite_required: accessMode !== 'public',
+    login_required: accessMode === 'private_gate',
+  }
 }
 
 export async function saveSiteSettings(
   db: D1Database,
   patch: Record<string, unknown>,
+  envFallback?: string,
 ): Promise<Record<string, unknown>> {
   const ts = nowShanghaiIso()
-  const current = await getSiteSettings(db)
+  const current = await getSiteSettings(db, envFallback)
   const stmts: D1PreparedStatement[] = []
 
   for (const [k, v] of Object.entries(patch)) {
+    if (k === 'invite_required' || k === 'login_required') continue
     if (!(k in current) || v === undefined || v === null) continue
     let serialized = ''
-    if (typeof v === 'boolean') {
+    if (k === 'access_mode') {
+      const candidate = typeof v === 'string' ? v.trim() : ''
+      if (!isValidAccessMode(candidate)) continue
+      serialized = candidate
+      current.access_mode = candidate
+      current.invite_required = candidate !== 'public'
+      current.login_required = candidate === 'private_gate'
+    } else if (typeof v === 'boolean') {
       serialized = v ? 'true' : 'false'
       current[k] = v
     } else if (k === 'feedback_daily_limit') {

@@ -1,15 +1,9 @@
 import type { Context, Next } from 'hono'
 import { verifyJwt } from './crypto'
-import { getUserById } from './db'
+import { getEffectiveAccessMode, getUserById, resolveAccessMode } from './db'
 import type { AccessMode, Env, HonoVariables, UserRow } from './types'
 
-export function resolveAccessMode(raw?: string): AccessMode {
-  const clean = (raw || '').trim().toLowerCase()
-  if (clean === 'private_gate' || clean === 'invite_only' || clean === 'public') {
-    return clean
-  }
-  return 'invite_only'
-}
+export { resolveAccessMode }
 
 export function getClientIp(c: Context<{ Bindings: Env; Variables: HonoVariables }>): string {
   const cfIp = c.req.header('cf-connecting-ip')
@@ -56,7 +50,7 @@ export async function attachContextMiddleware(
 ): Promise<Response | void> {
   const ip = getClientIp(c)
   const deviceId = await resolveDeviceFingerprint(c)
-  const accessMode = resolveAccessMode(c.env.SITE_ACCESS_MODE)
+  const accessMode = await getEffectiveAccessMode(c.env.DB, c.env.SITE_ACCESS_MODE)
   const user = await resolveOptionalUser(c)
   c.set('clientIp', ip)
   c.set('deviceId', deviceId)

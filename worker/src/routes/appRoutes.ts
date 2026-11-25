@@ -1,5 +1,5 @@
 import { Hono } from 'hono'
-import { requireUser, resolveAccessMode } from '../authMiddleware'
+import { requireUser } from '../authMiddleware'
 import { nowShanghaiIso } from '../crypto'
 import { getSiteSettings, getUserState, logAudit, sanitizeAvatarValue, saveUserState } from '../db'
 import {
@@ -27,7 +27,7 @@ publicAndCoreRoutes.get('/health', (c) => {
 })
 
 publicAndCoreRoutes.get('/public/access-config', (c) => {
-  const accessMode = resolveAccessMode(c.env.SITE_ACCESS_MODE)
+  const accessMode = c.get('accessMode')
   return c.json(
     {
       access_mode: accessMode,
@@ -42,17 +42,8 @@ publicAndCoreRoutes.get('/public/access-config', (c) => {
 })
 
 publicAndCoreRoutes.get('/public/settings', async (c) => {
-  const settings = await getSiteSettings(c.env.DB)
-  const accessMode = resolveAccessMode(c.env.SITE_ACCESS_MODE)
-  return c.json(
-    {
-      ...settings,
-      access_mode: accessMode,
-      invite_required: accessMode !== 'public',
-    },
-    200,
-    { 'Cache-Control': 'no-store' },
-  )
+  const settings = await getSiteSettings(c.env.DB, c.env.SITE_ACCESS_MODE)
+  return c.json(settings, 200, { 'Cache-Control': 'no-store' })
 })
 
 publicAndCoreRoutes.get('/public/overrides', async (c) => {
@@ -317,7 +308,7 @@ publicAndCoreRoutes.put('/predictions/:predictionId/vote', requireUser, async (c
 // ---------------- Feedback ----------------
 
 publicAndCoreRoutes.post('/feedback', async (c) => {
-  const settings = await getSiteSettings(c.env.DB)
+  const settings = await getSiteSettings(c.env.DB, c.env.SITE_ACCESS_MODE)
   if (!settings.feedback_enabled) {
     return c.json({ detail: '意见反馈通道当前维护中，请通过页面公布的联系方式直接联系团队' }, 403)
   }

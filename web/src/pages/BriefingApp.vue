@@ -389,6 +389,7 @@ const siteSettings = ref<PublicSiteSettings>({
   site_banner_text: '',
   site_banner_tone: 'info',
 })
+const siteSettingsLoaded = ref(false)
 const siteBannerDismissed = ref(false)
 const editorialOverrides = ref<EditorialOverridesDoc | null>(null)
 
@@ -420,6 +421,8 @@ async function refreshSiteSettingsAndOverrides() {
     if (overridesRes) editorialOverrides.value = overridesRes
   } catch {
     // Keep defaults silently
+  } finally {
+    siteSettingsLoaded.value = true
   }
 }
 
@@ -3397,6 +3400,16 @@ function executeLogoutNow() {
   lastSyncedAt.value = null
   authModalOpen.value = false
   userAvatar.value = saveUserAvatar('')
+  if (siteAccessMode.value === 'private_gate') {
+    wireStreamHandle?.stop()
+    wireStreamHandle = null
+    stopGlobalQuotesPolling()
+    if (pollTimer) {
+      clearInterval(pollTimer)
+      pollTimer = null
+    }
+    workbenchStarted = false
+  }
   notifyToast(t('已安全退出账号', 'Signed out cleanly'))
 }
 
@@ -3526,6 +3539,12 @@ function startLiveWorkbench() {
   }, 120_000)
 }
 
+watch([siteSettingsLoaded, isPrivateGateLocked], ([loaded, locked]) => {
+  if (loaded && !locked && !workbenchStarted) {
+    startLiveWorkbench()
+  }
+})
+
 onMounted(async () => {
   syncHtmlLangAttr()
   applyDarkClass(isDark.value)
@@ -3595,7 +3614,20 @@ onBeforeUnmount(() => {
 
 <template>
   <div
-    v-if="isPrivateGateLocked"
+    v-if="!authSession && !siteSettingsLoaded"
+    class="min-h-screen flex flex-col items-center justify-center p-4 bg-slate-100 dark:bg-slate-950"
+    data-testid="site-gate-loading"
+  >
+    <div class="flex flex-col items-center gap-3 text-center">
+      <div class="w-8 h-8 rounded-full border-2 border-slate-300 dark:border-slate-700 border-t-blue-600 dark:border-t-blue-400 animate-spin" />
+      <div class="text-xs font-medium text-slate-500 dark:text-slate-400">
+        {{ t('正在校验站点访问状态...', 'Checking workspace access...') }}
+      </div>
+    </div>
+  </div>
+
+  <div
+    v-else-if="isPrivateGateLocked"
     class="min-h-screen flex flex-col items-center justify-center p-4 bg-slate-100 dark:bg-slate-950"
     data-testid="private-gate-screen"
   >
