@@ -1,7 +1,7 @@
 {
   "schema_version": "4.2",
   "date_utc": "2026-11-25",
-  "updated_at": "2026-11-25T02:33:42Z",
+  "updated_at": "2026-11-25T13:09:32Z",
   "resolved_models": {
     "gemini-4-hydrogen": "gemini-4-hydrogen",
     "gemini-3.8-flash": "gemini-3.8-flash",
@@ -12,359 +12,396 @@
     "gemini-3.5-flash-lite": "gemini-3.5-flash-lite",
     "gemini-3.1-flash-lite": "gemini-3.1-flash-lite"
   },
-  "resolved_models_at": "2026-11-25T02:29:28Z",
+  "resolved_models_at": "2026-11-25T12:55:16Z",
   "keys": {
     "KEY_TECH": {
       "slot": "KEY_TECH",
       "fingerprint": "09c80db8",
       "date_utc": "2026-11-25",
-      "daily_calls": 3,
+      "daily_calls": 9,
       "cooldown_until": null,
       "exhausted_until": null,
       "model_exhausted_until": {},
       "last_error_code": "RATE_LIMIT_429",
       "last_error": "ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and ",
-      "last_success_at": "2026-11-24T06:06:15Z",
-      "consecutive_errors": 18,
+      "last_success_at": "2026-11-25T13:09:19Z",
+      "consecutive_errors": 1,
       "model_cooldown_until": {
         "gemini-4-hydrogen": "2026-11-24T09:37:08Z",
         "gemini-2.5-flash": "2026-11-24T09:38:22Z",
         "gemini-flash-latest": "2026-11-23T21:27:41Z",
         "gemini-3.6-flash": "2026-11-25T02:30:23Z",
-        "gemini-3.5-flash-lite": "2026-11-25T02:33:40Z",
-        "gemini-3.1-flash-lite": "2026-11-25T02:33:42Z",
-        "gemini-3-flash": "2026-11-24T03:46:26Z",
+        "gemini-3.5-flash-lite": "2026-11-25T13:05:02Z",
+        "gemini-3.1-flash-lite": "2026-11-25T13:10:20Z",
+        "gemini-3-flash": "2026-11-25T12:56:52Z",
         "gemini-3.8-flash": "2026-11-24T17:55:07Z"
       },
       "model_daily_calls": {
         "gemini-3.6-flash": 1,
-        "gemini-3.5-flash-lite": 1,
-        "gemini-3.1-flash-lite": 1
+        "gemini-3.5-flash-lite": 4,
+        "gemini-3.1-flash-lite": 3,
+        "gemini-3-flash": 1
       }
     },
     "KEY_GLOBAL": {
       "slot": "KEY_GLOBAL",
       "fingerprint": "99678299",
       "date_utc": "2026-11-25",
-      "daily_calls": 3,
+      "daily_calls": 11,
       "cooldown_until": null,
       "exhausted_until": null,
       "model_exhausted_until": {},
       "last_error_code": "RATE_LIMIT_429",
       "last_error": "ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and ",
-      "last_success_at": "2026-11-24T17:53:11Z",
-      "consecutive_errors": 8,
+      "last_success_at": "2026-11-25T13:04:18Z",
+      "consecutive_errors": 3,
       "model_cooldown_until": {
         "gemini-4-hydrogen": "2026-11-24T17:48:13Z",
-        "gemini-2.5-flash": "2026-11-24T17:46:59Z",
+        "gemini-2.5-flash": "2026-11-25T13:08:01Z",
         "gemini-flash-latest": "2026-11-23T21:27:42Z",
         "gemini-3-flash": "2026-11-25T02:30:47Z",
-        "gemini-3.5-flash-lite": "2026-11-25T02:33:41Z",
-        "gemini-3.1-flash-lite": "2026-11-25T02:33:43Z",
-        "gemini-3.6-flash": "2026-11-24T17:55:08Z",
+        "gemini-3.5-flash-lite": "2026-11-25T13:10:19Z",
+        "gemini-3.1-flash-lite": "2026-11-25T13:10:21Z",
+        "gemini-3.6-flash": "2026-11-25T12:56:28Z",
         "gemini-3.8-flash": "2026-11-24T17:49:19Z"
       },
       "model_daily_calls": {
         "gemini-3-flash": 1,
-        "gemini-3.5-flash-lite": 1,
-        "gemini-3.1-flash-lite": 1
+        "gemini-3.5-flash-lite": 5,
+        "gemini-3.1-flash-lite": 3,
+        "gemini-3.6-flash": 1,
+        "gemini-2.5-flash": 1
       }
     },
     "KEY_FINANCE": {
       "slot": "KEY_FINANCE",
       "fingerprint": "08e82e75",
       "date_utc": "2026-11-25",
-      "daily_calls": 3,
+      "daily_calls": 12,
       "cooldown_until": null,
       "exhausted_until": null,
       "model_exhausted_until": {},
       "last_error_code": "RATE_LIMIT_429",
       "last_error": "ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and ",
       "last_success_at": "2026-11-24T17:49:53Z",
-      "consecutive_errors": 9,
+      "consecutive_errors": 18,
       "model_cooldown_until": {
-        "gemini-4-hydrogen": "2026-11-24T03:45:37Z",
+        "gemini-4-hydrogen": "2026-11-25T12:56:02Z",
         "gemini-flash-latest": "2026-11-23T21:26:30Z",
-        "gemini-2.5-flash": "2026-11-24T17:55:03Z",
+        "gemini-2.5-flash": "2026-11-25T12:58:58Z",
         "gemini-3.8-flash": "2026-11-25T02:29:59Z",
-        "gemini-3.5-flash-lite": "2026-11-25T02:33:41Z",
-        "gemini-3.1-flash-lite": "2026-11-25T02:33:43Z",
-        "gemini-3.6-flash": "2026-11-24T17:46:29Z",
+        "gemini-3.5-flash-lite": "2026-11-25T13:10:20Z",
+        "gemini-3.1-flash-lite": "2026-11-25T13:10:21Z",
+        "gemini-3.6-flash": "2026-11-25T13:09:34Z",
         "gemini-3-flash": "2026-11-24T17:53:48Z"
       },
       "model_daily_calls": {
         "gemini-3.8-flash": 1,
-        "gemini-3.5-flash-lite": 1,
-        "gemini-3.1-flash-lite": 1
+        "gemini-3.5-flash-lite": 5,
+        "gemini-3.1-flash-lite": 3,
+        "gemini-4-hydrogen": 1,
+        "gemini-2.5-flash": 1,
+        "gemini-3.6-flash": 1
       }
     },
     "KEY_GENERAL": {
       "slot": "KEY_GENERAL",
       "fingerprint": "f9d158c9",
       "date_utc": "2026-11-25",
-      "daily_calls": 4,
+      "daily_calls": 11,
       "cooldown_until": null,
       "exhausted_until": null,
       "model_exhausted_until": {},
-      "last_error_code": null,
-      "last_error": null,
+      "last_error_code": "RATE_LIMIT_429",
+      "last_error": "ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and ",
       "last_success_at": "2026-11-25T02:33:42Z",
-      "consecutive_errors": 0,
+      "consecutive_errors": 7,
       "model_cooldown_until": {
-        "gemini-4-hydrogen": "2026-11-23T21:32:13Z",
+        "gemini-4-hydrogen": "2026-11-25T12:59:09Z",
         "gemini-2.5-flash": "2026-11-25T02:31:11Z",
-        "gemini-3.5-flash-lite": "2026-11-25T02:33:41Z",
-        "gemini-3.1-flash-lite": "2026-11-25T02:33:43Z",
-        "gemini-3.6-flash": "2026-11-24T03:46:02Z",
+        "gemini-3.5-flash-lite": "2026-11-25T13:10:19Z",
+        "gemini-3.1-flash-lite": "2026-11-25T13:10:21Z",
+        "gemini-3.6-flash": "2026-11-25T13:07:36Z",
         "gemini-3-flash": "2026-11-24T17:55:32Z",
         "gemini-3.8-flash": "2026-11-24T17:49:43Z"
       },
       "model_daily_calls": {
         "gemini-2.5-flash": 1,
-        "gemini-3.5-flash-lite": 2,
-        "gemini-3.1-flash-lite": 1
+        "gemini-3.5-flash-lite": 4,
+        "gemini-3.1-flash-lite": 4,
+        "gemini-4-hydrogen": 1,
+        "gemini-3.6-flash": 1
       }
     },
     "KEY_1": {
       "slot": "KEY_1",
       "fingerprint": "f48c8cc9",
       "date_utc": "2026-11-25",
-      "daily_calls": 3,
+      "daily_calls": 12,
       "cooldown_until": null,
       "exhausted_until": null,
       "model_exhausted_until": {},
       "last_error_code": "RATE_LIMIT_429",
       "last_error": "ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and ",
       "last_success_at": "2026-11-24T17:48:54Z",
-      "consecutive_errors": 9,
+      "consecutive_errors": 18,
       "model_cooldown_until": {
         "gemini-4-hydrogen": "2026-11-25T02:29:56Z",
-        "gemini-2.5-flash": "2026-11-24T17:55:40Z",
-        "gemini-3.5-flash-lite": "2026-11-25T02:33:40Z",
-        "gemini-3.8-flash": "2026-11-24T03:45:38Z",
-        "gemini-3.1-flash-lite": "2026-11-25T02:33:42Z",
-        "gemini-3.6-flash": "2026-11-24T17:45:05Z",
+        "gemini-2.5-flash": "2026-11-25T13:06:22Z",
+        "gemini-3.5-flash-lite": "2026-11-25T13:10:19Z",
+        "gemini-3.8-flash": "2026-11-25T12:56:27Z",
+        "gemini-3.1-flash-lite": "2026-11-25T13:10:21Z",
+        "gemini-3.6-flash": "2026-11-25T13:09:18Z",
         "gemini-3-flash": "2026-11-24T17:56:30Z"
       },
       "model_daily_calls": {
         "gemini-4-hydrogen": 1,
-        "gemini-3.5-flash-lite": 1,
-        "gemini-3.1-flash-lite": 1
+        "gemini-3.5-flash-lite": 4,
+        "gemini-3.1-flash-lite": 4,
+        "gemini-3.8-flash": 1,
+        "gemini-2.5-flash": 1,
+        "gemini-3.6-flash": 1
       }
     },
     "KEY_2": {
       "slot": "KEY_2",
       "fingerprint": "d6427670",
       "date_utc": "2026-11-25",
-      "daily_calls": 3,
+      "daily_calls": 11,
       "cooldown_until": null,
       "exhausted_until": null,
       "model_exhausted_until": {},
       "last_error_code": "RATE_LIMIT_429",
       "last_error": "ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and ",
-      "last_success_at": "2026-11-25T02:29:29Z",
-      "consecutive_errors": 2,
+      "last_success_at": "2026-11-25T13:04:00Z",
+      "consecutive_errors": 4,
       "model_cooldown_until": {
         "gemini-4-hydrogen": "2026-11-23T21:32:13Z",
-        "gemini-2.5-flash": "2026-11-24T03:46:49Z",
+        "gemini-2.5-flash": "2026-11-25T12:57:16Z",
         "gemini-flash-latest": "2026-11-23T21:26:31Z",
-        "gemini-3.5-flash-lite": "2026-11-25T02:33:41Z",
-        "gemini-3.1-flash-lite": "2026-11-25T02:33:43Z",
-        "gemini-3-flash": "2026-11-24T06:03:50Z",
+        "gemini-3.5-flash-lite": "2026-11-25T13:10:19Z",
+        "gemini-3.1-flash-lite": "2026-11-25T13:10:20Z",
+        "gemini-3-flash": "2026-11-25T13:07:37Z",
         "gemini-3.6-flash": "2026-11-24T17:53:06Z",
-        "gemini-3.8-flash": "2026-11-24T17:56:02Z"
+        "gemini-3.8-flash": "2026-11-25T12:59:09Z"
       },
       "model_daily_calls": {
-        "gemini-3.5-flash-lite": 2,
-        "gemini-3.1-flash-lite": 1
+        "gemini-3.5-flash-lite": 4,
+        "gemini-3.1-flash-lite": 3,
+        "gemini-2.5-flash": 1,
+        "gemini-3.8-flash": 1,
+        "gemini-3.6-flash": 1,
+        "gemini-3-flash": 1
       }
     },
     "KEY_3": {
       "slot": "KEY_3",
       "fingerprint": "0ca484b5",
       "date_utc": "2026-11-25",
-      "daily_calls": 3,
+      "daily_calls": 12,
       "cooldown_until": null,
       "exhausted_until": null,
       "model_exhausted_until": {},
       "last_error_code": "RATE_LIMIT_429",
       "last_error": "ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and ",
-      "last_success_at": "2026-11-24T09:38:14Z",
-      "consecutive_errors": 13,
+      "last_success_at": "2026-11-25T13:09:18Z",
+      "consecutive_errors": 2,
       "model_cooldown_until": {
         "gemini-4-hydrogen": "2026-11-24T17:47:20Z",
         "gemini-2.5-flash": "2026-11-24T06:04:14Z",
         "gemini-flash-latest": "2026-11-23T21:27:40Z",
-        "gemini-3.5-flash-lite": "2026-11-25T02:33:42Z",
-        "gemini-3.1-flash-lite": "2026-11-25T02:33:43Z",
-        "gemini-3.8-flash": "2026-11-24T17:55:44Z",
-        "gemini-3.6-flash": "2026-11-24T09:37:35Z",
+        "gemini-3.5-flash-lite": "2026-11-25T13:10:20Z",
+        "gemini-3.1-flash-lite": "2026-11-25T13:10:21Z",
+        "gemini-3.8-flash": "2026-11-25T13:02:52Z",
+        "gemini-3.6-flash": "2026-11-25T12:59:33Z",
         "gemini-3-flash": "2026-11-24T17:50:55Z"
       },
       "model_daily_calls": {
-        "gemini-3.5-flash-lite": 2,
-        "gemini-3.1-flash-lite": 1
+        "gemini-3.5-flash-lite": 5,
+        "gemini-3.1-flash-lite": 4,
+        "gemini-3.6-flash": 1,
+        "gemini-3.8-flash": 1,
+        "gemini-3-flash": 1
       }
     },
     "KEY_4": {
       "slot": "KEY_4",
       "fingerprint": "27eb07c4",
       "date_utc": "2026-11-25",
-      "daily_calls": 3,
+      "daily_calls": 11,
       "cooldown_until": null,
       "exhausted_until": null,
       "model_exhausted_until": {},
       "last_error_code": "RATE_LIMIT_429",
       "last_error": "ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and ",
-      "last_success_at": "2026-11-25T02:31:30Z",
-      "consecutive_errors": 2,
+      "last_success_at": "2026-11-25T12:55:18Z",
+      "consecutive_errors": 7,
       "model_cooldown_until": {
         "gemini-4-hydrogen": "2026-11-24T07:39:12Z",
         "gemini-2.5-flash": "2026-11-24T17:53:50Z",
         "gemini-flash-latest": "2026-11-23T08:01:41Z",
-        "gemini-3.5-flash-lite": "2026-11-25T02:33:41Z",
-        "gemini-3.1-flash-lite": "2026-11-25T02:34:15Z",
-        "gemini-3-flash": "2026-11-24T07:40:00Z",
-        "gemini-3.8-flash": "2026-11-24T17:45:04Z",
-        "gemini-3.6-flash": "2026-11-24T17:56:26Z"
+        "gemini-3.5-flash-lite": "2026-11-25T13:10:20Z",
+        "gemini-3.1-flash-lite": "2026-11-25T13:05:04Z",
+        "gemini-3-flash": "2026-11-25T12:59:57Z",
+        "gemini-3.8-flash": "2026-11-25T13:07:27Z",
+        "gemini-3.6-flash": "2026-11-25T13:09:34Z"
       },
       "model_daily_calls": {
-        "gemini-3.1-flash-lite": 2,
-        "gemini-3.5-flash-lite": 1
+        "gemini-3.1-flash-lite": 3,
+        "gemini-3.5-flash-lite": 5,
+        "gemini-3-flash": 1,
+        "gemini-3.8-flash": 1,
+        "gemini-3.6-flash": 1
       }
     },
     "KEY_5": {
       "slot": "KEY_5",
       "fingerprint": "5b1c687f",
       "date_utc": "2026-11-25",
-      "daily_calls": 3,
+      "daily_calls": 11,
       "cooldown_until": null,
       "exhausted_until": null,
       "model_exhausted_until": {},
       "last_error_code": "RATE_LIMIT_429",
       "last_error": "ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and ",
       "last_success_at": "2026-11-25T02:32:37Z",
-      "consecutive_errors": 2,
+      "consecutive_errors": 10,
       "model_cooldown_until": {
-        "gemini-4-hydrogen": "2026-11-24T17:45:54Z",
+        "gemini-4-hydrogen": "2026-11-25T12:57:46Z",
         "gemini-2.5-flash": "2026-11-23T04:13:53Z",
         "gemini-flash-latest": "2026-11-23T07:59:35Z",
-        "gemini-3.5-flash-lite": "2026-11-25T02:33:41Z",
-        "gemini-3.1-flash-lite": "2026-11-25T02:33:43Z",
-        "gemini-3.8-flash": "2026-11-24T17:46:17Z",
+        "gemini-3.5-flash-lite": "2026-11-25T13:10:20Z",
+        "gemini-3.1-flash-lite": "2026-11-25T13:10:21Z",
+        "gemini-3.8-flash": "2026-11-25T13:04:06Z",
         "gemini-3-flash": "2026-11-24T17:55:48Z",
-        "gemini-3.6-flash": "2026-11-24T17:50:52Z"
+        "gemini-3.6-flash": "2026-11-25T12:58:10Z"
       },
       "model_daily_calls": {
-        "gemini-3.5-flash-lite": 2,
-        "gemini-3.1-flash-lite": 1
+        "gemini-3.5-flash-lite": 5,
+        "gemini-3.1-flash-lite": 3,
+        "gemini-4-hydrogen": 1,
+        "gemini-3.6-flash": 1,
+        "gemini-3.8-flash": 1
       }
     },
     "KEY_6": {
       "slot": "KEY_6",
       "fingerprint": "3ccfa6cf",
       "date_utc": "2026-11-25",
-      "daily_calls": 4,
+      "daily_calls": 11,
       "cooldown_until": null,
       "exhausted_until": null,
       "model_exhausted_until": {},
-      "last_error_code": null,
-      "last_error": null,
-      "last_success_at": "2026-11-25T02:33:32Z",
-      "consecutive_errors": 0,
+      "last_error_code": "RATE_LIMIT_429",
+      "last_error": "ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and ",
+      "last_success_at": "2026-11-25T13:01:44Z",
+      "consecutive_errors": 5,
       "model_cooldown_until": {
         "gemini-4-hydrogen": "2026-11-23T21:32:13Z",
         "gemini-2.5-flash": "2026-11-24T07:40:21Z",
         "gemini-flash-latest": "2026-11-23T09:12:49Z",
-        "gemini-3.5-flash-lite": "2026-11-25T02:33:42Z",
-        "gemini-3.1-flash-lite": "2026-11-25T02:34:15Z",
-        "gemini-3.8-flash": "2026-11-24T17:54:22Z",
+        "gemini-3.5-flash-lite": "2026-11-25T13:10:19Z",
+        "gemini-3.1-flash-lite": "2026-11-25T13:10:21Z",
+        "gemini-3.8-flash": "2026-11-25T13:05:10Z",
         "gemini-3-flash": "2026-11-24T17:47:23Z",
-        "gemini-3.6-flash": "2026-11-24T17:54:46Z"
+        "gemini-3.6-flash": "2026-11-25T13:05:34Z"
       },
       "model_daily_calls": {
-        "gemini-3.5-flash-lite": 2,
-        "gemini-3.1-flash-lite": 1,
-        "gemini-2.5-flash": 1
+        "gemini-3.5-flash-lite": 4,
+        "gemini-3.1-flash-lite": 3,
+        "gemini-2.5-flash": 1,
+        "gemini-3-flash": 1,
+        "gemini-3.8-flash": 1,
+        "gemini-3.6-flash": 1
       }
     },
     "KEY_7": {
       "slot": "KEY_7",
       "fingerprint": "1b965772",
       "date_utc": "2026-11-25",
-      "daily_calls": 4,
+      "daily_calls": 12,
       "cooldown_until": null,
       "exhausted_until": null,
       "model_exhausted_until": {},
       "last_error_code": null,
       "last_error": null,
-      "last_success_at": "2026-11-25T02:33:14Z",
+      "last_success_at": "2026-11-25T13:09:31Z",
       "consecutive_errors": 0,
       "model_cooldown_until": {
         "gemini-4-hydrogen": "2026-11-23T21:32:14Z",
-        "gemini-2.5-flash": "2026-11-24T17:55:48Z",
+        "gemini-2.5-flash": "2026-11-25T13:00:21Z",
         "gemini-flash-latest": "2026-11-23T21:27:39Z",
-        "gemini-3.5-flash-lite": "2026-11-24T17:56:21Z",
-        "gemini-3.1-flash-lite": "2026-11-25T02:33:42Z",
+        "gemini-3.5-flash-lite": "2026-11-25T13:10:20Z",
+        "gemini-3.1-flash-lite": "2026-11-25T13:07:02Z",
         "gemini-3.6-flash": "2026-11-24T17:53:48Z",
         "gemini-3-flash": "2026-11-24T09:37:59Z",
-        "gemini-3.8-flash": "2026-11-24T17:52:42Z"
+        "gemini-3.8-flash": "2026-11-25T13:08:54Z"
       },
       "model_daily_calls": {
-        "gemini-3.5-flash-lite": 3,
-        "gemini-3.1-flash-lite": 1
+        "gemini-3.5-flash-lite": 5,
+        "gemini-3.1-flash-lite": 4,
+        "gemini-2.5-flash": 1,
+        "gemini-3.6-flash": 1,
+        "gemini-3.8-flash": 1
       }
     },
     "KEY_8": {
       "slot": "KEY_8",
       "fingerprint": "700d209b",
       "date_utc": "2026-11-25",
-      "daily_calls": 3,
+      "daily_calls": 11,
       "cooldown_until": null,
       "exhausted_until": null,
       "model_exhausted_until": {},
       "last_error_code": "RATE_LIMIT_429",
       "last_error": "ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and ",
       "last_success_at": "2026-11-25T02:31:33Z",
-      "consecutive_errors": 2,
+      "consecutive_errors": 10,
       "model_cooldown_until": {
         "gemini-4-hydrogen": "2026-11-24T06:03:01Z",
         "gemini-2.5-flash": "2026-11-24T17:47:47Z",
         "gemini-flash-latest": "2026-11-23T09:15:18Z",
-        "gemini-3.5-flash-lite": "2026-11-25T02:33:42Z",
-        "gemini-3.1-flash-lite": "2026-11-25T02:34:15Z",
-        "gemini-3.8-flash": "2026-11-24T06:03:03Z",
-        "gemini-3.6-flash": "2026-11-24T17:50:08Z",
-        "gemini-3-flash": "2026-11-24T17:54:57Z"
+        "gemini-3.5-flash-lite": "2026-11-25T13:10:20Z",
+        "gemini-3.1-flash-lite": "2026-11-25T13:08:29Z",
+        "gemini-3.8-flash": "2026-11-25T12:57:46Z",
+        "gemini-3.6-flash": "2026-11-25T13:09:34Z",
+        "gemini-3-flash": "2026-11-25T12:58:35Z"
       },
       "model_daily_calls": {
-        "gemini-3.5-flash-lite": 2,
-        "gemini-3.1-flash-lite": 1
+        "gemini-3.5-flash-lite": 5,
+        "gemini-3.1-flash-lite": 3,
+        "gemini-3.8-flash": 1,
+        "gemini-3-flash": 1,
+        "gemini-3.6-flash": 1
       }
     },
     "GOOGLE_API_KEY": {
       "slot": "GOOGLE_API_KEY",
       "fingerprint": "09c80db8",
       "date_utc": "2026-11-25",
-      "daily_calls": 3,
+      "daily_calls": 10,
       "cooldown_until": null,
       "exhausted_until": null,
       "model_exhausted_until": {},
       "last_error_code": null,
       "last_error": null,
-      "last_success_at": "2026-11-25T02:33:41Z",
+      "last_success_at": "2026-11-25T13:09:32Z",
       "consecutive_errors": 0,
       "model_cooldown_until": {
         "gemini-4-hydrogen": "2026-11-23T21:32:14Z",
         "gemini-2.5-flash": "2026-11-24T17:53:30Z",
-        "gemini-3.5-flash-lite": "2026-11-24T17:55:49Z",
-        "gemini-3.8-flash": "2026-11-24T17:53:47Z",
-        "gemini-3.1-flash-lite": "2026-11-24T17:55:43Z",
-        "gemini-3-flash": "2026-11-24T17:50:08Z",
-        "gemini-3.6-flash": "2026-11-24T17:55:45Z"
+        "gemini-3.5-flash-lite": "2026-11-25T13:04:45Z",
+        "gemini-3.8-flash": "2026-11-25T13:01:35Z",
+        "gemini-3.1-flash-lite": "2026-11-25T13:05:09Z",
+        "gemini-3-flash": "2026-11-25T13:05:59Z",
+        "gemini-3.6-flash": "2026-11-25T13:02:00Z"
       },
       "model_daily_calls": {
-        "gemini-3.5-flash-lite": 3
+        "gemini-3.5-flash-lite": 5,
+        "gemini-3.1-flash-lite": 2,
+        "gemini-3.8-flash": 1,
+        "gemini-3.6-flash": 1,
+        "gemini-3-flash": 1
       }
     }
   }

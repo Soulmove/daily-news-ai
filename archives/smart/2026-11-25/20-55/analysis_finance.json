@@ -1,0 +1,1806 @@
+{
+  "schema_version": "4.2",
+  "batch_id": "smart-20261125-205513",
+  "input_batch_id": "raw-20261125-205443",
+  "input_cutoff_at": "2026-11-25T20:54:43+08:00",
+  "generated_at": "2026-11-25T20:55:13+08:00",
+  "published_at": "2026-11-25T21:02:35+08:00",
+  "category": "finance",
+  "category_label": "财经/市场",
+  "generation_mode": "ai_v3_mega_overlay",
+  "model_name": "gemini-3.1-flash-lite",
+  "quality_flags": [
+    "deterministic_fresh_base"
+  ],
+  "key_changes": [
+    {
+      "headline": "现货黄金跌破3500美元/盎司 创2025年9月以来新低",
+      "detail": "现货黄金价格跌破3500美元/盎司，为2025年9月以来首次触及该低位。",
+      "event_id": "evt_f4e18305f65c",
+      "storyline_id": "st_404c14089ce3"
+    },
+    {
+      "headline": "美股盘前，科技股延续跌势，英伟达跌超4%，Anthropic下跌3%；AMD跌近5%，闪迪跌超5%。",
+      "detail": "美股盘前交易中，英伟达跌超4%，Anthropic跌3%，AMD跌近5%，闪迪跌超5%。",
+      "event_id": "evt_b9be6bb4f093",
+      "storyline_id": "st_0bd0926ceb0e"
+    },
+    {
+      "headline": "燃油价格飙升 英国廉航易捷利润暴跌96%",
+      "detail": "【燃油价格飙升 英国廉航易捷利润暴跌96%】英国廉价航空运营商易捷航空公司25日说，由于中东战事导致航空燃油价格飙升，该公司今年经营业绩不佳，去年10月至今年9月的上一财年净利润同比暴跌96%。(新华社)",
+      "event_id": "evt_50796b869bf0",
+      "storyline_id": "st_046c2d94bf9d"
+    }
+  ],
+  "overview_sections": [
+    {
+      "title": "市场避险与流动性压力",
+      "points": [
+        {
+          "text": "中东地缘冲突引发的能源成本激增正直接侵蚀企业盈利，同时叠加美股科技板块估值回调，市场避险情绪显著升温。",
+          "source_refs": []
+        }
+      ]
+    }
+  ],
+  "events": [
+    {
+      "schema_version": "4.1",
+      "event_id": "evt_f4e18305f65c",
+      "storyline_id": "st_404c14089ce3",
+      "article_ids": [
+        "rss-gnews-markets-zh_2d13557df6dd",
+        "rss-gnews-markets-zh_39ad76a057c3",
+        "rss-gnews-markets-zh_94eb36885bb5",
+        "cls-telegraph_6482a642925d"
+      ],
+      "legacy_event_ids": [],
+      "title": "现货黄金跌破3500美元/盎司 创2025年9月以来新低",
+      "category": "finance",
+      "entities": [
+        "地缘冲突、能源与大宗商品",
+        "黄金 / 贵金属与避险资产"
+      ],
+      "entity_ids": [
+        "ent_geopolitics_energy",
+        "ent_gold_metals"
+      ],
+      "entity_confidences": {
+        "地缘冲突、能源与大宗商品": 0.86,
+        "黄金 / 贵金属与避险资产": 0.96
+      },
+      "matched_entities": [
+        {
+          "entity_id": "ent_geopolitics_energy",
+          "canonical_name": "地缘冲突、能源与大宗商品",
+          "entity_type": "macro",
+          "sector": "能源安全与避险资产",
+          "matched_aliases": [
+            "现货黄金"
+          ],
+          "tickers": [],
+          "reason": "正文/实体匹配关键词「现货黄金」",
+          "confidence": 0.86
+        },
+        {
+          "entity_id": "ent_gold_metals",
+          "canonical_name": "黄金 / 贵金属与避险资产",
+          "entity_type": "industry",
+          "sector": "贵金属 / 大宗商品",
+          "matched_aliases": [
+            "现货黄金",
+            "黄金"
+          ],
+          "tickers": [
+            {
+              "symbol": "518880",
+              "market": "SH",
+              "exchange": "SSE",
+              "currency": "CNY",
+              "label": "518880.SH (SSE)"
+            },
+            {
+              "symbol": "GLD",
+              "market": "US",
+              "exchange": "NYSE",
+              "currency": "USD",
+              "label": "GLD.US (NYSE)"
+            }
+          ],
+          "reason": "正文/实体匹配关键词「现货黄金 / 黄金」",
+          "confidence": 0.96
+        }
+      ],
+      "importance": "high",
+      "sentiment": "Mixed",
+      "special_note": null,
+      "material_stage": null,
+      "material_stage_label": null,
+      "material_stage_confidence": null,
+      "thumbnail_url": null,
+      "publisher_name": "京报网",
+      "source_status": "ok",
+      "evidence_status": "multi_source",
+      "evidence_label": "多独立来源提及（待核官方全文）",
+      "evidence_status_reason": "已有 2 家独立媒体族（另识别 2 条高度相似转载）提及（含摘要或正文首段）；多源转载不代表官方公告已证实",
+      "attribution_warning": null,
+      "regulatory_note": null,
+      "contradictions": [],
+      "downweight_reasons": [],
+      "quality_flags": [],
+      "material_depth": "title_and_excerpt",
+      "source_count": 4,
+      "platform_count": 2,
+      "independent_publisher_count": 2,
+      "reprint_count": 2,
+      "published_at": "2026-11-25T19:59:16+08:00",
+      "event_date": "2026-11-25",
+      "event_time": "2026-11-25T19:59:16+08:00",
+      "stale": false,
+      "event_date_source": "llm_extracted",
+      "is_stale_rehash": false,
+      "time_trust_level": "article_timestamp",
+      "time_confidence": "article_timestamp",
+      "first_discovered_at": "2026-11-25T20:54:43+08:00",
+      "first_reported_at": "2026-11-25T19:59:16+08:00",
+      "latest_fact_update_at": "2026-11-25T20:15:05+08:00",
+      "latest_reported_at": "2026-11-25T20:15:05+08:00",
+      "fetched_at": "2026-11-25T20:54:43+08:00",
+      "input_batch_id": "raw-20261125-205443",
+      "fact_summary": "现货黄金价格跌破3500美元/盎司，为2025年9月以来首次触及该低位。",
+      "fact_atoms": [
+        {
+          "atom_id": "fa_77163264",
+          "subject": "地缘冲突、能源与大宗商品",
+          "metric_or_action": "现货黄金跌破3500美元/盎司 创2025年9月以来新低",
+          "value": null,
+          "unit": null,
+          "period": "单次披露/未注明周期",
+          "scope": "新闻事件陈述",
+          "fact_status": "multi_source_reported",
+          "attribution": "京报网",
+          "source_ref": "rss-gnews-markets-zh_2d13557df6dd",
+          "source_url": "https://news.google.com/rss/articles/CBMiXkFVX3lxTFBLc01kSUR4ck1YWEZieVJLQzhlZmdEbzdtNFNkS2NzZk9CSmhKdk5JUnhQMzB5amptdXFSRFAxVjFHX0NVOTJpb2pBUkpZaEg4RW1EelJGMmZGQncxcHc?oc=5",
+          "source_excerpt_or_locator": "现货黄金跌破3500美元关口 京报网",
+          "published_at": "2026-11-25T20:15:05+08:00",
+          "discovered_at": "2026-11-25T20:54:43+08:00",
+          "revision": 1
+        }
+      ],
+      "ai_analysis": "黄金作为避险资产的吸引力被高利率环境下的流动性需求挤压，机构在面临美股抛售时倾向于变现黄金以补充保证金。",
+      "unverified_claims": [],
+      "speculation_or_outlook": null,
+      "sources": [
+        {
+          "item_id": "rss-gnews-markets-zh_2d13557df6dd",
+          "article_id": "rss-gnews-markets-zh_2d13557df6dd",
+          "source_id": "rss-gnews-markets-zh",
+          "source_name": "京报网",
+          "publisher_name": "京报网",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "news",
+          "is_reprint_copy": false,
+          "title": "现货黄金跌破3500美元关口",
+          "url": "https://news.google.com/rss/articles/CBMiXkFVX3lxTFBLc01kSUR4ck1YWEZieVJLQzhlZmdEbzdtNFNkS2NzZk9CSmhKdk5JUnhQMzB5amptdXFSRFAxVjFHX0NVOTJpb2pBUkpZaEg4RW1EelJGMmZGQncxcHc?oc=5",
+          "published_at": "2026-11-25T20:15:05+08:00",
+          "published_at_source": "upstream_rfc2822",
+          "fetched_at": "2026-11-25T20:54:48+08:00",
+          "excerpt": "现货黄金跌破3500美元关口 京报网",
+          "thumbnail_url": null,
+          "deep_fetch_status": "empty_or_js_rendered"
+        },
+        {
+          "item_id": "rss-gnews-markets-zh_39ad76a057c3",
+          "article_id": "rss-gnews-markets-zh_39ad76a057c3",
+          "source_id": "rss-gnews-markets-zh",
+          "source_name": "东方财富网",
+          "publisher_name": "东方财富网",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "wap",
+          "is_reprint_copy": false,
+          "title": "现货黄金跌破3500美元/盎司 创2025年9月以来新低",
+          "url": "https://news.google.com/rss/articles/CBMiYEFVX3lxTE9XOEw2NUFDR0poNnI2aFNLdWZPWTZkTlZRU0dJNklFeTN6ZzFxZ3J2QnlwWmJYaVF4ajlhNFZhRnhUSEYzazhtZFJrR3ZTTy12dldIYUpiUUN1bHdCMndzaA?oc=5",
+          "published_at": "2026-11-25T20:05:42+08:00",
+          "published_at_source": "upstream_rfc2822",
+          "fetched_at": "2026-11-25T20:54:48+08:00",
+          "excerpt": "现货黄金跌破3500美元/盎司 创2025年9月以来新低 东方财富网",
+          "thumbnail_url": null,
+          "deep_fetch_status": null
+        },
+        {
+          "item_id": "rss-gnews-markets-zh_94eb36885bb5",
+          "article_id": "rss-gnews-markets-zh_94eb36885bb5",
+          "source_id": "rss-gnews-markets-zh",
+          "source_name": "财联社",
+          "publisher_name": "财联社",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "cls",
+          "is_reprint_copy": true,
+          "title": "19:59:16【现货黄金跌破3500美元/盎司 创2025年9月以来新低】",
+          "url": "https://news.google.com/rss/articles/CBMiSEFVX3lxTFBLOXF3SC1ZRDdnbWkxbEltTjJNNUJvdHM0MGpRUWdQWXJpMzVWVGdvVzl6bUtOaDgzY1RqS2Fyc3JOSmZRRUtXUw?oc=5",
+          "published_at": "2026-11-25T19:59:16+08:00",
+          "published_at_source": "upstream_rfc2822",
+          "fetched_at": "2026-11-25T20:54:48+08:00",
+          "excerpt": "19:59:16【现货黄金跌破3500美元/盎司 创2025年9月以来新低】 财联社",
+          "thumbnail_url": null,
+          "deep_fetch_status": null
+        },
+        {
+          "item_id": "cls-telegraph_6482a642925d",
+          "article_id": "cls-telegraph_6482a642925d",
+          "source_id": "cls-telegraph",
+          "source_name": "财联社 · 电报",
+          "publisher_name": "财联社 · 电报",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "aggregator_lead",
+          "publisher_family": "cls",
+          "is_reprint_copy": true,
+          "title": "现货黄金跌破3500美元/盎司 创2025年9月以来新低",
+          "url": "https://www.cls.cn/detail/2544461",
+          "published_at": "2026-11-25T19:59:16+08:00",
+          "published_at_source": "upstream_epoch",
+          "fetched_at": "2026-11-25T20:54:43+08:00",
+          "excerpt": null,
+          "thumbnail_url": null,
+          "deep_fetch_status": null
+        }
+      ],
+      "verification": {
+        "all_refs_valid": true,
+        "has_primary_url": true,
+        "rejected_refs": [],
+        "has_first_party": false
+      },
+      "followup": null,
+      "is_new_in_batch": true,
+      "update_kind": "new_discovery",
+      "heavy_score": 57.5,
+      "radar_score": 82,
+      "severity_tier": "A",
+      "severity_label": "A级要闻",
+      "heavy_reason_tag": "大宗与市场剧震",
+      "summary": "现货黄金价格跌破3500美元/盎司，为2025年9月以来首次触及该低位。",
+      "summary_zh": "现货黄金价格跌破3500美元/盎司，为2025年9月以来首次触及该低位。",
+      "deep_qa": [
+        {
+          "question": "黄金跌破关键支撑位是否意味着避险逻辑的彻底逆转？",
+          "answer": "并非逻辑逆转，而是市场在极端波动下出现了流动性优先的去杠杆行为，即投资者被迫抛售流动性较好的资产以应对其他市场的追加保证金通知。",
+          "historical_parallel": "2020年3月疫情初期，黄金曾随美股同步暴跌，随后因货币宽松政策迅速反弹。"
+        },
+        {
+          "question": "未来黄金价格的修复路径取决于哪些变量？",
+          "answer": "取决于美联储货币政策的边际转向预期以及中东地缘冲突是否会进一步推高全球通胀预期。",
+          "historical_parallel": "1970年代滞胀时期，黄金在通胀失控与地缘政治动荡的双重驱动下表现出极强的抗跌性。"
+        }
+      ],
+      "ai_overlaid": true,
+      "translation_attempts": 0,
+      "translation_error": null,
+      "title_zh": "现货黄金跌破3500美元/盎司 创2025年9月以来新低",
+      "translation_status": "native_zh",
+      "title_en": "",
+      "summary_en": "",
+      "ai_analysis_en": ""
+    },
+    {
+      "schema_version": "4.1",
+      "event_id": "evt_b9be6bb4f093",
+      "storyline_id": "st_0bd0926ceb0e",
+      "article_ids": [
+        "rss-gnews-markets-zh_0933f61fb53c",
+        "wscn-us-stock-channel_64334faf4bd4"
+      ],
+      "legacy_event_ids": [],
+      "title": "美股盘前，科技股延续跌势，英伟达跌超4%，Anthropic下跌3%；AMD跌近5%，闪迪跌超5%。",
+      "category": "finance",
+      "entities": [
+        "英伟达 (NVIDIA)",
+        "Anthropic / Claude",
+        "AMD (超威半导体)",
+        "中信证券 / A股券商与资本市场"
+      ],
+      "entity_ids": [
+        "ent_nvidia",
+        "ent_anthropic",
+        "ent_amd",
+        "ent_cn_brokers"
+      ],
+      "entity_confidences": {
+        "英伟达 (NVIDIA)": 0.86,
+        "Anthropic / Claude": 0.86,
+        "AMD (超威半导体)": 0.68,
+        "中信证券 / A股券商与资本市场": 0.86
+      },
+      "matched_entities": [
+        {
+          "entity_id": "ent_nvidia",
+          "canonical_name": "英伟达 (NVIDIA)",
+          "entity_type": "company",
+          "sector": "半导体 / AI算力",
+          "matched_aliases": [
+            "英伟达"
+          ],
+          "tickers": [
+            {
+              "symbol": "NVDA",
+              "market": "US",
+              "exchange": "NASDAQ",
+              "currency": "USD",
+              "label": "NVDA.US (NASDAQ)"
+            }
+          ],
+          "reason": "正文/实体匹配关键词「英伟达」",
+          "confidence": 0.86
+        },
+        {
+          "entity_id": "ent_anthropic",
+          "canonical_name": "Anthropic / Claude",
+          "entity_type": "company",
+          "sector": "AI 模型与安全",
+          "matched_aliases": [
+            "anthropic"
+          ],
+          "tickers": [],
+          "reason": "正文/实体匹配关键词「anthropic」",
+          "confidence": 0.86
+        },
+        {
+          "entity_id": "ent_amd",
+          "canonical_name": "AMD (超威半导体)",
+          "entity_type": "company",
+          "sector": "半导体 / AI算力",
+          "matched_aliases": [
+            "amd"
+          ],
+          "tickers": [
+            {
+              "symbol": "AMD",
+              "market": "US",
+              "exchange": "NASDAQ",
+              "currency": "USD",
+              "label": "AMD.US (NASDAQ)"
+            }
+          ],
+          "reason": "正文/实体匹配关键词「amd」",
+          "confidence": 0.68
+        },
+        {
+          "entity_id": "ent_cn_brokers",
+          "canonical_name": "中信证券 / A股券商与资本市场",
+          "entity_type": "company",
+          "sector": "金融基础设施 / 券商",
+          "matched_aliases": [
+            "东方财富"
+          ],
+          "tickers": [
+            {
+              "symbol": "600030",
+              "market": "SH",
+              "exchange": "SSE",
+              "currency": "CNY",
+              "label": "600030.SH (SSE)"
+            }
+          ],
+          "reason": "正文/实体匹配关键词「东方财富」",
+          "confidence": 0.86
+        }
+      ],
+      "importance": "high",
+      "sentiment": "Mixed",
+      "special_note": null,
+      "material_stage": null,
+      "material_stage_label": null,
+      "material_stage_confidence": null,
+      "thumbnail_url": null,
+      "publisher_name": "东方财富网",
+      "source_status": "ok",
+      "evidence_status": "multi_source",
+      "evidence_label": "多独立来源提及（待核官方全文）",
+      "evidence_status_reason": "已有 2 家独立媒体族提及（含摘要或正文首段）；多源转载不代表官方公告已证实",
+      "attribution_warning": null,
+      "regulatory_note": null,
+      "contradictions": [],
+      "downweight_reasons": [],
+      "quality_flags": [],
+      "material_depth": "title_and_excerpt",
+      "source_count": 2,
+      "platform_count": 2,
+      "independent_publisher_count": 2,
+      "reprint_count": 0,
+      "published_at": "2026-11-25T17:01:28+08:00",
+      "event_date": "2026-11-25",
+      "event_time": "2026-11-25T17:01:28+08:00",
+      "stale": false,
+      "event_date_source": "llm_extracted",
+      "is_stale_rehash": false,
+      "time_trust_level": "article_timestamp",
+      "time_confidence": "article_timestamp",
+      "first_discovered_at": "2026-11-25T20:54:43+08:00",
+      "first_reported_at": "2026-11-25T17:01:28+08:00",
+      "latest_fact_update_at": "2026-11-25T19:08:15+08:00",
+      "latest_reported_at": "2026-11-25T19:08:15+08:00",
+      "fetched_at": "2026-11-25T20:54:43+08:00",
+      "input_batch_id": "raw-20261125-205443",
+      "fact_summary": "美股盘前交易中，英伟达跌超4%，Anthropic跌3%，AMD跌近5%，闪迪跌超5%。",
+      "fact_atoms": [
+        {
+          "atom_id": "fa_65934604",
+          "subject": "英伟达 (NVIDIA)",
+          "metric_or_action": "美股盘前，科技股延续跌势，英伟达跌超4%，Anthropic下跌3%；AMD跌近5%，闪迪跌超5%。",
+          "value": "4",
+          "unit": "%",
+          "period": "单次披露/未注明周期",
+          "scope": "新闻事件陈述",
+          "fact_status": "multi_source_reported",
+          "attribution": "东方财富网",
+          "source_ref": "rss-gnews-markets-zh_0933f61fb53c",
+          "source_url": "https://news.google.com/rss/articles/CBMiZkFVX3lxTE1jYWZOUklnby1odEd2ZlJBaUc0NW41bzVMZ0VTYm16cW5UZVphY0Y1dUxwUkFuT2ZONUhLWjFnMmVIV3lhSTQ1cWs1bktydzVLZkJXWFJaOTJSMEhtNGR3TXFRdVQ1dw?oc=5",
+          "source_excerpt_or_locator": "阿斯麦美股盘前跌超4% 东方财富网",
+          "published_at": "2026-11-25T19:08:15+08:00",
+          "discovered_at": "2026-11-25T20:54:43+08:00",
+          "revision": 1
+        }
+      ],
+      "ai_analysis": "科技股集体回调反映了市场对AI硬件资本开支可持续性的重新评估，以及对高估值板块在宏观不确定性下的防御性减仓。",
+      "unverified_claims": [],
+      "speculation_or_outlook": null,
+      "sources": [
+        {
+          "item_id": "rss-gnews-markets-zh_0933f61fb53c",
+          "article_id": "rss-gnews-markets-zh_0933f61fb53c",
+          "source_id": "rss-gnews-markets-zh",
+          "source_name": "东方财富网",
+          "publisher_name": "东方财富网",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "finance",
+          "is_reprint_copy": false,
+          "title": "阿斯麦美股盘前跌超4%",
+          "url": "https://news.google.com/rss/articles/CBMiZkFVX3lxTE1jYWZOUklnby1odEd2ZlJBaUc0NW41bzVMZ0VTYm16cW5UZVphY0Y1dUxwUkFuT2ZONUhLWjFnMmVIV3lhSTQ1cWs1bktydzVLZkJXWFJaOTJSMEhtNGR3TXFRdVQ1dw?oc=5",
+          "published_at": "2026-11-25T19:08:15+08:00",
+          "published_at_source": "upstream_rfc2822",
+          "fetched_at": "2026-11-25T20:54:48+08:00",
+          "excerpt": "阿斯麦美股盘前跌超4% 东方财富网",
+          "thumbnail_url": null,
+          "deep_fetch_status": "empty_or_js_rendered"
+        },
+        {
+          "item_id": "wscn-us-stock-channel_64334faf4bd4",
+          "article_id": "wscn-us-stock-channel_64334faf4bd4",
+          "source_id": "wscn-us-stock-channel",
+          "source_name": "华尔街见闻 美股快讯",
+          "publisher_name": "华尔街见闻 美股快讯",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "wallstreetcn",
+          "is_reprint_copy": false,
+          "title": "美股盘前，科技股延续跌势，英伟达跌超4%，Anthropic下跌3%；AMD跌近5%，闪迪跌超5%。",
+          "url": "https://wallstreetcn.com/livenews/3205558",
+          "published_at": "2026-11-25T17:01:28+08:00",
+          "published_at_source": "upstream_api",
+          "fetched_at": "2026-11-25T20:54:44+08:00",
+          "excerpt": null,
+          "thumbnail_url": null,
+          "deep_fetch_status": null
+        }
+      ],
+      "verification": {
+        "all_refs_valid": true,
+        "has_primary_url": true,
+        "rejected_refs": [],
+        "has_first_party": false
+      },
+      "followup": null,
+      "is_new_in_batch": true,
+      "update_kind": "new_discovery",
+      "heavy_score": 73.6,
+      "radar_score": 82,
+      "severity_tier": "A",
+      "severity_label": "A级要闻",
+      "heavy_reason_tag": "巨头重大变动",
+      "summary": "美股盘前交易中，英伟达跌超4%，Anthropic跌3%，AMD跌近5%，闪迪跌超5%。",
+      "summary_zh": "美股盘前交易中，英伟达跌超4%，Anthropic跌3%，AMD跌近5%，闪迪跌超5%。",
+      "deep_qa": [
+        {
+          "question": "此次科技股抛售是否预示着AI板块泡沫的破裂？",
+          "answer": "这更倾向于是一次针对高估值溢价的修正，而非AI产业逻辑的终结，市场正在从盲目追逐增长转向关注实际盈利转化率。",
+          "historical_parallel": "2000年互联网泡沫破裂前夕，市场对硬件基础设施的过度预期与软件应用落地缓慢之间的错位。"
+        },
+        {
+          "question": "半导体板块的连锁反应将如何影响全球供应链？",
+          "answer": "头部厂商的股价波动将直接影响其融资能力与研发投入，进而可能导致全球AI算力基础设施建设周期的放缓。",
+          "historical_parallel": "2018年加密货币挖矿热潮退去后，显卡市场供需失衡对半导体厂商财报的冲击。"
+        }
+      ],
+      "ai_overlaid": true,
+      "translation_attempts": 0,
+      "translation_error": null,
+      "title_zh": "美股盘前，科技股延续跌势，英伟达跌超4%，Anthropic下跌3%；AMD跌近5%，闪迪跌超5%。",
+      "translation_status": "native_zh",
+      "title_en": "",
+      "summary_en": "",
+      "ai_analysis_en": ""
+    },
+    {
+      "schema_version": "4.1",
+      "event_id": "evt_50796b869bf0",
+      "storyline_id": "st_046c2d94bf9d",
+      "article_ids": [
+        "sina-7x24_0daba639aed4"
+      ],
+      "legacy_event_ids": [],
+      "title": "燃油价格飙升 英国廉航易捷利润暴跌96%",
+      "category": "finance",
+      "entities": [
+        "地缘冲突、能源与大宗商品"
+      ],
+      "entity_ids": [
+        "ent_geopolitics_energy"
+      ],
+      "entity_confidences": {
+        "地缘冲突、能源与大宗商品": 0.86
+      },
+      "matched_entities": [
+        {
+          "entity_id": "ent_geopolitics_energy",
+          "canonical_name": "地缘冲突、能源与大宗商品",
+          "entity_type": "macro",
+          "sector": "能源安全与避险资产",
+          "matched_aliases": [
+            "中东"
+          ],
+          "tickers": [],
+          "reason": "正文/实体匹配关键词「中东」",
+          "confidence": 0.86
+        }
+      ],
+      "importance": "medium",
+      "sentiment": "Mixed",
+      "special_note": null,
+      "material_stage": null,
+      "material_stage_label": null,
+      "material_stage_confidence": null,
+      "thumbnail_url": null,
+      "publisher_name": "新浪财经 7×24 电报",
+      "source_status": "ok",
+      "evidence_status": "single_source",
+      "evidence_label": "单一独立来源线索",
+      "evidence_status_reason": "目前仅见 1 家独立来源（共 1 条引用含转载，含摘要/首段），尚未见独立渠道交叉或官方确认",
+      "attribution_warning": null,
+      "regulatory_note": null,
+      "contradictions": [],
+      "downweight_reasons": [],
+      "quality_flags": [],
+      "material_depth": "title_and_excerpt",
+      "source_count": 1,
+      "platform_count": 1,
+      "independent_publisher_count": 1,
+      "reprint_count": 0,
+      "published_at": "2026-11-25T20:41:08+08:00",
+      "event_date": "2026-11-25",
+      "event_time": "2026-11-25T20:41:08+08:00",
+      "stale": false,
+      "event_date_source": "llm_extracted",
+      "is_stale_rehash": false,
+      "time_trust_level": "article_timestamp",
+      "time_confidence": "article_timestamp",
+      "first_discovered_at": "2026-11-25T20:54:43+08:00",
+      "first_reported_at": "2026-11-25T20:41:08+08:00",
+      "latest_fact_update_at": "2026-11-25T20:41:08+08:00",
+      "latest_reported_at": "2026-11-25T20:41:08+08:00",
+      "fetched_at": "2026-11-25T20:54:43+08:00",
+      "input_batch_id": "raw-20261125-205443",
+      "fact_summary": "【燃油价格飙升 英国廉航易捷利润暴跌96%】英国廉价航空运营商易捷航空公司25日说，由于中东战事导致航空燃油价格飙升，该公司今年经营业绩不佳，去年10月至今年9月的上一财年净利润同比暴跌96%。(新华社)",
+      "fact_atoms": [
+        {
+          "atom_id": "fa_31960570",
+          "subject": "地缘冲突、能源与大宗商品",
+          "metric_or_action": "燃油价格飙升 英国廉航易捷利润暴跌96%",
+          "value": "96",
+          "unit": "%",
+          "period": "同比 (YoY)",
+          "scope": "营收/业绩",
+          "fact_status": "reported_unconfirmed_by_filing",
+          "attribution": "新浪财经 7×24 电报",
+          "source_ref": "sina-7x24_0daba639aed4",
+          "source_url": "https://finance.sina.cn/7x24/2026-11-25/detail-inizyeha8550965.d.html",
+          "source_excerpt_or_locator": "【燃油价格飙升 英国廉航易捷利润暴跌96%】英国廉价航空运营商易捷航空公司25日说，由于中东战事导致航空燃油价格飙升，该公司今年经营业绩不佳，去年10月至今年9月的上一财年净利润同比暴跌96%。(新华社)",
+          "published_at": "2026-11-25T20:41:08+08:00",
+          "discovered_at": "2026-11-25T20:54:43+08:00",
+          "revision": 1
+        }
+      ],
+      "ai_analysis": "引发地缘冲突、能源与大宗商品估值与产业链联动重定价，需紧盯主力资金流向与官方后续披露。",
+      "unverified_claims": [],
+      "speculation_or_outlook": null,
+      "sources": [
+        {
+          "item_id": "sina-7x24_0daba639aed4",
+          "article_id": "sina-7x24_0daba639aed4",
+          "source_id": "sina-7x24",
+          "source_name": "新浪财经 7×24 电报",
+          "publisher_name": "新浪财经 7×24 电报",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "sina",
+          "is_reprint_copy": false,
+          "title": "燃油价格飙升 英国廉航易捷利润暴跌96%",
+          "url": "https://finance.sina.cn/7x24/2026-11-25/detail-inizyeha8550965.d.html",
+          "published_at": "2026-11-25T20:41:08+08:00",
+          "published_at_source": "upstream_api",
+          "fetched_at": "2026-11-25T20:54:44+08:00",
+          "excerpt": "【燃油价格飙升 英国廉航易捷利润暴跌96%】英国廉价航空运营商易捷航空公司25日说，由于中东战事导致航空燃油价格飙升，该公司今年经营业绩不佳，去年10月至今年9月的上一财年净利润同比暴跌96%。(新华社)",
+          "thumbnail_url": null,
+          "deep_fetch_status": null
+        }
+      ],
+      "verification": {
+        "all_refs_valid": true,
+        "has_primary_url": true,
+        "rejected_refs": [],
+        "has_first_party": false
+      },
+      "followup": null,
+      "is_new_in_batch": true,
+      "update_kind": "new_discovery",
+      "heavy_score": 55.2,
+      "radar_score": 76,
+      "severity_tier": "B",
+      "severity_label": "B级常规",
+      "translation_attempts": 0,
+      "translation_error": null,
+      "title_zh": "燃油价格飙升 英国廉航易捷利润暴跌96%",
+      "translation_status": "native_zh",
+      "summary_zh": "【燃油价格飙升 英国廉航易捷利润暴跌96%】英国廉价航空运营商易捷航空公司25日说，由于中东战事导致航空燃油价格飙升，该公司今年经营业绩不佳，去年10月至今年9月的上一财年净利润同比暴跌96%。(新华社)",
+      "title_en": "",
+      "summary_en": "",
+      "ai_analysis_en": ""
+    },
+    {
+      "schema_version": "4.1",
+      "event_id": "evt_b6aa617a290d",
+      "storyline_id": "st_93aac2c597ae",
+      "article_ids": [
+        "rss-gnews-markets-zh_13e0173716b2",
+        "rss-gnews-markets-zh_8fcf086894a1"
+      ],
+      "legacy_event_ids": [],
+      "title": "华尔街开始押注：美联储再这么加息 离猛烈降息不远了？",
+      "category": "finance",
+      "entities": [
+        "美联储 FOMC 与全球流动性"
+      ],
+      "entity_ids": [
+        "ent_macro_fomc"
+      ],
+      "entity_confidences": {
+        "美联储 FOMC 与全球流动性": 0.96
+      },
+      "matched_entities": [
+        {
+          "entity_id": "ent_macro_fomc",
+          "canonical_name": "美联储 FOMC 与全球流动性",
+          "entity_type": "macro",
+          "sector": "宏观利率与汇率",
+          "matched_aliases": [
+            "美联储",
+            "加息",
+            "降息"
+          ],
+          "tickers": [],
+          "reason": "正文/实体匹配关键词「美联储 / 加息」",
+          "confidence": 0.96
+        }
+      ],
+      "importance": "high",
+      "sentiment": "Mixed",
+      "special_note": null,
+      "material_stage": null,
+      "material_stage_label": null,
+      "material_stage_confidence": null,
+      "thumbnail_url": null,
+      "publisher_name": "东方财富网",
+      "source_status": "ok",
+      "evidence_status": "multi_source",
+      "evidence_label": "多独立来源提及（待核官方全文）",
+      "evidence_status_reason": "已有 2 家独立媒体族提及（含摘要或正文首段）；多源转载不代表官方公告已证实",
+      "attribution_warning": null,
+      "regulatory_note": null,
+      "contradictions": [],
+      "downweight_reasons": [],
+      "quality_flags": [],
+      "material_depth": "title_and_excerpt",
+      "source_count": 2,
+      "platform_count": 1,
+      "independent_publisher_count": 2,
+      "reprint_count": 0,
+      "published_at": "2026-11-25T16:17:20+08:00",
+      "event_date": "2026-11-25",
+      "event_time": "2026-11-25T16:17:20+08:00",
+      "stale": false,
+      "event_date_source": "llm_extracted",
+      "is_stale_rehash": false,
+      "time_trust_level": "article_timestamp",
+      "time_confidence": "article_timestamp",
+      "first_discovered_at": "2026-11-25T10:29:02+08:00",
+      "first_reported_at": "2026-11-25T16:17:20+08:00",
+      "latest_fact_update_at": "2026-11-25T18:36:12+08:00",
+      "latest_reported_at": "2026-11-25T18:36:12+08:00",
+      "fetched_at": "2026-11-25T20:54:43+08:00",
+      "input_batch_id": "raw-20261125-205443",
+      "fact_summary": "华尔街分析认为美联储持续加息可能导致后续出现猛烈降息周期。",
+      "fact_atoms": [
+        {
+          "atom_id": "fa_30761493",
+          "subject": "美联储 FOMC 与全球流动性",
+          "metric_or_action": "华尔街开始押注：美联储再这么加息 离猛烈降息不远了？",
+          "value": null,
+          "unit": null,
+          "period": "单次披露/未注明周期",
+          "scope": "新闻事件陈述",
+          "fact_status": "multi_source_reported",
+          "attribution": "东方财富网",
+          "source_ref": "rss-gnews-markets-zh_13e0173716b2",
+          "source_url": "https://news.google.com/rss/articles/CBMiZkFVX3lxTE5ZX0dEVF9BVUtHVGRmb3NhZFp0TURNb3hHVTBkX09KZHgzR2F2OUNKcldCYVNSZndMZUduRzROM2w4MWpFdzhUek5kLUNBVlJtRS1vRWYtN1dVMm42S0hRVnQwVDhVdw?oc=5",
+          "source_excerpt_or_locator": "华尔街开始押注：美联储再这么加息 离猛烈降息不远了？ 东方财富网",
+          "published_at": "2026-11-25T18:36:12+08:00",
+          "discovered_at": "2026-11-25T10:29:02+08:00",
+          "revision": 1
+        }
+      ],
+      "ai_analysis": "市场押注美联储政策将从紧缩转向衰退应对，这种预期差将直接影响美元指数及全球资产定价。",
+      "unverified_claims": [],
+      "speculation_or_outlook": null,
+      "sources": [
+        {
+          "item_id": "rss-gnews-markets-zh_13e0173716b2",
+          "article_id": "rss-gnews-markets-zh_13e0173716b2",
+          "source_id": "rss-gnews-markets-zh",
+          "source_name": "东方财富网",
+          "publisher_name": "东方财富网",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "finance",
+          "is_reprint_copy": false,
+          "title": "华尔街开始押注：美联储再这么加息 离猛烈降息不远了？",
+          "url": "https://news.google.com/rss/articles/CBMiZkFVX3lxTE5ZX0dEVF9BVUtHVGRmb3NhZFp0TURNb3hHVTBkX09KZHgzR2F2OUNKcldCYVNSZndMZUduRzROM2w4MWpFdzhUek5kLUNBVlJtRS1vRWYtN1dVMm42S0hRVnQwVDhVdw?oc=5",
+          "published_at": "2026-11-25T18:36:12+08:00",
+          "published_at_source": "upstream_rfc2822",
+          "fetched_at": "2026-11-25T20:54:48+08:00",
+          "excerpt": "华尔街开始押注：美联储再这么加息 离猛烈降息不远了？ 东方财富网",
+          "thumbnail_url": null,
+          "deep_fetch_status": "empty_or_js_rendered"
+        },
+        {
+          "item_id": "rss-gnews-markets-zh_8fcf086894a1",
+          "article_id": "rss-gnews-markets-zh_8fcf086894a1",
+          "source_id": "rss-gnews-markets-zh",
+          "source_name": "金十数据",
+          "publisher_name": "金十数据",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "xnews",
+          "is_reprint_copy": false,
+          "title": "华尔街开始布局对冲：美联储有可能“加息加过头”！-市场参考",
+          "url": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE1nWEtHZGkyRzhuSldibHZHNFJ4NDlWd19HVHlFSDRwN2tKcHVqaVVnbUdWTnoyVFVQRjMzSVVZQ1lsbnNxQll0QnQtVzE5dGc?oc=5",
+          "published_at": "2026-11-25T16:17:20+08:00",
+          "published_at_source": "upstream_rfc2822",
+          "fetched_at": "2026-11-25T20:54:48+08:00",
+          "excerpt": "华尔街开始布局对冲：美联储有可能“加息加过头”！-市场参考 金十数据",
+          "thumbnail_url": null,
+          "deep_fetch_status": null
+        }
+      ],
+      "verification": {
+        "all_refs_valid": true,
+        "has_primary_url": true,
+        "rejected_refs": [],
+        "has_first_party": false
+      },
+      "followup": {
+        "is_continuing": true,
+        "prev_batch_id": "smart-20261125-102924",
+        "prev_event_id": "evt_b6aa617a290d",
+        "prev_title": "华尔街开始押注：美联储再这么加息 离猛烈降息不远了？",
+        "delta_note": "同一事件在最新批次出现表述修订或信息补充"
+      },
+      "is_new_in_batch": true,
+      "update_kind": "new_discovery",
+      "heavy_score": 71.3,
+      "radar_score": 82,
+      "severity_tier": "S",
+      "severity_label": "S级重磅",
+      "heavy_reason_tag": "元首/央行表态",
+      "summary": "华尔街分析认为美联储持续加息可能导致后续出现猛烈降息周期。",
+      "summary_zh": "华尔街分析认为美联储持续加息可能导致后续出现猛烈降息周期。",
+      "deep_qa": [
+        {
+          "question": "为何华尔街押注加息后会迅速转向降息？",
+          "answer": "基于对美国经济硬着陆风险的担忧，市场认为过度的紧缩将迫使美联储在经济数据恶化时迅速转向宽松以救市。",
+          "historical_parallel": "类似于2007年美联储在加息周期末端迅速转向降息的政策路径。"
+        }
+      ],
+      "ai_overlaid": true,
+      "translation_attempts": 0,
+      "translation_error": null,
+      "title_zh": "华尔街开始押注：美联储再这么加息 离猛烈降息不远了？",
+      "translation_status": "native_zh",
+      "title_en": "",
+      "summary_en": "",
+      "ai_analysis_en": ""
+    },
+    {
+      "schema_version": "4.1",
+      "event_id": "evt_fc928154eb2d",
+      "storyline_id": "st_b02357def41f",
+      "article_ids": [
+        "jin10_ab86466f08bd",
+        "fastbull-express_072f877b9fa2"
+      ],
+      "legacy_event_ids": [],
+      "title": "美联储理事鲍曼在银行监管会议上讲话，未对经济或货币政策前景置评。",
+      "category": "finance",
+      "entities": [
+        "美联储 FOMC 与全球流动性"
+      ],
+      "entity_ids": [
+        "ent_macro_fomc"
+      ],
+      "entity_confidences": {
+        "美联储 FOMC 与全球流动性": 0.86
+      },
+      "matched_entities": [
+        {
+          "entity_id": "ent_macro_fomc",
+          "canonical_name": "美联储 FOMC 与全球流动性",
+          "entity_type": "macro",
+          "sector": "宏观利率与汇率",
+          "matched_aliases": [
+            "美联储"
+          ],
+          "tickers": [],
+          "reason": "正文/实体匹配关键词「美联储」",
+          "confidence": 0.86
+        }
+      ],
+      "importance": "medium",
+      "sentiment": "Mixed",
+      "special_note": null,
+      "material_stage": null,
+      "material_stage_label": null,
+      "material_stage_confidence": null,
+      "thumbnail_url": null,
+      "publisher_name": "金十数据",
+      "source_status": "ok",
+      "evidence_status": "multi_source",
+      "evidence_label": "多独立来源提及（待核官方全文）",
+      "evidence_status_reason": "已有 2 家独立媒体族提及（仅基于标题素材）；多源转载不代表官方公告已证实",
+      "attribution_warning": null,
+      "regulatory_note": null,
+      "contradictions": [],
+      "downweight_reasons": [
+        "仅含标题素材 (-8)"
+      ],
+      "quality_flags": [],
+      "material_depth": "title_only",
+      "source_count": 2,
+      "platform_count": 2,
+      "independent_publisher_count": 2,
+      "reprint_count": 0,
+      "published_at": "2026-11-25T20:25:23+08:00",
+      "event_date": "2026-11-25",
+      "event_time": "2026-11-25T20:25:23+08:00",
+      "stale": false,
+      "event_date_source": "llm_extracted",
+      "is_stale_rehash": false,
+      "time_trust_level": "article_timestamp",
+      "time_confidence": "article_timestamp",
+      "first_discovered_at": "2026-11-25T20:54:43+08:00",
+      "first_reported_at": "2026-11-25T20:25:23+08:00",
+      "latest_fact_update_at": "2026-11-25T20:25:25+08:00",
+      "latest_reported_at": "2026-11-25T20:25:25+08:00",
+      "fetched_at": "2026-11-25T20:54:43+08:00",
+      "input_batch_id": "raw-20261125-205443",
+      "fact_summary": "美联储理事鲍曼在银行监管会议上讲话，未对经济或货币政策前景置评。",
+      "fact_atoms": [
+        {
+          "atom_id": "fa_7683908",
+          "subject": "美联储 FOMC 与全球流动性",
+          "metric_or_action": "美联储理事鲍曼在银行监管会议上讲话，未对经济或货币政策前景置评。",
+          "value": null,
+          "unit": null,
+          "period": "单次披露/未注明周期",
+          "scope": "新闻事件陈述",
+          "fact_status": "multi_source_reported",
+          "attribution": "金十数据",
+          "source_ref": "jin10_ab86466f08bd",
+          "source_url": "https://flash.jin10.com/detail/20261125202523810800",
+          "source_excerpt_or_locator": "美联储理事鲍曼在银行监管会议上讲话，未对经济或货币政策前景置评。",
+          "published_at": "2026-11-25T20:25:23+08:00",
+          "discovered_at": "2026-11-25T20:54:43+08:00",
+          "revision": 1
+        }
+      ],
+      "ai_analysis": "该动态聚焦美联储 FOMC 与全球流动性核心变量变化，建议结合多方信源跟踪后续实质进展。",
+      "unverified_claims": [],
+      "speculation_or_outlook": null,
+      "sources": [
+        {
+          "item_id": "jin10_ab86466f08bd",
+          "article_id": "jin10_ab86466f08bd",
+          "source_id": "jin10",
+          "source_name": "金十数据",
+          "publisher_name": "金十数据",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "aggregator_lead",
+          "publisher_family": "jin10",
+          "is_reprint_copy": false,
+          "title": "美联储理事鲍曼在银行监管会议上讲话，未对经济或货币政策前景置评。",
+          "url": "https://flash.jin10.com/detail/20261125202523810800",
+          "published_at": "2026-11-25T20:25:23+08:00",
+          "published_at_source": "upstream_epoch",
+          "fetched_at": "2026-11-25T20:54:43+08:00",
+          "excerpt": null,
+          "thumbnail_url": null,
+          "deep_fetch_status": null
+        },
+        {
+          "item_id": "fastbull-express_072f877b9fa2",
+          "article_id": "fastbull-express_072f877b9fa2",
+          "source_id": "fastbull-express",
+          "source_name": "法布财经 · 快讯",
+          "publisher_name": "法布财经 · 快讯",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "aggregator_lead",
+          "publisher_family": "fastbull",
+          "is_reprint_copy": false,
+          "title": "美联储理事鲍曼在银行业监管会议上的讲话中未就经济或货币政策前景发表意见。",
+          "url": "https://www.fastbull.com/cn/fastshort/4364579_212_1",
+          "published_at": "2026-11-25T20:25:25+08:00",
+          "published_at_source": "upstream_epoch",
+          "fetched_at": "2026-11-25T20:54:43+08:00",
+          "excerpt": null,
+          "thumbnail_url": null,
+          "deep_fetch_status": null
+        }
+      ],
+      "verification": {
+        "all_refs_valid": true,
+        "has_primary_url": true,
+        "rejected_refs": [],
+        "has_first_party": false
+      },
+      "followup": null,
+      "is_new_in_batch": true,
+      "update_kind": "new_discovery",
+      "heavy_score": 41.4,
+      "radar_score": 59,
+      "severity_tier": "B",
+      "severity_label": "B级常规",
+      "translation_attempts": 0,
+      "translation_error": null,
+      "title_zh": "美联储理事鲍曼在银行监管会议上讲话，未对经济或货币政策前景置评。",
+      "translation_status": "native_zh",
+      "summary_zh": "美联储理事鲍曼在银行监管会议上讲话，未对经济或货币政策前景置评。",
+      "title_en": "",
+      "summary_en": "",
+      "ai_analysis_en": "",
+      "deep_qa": [
+        {
+          "question": "鲍曼为何在监管会议上避谈货币政策？",
+          "answer": "鲍曼作为美联储理事，在非货币政策主题会议上保持沉默是为了避免市场对政策预期产生过度解读，维持政策沟通的严谨性。",
+          "historical_parallel": "美联储官员在非政策会议上通常遵循缄默期规则，以防止市场波动。"
+        }
+      ]
+    },
+    {
+      "schema_version": "4.1",
+      "event_id": "evt_72ca4bcfab94",
+      "storyline_id": "st_5ca8ee51eb07",
+      "article_ids": [
+        "wscn-us-stock-channel_f8bb132d1345"
+      ],
+      "legacy_event_ids": [],
+      "title": "SK海力士和三星电子年底330亿美元派息资金需求料提振韩元",
+      "category": "finance",
+      "entities": [],
+      "entity_ids": [
+        "ent_memory_chips"
+      ],
+      "entity_confidences": {
+        "存储芯片 (DRAM / HBM / NAND)": 0.86
+      },
+      "matched_entities": [
+        {
+          "entity_id": "ent_memory_chips",
+          "canonical_name": "存储芯片 (DRAM / HBM / NAND)",
+          "entity_type": "industry",
+          "sector": "半导体",
+          "matched_aliases": [
+            "sk海力士"
+          ],
+          "tickers": [
+            {
+              "symbol": "MU",
+              "market": "US",
+              "exchange": "NASDAQ",
+              "currency": "USD",
+              "label": "MU.US (NASDAQ)"
+            }
+          ],
+          "reason": "正文/实体匹配关键词「sk海力士」",
+          "confidence": 0.86
+        }
+      ],
+      "importance": "medium",
+      "sentiment": "Mixed",
+      "special_note": null,
+      "material_stage": null,
+      "material_stage_label": null,
+      "material_stage_confidence": null,
+      "thumbnail_url": null,
+      "publisher_name": "华尔街见闻 美股快讯",
+      "source_status": "ok",
+      "evidence_status": "single_source",
+      "evidence_label": "单一独立来源线索",
+      "evidence_status_reason": "目前仅见 1 家独立来源（共 1 条引用含转载，含摘要/首段），尚未见独立渠道交叉或官方确认",
+      "attribution_warning": null,
+      "regulatory_note": null,
+      "contradictions": [],
+      "downweight_reasons": [],
+      "quality_flags": [],
+      "material_depth": "title_and_excerpt",
+      "source_count": 1,
+      "platform_count": 1,
+      "independent_publisher_count": 1,
+      "reprint_count": 0,
+      "published_at": "2026-11-25T17:44:20+08:00",
+      "event_date": "2026-11-25",
+      "event_time": "2026-11-25T17:44:20+08:00",
+      "stale": false,
+      "event_date_source": "llm_extracted",
+      "is_stale_rehash": false,
+      "time_trust_level": "article_timestamp",
+      "time_confidence": "article_timestamp",
+      "first_discovered_at": "2026-11-25T20:54:43+08:00",
+      "first_reported_at": "2026-11-25T17:44:20+08:00",
+      "latest_fact_update_at": "2026-11-25T17:44:20+08:00",
+      "latest_reported_at": "2026-11-25T17:44:20+08:00",
+      "fetched_at": "2026-11-25T20:54:43+08:00",
+      "input_batch_id": "raw-20261125-205443",
+      "fact_summary": "韩国从人工智能(AI)芯片热潮中获得的意外之财正掀起一波年底资金流动，可能推动韩元进入下一阶段的升势。预计SK海力士和三星电子将把巨额出口收入的一部分兑换成韩元，用于支付合计330亿美元的第三季度股息和创纪录的员工奖金。受AI硬件热潮推动，两家公司还需要更多韩元来缴纳大额税款。（彭博）",
+      "fact_atoms": [
+        {
+          "atom_id": "fa_34850878",
+          "subject": "存储芯片 (DRAM / HBM / NAND)",
+          "metric_or_action": "SK海力士和三星电子年底330亿美元派息资金需求料提振韩元",
+          "value": "330",
+          "unit": "亿美元",
+          "period": "季度口径",
+          "scope": "营收/业绩",
+          "fact_status": "reported_unconfirmed_by_filing",
+          "attribution": "华尔街见闻 美股快讯",
+          "source_ref": "wscn-us-stock-channel_f8bb132d1345",
+          "source_url": "https://wallstreetcn.com/livenews/3205608",
+          "source_excerpt_or_locator": "韩国从人工智能(AI)芯片热潮中获得的意外之财正掀起一波年底资金流动，可能推动韩元进入下一阶段的升势。预计SK海力士和三星电子将把巨额出口收入的一部分兑换成韩元，用于支付合计330亿美元的第三季度股息和创纪录的员工奖金。受AI硬件热潮推动，两家公司还需要更多韩元来缴纳大额税款。（彭博）",
+          "published_at": "2026-11-25T17:44:20+08:00",
+          "discovered_at": "2026-11-25T20:54:43+08:00",
+          "revision": 1
+        }
+      ],
+      "ai_analysis": "该动态聚焦存储芯片 (DRAM / HBM / NAND)核心变量变化，建议结合多方信源跟踪后续实质进展。",
+      "unverified_claims": [],
+      "speculation_or_outlook": null,
+      "sources": [
+        {
+          "item_id": "wscn-us-stock-channel_f8bb132d1345",
+          "article_id": "wscn-us-stock-channel_f8bb132d1345",
+          "source_id": "wscn-us-stock-channel",
+          "source_name": "华尔街见闻 美股快讯",
+          "publisher_name": "华尔街见闻 美股快讯",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "wallstreetcn",
+          "is_reprint_copy": false,
+          "title": "SK海力士和三星电子年底330亿美元派息资金需求料提振韩元",
+          "url": "https://wallstreetcn.com/livenews/3205608",
+          "published_at": "2026-11-25T17:44:20+08:00",
+          "published_at_source": "upstream_api",
+          "fetched_at": "2026-11-25T20:54:44+08:00",
+          "excerpt": "韩国从人工智能(AI)芯片热潮中获得的意外之财正掀起一波年底资金流动，可能推动韩元进入下一阶段的升势。预计SK海力士和三星电子将把巨额出口收入的一部分兑换成韩元，用于支付合计330亿美元的第三季度股息和创纪录的员工奖金。受AI硬件热潮推动，两家公司还需要更多韩元来缴纳大额税款。（彭博）",
+          "thumbnail_url": null,
+          "deep_fetch_status": null
+        }
+      ],
+      "verification": {
+        "all_refs_valid": true,
+        "has_primary_url": true,
+        "rejected_refs": [],
+        "has_first_party": false
+      },
+      "followup": null,
+      "is_new_in_batch": true,
+      "update_kind": "new_discovery",
+      "heavy_score": 48.3,
+      "radar_score": 76,
+      "severity_tier": "B",
+      "severity_label": "B级常规",
+      "translation_attempts": 0,
+      "translation_error": null,
+      "title_zh": "SK海力士和三星电子年底330亿美元派息资金需求料提振韩元",
+      "translation_status": "native_zh",
+      "summary_zh": "韩国从人工智能(AI)芯片热潮中获得的意外之财正掀起一波年底资金流动，可能推动韩元进入下一阶段的升势。预计SK海力士和三星电子将把巨额出口收入的一部分兑换成韩元，用于支付合计330亿美元的第三季度股息和创纪录的员工奖金。受AI硬件热潮推动，两家公司还需要更多韩元来缴纳大额税款。（彭博）",
+      "title_en": "",
+      "summary_en": "",
+      "ai_analysis_en": ""
+    },
+    {
+      "schema_version": "4.1",
+      "event_id": "evt_d522aeba0551",
+      "storyline_id": "st_6b25761735ed",
+      "article_ids": [
+        "rss-gnews-markets-zh_65bae9abd4e7",
+        "jin10_ae099c823fcd"
+      ],
+      "legacy_event_ids": [],
+      "title": "美股期货扩大跌幅 纳指期货跌约3%",
+      "category": "finance",
+      "entities": [],
+      "entity_ids": [],
+      "entity_confidences": {},
+      "matched_entities": [],
+      "importance": "medium",
+      "sentiment": "Mixed",
+      "special_note": null,
+      "material_stage": null,
+      "material_stage_label": null,
+      "material_stage_confidence": null,
+      "thumbnail_url": null,
+      "publisher_name": "中国基金报",
+      "source_status": "ok",
+      "evidence_status": "multi_source",
+      "evidence_label": "多独立来源提及（待核官方全文）",
+      "evidence_status_reason": "已有 2 家独立媒体族提及（含摘要或正文首段）；多源转载不代表官方公告已证实",
+      "attribution_warning": null,
+      "regulatory_note": null,
+      "contradictions": [],
+      "downweight_reasons": [],
+      "quality_flags": [],
+      "material_depth": "title_and_excerpt",
+      "source_count": 2,
+      "platform_count": 2,
+      "independent_publisher_count": 2,
+      "reprint_count": 0,
+      "published_at": "2026-11-25T19:10:00+08:00",
+      "event_date": "2026-11-25",
+      "event_time": "2026-11-25T19:10:00+08:00",
+      "stale": false,
+      "event_date_source": "llm_extracted",
+      "is_stale_rehash": false,
+      "time_trust_level": "article_timestamp",
+      "time_confidence": "article_timestamp",
+      "first_discovered_at": "2026-11-25T20:54:43+08:00",
+      "first_reported_at": "2026-11-25T19:10:00+08:00",
+      "latest_fact_update_at": "2026-11-25T20:06:55+08:00",
+      "latest_reported_at": "2026-11-25T20:06:55+08:00",
+      "fetched_at": "2026-11-25T20:54:43+08:00",
+      "input_batch_id": "raw-20261125-205443",
+      "fact_summary": "金十数据11月25日讯，美国股指期货跌幅进一步扩大，纳指期货跌约3%，标普500指数期货跌约2%，道指期货跌约1.3%。",
+      "fact_atoms": [
+        {
+          "atom_id": "fa_75379377",
+          "subject": "相关主体",
+          "metric_or_action": "美股期货扩大跌幅 纳指期货跌约3%",
+          "value": "3",
+          "unit": "%",
+          "period": "单次披露/未注明周期",
+          "scope": "新闻事件陈述",
+          "fact_status": "multi_source_reported",
+          "attribution": "中国基金报",
+          "source_ref": "rss-gnews-markets-zh_65bae9abd4e7",
+          "source_url": "https://news.google.com/rss/articles/CBMiekFVX3lxTFB2VTdYQkphWWVmZW5yN1NqWlpCS3VNV3ZkMlJJYUozUHRpcW1acDBFc2todVBCWXFCM1FoRHZIWHdCanpVc1RoU0lqSDBJMThzTDBYc2x4ME5sTXp3Z25BSGNiN0FNODJhamR1ZjZuMDFvWlQtZnZDVXh3?oc=5",
+          "source_excerpt_or_locator": "美国股指期货跌幅扩大，美股存储、光通信板块盘前普跌 中国基金报",
+          "published_at": "2026-11-25T19:10:00+08:00",
+          "discovered_at": "2026-11-25T20:54:43+08:00",
+          "revision": 1
+        }
+      ],
+      "ai_analysis": "引发财经/市场估值与产业链联动重定价，需紧盯主力资金流向与官方后续披露。",
+      "unverified_claims": [],
+      "speculation_or_outlook": null,
+      "sources": [
+        {
+          "item_id": "rss-gnews-markets-zh_65bae9abd4e7",
+          "article_id": "rss-gnews-markets-zh_65bae9abd4e7",
+          "source_id": "rss-gnews-markets-zh",
+          "source_name": "中国基金报",
+          "publisher_name": "中国基金报",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "chnfund",
+          "is_reprint_copy": false,
+          "title": "美国股指期货跌幅扩大，美股存储、光通信板块盘前普跌",
+          "url": "https://news.google.com/rss/articles/CBMiekFVX3lxTFB2VTdYQkphWWVmZW5yN1NqWlpCS3VNV3ZkMlJJYUozUHRpcW1acDBFc2todVBCWXFCM1FoRHZIWHdCanpVc1RoU0lqSDBJMThzTDBYc2x4ME5sTXp3Z25BSGNiN0FNODJhamR1ZjZuMDFvWlQtZnZDVXh3?oc=5",
+          "published_at": "2026-11-25T19:10:00+08:00",
+          "published_at_source": "upstream_rfc2822",
+          "fetched_at": "2026-11-25T20:54:48+08:00",
+          "excerpt": "美国股指期货跌幅扩大，美股存储、光通信板块盘前普跌 中国基金报",
+          "thumbnail_url": null,
+          "deep_fetch_status": null
+        },
+        {
+          "item_id": "jin10_ae099c823fcd",
+          "article_id": "jin10_ae099c823fcd",
+          "source_id": "jin10",
+          "source_name": "金十数据",
+          "publisher_name": "金十数据",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "aggregator_lead",
+          "publisher_family": "jin10",
+          "is_reprint_copy": false,
+          "title": "美股期货扩大跌幅 纳指期货跌约3%",
+          "url": "https://flash.jin10.com/detail/20261125200655431800",
+          "published_at": "2026-11-25T20:06:55+08:00",
+          "published_at_source": "upstream_epoch",
+          "fetched_at": "2026-11-25T20:54:43+08:00",
+          "excerpt": "金十数据11月25日讯，美国股指期货跌幅进一步扩大，纳指期货跌约3%，标普500指数期货跌约2%，道指期货跌约1.3%。",
+          "thumbnail_url": null,
+          "deep_fetch_status": null
+        }
+      ],
+      "verification": {
+        "all_refs_valid": true,
+        "has_primary_url": true,
+        "rejected_refs": [],
+        "has_first_party": false
+      },
+      "followup": null,
+      "is_new_in_batch": true,
+      "update_kind": "new_discovery",
+      "heavy_score": 57.5,
+      "radar_score": 52,
+      "severity_tier": "B",
+      "severity_label": "B级常规",
+      "translation_attempts": 0,
+      "translation_error": null,
+      "title_zh": "美股期货扩大跌幅 纳指期货跌约3%",
+      "translation_status": "native_zh",
+      "summary_zh": "金十数据11月25日讯，美国股指期货跌幅进一步扩大，纳指期货跌约3%，标普500指数期货跌约2%，道指期货跌约1.3%。",
+      "title_en": "",
+      "summary_en": "",
+      "ai_analysis_en": "",
+      "deep_qa": [
+        {
+          "question": "美股期货大跌的主要驱动因素是什么？",
+          "answer": "美股期货大跌主要受地缘政治风险加剧、通胀预期波动以及市场对高估值科技股的避险情绪共同驱动。",
+          "historical_parallel": "2020年3月市场因疫情不确定性引发期货大幅波动，与当前避险情绪类似。"
+        }
+      ]
+    },
+    {
+      "schema_version": "4.1",
+      "event_id": "evt_7c26755d50d4",
+      "storyline_id": "st_d700366a7ec3",
+      "article_ids": [
+        "sina-7x24_3bbce256502d",
+        "cls-telegraph_440553fe85d6"
+      ],
+      "legacy_event_ids": [],
+      "title": "以军证实在加沙地带打死哈马斯安全机构一名负责人",
+      "category": "finance",
+      "entities": [
+        "地缘冲突、能源与大宗商品"
+      ],
+      "entity_ids": [
+        "ent_geopolitics_energy"
+      ],
+      "entity_confidences": {
+        "地缘冲突、能源与大宗商品": 0.86
+      },
+      "matched_entities": [
+        {
+          "entity_id": "ent_geopolitics_energy",
+          "canonical_name": "地缘冲突、能源与大宗商品",
+          "entity_type": "macro",
+          "sector": "能源安全与避险资产",
+          "matched_aliases": [
+            "以色列"
+          ],
+          "tickers": [],
+          "reason": "正文/实体匹配关键词「以色列」",
+          "confidence": 0.86
+        }
+      ],
+      "importance": "medium",
+      "sentiment": "Mixed",
+      "special_note": null,
+      "material_stage": null,
+      "material_stage_label": null,
+      "material_stage_confidence": null,
+      "thumbnail_url": null,
+      "publisher_name": "新浪财经 7×24 电报",
+      "source_status": "ok",
+      "evidence_status": "single_source",
+      "evidence_label": "单一独立来源线索",
+      "evidence_status_reason": "目前仅见 1 家独立来源（共 2 条引用含转载，含摘要/首段），尚未见独立渠道交叉或官方确认",
+      "attribution_warning": null,
+      "regulatory_note": null,
+      "contradictions": [],
+      "downweight_reasons": [],
+      "quality_flags": [],
+      "material_depth": "title_and_excerpt",
+      "source_count": 2,
+      "platform_count": 2,
+      "independent_publisher_count": 1,
+      "reprint_count": 1,
+      "published_at": "2026-11-25T20:40:00+08:00",
+      "event_date": "2026-11-25",
+      "event_time": "2026-11-25T20:40:00+08:00",
+      "stale": false,
+      "event_date_source": "llm_extracted",
+      "is_stale_rehash": false,
+      "time_trust_level": "article_timestamp",
+      "time_confidence": "article_timestamp",
+      "first_discovered_at": "2026-11-25T20:54:43+08:00",
+      "first_reported_at": "2026-11-25T20:40:00+08:00",
+      "latest_fact_update_at": "2026-11-25T20:40:17+08:00",
+      "latest_reported_at": "2026-11-25T20:40:17+08:00",
+      "fetched_at": "2026-11-25T20:54:43+08:00",
+      "input_batch_id": "raw-20261125-205443",
+      "fact_summary": "【以军证实在加沙地带打死哈马斯安全机构一名负责人】以色列国防军与以色列国家安全总局（辛贝特）当地时间25日发表联合声明说，以军和辛贝特25日凌晨在加沙地带北部发动空袭，打死巴勒斯坦伊斯兰抵抗运动（哈马斯）在加沙地带北部的内部安全机构负责人阿布·奥夫。声明说，阿布·奥夫是哈马斯内部重要人物，长期策划针对以色列的袭击，并致力于恢复加沙地带相关武装组织的作战能力。",
+      "fact_atoms": [
+        {
+          "atom_id": "fa_62314562",
+          "subject": "地缘冲突、能源与大宗商品",
+          "metric_or_action": "以军证实在加沙地带打死哈马斯安全机构一名负责人",
+          "value": null,
+          "unit": null,
+          "period": "单次披露/未注明周期",
+          "scope": "新闻事件陈述",
+          "fact_status": "reported_unconfirmed_by_filing",
+          "attribution": "新浪财经 7×24 电报",
+          "source_ref": "sina-7x24_3bbce256502d",
+          "source_url": "https://finance.sina.cn/7x24/2026-11-25/detail-inizyeha8550457.d.html",
+          "source_excerpt_or_locator": "【以军证实在加沙地带打死哈马斯安全机构一名负责人】以色列国防军与以色列国家安全总局（辛贝特）当地时间25日发表联合声明说，以军和辛贝特25日凌晨在加沙地带北部发动空袭，打死巴勒斯坦伊斯兰抵抗运动（哈马斯）在加沙地带北部的内部安全机构负责人阿布·奥夫。声明说，阿布·奥夫是哈马斯内部重要人物，长期策划针对以色列的袭击，并致力于恢复加沙地带相关武装组织的作战能力。",
+          "published_at": "2026-11-25T20:40:17+08:00",
+          "discovered_at": "2026-11-25T20:54:43+08:00",
+          "revision": 1
+        }
+      ],
+      "ai_analysis": "该动态聚焦地缘冲突、能源与大宗商品核心变量变化，建议结合多方信源跟踪后续实质进展。",
+      "unverified_claims": [],
+      "speculation_or_outlook": null,
+      "sources": [
+        {
+          "item_id": "sina-7x24_3bbce256502d",
+          "article_id": "sina-7x24_3bbce256502d",
+          "source_id": "sina-7x24",
+          "source_name": "新浪财经 7×24 电报",
+          "publisher_name": "新浪财经 7×24 电报",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "sina",
+          "is_reprint_copy": false,
+          "title": "以军证实在加沙地带打死哈马斯安全机构一名负责人",
+          "url": "https://finance.sina.cn/7x24/2026-11-25/detail-inizyeha8550457.d.html",
+          "published_at": "2026-11-25T20:40:17+08:00",
+          "published_at_source": "upstream_api",
+          "fetched_at": "2026-11-25T20:54:44+08:00",
+          "excerpt": "【以军证实在加沙地带打死哈马斯安全机构一名负责人】以色列国防军与以色列国家安全总局（辛贝特）当地时间25日发表联合声明说，以军和辛贝特25日凌晨在加沙地带北部发动空袭，打死巴勒斯坦伊斯兰抵抗运动（哈马斯）在加沙地带北部的内部安全机构负责人阿布·奥夫。声明说，阿布·奥夫是哈马斯内部重要人物，长期策划针对以色列的袭击，并致力于恢复加沙地带相关武装组织的作战能力。",
+          "thumbnail_url": null,
+          "deep_fetch_status": null
+        },
+        {
+          "item_id": "cls-telegraph_440553fe85d6",
+          "article_id": "cls-telegraph_440553fe85d6",
+          "source_id": "cls-telegraph",
+          "source_name": "财联社 · 电报",
+          "publisher_name": "财联社 · 电报",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "aggregator_lead",
+          "publisher_family": "cls",
+          "is_reprint_copy": true,
+          "title": "以军证实在加沙地带打死哈马斯安全机构一名负责人",
+          "url": "https://www.cls.cn/detail/2544499",
+          "published_at": "2026-11-25T20:40:00+08:00",
+          "published_at_source": "upstream_epoch",
+          "fetched_at": "2026-11-25T20:54:43+08:00",
+          "excerpt": null,
+          "thumbnail_url": null,
+          "deep_fetch_status": null
+        }
+      ],
+      "verification": {
+        "all_refs_valid": true,
+        "has_primary_url": true,
+        "rejected_refs": [],
+        "has_first_party": false
+      },
+      "followup": null,
+      "is_new_in_batch": true,
+      "update_kind": "new_discovery",
+      "heavy_score": 20.7,
+      "radar_score": 76,
+      "severity_tier": "B",
+      "severity_label": "B级常规",
+      "translation_attempts": 0,
+      "translation_error": null,
+      "title_zh": "以军证实在加沙地带打死哈马斯安全机构一名负责人",
+      "translation_status": "native_zh",
+      "summary_zh": "【以军证实在加沙地带打死哈马斯安全机构一名负责人】以色列国防军与以色列国家安全总局（辛贝特）当地时间25日发表联合声明说，以军和辛贝特25日凌晨在加沙地带北部发动空袭，打死巴勒斯坦伊斯兰抵抗运动（哈马斯）在加沙地带北部的内部安全机构负责人阿布·奥夫。声明说，阿布·奥夫是哈马斯内部重要人物，长期策划针对以色列的袭击，并致力于恢复加沙地带相关武装组织的作战能力。",
+      "title_en": "",
+      "summary_en": "",
+      "ai_analysis_en": "",
+      "deep_qa": [
+        {
+          "question": "事件对大宗物价、出行或外贸订单有何影响？",
+          "answer": "重点关注地缘冲突、能源与大宗商品引发的跨区域供应链、汇率与大宗品风险溢价变动：【以军证实在加沙地带打死哈马斯安全机构一名负责人】以色列国防军与以色列国家安全总局（辛贝特）当地时间25日发表联合声明说。",
+          "historical_parallel": "历次跨区域地缘与贸易规则博弈多呈“首轮情绪脉冲，随后看实际封锁或关税文本落地决定持续性”轨迹。"
+        },
+        {
+          "question": "下一步决定走向的关键观测点是什么？",
+          "answer": "盯紧涉事官方下一轮正式公报与约束性细则落地。",
+          "historical_parallel": "若各方在后续窗口重回务实谈判，避险溢价与航运附加费通常较快收敛。"
+        }
+      ]
+    },
+    {
+      "schema_version": "4.1",
+      "event_id": "evt_e09b4c0ea34a",
+      "storyline_id": "st_dcf4fe64d154",
+      "article_ids": [
+        "sina-7x24_561009f26374"
+      ],
+      "legacy_event_ids": [],
+      "title": "印度央行公告：2026年3月底零售贷款增长加快，主要受个人黄金贷款快速增长推动。",
+      "category": "finance",
+      "entities": [
+        "黄金 / 贵金属与避险资产"
+      ],
+      "entity_ids": [
+        "ent_gold_metals"
+      ],
+      "entity_confidences": {
+        "黄金 / 贵金属与避险资产": 0.86
+      },
+      "matched_entities": [
+        {
+          "entity_id": "ent_gold_metals",
+          "canonical_name": "黄金 / 贵金属与避险资产",
+          "entity_type": "industry",
+          "sector": "贵金属 / 大宗商品",
+          "matched_aliases": [
+            "黄金"
+          ],
+          "tickers": [
+            {
+              "symbol": "518880",
+              "market": "SH",
+              "exchange": "SSE",
+              "currency": "CNY",
+              "label": "518880.SH (SSE)"
+            },
+            {
+              "symbol": "GLD",
+              "market": "US",
+              "exchange": "NYSE",
+              "currency": "USD",
+              "label": "GLD.US (NYSE)"
+            }
+          ],
+          "reason": "正文/实体匹配关键词「黄金」",
+          "confidence": 0.86
+        }
+      ],
+      "importance": "normal",
+      "sentiment": "Mixed",
+      "special_note": null,
+      "material_stage": null,
+      "material_stage_label": null,
+      "material_stage_confidence": null,
+      "thumbnail_url": null,
+      "publisher_name": "新浪财经 7×24 电报",
+      "source_status": "ok",
+      "evidence_status": "single_source",
+      "evidence_label": "单一独立来源线索",
+      "evidence_status_reason": "目前仅见 1 家独立来源（共 1 条引用含转载，仅基于标题素材），尚未见独立渠道交叉或官方确认",
+      "attribution_warning": null,
+      "regulatory_note": null,
+      "contradictions": [],
+      "downweight_reasons": [
+        "仅含标题素材 (-8)"
+      ],
+      "quality_flags": [],
+      "material_depth": "title_only",
+      "source_count": 1,
+      "platform_count": 1,
+      "independent_publisher_count": 1,
+      "reprint_count": 0,
+      "published_at": "2026-11-25T20:40:31+08:00",
+      "event_date": "2026-11-25",
+      "event_time": "2026-11-25T20:40:31+08:00",
+      "stale": false,
+      "event_date_source": "llm_extracted",
+      "is_stale_rehash": false,
+      "time_trust_level": "article_timestamp",
+      "time_confidence": "article_timestamp",
+      "first_discovered_at": "2026-11-25T20:54:43+08:00",
+      "first_reported_at": "2026-11-25T20:40:31+08:00",
+      "latest_fact_update_at": "2026-11-25T20:40:31+08:00",
+      "latest_reported_at": "2026-11-25T20:40:31+08:00",
+      "fetched_at": "2026-11-25T20:54:43+08:00",
+      "input_batch_id": "raw-20261125-205443",
+      "fact_summary": "印度央行公告：2026年3月底零售贷款增长加快，主要受个人黄金贷款快速增长推动。",
+      "fact_atoms": [
+        {
+          "atom_id": "fa_88574986",
+          "subject": "黄金 / 贵金属与避险资产",
+          "metric_or_action": "印度央行公告：2026年3月底零售贷款增长加快，主要受个人黄金贷款快速增长推动。",
+          "value": null,
+          "unit": null,
+          "period": "单次披露/未注明周期",
+          "scope": "新闻事件陈述",
+          "fact_status": "reported_unconfirmed_by_filing",
+          "attribution": "新浪财经 7×24 电报",
+          "source_ref": "sina-7x24_561009f26374",
+          "source_url": "https://finance.sina.cn/7x24/2026-11-25/detail-inizyefz1774230.d.html",
+          "source_excerpt_or_locator": "印度央行公告：2026年3月底零售贷款增长加快，主要受个人黄金贷款快速增长推动。",
+          "published_at": "2026-11-25T20:40:31+08:00",
+          "discovered_at": "2026-11-25T20:54:43+08:00",
+          "revision": 1
+        }
+      ],
+      "ai_analysis": "该动态聚焦黄金 / 贵金属与避险资产核心变量变化，建议结合多方信源跟踪后续实质进展。",
+      "unverified_claims": [],
+      "speculation_or_outlook": null,
+      "sources": [
+        {
+          "item_id": "sina-7x24_561009f26374",
+          "article_id": "sina-7x24_561009f26374",
+          "source_id": "sina-7x24",
+          "source_name": "新浪财经 7×24 电报",
+          "publisher_name": "新浪财经 7×24 电报",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "sina",
+          "is_reprint_copy": false,
+          "title": "印度央行公告：2026年3月底零售贷款增长加快，主要受个人黄金贷款快速增长推动。",
+          "url": "https://finance.sina.cn/7x24/2026-11-25/detail-inizyefz1774230.d.html",
+          "published_at": "2026-11-25T20:40:31+08:00",
+          "published_at_source": "upstream_api",
+          "fetched_at": "2026-11-25T20:54:44+08:00",
+          "excerpt": null,
+          "thumbnail_url": null,
+          "deep_fetch_status": null
+        }
+      ],
+      "verification": {
+        "all_refs_valid": true,
+        "has_primary_url": true,
+        "rejected_refs": [],
+        "has_first_party": false
+      },
+      "followup": null,
+      "is_new_in_batch": true,
+      "update_kind": "new_discovery",
+      "heavy_score": 36.8,
+      "radar_score": 53,
+      "severity_tier": "B",
+      "severity_label": "B级常规",
+      "translation_attempts": 0,
+      "translation_error": null,
+      "title_zh": "印度央行公告：2026年3月底零售贷款增长加快，主要受个人黄金贷款快速增长推动。",
+      "translation_status": "native_zh",
+      "summary_zh": "印度央行公告：2026年3月底零售贷款增长加快，主要受个人黄金贷款快速增长推动。",
+      "title_en": "",
+      "summary_en": "",
+      "ai_analysis_en": ""
+    },
+    {
+      "schema_version": "4.1",
+      "event_id": "evt_488e1a3942d7",
+      "storyline_id": "st_ec5dc0cd8d8a",
+      "article_ids": [
+        "wscn-global-channel_0e7e3be59d06",
+        "cls-telegraph_827d0343d4ca"
+      ],
+      "legacy_event_ids": [],
+      "title": "财联社11月25日电，阿里巴巴将中通快递的持股比例降至2.9%。",
+      "category": "finance",
+      "entities": [
+        "阿里巴巴 / 通义千问 (Qwen)"
+      ],
+      "entity_ids": [
+        "ent_qwen_alibaba"
+      ],
+      "entity_confidences": {
+        "阿里巴巴 / 通义千问 (Qwen)": 0.86
+      },
+      "matched_entities": [
+        {
+          "entity_id": "ent_qwen_alibaba",
+          "canonical_name": "阿里巴巴 / 通义千问 (Qwen)",
+          "entity_type": "tech",
+          "sector": "AI 模型与云平台",
+          "matched_aliases": [
+            "阿里巴巴"
+          ],
+          "tickers": [
+            {
+              "symbol": "09988",
+              "market": "HK",
+              "exchange": "HKEX",
+              "currency": "HKD",
+              "label": "09988.HK (HKEX)"
+            },
+            {
+              "symbol": "BABA",
+              "market": "US",
+              "exchange": "NYSE",
+              "currency": "USD",
+              "label": "BABA.US (NYSE)"
+            }
+          ],
+          "reason": "正文/实体匹配关键词「阿里巴巴」",
+          "confidence": 0.86
+        }
+      ],
+      "importance": "medium",
+      "sentiment": "Mixed",
+      "special_note": null,
+      "material_stage": null,
+      "material_stage_label": null,
+      "material_stage_confidence": null,
+      "thumbnail_url": null,
+      "publisher_name": "华尔街见闻 7×24 全球",
+      "source_status": "ok",
+      "evidence_status": "multi_source",
+      "evidence_label": "多独立来源提及（待核官方全文）",
+      "evidence_status_reason": "已有 2 家独立媒体族提及（仅基于标题素材）；多源转载不代表官方公告已证实",
+      "attribution_warning": null,
+      "regulatory_note": null,
+      "contradictions": [],
+      "downweight_reasons": [
+        "仅含标题素材 (-8)"
+      ],
+      "quality_flags": [],
+      "material_depth": "title_only",
+      "source_count": 2,
+      "platform_count": 2,
+      "independent_publisher_count": 2,
+      "reprint_count": 0,
+      "published_at": "2026-11-25T20:35:46+08:00",
+      "event_date": "2026-11-25",
+      "event_time": "2026-11-25T20:35:46+08:00",
+      "stale": false,
+      "event_date_source": "llm_extracted",
+      "is_stale_rehash": false,
+      "time_trust_level": "article_timestamp",
+      "time_confidence": "article_timestamp",
+      "first_discovered_at": "2026-11-25T20:54:43+08:00",
+      "first_reported_at": "2026-11-25T20:35:46+08:00",
+      "latest_fact_update_at": "2026-11-25T20:37:35+08:00",
+      "latest_reported_at": "2026-11-25T20:37:35+08:00",
+      "fetched_at": "2026-11-25T20:54:43+08:00",
+      "input_batch_id": "raw-20261125-205443",
+      "fact_summary": "财联社11月25日电，阿里巴巴将中通快递的持股比例降至2.9%。",
+      "fact_atoms": [
+        {
+          "atom_id": "fa_6434367",
+          "subject": "阿里巴巴 / 通义千问 (Qwen)",
+          "metric_or_action": "财联社11月25日电，阿里巴巴将中通快递的持股比例降至2.9%。",
+          "value": "2.9",
+          "unit": "%",
+          "period": "单次披露/未注明周期",
+          "scope": "新闻事件陈述",
+          "fact_status": "multi_source_reported",
+          "attribution": "华尔街见闻 7×24 全球",
+          "source_ref": "wscn-global-channel_0e7e3be59d06",
+          "source_url": "https://wallstreetcn.com/livenews/3205722",
+          "source_excerpt_or_locator": "阿里巴巴减持中通快递，持股比例降至2.9%。",
+          "published_at": "2026-11-25T20:37:35+08:00",
+          "discovered_at": "2026-11-25T20:54:43+08:00",
+          "revision": 1
+        }
+      ],
+      "ai_analysis": "该动态聚焦阿里巴巴 / 通义千问 (Qwen)核心变量变化，建议结合多方信源跟踪后续实质进展。",
+      "unverified_claims": [],
+      "speculation_or_outlook": null,
+      "sources": [
+        {
+          "item_id": "wscn-global-channel_0e7e3be59d06",
+          "article_id": "wscn-global-channel_0e7e3be59d06",
+          "source_id": "wscn-global-channel",
+          "source_name": "华尔街见闻 7×24 全球",
+          "publisher_name": "华尔街见闻 7×24 全球",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "wallstreetcn",
+          "is_reprint_copy": false,
+          "title": "阿里巴巴减持中通快递，持股比例降至2.9%。",
+          "url": "https://wallstreetcn.com/livenews/3205722",
+          "published_at": "2026-11-25T20:37:35+08:00",
+          "published_at_source": "upstream_api",
+          "fetched_at": "2026-11-25T20:54:44+08:00",
+          "excerpt": null,
+          "thumbnail_url": null,
+          "deep_fetch_status": null
+        },
+        {
+          "item_id": "cls-telegraph_827d0343d4ca",
+          "article_id": "cls-telegraph_827d0343d4ca",
+          "source_id": "cls-telegraph",
+          "source_name": "财联社 · 电报",
+          "publisher_name": "财联社 · 电报",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "aggregator_lead",
+          "publisher_family": "cls",
+          "is_reprint_copy": false,
+          "title": "财联社11月25日电，阿里巴巴将中通快递的持股比例降至2.9%。",
+          "url": "https://www.cls.cn/detail/2544491",
+          "published_at": "2026-11-25T20:35:46+08:00",
+          "published_at_source": "upstream_epoch",
+          "fetched_at": "2026-11-25T20:54:43+08:00",
+          "excerpt": null,
+          "thumbnail_url": null,
+          "deep_fetch_status": null
+        }
+      ],
+      "verification": {
+        "all_refs_valid": true,
+        "has_primary_url": true,
+        "rejected_refs": [],
+        "has_first_party": false
+      },
+      "followup": null,
+      "is_new_in_batch": true,
+      "update_kind": "new_discovery",
+      "heavy_score": 41.4,
+      "radar_score": 59,
+      "severity_tier": "B",
+      "severity_label": "B级常规",
+      "translation_attempts": 0,
+      "translation_error": null,
+      "title_zh": "财联社11月25日电，阿里巴巴将中通快递的持股比例降至2.9%。",
+      "translation_status": "native_zh",
+      "summary_zh": "财联社11月25日电，阿里巴巴将中通快递的持股比例降至2.9%。",
+      "title_en": "",
+      "summary_en": "",
+      "ai_analysis_en": "",
+      "deep_qa": [
+        {
+          "question": "事件对大宗物价、出行或外贸订单有何影响？",
+          "answer": "重点关注阿里巴巴 / 通义千问 (Qwen)引发的跨区域供应链、汇率与大宗品风险溢价变动：财联社11月25日电，阿里巴巴将中通快递的持股比例降至2.9%。",
+          "historical_parallel": "历次跨区域地缘与贸易规则博弈多呈“首轮情绪脉冲，随后看实际封锁或关税文本落地决定持续性”轨迹。"
+        },
+        {
+          "question": "下一步决定走向的关键观测点是什么？",
+          "answer": "盯紧涉事官方下一轮正式公报与约束性细则落地。",
+          "historical_parallel": "若各方在后续窗口重回务实谈判，避险溢价与航运附加费通常较快收敛。"
+        }
+      ]
+    }
+  ]
+}
