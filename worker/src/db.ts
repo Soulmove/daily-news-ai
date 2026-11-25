@@ -690,6 +690,9 @@ export const GROWTH_SUPER_ADMIN_KEYS = new Set<string>([
   'user_invite_quota',
   'referral_bonus_qa_quota',
   'invite_waitlist_enabled',
+  'prediction_daily_market_enabled',
+  'prediction_rewards_enabled',
+  'prediction_proposals_enabled',
 ])
 
 export function isValidGrowthStage(raw: unknown): raw is GrowthStage {
@@ -751,6 +754,9 @@ export async function getSiteSettings(db: D1Database, envFallback?: string): Pro
     user_invite_quota: 3,
     referral_bonus_qa_quota: 15,
     invite_waitlist_enabled: false,
+    prediction_daily_market_enabled: true,
+    prediction_rewards_enabled: true,
+    prediction_proposals_enabled: true,
   }
   const boolKeys = new Set([
     'monitor_public',
@@ -760,6 +766,9 @@ export async function getSiteSettings(db: D1Database, envFallback?: string): Pro
     'soft_auth_prompts_enabled',
     'user_referral_enabled',
     'invite_waitlist_enabled',
+    'prediction_daily_market_enabled',
+    'prediction_rewards_enabled',
+    'prediction_proposals_enabled',
   ])
   const rows = await db.prepare('SELECT key, value FROM site_settings').all<{ key: string; value: string }>()
   let dbAccessModeRaw = ''

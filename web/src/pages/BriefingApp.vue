@@ -42,6 +42,7 @@ import {
   Search,
   Shield,
   Sparkles,
+  Target,
   Trash2,
   TrendingUp,
   User,
@@ -78,6 +79,7 @@ import {
 } from '../core/readingProgress'
 import { invalidateReactionsCache, loadReactionsBatch } from '../core/reactionsStore'
 import {
+  buildThreeColumnPerspectives,
   isOnboardingCompleted,
   setOnboardingCompleted,
   type WatchlistPresetTemplate,
@@ -96,18 +98,23 @@ import {
 } from '../core/mobilePush'
 import {
   apiFetchMe,
+  apiFetchPredictionArena,
   apiFetchPredictionCrowd,
   apiFetchPublicOverrides,
   apiGetPublicSettings,
   apiPullCloudState,
   apiPushCloudState,
+  apiSubmitPredictionProposal,
   apiSubmitPredictionVote,
   clearAuthSession,
   isAdminRole,
   loadAuthSession,
   saveAuthSession,
+  type ArenaLeaderboardRow,
   type AuthSession,
+  type DailyPredictionRow,
   type PublicSiteSettings,
+  type UserPredictionProfile,
 } from '../core/auth'
 import {
   applyEditorialOverridesToEvents,
@@ -369,6 +376,14 @@ const techTools = ref<TechToolEntry[]>([])
 const toolsLoaded = ref(false)
 const toolsLoading = ref(false)
 const seedPredictions = ref<PredictionRecord[]>([])
+const dailyArenaPredictions = ref<PredictionRecord[]>([])
+const arenaProfile = ref<UserPredictionProfile | null>(null)
+const arenaLeaderboard = ref<ArenaLeaderboardRow[]>([])
+const arenaReasonTags = ref<string[]>(['流动性驱动', '业绩超预期', '市场已计价', '政策博弈', '逆向情绪'])
+const arenaSeasonKey = ref('')
+const predictionBonusQaQuota = ref(0)
+const sharedPortfolioPreview = ref<{ sectors: string[]; tickers: string[] } | null>(null)
+const focusedEventModalEvent = ref<SmartEvent | null>(null)
 const predictionsNote = ref('')
 const predictionsLoaded = ref(false)
 const predictionsLoading = ref(false)
@@ -748,9 +763,23 @@ const visibleTodayEvents = computed<SmartEvent[]>(() =>
 
 const bookmarkedIdSet = computed(() => new Set(bookmarks.value.map((b) => b.event_id)))
 
-const mergedPredictions = computed(() =>
-  mergePredictions(seedPredictions.value, localPredictions.value),
-)
+const mergedPredictions = computed(() => {
+  const combinedSeeds: PredictionRecord[] = []
+  const seen = new Set<string>()
+  for (const dp of dailyArenaPredictions.value) {
+    if (!seen.has(dp.prediction_id)) {
+      seen.add(dp.prediction_id)
+      combinedSeeds.push(dp)
+    }
+  }
+  for (const sp of seedPredictions.value) {
+    if (!seen.has(sp.prediction_id)) {
+      seen.add(sp.prediction_id)
+      combinedSeeds.push(sp)
+    }
+  }
+  return mergePredictions(combinedSeeds, localPredictions.value)
+})
 
 const localPredictionIdSet = computed(
   () => new Set(localPredictions.value.map((p) => p.prediction_id)),
@@ -1037,6 +1066,11 @@ function syncUrl(replace = false) {
     source: sourceFilter.value,
     evidence: evidenceFilter.value,
     unread: onlyUnreadOrNew.value,
+    pred: incomingPkChallenge.value?.predId || null,
+    p: incomingPkChallenge.value ? String(incomingPkChallenge.value.prob) : null,
+    ref: incomingPkChallenge.value?.ref || null,
+    ref_sectors: sharedPortfolioPreview.value?.sectors.length ? sharedPortfolioPreview.value.sectors.join(',') : null,
+    ref_tickers: sharedPortfolioPreview.value?.tickers.length ? sharedPortfolioPreview.value.tickers.join(',') : null,
   })
   syncUrlToBrowser(url, replace)
 }
@@ -1171,12 +1205,60 @@ function triggerSoftAuth(scenario: SoftAuthScenario) {
   softAuthPromptOpen.value = true
 }
 
+function mapDailyRowToPredictionRecord(row: DailyPredictionRow): PredictionRecord {
+  return {
+    prediction_id: row.id,
+    mode: 'live',
+    status: row.status === 'settled' ? 'settled' : 'open',
+    category: (row.category || 'market') as PredictionRecord['category'],
+    title: row.title,
+    target_entity_id: null,
+    target_entity: row.ticker || null,
+    question: row.question,
+    created_at: row.created_at,
+    due_at: row.due_at,
+    lock_at: row.lock_at,
+    win_rule: row.win_rule || '',
+    lose_rule: row.lose_rule || '',
+    supporting_evidence: [],
+    opposing_evidence: [],
+    core_assumption: '',
+    invalidation_trigger: '',
+    probability_pct: Number(row.ai_prob_pct ?? 50),
+    current_judgment: row.win_rule || row.question,
+    versions: [],
+    settlement:
+      row.status === 'settled'
+        ? {
+            settled_at: row.settled_at || row.due_at,
+            outcome: row.outcome === 'yes' ? 'correct' : row.outcome === 'no' ? 'incorrect' : 'indeterminate',
+            evidence_url: '',
+            note: row.settled_value !== null && row.settled_value !== undefined
+              ? `结算观测值：${row.settled_value}`
+              : '系统客观结算',
+          }
+        : null,
+    is_seed: true,
+    source_type: row.source_type,
+    ticker: row.ticker,
+    base_price: row.base_price,
+    target_price: row.target_price,
+    proposer_username: row.proposer_username,
+    arena_status: row.status,
+    arena_outcome: row.outcome,
+    settled_value: row.settled_value,
+  }
+}
+
+function clearSharedPortfolioPreview() {
+  sharedPortfolioPreview.value = null
+  syncUrl(true)
+}
+
 function openPredictionPkShareCard(payload: { rec: PredictionRecord; probPct: number }) {
   const pid = payload.rec.prediction_id
   const origin = typeof window !== 'undefined' ? window.location.origin : 'https://mirrorinfo.xyz'
-  const u = new URL(origin)
-  u.searchParams.set('tab', 'calendar')
-  u.searchParams.set('pred', pid)
+  const u = new URL(`${origin}/s/pred/${encodeURIComponent(pid)}`)
   u.searchParams.set('p', String(Math.round(payload.probPct)))
   if (authSession.value?.user?.username) {
     u.searchParams.set('ref', authSession.value.user.username)
@@ -1188,12 +1270,17 @@ function openPredictionPkShareCard(payload: { rec: PredictionRecord; probPct: nu
   shareCardPayload.value = {
     kind: 'prediction_pk',
     predictionId: pid,
+    title: payload.rec.title,
     question: pickBiText(payload.rec.question, (payload.rec as unknown as { question_en?: string }).question_en) || payload.rec.title,
     userProbPct: payload.probPct,
+    aiProbPct: Number(payload.rec.probability_pct ?? 50),
+    winRule: payload.rec.win_rule || '',
     deadlineLabel: formatShanghaiDateTime(payload.rec.due_at, false),
     voteCount: Number(stat?.vote_count ?? (guestStagedVotes.value[pid] !== undefined ? 1 : 0)),
     minVotes,
     crowdAvgPct: stat?.unlocked && typeof stat.crowd_avg_pct === 'number' ? stat.crowd_avg_pct : null,
+    rankTier: arenaProfile.value?.rank_tier || null,
+    hitRatePct: arenaProfile.value?.hit_rate_pct ?? null,
     shareUrl: u.toString(),
   }
   shareCardOpen.value = true
@@ -1204,12 +1291,21 @@ function openPortfolioShareCard(summary: {
   bullishCount: number
   bearishCount: number
   neutralCount: number
+  isRedUp: boolean
+  sectors: string[]
+  tickers: string[]
   symbolsLabel: string
-  takeaways: { title: string; polarity: 'positive' | 'negative' | 'neutral'; summary: string }[]
+  takeaways: { title: string; polarity: 'positive' | 'negative' | 'neutral'; summary: string; tags?: string[] }[]
 }) {
   const origin = typeof window !== 'undefined' ? window.location.origin : 'https://mirrorinfo.xyz'
   const u = new URL(origin)
   u.searchParams.set('tab', 'finance')
+  if (summary.sectors.length > 0) {
+    u.searchParams.set('ref_sectors', summary.sectors.slice(0, 10).join(','))
+  }
+  if (summary.tickers.length > 0) {
+    u.searchParams.set('ref_tickers', summary.tickers.slice(0, 10).join(','))
+  }
   shareCardPayload.value = {
     kind: 'portfolio_radar',
     ...summary,
@@ -1233,19 +1329,63 @@ function openEchoChamberShareCard() {
     tech: t('科技AI', 'Tech & AI'),
     general: t('综合要闻', 'General'),
   }
+  const sortedCats = [...weekly.categoryDistribution].sort((a, b) => a.pct - b.pct)
+  const blindCat = sortedCats[0]
+  let blindspotTeaserTitle = ''
+  if (blindCat) {
+    const candidates = allLoadedEvents.value.filter((ev) => ev.category === blindCat.category)
+    const topEv =
+      candidates.find((ev) => ev.severity_tier === 'S' || ev.importance === 'high') ||
+      candidates[0]
+    if (topEv) {
+      blindspotTeaserTitle = pickBiText(topEv.title_zh || topEv.title, topEv.title_en || topEv.title)
+    }
+  }
+  const score = echo.diversityScore ?? 0
+  const personaLabel =
+    score >= 75
+      ? t('全景穿透型视野', 'Panoramic Lens')
+      : score >= 50
+        ? t('均衡观察型视野', 'Balanced Observer')
+        : t('单频聚焦型视野', 'Single-Band Focus')
+
   const origin = typeof window !== 'undefined' ? window.location.origin : 'https://mirrorinfo.xyz'
   shareCardPayload.value = {
     kind: 'echo_chamber',
-    diversityScore: echo.diversityScore ?? 0,
+    diversityScore: score,
     statusLabel: t(echo.statusLabel, echo.statusLabelEn),
+    personaLabel,
     totalReads: echo.totalCategorizedReads,
     distribution: weekly.categoryDistribution.map((c) => ({
       label: catLabelMap[c.category],
       pct: c.pct,
       color: colorHex[c.category],
     })),
+    blindspotLabel: blindCat ? catLabelMap[blindCat.category] : '',
+    blindspotPct: blindCat ? blindCat.pct : 0,
+    blindspotTeaserTitle,
     recommendation: t(echo.recommendation, echo.recommendationEn),
     shareUrl: origin,
+  }
+  shareCardOpen.value = true
+}
+
+function openEventBriefShareCard(ev: SmartEvent) {
+  const origin = typeof window !== 'undefined' ? window.location.origin : 'https://mirrorinfo.xyz'
+  const cols = buildThreeColumnPerspectives(ev, commentsByCatForCards.value[ev.category] || [])
+  const catMeta = CATEGORIES[ev.category]
+  const primarySrc = ev.sources[0]
+  shareCardPayload.value = {
+    kind: 'event_brief',
+    eventId: ev.event_id,
+    title: pickBiText(ev.title_zh || ev.title, ev.title_en || ev.title),
+    categoryLabel: appLang.value === 'en' ? catMeta.nameEn : catMeta.name,
+    sourceName: primarySrc?.publisher_name || primarySrc?.source_name || t('多源交叉核验', 'Cross-Checked'),
+    sourceCount: ev.sources.length,
+    officialPoints: cols.find((c) => c.lane === 'official')?.points.slice(0, 2) || [],
+    bullishPoints: cols.find((c) => c.lane === 'bullish')?.points.slice(0, 2) || [],
+    bearishPoints: cols.find((c) => c.lane === 'bearish')?.points.slice(0, 2) || [],
+    shareUrl: `${origin}/s/event/${encodeURIComponent(ev.event_id)}`,
   }
   shareCardOpen.value = true
 }
@@ -1259,7 +1399,7 @@ async function loadCrowdStats() {
   }
 }
 
-async function handleVotePredictionCrowd(payload: { predictionId: string; probPct: number }) {
+async function handleVotePredictionCrowd(payload: { predictionId: string; probPct: number; reasonTag?: string }) {
   if (!authSession.value?.token) {
     // Guest UX unified (P0-4): stage vote locally first, then prompt soft registration without hard-blocking slider
     const nextStaged = { ...guestStagedVotes.value, [payload.predictionId]: payload.probPct }
@@ -1275,16 +1415,29 @@ async function handleVotePredictionCrowd(payload: { predictionId: string; probPc
     return
   }
   try {
-    const res = await apiSubmitPredictionVote(authSession.value.token, payload.predictionId, payload.probPct)
+    const challengerRef =
+      incomingPkChallenge.value?.predId === payload.predictionId ? incomingPkChallenge.value.ref : undefined
+    const res = await apiSubmitPredictionVote(authSession.value.token, payload.predictionId, payload.probPct, {
+      reason_tag: payload.reasonTag,
+      challenger_ref: challengerRef,
+    })
     if (res.items) {
       crowdStatsMap.value = res.items
     }
     const stat = res.item || crowdStatsMap.value[payload.predictionId]
     const cnt = stat?.vote_count || 1
     const minNeed = Math.max(1, Number(stat?.min_votes ?? res.min_votes ?? siteSettings.value.crowd_vote_min_unlock ?? 3))
+    const mult = Number(res.early_multiplier ?? stat?.user_early_multiplier ?? 1)
+    const multTag = mult > 1 ? ` · 早鸟 ${mult.toFixed(1)}x` : ''
     const msg = stat?.unlocked
-      ? t(`已记录 ${payload.probPct}%（共 ${cnt} 人参与，群众均值 ${stat.crowd_avg_pct}%）`, `Vote ${payload.probPct}% saved (${cnt} voters · avg ${stat.crowd_avg_pct}%)`)
-      : t(`已记录 ${payload.probPct}%（已收 ${cnt}/${minNeed} 份，邀好友立即解锁均值）`, `Vote ${payload.probPct}% saved (${cnt}/${minNeed} to unlock crowd avg)`)
+      ? t(
+          `已记录 ${payload.probPct}%${multTag}（共 ${cnt} 人参与，群众均值 ${stat.crowd_avg_pct}%）`,
+          `Vote ${payload.probPct}% saved (${cnt} voters · avg ${stat.crowd_avg_pct}%)`,
+        )
+      : t(
+          `已记录 ${payload.probPct}%${multTag}（已收 ${cnt}/${minNeed} 份，邀好友立即解锁均值）`,
+          `Vote ${payload.probPct}% saved (${cnt}/${minNeed} to unlock crowd avg)`,
+        )
     const rec = mergedPredictions.value.find((p) => p.prediction_id === payload.predictionId)
     notifyToast(
       msg,
@@ -1300,16 +1453,60 @@ async function handleVotePredictionCrowd(payload: { predictionId: string; probPc
   }
 }
 
+async function handleSubmitPredictionProposal(body: {
+  category: string
+  title: string
+  question: string
+  win_rule: string
+  lose_rule: string
+  due_at: string
+}) {
+  if (!authSession.value?.token) {
+    triggerSoftAuth('prediction_vote')
+    return
+  }
+  try {
+    await apiSubmitPredictionProposal(authSession.value.token, body)
+    notifyToast(
+      t(
+        '预测提案已提交审核，通过后将上架全站日赛并奖励 +100 洞察分与 +1 邀请名额',
+        'Proposal submitted — rewards +100 pts and +1 invite upon approval',
+      ),
+    )
+  } catch (err) {
+    notifyToast(err instanceof Error ? err.message : t('提案提交失败，请稍后重试', 'Proposal submission failed'))
+  }
+}
+
 async function loadPredictions(forceFresh = false) {
   if (!forceFresh && predictionsLoaded.value) return
   predictionsLoading.value = true
   try {
-    const [res] = await Promise.all([
+    const [res, arenaRes] = await Promise.all([
       fetchPredictionsPublic(manifest.value, forceFresh),
-      loadCrowdStats(),
+      apiFetchPredictionArena(authSession.value?.token).catch(() => null),
     ])
     seedPredictions.value = res.predictions
     predictionsNote.value = res.note
+    if (arenaRes) {
+      dailyArenaPredictions.value = (arenaRes.daily_predictions || []).map(mapDailyRowToPredictionRecord)
+      crowdStatsMap.value = arenaRes.crowd_stats || {}
+      arenaProfile.value = arenaRes.my_profile || null
+      arenaLeaderboard.value = arenaRes.leaderboard || []
+      if (arenaRes.allowed_reason_tags?.length) {
+        arenaReasonTags.value = arenaRes.allowed_reason_tags
+      }
+      arenaSeasonKey.value = arenaRes.season_key || ''
+      if (arenaRes.my_profile) {
+        const expMs = Date.parse(arenaRes.my_profile.bonus_qa_expires_at || '')
+        predictionBonusQaQuota.value =
+          arenaRes.my_profile.bonus_qa_quota > 0 && (Number.isNaN(expMs) || expMs > Date.now())
+            ? Number(arenaRes.my_profile.bonus_qa_quota)
+            : 0
+      }
+    } else {
+      await loadCrowdStats()
+    }
     predictionsLoaded.value = true
   } finally {
     predictionsLoading.value = false
@@ -1443,10 +1640,10 @@ async function loadInitial(forceFresh = false) {
     }
     docsByCat.value = {}
     await ensureCategoryLoaded(activeCategory.value, forceFresh)
-    if (searchScope.value === 'all' || searchQuery.value.trim()) {
-      void ensureAllCategoriesLoaded(forceFresh)
+    if (searchScope.value === 'all' || searchQuery.value.trim() || highlightedEventId.value) {
+      await ensureAllCategoriesLoaded(forceFresh)
     }
-    if (forceFresh) {
+    if (forceFresh || highlightedEventId.value || incomingPkChallenge.value || sharedPortfolioPreview.value) {
       await Promise.all([ensureDataForTab(activeTab.value, forceFresh), refreshSiteSettingsAndOverrides()])
     } else {
       void ensureDataForTab(activeTab.value, forceFresh)
@@ -1454,7 +1651,11 @@ async function loadInitial(forceFresh = false) {
     if (drawerEntityKey.value) {
       void loadEntities(forceFresh)
     }
-    scrollToHighlightedEvent()
+    if (highlightedEventId.value) {
+      void focusHighlightedEventLanding()
+    } else {
+      scrollToHighlightedEvent()
+    }
   } finally {
     loadingCat.value = false
   }
@@ -1517,6 +1718,25 @@ function scrollToHighlightedEvent() {
       el.scrollIntoView({ behavior: 'smooth', block: 'center' })
     }
   }, 120)
+}
+
+async function focusHighlightedEventLanding() {
+  const targetId = highlightedEventId.value
+  if (!targetId) return
+  const matched = allLoadedEvents.value.find((e) => e.event_id === targetId)
+  if (!matched) {
+    notifyToast(t('该事件可能已进入历史归档，请点击左侧「历史归档」回看', 'Event may have moved to Archive'))
+    return
+  }
+  await nextTick()
+  setTimeout(() => {
+    const el = typeof document !== 'undefined' ? document.getElementById(`event-${targetId}`) : null
+    if (el && el.offsetParent !== null) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    } else {
+      focusedEventModalEvent.value = matched
+    }
+  }, 180)
 }
 
 function jumpToEvent(eventId: string | undefined) {
@@ -2268,23 +2488,9 @@ function saveBookmarkTags(eventId: string) {
 
 function handleCopyLink(ev: SmartEvent) {
   highlightedEventId.value = ev.event_id
-  const relUrl = buildBriefingUrl({
-    tab: 'briefing',
-    cat: ev.category,
-    history: historyPath.value,
-    event: ev.event_id,
-    story: null,
-    entity: null,
-    fresh: 'all',
-    q: '',
-    scope: 'current',
-    source: 'all',
-    evidence: 'all',
-    unread: false,
-  })
   syncUrl(false)
   if (typeof window !== 'undefined' && navigator.clipboard) {
-    const abs = new URL(relUrl, window.location.origin).toString()
+    const abs = `${window.location.origin}/s/event/${encodeURIComponent(ev.event_id)}`
     void navigator.clipboard.writeText(abs).catch(() => {})
   }
   notifyToast(t('已复制该事件直达链接（含精确事件 ID）', 'Copied permalink with exact event ID'))
@@ -2298,7 +2504,7 @@ function handleSelectEntity(ent: string) {
   }
 }
 
-const SECONDARY_TABS = new Set<WorkbenchTab>(['tracking', 'calendar'])
+const SECONDARY_TABS = new Set<WorkbenchTab>(['tracking'])
 const isSecondaryTabActive = computed(() => SECONDARY_TABS.has(activeTab.value))
 const previousTab = ref<WorkbenchTab>('today')
 
@@ -3579,7 +3785,15 @@ async function handleAuthenticated(sess: AuthSession) {
     }
     guestStagedVotes.value = {}
     saveGuestStagedVotes({})
-    void loadCrowdStats()
+  }
+  if (predictionsLoaded.value || activeTab.value === 'calendar') {
+    void loadPredictions(true)
+  } else {
+    void apiFetchMe(sess.token)
+      .then((me) => {
+        predictionBonusQaQuota.value = Math.max(0, Number(me.prediction_bonus_qa_quota ?? 0))
+      })
+      .catch(() => {})
   }
   if (sess.referral_bonus_granted && sess.referral_bonus_granted > 0) {
     notifyToast(
@@ -3605,6 +3819,8 @@ async function handleAuthenticated(sess: AuthSession) {
 function executeLogoutNow() {
   clearAuthSession()
   authSession.value = null
+  arenaProfile.value = null
+  predictionBonusQaQuota.value = 0
   lastSyncedAt.value = null
   authModalOpen.value = false
   userAvatar.value = saveUserAvatar('')
@@ -3768,13 +3984,25 @@ onMounted(async () => {
       }
     }
     const pkPred = (urlParams.get('pred') || '').trim()
-    const pkProb = Number(urlParams.get('p'))
-    if (pkPred && Number.isFinite(pkProb) && pkProb >= 5 && pkProb <= 95) {
-      incomingPkChallenge.value = { predId: pkPred, prob: Math.round(pkProb), ref: refParam || undefined }
+    const rawProb = urlParams.get('p')
+    const pkProb = rawProb ? Number(rawProb) : 50
+    if (pkPred) {
+      const clampedProb = Number.isFinite(pkProb) && pkProb >= 5 && pkProb <= 95 ? Math.round(pkProb) : 50
+      incomingPkChallenge.value = { predId: pkPred, prob: clampedProb, ref: refParam || undefined }
       activeTab.value = 'calendar'
       scheduleSubView.value = 'predictions'
     }
-    if (hasInvalidBriefingUrlParams(window.location.search) || refParam || pkPred) {
+    const refSectorsRaw = (urlParams.get('ref_sectors') || '').trim()
+    const refTickersRaw = (urlParams.get('ref_tickers') || '').trim()
+    if (refSectorsRaw || refTickersRaw) {
+      const sectors = refSectorsRaw.split(',').map((s) => s.trim()).filter(Boolean).slice(0, 12)
+      const tickers = refTickersRaw.split(',').map((s) => s.trim()).filter(Boolean).slice(0, 12)
+      if (sectors.length > 0 || tickers.length > 0) {
+        sharedPortfolioPreview.value = { sectors, tickers }
+        activeTab.value = 'finance'
+      }
+    }
+    if (hasInvalidBriefingUrlParams(window.location.search)) {
       syncUrl(true)
     }
   }
@@ -3784,6 +4012,7 @@ onMounted(async () => {
       if (authSession.value) {
         authSession.value = { token: authSession.value.token, user: res.user }
         saveAuthSession(authSession.value)
+        predictionBonusQaQuota.value = Math.max(0, Number(res.prediction_bonus_qa_quota ?? 0))
         if (res.user.avatar) {
           userAvatar.value = saveUserAvatar(res.user.avatar)
         }
@@ -4044,10 +4273,10 @@ onBeforeUnmount(() => {
       </div>
       <!-- Desktop 3-Column / Tablet 2-Column / Mobile 1-Column Responsive Workbench -->
       <div class="md:flex md:items-start md:gap-4 lg:gap-5 xl:gap-6">
-        <!-- LEFT RAIL: Fixed Sticky macOS Frosted Navigation (>=768px; collapses to 64px icon rail) -->
+        <!-- LEFT RAIL: Fixed Sticky macOS Frosted Navigation (>=768px; expands at >=1024px) -->
         <aside
           class="hidden md:flex desktop-shell-only flex-col justify-between sticky top-[58px] h-[calc(100vh-4.25rem)] shrink-0 rounded-2xl ios-glass p-2 transition-all duration-200"
-          :class="sidebarCollapsed ? 'w-16' : 'w-16 xl:w-[216px]'"
+          :class="sidebarCollapsed ? 'w-16' : 'w-16 lg:w-[208px] xl:w-[216px]'"
           :aria-label="t('工作台导航栏', 'Workbench Sidebar')"
         >
           <div class="space-y-1 overflow-y-auto no-scrollbar">
@@ -4060,7 +4289,7 @@ onBeforeUnmount(() => {
               :title="item.label"
               class="ios-tap w-full min-h-[38px] px-2.5 rounded-xl flex items-center gap-2.5 text-[13px] transition-colors"
               :class="[
-                sidebarCollapsed ? 'justify-center' : 'justify-center xl:justify-between',
+                sidebarCollapsed ? 'justify-center' : 'justify-center lg:justify-between',
                 activeTab === item.id
                   ? 'bg-[#007AFF] text-white font-semibold shadow-xs'
                   : 'text-zinc-700 dark:text-zinc-300 hover:bg-black/[0.05] dark:hover:bg-white/[0.07] font-medium',
@@ -4068,11 +4297,11 @@ onBeforeUnmount(() => {
             >
               <span class="inline-flex items-center gap-2.5 min-w-0">
                 <component :is="item.icon" class="w-[18px] h-[18px] shrink-0" :stroke-width="1.5" />
-                <span v-if="!sidebarCollapsed" class="hidden xl:inline truncate">{{ item.label }}</span>
+                <span v-if="!sidebarCollapsed" class="hidden lg:inline truncate">{{ item.label }}</span>
               </span>
               <span
                 v-if="!sidebarCollapsed && item.count > 0"
-                class="hidden xl:inline-flex text-[11px] tabular-nums px-1.5 py-0.2 rounded-md"
+                class="hidden lg:inline-flex text-[11px] tabular-nums px-1.5 py-0.2 rounded-md"
                 :class="activeTab === item.id ? 'bg-white/20 text-white' : 'text-zinc-400'"
               >
                 {{ item.count }}
@@ -4087,14 +4316,14 @@ onBeforeUnmount(() => {
               :title="t('历史归档', 'Archive')"
               class="ios-tap w-full min-h-[38px] px-2.5 rounded-xl flex items-center gap-2.5 text-[13px] font-medium transition-colors"
               :class="[
-                sidebarCollapsed ? 'justify-center' : 'justify-center xl:justify-start',
+                sidebarCollapsed ? 'justify-center' : 'justify-center lg:justify-start',
                 isHistoryMode
                   ? 'bg-[#007AFF]/12 text-[#007AFF] dark:text-[#0A84FF] font-semibold'
                   : 'text-zinc-600 dark:text-zinc-400 hover:bg-black/[0.05] dark:hover:bg-white/[0.07]',
               ]"
             >
               <History class="w-[18px] h-[18px] shrink-0" :stroke-width="1.5" />
-              <span v-if="!sidebarCollapsed" class="hidden xl:inline truncate">
+              <span v-if="!sidebarCollapsed" class="hidden lg:inline truncate">
                 {{ isHistoryMode ? `${t('历史', 'Archive')}` : t('历史归档', 'Archive') }}
               </span>
             </button>
@@ -4104,15 +4333,15 @@ onBeforeUnmount(() => {
               @click="openLibraryModal('saved')"
               :title="t('个人阅读库', 'Library')"
               class="ios-tap w-full min-h-[38px] px-2.5 rounded-xl flex items-center gap-2.5 text-[13px] font-medium text-zinc-600 dark:text-zinc-400 hover:bg-black/[0.05] dark:hover:bg-white/[0.07] transition-colors"
-              :class="sidebarCollapsed ? 'justify-center' : 'justify-center xl:justify-between'"
+              :class="sidebarCollapsed ? 'justify-center' : 'justify-center lg:justify-between'"
             >
               <span class="inline-flex items-center gap-2.5 min-w-0">
                 <Bookmark class="w-[18px] h-[18px] shrink-0" :stroke-width="1.5" />
-                <span v-if="!sidebarCollapsed" class="hidden xl:inline truncate">{{ t('阅读库', 'Library') }}</span>
+                <span v-if="!sidebarCollapsed" class="hidden lg:inline truncate">{{ t('阅读库', 'Library') }}</span>
               </span>
               <span
                 v-if="!sidebarCollapsed && libraryCount > 0"
-                class="hidden xl:inline-flex text-[11px] tabular-nums text-zinc-400"
+                class="hidden lg:inline-flex text-[11px] tabular-nums text-zinc-400"
               >
                 {{ libraryCount }}
               </span>
@@ -4130,7 +4359,7 @@ onBeforeUnmount(() => {
               :title="t('使用帮助', 'Help & Guide')"
             >
               <HelpCircle class="w-3.5 h-3.5 shrink-0" :stroke-width="1.5" />
-              <span v-if="!sidebarCollapsed" class="hidden xl:inline truncate">{{ t('使用帮助', 'Help') }}</span>
+              <span v-if="!sidebarCollapsed" class="hidden lg:inline truncate">{{ t('使用帮助', 'Help') }}</span>
             </a>
             <button
               type="button"
@@ -4139,7 +4368,7 @@ onBeforeUnmount(() => {
               :title="t('意见反馈', 'Send Feedback')"
             >
               <MessageSquarePlus class="w-3.5 h-3.5 shrink-0" :stroke-width="1.5" />
-              <span v-if="!sidebarCollapsed" class="hidden xl:inline truncate">{{ t('意见反馈', 'Feedback') }}</span>
+              <span v-if="!sidebarCollapsed" class="hidden lg:inline truncate">{{ t('意见反馈', 'Feedback') }}</span>
             </button>
             <a
               href="./about.html"
@@ -4147,7 +4376,7 @@ onBeforeUnmount(() => {
               :title="t('关于镜信', 'About MirrorBrief')"
             >
               <Info class="w-3.5 h-3.5 shrink-0" :stroke-width="1.5" />
-              <span v-if="!sidebarCollapsed" class="hidden xl:inline truncate">{{ t('关于镜信', 'About') }}</span>
+              <span v-if="!sidebarCollapsed" class="hidden lg:inline truncate">{{ t('关于镜信', 'About') }}</span>
             </a>
             <a
               v-if="isAdminRole(authSession?.user?.role)"
@@ -4156,19 +4385,19 @@ onBeforeUnmount(() => {
               :title="t('管理员后台', 'Admin Console')"
             >
               <Shield class="w-3.5 h-3.5 shrink-0" :stroke-width="1.5" />
-              <span v-if="!sidebarCollapsed" class="hidden xl:inline truncate">{{ t('管理员后台', 'Admin') }}</span>
+              <span v-if="!sidebarCollapsed" class="hidden lg:inline truncate">{{ t('管理员后台', 'Admin') }}</span>
             </a>
           </div>
 
           <!-- Sidebar Footer: Collapse Toggle & Shortcuts -->
           <div
             class="pt-1.5 border-t border-black/[0.06] dark:border-white/[0.08] flex items-center gap-1"
-            :class="sidebarCollapsed ? 'flex-col justify-center' : 'justify-center xl:justify-between'"
+            :class="sidebarCollapsed ? 'flex-col justify-center' : 'justify-center lg:justify-between'"
           >
             <button
               type="button"
               @click="sidebarCollapsed = !sidebarCollapsed"
-              class="hidden xl:inline-flex items-center justify-center w-9 h-9 rounded-xl text-zinc-400 hover:text-zinc-800 dark:hover:text-white hover:bg-black/[0.05] dark:hover:bg-white/[0.08]"
+              class="hidden lg:inline-flex items-center justify-center w-9 h-9 rounded-xl text-zinc-400 hover:text-zinc-800 dark:hover:text-white hover:bg-black/[0.05] dark:hover:bg-white/[0.08]"
               :title="sidebarCollapsed ? t('展开侧边栏', 'Expand sidebar') : t('收起侧边栏', 'Collapse sidebar')"
               :aria-label="sidebarCollapsed ? t('展开侧边栏', 'Expand sidebar') : t('收起侧边栏', 'Collapse sidebar')"
             >
@@ -4183,7 +4412,7 @@ onBeforeUnmount(() => {
               :aria-label="t('键盘快捷键 (?)', 'Keyboard shortcuts (?)')"
             >
               <Keyboard class="w-3.5 h-3.5" :stroke-width="1.5" />
-              <kbd v-if="!sidebarCollapsed" class="hidden xl:inline font-mono">?</kbd>
+              <kbd v-if="!sidebarCollapsed" class="hidden lg:inline font-mono">?</kbd>
             </button>
           </div>
         </aside>
@@ -4346,6 +4575,7 @@ onBeforeUnmount(() => {
           :saved-note-map="savedNoteMap"
           :research-notes="researchNotes"
           :comments-map="commentsByCatForCards"
+          :highlighted-event-id="highlightedEventId"
           :loading="loadingCat || loadingAllCats"
           :topics-loading="topicsLoading || !topicsLoaded"
           @add-watchlist="handleAddWatchlist"
@@ -4378,6 +4608,7 @@ onBeforeUnmount(() => {
           @clear-search="clearFilters"
           @open-auth="openAuthModal()"
           @open-echo-share-card="openEchoChamberShareCard"
+          @share-poster="openEventBriefShareCard"
         >
           <template #pillars>
             <div class="space-y-3">
@@ -4751,6 +4982,7 @@ onBeforeUnmount(() => {
                       :is-bookmarked="checkIsBookmarked(ev)"
                       :is-new-since-visit="checkIsNew(ev)"
                       :is-highlighted="highlightedEventId === ev.event_id"
+                      :force-expand-perspectives="highlightedEventId === ev.event_id"
                       :saved-note="savedNoteMap[ev.event_id] || ''"
                       :matching-note-count="countMatchingNotesForSubject(researchNotes, { eventId: ev.event_id, storylineId: ev.storyline_id, entityIds: ev.entity_ids, entities: ev.entities })"
                       :perspectives="commentsByCatForCards[ev.category] || []"
@@ -4771,6 +5003,7 @@ onBeforeUnmount(() => {
                       @toggle-read-later="toggleSetKey('read_later', $event)"
                       @toggle-downweight="toggleSetKey('downweighted', $event)"
                       @toggle-mute="toggleSetKey('muted', $event)"
+                      @share-poster="openEventBriefShareCard"
                     />
                   </div>
                   <div v-if="pagedBriefingEvents.hasMore" class="pt-1 text-center">
@@ -4804,6 +5037,7 @@ onBeforeUnmount(() => {
                       :is-bookmarked="checkIsBookmarked(ev)"
                       :is-new-since-visit="checkIsNew(ev)"
                       :is-highlighted="highlightedEventId === ev.event_id"
+                      :force-expand-perspectives="highlightedEventId === ev.event_id"
                       :saved-note="savedNoteMap[ev.event_id] || ''"
                       :matching-note-count="countMatchingNotesForSubject(researchNotes, { eventId: ev.event_id, storylineId: ev.storyline_id, entityIds: ev.entity_ids, entities: ev.entities })"
                       :perspectives="commentsByCatForCards[ev.category] || []"
@@ -4824,6 +5058,7 @@ onBeforeUnmount(() => {
                       @toggle-read-later="toggleSetKey('read_later', $event)"
                       @toggle-downweight="toggleSetKey('downweighted', $event)"
                       @toggle-mute="toggleSetKey('muted', $event)"
+                      @share-poster="openEventBriefShareCard"
                     />
                   </div>
                 </details>
@@ -4918,10 +5153,12 @@ onBeforeUnmount(() => {
           :initial-portfolio-only="financeInitialPortfolioOnly"
           :open-portfolio-nonce="financeOpenPortfolioNonce"
           :research-notes="researchNotes"
+          :shared-portfolio-preview="sharedPortfolioPreview"
           @jump-event-id="handleJumpToEventId"
           @mark-read-event-id="handleMarkSingleRead"
           @open-notes="openLibraryModal('notes')"
           @clear-search="clearFilters"
+          @clear-shared-portfolio="clearSharedPortfolioPreview"
           @portfolio-changed="handlePortfolioChanged"
           @open-portfolio-share-card="openPortfolioShareCard"
         />
@@ -5021,16 +5258,23 @@ onBeforeUnmount(() => {
               :crowd-min-unlock="siteSettings.crowd_vote_min_unlock ?? 3"
               :guest-staged-votes="guestStagedVotes"
               :incoming-pk-challenge="incomingPkChallenge"
+              :arena-profile="arenaProfile"
+              :arena-leaderboard="arenaLeaderboard"
+              :allowed-reason-tags="arenaReasonTags"
+              :prediction-proposals-enabled="siteSettings.prediction_proposals_enabled !== false"
+              :season-key="arenaSeasonKey"
               :is-logged-in="Boolean(authSession)"
               :is-admin="isAdminRole(authSession?.user?.role)"
               :now-ms="nowMs"
               @create-prediction="handleCreatePrediction"
+              @submit-proposal="handleSubmitPredictionProposal"
               @revise-prediction="handleRevisePrediction"
               @settle-prediction="handleSettlePrediction"
               @set-prediction-stance="handleSetPredictionStance"
               @vote-crowd="handleVotePredictionCrowd"
               @open-share-pk="openPredictionPkShareCard"
-              @dismiss-pk-banner="incomingPkChallenge = null"
+              @dismiss-pk-banner="incomingPkChallenge = null; syncUrl(true)"
+              @open-auth="openAuthModal('login')"
               @delete-prediction="handleDeletePrediction"
               @reset-local-predictions="handleResetLocalPredictions"
               @clear-search="clearFilters"
@@ -5157,7 +5401,7 @@ onBeforeUnmount(() => {
       :auth-token="authSession?.token ?? null"
       :guest-daily-limit="siteSettings.guest_qa_daily_limit ?? 5"
       :auth-daily-limit="siteSettings.auth_qa_daily_limit ?? 30"
-      :extra-qa-quota="authSession?.user?.extra_qa_quota ?? 0"
+      :extra-qa-quota="(authSession?.user?.extra_qa_quota ?? 0) + predictionBonusQaQuota"
       :now-ms="nowMs"
       @close="qaModalOpen = false"
       @save-note="handleSaveResearchNote"
@@ -5665,6 +5909,82 @@ onBeforeUnmount(() => {
       :payload="shareCardPayload"
       @close="shareCardOpen = false"
     />
+
+    <!-- Single-Event Focus Reader Modal (for ?event=<id> shared deep-links not in active visible list) -->
+    <Teleport to="body">
+      <div
+        v-if="focusedEventModalEvent"
+        class="fixed inset-0 z-[58] flex items-center justify-center p-3 sm:p-5 bg-slate-950/60 backdrop-blur-xs"
+        @click.self="focusedEventModalEvent = null"
+        @keydown.esc.prevent="focusedEventModalEvent = null"
+      >
+        <div
+          role="dialog"
+          aria-modal="true"
+          :aria-label="t('分享事件精读聚焦', 'Focused Shared Event')"
+          class="w-full max-w-2xl max-h-[88vh] overflow-y-auto rounded-2xl bg-white dark:bg-[#1C1C1E] border border-black/[0.08] dark:border-white/[0.12] shadow-2xl p-4 sm:p-5 space-y-3"
+        >
+          <div class="flex items-center justify-between gap-2 pb-2 border-b border-black/[0.06] dark:border-white/[0.08]">
+            <div class="inline-flex items-center gap-2 min-w-0">
+              <span class="px-2 py-0.5 rounded-full text-[11px] font-semibold bg-[#007AFF]/12 text-[#007AFF] dark:text-[#0A84FF]">
+                {{ appLang === 'en' ? CATEGORIES[focusedEventModalEvent.category].nameEn : CATEGORIES[focusedEventModalEvent.category].name }}
+              </span>
+              <span class="text-xs font-semibold text-zinc-700 dark:text-zinc-200 truncate">
+                {{ t('精读直达聚焦视图', 'Shared Event Focus') }}
+              </span>
+            </div>
+            <div class="flex items-center gap-1.5 shrink-0">
+              <button
+                type="button"
+                @click="const cat = focusedEventModalEvent.category; focusedEventModalEvent = null; activeTab = 'briefing'; void switchCategory(cat)"
+                class="px-2.5 min-h-[30px] rounded-lg bg-[#007AFF]/10 text-[#007AFF] dark:text-[#0A84FF] text-[11px] font-semibold hover:bg-[#007AFF]/15"
+              >
+                {{ t('进入频道完整流', 'Open Channel') }}
+              </button>
+              <button
+                type="button"
+                @click="focusedEventModalEvent = null"
+                class="w-8 h-8 inline-flex items-center justify-center rounded-lg text-zinc-400 hover:bg-black/[0.05] dark:hover:bg-white/[0.08]"
+                :aria-label="t('关闭', 'Close')"
+              >
+                <X class="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+          <EventCard
+            :event="focusedEventModalEvent"
+            :now-ms="nowMs"
+            :is-read="checkIsRead(focusedEventModalEvent)"
+            :market-impact="financeImpactDoc?.event_impact_map?.[focusedEventModalEvent.event_id] || null"
+            :is-bookmarked="checkIsBookmarked(focusedEventModalEvent)"
+            :is-new-since-visit="checkIsNew(focusedEventModalEvent)"
+            :is-highlighted="true"
+            :force-expand-perspectives="true"
+            :default-expanded="true"
+            :saved-note="savedNoteMap[focusedEventModalEvent.event_id] || ''"
+            :matching-note-count="countMatchingNotesForSubject(researchNotes, { eventId: focusedEventModalEvent.event_id, storylineId: focusedEventModalEvent.storyline_id, entityIds: focusedEventModalEvent.entity_ids, entities: focusedEventModalEvent.entities })"
+            :perspectives="commentsByCatForCards[focusedEventModalEvent.category] || []"
+            :is-read-later="readLaterSet.has(focusedEventModalEvent.event_id)"
+            :downweighted="downweightedSet.has(focusedEventModalEvent.event_id)"
+            :show-moderation-actions="false"
+            @toggle-read="handleToggleRead"
+            @mark-read="handleMarkSingleRead"
+            @open-notes="openLibraryModal('notes')"
+            @toggle-bookmark="handleToggleBookmark"
+            @copy-link="handleCopyLink"
+            @select-entity="handleOpenEntityByName"
+            @open-storyline="handleOpenStoryline"
+            @open-qa="(ev) => { focusedEventModalEvent = null; openQaForEvent(ev) }"
+            @open-detail="(ev) => { focusedEventModalEvent = null; openEventInDetailReader(ev) }"
+            @save-note="handleSaveCardNote"
+            @toggle-read-later="toggleSetKey('read_later', $event)"
+            @toggle-downweight="toggleSetKey('downweighted', $event)"
+            @toggle-mute="toggleSetKey('muted', $event)"
+            @share-poster="openEventBriefShareCard"
+          />
+        </div>
+      </div>
+    </Teleport>
 
     <!-- Secondary Action Confirmation Modal (Sign Out / Delete Note / Remove Bookmark) -->
     <Teleport to="body">
@@ -6235,12 +6555,12 @@ onBeforeUnmount(() => {
       </div>
     </Teleport>
 
-    <!-- iOS-Grade Frosted 5-Tab Bottom Navigation Bar (<768px mobile, plus Android shell / phone landscape) -->
+    <!-- iOS-Grade Frosted 6-Tab Bottom Navigation Bar (<768px mobile, plus Android shell / phone landscape) -->
     <nav
       class="md:hidden mobile-shell-nav fixed bottom-0 inset-x-0 z-40 ios-glass border-t border-black/[0.07] dark:border-white/[0.1] px-1 pt-1 pb-[max(0.35rem,env(safe-area-inset-bottom))]"
       aria-label="移动端底部导航"
     >
-      <div class="grid grid-cols-5 items-center text-[10px] font-semibold">
+      <div class="grid grid-cols-6 items-center text-[10px] font-semibold">
         <button
           type="button"
           @click="handleBottomTabClick('today')"
@@ -6248,7 +6568,7 @@ onBeforeUnmount(() => {
           class="ios-tap flex flex-col items-center justify-center gap-0.5 min-h-[48px] py-1 rounded-xl transition-colors"
           :class="activeTab === 'today' ? 'text-[#007AFF] dark:text-[#0A84FF]' : 'text-zinc-500 dark:text-zinc-400'"
         >
-          <Compass class="w-[21px] h-[21px]" :stroke-width="1.5" />
+          <Compass class="w-[20px] h-[20px]" :stroke-width="1.5" />
           <span>{{ t('要闻', 'Today') }}</span>
         </button>
         <button
@@ -6258,7 +6578,7 @@ onBeforeUnmount(() => {
           class="ios-tap relative flex flex-col items-center justify-center gap-0.5 min-h-[48px] py-1 rounded-xl transition-colors"
           :class="activeTab === 'wire' ? 'text-[#007AFF] dark:text-[#0A84FF]' : 'text-zinc-500 dark:text-zinc-400'"
         >
-          <Radio class="w-[21px] h-[21px]" :stroke-width="1.5" />
+          <Radio class="w-[20px] h-[20px]" :stroke-width="1.5" />
           <span>{{ t('快讯', 'Live') }}</span>
         </button>
         <button
@@ -6268,8 +6588,18 @@ onBeforeUnmount(() => {
           class="ios-tap flex flex-col items-center justify-center gap-0.5 min-h-[48px] py-1 rounded-xl transition-colors"
           :class="activeTab === 'finance' ? 'text-[#007AFF] dark:text-[#0A84FF]' : 'text-zinc-500 dark:text-zinc-400'"
         >
-          <TrendingUp class="w-[21px] h-[21px]" :stroke-width="1.5" />
+          <TrendingUp class="w-[20px] h-[20px]" :stroke-width="1.5" />
           <span>{{ t('股市', 'Markets') }}</span>
+        </button>
+        <button
+          type="button"
+          @click="scheduleSubView = 'predictions'; void loadPredictions(); handleBottomTabClick('calendar')"
+          :aria-current="activeTab === 'calendar' ? 'page' : undefined"
+          class="ios-tap flex flex-col items-center justify-center gap-0.5 min-h-[48px] py-1 rounded-xl transition-colors"
+          :class="activeTab === 'calendar' ? 'text-[#007AFF] dark:text-[#0A84FF]' : 'text-zinc-500 dark:text-zinc-400'"
+        >
+          <Target class="w-[20px] h-[20px]" :stroke-width="1.5" />
+          <span>{{ t('预测', 'Arena') }}</span>
         </button>
         <button
           type="button"
@@ -6278,7 +6608,7 @@ onBeforeUnmount(() => {
           class="ios-tap flex flex-col items-center justify-center gap-0.5 min-h-[48px] py-1 rounded-xl transition-colors"
           :class="activeTab === 'ai_progress' ? 'text-[#007AFF] dark:text-[#0A84FF]' : 'text-zinc-500 dark:text-zinc-400'"
         >
-          <Bot class="w-[21px] h-[21px]" :stroke-width="1.5" />
+          <Bot class="w-[20px] h-[20px]" :stroke-width="1.5" />
           <span>{{ t('AI 前沿', 'AI') }}</span>
         </button>
         <button
@@ -6288,8 +6618,8 @@ onBeforeUnmount(() => {
           class="ios-tap relative flex flex-col items-center justify-center gap-0.5 min-h-[48px] py-1 rounded-xl transition-colors"
           :class="activeTab === 'me' || isSecondaryTabActive ? 'text-[#007AFF] dark:text-[#0A84FF]' : 'text-zinc-500 dark:text-zinc-400'"
         >
-          <span v-if="isSecondaryTabActive" class="w-1.5 h-1.5 rounded-full bg-[#007AFF] absolute top-1.5 right-4" />
-          <User class="w-[21px] h-[21px]" :stroke-width="1.5" />
+          <span v-if="isSecondaryTabActive" class="w-1.5 h-1.5 rounded-full bg-[#007AFF] absolute top-1.5 right-3" />
+          <User class="w-[20px] h-[20px]" :stroke-width="1.5" />
           <span>{{ t('我的', 'Me') }}</span>
         </button>
       </div>

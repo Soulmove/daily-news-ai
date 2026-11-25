@@ -20,6 +20,11 @@ export interface BriefingUrlState {
   evidence: 'all' | EvidenceStatus
   unread: boolean
   fresh: FreshnessBucket
+  pred?: string | null
+  p?: string | null
+  ref?: string | null
+  ref_sectors?: string | null
+  ref_tickers?: string | null
 }
 
 export type MonitorViewMode = 'stream' | 'matrix' | 'health' | 'connectors' | 'radar'
@@ -81,6 +86,11 @@ export function parseBriefingUrlState(search = typeof window !== 'undefined' ? w
     evidence,
     unread: params.get('unread') === '1',
     fresh,
+    pred: params.get('pred')?.trim() || null,
+    p: params.get('p')?.trim() || null,
+    ref: params.get('ref')?.trim() || null,
+    ref_sectors: params.get('ref_sectors')?.trim() || null,
+    ref_tickers: params.get('ref_tickers')?.trim() || null,
   }
 }
 
@@ -101,6 +111,11 @@ export function buildBriefingUrl(
   if (state.evidence !== 'all') params.set('evidence', state.evidence)
   if (state.unread) params.set('unread', '1')
   if (state.fresh && state.fresh !== 'all') params.set('fresh', state.fresh)
+  if (state.pred) params.set('pred', state.pred)
+  if (state.p) params.set('p', state.p)
+  if (state.ref) params.set('ref', state.ref)
+  if (state.ref_sectors) params.set('ref_sectors', state.ref_sectors)
+  if (state.ref_tickers) params.set('ref_tickers', state.ref_tickers)
 
   const qs = params.toString()
   if (typeof window !== 'undefined') {

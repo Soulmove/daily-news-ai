@@ -654,6 +654,7 @@ export interface PredictionRecord {
   question: string
   created_at: string
   due_at: string
+  lock_at?: string
   win_rule: string
   lose_rule: string
   indeterminate_rule?: string
@@ -667,6 +668,14 @@ export interface PredictionRecord {
   versions: PredictionVersion[]
   settlement: PredictionSettlement | null
   is_seed?: boolean
+  source_type?: 'auto_market' | 'user_proposal' | 'ai_flash' | 'seed' | string
+  ticker?: string
+  base_price?: number | null
+  target_price?: number | null
+  proposer_username?: string
+  arena_status?: 'open' | 'locked' | 'settled' | string
+  arena_outcome?: 'yes' | 'no' | 'void' | null
+  settled_value?: number | null
 }
 
 export interface TechToolEntry {
@@ -1151,4 +1160,13 @@ export interface CrowdPredictionStat {
   bull_votes: number | null
   bear_votes: number | null
   user_prob_pct: number | null
+  user_reason_tag?: string
+  user_early_multiplier?: number
+  user_points_awarded?: number
+  user_brier_score?: number | null
+  reason_breakdown?: {
+    counts: Record<string, number>
+    bull_top: { tag: string; count: number }[]
+    bear_top: { tag: string; count: number }[]
+  }
 }

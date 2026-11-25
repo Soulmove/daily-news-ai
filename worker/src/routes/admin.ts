@@ -39,6 +39,14 @@ import {
   updateWaitlistEntryStatus,
   upsertEditorialOverride,
 } from '../dbExtras'
+import {
+  approvePredictionProposal,
+  listDailyPredictions,
+  listPredictionProposals,
+  rejectPredictionProposal,
+  runPredictionArenaCron,
+  settleDailyPrediction,
+} from '../predictionArena'
 import { QUOTES_CACHE_KEY, fetchAndBuildMarketQuotes, getDefaultEdgeCache } from '../quotes'
 import type { AccessMode, Env, HonoVariables, UserRole } from '../types'
 import { getWireLatestDoc, runWireCron } from '../wireCron'
@@ -687,4 +695,105 @@ adminRoutes.post('/sync-now', async (c) => {
     wire_total: wireTotal,
     quotes_count: quotesCount,
   })
+})
+
+// ---------------- Prediction Arena & User Proposals Admin ----------------
+
+adminRoutes.get('/predictions/proposals', async (c) => {
+  const statusFilter = (c.req.query('status') || '').trim()
+  const items = await listPredictionProposals(c.env.DB, { statusFilter, limit: 100 })
+  return c.json({ items }, 200, { 'Cache-Control': 'no-store' })
+})
+
+adminRoutes.post('/predictions/proposals/:id/approve', async (c) => {
+  const admin = c.get('user')!
+  const id = Number(c.req.param('id'))
+  if (!Number.isFinite(id) || id <= 0) {
+    return c.json({ detail: '无效的提案 ID' }, 400)
+  }
+  const settings = await getSiteSettings(c.env.DB, c.env.SITE_ACCESS_MODE)
+  const rewardsEnabled = settings.prediction_rewards_enabled !== false
+  const res = await approvePredictionProposal(c.env.DB, { proposalId: id, rewardsEnabled })
+  if (!res.proposal) {
+    return c.json({ detail: '预测提案不存在' }, 404)
+  }
+  if (!res.already_approved) {
+    await logAudit(c.env.DB, {
+      action: 'admin_approve_prediction_proposal',
+      userId: admin.id,
+      username: admin.username,
+      detail: `Approved proposal #${id} by @${res.proposal.username} -> ${res.prediction?.id || ''}`,
+      ip: c.get('clientIp'),
+    })
+  }
+  return c.json({ ok: true, ...res })
+})
+
+adminRoutes.post('/predictions/proposals/:id/reject', async (c) => {
+  const admin = c.get('user')!
+  const id = Number(c.req.param('id'))
+  if (!Number.isFinite(id) || id <= 0) {
+    return c.json({ detail: '无效的提案 ID' }, 400)
+  }
+  const updated = await rejectPredictionProposal(c.env.DB, id)
+  if (!updated) {
+    return c.json({ detail: '预测提案不存在' }, 404)
+  }
+  await logAudit(c.env.DB, {
+    action: 'admin_reject_prediction_proposal',
+    userId: admin.id,
+    username: admin.username,
+    detail: `Rejected proposal #${id} by @${updated.username}`,
+    ip: c.get('clientIp'),
+  })
+  return c.json({ ok: true, proposal: updated })
+})
+
+adminRoutes.get('/predictions/daily', async (c) => {
+  const items = await listDailyPredictions(c.env.DB, 80)
+  return c.json({ items }, 200, { 'Cache-Control': 'no-store' })
+})
+
+adminRoutes.post('/predictions/:predictionId/settle', async (c) => {
+  const admin = c.get('user')!
+  const predictionId = decodeURIComponent(c.req.param('predictionId') || '').trim()
+  if (!predictionId) {
+    return c.json({ detail: '无效的预测条目 ID' }, 400)
+  }
+  const body = (await c.req.json().catch(() => ({}))) as {
+    outcome?: string
+    settled_value?: number | null
+  }
+  const outcome = String(body.outcome || '').trim().toLowerCase()
+  if (outcome !== 'yes' && outcome !== 'no' && outcome !== 'void') {
+    return c.json({ detail: '结算结果仅支持 yes / no / void' }, 400)
+  }
+  const settings = await getSiteSettings(c.env.DB, c.env.SITE_ACCESS_MODE)
+  const res = await settleDailyPrediction(c.env.DB, {
+    predictionId,
+    outcome,
+    settledValue: body.settled_value ?? null,
+    rewardsEnabled: settings.prediction_rewards_enabled !== false,
+  })
+  await logAudit(c.env.DB, {
+    action: 'admin_settle_prediction',
+    userId: admin.id,
+    username: admin.username,
+    detail: `Settled ${predictionId} outcome=${outcome} votes=${res.settled_votes}`,
+    ip: c.get('clientIp'),
+  })
+  return c.json(res)
+})
+
+adminRoutes.post('/predictions/run-daily-cron', async (c) => {
+  const admin = c.get('user')!
+  const res = await runPredictionArenaCron(c.env, { forceTradingDay: true })
+  await logAudit(c.env.DB, {
+    action: 'admin_run_prediction_cron',
+    userId: admin.id,
+    username: admin.username,
+    detail: `Daily prediction cron: generated=${res.generated} locked=${res.locked} settled=${res.settled}`,
+    ip: c.get('clientIp'),
+  })
+  return c.json({ ok: true, ...res })
 })

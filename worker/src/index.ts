@@ -2,9 +2,11 @@ import { Hono } from 'hono'
 import { cors } from 'hono/cors'
 import { attachContextMiddleware } from './authMiddleware'
 import { ensureBootstrapAdmin } from './db'
+import { runPredictionArenaCron } from './predictionArena'
 import { adminRoutes } from './routes/admin'
 import { publicAndCoreRoutes } from './routes/appRoutes'
 import { authRoutes } from './routes/auth'
+import { shareMetaRoutes } from './shareMeta'
 import type { Env, HonoVariables } from './types'
 import { runWireCron } from './wireCron'
 
@@ -13,6 +15,7 @@ const PRIVATE_GATE_PUBLIC_ALLOWLIST = new Set([
   '/api/public/settings',
   '/api/public/access-config',
   '/api/public/waitlist',
+  '/api/share/meta',
   '/api/auth/login',
   '/api/auth/register',
   '/api/auth/send-code',
@@ -77,6 +80,7 @@ export function createWorkerApp() {
     await next()
   })
 
+  app.route('/s', shareMetaRoutes)
   app.route('/api/auth', authRoutes)
   app.route('/api/admin', adminRoutes)
   app.route('/api', publicAndCoreRoutes)
@@ -99,7 +103,16 @@ export default {
     ctx.waitUntil(
       (async () => {
         await ensureBootstrapAdmin(env)
-        await runWireCron(env)
+        try {
+          await runWireCron(env)
+        } catch (err) {
+          console.error('runWireCron failed:', err)
+        }
+        try {
+          await runPredictionArenaCron(env)
+        } catch (err) {
+          console.error('runPredictionArenaCron failed:', err)
+        }
       })(),
     )
   },

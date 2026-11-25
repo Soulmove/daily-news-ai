@@ -17,8 +17,20 @@ import {
   upsertPredictionVote,
 } from '../dbExtras'
 import { handleQaAsk, type QaRequestBody } from '../qa'
+import {
+  ALLOWED_REASON_TAGS,
+  buildPredictionArenaPayload,
+  computeEarlyMultiplier,
+  createPredictionProposal,
+  findPredictionDeadline,
+  getActivePredictionBonusQaQuota,
+  isPredictionLocked,
+  isValidReasonTag,
+  listUserPredictionProposals,
+} from '../predictionArena'
 import { QUOTES_CACHE_KEY, fetchAndBuildMarketQuotes, getDefaultEdgeCache } from '../quotes'
 import { checkAndHitRateLimit } from '../rateLimit'
+import { resolveShareMeta } from '../shareMeta'
 import type { Env, HonoVariables } from '../types'
 import { AI_PROGRESS_CACHE_KEY, WIRE_CACHE_KEY, getWireLatestDoc } from '../wireCron'
 
@@ -276,7 +288,18 @@ publicAndCoreRoutes.put('/user/state', requireUser, async (c) => {
   })
 })
 
-// ---------------- Predictions Crowd Consensus ----------------
+// ---------------- Predictions Crowd Consensus & Arena ----------------
+
+publicAndCoreRoutes.get('/predictions/arena', async (c) => {
+  const user = c.get('user')
+  const settings = await getSiteSettings(c.env.DB, c.env.SITE_ACCESS_MODE)
+  const minUnlock = Math.max(1, Math.min(50, Number(settings.crowd_vote_min_unlock ?? 3)))
+  const payload = await buildPredictionArenaPayload(c.env, {
+    userId: user ? user.id : null,
+    minVotes: minUnlock,
+  })
+  return c.json(payload, 200, { 'Cache-Control': 'no-store' })
+})
 
 publicAndCoreRoutes.get('/predictions/crowd', async (c) => {
   const user = c.get('user')
@@ -295,25 +318,132 @@ publicAndCoreRoutes.put('/predictions/:predictionId/vote', requireUser, async (c
   if (!pid || pid.length > 120) {
     return c.json({ detail: '无效的预测条目 ID' }, 400)
   }
-  const body = (await c.req.json().catch(() => ({}))) as { prob_pct?: number }
+  const body = (await c.req.json().catch(() => ({}))) as {
+    prob_pct?: number
+    reason_tag?: string
+    challenger_ref?: string
+  }
   const prob = Number(body.prob_pct)
   if (!Number.isFinite(prob) || prob < 5 || prob > 95) {
     return c.json({ detail: '概率值须在 5 至 95 之间' }, 422)
   }
+  const reasonTag = String(body.reason_tag || '').trim()
+  if (!isValidReasonTag(reasonTag)) {
+    return c.json({ detail: `无效的判断逻辑标签，仅支持：${ALLOWED_REASON_TAGS.join(' / ')}` }, 400)
+  }
+
+  const deadlineInfo = await findPredictionDeadline(c.env, pid)
+  if (deadlineInfo.found && isPredictionLocked(deadlineInfo.due_at, deadlineInfo.status, deadlineInfo.lock_at)) {
+    return c.json(
+      {
+        detail: '该预测题已封盘，正在等待客观结算，禁止继续投票',
+        locked: true,
+      },
+      400,
+    )
+  }
+
+  const earlyMultiplier = deadlineInfo.found
+    ? computeEarlyMultiplier(deadlineInfo.created_at, deadlineInfo.lock_at)
+    : 1.0
+
   const settings = await getSiteSettings(c.env.DB, c.env.SITE_ACCESS_MODE)
   const minUnlock = Math.max(1, Math.min(50, Number(settings.crowd_vote_min_unlock ?? 3)))
-  await upsertPredictionVote(c.env.DB, { predictionId: pid, userId: user.id, probPct: prob })
+  await upsertPredictionVote(c.env.DB, {
+    predictionId: pid,
+    userId: user.id,
+    probPct: prob,
+    earlyMultiplier,
+    reasonTag,
+    challengerRef: String(body.challenger_ref || '').trim(),
+  })
   const stats = await getPredictionCrowdStats(c.env.DB, { userId: user.id, minVotes: minUnlock })
   return c.json(
     {
       ok: true,
       min_votes: stats.min_votes,
+      early_multiplier: earlyMultiplier,
+      reason_tag: reasonTag,
       item: stats.items[pid] ?? null,
       items: stats.items,
     },
     200,
     { 'Cache-Control': 'no-store' },
   )
+})
+
+publicAndCoreRoutes.post('/predictions/proposals', requireUser, async (c) => {
+  const user = c.get('user')!
+  const settings = await getSiteSettings(c.env.DB, c.env.SITE_ACCESS_MODE)
+  if (settings.prediction_proposals_enabled === false) {
+    return c.json({ detail: '当前未开放用户共创预测投稿，请联系管理员' }, 403)
+  }
+  const rl = await checkAndHitRateLimit(c.env.DB, {
+    scope: 'pred_proposal_daily',
+    key: `uid:${user.id}`,
+    limit: 5,
+    windowSec: 86_400,
+  })
+  if (!rl.allowed) {
+    return c.json({ detail: '24 小时内最多投稿 5 条预测提案，请明日再试' }, 429)
+  }
+  const body = (await c.req.json().catch(() => ({}))) as {
+    category?: string
+    title?: string
+    question?: string
+    win_rule?: string
+    lose_rule?: string
+    due_at?: string
+  }
+  const title = (body.title || '').trim()
+  const question = (body.question || '').trim()
+  const dueAt = (body.due_at || '').trim()
+  if (title.length < 4 || question.length < 6) {
+    return c.json({ detail: '请填写明确的预测标题（至少 4 字）与可核验问题（至少 6 字）' }, 400)
+  }
+  const dueMs = Date.parse(dueAt)
+  if (!dueAt || !Number.isFinite(dueMs) || dueMs <= Date.now() + 3600_000) {
+    return c.json({ detail: '预测到期时间须至少晚于当前时间 1 小时' }, 400)
+  }
+  const proposal = await createPredictionProposal(c.env.DB, {
+    userId: user.id,
+    username: user.username,
+    category: (body.category || 'market').trim(),
+    title,
+    question,
+    winRule: (body.win_rule || '').trim(),
+    loseRule: (body.lose_rule || '').trim(),
+    dueAt,
+  })
+  await logAudit(c.env.DB, {
+    action: 'user_submit_prediction_proposal',
+    userId: user.id,
+    username: user.username,
+    detail: `Proposal #${proposal.id}: ${title.slice(0, 60)}`,
+    ip: c.get('clientIp'),
+  })
+  return c.json({ ok: true, proposal })
+})
+
+publicAndCoreRoutes.get('/predictions/proposals/mine', requireUser, async (c) => {
+  const user = c.get('user')!
+  const items = await listUserPredictionProposals(c.env.DB, user.id)
+  return c.json({ items }, 200, { 'Cache-Control': 'no-store' })
+})
+
+publicAndCoreRoutes.get('/share/meta', async (c) => {
+  const rawType = (c.req.query('type') || 'pred').trim()
+  const id = (c.req.query('id') || '').trim()
+  if (!id || (rawType !== 'pred' && rawType !== 'event')) {
+    return c.json({ detail: '请提供有效的分享类型 (pred/event) 与 id' }, 400)
+  }
+  const meta = await resolveShareMeta(c.env, {
+    type: rawType,
+    id,
+    p: c.req.query('p'),
+    ref: c.req.query('ref'),
+  })
+  return c.json({ type: rawType, id, ...meta }, 200, { 'Cache-Control': 'public, max-age=120' })
 })
 
 // ---------------- Feedback ----------------
@@ -494,11 +624,18 @@ publicAndCoreRoutes.post('/reactions', async (c) => {
 publicAndCoreRoutes.post('/qa/ask', async (c) => {
   const user = c.get('user')
   const body = (await c.req.json().catch(() => ({}))) as QaRequestBody
+  let bonusQa = 0
+  if (user) {
+    const settings = await getSiteSettings(c.env.DB, c.env.SITE_ACCESS_MODE)
+    if (settings.prediction_rewards_enabled !== false) {
+      bonusQa = await getActivePredictionBonusQaQuota(c.env.DB, user.id)
+    }
+  }
   const result = await handleQaAsk(c.env, body, {
     clientIp: c.get('clientIp'),
     userId: user ? user.id : null,
     deviceId: c.get('deviceId'),
-    extraQaQuota: user ? Number(user.extra_qa_quota ?? 0) : 0,
+    extraQaQuota: user ? Number(user.extra_qa_quota ?? 0) + bonusQa : 0,
   })
   return c.json(result.payload, result.status as 200 | 400 | 429)
 })

@@ -25,6 +25,7 @@ import {
   verifyAndConsumeCode,
 } from '../db'
 import { getPushConfig } from '../dbExtras'
+import { getActivePredictionBonusQaQuota, getUserPredictionReferralBonus } from '../predictionArena'
 import { checkAndHitRateLimit, checkRegistrationGuards, recordRegistrationGuard } from '../rateLimit'
 import type { Env, HonoVariables } from '../types'
 
@@ -304,7 +305,12 @@ authRoutes.post('/register', async (c) => {
 authRoutes.get('/my-invites', requireUser, async (c) => {
   const user = c.get('user')!
   const settings = await getSiteSettings(c.env.DB, c.env.SITE_ACCESS_MODE)
-  const quota = Math.max(0, Number(settings.user_invite_quota ?? 3))
+  const baseQuota = Math.max(0, Number(settings.user_invite_quota ?? 3))
+  const predBonus =
+    settings.prediction_rewards_enabled !== false
+      ? await getUserPredictionReferralBonus(c.env.DB, user.id)
+      : 0
+  const quota = baseQuota + predBonus
   const [items, generatedCount, invitedCount] = await Promise.all([
     listUserInviteCodes(c.env.DB, user.id),
     countUserInviteCodes(c.env.DB, user.id),
@@ -314,6 +320,8 @@ authRoutes.get('/my-invites', requireUser, async (c) => {
     {
       enabled: Boolean(settings.user_referral_enabled),
       member_number: Number(user.id),
+      base_quota: baseQuota,
+      prediction_referral_bonus: predBonus,
       quota,
       generated_count: generatedCount,
       remaining_quota: Math.max(0, quota - generatedCount),
@@ -333,7 +341,12 @@ authRoutes.post('/my-invites', requireUser, async (c) => {
   if (!settings.user_referral_enabled) {
     return c.json({ detail: '当前阶段暂未开放普通用户生成专属邀请码，敬请期待' }, 403)
   }
-  const quota = Math.max(0, Number(settings.user_invite_quota ?? 3))
+  const baseQuota = Math.max(0, Number(settings.user_invite_quota ?? 3))
+  const predBonus =
+    settings.prediction_rewards_enabled !== false
+      ? await getUserPredictionReferralBonus(c.env.DB, user.id)
+      : 0
+  const quota = baseQuota + predBonus
   const generatedCount = await countUserInviteCodes(c.env.DB, user.id)
   if (generatedCount >= quota) {
     return c.json({ detail: `您已用完个人 ${quota} 个专属邀请码配额` }, 400)
@@ -358,6 +371,8 @@ authRoutes.post('/my-invites', requireUser, async (c) => {
     ok: true,
     item: created[0] || null,
     member_number: Number(user.id),
+    base_quota: baseQuota,
+    prediction_referral_bonus: predBonus,
     quota,
     generated_count: generatedCount + created.length,
     remaining_quota: Math.max(0, quota - generatedCount - created.length),
@@ -401,9 +416,17 @@ authRoutes.post('/login', async (c) => {
 
 authRoutes.get('/me', requireUser, async (c) => {
   const user = c.get('user')!
-  const st = await getUserState(c.env, user.id)
+  const [st, settings] = await Promise.all([
+    getUserState(c.env, user.id),
+    getSiteSettings(c.env.DB, c.env.SITE_ACCESS_MODE),
+  ])
+  const predBonusQa =
+    settings.prediction_rewards_enabled !== false
+      ? await getActivePredictionBonusQaQuota(c.env.DB, user.id)
+      : 0
   return c.json({
     user: toPublicUser(user),
+    prediction_bonus_qa_quota: predBonusQa,
     sync_summary: {
       has_cloud_state: st !== null,
       updated_at: st ? st.updated_at : null,

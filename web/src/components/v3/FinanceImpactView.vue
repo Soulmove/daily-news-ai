@@ -59,6 +59,7 @@ const props = defineProps<{
   initialPortfolioOnly?: boolean
   openPortfolioNonce?: number
   researchNotes?: ResearchNote[]
+  sharedPortfolioPreview?: { sectors: string[]; tickers: string[] } | null
 }>()
 
 const emit = defineEmits<{
@@ -66,14 +67,18 @@ const emit = defineEmits<{
   (e: 'mark-read-event-id', eventId: string): void
   (e: 'open-notes'): void
   (e: 'clear-search'): void
+  (e: 'clear-shared-portfolio'): void
   (e: 'portfolio-changed', cfg: PortfolioConfig, matchedCount?: number): void
   (e: 'open-portfolio-share-card', summary: {
     matchedCount: number
     bullishCount: number
     bearishCount: number
     neutralCount: number
+    isRedUp: boolean
+    sectors: string[]
+    tickers: string[]
     symbolsLabel: string
-    takeaways: { title: string; polarity: 'positive' | 'negative' | 'neutral'; summary: string }[]
+    takeaways: { title: string; polarity: 'positive' | 'negative' | 'neutral'; summary: string; tags?: string[] }[]
   }): void
 }>()
 
@@ -235,13 +240,45 @@ const impacts = computed<EventMarketImpact[]>(() =>
   ),
 )
 
+const effectivePortfolio = computed<PortfolioConfig>(() =>
+  props.sharedPortfolioPreview &&
+  (props.sharedPortfolioPreview.sectors.length > 0 || props.sharedPortfolioPreview.tickers.length > 0)
+    ? {
+        sectors: props.sharedPortfolioPreview.sectors,
+        tickers: props.sharedPortfolioPreview.tickers,
+        riskProfile: 'balanced',
+      }
+    : portfolio.value,
+)
+
 const portfolioMatchMap = computed<Record<string, PortfolioMatchResult>>(() => {
   const out: Record<string, PortfolioMatchResult> = {}
   for (const item of impacts.value) {
-    out[item.id] = matchImpactAgainstPortfolio(item, portfolio.value)
+    out[item.id] = matchImpactAgainstPortfolio(item, effectivePortfolio.value)
   }
   return out
 })
+
+const sharedPreviewStats = computed(() => {
+  if (!props.sharedPortfolioPreview) return null
+  const matched = impacts.value.filter((it) => portfolioMatchMap.value[it.id]?.matched)
+  let bullish = 0
+  let bearish = 0
+  let neutral = 0
+  for (const it of matched) {
+    const m = portfolioMatchMap.value[it.id]
+    if (m && m.avgDelta > 0.2) bullish += 1
+    else if (m && m.avgDelta < -0.2) bearish += 1
+    else neutral += 1
+  }
+  return { total: matched.length, bullish, bearish, neutral }
+})
+
+function switchToMyOwnPortfolio() {
+  emit('clear-shared-portfolio')
+  portfolioPanelOpen.value = true
+  onlyPortfolioHits.value = false
+}
 
 const baseFilteredWithoutPortfolio = computed(() => {
   const q = (props.searchQuery || '').trim().toLowerCase()
@@ -376,43 +413,48 @@ function openPortfolioRadarShareCard() {
   let bullishCount = 0
   let bearishCount = 0
   let neutralCount = 0
-  const takeaways = pool.slice(0, 3).map((it) => {
+  const classifyItem = (it: EventMarketImpact): 'positive' | 'negative' | 'neutral' => {
     const m = portfolioMatchMap.value[it.id]
-    const pol: 'positive' | 'negative' | 'neutral' = m?.matched
-      ? m.avgDelta > 0.2
-        ? 'positive'
-        : m.avgDelta < -0.2
-          ? 'negative'
-          : 'neutral'
-      : it.polarity === 'bullish'
-        ? 'positive'
-        : it.polarity === 'bearish'
-          ? 'negative'
-          : 'neutral'
+    if (m?.matched) {
+      if (m.avgDelta > 0.2) return 'positive'
+      if (m.avgDelta < -0.2) return 'negative'
+      return 'neutral'
+    }
+    if (it.polarity === 'bullish') return 'positive'
+    if (it.polarity === 'bearish') return 'negative'
+    return 'neutral'
+  }
+
+  for (const it of pool) {
+    const pol = classifyItem(it)
     if (pol === 'positive') bullishCount += 1
     else if (pol === 'negative') bearishCount += 1
     else neutralCount += 1
+  }
+
+  const takeaways = pool.slice(0, 3).map((it) => {
+    const pol = classifyItem(it)
+    const m = portfolioMatchMap.value[it.id]
+    const barTags = (it.bars || []).slice(0, 2).map((b) => cleanSectorTitle(b.market, b.sector))
     return {
       title: pickBiText(it.event_title, it.event_title_en),
       polarity: pol,
       summary: pickBiText(it.one_liner, it.one_liner_en),
+      tags: m?.tags?.length ? m.tags.slice(0, 2) : barTags,
     }
   })
-  // Count across full pool as well
-  if (pool.length > 3) {
-    for (const it of pool.slice(3)) {
-      const m = portfolioMatchMap.value[it.id]
-      if ((m?.matched && m.avgDelta > 0.2) || (!m?.matched && it.polarity === 'bullish')) bullishCount += 1
-      else if ((m?.matched && m.avgDelta < -0.2) || (!m?.matched && it.polarity === 'bearish')) bearishCount += 1
-      else neutralCount += 1
-    }
-  }
-  const labels = [...portfolio.value.sectors, ...portfolio.value.tickers].slice(0, 5)
+
+  const sectors = effectivePortfolio.value.sectors
+  const tickers = effectivePortfolio.value.tickers
+  const labels = [...sectors, ...tickers].slice(0, 6)
   emit('open-portfolio-share-card', {
-    matchedCount: portfolioMatchedCount.value,
+    matchedCount: bullishCount + bearishCount + neutralCount,
     bullishCount,
     bearishCount,
     neutralCount,
+    isRedUp: isRedUp(),
+    sectors,
+    tickers,
     symbolsLabel: labels.length > 0 ? labels.join(' · ') : t('全市场重点板块雷达', 'Cross-Market Sector Radar'),
     takeaways,
   })
@@ -602,6 +644,34 @@ watch(
         >
           <X class="w-4 h-4" />
         </button>
+      </div>
+
+      <!-- Shared Friend Portfolio Preview Banner (?tab=finance&ref_sectors=...&ref_tickers=...) -->
+      <div
+        v-if="sharedPortfolioPreview && sharedPreviewStats"
+        class="rounded-2xl border border-[#007AFF]/35 bg-gradient-to-r from-[#007AFF]/10 via-white to-white dark:from-[#0A84FF]/15 dark:via-[#1C1C1E] dark:to-[#1C1C1E] p-3.5 sm:p-4 space-y-2.5 text-xs"
+        data-testid="shared-portfolio-preview-banner"
+      >
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <div class="space-y-0.5 min-w-0">
+            <div class="font-bold text-zinc-950 dark:text-white flex items-center gap-1.5">
+              <Briefcase class="w-4 h-4 text-[#007AFF] shrink-0" :stroke-width="1.75" />
+              <span>{{ t('好友脱敏持仓传导预览（只读）', 'Shared Desensitized Portfolio Radar Preview') }}</span>
+            </div>
+            <p class="text-[11.5px] text-zinc-600 dark:text-zinc-300">
+              {{ [...sharedPortfolioPreview.sectors, ...sharedPortfolioPreview.tickers].join(' · ') }}
+              · {{ t(`命中 ${sharedPreviewStats.total} 条传导线（利好 ${sharedPreviewStats.bullish} / 承压 ${sharedPreviewStats.bearish} / 分化 ${sharedPreviewStats.neutral}）`, `${sharedPreviewStats.total} matched (${sharedPreviewStats.bullish} bull / ${sharedPreviewStats.bearish} bear / ${sharedPreviewStats.neutral} mix)`) }}
+            </p>
+          </div>
+          <button
+            type="button"
+            @click="switchToMyOwnPortfolio"
+            class="ios-tap px-3.5 py-2 rounded-xl bg-[#007AFF] hover:bg-[#0066D6] text-white font-semibold shrink-0 whitespace-nowrap"
+            data-testid="switch-to-my-portfolio-btn"
+          >
+            {{ t('换成我的自选股测一测', 'Test With My Watchlist') }}
+          </button>
+        </div>
       </div>
 
       <!-- Portfolio Scenario Simulator Panel -->

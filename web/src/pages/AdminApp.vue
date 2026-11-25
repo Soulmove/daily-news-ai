@@ -35,6 +35,7 @@ import DialogDirtyGuard from '../components/DialogDirtyGuard.vue'
 import UserAvatar from '../components/UserAvatar.vue'
 import { useDialogBehavior } from '../core/dialog'
 import {
+  apiAdminApprovePredictionProposal,
   apiAdminApproveWaitlist,
   apiAdminAuditLogs,
   apiAdminContentList,
@@ -46,17 +47,22 @@ import {
   apiAdminGetPushConfig,
   apiAdminGetSiteSettings,
   apiAdminInviteCodes,
+  apiAdminListDailyPredictions,
+  apiAdminListPredictionProposals,
   apiAdminListWaitlist,
   apiAdminOverview,
   apiAdminPatchUser,
   apiAdminPushLogs,
   apiAdminPushTest,
+  apiAdminRejectPredictionProposal,
   apiAdminRejectWaitlist,
   apiAdminRevealUserPassword,
   apiAdminRevokeInviteCode,
+  apiAdminRunDailyPredictionCron,
   apiAdminSaveEditorialOverride,
   apiAdminSavePushConfig,
   apiAdminSaveSiteSettings,
+  apiAdminSettleDailyPrediction,
   apiAdminSyncNow,
   apiAdminUpdateFeedback,
   apiAdminUserData,
@@ -73,8 +79,10 @@ import {
   type AdminPushConfig,
   type AdminUserRow,
   type AuthSession,
+  type DailyPredictionRow,
   type FeedbackRecordItem,
   type GrowthStage,
+  type PredictionProposalRow,
   type PublicSiteSettings,
   type SiteAccessMode,
   type UserRole,
@@ -141,6 +149,9 @@ const siteSettingsForm = ref<PublicSiteSettings>({
   user_invite_quota: 3,
   referral_bonus_qa_quota: 15,
   invite_waitlist_enabled: false,
+  prediction_daily_market_enabled: true,
+  prediction_rewards_enabled: true,
+  prediction_proposals_enabled: true,
 })
 
 interface GrowthControlDraft {
@@ -155,6 +166,9 @@ interface GrowthControlDraft {
   user_invite_quota: number
   referral_bonus_qa_quota: number
   invite_waitlist_enabled: boolean
+  prediction_daily_market_enabled: boolean
+  prediction_rewards_enabled: boolean
+  prediction_proposals_enabled: boolean
 }
 
 const growthDraft = ref<GrowthControlDraft>({
@@ -169,9 +183,15 @@ const growthDraft = ref<GrowthControlDraft>({
   user_invite_quota: 3,
   referral_bonus_qa_quota: 15,
   invite_waitlist_enabled: false,
+  prediction_daily_market_enabled: true,
+  prediction_rewards_enabled: true,
+  prediction_proposals_enabled: true,
 })
 const privateGateConfirmOpen = ref(false)
 const waitlistItems = ref<WaitlistEntryRow[]>([])
+const predictionProposals = ref<PredictionProposalRow[]>([])
+const dailyPredictions = ref<DailyPredictionRow[]>([])
+const settleValueDrafts = ref<Record<string, string>>({})
 
 // Feedback inbox state
 const feedbackStatusFilter = ref<string>('')
@@ -298,6 +318,9 @@ function buildGrowthDraftFromSettings(s: PublicSiteSettings): GrowthControlDraft
     user_invite_quota: Number(s.user_invite_quota ?? 3),
     referral_bonus_qa_quota: Number(s.referral_bonus_qa_quota ?? 15),
     invite_waitlist_enabled: Boolean(s.invite_waitlist_enabled),
+    prediction_daily_market_enabled: s.prediction_daily_market_enabled !== false,
+    prediction_rewards_enabled: s.prediction_rewards_enabled !== false,
+    prediction_proposals_enabled: s.prediction_proposals_enabled !== false,
   }
 }
 
@@ -317,8 +340,11 @@ const GROWTH_STAGE_PRESETS: ReadonlyArray<{
       welcome_hero_enabled: true,
       soft_auth_prompts_enabled: true,
       guest_qa_daily_limit: 5,
+      auth_qa_daily_limit: 30,
       crowd_vote_min_unlock: 3,
       user_referral_enabled: false,
+      user_invite_quota: 3,
+      referral_bonus_qa_quota: 15,
       invite_waitlist_enabled: false,
     },
   },
@@ -575,7 +601,7 @@ async function loadAllAdminData() {
   authError.value = ''
   try {
     const token = session.value.token
-    const [ov, ul, pc, pl, al, ss, fb, ct, invRes, wlRes] = await Promise.all([
+    const [ov, ul, pc, pl, al, ss, fb, ct, invRes, wlRes, propRes, dpRes] = await Promise.all([
       apiAdminOverview(token),
       apiAdminUsers(token),
       apiAdminGetPushConfig(token),
@@ -586,9 +612,13 @@ async function loadAllAdminData() {
       apiAdminContentList(token),
       apiAdminInviteCodes(token).catch(() => ({ items: [] })),
       apiAdminListWaitlist(token).catch(() => ({ items: [] })),
+      apiAdminListPredictionProposals(token).catch(() => ({ items: [] })),
+      apiAdminListDailyPredictions(token).catch(() => ({ items: [] })),
     ])
     inviteCodes.value = invRes.items || []
     waitlistItems.value = wlRes.items || []
+    predictionProposals.value = propRes.items || []
+    dailyPredictions.value = dpRes.items || []
     overview.value = ov
     users.value = ul.users
     pushConfig.value = pc.config
@@ -620,6 +650,9 @@ async function loadAllAdminData() {
       user_invite_quota: ss.user_invite_quota ?? 3,
       referral_bonus_qa_quota: ss.referral_bonus_qa_quota ?? 15,
       invite_waitlist_enabled: Boolean(ss.invite_waitlist_enabled),
+      prediction_daily_market_enabled: ss.prediction_daily_market_enabled !== false,
+      prediction_rewards_enabled: ss.prediction_rewards_enabled !== false,
+      prediction_proposals_enabled: ss.prediction_proposals_enabled !== false,
     }
     growthDraft.value = buildGrowthDraftFromSettings(siteSettingsForm.value)
     feedbackItems.value = fb.items || []
@@ -889,6 +922,79 @@ async function handleRejectWaitlist(row: WaitlistEntryRow) {
     waitlistItems.value = wlRes.items || []
   } catch (err) {
     showToast(err instanceof Error ? err.message : '操作失败')
+  } finally {
+    busyAction.value = false
+  }
+}
+
+async function handleApproveProposal(row: PredictionProposalRow) {
+  if (!session.value) return
+  busyAction.value = true
+  try {
+    const res = await apiAdminApprovePredictionProposal(session.value.token, row.id)
+    showToast(
+      res.already_approved
+        ? `提案 #${row.id} 此前已通过并上架`
+        : `已通过提案 #${row.id} 并上架全站预测池，已向 ${row.username} 发放 +100 洞察分与 +1 邀请名额`,
+    )
+    const [propRes, dpRes] = await Promise.all([
+      apiAdminListPredictionProposals(session.value.token),
+      apiAdminListDailyPredictions(session.value.token),
+    ])
+    predictionProposals.value = propRes.items || []
+    dailyPredictions.value = dpRes.items || []
+  } catch (err) {
+    showToast(err instanceof Error ? err.message : '审批提案失败')
+  } finally {
+    busyAction.value = false
+  }
+}
+
+async function handleRejectProposal(row: PredictionProposalRow) {
+  if (!session.value) return
+  busyAction.value = true
+  try {
+    await apiAdminRejectPredictionProposal(session.value.token, row.id)
+    showToast(`已拒绝提案 #${row.id}`)
+    const propRes = await apiAdminListPredictionProposals(session.value.token)
+    predictionProposals.value = propRes.items || []
+  } catch (err) {
+    showToast(err instanceof Error ? err.message : '操作失败')
+  } finally {
+    busyAction.value = false
+  }
+}
+
+async function handleSettleDaily(row: DailyPredictionRow, outcome: 'yes' | 'no' | 'void') {
+  if (!session.value) return
+  busyAction.value = true
+  try {
+    const rawVal = (settleValueDrafts.value[row.id] || '').trim()
+    const numVal = rawVal !== '' && Number.isFinite(Number(rawVal)) ? Number(rawVal) : null
+    const res = await apiAdminSettleDailyPrediction(session.value.token, row.id, {
+      outcome,
+      settled_value: numVal,
+    })
+    showToast(`已完成结算（结果：${res.outcome.toUpperCase()} · 结算 ${res.settled_votes} 份投票）`)
+    const dpRes = await apiAdminListDailyPredictions(session.value.token)
+    dailyPredictions.value = dpRes.items || []
+  } catch (err) {
+    showToast(err instanceof Error ? err.message : '结算失败')
+  } finally {
+    busyAction.value = false
+  }
+}
+
+async function handleTriggerDailyCron() {
+  if (!session.value) return
+  busyAction.value = true
+  try {
+    const res = await apiAdminRunDailyPredictionCron(session.value.token)
+    showToast(`日赛调度完成：新生成 ${res.generated} 题 · 封盘 ${res.locked} 题 · 自动结算 ${res.settled} 题`)
+    const dpRes = await apiAdminListDailyPredictions(session.value.token)
+    dailyPredictions.value = dpRes.items || []
+  } catch (err) {
+    showToast(err instanceof Error ? err.message : '执行日赛调度失败')
   } finally {
     busyAction.value = false
   }
@@ -1530,6 +1636,39 @@ onMounted(() => {
                   <div class="text-[11px] text-slate-500">邀请制下允许无码访客提交候补席位申请</div>
                 </div>
                 <input v-model="growthDraft.invite_waitlist_enabled" :disabled="!isSuperAdmin" type="checkbox" class="rounded w-4 h-4 text-indigo-600 mt-0.5" />
+              </label>
+
+              <label
+                class="rounded-xl border p-3 flex items-start justify-between gap-2 cursor-pointer"
+                :class="changedGrowthKeys.has('prediction_daily_market_enabled') ? 'border-amber-400 bg-amber-50/60 dark:bg-amber-950/20' : 'border-slate-200 dark:border-slate-800'"
+              >
+                <div>
+                  <div class="font-bold text-slate-900 dark:text-white">自动每日行情日赛</div>
+                  <div class="text-[11px] text-slate-500">每日自动生成标普/黄金/A股 T+1 预测题目并客观结算</div>
+                </div>
+                <input v-model="growthDraft.prediction_daily_market_enabled" :disabled="!isSuperAdmin" type="checkbox" class="rounded w-4 h-4 text-indigo-600 mt-0.5" />
+              </label>
+
+              <label
+                class="rounded-xl border p-3 flex items-start justify-between gap-2 cursor-pointer"
+                :class="changedGrowthKeys.has('prediction_rewards_enabled') ? 'border-amber-400 bg-amber-50/60 dark:bg-amber-950/20' : 'border-slate-200 dark:border-slate-800'"
+              >
+                <div>
+                  <div class="font-bold text-slate-900 dark:text-white">洞察分与连胜权益奖励</div>
+                  <div class="text-[11px] text-slate-500">启用 Brier 洞察分、段位勋章、连胜 AI 加赠及邀请加额</div>
+                </div>
+                <input v-model="growthDraft.prediction_rewards_enabled" :disabled="!isSuperAdmin" type="checkbox" class="rounded w-4 h-4 text-indigo-600 mt-0.5" />
+              </label>
+
+              <label
+                class="rounded-xl border p-3 flex items-start justify-between gap-2 cursor-pointer"
+                :class="changedGrowthKeys.has('prediction_proposals_enabled') ? 'border-amber-400 bg-amber-50/60 dark:bg-amber-950/20' : 'border-slate-200 dark:border-slate-800'"
+              >
+                <div>
+                  <div class="font-bold text-slate-900 dark:text-white">用户预测题共创投稿</div>
+                  <div class="text-[11px] text-slate-500">允许登录用户提交可核验预测题提案供管理员采纳</div>
+                </div>
+                <input v-model="growthDraft.prediction_proposals_enabled" :disabled="!isSuperAdmin" type="checkbox" class="rounded w-4 h-4 text-indigo-600 mt-0.5" />
               </label>
 
               <div
@@ -2241,6 +2380,178 @@ onMounted(() => {
                       拒绝
                     </button>
                   </template>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- User Prediction Proposals Review Queue -->
+          <div
+            class="rounded-2xl border border-indigo-200/80 dark:border-indigo-900/70 bg-white dark:bg-slate-900 p-4 sm:p-5 space-y-3 text-xs"
+            data-testid="admin-proposals-panel"
+          >
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <div>
+                <h2 class="text-sm sm:text-base font-bold text-slate-900 dark:text-white">
+                  用户预测提案审核队列 ({{ predictionProposals.filter((p) => p.status === 'pending').length }} 待审 / 共 {{ predictionProposals.length }})
+                </h2>
+                <p class="text-slate-500">
+                  采纳用户提交的可验证预测题后，题目立即进入全站竞技场并向提案者发放 +100 洞察分与 +1 邀请码额度。
+                </p>
+              </div>
+            </div>
+            <div v-if="predictionProposals.length === 0" class="py-4 text-center text-slate-400">
+              暂无用户预测提案记录
+            </div>
+            <div v-else class="space-y-2 max-h-80 overflow-y-auto">
+              <div
+                v-for="prop in predictionProposals"
+                :key="prop.id"
+                class="rounded-xl border border-slate-200 dark:border-slate-800 p-3 space-y-2"
+              >
+                <div class="flex flex-wrap items-center justify-between gap-2">
+                  <div class="flex flex-wrap items-center gap-2">
+                    <span class="font-mono font-bold text-slate-800 dark:text-white">#{{ prop.id }}</span>
+                    <span class="font-semibold text-indigo-600 dark:text-indigo-400">{{ prop.username }}</span>
+                    <span class="px-2 py-0.5 rounded-full text-[10.5px] font-semibold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
+                      {{ prop.category }}
+                    </span>
+                    <span
+                      class="px-2 py-0.5 rounded-full text-[10.5px] font-semibold"
+                      :class="
+                        prop.status === 'approved'
+                          ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300'
+                          : prop.status === 'rejected'
+                            ? 'bg-slate-200 text-slate-600 dark:bg-slate-800 dark:text-slate-400'
+                            : 'bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300'
+                      "
+                    >
+                      {{ prop.status === 'approved' ? '已采纳上架' : prop.status === 'rejected' ? '已拒绝' : '待审核' }}
+                    </span>
+                  </div>
+                  <span class="font-mono text-[11px] text-slate-400">截止 {{ prop.due_at }}</span>
+                </div>
+                <div class="font-bold text-slate-900 dark:text-white">{{ prop.title }}</div>
+                <div class="text-slate-600 dark:text-slate-300">{{ prop.question }}</div>
+                <div class="text-[11px] text-slate-500">
+                  达成标准：{{ prop.win_rule || '按截止时刻公开数据核验' }} · 未达成标准：{{ prop.lose_rule || '未达到上述阈值' }}
+                </div>
+                <div v-if="prop.status === 'pending'" class="flex items-center gap-2 pt-1">
+                  <button
+                    type="button"
+                    :disabled="busyAction"
+                    @click="handleApproveProposal(prop)"
+                    class="px-3 py-1.5 rounded-lg bg-emerald-600 text-white font-semibold hover:bg-emerald-700"
+                  >
+                    通过上架（+100分/+1邀）
+                  </button>
+                  <button
+                    type="button"
+                    :disabled="busyAction"
+                    @click="handleRejectProposal(prop)"
+                    class="px-2.5 py-1.5 rounded-lg border border-rose-200 dark:border-rose-800 text-rose-600 hover:bg-rose-50"
+                  >
+                    拒绝
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Daily Market Predictions & Manual Settlement Console -->
+          <div
+            class="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4 sm:p-5 space-y-3 text-xs"
+            data-testid="admin-daily-predictions-panel"
+          >
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <div>
+                <h2 class="text-sm sm:text-base font-bold text-slate-900 dark:text-white">
+                  每日自动行情日赛与手动结算台 ({{ dailyPredictions.filter((d) => d.status !== 'settled').length }} 进行中 / 共 {{ dailyPredictions.length }})
+                </h2>
+                <p class="text-slate-500">
+                  支持一键触发当日自动行情出题与客观结算，也可在极端行情或用户共创题到期时执行人工兜底裁定。
+                </p>
+              </div>
+              <button
+                type="button"
+                :disabled="busyAction"
+                @click="handleTriggerDailyCron"
+                class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-indigo-600 text-white font-semibold hover:bg-indigo-700 disabled:opacity-50"
+              >
+                <RefreshCw class="w-3.5 h-3.5" />
+                <span>立即运行自动出题与结算</span>
+              </button>
+            </div>
+            <div v-if="dailyPredictions.length === 0" class="py-4 text-center text-slate-400">
+              暂无日赛或共创预测题目，可点击右上角按钮立即生成今日行情预测题
+            </div>
+            <div v-else class="space-y-2 max-h-96 overflow-y-auto">
+              <div
+                v-for="dp in dailyPredictions"
+                :key="dp.id"
+                class="rounded-xl border border-slate-200 dark:border-slate-800 p-3 space-y-2"
+              >
+                <div class="flex flex-wrap items-center justify-between gap-2">
+                  <div class="flex flex-wrap items-center gap-2">
+                    <span class="font-mono text-[11px] font-bold text-slate-700 dark:text-slate-200">{{ dp.id }}</span>
+                    <span
+                      class="px-2 py-0.5 rounded-full text-[10.5px] font-semibold"
+                      :class="
+                        dp.status === 'settled'
+                          ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300'
+                          : dp.status === 'locked'
+                            ? 'bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300'
+                            : 'bg-blue-100 text-blue-700 dark:bg-blue-950/60 dark:text-blue-300'
+                      "
+                    >
+                      {{ dp.status === 'settled' ? `已结算 (${String(dp.outcome || '').toUpperCase()})` : dp.status === 'locked' ? '已封盘待结算' : '开放投票中' }}
+                    </span>
+                    <span v-if="dp.ticker" class="font-mono text-[11px] text-indigo-600 dark:text-indigo-400">
+                      {{ dp.ticker }} (基准 {{ dp.base_price ?? '-' }})
+                    </span>
+                    <span v-if="dp.proposer_username" class="text-[11px] text-slate-500">
+                      提案人：{{ dp.proposer_username }}
+                    </span>
+                  </div>
+                  <span class="font-mono text-[11px] text-slate-400">截止 {{ dp.due_at }}</span>
+                </div>
+                <div class="font-bold text-slate-900 dark:text-white">{{ dp.title }}</div>
+                <div class="text-slate-600 dark:text-slate-300">{{ dp.question }}</div>
+                <div v-if="dp.status !== 'settled'" class="flex flex-wrap items-center gap-2 pt-1">
+                  <input
+                    v-model="settleValueDrafts[dp.id]"
+                    type="text"
+                    placeholder="可选：结算观测值"
+                    class="w-36 h-8 px-2.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 font-mono text-[11px]"
+                  />
+                  <button
+                    type="button"
+                    :disabled="busyAction"
+                    @click="handleSettleDaily(dp, 'yes')"
+                    class="px-3 py-1.5 rounded-lg bg-emerald-600 text-white font-semibold hover:bg-emerald-700"
+                  >
+                    判为达成 (YES)
+                  </button>
+                  <button
+                    type="button"
+                    :disabled="busyAction"
+                    @click="handleSettleDaily(dp, 'no')"
+                    class="px-3 py-1.5 rounded-lg bg-rose-600 text-white font-semibold hover:bg-rose-700"
+                  >
+                    判为未达成 (NO)
+                  </button>
+                  <button
+                    type="button"
+                    :disabled="busyAction"
+                    @click="handleSettleDaily(dp, 'void')"
+                    class="px-2.5 py-1.5 rounded-lg border border-slate-300 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800"
+                  >
+                    作废 (VOID)
+                  </button>
+                </div>
+                <div v-else class="text-[11px] text-emerald-700 dark:text-emerald-300 font-medium">
+                  已于 {{ dp.settled_at }} 结算为 {{ String(dp.outcome || '').toUpperCase() }}
+                  <span v-if="dp.settled_value !== null && dp.settled_value !== undefined">（观测值：{{ dp.settled_value }}）</span>
                 </div>
               </div>
             </div>

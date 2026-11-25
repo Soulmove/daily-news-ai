@@ -104,7 +104,8 @@ class MockR2Bucket {
 function createTestEnv(overrides: Partial<Env> = {}): { env: Env; r2: MockR2Bucket; db: MockD1Database } {
   const schemaPath1 = resolve(__dirname, '../migrations/0001_init.sql')
   const schemaPath2 = resolve(__dirname, '../migrations/0002_growth_and_interactions.sql')
-  const schemaSql = `${readFileSync(schemaPath1, 'utf-8')}\n${readFileSync(schemaPath2, 'utf-8')}`
+  const schemaPath3 = resolve(__dirname, '../migrations/0003_prediction_arena.sql')
+  const schemaSql = `${readFileSync(schemaPath1, 'utf-8')}\n${readFileSync(schemaPath2, 'utf-8')}\n${readFileSync(schemaPath3, 'utf-8')}`
   const db = new MockD1Database(schemaSql)
   const r2 = new MockR2Bucket()
   const env: Env = {
@@ -1092,5 +1093,418 @@ describe('MirrorBrief Worker Crypto & API Suite', () => {
       total: 2,
       my_reaction: 'heavy',
     })
+  })
+
+  it('runs Prediction Arena lifecycle: daily market gen, 30-min lock, proposals, objective auto-settlement & stacked perks', async () => {
+    const { env, r2 } = createTestEnv({ SITE_ACCESS_MODE: 'public' })
+    const app = createWorkerApp()
+    await r2.put(
+      'data/market_quotes.json',
+      JSON.stringify({
+        generated_at: new Date().toISOString(),
+        quotes: {
+          '000001.SH': { ticker: '000001.SH', name: '上证指数', price: 3350.0, pct_change: 0.6 },
+          NVDA: { ticker: 'NVDA', name: '英伟达', price: 145.0, pct_change: 1.1 },
+          XAUUSD: { ticker: 'XAUUSD', name: '伦敦金现', price: 2742.0, pct_change: 0.4 },
+        },
+      }),
+    )
+
+    // Bootstrap super_admin and sub_admin
+    const adminLogin = await app.request(
+      'https://mirrorinfo.xyz/api/auth/login',
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username: 'admin', password: 'AdminPass123!' }),
+      },
+      env,
+    )
+    expect(adminLogin.status).toBe(200)
+    const superSess = (await adminLogin.json()) as { token: string }
+
+    await app.request(
+      'https://mirrorinfo.xyz/api/admin/users',
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${superSess.token}` },
+        body: JSON.stringify({ username: 'sub_ops', password: 'SubPassword123', role: 'admin' }),
+      },
+      env,
+    )
+    const subLogin = await app.request(
+      'https://mirrorinfo.xyz/api/auth/login',
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username: 'sub_ops', password: 'SubPassword123' }),
+      },
+      env,
+    )
+    const subSess = (await subLogin.json()) as { token: string }
+
+    // Hot toggle check: sub_admin gets 403, super_admin succeeds
+    const subBlocked = await app.request(
+      'https://mirrorinfo.xyz/api/admin/site-settings',
+      {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${subSess.token}` },
+        body: JSON.stringify({ prediction_rewards_enabled: false }),
+      },
+      env,
+    )
+    expect(subBlocked.status).toBe(403)
+
+    const superSettingsRes = await app.request(
+      'https://mirrorinfo.xyz/api/admin/site-settings',
+      {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${superSess.token}` },
+        body: JSON.stringify({
+          access_mode: 'public',
+          auth_qa_daily_limit: 1,
+          user_referral_enabled: true,
+          user_invite_quota: 2,
+          prediction_daily_market_enabled: true,
+          prediction_rewards_enabled: true,
+          prediction_proposals_enabled: true,
+        }),
+      },
+      env,
+    )
+    expect(superSettingsRes.status).toBe(200)
+
+    // Register normal user alice
+    const regAlice = await app.request(
+      'https://mirrorinfo.xyz/api/auth/register',
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'cf-connecting-ip': '198.51.100.31', 'X-Device-ID': 'arena-dev-a' },
+        body: JSON.stringify({ username: 'alice_arena', password: 'AlicePassword123' }),
+      },
+      env,
+    )
+    expect(regAlice.status).toBe(200)
+    const aliceSess = (await regAlice.json()) as { token: string }
+
+    // Trigger daily cron twice -> idempotent 3 created on first run, 0 on second
+    const cron1 = await app.request(
+      'https://mirrorinfo.xyz/api/admin/predictions/run-daily-cron',
+      { method: 'POST', headers: { Authorization: `Bearer ${superSess.token}` } },
+      env,
+    )
+    expect(cron1.status).toBe(200)
+    const cron1Json = (await cron1.json()) as { ok: boolean; generated: number }
+    expect(cron1Json.generated).toBe(3)
+
+    const cron2 = await app.request(
+      'https://mirrorinfo.xyz/api/admin/predictions/run-daily-cron',
+      { method: 'POST', headers: { Authorization: `Bearer ${superSess.token}` } },
+      env,
+    )
+    expect(((await cron2.json()) as { generated: number }).generated).toBe(0)
+
+    const arenaRes1 = await app.request('https://mirrorinfo.xyz/api/predictions/arena', {}, env)
+    expect(arenaRes1.status).toBe(200)
+    const arenaData1 = (await arenaRes1.json()) as {
+      daily_predictions: Array<{ id: string; due_at: string; lock_at: string; source_type: string }>
+      allowed_reason_tags: string[]
+    }
+    expect(arenaData1.daily_predictions).toHaveLength(3)
+    expect(arenaData1.allowed_reason_tags).toContain('流动性驱动')
+
+    const sseItem = arenaData1.daily_predictions.find((d) => d.id.endsWith('_sse'))!
+    const nvdaItem = arenaData1.daily_predictions.find((d) => d.id.endsWith('_nvda'))!
+    const goldItem = arenaData1.daily_predictions.find((d) => d.id.endsWith('_gold'))!
+    expect(sseItem).toBeTruthy()
+    expect(nvdaItem).toBeTruthy()
+    expect(goldItem).toBeTruthy()
+
+    // Test 30-min lock guard on nvdaItem temporarily, then restore nvdaItem to open for voting
+    const origLock = nvdaItem.lock_at
+    const pastLock = new Date(Date.now() - 5 * 60_000).toISOString()
+    await env.DB.prepare('UPDATE daily_predictions SET lock_at = ?1 WHERE id = ?2').bind(pastLock, nvdaItem.id).run()
+
+    const lockedVoteRes = await app.request(
+      `https://mirrorinfo.xyz/api/predictions/${nvdaItem.id}/vote`,
+      {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${aliceSess.token}` },
+        body: JSON.stringify({ prob_pct: 75, reason_tag: '流动性驱动' }),
+      },
+      env,
+    )
+    expect(lockedVoteRes.status).toBe(400)
+    expect(await lockedVoteRes.json()).toMatchObject({ locked: true })
+
+    await env.DB.prepare('UPDATE daily_predictions SET lock_at = ?1 WHERE id = ?2').bind(origLock, nvdaItem.id).run()
+
+    // Alice votes >= 55% with reason_tag on all 3 daily predictions
+    for (const pid of [sseItem.id, nvdaItem.id, goldItem.id]) {
+      const voteRes = await app.request(
+        `https://mirrorinfo.xyz/api/predictions/${pid}/vote`,
+        {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${aliceSess.token}` },
+          body: JSON.stringify({ prob_pct: 80, reason_tag: '流动性驱动' }),
+        },
+        env,
+      )
+      expect(voteRes.status).toBe(200)
+    }
+
+    // Objective auto-settlement: move sseItem due_at to past and set higher 000001.SH in R2, then run cron
+    const pastDue = new Date(Date.now() - 2 * 60_000).toISOString()
+    await env.DB.prepare('UPDATE daily_predictions SET due_at = ?1, lock_at = ?2 WHERE id = ?3').bind(pastDue, pastDue, sseItem.id).run()
+    await r2.put(
+      'data/market_quotes.json',
+      JSON.stringify({
+        generated_at: new Date().toISOString(),
+        quotes: {
+          '000001.SH': { ticker: '000001.SH', name: '上证指数', price: 3388.5, pct_change: 1.15 },
+          NVDA: { ticker: 'NVDA', name: '英伟达', price: 148.2, pct_change: 2.2 },
+          XAUUSD: { ticker: 'XAUUSD', name: '伦敦金现', price: 2760.0, pct_change: 0.7 },
+        },
+      }),
+    )
+    const cronAutoSettle = await app.request(
+      'https://mirrorinfo.xyz/api/admin/predictions/run-daily-cron',
+      { method: 'POST', headers: { Authorization: `Bearer ${superSess.token}` } },
+      env,
+    )
+    expect(((await cronAutoSettle.json()) as { settled: number }).settled).toBe(1)
+
+    // Manually settle remaining 2 items as 'yes' to build a 3-hit streak
+    for (const pid of [nvdaItem.id, goldItem.id]) {
+      const sRes = await app.request(
+        `https://mirrorinfo.xyz/api/admin/predictions/${pid}/settle`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${superSess.token}` },
+          body: JSON.stringify({ outcome: 'yes', settled_value: 999 }),
+        },
+        env,
+      )
+      expect(sRes.status).toBe(200)
+    }
+
+    // Alice submits a user prediction proposal & admin approves (+100 pts, +1 invite bonus)
+    const propFutureDue = new Date(Date.now() + 72 * 3600_000).toISOString()
+    const propCreate = await app.request(
+      'https://mirrorinfo.xyz/api/predictions/proposals',
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${aliceSess.token}` },
+        body: JSON.stringify({
+          category: 'macro',
+          title: 'FOMC 纪要鹰派措辞预测',
+          question: '下周公布的 FOMC 会议纪要是否提及暂缓降息路径？',
+          win_rule: '美联储官网全文出现暂缓降息相关表态',
+          lose_rule: '纪要仅重申按期降息路线',
+          due_at: propFutureDue,
+        }),
+      },
+      env,
+    )
+    expect(propCreate.status).toBe(200)
+    const propJson = (await propCreate.json()) as { proposal: { id: number } }
+
+    const propApprove = await app.request(
+      `https://mirrorinfo.xyz/api/admin/predictions/proposals/${propJson.proposal.id}/approve`,
+      { method: 'POST', headers: { Authorization: `Bearer ${superSess.token}` } },
+      env,
+    )
+    expect(propApprove.status).toBe(200)
+
+    // Verify rewards profile, rank tier, bonus QA quota, and unlocked invite quota
+    const arenaAfter = await app.request(
+      'https://mirrorinfo.xyz/api/predictions/arena',
+      { headers: { Authorization: `Bearer ${aliceSess.token}` } },
+      env,
+    )
+    expect(arenaAfter.status).toBe(200)
+    const arenaAfterData = (await arenaAfter.json()) as {
+      my_profile: {
+        settled_count: number
+        hit_count: number
+        current_streak: number
+        insight_points: number
+        rank_tier: string
+        bonus_qa_quota: number
+        unlocked_referral_bonus: number
+      }
+      leaderboard: Array<{ username: string; rank: number }>
+    }
+    expect(arenaAfterData.my_profile.settled_count).toBe(3)
+    expect(arenaAfterData.my_profile.hit_count).toBe(3)
+    expect(arenaAfterData.my_profile.current_streak).toBe(3)
+    expect(arenaAfterData.my_profile.insight_points).toBeGreaterThanOrEqual(200)
+    expect(arenaAfterData.my_profile.rank_tier).toBe('趋势捕手')
+    expect(arenaAfterData.my_profile.bonus_qa_quota).toBe(10)
+    expect(arenaAfterData.my_profile.unlocked_referral_bonus).toBe(3) // +2 streak +1 approved proposal
+    expect(arenaAfterData.leaderboard[0]?.username).toBe('alice_arena')
+
+    const meRes = await app.request(
+      'https://mirrorinfo.xyz/api/auth/me',
+      { headers: { Authorization: `Bearer ${aliceSess.token}` } },
+      env,
+    )
+    expect(((await meRes.json()) as { prediction_bonus_qa_quota: number }).prediction_bonus_qa_quota).toBe(10)
+
+    const invRes = await app.request(
+      'https://mirrorinfo.xyz/api/auth/my-invites',
+      { headers: { Authorization: `Bearer ${aliceSess.token}` } },
+      env,
+    )
+    expect(((await invRes.json()) as { quota: number }).quota).toBe(5) // base 2 + unlocked 3
+
+    // auth_qa_daily_limit was set to 1, but bonus_qa_quota=10 stacks -> 2nd QA call STILL succeeds!
+    for (const qText of ['第一问验证配额', '第二问验证连胜加赠叠加上限']) {
+      const qaRes = await app.request(
+        'https://mirrorinfo.xyz/api/qa/ask',
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${aliceSess.token}` },
+          body: JSON.stringify({ question: qText, lang: 'zh' }),
+        },
+        env,
+      )
+      expect(qaRes.status).toBe(200)
+    }
+
+    // Disabling proposals blocks new proposal submission with 403
+    await app.request(
+      'https://mirrorinfo.xyz/api/admin/site-settings',
+      {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${superSess.token}` },
+        body: JSON.stringify({ prediction_proposals_enabled: false }),
+      },
+      env,
+    )
+    const propBlocked = await app.request(
+      'https://mirrorinfo.xyz/api/predictions/proposals',
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${aliceSess.token}` },
+        body: JSON.stringify({
+          category: 'macro',
+          title: '关闭投稿拦截测试',
+          question: '测试关闭开关是否实时拦截？',
+          due_at: propFutureDue,
+        }),
+      },
+      env,
+    )
+    expect(propBlocked.status).toBe(403)
+  })
+
+  it('serves dynamic OG HTML to crawlers and 302 deep-link redirects to browsers on /s/pred/* and /s/event/*', async () => {
+    const { env, r2 } = createTestEnv({ SITE_ACCESS_MODE: 'public' })
+    const app = createWorkerApp()
+    await r2.put(
+      'data/market_quotes.json',
+      JSON.stringify({
+        generated_at: new Date().toISOString(),
+        quotes: {
+          '000001.SH': { ticker: '000001.SH', name: '上证指数', price: 3350.0, pct_change: 0.6 },
+        },
+      }),
+    )
+    await r2.put(
+      'analysis_finance.json',
+      JSON.stringify({
+        events: [
+          {
+            event_id: 'ev_share_og_1',
+            title: '央行宣布降准 25 个基点',
+            fact_summary: '释放长期流动性约 5000 亿元。',
+            sources: [{ source_name: '中国人民银行' }, { source_name: '新华社' }],
+          },
+        ],
+      }),
+    )
+
+    const adminLogin = await app.request(
+      'https://mirrorinfo.xyz/api/auth/login',
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username: 'admin', password: 'AdminPass123!' }),
+      },
+      env,
+    )
+    const superSess = (await adminLogin.json()) as { token: string }
+    await app.request(
+      'https://mirrorinfo.xyz/api/admin/predictions/run-daily-cron',
+      { method: 'POST', headers: { Authorization: `Bearer ${superSess.token}` } },
+      env,
+    )
+    const arenaData = (await (
+      await app.request('https://mirrorinfo.xyz/api/predictions/arena', {}, env)
+    ).json()) as { daily_predictions: Array<{ id: string; title: string }> }
+    const predId = arenaData.daily_predictions[0].id
+
+    // Bot UA gets HTTP 200 HTML with dynamic og:title
+    const predBot = await app.request(
+      `https://mirrorinfo.xyz/s/pred/${encodeURIComponent(predId)}?p=78&ref=ALICE`,
+      { headers: { 'User-Agent': 'TelegramBot (like TwitterBot)' } },
+      env,
+    )
+    expect(predBot.status).toBe(200)
+    const predHtml = await predBot.text()
+    expect(predHtml).toContain('og:title')
+    expect(predHtml).toContain('我押 78%')
+    expect(predHtml).toContain('上证指数')
+
+    // Regular browser gets 302 redirect preserving tab/pred/p/ref
+    const predBrowser = await app.request(
+      `https://mirrorinfo.xyz/s/pred/${encodeURIComponent(predId)}?p=78&ref=ALICE`,
+      { headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)' } },
+      env,
+    )
+    expect(predBrowser.status).toBe(302)
+    const locPred = predBrowser.headers.get('location') || ''
+    expect(locPred).toContain('tab=calendar')
+    expect(locPred).toContain(`pred=${predId}`)
+    expect(locPred).toContain('p=78')
+    expect(locPred).toContain('ref=ALICE')
+
+    // Event OG HTML & redirect
+    const evBot = await app.request(
+      'https://mirrorinfo.xyz/s/event/ev_share_og_1',
+      { headers: { 'User-Agent': 'MicroMessenger/8.0' } },
+      env,
+    )
+    expect(evBot.status).toBe(200)
+    expect(await evBot.text()).toContain('央行宣布降准 25 个基点')
+
+    const evBrowser = await app.request(
+      'https://mirrorinfo.xyz/s/event/ev_share_og_1',
+      { headers: { 'User-Agent': 'Mozilla/5.0' } },
+      env,
+    )
+    expect(evBrowser.status).toBe(302)
+    expect(evBrowser.headers.get('location')).toBe('https://mirrorinfo.xyz/?event=ev_share_og_1')
+
+    // Under private_gate, OG HTML must NOT expose internal titles
+    await app.request(
+      'https://mirrorinfo.xyz/api/admin/site-settings',
+      {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${superSess.token}` },
+        body: JSON.stringify({ access_mode: 'private_gate' }),
+      },
+      env,
+    )
+    const privateBot = await app.request(
+      'https://mirrorinfo.xyz/s/event/ev_share_og_1?preview=1',
+      {},
+      env,
+    )
+    expect(privateBot.status).toBe(200)
+    const privHtml = await privateBot.text()
+    expect(privHtml).toContain('镜信 MirrorBrief')
+    expect(privHtml).not.toContain('释放长期流动性')
   })
 })

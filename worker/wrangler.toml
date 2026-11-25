@@ -6,7 +6,9 @@ workers_dev = false
 
 routes = [
   { pattern = "mirrorinfo.xyz/api/*", zone_id = "affe70e3c21c0f77f1ce04be80ed62cc" },
-  { pattern = "www.mirrorinfo.xyz/api/*", zone_id = "affe70e3c21c0f77f1ce04be80ed62cc" }
+  { pattern = "www.mirrorinfo.xyz/api/*", zone_id = "affe70e3c21c0f77f1ce04be80ed62cc" },
+  { pattern = "mirrorinfo.xyz/s/*", zone_id = "affe70e3c21c0f77f1ce04be80ed62cc" },
+  { pattern = "www.mirrorinfo.xyz/s/*", zone_id = "affe70e3c21c0f77f1ce04be80ed62cc" }
 ]
 
 [triggers]

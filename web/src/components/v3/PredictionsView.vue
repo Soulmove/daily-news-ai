@@ -1,9 +1,35 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
-import { Check, CheckCircle2, ChevronDown, ChevronRight, Copy, HelpCircle, History, Plus, RotateCcw, Scale, Share2, Sparkles, ThumbsDown, ThumbsUp, Trash2, Trophy, Users } from 'lucide-vue-next'
+import {
+  Award,
+  Check,
+  CheckCircle2,
+  ChevronDown,
+  ChevronRight,
+  Clock,
+  Copy,
+  Flame,
+  HelpCircle,
+  History,
+  Lock,
+  Plus,
+  RotateCcw,
+  Scale,
+  Send,
+  Share2,
+  Sparkles,
+  ThumbsDown,
+  ThumbsUp,
+  Trash2,
+  Trophy,
+  Users,
+  Zap,
+} from 'lucide-vue-next'
 import EmptySearchState from '../EmptySearchState.vue'
 import OdometerNumber from '../OdometerNumber.vue'
 import SmartTime from '../SmartTime.vue'
+import UserAvatar from '../UserAvatar.vue'
+import type { ArenaLeaderboardRow, UserPredictionProfile } from '../../core/auth'
 import { pickBiText, t } from '../../core/i18n'
 import { normalizeExternalUrl } from '../../core/legacyAdapter'
 import { getReactionSummary, loadReactionsBatch, toggleStructuredReaction } from '../../core/reactionsStore'
@@ -11,6 +37,8 @@ import { matchesSmartQuery } from '../../core/search'
 import type { PredictionStance } from '../../core/storage'
 import { computeLiveDomainLeaderboard, computePredictionStats, inferPredictionCategory, type PredictionCategory } from '../../core/v3Logic'
 import type { CrowdPredictionStat, PredictionRecord } from '../../core/types'
+
+const DEFAULT_REASON_TAGS = ['流动性驱动', '业绩超预期', '市场已计价', '政策博弈', '逆向情绪']
 
 const props = defineProps<{
   predictions: PredictionRecord[]
@@ -22,6 +50,11 @@ const props = defineProps<{
   crowdMinUnlock?: number
   guestStagedVotes?: Record<string, number>
   incomingPkChallenge?: { predId: string; prob: number; ref?: string } | null
+  arenaProfile?: UserPredictionProfile | null
+  arenaLeaderboard?: ArenaLeaderboardRow[]
+  allowedReasonTags?: string[]
+  predictionProposalsEnabled?: boolean
+  seasonKey?: string
   isLoggedIn?: boolean
   isAdmin?: boolean
   nowMs?: number
@@ -29,12 +62,14 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   (e: 'create-prediction', record: PredictionRecord): void
+  (e: 'submit-proposal', body: { category: string; title: string; question: string; win_rule: string; lose_rule: string; due_at: string }): void
   (e: 'revise-prediction', payload: { predictionId: string; newJudgment: string; newProbPct: number; reason: string }): void
   (e: 'settle-prediction', payload: { predictionId: string; outcome: 'correct' | 'incorrect' | 'indeterminate'; evidenceUrl: string; note: string }): void
   (e: 'set-prediction-stance', payload: { predictionId: string; stance: PredictionStance }): void
-  (e: 'vote-crowd', payload: { predictionId: string; probPct: number }): void
+  (e: 'vote-crowd', payload: { predictionId: string; probPct: number; reasonTag?: string }): void
   (e: 'open-share-pk', payload: { rec: PredictionRecord; probPct: number }): void
   (e: 'dismiss-pk-banner'): void
+  (e: 'open-auth'): void
   (e: 'delete-prediction', predictionId: string): void
   (e: 'reset-local-predictions'): void
   (e: 'clear-search'): void
@@ -42,6 +77,7 @@ const emit = defineEmits<{
 
 const categoryFilter = ref<'all' | PredictionCategory | 'settled'>('all')
 const showLeaderboard = ref(true)
+const arenaBoardOpen = ref(true)
 const summaryOpenMobile = ref(false)
 const brierHelpOpen = ref(false)
 const expandedVersionIds = ref<Set<string>>(new Set())
@@ -49,10 +85,12 @@ const leaderboardCopied = ref(false)
 const showNewForm = ref(false)
 const revisingId = ref<string | null>(null)
 const settlingId = ref<string | null>(null)
+const sprintIdx = ref(0)
 const effectiveNowMs = computed(() => props.nowMs ?? Date.now())
 
 const fTitle = ref('')
 const fEntity = ref('')
+const fCategory = ref<'market' | 'tech_ai' | 'macro' | 'global_space'>('market')
 const fQuestion = ref('')
 const fDueAt = ref('2026-12-01T18:00')
 const fMode = ref<'live' | 'replay'>('live')
@@ -62,14 +100,25 @@ const fLose = ref('')
 const fAssume = ref('')
 const fInvalid = ref('')
 const fJudg = ref('')
+const submitToArenaPool = ref(true)
 
 const revJudg = ref('')
 const revProb = ref(50)
+const revReason = ref('')
 const voteDrafts = ref<Record<string, number>>({})
+const reasonDrafts = ref<Record<string, string>>({})
 const stanceBurstKey = ref('')
 const voteBurstPid = ref('')
 const pkCopiedPid = ref('')
 let burstTimer: ReturnType<typeof setTimeout> | null = null
+
+const setOutcome = ref<'correct' | 'incorrect' | 'indeterminate'>('correct')
+const setUrl = ref('')
+const setNote = ref('')
+
+const reasonTagsList = computed(() =>
+  props.allowedReasonTags && props.allowedReasonTags.length > 0 ? props.allowedReasonTags : DEFAULT_REASON_TAGS,
+)
 
 const effectiveMinUnlock = computed(() => Math.max(1, Number(props.crowdMinUnlock ?? 3)))
 
@@ -77,14 +126,57 @@ function minVotesForRec(pid: string): number {
   return Math.max(1, Number(props.crowdStats?.[pid]?.min_votes ?? effectiveMinUnlock.value))
 }
 
+function resolveLockAtMs(rec: PredictionRecord): number | null {
+  if (rec.lock_at) {
+    const lm = Date.parse(rec.lock_at)
+    if (!Number.isNaN(lm)) return lm
+  }
+  const dueMs = Date.parse(rec.due_at || '')
+  if (!Number.isNaN(dueMs)) return dueMs - 30 * 60_000
+  return null
+}
+
+function isRecLocked(rec: PredictionRecord): boolean {
+  if (rec.settlement || rec.status === 'settled' || rec.arena_status === 'settled' || rec.arena_status === 'locked') {
+    return true
+  }
+  const lockMs = resolveLockAtMs(rec)
+  if (lockMs !== null && effectiveNowMs.value >= lockMs) return true
+  const dueMs = Date.parse(rec.due_at || '')
+  if (!Number.isNaN(dueMs) && effectiveNowMs.value >= dueMs) return true
+  return false
+}
+
+function formatLockCountdown(rec: PredictionRecord): string {
+  if (rec.settlement || rec.arena_status === 'settled') return t('已核验结算', 'Settled')
+  if (isRecLocked(rec)) return t('已封盘 · 等待客观结算', 'Locked · Awaiting Settlement')
+  const lockMs = resolveLockAtMs(rec)
+  if (lockMs === null) return ''
+  const diffMin = Math.max(1, Math.floor((lockMs - effectiveNowMs.value) / 60_000))
+  if (diffMin < 60) return t(`距封盘 ${diffMin} 分`, `Locks in ${diffMin}m`)
+  const hours = Math.floor(diffMin / 60)
+  if (hours < 24) {
+    const mins = diffMin % 60
+    return t(`距封盘 ${hours}h${mins > 0 ? `${mins}m` : ''}`, `Locks in ${hours}h`)
+  }
+  const days = Math.floor(hours / 24)
+  return t(`距封盘 ${days} 天`, `Locks in ${days}d`)
+}
+
+function getEarlyMultiplier(rec: PredictionRecord): number {
+  const cMs = Date.parse(rec.created_at || '')
+  const lMs = resolveLockAtMs(rec)
+  if (Number.isNaN(cMs) || lMs === null || lMs <= cMs) return 1.0
+  const frac = Math.max(0, (effectiveNowMs.value - cMs) / (lMs - cMs))
+  if (frac <= 0.25) return 1.5
+  if (frac <= 0.6) return 1.2
+  return 1.0
+}
+
 function buildPkShareUrl(pid: string, probPct: number): string {
   if (typeof window === 'undefined') return ''
-  const u = new URL(window.location.href)
-  u.search = ''
-  u.searchParams.set('tab', 'calendar')
-  u.searchParams.set('pred', pid)
-  u.searchParams.set('p', String(Math.round(probPct)))
-  return u.toString()
+  const origin = window.location.origin || 'https://mirrorinfo.xyz'
+  return `${origin}/s/pred/${encodeURIComponent(pid)}?p=${Math.round(probPct)}`
 }
 
 function copyPkLink(rec: PredictionRecord) {
@@ -122,14 +214,30 @@ function triggerStanceClick(predictionId: string, stance: PredictionStance) {
   emit('set-prediction-stance', { predictionId, stance })
 }
 
+function getReasonDraft(rec: PredictionRecord): string {
+  const pid = rec.prediction_id
+  if (pid in reasonDrafts.value) return reasonDrafts.value[pid]
+  return props.crowdStats?.[pid]?.user_reason_tag || ''
+}
+
+function toggleReasonDraft(pid: string, tag: string) {
+  const cur = reasonDrafts.value[pid] ?? props.crowdStats?.[pid]?.user_reason_tag ?? ''
+  reasonDrafts.value = { ...reasonDrafts.value, [pid]: cur === tag ? '' : tag }
+}
+
 function triggerVoteClick(rec: PredictionRecord) {
+  if (isRecLocked(rec)) return
   voteBurstPid.value = rec.prediction_id
   if (burstTimer) clearTimeout(burstTimer)
   burstTimer = setTimeout(() => {
     stanceBurstKey.value = ''
     voteBurstPid.value = ''
   }, 500)
-  emit('vote-crowd', { predictionId: rec.prediction_id, probPct: getVoteDraft(rec) })
+  emit('vote-crowd', {
+    predictionId: rec.prediction_id,
+    probPct: getVoteDraft(rec),
+    reasonTag: getReasonDraft(rec) || undefined,
+  })
 }
 
 function getVoteDraft(rec: PredictionRecord): number {
@@ -157,14 +265,46 @@ function cleanPredText(raw?: string | null): string {
     .replace(/连接器/g, '官方追踪')
     .trim()
 }
-const revReason = ref('')
-
-const setOutcome = ref<'correct' | 'incorrect' | 'indeterminate'>('correct')
-const setUrl = ref('')
-const setNote = ref('')
 
 const stats = computed(() => computePredictionStats(props.predictions))
 const liveBoard = computed(() => computeLiveDomainLeaderboard(props.predictions, 5))
+
+const pkChallengeRecord = computed<PredictionRecord | null>(() => {
+  if (!props.incomingPkChallenge) return null
+  return props.predictions.find((p) => p.prediction_id === props.incomingPkChallenge?.predId) ?? null
+})
+
+// Daily 3-Question Speed Prediction Sprint: prioritize open daily/proposal questions first, then open live questions
+const sprintQuestions = computed<PredictionRecord[]>(() => {
+  const openOnes = props.predictions.filter((p) => p.mode === 'live' && !isRecLocked(p))
+  const dailyOrProposal = openOnes.filter((p) => p.source_type === 'auto_market' || p.source_type === 'user_proposal')
+  const rest = openOnes.filter((p) => p.source_type !== 'auto_market' && p.source_type !== 'user_proposal')
+  return [...dailyOrProposal, ...rest].slice(0, 3)
+})
+
+function hasUserForecasted(pid: string): boolean {
+  return (
+    props.crowdStats?.[pid]?.user_prob_pct != null ||
+    props.guestStagedVotes?.[pid] !== undefined
+  )
+}
+
+const sprintDoneCount = computed(() => sprintQuestions.value.filter((q) => hasUserForecasted(q.prediction_id)).length)
+const currentSprintRec = computed<PredictionRecord | null>(() => {
+  const list = sprintQuestions.value
+  if (list.length === 0) return null
+  const idx = sprintIdx.value % list.length
+  return list[idx]
+})
+
+function submitSprintAndAdvance() {
+  const rec = currentSprintRec.value
+  if (!rec || isRecLocked(rec)) return
+  triggerVoteClick(rec)
+  if (sprintQuestions.value.length > 1) {
+    sprintIdx.value = (sprintIdx.value + 1) % sprintQuestions.value.length
+  }
+}
 
 function toggleVersionExpand(id: string) {
   const next = new Set(expandedVersionIds.value)
@@ -205,6 +345,20 @@ function copyLeaderboardUrl() {
   }, 1800)
 }
 
+function humanVsAiOutcome(rec: PredictionRecord): 'human_win' | 'ai_win' | 'tie' | null {
+  if (!rec.settlement || rec.settlement.outcome === 'indeterminate') return null
+  const stat = props.crowdStats?.[rec.prediction_id]
+  if (!stat || !stat.unlocked || stat.crowd_avg_pct == null) return null
+  const actual = rec.settlement.outcome === 'correct' ? (rec.probability_pct >= 50 ? 1 : 0) : null
+  const arenaActual = rec.arena_outcome === 'yes' ? 1 : rec.arena_outcome === 'no' ? 0 : actual
+  if (arenaActual === null) return null
+  const hErr = Math.abs(stat.crowd_avg_pct / 100 - arenaActual)
+  const aiErr = Math.abs(rec.probability_pct / 100 - arenaActual)
+  if (hErr + 0.01 < aiErr) return 'human_win'
+  if (aiErr + 0.01 < hErr) return 'ai_win'
+  return 'tie'
+}
+
 const categoryCounts = computed(() => {
   const live = props.predictions.filter((p) => p.mode === 'live')
   return {
@@ -234,13 +388,17 @@ const filteredRecords = computed(() => {
     return true
   })
   return matched.slice().sort((a, b) => {
-    // 1. Live mode before historical replay; 2. Early/live settled highlighted cleanly right on top; 3. Earliest due date first
-    const modeRankA = a.mode === 'live' ? 0 : 1
-    const modeRankB = b.mode === 'live' ? 0 : 1
-    if (modeRankA !== modeRankB) return modeRankA - modeRankB
-    const settledA = a.status === 'settled' || Boolean(a.settlement) ? 0 : 1
-    const settledB = b.status === 'settled' || Boolean(b.settlement) ? 0 : 1
-    if (settledA !== settledB) return settledA - settledB
+    // 1. Open daily/co-created & live predictions first; 2. Locked open waiting settlement; 3. Settled; 4. Replay
+    const rankWeight = (p: PredictionRecord) => {
+      if (p.mode === 'replay') return 4
+      if (p.status === 'settled' || Boolean(p.settlement)) return 3
+      if (isRecLocked(p)) return 2
+      if (p.source_type === 'auto_market' || p.source_type === 'user_proposal') return 0
+      return 1
+    }
+    const rA = rankWeight(a)
+    const rB = rankWeight(b)
+    if (rA !== rB) return rA - rB
     return String(a.due_at || '').localeCompare(String(b.due_at || ''))
   })
 })
@@ -250,17 +408,23 @@ function submitNew() {
   const nowIso = new Date().toISOString()
   const dueIso = fDueAt.value ? `${fDueAt.value}:00+08:00` : nowIso
   const initJudg = fJudg.value.trim() || fTitle.value.trim()
+  const titleTrim = fTitle.value.trim()
+  const qTrim = fQuestion.value.trim()
+  const winTrim = fWin.value.trim() || t('出现公开官方证实公告或可验证指标达标', 'Official confirmation or measurable milestone met')
+  const loseTrim = fLose.value.trim() || t('到期前未达成目标或被官方辟谣', 'Not achieved by deadline or officially refuted')
+
   emit('create-prediction', {
     prediction_id: `pred_user_${Date.now().toString(36)}`,
     mode: fMode.value,
     status: 'open',
-    title: fTitle.value.trim(),
+    category: fCategory.value,
+    title: titleTrim,
     target_entity: fEntity.value.trim() || t('自定义标的', 'Custom Entity'),
-    question: fQuestion.value.trim(),
+    question: qTrim,
     created_at: nowIso,
     due_at: dueIso,
-    win_rule: fWin.value.trim() || t('出现公开官方证实公告或可验证指标达标', 'Official confirmation or measurable milestone met'),
-    lose_rule: fLose.value.trim() || t('到期前未达成目标或被官方辟谣', 'Not achieved by deadline or officially refuted'),
+    win_rule: winTrim,
+    lose_rule: loseTrim,
     indeterminate_rule: t('截至到期双方未公布足够客观证据', 'Insufficient objective public evidence by deadline'),
     supporting_evidence: [],
     opposing_evidence: [],
@@ -280,6 +444,18 @@ function submitNew() {
     ],
     settlement: null,
   })
+
+  if (submitToArenaPool.value && fMode.value === 'live' && props.predictionProposalsEnabled !== false) {
+    emit('submit-proposal', {
+      category: fCategory.value,
+      title: titleTrim,
+      question: qTrim,
+      win_rule: winTrim,
+      lose_rule: loseTrim,
+      due_at: dueIso,
+    })
+  }
+
   fTitle.value = ''
   fQuestion.value = ''
   fJudg.value = ''
@@ -325,6 +501,313 @@ function submitSettle(id: string) {
 
 <template>
   <section class="space-y-3" :aria-label="t('前瞻判断与历史验证工作台', 'Predictions & Verification Workbench')">
+    <!-- Pinned Top Friend PK Focusing Card (?tab=calendar&pred=<id>&p=<prob>&ref=<name>) -->
+    <div
+      v-if="incomingPkChallenge"
+      class="rounded-2xl border-2 border-[#007AFF] bg-gradient-to-br from-[#007AFF]/[0.08] via-white to-white dark:from-[#0A84FF]/[0.16] dark:via-slate-900 dark:to-slate-900 p-4 space-y-3 shadow-sm text-xs"
+      data-testid="pk-challenge-banner"
+    >
+      <div class="flex flex-wrap items-center justify-between gap-2">
+        <div class="flex items-center gap-2 min-w-0">
+          <span class="px-2 py-0.5 rounded-full bg-[#007AFF] text-white text-[11px] font-bold shrink-0">
+            {{ t('好友预测 PK 聚焦对战', 'Friend Prediction PK') }}
+          </span>
+          <span class="font-bold text-slate-900 dark:text-white truncate">
+            {{ pkChallengeRecord ? cleanPredText(pkChallengeRecord.title) : incomingPkChallenge.predId }}
+          </span>
+        </div>
+        <div class="flex items-center gap-1.5 shrink-0">
+          <button
+            type="button"
+            @click="categoryFilter = 'all'; scrollToPrediction(incomingPkChallenge.predId)"
+            class="px-2.5 py-1 rounded-lg bg-[#F2F2F7] dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-semibold hover:text-[#007AFF]"
+          >
+            {{ t('定位原卡片', 'Scroll to Card') }}
+          </button>
+          <button
+            type="button"
+            @click="emit('dismiss-pk-banner')"
+            class="px-2 py-1 rounded-lg text-zinc-500 hover:bg-black/[0.05] dark:hover:bg-white/[0.08]"
+          >
+            {{ t('收起', 'Dismiss') }}
+          </button>
+        </div>
+      </div>
+
+      <p v-if="pkChallengeRecord" class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+        {{ cleanPredText(pkChallengeRecord.question) }}
+      </p>
+
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-2.5 items-stretch">
+        <div class="md:col-span-3 rounded-xl bg-amber-500/10 border border-amber-500/25 p-3 flex flex-col justify-center">
+          <div class="text-[11px] font-semibold text-amber-800 dark:text-amber-300">
+            {{ incomingPkChallenge.ref ? `@${incomingPkChallenge.ref} 的预判` : t('好友预判概率', 'Friend Forecast') }}
+          </div>
+          <div class="text-2xl font-bold font-mono tabular-nums text-amber-700 dark:text-amber-300 mt-0.5">
+            {{ incomingPkChallenge.prob }}%
+          </div>
+        </div>
+
+        <div class="md:col-span-3 rounded-xl bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 p-3 flex flex-col justify-center">
+          <div class="text-[11px] font-semibold text-slate-500 dark:text-slate-400">
+            {{ t('镜信 AI 基准概率', 'MirrorBrief AI Baseline') }}
+          </div>
+          <div class="text-2xl font-bold font-mono tabular-nums text-slate-900 dark:text-white mt-0.5">
+            {{ pkChallengeRecord ? Math.round(pkChallengeRecord.probability_pct) : 50 }}%
+          </div>
+        </div>
+
+        <div class="md:col-span-6 rounded-xl bg-white dark:bg-slate-950/60 border border-[#007AFF]/25 p-3 space-y-2">
+          <template v-if="pkChallengeRecord && isRecLocked(pkChallengeRecord)">
+            <div class="flex items-center gap-1.5 text-amber-700 dark:text-amber-300 font-semibold">
+              <Lock class="w-3.5 h-3.5 shrink-0" />
+              <span>{{ t('本题已封盘 · 等待客观结算，禁止继续提交新预测', 'Locked — Awaiting Objective Settlement') }}</span>
+            </div>
+          </template>
+          <template v-else-if="pkChallengeRecord">
+            <div class="flex items-center justify-between gap-2">
+              <span class="font-semibold text-slate-800 dark:text-slate-100">{{ t('我的接招概率：', 'My Forecast:') }}</span>
+              <div class="flex items-center gap-1">
+                <button
+                  v-for="presetVal in [20, 50, 80]"
+                  :key="presetVal"
+                  type="button"
+                  @click="setVoteDraft(pkChallengeRecord.prediction_id, presetVal)"
+                  class="px-2 py-0.5 rounded-md font-mono font-bold text-[11px] border"
+                  :class="getVoteDraft(pkChallengeRecord) === presetVal ? 'bg-[#007AFF] text-white border-[#007AFF]' : 'border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300'"
+                >
+                  {{ presetVal }}%
+                </button>
+              </div>
+            </div>
+            <div class="flex items-center gap-2">
+              <input
+                type="range"
+                min="5"
+                max="95"
+                step="5"
+                :value="getVoteDraft(pkChallengeRecord)"
+                @input="setVoteDraft(pkChallengeRecord.prediction_id, Number(($event.target as HTMLInputElement).value))"
+                class="flex-1 accent-[#007AFF] cursor-pointer"
+              />
+              <span class="font-mono text-sm font-bold text-[#007AFF] w-10 text-right tabular-nums">
+                {{ getVoteDraft(pkChallengeRecord) }}%
+              </span>
+              <button
+                type="button"
+                @click="triggerVoteClick(pkChallengeRecord)"
+                class="px-3 py-1.5 rounded-xl bg-[#007AFF] hover:bg-[#0066D6] text-white font-semibold shrink-0"
+              >
+                {{ t('提交应战', 'Accept PK') }}
+              </button>
+              <button
+                type="button"
+                @click="emit('open-share-pk', { rec: pkChallengeRecord, probPct: getVoteDraft(pkChallengeRecord) })"
+                class="px-2.5 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold shrink-0"
+              >
+                {{ t('海报', 'Card') }}
+              </button>
+            </div>
+          </template>
+        </div>
+      </div>
+    </div>
+
+    <!-- Top Arena Bar: Calibration Profile + Daily 3-Question Sprint + Season Leaderboard -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-3 text-xs">
+      <!-- Left: Daily 3-Question Speed Sprint -->
+      <div
+        v-if="sprintQuestions.length > 0"
+        class="lg:col-span-7 rounded-2xl border border-emerald-500/25 bg-gradient-to-br from-emerald-500/[0.06] via-white to-white dark:from-emerald-400/[0.08] dark:via-slate-900 dark:to-slate-900 p-3.5 sm:p-4 space-y-2.5 shadow-xs"
+        data-testid="daily-sprint-card"
+      >
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <div class="flex items-center gap-1.5 font-bold text-slate-900 dark:text-white text-[13.5px]">
+            <Zap class="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" :stroke-width="2" />
+            <span>{{ t('每日 3 题极速预测打卡', 'Daily 3-Question Prediction Sprint') }}</span>
+            <span class="px-2 py-0.5 rounded-full bg-emerald-600/12 text-emerald-700 dark:text-emerald-300 text-[11px] font-mono tabular-nums">
+              {{ sprintDoneCount }}/{{ sprintQuestions.length }}
+            </span>
+          </div>
+          <div class="flex items-center gap-1">
+            <button
+              v-for="(sq, idx) in sprintQuestions"
+              :key="`sp-dot-${sq.prediction_id}`"
+              type="button"
+              @click="sprintIdx = idx"
+              class="px-2 py-0.5 rounded-md font-mono text-[11px] font-semibold border transition-colors"
+              :class="
+                idx === sprintIdx % sprintQuestions.length
+                  ? 'bg-emerald-600 text-white border-emerald-600'
+                  : hasUserForecasted(sq.prediction_id)
+                    ? 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border-emerald-500/30'
+                    : 'bg-white dark:bg-slate-800 text-slate-500 border-slate-200 dark:border-slate-700'
+              "
+            >
+              #{{ idx + 1 }}
+            </button>
+          </div>
+        </div>
+
+        <template v-if="currentSprintRec">
+          <div class="space-y-1">
+            <div class="flex flex-wrap items-center gap-1.5 text-[11px]">
+              <span
+                class="px-1.5 py-0.5 rounded bg-blue-500/12 text-blue-700 dark:text-blue-300 font-semibold"
+              >
+                {{
+                  currentSprintRec.source_type === 'auto_market'
+                    ? t('今日行情日赛', 'Daily Market')
+                    : currentSprintRec.source_type === 'user_proposal'
+                      ? t('用户共创', 'Community')
+                      : t('主线追踪', 'Live Track')
+                }}
+              </span>
+              <span class="px-1.5 py-0.5 rounded bg-amber-500/12 text-amber-700 dark:text-amber-300 font-mono font-bold">
+                {{ t(`早鸟 ${getEarlyMultiplier(currentSprintRec)}×`, `${getEarlyMultiplier(currentSprintRec)}x Early`) }}
+              </span>
+              <span class="text-slate-500 dark:text-slate-400 font-medium">
+                {{ formatLockCountdown(currentSprintRec) }}
+              </span>
+            </div>
+            <div class="font-bold text-sm text-slate-950 dark:text-white leading-snug">
+              {{ cleanPredText(currentSprintRec.title) }}
+            </div>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-1.5">
+            <button
+              v-for="pctBtn in [20, 50, 80]"
+              :key="`sp-pct-${pctBtn}`"
+              type="button"
+              @click="setVoteDraft(currentSprintRec.prediction_id, pctBtn)"
+              class="px-2.5 min-h-[30px] rounded-lg font-mono font-bold border transition-colors"
+              :class="
+                getVoteDraft(currentSprintRec) === pctBtn
+                  ? 'bg-[#007AFF] text-white border-[#007AFF]'
+                  : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:border-[#007AFF]'
+              "
+            >
+              {{ pctBtn }}%
+            </button>
+            <input
+              type="range"
+              min="5"
+              max="95"
+              step="5"
+              :value="getVoteDraft(currentSprintRec)"
+              @input="setVoteDraft(currentSprintRec.prediction_id, Number(($event.target as HTMLInputElement).value))"
+              class="flex-1 min-w-[110px] accent-[#007AFF] cursor-pointer"
+            />
+            <span class="font-mono font-bold text-slate-800 dark:text-slate-100 w-9 text-right tabular-nums">
+              {{ getVoteDraft(currentSprintRec) }}%
+            </span>
+          </div>
+
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <div class="flex flex-wrap items-center gap-1">
+              <button
+                v-for="tag in reasonTagsList"
+                :key="`sp-tag-${tag}`"
+                type="button"
+                @click="toggleReasonDraft(currentSprintRec.prediction_id, tag)"
+                class="px-2 py-0.5 rounded-full text-[11px] border transition-colors"
+                :class="
+                  getReasonDraft(currentSprintRec) === tag
+                    ? 'bg-slate-900 text-white border-slate-900 dark:bg-blue-600 dark:border-blue-600'
+                    : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700'
+                "
+              >
+                {{ tag }}
+              </button>
+            </div>
+            <div class="flex items-center gap-1.5 ml-auto">
+              <button
+                type="button"
+                @click="submitSprintAndAdvance"
+                class="px-3 min-h-[32px] rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold"
+                data-testid="sprint-submit-btn"
+              >
+                {{ t('提交并下一题', 'Submit & Next') }}
+              </button>
+              <button
+                v-if="sprintDoneCount >= sprintQuestions.length"
+                type="button"
+                @click="emit('open-share-pk', { rec: currentSprintRec, probPct: getVoteDraft(currentSprintRec) })"
+                class="inline-flex items-center gap-1 px-3 min-h-[32px] rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold"
+              >
+                <Share2 class="w-3.5 h-3.5" />
+                <span>{{ t('今日打卡完成 · 晒 PK 卡', 'Done · Share PK') }}</span>
+              </button>
+            </div>
+          </div>
+        </template>
+      </div>
+
+      <!-- Right: Personal Calibration Rank & Rewards -->
+      <div
+        class="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-3.5 sm:p-4 space-y-2.5 shadow-xs flex flex-col justify-between"
+        :class="sprintQuestions.length > 0 ? 'lg:col-span-5' : 'lg:col-span-12'"
+        data-testid="personal-arena-profile"
+      >
+        <div class="flex items-center justify-between gap-2">
+          <div class="flex items-center gap-1.5 font-bold text-slate-900 dark:text-white text-[13.5px]">
+            <Award class="w-4 h-4 text-amber-500 shrink-0" :stroke-width="2" />
+            <span>{{ t('我的校准战绩与站内特权', 'My Calibration Rank & Perks') }}</span>
+          </div>
+          <span v-if="seasonKey" class="px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 font-mono text-[10.5px] text-slate-500">
+            {{ seasonKey }} 赛季
+          </span>
+        </div>
+
+        <template v-if="isLoggedIn && arenaProfile">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <div>
+              <span class="px-2.5 py-0.5 rounded-full bg-amber-500/15 text-amber-700 dark:text-amber-300 font-bold text-xs">
+                {{ arenaProfile.rank_tier || '见习观察员' }}
+              </span>
+              <span class="ml-2 text-slate-500 tabular-nums">
+                {{ t(`洞察分 ${arenaProfile.insight_points}`, `${arenaProfile.insight_points} Pts`) }}
+              </span>
+            </div>
+            <div class="font-mono text-slate-700 dark:text-slate-200 tabular-nums">
+              {{
+                arenaProfile.settled_count > 0
+                  ? t(`胜率 ${arenaProfile.hit_rate_pct ?? 0}% · 连胜 ${arenaProfile.current_streak}`, `Win ${arenaProfile.hit_rate_pct ?? 0}% · Streak ${arenaProfile.current_streak}`)
+                  : t('首场结算后解锁胜率', 'Win rate unlocks after 1st settle')
+              }}
+            </div>
+          </div>
+          <div class="grid grid-cols-2 gap-2 text-[11px]">
+            <div class="rounded-xl bg-[#F5F5F7] dark:bg-slate-800/80 px-2.5 py-2">
+              <div class="text-slate-500">{{ t('连胜 / 前30% AI额度奖励', 'Streak / Top 30% AI Bonus') }}</div>
+              <div class="font-bold text-[#007AFF] dark:text-[#0A84FF] mt-0.5">
+                {{ arenaProfile.bonus_qa_quota > 0 ? `+${arenaProfile.bonus_qa_quota} 次/日（7天有效）` : t('3 连胜或月榜前 30% 解锁 +10', '3-streak unlocks +10/day') }}
+              </div>
+            </div>
+            <div class="rounded-xl bg-[#F5F5F7] dark:bg-slate-800/80 px-2.5 py-2">
+              <div class="text-slate-500">{{ t('荣誉邀请码配额加成', 'Invite Quota Unlocked') }}</div>
+              <div class="font-bold text-emerald-600 dark:text-emerald-400 mt-0.5">
+                {{ arenaProfile.unlocked_referral_bonus > 0 ? `+${arenaProfile.unlocked_referral_bonus} 枚额外邀请码` : t('升至趋势捕手解锁 +2 枚', 'Tier 2 unlocks +2 invites') }}
+              </div>
+            </div>
+          </div>
+        </template>
+        <template v-else>
+          <p class="text-slate-600 dark:text-slate-300 leading-relaxed">
+            {{ t('登录后自动累积每月洞察分、连胜记录与 Brier 校准段位：3 连胜或进月榜前 30% 解锁 +10 次/日 AI 问答额度，出题采纳奖 +100 分与 +1 邀请码。', 'Sign in to earn monthly insight points & calibration tiers: 3-streak or Top 30% unlocks +10 daily AI Q&As and bonus invite codes.') }}
+          </p>
+          <button
+            type="button"
+            @click="emit('open-auth')"
+            class="self-start px-3.5 py-1.5 rounded-xl bg-[#007AFF] hover:bg-[#0066D6] text-white font-semibold"
+          >
+            {{ t('登录绑定个人战绩', 'Sign In to Save Stats') }}
+          </button>
+        </template>
+      </div>
+    </div>
+
     <div class="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-3 sm:p-4 space-y-3 shadow-xs">
       <!-- Slim Top Header + ? Explainer -->
       <div class="flex flex-wrap items-center justify-between gap-2">
@@ -342,7 +825,7 @@ function submitSettle(id: string) {
             </button>
           </h2>
           <p class="hidden sm:block text-xs text-slate-500 dark:text-slate-400">
-            {{ cleanPredText(publicNote) || t('实时追踪与历史复盘严格分开计分，每次修订均不可篡改地保留历史快照。', 'Live tracking and historical reviews are scored strictly separately.') }}
+            {{ cleanPredText(publicNote) || t('纯智识荣誉激励，零资金充值或水评；每次预判均严格锁定到期前 30 分钟封盘与不可篡改核验。', 'Zero cash, zero open comments. Strict 30-min lock before settlement & objective calibration.') }}
           </p>
         </div>
 
@@ -353,7 +836,7 @@ function submitSettle(id: string) {
             class="inline-flex items-center gap-1 px-3 min-h-[32px] rounded-xl sm:rounded-lg bg-blue-600 text-white font-semibold hover:bg-blue-700 whitespace-nowrap"
           >
             <Plus class="w-3.5 h-3.5" />
-            <span>{{ t('新建', 'New') }}<span class="hidden sm:inline">{{ t('可验证假设', ' Hypothesis') }}</span></span>
+            <span>{{ t('新建', 'New') }}<span class="hidden sm:inline">{{ t('可验证假设 / 共创投稿', ' Hypothesis') }}</span></span>
           </button>
           <button
             v-if="props.localPredictionIds && props.localPredictionIds.size > 0"
@@ -377,11 +860,11 @@ function submitSettle(id: string) {
           {{ t('镜信前瞻验证：3 步透明闭环与校准精度 (Brier 误差)', 'How Verification & Brier Calibration Works') }}
         </div>
         <p class="leading-relaxed">
-          {{ t('① 公开立 Flag：绑定具体事实问题、倾向概率（0~100%）与唯一官方判定依据；② 过程修订留痕：每次根据新证据调整概率均保留 v1 底稿与演化链，绝不事后改口；③ 到期官方核验：依据 SEC 公告/央行声明/交易所收盘价自动结算。Brier 误差越接近 0 代表概率判断越精准（0.25 相当于随机猜）。', '1) Set falsifiable target & official win rule; 2) Track every probability revision without deleting v1; 3) Settle against official filings/rates. Lower Brier score (near 0) means better probability calibration.') }}
+          {{ t('① 越早预判倍率越高（1.5× / 1.2× / 1.0×），并在到期前 30 分钟自动封盘防作弊；② 到期由行情或一手官宣客观结算，Brier 误差越近 0 洞察分越高、击败镜信 AI 再加 +20 分；③ 零现金玩法，连胜与高段位解锁 AI 证据问答扩容及共创荣誉署名。', '1) Early forecasts earn 1.5x/1.2x multipliers and lock 30m before due; 2) Resolved objectively via market quotes or primary filings; 3) Non-monetary insight points unlock AI Q&A quota bonuses.') }}
         </p>
       </div>
 
-      <!-- Mobile Collapsible Overview Bar (< sm): Keeps prediction cards 1 & 2 right above the fold on 393x851! -->
+      <!-- Mobile Collapsible Overview Bar (< sm) -->
       <button
         type="button"
         @click="summaryOpenMobile = !summaryOpenMobile"
@@ -390,14 +873,14 @@ function submitSettle(id: string) {
         <span class="font-semibold text-slate-800 dark:text-slate-100 truncate tabular-nums">
           {{
             liveBoard.liveSettledDecisive > 0
-              ? t(`验证战绩（进行中 ${stats.live.openCount} · 实时已结 ${liveBoard.liveSettledDecisive} 命中 ${stats.live.correctCount}）`, `Summary (${stats.live.openCount} Open · ${liveBoard.liveSettledDecisive} Won ${stats.live.correctCount})`)
-              : t(`验证战绩总览（实时进行中 ${stats.live.openCount} · 待核验 · 胜率榜）`, `Summary (${stats.live.openCount} Live Open · Stats)`)
+              ? t(`验证战绩（进行中 ${stats.live.openCount} · 已结 ${liveBoard.liveSettledDecisive}）`, `Summary (${stats.live.openCount} Open · ${liveBoard.liveSettledDecisive} Settled)`)
+              : t(`月度赛季榜单 & 战绩总览（进行中 ${stats.live.openCount}）`, `Leaderboard & Stats (${stats.live.openCount} Open)`)
           }}
         </span>
         <ChevronDown class="w-4 h-4 text-slate-500 shrink-0 transition-transform" :class="{ 'rotate-180': summaryOpenMobile }" />
       </button>
 
-      <!-- Dual Calibration Cards + Live-Only Leaderboard (Collapsible on Mobile, Visible on Desktop >= sm) -->
+      <!-- Dual Calibration Cards + Monthly Season Leaderboard -->
       <div :class="summaryOpenMobile ? 'block space-y-3' : 'hidden sm:block space-y-3'">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
           <div class="rounded-xl bg-emerald-500/8 dark:bg-emerald-400/10 p-3 space-y-1">
@@ -406,11 +889,8 @@ function submitSettle(id: string) {
               <span v-if="liveBoard.unlocked && stats.live.decisiveHitRatePct !== null" class="font-mono text-emerald-700 dark:text-emerald-300 font-semibold shrink-0 whitespace-nowrap">
                 {{ t(`真实胜率 ${stats.live.decisiveHitRatePct}%`, `Win Rate ${stats.live.decisiveHitRatePct}%`) }}
               </span>
-              <span v-else-if="liveBoard.liveSettledDecisive > 0" class="font-mono text-emerald-700 dark:text-emerald-300 font-semibold shrink-0 whitespace-nowrap">
-                {{ t(`实时已结 ${liveBoard.liveSettledDecisive} 题（命中 ${stats.live.correctCount}）`, `${liveBoard.liveSettledDecisive} Settled (${stats.live.correctCount} Won)`) }}
-              </span>
               <span v-else class="text-[11px] text-zinc-500 dark:text-zinc-400 shrink-0 whitespace-nowrap">
-                {{ t(`待到期核验 (${stats.live.openCount} 题)`, `Awaiting Due Date (${stats.live.openCount} open)`) }}
+                {{ t(`进行中 (${stats.live.openCount} 题)`, `Tracking (${stats.live.openCount} open)`) }}
               </span>
             </div>
             <div class="flex flex-wrap gap-x-4 gap-y-1 text-zinc-700 dark:text-zinc-300 tabular-nums">
@@ -421,32 +901,72 @@ function submitSettle(id: string) {
               </span>
               <template v-if="liveBoard.unlocked">
                 <span>{{ t('命中', 'Won') }} {{ stats.live.correctCount }}</span>
-                <span>{{ t('未中', 'Lost') }} {{ stats.live.incorrectCount }}</span>
-                <span>{{ t(`校准精度（Brier 误差 ${stats.live.brierScore} · 越接近 0 越精准）`, `Brier Error ${stats.live.brierScore}`) }}</span>
+                <span>{{ t(`Brier 误差 ${stats.live.brierScore}`, `Brier ${stats.live.brierScore}`) }}</span>
               </template>
-              <span v-else-if="liveBoard.liveSettledDecisive > 0" class="text-emerald-700 dark:text-emerald-300 font-medium">
-                {{ t(`实时已结 ${liveBoard.liveSettledDecisive} 题（命中 ${stats.live.correctCount}${stats.live.brierScore !== null ? ` · Brier ${stats.live.brierScore}` : ''}）· 满 5 题解锁完整榜单`, `Live settled ${liveBoard.liveSettledDecisive} (${stats.live.correctCount} won) · 5 settled unlocks full board`) }}
-              </span>
-              <span v-else class="text-zinc-500 dark:text-zinc-400">
-                {{ t(`统计积累中 (${liveBoard.liveSettledDecisive}/5，待到期官方核验解锁真实胜率)`, `Building live sample (${liveBoard.liveSettledDecisive}/5 to unlock win rate)`) }}
-              </span>
             </div>
           </div>
 
           <div class="ios-surface-2 p-3 space-y-1">
             <div class="flex items-start justify-between gap-2">
-              <span class="font-bold text-zinc-800 dark:text-zinc-200 min-w-0">{{ t('历史复盘对照（独立存档，不计入公开胜率）', 'Historical Replay (Excluded from Public Win Rate)') }}</span>
+              <span class="font-bold text-zinc-800 dark:text-zinc-200 min-w-0">{{ t('历史复盘对照（独立存档，不计入榜单）', 'Historical Replay (Excluded from Ranking)') }}</span>
               <span class="text-[11px] text-zinc-500 dark:text-zinc-400 shrink-0 whitespace-nowrap">
-                {{ t(`${stats.replay.total} 题对照样题`, `${stats.replay.total} Replay Cases`) }}
+                {{ t(`${stats.replay.total} 题样题`, `${stats.replay.total} Cases`) }}
               </span>
             </div>
             <div class="text-zinc-600 dark:text-zinc-400">
-              {{ t(`已核验 ${liveBoard.replaySettledDecisive} 题历史事件回放；仅用于复盘波动幅度与锚定基准，绝不拉高实时胜率榜。`, `${liveBoard.replaySettledDecisive} historical replays archived separately; excluded from live leaderboard KPIs.`) }}
+              {{ t(`已核验 ${liveBoard.replaySettledDecisive} 题历史事件回放；仅用于复盘波动基准。`, `${liveBoard.replaySettledDecisive} historical replays archived separately.`) }}
             </div>
           </div>
         </div>
 
-        <!-- Public Prediction Accuracy Leaderboard (STRICTLY Live-only & >= 5 threshold) -->
+        <!-- Monthly User Calibration Leaderboard (Top 20) -->
+        <div
+          v-if="(arenaLeaderboard?.length || 0) > 0"
+          class="rounded-xl border border-amber-200/80 dark:border-amber-800/70 bg-amber-50/40 dark:bg-amber-950/15 p-3 space-y-2 text-xs"
+          data-testid="season-user-leaderboard"
+        >
+          <div class="flex items-center justify-between gap-2">
+            <div class="flex items-center gap-1.5 font-bold text-slate-900 dark:text-white">
+              <Trophy class="w-4 h-4 text-amber-500" />
+              <span>{{ t(`${seasonKey || ''} 月度先知榜（Top 30% 获 +10 次 AI 问答加成）`, 'Monthly Calibration Leaderboard') }}</span>
+            </div>
+            <button
+              type="button"
+              @click="arenaBoardOpen = !arenaBoardOpen"
+              class="text-[11px] text-slate-500 hover:text-slate-800 dark:hover:text-white"
+            >
+              {{ arenaBoardOpen ? t('收起', 'Hide') : t('展开', 'Show') }}
+            </button>
+          </div>
+          <div v-if="arenaBoardOpen" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
+            <div
+              v-for="row in (arenaLeaderboard || []).slice(0, 9)"
+              :key="`lb-u-${row.user_id}`"
+              class="rounded-lg bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 px-2.5 py-2 flex items-center justify-between gap-2"
+            >
+              <div class="flex items-center gap-2 min-w-0">
+                <span class="font-mono font-bold text-slate-400 w-4 text-center shrink-0">#{{ row.rank }}</span>
+                <UserAvatar :avatar="row.avatar" :username="row.username" size="xs" />
+                <div class="min-w-0">
+                  <div class="font-semibold text-slate-800 dark:text-slate-100 truncate">
+                    {{ row.display_name || row.username }}
+                  </div>
+                  <div class="text-[10.5px] text-slate-500 truncate">
+                    {{ row.rank_tier }} · {{ row.hit_rate_pct != null ? `胜率 ${row.hit_rate_pct}%` : '追踪中' }}
+                  </div>
+                </div>
+              </div>
+              <div class="text-right shrink-0">
+                <div class="font-mono font-bold text-amber-600 dark:text-amber-400">{{ row.insight_points }}分</div>
+                <div v-if="row.current_streak > 0" class="text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold">
+                  {{ row.current_streak }} 连胜
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Public Prediction Accuracy Leaderboard (Domain Live-only & >= 5 threshold) -->
         <div
           v-if="showLeaderboard"
           class="rounded-xl border border-indigo-200/80 dark:border-indigo-800/70 bg-indigo-50/40 dark:bg-indigo-950/20 p-3 space-y-2 text-xs"
@@ -454,8 +974,8 @@ function submitSettle(id: string) {
         >
           <div class="flex flex-wrap items-center justify-between gap-2">
             <div class="flex items-center gap-1.5 font-bold text-slate-900 dark:text-white">
-              <Trophy class="w-4 h-4 text-amber-500" />
-              <span>{{ t('前瞻预测实时公开胜率榜（仅计入到期核验 Live 题）', 'Live Public Accuracy Leaderboard (Live Mode Only)') }}</span>
+              <Flame class="w-4 h-4 text-indigo-500" />
+              <span>{{ t('领域基准公开校准率榜（Live 模式）', 'Live Domain Accuracy Leaderboard') }}</span>
             </div>
             <button
               v-if="liveBoard.unlocked"
@@ -464,7 +984,7 @@ function submitSettle(id: string) {
               class="inline-flex items-center gap-1 px-2.5 min-h-[28px] rounded-lg border border-indigo-200 dark:border-indigo-700 bg-white dark:bg-slate-900 text-[11px] font-medium text-indigo-700 dark:text-indigo-300 hover:bg-indigo-50"
             >
               <Share2 class="w-3 h-3" />
-              <span>{{ leaderboardCopied ? t('已复制公开榜链接', 'Leaderboard URL Copied') : t('分享公开胜率榜', 'Share Leaderboard') }}</span>
+              <span>{{ leaderboardCopied ? t('已复制公开榜链接', 'Copied') : t('分享公开胜率榜', 'Share Leaderboard') }}</span>
             </button>
           </div>
 
@@ -473,12 +993,12 @@ function submitSettle(id: string) {
             class="rounded-lg bg-white/85 dark:bg-slate-900/80 border border-indigo-200/70 dark:border-indigo-900/60 px-3 py-2 text-slate-600 dark:text-slate-300"
           >
             {{
-              liveBoard.liveSettledDecisive > 0
-                ? t(`实时已结 ${liveBoard.liveSettledDecisive} 题（命中 ${stats.live.correctCount}）· 累计满 5 题解锁分领域公开胜率榜（另含 ${liveBoard.replaySettledDecisive} 题历史复盘样题独立计分，不计入榜单）。`, `Live settled ${liveBoard.liveSettledDecisive} (${stats.live.correctCount} won) · 5 settled unlocks domain leaderboard (${liveBoard.replaySettledDecisive} historical replays excluded).`)
-                : t(`实时胜率统计积累中 (${liveBoard.liveSettledDecisive}/5，待到期官方核验解锁真实胜率) · 当前仅展示进行中/待核验跟踪题目（另含 ${liveBoard.replaySettledDecisive} 题历史复盘样题不计入榜单）。`, `Accumulating live sample (${liveBoard.liveSettledDecisive}/5 live settled needed to unlock public win rates; ${liveBoard.replaySettledDecisive} historical replays excluded).`)
+              t(
+                `实时胜率统计积累中 (${liveBoard.liveSettledDecisive}/5，待到期官方核验解锁分领域榜单)。`,
+                `Accumulating live sample (${liveBoard.liveSettledDecisive}/5 live settled needed to unlock domain leaderboard).`,
+              )
             }}
           </div>
-
           <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
             <div
               v-for="(row, idx) in liveBoard.rows"
@@ -490,15 +1010,12 @@ function submitSettle(id: string) {
                   #{{ idx + 1 }} {{ row.entity }}
                 </div>
                 <div class="text-[11px] text-slate-500 tabular-nums">
-                  {{ t(`实时样本 ${row.totalLive} · 已决 ${row.settledDecisive} · 命中 ${row.correct}`, `${row.totalLive} live · ${row.settledDecisive} settled · ${row.correct} won`) }}
+                  {{ t(`样本 ${row.totalLive} · 已决 ${row.settledDecisive} · 命中 ${row.correct}`, `${row.totalLive} live · ${row.settledDecisive} settled · ${row.correct} won`) }}
                 </div>
               </div>
               <div class="text-right shrink-0">
                 <div class="font-mono font-bold text-sm" :class="row.hitPct !== null && row.hitPct >= 60 ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-700 dark:text-slate-200'">
                   {{ row.hitPct !== null ? `${row.hitPct}%` : t('待核验', 'Pending') }}
-                </div>
-                <div v-if="row.brier !== null" class="text-[10px] font-mono text-slate-400">
-                  {{ t('Brier 误差', 'Brier') }} {{ row.brier }}
                 </div>
               </div>
             </div>
@@ -506,27 +1023,29 @@ function submitSettle(id: string) {
         </div>
       </div>
 
-      <!-- Create Form -->
+      <!-- Create / Community Proposal Form -->
       <form
         v-if="showNewForm"
         @submit.prevent="submitNew"
         class="pt-3 border-t border-slate-200 dark:border-slate-800 space-y-2.5 text-xs"
       >
         <div class="grid grid-cols-1 sm:grid-cols-12 gap-2">
-          <input v-model="fTitle" type="text" :placeholder="t('假设标题，如 某公司是否按期披露 8-K 公告', 'Hypothesis title, e.g. Will Company X file 8-K on schedule?')" class="sm:col-span-5 h-9 px-3 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white" />
-          <input v-model="fEntity" type="text" :placeholder="t('目标主体 (如 NVDA / Qwen)', 'Entity (e.g. NVDA / Qwen)')" class="sm:col-span-3 h-9 px-2.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white" />
-          <div class="relative inline-flex items-center sm:col-span-2 w-full h-9 pl-2.5 pr-7 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white focus-within:ring-2 focus-within:ring-[#007AFF]/40">
-            <span class="pointer-events-none truncate">{{ fMode === 'live' ? t('实时追踪', 'Live') : t('历史复盘', 'Review') }}</span>
-            <ChevronDown class="w-3.5 h-3.5 text-zinc-400 pointer-events-none absolute right-2" />
-            <select v-model="fMode" :aria-label="t('预测模式', 'Prediction mode')" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
-              <option value="live">{{ t('实时追踪', 'Live') }}</option>
-              <option value="replay">{{ t('历史复盘', 'Review') }}</option>
-            </select>
-          </div>
-          <input v-model.number="fProb" type="number" min="1" max="99" :aria-label="t('初始概率百分比', 'Initial probability (%)')" class="sm:col-span-2 h-9 px-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white" />
+          <input v-model="fTitle" type="text" required :placeholder="t('假设标题，如 本周内是否公布新关税豁免清单', 'Hypothesis title')" class="sm:col-span-4 h-9 px-3 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white" />
+          <input v-model="fEntity" type="text" :placeholder="t('目标主体 (如 NVDA / A股)', 'Entity (e.g. NVDA)')" class="sm:col-span-2 h-9 px-2.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white" />
+          <select v-model="fCategory" :aria-label="t('赛道分类', 'Category')" class="sm:col-span-2 h-9 px-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white">
+            <option value="market">{{ t('股市与大宗', 'Markets') }}</option>
+            <option value="tech_ai">{{ t('科技与 AI', 'Tech & AI') }}</option>
+            <option value="macro">{{ t('宏观与央行', 'Macro & Fed') }}</option>
+            <option value="global_space">{{ t('国际与航天', 'Global') }}</option>
+          </select>
+          <select v-model="fMode" :aria-label="t('预测模式', 'Prediction mode')" class="sm:col-span-2 h-9 px-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white">
+            <option value="live">{{ t('实时追踪', 'Live') }}</option>
+            <option value="replay">{{ t('历史复盘', 'Review') }}</option>
+          </select>
+          <input v-model.number="fProb" type="number" min="5" max="95" :aria-label="t('初始概率百分比', 'Initial probability (%)')" class="sm:col-span-2 h-9 px-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white" />
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-12 gap-2">
-          <input v-model="fQuestion" type="text" :placeholder="t('具体可检验问题（谁/什么指标/何时前）', 'Falsifiable question (who/metric/deadline)')" class="sm:col-span-5 h-9 px-3 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white" />
+          <input v-model="fQuestion" type="text" required :placeholder="t('具体可检验问题（谁/什么指标/何时前）', 'Falsifiable question (who/metric/deadline)')" class="sm:col-span-5 h-9 px-3 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white" />
           <input v-model="fDueAt" type="datetime-local" :aria-label="t('到期时间', 'Due date')" class="sm:col-span-3 h-9 px-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white" />
           <input v-model="fJudg" type="text" :placeholder="t('v1 初始判断结论', 'Initial v1 judgment')" class="sm:col-span-4 h-9 px-2.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white" />
         </div>
@@ -534,9 +1053,22 @@ function submitSettle(id: string) {
           <input v-model="fWin" type="text" :placeholder="t('判赢客观规则 (可选)', 'Win criteria (optional)')" class="h-9 px-2.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white" />
           <input v-model="fLose" type="text" :placeholder="t('判输/证伪触发条件 (可选)', 'Falsification criteria (optional)')" class="h-9 px-2.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white" />
         </div>
-        <button type="submit" class="px-4 py-2 rounded-lg bg-emerald-600 text-white font-semibold hover:bg-emerald-700">
-          {{ t('提交建立预测 (保存 v1 初始版本)', 'Create Hypothesis (Save v1)') }}
-        </button>
+
+        <label
+          v-if="fMode === 'live' && props.predictionProposalsEnabled !== false"
+          class="inline-flex items-center gap-2 text-xs text-indigo-700 dark:text-indigo-300 font-medium cursor-pointer"
+          data-testid="submit-to-arena-checkbox"
+        >
+          <input v-model="submitToArenaPool" type="checkbox" class="rounded text-indigo-600" />
+          <span>{{ t('同时投稿至全站预测池（审核上架奖 +100 洞察分与出题官徽章，并赠 +1 邀请码）', 'Also propose to Global Arena Pool (+100 pts, author badge & +1 invite if approved)') }}</span>
+        </label>
+
+        <div class="flex flex-wrap items-center gap-2">
+          <button type="submit" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-emerald-600 text-white font-semibold hover:bg-emerald-700">
+            <Send class="w-3.5 h-3.5" />
+            <span>{{ t('提交建立预测', 'Submit Prediction') }}</span>
+          </button>
+        </div>
       </form>
 
       <!-- Domain Category Filter Pills -->
@@ -576,89 +1108,84 @@ function submitSettle(id: string) {
       @reset="categoryFilter = 'all'; emit('clear-search')"
     />
 
-    <div v-else class="space-y-3">
-      <!-- Friend PK Challenge Banner (?tab=calendar&pred=<id>&p=<prob>) -->
-      <div
-        v-if="incomingPkChallenge"
-        class="rounded-2xl border border-[#007AFF]/30 bg-[#007AFF]/8 dark:bg-[#0A84FF]/12 px-4 py-3 flex flex-wrap items-center justify-between gap-2.5 text-xs"
-        data-testid="pk-challenge-banner"
-      >
-        <div class="flex items-center gap-2 min-w-0">
-          <Sparkles class="w-4 h-4 text-[#007AFF] dark:text-[#0A84FF] shrink-0" :stroke-width="1.75" />
-          <span class="font-semibold text-zinc-900 dark:text-white leading-snug">
-            {{
-              t(
-                `你的好友对本题给出了 ${incomingPkChallenge.prob}% 概率预判，来给出你的判断看开奖谁更准`,
-                `Your friend forecasted ${incomingPkChallenge.prob}% on this question — drag the slider below to compare!`,
-              )
-            }}
-          </span>
-        </div>
-        <div class="flex items-center gap-2 shrink-0">
-          <button
-            type="button"
-            @click="categoryFilter = 'all'; scrollToPrediction(incomingPkChallenge.predId)"
-            class="px-3 py-1.5 rounded-xl bg-[#007AFF] text-white font-semibold"
-          >
-            {{ t('定位题目', 'Jump to Card') }}
-          </button>
-          <button
-            type="button"
-            @click="emit('dismiss-pk-banner')"
-            class="px-2 py-1.5 rounded-xl text-zinc-500 hover:bg-black/[0.05] dark:hover:bg-white/[0.08]"
-          >
-            {{ t('收起', 'Dismiss') }}
-          </button>
-        </div>
-      </div>
-
-      <div class="grid grid-cols-1 xl:grid-cols-2 gap-3">
+    <div v-else class="grid grid-cols-1 xl:grid-cols-2 gap-3">
       <article
         v-for="rec in filteredRecords"
         :key="rec.prediction_id"
         :id="`pred-card-${rec.prediction_id}`"
         class="rounded-xl border bg-white dark:bg-slate-900 p-3.5 sm:p-4 flex flex-col justify-between gap-3"
-        :class="incomingPkChallenge?.predId === rec.prediction_id ? 'border-[#007AFF] ring-2 ring-[#007AFF]/20' : 'border-slate-200 dark:border-slate-800'"
+        :class="incomingPkChallenge?.predId === rec.prediction_id ? 'border-[#007AFF] ring-2 ring-[#007AFF]/25' : 'border-slate-200 dark:border-slate-800'"
       >
         <div class="space-y-3">
-          <!-- Section 1: Question Header + Countdown + Benchmark Badge -->
+          <!-- Section 1: Question Header + Source Type + Lock Countdown + Early Multiplier -->
           <div class="flex flex-wrap items-center justify-between gap-2 text-xs">
             <div class="flex flex-wrap items-center gap-1.5">
               <span
                 class="px-2 py-0.5 rounded-md font-semibold"
-                :class="rec.mode === 'live' ? 'bg-emerald-500/12 text-emerald-700 dark:bg-emerald-400/15 dark:text-emerald-300' : 'bg-zinc-500/12 text-zinc-700 dark:bg-zinc-400/15 dark:text-zinc-300'"
+                :class="
+                  rec.source_type === 'auto_market'
+                    ? 'bg-blue-500/12 text-blue-700 dark:text-blue-300'
+                    : rec.source_type === 'user_proposal'
+                      ? 'bg-violet-500/12 text-violet-700 dark:text-violet-300'
+                      : rec.mode === 'live'
+                        ? 'bg-emerald-500/12 text-emerald-700 dark:bg-emerald-400/15 dark:text-emerald-300'
+                        : 'bg-zinc-500/12 text-zinc-700 dark:bg-zinc-400/15 dark:text-zinc-300'
+                "
               >
-                {{ rec.mode === 'live' ? t('实时追踪', 'Live') : t('历史复盘', 'Review') }}
+                {{
+                  rec.source_type === 'auto_market'
+                    ? t('每日行情日赛', 'Daily Market')
+                    : rec.source_type === 'user_proposal'
+                      ? t('用户共创', 'Community')
+                      : rec.mode === 'live'
+                        ? t('实时追踪', 'Live')
+                        : t('历史复盘', 'Review')
+                }}
               </span>
               <span
-                class="px-2 py-0.5 rounded font-semibold"
+                class="px-2 py-0.5 rounded font-semibold inline-flex items-center gap-1"
                 :class="rec.settlement?.outcome === 'correct'
                   ? 'bg-emerald-600 text-white'
                   : rec.settlement?.outcome === 'incorrect'
                     ? 'bg-red-600 text-white'
                     : rec.settlement?.outcome === 'indeterminate'
                       ? 'bg-amber-600 text-white'
-                      : 'bg-blue-50 text-blue-800 dark:bg-blue-950/60 dark:text-blue-200'"
+                      : isRecLocked(rec)
+                        ? 'bg-amber-500/15 text-amber-800 dark:text-amber-300'
+                        : 'bg-blue-50 text-blue-800 dark:bg-blue-950/60 dark:text-blue-200'"
               >
-                {{
-                  rec.settlement
-                    ? rec.settlement.outcome === 'correct'
-                      ? t('已核验：达成', 'Settled: Correct')
-                      : rec.settlement.outcome === 'incorrect'
-                        ? t('已核验：未达', 'Settled: Missed')
-                        : t('已核验：延期未决', 'Settled: Indeterminate')
-                    : t('进行中 · 待核验', 'Open · Tracking')
-                }}
+                <Lock v-if="isRecLocked(rec) && !rec.settlement" class="w-3 h-3" />
+                <span>
+                  {{
+                    rec.settlement
+                      ? rec.settlement.outcome === 'correct'
+                        ? t('已核验：达成', 'Settled: Yes')
+                        : rec.settlement.outcome === 'incorrect'
+                          ? t('已核验：未达', 'Settled: No')
+                          : t('已核验：延期/作废', 'Settled: Void')
+                      : isRecLocked(rec)
+                        ? t('已封盘 · 等待客观结算', 'Locked · Awaiting Settlement')
+                        : t('进行中 · 可投票', 'Open')
+                  }}
+                </span>
               </span>
-              <span class="px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-[11px] font-medium">
-                {{ rec.prediction_id.startsWith('pred_user_') ? t('我的自建判断', 'My Hypothesis') : t('镜信 AI 公开基准', 'MirrorBrief Benchmark') }}
+              <span
+                v-if="!isRecLocked(rec) && rec.mode === 'live'"
+                class="px-1.5 py-0.5 rounded bg-amber-500/12 text-amber-700 dark:text-amber-300 font-mono text-[11px] font-bold"
+              >
+                {{ t(`早鸟 ${getEarlyMultiplier(rec)}×`, `${getEarlyMultiplier(rec)}x`) }}
+              </span>
+              <span
+                v-if="rec.proposer_username"
+                class="px-2 py-0.5 rounded bg-violet-500/10 text-violet-700 dark:text-violet-300 text-[11px] font-semibold"
+              >
+                本题由 @{{ rec.proposer_username }} 提出
               </span>
             </div>
-            <span class="text-slate-500 tabular-nums text-[11px]">
-              {{ t('到期 ', 'Due ') }}<SmartTime :iso="rec.due_at" :now-ms="effectiveNowMs" />
-              <span v-if="!rec.settlement && formatDueCountdown(rec.due_at)" class="ml-1 font-semibold text-blue-600 dark:text-blue-400">
-                ({{ formatDueCountdown(rec.due_at) }})
-              </span>
+            <span class="text-slate-500 tabular-nums text-[11px] inline-flex items-center gap-1">
+              <Clock class="w-3 h-3" />
+              <span>{{ formatLockCountdown(rec) || formatDueCountdown(rec.due_at) }}</span>
+              <span class="opacity-65">(<SmartTime :iso="rec.due_at" :now-ms="effectiveNowMs" />)</span>
             </span>
           </div>
 
@@ -667,111 +1194,154 @@ function submitSettle(id: string) {
             <p class="text-xs text-slate-600 dark:text-slate-300 mt-1 leading-relaxed">{{ cleanPredText(pickBiText(rec.question, (rec as any).question_en)) }}</p>
           </div>
 
-          <!-- Section 2: Visual Tendency Probability Progress Bar & Official Settlement Criterion -->
+          <!-- Section 2: Human Crowd VS MirrorBrief AI Confrontation Bar -->
           <div class="rounded-lg bg-slate-50 dark:bg-slate-800/60 p-2.5 border border-slate-200/80 dark:border-slate-700/80 space-y-2 text-xs">
-            <div class="flex items-center justify-between gap-2">
-              <span class="font-semibold text-slate-700 dark:text-slate-200">
-                <template v-if="rec.settlement">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <div class="flex items-center gap-2 font-semibold text-slate-800 dark:text-slate-100">
+                <Users class="w-3.5 h-3.5 text-[#007AFF] shrink-0" />
+                <span>{{ t('人类众筹 VS 镜信 AI', 'Human Crowd VS MirrorBrief AI') }}</span>
+                <span
+                  v-if="humanVsAiOutcome(rec) === 'human_win'"
+                  class="px-2 py-0.5 rounded-full bg-emerald-600 text-white text-[10px] font-bold"
+                >
+                  {{ t('战报：人类共识击败 AI', 'Humans Beat AI') }}
+                </span>
+                <span
+                  v-else-if="humanVsAiOutcome(rec) === 'ai_win'"
+                  class="px-2 py-0.5 rounded-full bg-amber-600 text-white text-[10px] font-bold"
+                >
+                  {{ t('战报：镜信 AI 获胜', 'AI Won') }}
+                </span>
+              </div>
+              <div class="flex items-center gap-2 font-mono text-[11.5px] tabular-nums">
+                <span class="text-[#007AFF] dark:text-[#64D2FF] font-bold">
                   {{
-                    t(
-                      `结算前预测概率：${rec.probability_pct}%（${rec.settlement.outcome === 'correct' ? '已命中 · 100% 兑现' : rec.settlement.outcome === 'incorrect' ? '未命中 · 0% 落空' : '延期结案'}）`,
-                      `Pre-Resolution Prob: ${rec.probability_pct}% (${rec.settlement.outcome === 'correct' ? 'Hit · 100%' : rec.settlement.outcome === 'incorrect' ? 'Missed · 0%' : 'Deferred'})`,
-                    )
+                    props.crowdStats?.[rec.prediction_id]?.unlocked && props.crowdStats?.[rec.prediction_id]?.crowd_avg_pct != null
+                      ? `人类 ${props.crowdStats[rec.prediction_id].crowd_avg_pct}%`
+                      : `人类 ${props.crowdStats?.[rec.prediction_id]?.vote_count || 0}/${minVotesForRec(rec.prediction_id)}票解锁`
                   }}
-                </template>
-                <template v-else>
-                  {{ t(`当前倾向概率：${rec.probability_pct}%`, `Current Probability: ${rec.probability_pct}%`) }}
-                </template>
-                <span class="text-[11px] font-normal text-slate-500">· {{ rec.prediction_id.startsWith('pred_user_') ? t('我的自建判断', 'My Judgment') : t('镜信 AI 公开基准', 'AI Public Benchmark') }}</span>
-              </span>
-              <span class="font-mono font-bold tabular-nums text-blue-700 dark:text-blue-300">
-                {{ rec.settlement?.outcome === 'correct' ? '100%' : rec.settlement?.outcome === 'incorrect' ? '0%' : `${rec.probability_pct}%` }}
-              </span>
+                </span>
+                <span class="text-slate-400">VS</span>
+                <span class="text-amber-600 dark:text-amber-400 font-bold">
+                  AI {{ Math.round(rec.probability_pct) }}%
+                </span>
+              </div>
             </div>
-            <div class="relative h-2 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden">
+
+            <!-- Confrontation Visual Progress Track -->
+            <div class="relative h-2.5 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden">
               <div
-                class="h-full rounded-full transition-all"
-                :class="
-                  rec.settlement?.outcome === 'correct'
-                    ? 'bg-emerald-500'
-                    : rec.settlement?.outcome === 'incorrect'
-                      ? 'bg-rose-500'
-                      : rec.probability_pct >= 60
-                        ? 'bg-emerald-500'
-                        : rec.probability_pct <= 40
-                          ? 'bg-amber-500'
-                          : 'bg-[#007AFF]'
-                "
-                :style="{
-                  width: `${
-                    rec.settlement?.outcome === 'correct'
-                      ? 100
-                      : rec.settlement?.outcome === 'incorrect'
-                        ? 8
-                        : Math.min(100, Math.max(4, rec.probability_pct))
-                  }%`,
-                }"
+                v-if="props.crowdStats?.[rec.prediction_id]?.unlocked && props.crowdStats?.[rec.prediction_id]?.crowd_avg_pct != null"
+                class="h-full rounded-full bg-[#007AFF] transition-all"
+                :style="{ width: `${Math.min(100, Math.max(4, props.crowdStats[rec.prediction_id].crowd_avg_pct || 50))}%` }"
+              />
+              <div
+                v-else
+                class="h-full rounded-full bg-amber-400/75 transition-all"
+                :style="{ width: `${Math.min(100, Math.round(((props.crowdStats?.[rec.prediction_id]?.vote_count || 0) / minVotesForRec(rec.prediction_id)) * 100))}%` }"
+              />
+              <div
+                class="absolute top-0 bottom-0 w-1 bg-amber-600 dark:bg-amber-400"
+                :style="{ left: `${Math.min(98, Math.max(2, rec.probability_pct))}%` }"
+                :title="`AI ${rec.probability_pct}%`"
               />
             </div>
 
-            <!-- Crowd Consensus Probability (dynamic D1 unlock threshold) & Interactive Slider -->
+            <!-- Crowd Consensus Interactive Submission Panel (Enforces Lock!) -->
             <div
               v-if="rec.mode === 'live' && !rec.settlement"
-              class="pt-2 mt-1 border-t border-slate-200/70 dark:border-slate-700/70 space-y-1.5"
+              class="pt-2 mt-1 border-t border-slate-200/70 dark:border-slate-700/70 space-y-2"
               data-testid="crowd-consensus-panel"
             >
-              <div class="flex flex-wrap items-center justify-between gap-2 text-[11.5px]">
-                <span class="inline-flex items-center gap-1.5 font-semibold text-slate-700 dark:text-slate-200">
-                  <Users class="w-3.5 h-3.5 text-slate-500 shrink-0" :stroke-width="1.75" />
-                  <span>{{ t('群众共识概率', 'Crowd Consensus') }}</span>
+              <div
+                v-if="isRecLocked(rec)"
+                class="rounded-lg bg-amber-500/12 border border-amber-500/30 px-2.5 py-2 flex items-center justify-between gap-2 text-[11.5px] font-semibold text-amber-800 dark:text-amber-200"
+                data-testid="prediction-locked-notice"
+              >
+                <span class="inline-flex items-center gap-1.5">
+                  <Lock class="w-3.5 h-3.5 shrink-0" />
+                  <span>{{ t('已封盘 · 等待客观结算（禁止继续新投票）', 'Locked — Awaiting Objective Settlement') }}</span>
                 </span>
-                <span v-if="props.crowdStats?.[rec.prediction_id]?.unlocked" class="font-mono font-bold text-indigo-600 dark:text-indigo-400">
-                  {{ t(`群众均值 ${props.crowdStats[rec.prediction_id].crowd_avg_pct}%（${props.crowdStats[rec.prediction_id].vote_count} 人参与）`, `Avg ${props.crowdStats[rec.prediction_id].crowd_avg_pct}% (${props.crowdStats[rec.prediction_id].vote_count} voters)`) }}
-                </span>
-                <span v-else class="font-medium text-amber-700 dark:text-amber-300">
-                  {{
-                    t(
-                      `已收 ${props.crowdStats?.[rec.prediction_id]?.vote_count || 0}/${minVotesForRec(rec.prediction_id)} 份预判，再邀 ${Math.max(1, minVotesForRec(rec.prediction_id) - (props.crowdStats?.[rec.prediction_id]?.vote_count || 0))} 位好友投票立即解锁全站均值！`,
-                      `${props.crowdStats?.[rec.prediction_id]?.vote_count || 0}/${minVotesForRec(rec.prediction_id)} votes — invite ${Math.max(1, minVotesForRec(rec.prediction_id) - (props.crowdStats?.[rec.prediction_id]?.vote_count || 0))} more to unlock!`,
-                    )
-                  }}
+                <span v-if="props.crowdStats?.[rec.prediction_id]?.user_prob_pct != null" class="font-mono">
+                  {{ t(`我的锁定押注 ${props.crowdStats[rec.prediction_id].user_prob_pct}%`, `Locked ${props.crowdStats[rec.prediction_id].user_prob_pct}%`) }}
                 </span>
               </div>
-              <div class="relative h-1.5 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden">
-                <div
-                  v-if="props.crowdStats?.[rec.prediction_id]?.unlocked && props.crowdStats?.[rec.prediction_id]?.crowd_avg_pct != null"
-                  class="h-full rounded-full bg-indigo-500 transition-all"
-                  :style="{ width: `${Math.min(100, Math.max(4, props.crowdStats[rec.prediction_id].crowd_avg_pct || 0))}%` }"
-                />
-                <div
-                  v-else
-                  class="h-full rounded-full bg-amber-400 transition-all"
-                  :style="{ width: `${Math.min(100, Math.round(((props.crowdStats?.[rec.prediction_id]?.vote_count || 0) / minVotesForRec(rec.prediction_id)) * 100))}%` }"
-                />
-              </div>
-              <div class="flex flex-wrap items-center gap-2 pt-0.5">
-                <input
-                  type="range"
-                  min="5"
-                  max="95"
-                  step="5"
-                  :value="getVoteDraft(rec)"
-                  @input="setVoteDraft(rec.prediction_id, Number(($event.target as HTMLInputElement).value))"
-                  :aria-label="t('我的概率预判滑块', 'My probability slider')"
-                  class="flex-1 min-w-[120px] accent-[#007AFF] cursor-pointer"
-                />
-                <span class="font-mono text-[11px] font-bold text-slate-700 dark:text-slate-200 w-9 text-right tabular-nums">
-                  {{ getVoteDraft(rec) }}%
+
+              <template v-else>
+                <div class="flex flex-wrap items-center gap-2 pt-0.5">
+                  <div class="flex items-center gap-1">
+                    <button
+                      v-for="pctBtn in [20, 50, 80]"
+                      :key="`c-pct-${rec.prediction_id}-${pctBtn}`"
+                      type="button"
+                      @click="setVoteDraft(rec.prediction_id, pctBtn)"
+                      class="px-1.5 py-0.5 rounded font-mono text-[10.5px] font-bold border"
+                      :class="getVoteDraft(rec) === pctBtn ? 'bg-[#007AFF] text-white border-[#007AFF]' : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300'"
+                    >
+                      {{ pctBtn }}%
+                    </button>
+                  </div>
+                  <input
+                    type="range"
+                    min="5"
+                    max="95"
+                    step="5"
+                    :disabled="isRecLocked(rec)"
+                    :value="getVoteDraft(rec)"
+                    @input="setVoteDraft(rec.prediction_id, Number(($event.target as HTMLInputElement).value))"
+                    :aria-label="t('我的概率预判滑块', 'My probability slider')"
+                    class="flex-1 min-w-[100px] accent-[#007AFF] cursor-pointer disabled:opacity-50"
+                  />
+                  <span class="font-mono text-[11px] font-bold text-slate-700 dark:text-slate-200 w-9 text-right tabular-nums">
+                    {{ getVoteDraft(rec) }}%
+                  </span>
+                  <button
+                    type="button"
+                    :disabled="isRecLocked(rec)"
+                    @click="triggerVoteClick(rec)"
+                    class="jx-pop-target px-2.5 min-h-[28px] rounded-lg bg-[#007AFF] text-white text-[11px] font-semibold hover:bg-blue-600 whitespace-nowrap transition-transform disabled:opacity-50 disabled:cursor-not-allowed"
+                    :class="voteBurstPid === rec.prediction_id ? 'jx-pop-active jx-burst-ring' : ''"
+                  >
+                    {{ props.crowdStats?.[rec.prediction_id]?.user_prob_pct != null ? t('更新押注', 'Update') : t('提交预判', 'Submit') }}
+                  </button>
+                </div>
+
+                <!-- Structured Reason Tag Selector (0 UGC moderation risk) -->
+                <div class="flex flex-wrap items-center gap-1 text-[10.5px]">
+                  <span class="text-slate-500 mr-0.5">{{ t('判断依据(选点)：', 'Reason:') }}</span>
+                  <button
+                    v-for="tag in reasonTagsList"
+                    :key="`rtag-${rec.prediction_id}-${tag}`"
+                    type="button"
+                    @click="toggleReasonDraft(rec.prediction_id, tag)"
+                    class="px-2 py-0.5 rounded-full border transition-colors"
+                    :class="
+                      getReasonDraft(rec) === tag
+                        ? 'bg-slate-900 text-white border-slate-900 dark:bg-blue-600 dark:border-blue-600'
+                        : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-blue-400'
+                    "
+                  >
+                    {{ tag }}
+                  </button>
+                </div>
+              </template>
+
+              <!-- Bull vs Bear Top Reason Tags Distribution -->
+              <div
+                v-if="
+                  (props.crowdStats?.[rec.prediction_id]?.reason_breakdown?.bull_top?.length || 0) > 0 ||
+                  (props.crowdStats?.[rec.prediction_id]?.reason_breakdown?.bear_top?.length || 0) > 0
+                "
+                class="flex flex-wrap items-center gap-2 text-[10.5px] text-slate-600 dark:text-slate-300"
+              >
+                <span v-if="(props.crowdStats?.[rec.prediction_id]?.reason_breakdown?.bull_top?.length || 0) > 0" class="text-rose-600 dark:text-rose-400">
+                  看多逻辑：{{ props.crowdStats![rec.prediction_id].reason_breakdown!.bull_top.slice(0, 2).map((x) => `${x.tag}(${x.count})`).join(' · ') }}
                 </span>
-                <button
-                  type="button"
-                  @click="triggerVoteClick(rec)"
-                  class="jx-pop-target px-2.5 min-h-[28px] rounded-lg bg-[#007AFF] text-white text-[11px] font-semibold hover:bg-blue-600 whitespace-nowrap transition-transform"
-                  :class="voteBurstPid === rec.prediction_id ? 'jx-pop-active jx-burst-ring' : ''"
-                >
-                  {{ props.crowdStats?.[rec.prediction_id]?.user_prob_pct != null ? t('更新我的投票', 'Update Vote') : t('提交我的概率预判', 'Submit Vote') }}
-                </button>
+                <span v-if="(props.crowdStats?.[rec.prediction_id]?.reason_breakdown?.bear_top?.length || 0) > 0" class="text-emerald-600 dark:text-emerald-400">
+                  看空逻辑：{{ props.crowdStats![rec.prediction_id].reason_breakdown!.bear_top.slice(0, 2).map((x) => `${x.tag}(${x.count})`).join(' · ') }}
+                </span>
               </div>
+
               <div class="flex flex-wrap items-center justify-between gap-2 pt-0.5 text-[11px]">
                 <span
                   v-if="!isLoggedIn && props.guestStagedVotes?.[rec.prediction_id] !== undefined"
@@ -781,7 +1351,12 @@ function submitSettle(id: string) {
                   {{ t(`已暂存你的预判：${props.guestStagedVotes[rec.prediction_id]}% · 登录后计入胜率战绩`, `Staged: ${props.guestStagedVotes[rec.prediction_id]}% · Sign in to lock record`) }}
                 </span>
                 <span v-else-if="props.crowdStats?.[rec.prediction_id]?.user_prob_pct != null" class="text-emerald-600 dark:text-emerald-400 font-semibold tabular-nums">
-                  {{ t(`已计入共识：${props.crowdStats[rec.prediction_id].user_prob_pct}%`, `Locked: ${props.crowdStats[rec.prediction_id].user_prob_pct}%`) }}
+                  {{
+                    t(
+                      `已锁定 ${props.crowdStats[rec.prediction_id].user_prob_pct}%${props.crowdStats[rec.prediction_id].user_early_multiplier ? ` (${props.crowdStats[rec.prediction_id].user_early_multiplier}×倍率)` : ''}`,
+                      `Locked: ${props.crowdStats[rec.prediction_id].user_prob_pct}%`,
+                    )
+                  }}
                 </span>
                 <span v-else class="text-slate-400">{{ t('拖动滑块参与预判对赌', 'Slide to forecast') }}</span>
 
@@ -820,7 +1395,7 @@ function submitSettle(id: string) {
             </div>
           </div>
 
-          <!-- Section 4: Collapsed 1-Line Version Evolution History (ZERO Nested Scroll Container!) -->
+          <!-- Version Evolution History -->
           <div class="rounded-lg bg-slate-50 dark:bg-slate-800/50 border border-slate-200/80 dark:border-slate-700/80 text-xs overflow-hidden">
             <button
               type="button"
@@ -853,7 +1428,9 @@ function submitSettle(id: string) {
               <strong>{{ t('核验结论：', 'Resolution: ') }}</strong>{{ rec.settlement.note }}
             </div>
             <div class="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-slate-600 dark:text-slate-300">
-              <span v-if="rec.settlement.evidence_title">{{ rec.settlement.evidence_title }}</span>
+              <span v-if="props.crowdStats?.[rec.prediction_id]?.user_points_awarded">
+                {{ t(`本题获得 +${props.crowdStats[rec.prediction_id].user_points_awarded} 洞察分`, `+${props.crowdStats[rec.prediction_id].user_points_awarded} Insight Pts`) }}
+              </span>
               <a
                 v-if="normalizeExternalUrl(rec.settlement.evidence_url)"
                 :href="normalizeExternalUrl(rec.settlement.evidence_url)!"
@@ -864,9 +1441,6 @@ function submitSettle(id: string) {
               >
                 {{ t('查看核验出处', 'Verify Source') }}
               </a>
-              <span v-if="rec.settlement.brier_score !== null && rec.settlement.brier_score !== undefined" class="font-mono text-emerald-700 dark:text-emerald-300">
-                {{ t(`Brier 误差 ${rec.settlement.brier_score}`, `Brier ${rec.settlement.brier_score}`) }}
-              </span>
             </div>
           </div>
 
@@ -875,7 +1449,7 @@ function submitSettle(id: string) {
               <input v-model="revJudg" type="text" :placeholder="t('新判断陈述', 'Revised judgment')" class="sm:col-span-3 px-2.5 py-1.5 rounded border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900" />
               <input v-model.number="revProb" type="number" min="1" max="99" class="px-2.5 py-1.5 rounded border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900" />
             </div>
-            <input v-model="revReason" type="text" :placeholder="t('修改依据 (如 新增 SEC 披露或指标变化)', 'Reason for revision')" class="w-full px-2.5 py-1.5 rounded border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900" />
+            <input v-model="revReason" type="text" :placeholder="t('修改依据', 'Reason for revision')" class="w-full px-2.5 py-1.5 rounded border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900" />
             <div class="flex gap-2">
               <button type="button" @click="submitRevise(rec.prediction_id)" class="px-3 py-1 rounded bg-blue-600 text-white font-semibold">{{ t('保留旧版并写入新版本', 'Append New Version') }}</button>
               <button type="button" @click="revisingId = null" class="px-3 py-1 rounded border border-slate-300">{{ t('取消', 'Cancel') }}</button>
@@ -884,16 +1458,16 @@ function submitSettle(id: string) {
 
           <div v-if="settlingId === rec.prediction_id" class="p-3 rounded-xl border border-emerald-200 bg-emerald-50/50 dark:bg-emerald-950/30 space-y-2 text-xs">
             <div class="flex flex-wrap gap-2">
-              <label class="inline-flex items-center gap-1"><input v-model="setOutcome" type="radio" value="correct" />{{ t('正确 (Correct)', 'Correct') }}</label>
-              <label class="inline-flex items-center gap-1"><input v-model="setOutcome" type="radio" value="incorrect" />{{ t('错误 (Incorrect)', 'Incorrect') }}</label>
-              <label class="inline-flex items-center gap-1"><input v-model="setOutcome" type="radio" value="indeterminate" />{{ t('不可判定 (Indeterminate)', 'Indeterminate') }}</label>
+              <label class="inline-flex items-center gap-1"><input v-model="setOutcome" type="radio" value="correct" />{{ t('正确', 'Correct') }}</label>
+              <label class="inline-flex items-center gap-1"><input v-model="setOutcome" type="radio" value="incorrect" />{{ t('错误', 'Incorrect') }}</label>
+              <label class="inline-flex items-center gap-1"><input v-model="setOutcome" type="radio" value="indeterminate" />{{ t('不可判定', 'Indeterminate') }}</label>
             </div>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-              <input v-model="setUrl" type="url" :placeholder="t('结算证据 URL (可选)', 'Evidence URL (optional)')" class="px-2.5 py-1.5 rounded border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900" />
+              <input v-model="setUrl" type="url" :placeholder="t('结算证据 URL (可选)', 'Evidence URL')" class="px-2.5 py-1.5 rounded border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900" />
               <input v-model="setNote" type="text" :placeholder="t('结算依据说明', 'Resolution rationale')" class="px-2.5 py-1.5 rounded border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900" />
             </div>
             <div class="flex gap-2">
-              <button type="button" @click="submitSettle(rec.prediction_id)" class="px-3 py-1 rounded bg-emerald-600 text-white font-semibold">{{ t('确认客观结算', 'Confirm Resolution') }}</button>
+              <button type="button" @click="submitSettle(rec.prediction_id)" class="px-3 py-1 rounded bg-emerald-600 text-white font-semibold">{{ t('确认结算', 'Resolve') }}</button>
               <button type="button" @click="settlingId = null" class="px-3 py-1 rounded border border-slate-300">{{ t('取消', 'Cancel') }}</button>
             </div>
           </div>
@@ -901,7 +1475,7 @@ function submitSettle(id: string) {
 
         <div class="pt-2 border-t border-slate-100 dark:border-slate-800 space-y-2 text-xs">
           <div class="flex flex-wrap items-center justify-between gap-2">
-            <!-- 1-Click Stance Vote (Server Aggregated + Live Ratio Bar) -->
+            <!-- 1-Click Stance Vote -->
             <div v-if="rec.mode === 'live' && !rec.settlement" class="flex items-center gap-1">
               <button
                 type="button"
@@ -912,7 +1486,7 @@ function submitSettle(id: string) {
                   stanceBurstKey === `${rec.prediction_id}:agree` ? 'jx-pop-active jx-burst-ring text-emerald-500' : '',
                 ]"
               >
-                <ThumbsUp class="w-3 h-3 shrink-0" :stroke-width="1.75" :class="{ 'fill-current': (getReactionSummary('prediction', rec.prediction_id).my_reaction || props.stances?.[rec.prediction_id]) === 'agree' }" />
+                <ThumbsUp class="w-3 h-3 shrink-0" :stroke-width="1.75" />
                 <span>{{ t('赞同', 'Agree') }}</span>
                 <span v-if="(getReactionSummary('prediction', rec.prediction_id).counts.agree || 0) > 0" class="font-mono text-[10px] opacity-85 tabular-nums">
                   {{ getReactionSummary('prediction', rec.prediction_id).counts.agree }}
@@ -927,7 +1501,7 @@ function submitSettle(id: string) {
                   stanceBurstKey === `${rec.prediction_id}:disagree` ? 'jx-pop-active jx-burst-ring text-rose-500' : '',
                 ]"
               >
-                <ThumbsDown class="w-3 h-3 shrink-0" :stroke-width="1.75" :class="{ 'fill-current': (getReactionSummary('prediction', rec.prediction_id).my_reaction || props.stances?.[rec.prediction_id]) === 'disagree' }" />
+                <ThumbsDown class="w-3 h-3 shrink-0" :stroke-width="1.75" />
                 <span>{{ t('反对', 'Disagree') }}</span>
                 <span v-if="(getReactionSummary('prediction', rec.prediction_id).counts.disagree || 0) > 0" class="font-mono text-[10px] opacity-85 tabular-nums">
                   {{ getReactionSummary('prediction', rec.prediction_id).counts.disagree }}
@@ -962,6 +1536,7 @@ function submitSettle(id: string) {
                 {{ t('修订 (留v1)', 'Revise') }}
               </button>
               <button
+                v-if="rec.prediction_id.startsWith('pred_user_') || !rec.source_type || rec.source_type === 'seed'"
                 type="button"
                 @click="openSettle(rec)"
                 class="px-2.5 min-h-[30px] rounded-lg border border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-50 dark:hover:bg-emerald-950/50"
@@ -978,11 +1553,8 @@ function submitSettle(id: string) {
                 <Trash2 class="w-3.5 h-3.5" />
               </button>
             </div>
-            <span
-              v-else
-              class="ml-auto text-[11px] text-slate-400"
-            >
-              {{ rec.settlement ? t('已由系统客观核验结案', 'Verified & settled automatically') : t('支持上方一键投票记录立场', 'Click Agree / Disagree / Hold to record stance') }}
+            <span v-else class="ml-auto text-[11px] text-slate-400">
+              {{ rec.settlement ? t('已由系统客观核验结案', 'Settled objectively') : t('上方选择依据并提交概率', 'Pick reason & submit prob') }}
             </span>
           </div>
 
@@ -1005,7 +1577,6 @@ function submitSettle(id: string) {
           </div>
         </div>
       </article>
-      </div>
     </div>
   </section>
 </template>

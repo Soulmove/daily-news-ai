@@ -100,6 +100,7 @@ const props = defineProps<{
   topicsLoading?: boolean
   activeSection?: 'feed' | 'pillars' | 'topics' | 'cocoon'
   openWatchlistNonce?: number
+  highlightedEventId?: string | null
 }>()
 
 const emit = defineEmits<{
@@ -123,6 +124,7 @@ const emit = defineEmits<{
   (e: 'mark-all-read', events: SmartEvent[]): void
   (e: 'toggle-bookmark', event: SmartEvent): void
   (e: 'copy-link', event: SmartEvent): void
+  (e: 'share-poster', event: SmartEvent): void
   (e: 'select-entity', entityName: string): void
   (e: 'open-storyline', storylineId: string): void
   (e: 'open-qa', event: SmartEvent): void
@@ -145,6 +147,20 @@ const wirePulseIdx = ref(0)
 const wirePulseExpanded = ref(false)
 const antiEchoMode = ref(false)
 const expandedEventIds = ref<Set<string>>(new Set())
+
+watch(
+  () => props.highlightedEventId,
+  (hid) => {
+    if (!hid) return
+    const next = new Set(expandedEventIds.value)
+    next.add(hid)
+    expandedEventIds.value = next
+    if (sortedFallbackList.value.some((x) => x.event.event_id === hid)) {
+      showAllNonMatched.value = true
+    }
+  },
+  { immediate: true },
+)
 
 // Freeze read baseline for lead-story ordering during active session so markRead never re-sorts or collapses cards!
 const sessionReadIds = ref<Set<string>>(new Set(props.readIds))
@@ -1005,11 +1021,11 @@ const cocoonDiversityPanel = computed(() => {
         <button
           type="button"
           @click="(e) => { centerPillIntoView(e); emit('switch-tab', 'predictions') }"
-          class="mobile-pressable ios-tap inline-flex items-center gap-1.5 min-h-[34px] px-2.5 rounded-xl bg-white dark:bg-[#131823] border border-black/[0.06] dark:border-white/[0.08] text-[11.5px] font-semibold text-zinc-800 dark:text-zinc-100 whitespace-nowrap shrink-0 shadow-[0_1px_2px_rgba(0,0,0,0.03)]"
+          class="mobile-pressable ios-tap inline-flex items-center gap-1.5 min-h-[34px] px-2.5 rounded-xl bg-white dark:bg-[#131823] border border-emerald-500/25 text-[11.5px] font-semibold text-emerald-700 dark:text-emerald-300 whitespace-nowrap shrink-0 shadow-[0_1px_2px_rgba(0,0,0,0.03)]"
           data-testid="quick-entry-predictions"
         >
           <Scale class="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" :stroke-width="1.75" />
-          <span>{{ t('前瞻验证', 'Predictions') }}</span>
+          <span>{{ t('每日 3 题极速预测', '3 Daily Predictions') }}</span>
         </button>
       </div>
     </div>
@@ -1115,6 +1131,8 @@ const cocoonDiversityPanel = computed(() => {
           :matching-note-count="matchingNotesForEvent(bp.ev)"
           :perspectives="commentsMap?.[bp.ev.category] || []"
           :is-read-later="readLaterSet.has(bp.ev.event_id)"
+          :is-highlighted="highlightedEventId === bp.ev.event_id"
+          :force-expand-perspectives="highlightedEventId === bp.ev.event_id"
           :cross-domain-badge="t(`跨界破茧 · ${bp.domainLabel}`, `Cross-Domain · ${bp.domainLabel}`)"
           :cross-domain-hint="buildCrossDomainHint(bp.ev)"
           :show-moderation-actions="true"
@@ -1123,6 +1141,7 @@ const cocoonDiversityPanel = computed(() => {
           @open-notes="emit('open-notes')"
           @toggle-bookmark="emit('toggle-bookmark', $event)"
           @copy-link="emit('copy-link', $event)"
+          @share-poster="emit('share-poster', $event)"
           @select-entity="emit('select-entity', $event)"
           @open-storyline="emit('open-storyline', $event)"
           @open-qa="emit('open-qa', $event)"
@@ -1169,12 +1188,15 @@ const cocoonDiversityPanel = computed(() => {
           :matching-note-count="matchingNotesForEvent(pagedFallback.visible[0].event)"
           :perspectives="commentsMap?.[pagedFallback.visible[0].event.category] || []"
           :is-read-later="readLaterSet.has(pagedFallback.visible[0].event.event_id)"
+          :is-highlighted="highlightedEventId === pagedFallback.visible[0].event.event_id"
+          :force-expand-perspectives="highlightedEventId === pagedFallback.visible[0].event.event_id"
           :show-moderation-actions="true"
           @toggle-read="emit('toggle-read', $event)"
           @mark-read="emit('mark-read', $event)"
           @open-notes="emit('open-notes')"
           @toggle-bookmark="emit('toggle-bookmark', $event)"
           @copy-link="emit('copy-link', $event)"
+          @share-poster="emit('share-poster', $event)"
           @select-entity="emit('select-entity', $event)"
           @open-storyline="emit('open-storyline', $event)"
           @open-qa="emit('open-qa', $event)"
@@ -1205,12 +1227,15 @@ const cocoonDiversityPanel = computed(() => {
             :matching-note-count="matchingNotesForEvent(item.event)"
             :perspectives="commentsMap?.[item.event.category] || []"
             :is-read-later="readLaterSet.has(item.event.event_id)"
+            :is-highlighted="highlightedEventId === item.event.event_id"
+            :force-expand-perspectives="highlightedEventId === item.event.event_id"
             :show-moderation-actions="true"
             @toggle-read="emit('toggle-read', $event)"
             @mark-read="emit('mark-read', $event)"
             @open-notes="emit('open-notes')"
             @toggle-bookmark="emit('toggle-bookmark', $event)"
             @copy-link="emit('copy-link', $event)"
+            @share-poster="emit('share-poster', $event)"
             @select-entity="emit('select-entity', $event)"
             @open-storyline="emit('open-storyline', $event)"
             @open-qa="emit('open-qa', $event)"
@@ -1291,12 +1316,15 @@ const cocoonDiversityPanel = computed(() => {
         :downweighted="interwovenFeedRows[0].item.downweighted"
         :cross-domain-badge="interwovenFeedRows[0].crossDomainBadge || null"
         :cross-domain-hint="interwovenFeedRows[0].crossDomainHint || null"
+        :is-highlighted="highlightedEventId === interwovenFeedRows[0].item.event.event_id"
+        :force-expand-perspectives="highlightedEventId === interwovenFeedRows[0].item.event.event_id"
         :show-moderation-actions="true"
         @toggle-read="emit('toggle-read', $event)"
         @mark-read="emit('mark-read', $event)"
         @open-notes="emit('open-notes')"
         @toggle-bookmark="emit('toggle-bookmark', $event)"
         @copy-link="emit('copy-link', $event)"
+        @share-poster="emit('share-poster', $event)"
         @select-entity="emit('select-entity', $event)"
         @open-storyline="emit('open-storyline', $event)"
         @open-qa="emit('open-qa', $event)"
@@ -1331,12 +1359,15 @@ const cocoonDiversityPanel = computed(() => {
           :downweighted="row.item.downweighted"
           :cross-domain-badge="row.crossDomainBadge || null"
           :cross-domain-hint="row.crossDomainHint || null"
+          :is-highlighted="highlightedEventId === row.item.event.event_id"
+          :force-expand-perspectives="highlightedEventId === row.item.event.event_id"
           :show-moderation-actions="true"
           @toggle-read="emit('toggle-read', $event)"
           @mark-read="emit('mark-read', $event)"
           @open-notes="emit('open-notes')"
           @toggle-bookmark="emit('toggle-bookmark', $event)"
           @copy-link="emit('copy-link', $event)"
+          @share-poster="emit('share-poster', $event)"
           @select-entity="emit('select-entity', $event)"
           @open-storyline="emit('open-storyline', $event)"
           @open-qa="emit('open-qa', $event)"
@@ -1390,10 +1421,13 @@ const cocoonDiversityPanel = computed(() => {
           :saved-note="savedNoteMap?.[item.event.event_id] || ''"
           :perspectives="commentsMap?.[item.event.category] || []"
           :is-read-later="readLaterSet.has(item.event.event_id)"
+          :is-highlighted="highlightedEventId === item.event.event_id"
+          :force-expand-perspectives="highlightedEventId === item.event.event_id"
           :show-moderation-actions="true"
           @toggle-read="emit('toggle-read', $event)"
           @toggle-bookmark="emit('toggle-bookmark', $event)"
           @copy-link="emit('copy-link', $event)"
+          @share-poster="emit('share-poster', $event)"
           @select-entity="emit('select-entity', $event)"
           @open-storyline="emit('open-storyline', $event)"
           @open-qa="emit('open-qa', $event)"
@@ -1429,9 +1463,12 @@ const cocoonDiversityPanel = computed(() => {
           :thumbnail-url="uEv.thumbnail_url || null"
           :saved-note="savedNoteMap?.[uEv.event_id] || ''"
           :perspectives="commentsMap?.[uEv.category] || []"
+          :is-highlighted="highlightedEventId === uEv.event_id"
+          :force-expand-perspectives="highlightedEventId === uEv.event_id"
           @toggle-read="emit('toggle-read', $event)"
           @toggle-bookmark="emit('toggle-bookmark', $event)"
           @copy-link="emit('copy-link', $event)"
+          @share-poster="emit('share-poster', $event)"
           @select-entity="emit('select-entity', $event)"
           @open-storyline="emit('open-storyline', $event)"
           @open-qa="emit('open-qa', $event)"

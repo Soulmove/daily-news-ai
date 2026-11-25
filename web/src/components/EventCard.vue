@@ -15,6 +15,7 @@ import {
   Link2,
   MoreHorizontal,
   NotebookPen,
+  Share2,
   Sparkles,
   ThumbsDown,
   X,
@@ -56,6 +57,7 @@ const props = defineProps<{
   isBookmarked: boolean
   isNewSinceVisit: boolean
   isHighlighted?: boolean
+  forceExpandPerspectives?: boolean
   defaultExpanded?: boolean
   controlledExpanded?: boolean
   grouped?: boolean
@@ -81,6 +83,7 @@ const emit = defineEmits<{
   (e: 'mark-read', event: SmartEvent): void
   (e: 'toggle-bookmark', event: SmartEvent): void
   (e: 'copy-link', event: SmartEvent): void
+  (e: 'share-poster', event: SmartEvent): void
   (e: 'select-entity', entity: string): void
   (e: 'open-prev-batch', prevBatchId: string): void
   (e: 'open-storyline', storylineId: string): void
@@ -96,7 +99,7 @@ const emit = defineEmits<{
 }>()
 
 const isDesktopWide = typeof window !== 'undefined' && window.innerWidth >= 1280
-const localExpanded = ref(Boolean(props.defaultExpanded || (props.isHighlighted && !isDesktopWide)))
+const localExpanded = ref(Boolean(props.defaultExpanded || props.forceExpandPerspectives || (props.isHighlighted && !isDesktopWide)))
 const expanded = computed<boolean>({
   get: () => (props.controlledExpanded !== undefined ? props.controlledExpanded : localExpanded.value),
   set: (val: boolean) => {
@@ -107,7 +110,19 @@ const expanded = computed<boolean>({
   },
 })
 const actionSheetOpen = ref(false)
-const perspectivesOpen = ref(false)
+const perspectivesOpen = ref(Boolean(props.forceExpandPerspectives))
+
+watch(
+  () => props.forceExpandPerspectives,
+  (val) => {
+    if (val) {
+      localExpanded.value = true
+      if (props.controlledExpanded !== undefined) emit('set-expanded', true)
+      perspectivesOpen.value = true
+    }
+  },
+  { immediate: true },
+)
 const noteOpen = ref(false)
 const openQaIdx = ref<number | null>(null)
 const draftNote = ref(props.savedNote || '')
@@ -794,6 +809,15 @@ function runSheetAction(fn: () => void) {
                 <Sparkles class="w-3.5 h-3.5 text-[#007AFF] dark:text-[#0A84FF]" :stroke-width="1.5" />
                 <span>{{ t('证据问答', 'Q&A') }}</span>
               </button>
+              <button
+                type="button"
+                @click.stop="emit('share-poster', event)"
+                class="ios-tap inline-flex items-center gap-1 px-3 min-h-[38px] rounded-xl text-xs font-medium bg-[#F2F2F7] dark:bg-[#2C2C2E] text-zinc-700 dark:text-zinc-200 hover:text-[#007AFF]"
+                data-testid="card-share-poster-btn"
+              >
+                <Share2 class="w-3.5 h-3.5 text-[#007AFF] dark:text-[#0A84FF]" :stroke-width="1.5" />
+                <span>{{ t('生成简报海报', 'Brief Poster') }}</span>
+              </button>
             </div>
 
             <ul
@@ -1026,6 +1050,17 @@ function runSheetAction(fn: () => void) {
               <span class="inline-flex items-center gap-2.5">
                 <Columns3 class="w-4 h-4 text-zinc-500" />
                 <span>{{ perspectivesOpen ? t('收起观点对照', 'Hide Perspectives') : t('观点对照', 'Perspectives') }}</span>
+              </span>
+            </button>
+
+            <button
+              type="button"
+              @click="runSheetAction(() => emit('share-poster', event))"
+              class="w-full min-h-[48px] px-4 flex items-center justify-between text-sm font-medium text-zinc-900 dark:text-white active:bg-black/[0.04] dark:active:bg-white/[0.06]"
+            >
+              <span class="inline-flex items-center gap-2.5">
+                <Share2 class="w-4 h-4 text-[#007AFF]" />
+                <span>{{ t('生成三视角简报海报', 'Generate Brief Poster') }}</span>
               </span>
             </button>
 

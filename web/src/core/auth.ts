@@ -254,6 +254,7 @@ export async function apiResetPassword(
 
 export async function apiFetchMe(token: string): Promise<{
   user: AuthUser
+  prediction_bonus_qa_quota?: number
   sync_summary: { has_cloud_state: boolean; updated_at: string | null; counts: CloudSyncCounts | null }
 }> {
   return apiRequest('/api/auth/me', { method: 'GET' }, token)
@@ -404,9 +405,12 @@ export async function apiSubmitPredictionVote(
   token: string,
   predictionId: string,
   probPct: number,
+  opts: { reason_tag?: string; challenger_ref?: string } = {},
 ): Promise<{
   ok: boolean
   min_votes: number
+  early_multiplier?: number
+  reason_tag?: string
   items: Record<string, any>
   item?: any
 }> {
@@ -414,10 +418,125 @@ export async function apiSubmitPredictionVote(
     `/api/predictions/${encodeURIComponent(predictionId)}/vote`,
     {
       method: 'PUT',
-      body: JSON.stringify({ prob_pct: probPct }),
+      body: JSON.stringify({
+        prob_pct: probPct,
+        reason_tag: opts.reason_tag || '',
+        challenger_ref: opts.challenger_ref || '',
+      }),
     },
     token,
   )
+}
+
+export interface DailyPredictionRow {
+  id: string
+  source_type: string
+  category: string
+  title: string
+  question: string
+  win_rule: string
+  lose_rule: string
+  ticker: string
+  base_price: number | null
+  target_price: number | null
+  ai_prob_pct: number
+  created_at: string
+  lock_at: string
+  due_at: string
+  status: 'open' | 'locked' | 'settled' | string
+  outcome: 'yes' | 'no' | 'void' | null
+  settled_value: number | null
+  settled_at: string | null
+  proposer_user_id: number | null
+  proposer_username: string
+}
+
+export interface PredictionProposalRow {
+  id: number
+  user_id: number
+  username: string
+  category: string
+  title: string
+  question: string
+  win_rule: string
+  lose_rule: string
+  due_at: string
+  status: 'pending' | 'approved' | 'rejected' | string
+  published_prediction_id: string
+  created_at: string
+  reviewed_at: string
+}
+
+export interface UserPredictionProfile {
+  user_id: number
+  season_key: string
+  insight_points: number
+  settled_count: number
+  hit_count: number
+  hit_rate_pct: number | null
+  avg_brier: number | null
+  current_streak: number
+  best_streak: number
+  rank_tier: string
+  bonus_qa_quota: number
+  bonus_qa_expires_at: string
+  unlocked_referral_bonus: number
+}
+
+export interface ArenaLeaderboardRow {
+  rank: number
+  user_id: number
+  username: string
+  display_name: string
+  avatar: string
+  insight_points: number
+  settled_count: number
+  hit_count: number
+  hit_rate_pct: number | null
+  avg_brier: number | null
+  current_streak: number
+  best_streak: number
+  rank_tier: string
+}
+
+export interface PredictionArenaResponse {
+  season_key: string
+  daily_predictions: DailyPredictionRow[]
+  public_predictions: Array<Record<string, unknown>>
+  crowd_stats: Record<string, import('./types').CrowdPredictionStat>
+  min_votes: number
+  my_profile: UserPredictionProfile | null
+  leaderboard: ArenaLeaderboardRow[]
+  allowed_reason_tags: string[]
+  server_time: string
+}
+
+export async function apiFetchPredictionArena(token?: string | null): Promise<PredictionArenaResponse> {
+  return apiRequest('/api/predictions/arena', { method: 'GET' }, token)
+}
+
+export async function apiSubmitPredictionProposal(
+  token: string,
+  body: {
+    category: string
+    title: string
+    question: string
+    win_rule?: string
+    lose_rule?: string
+    due_at: string
+  },
+): Promise<{ ok: boolean; proposal: PredictionProposalRow }> {
+  return apiRequest(
+    '/api/predictions/proposals',
+    { method: 'POST', body: JSON.stringify(body) },
+    token,
+  )
+}
+
+export async function apiFetchMyPredictionProposals(
+  token: string,
+): Promise<{ items: PredictionProposalRow[] }> {
+  return apiRequest('/api/predictions/proposals/mine', { method: 'GET' }, token)
 }
 
 // ---------------- Admin APIs (Level-1 super_admin & Level-2 admin) ----------------
@@ -640,6 +759,9 @@ export interface PublicSiteSettings {
   user_invite_quota?: number
   referral_bonus_qa_quota?: number
   invite_waitlist_enabled?: boolean
+  prediction_daily_market_enabled?: boolean
+  prediction_rewards_enabled?: boolean
+  prediction_proposals_enabled?: boolean
 }
 
 export async function apiGetPublicSettings(): Promise<PublicSiteSettings> {
@@ -664,6 +786,9 @@ export async function apiGetPublicSettings(): Promise<PublicSiteSettings> {
       user_invite_quota: 3,
       referral_bonus_qa_quota: 15,
       invite_waitlist_enabled: false,
+      prediction_daily_market_enabled: true,
+      prediction_rewards_enabled: true,
+      prediction_proposals_enabled: true,
     }
   }
 }
@@ -868,6 +993,52 @@ export async function apiAdminRejectWaitlist(
   id: number,
 ): Promise<{ ok: boolean; item: WaitlistEntryRow }> {
   return apiRequest(`/api/admin/waitlist/${id}/reject`, { method: 'POST' }, token)
+}
+
+export async function apiAdminListPredictionProposals(
+  token: string,
+  status = '',
+): Promise<{ items: PredictionProposalRow[] }> {
+  const qs = status ? `?status=${encodeURIComponent(status)}` : ''
+  return apiRequest(`/api/admin/predictions/proposals${qs}`, { method: 'GET' }, token)
+}
+
+export async function apiAdminApprovePredictionProposal(
+  token: string,
+  id: number,
+): Promise<{ ok: boolean; proposal: PredictionProposalRow; prediction: DailyPredictionRow | null; already_approved?: boolean }> {
+  return apiRequest(`/api/admin/predictions/proposals/${id}/approve`, { method: 'POST' }, token)
+}
+
+export async function apiAdminRejectPredictionProposal(
+  token: string,
+  id: number,
+): Promise<{ ok: boolean; proposal: PredictionProposalRow }> {
+  return apiRequest(`/api/admin/predictions/proposals/${id}/reject`, { method: 'POST' }, token)
+}
+
+export async function apiAdminListDailyPredictions(
+  token: string,
+): Promise<{ items: DailyPredictionRow[] }> {
+  return apiRequest('/api/admin/predictions/daily', { method: 'GET' }, token)
+}
+
+export async function apiAdminSettleDailyPrediction(
+  token: string,
+  predictionId: string,
+  body: { outcome: 'yes' | 'no' | 'void'; settled_value?: number | null },
+): Promise<{ ok: boolean; already_settled?: boolean; settled_votes: number; outcome: string }> {
+  return apiRequest(
+    `/api/admin/predictions/${encodeURIComponent(predictionId)}/settle`,
+    { method: 'POST', body: JSON.stringify(body) },
+    token,
+  )
+}
+
+export async function apiAdminRunDailyPredictionCron(
+  token: string,
+): Promise<{ ok: boolean; generated: number; locked: number; settled: number }> {
+  return apiRequest('/api/admin/predictions/run-daily-cron', { method: 'POST' }, token)
 }
 
 export type ReactionTargetType = 'event' | 'finance' | 'prediction'

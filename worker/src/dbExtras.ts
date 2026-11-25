@@ -265,22 +265,51 @@ export async function deleteFeedback(db: D1Database, feedbackId: number): Promis
 
 export async function upsertPredictionVote(
   db: D1Database,
-  opts: { predictionId: string; userId: number; probPct: number },
-): Promise<{ prediction_id: string; user_prob_pct: number; updated_at: string }> {
+  opts: {
+    predictionId: string
+    userId: number
+    probPct: number
+    earlyMultiplier?: number
+    reasonTag?: string
+    challengerRef?: string
+  },
+): Promise<{
+  prediction_id: string
+  user_prob_pct: number
+  early_multiplier: number
+  reason_tag: string
+  updated_at: string
+}> {
   const pid = opts.predictionId.trim().slice(0, 120)
   const clamped = Math.round(Math.max(5.0, Math.min(95.0, opts.probPct)) * 10) / 10
+  const mult = Math.max(1.0, Math.min(2.0, Number(opts.earlyMultiplier ?? 1.0) || 1.0))
+  const rTag = (opts.reasonTag || '').trim().slice(0, 32)
+  const cRef = (opts.challengerRef || '').trim().slice(0, 64)
   const ts = nowShanghaiIso()
   await db
     .prepare(
-      `INSERT INTO prediction_crowd_votes (prediction_id, user_id, prob_pct, updated_at)
-       VALUES (?1, ?2, ?3, ?4)
+      `INSERT INTO prediction_crowd_votes (
+         prediction_id, user_id, prob_pct, early_multiplier, reason_tag, challenger_ref, updated_at
+       ) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7)
        ON CONFLICT(prediction_id, user_id) DO UPDATE SET
          prob_pct = excluded.prob_pct,
+         early_multiplier = excluded.early_multiplier,
+         reason_tag = excluded.reason_tag,
+         challenger_ref = CASE
+           WHEN excluded.challenger_ref != '' THEN excluded.challenger_ref
+           ELSE prediction_crowd_votes.challenger_ref
+         END,
          updated_at = excluded.updated_at`,
     )
-    .bind(pid, opts.userId, clamped, ts)
+    .bind(pid, opts.userId, clamped, mult, rTag, cRef, ts)
     .run()
-  return { prediction_id: pid, user_prob_pct: clamped, updated_at: ts }
+  return {
+    prediction_id: pid,
+    user_prob_pct: clamped,
+    early_multiplier: mult,
+    reason_tag: rTag,
+    updated_at: ts,
+  }
 }
 
 export async function getPredictionCrowdStats(
@@ -288,33 +317,106 @@ export async function getPredictionCrowdStats(
   opts: { userId?: number | null; minVotes?: number } = {},
 ): Promise<{ min_votes: number; items: Record<string, Record<string, unknown>> }> {
   const threshold = Math.max(1, Math.round(opts.minVotes ?? 10))
-  const agg = await db
-    .prepare(
-      `SELECT
-         prediction_id,
-         COUNT(DISTINCT user_id) AS vote_count,
-         AVG(prob_pct) AS avg_prob,
-         SUM(CASE WHEN prob_pct > 55.0 THEN 1 ELSE 0 END) AS bull_votes,
-         SUM(CASE WHEN prob_pct < 45.0 THEN 1 ELSE 0 END) AS bear_votes
-       FROM prediction_crowd_votes
-       GROUP BY prediction_id`,
-    )
-    .all<{
-      prediction_id: string
-      vote_count: number
-      avg_prob: number
-      bull_votes: number
-      bear_votes: number
-    }>()
+  const [agg, reasonAgg] = await Promise.all([
+    db
+      .prepare(
+        `SELECT
+           prediction_id,
+           COUNT(DISTINCT user_id) AS vote_count,
+           AVG(prob_pct) AS avg_prob,
+           SUM(CASE WHEN prob_pct > 55.0 THEN 1 ELSE 0 END) AS bull_votes,
+           SUM(CASE WHEN prob_pct < 45.0 THEN 1 ELSE 0 END) AS bear_votes
+         FROM prediction_crowd_votes
+         GROUP BY prediction_id`,
+      )
+      .all<{
+        prediction_id: string
+        vote_count: number
+        avg_prob: number
+        bull_votes: number
+        bear_votes: number
+      }>(),
+    db
+      .prepare(
+        `SELECT
+           prediction_id,
+           reason_tag,
+           COUNT(*) AS total_cnt,
+           SUM(CASE WHEN prob_pct > 55.0 THEN 1 ELSE 0 END) AS bull_cnt,
+           SUM(CASE WHEN prob_pct < 45.0 THEN 1 ELSE 0 END) AS bear_cnt
+         FROM prediction_crowd_votes
+         WHERE reason_tag != ''
+         GROUP BY prediction_id, reason_tag`,
+      )
+      .all<{
+        prediction_id: string
+        reason_tag: string
+        total_cnt: number
+        bull_cnt: number
+        bear_cnt: number
+      }>(),
+  ])
 
-  const userVotes: Record<string, number> = {}
+  const reasonByPred: Record<
+    string,
+    {
+      counts: Record<string, number>
+      bull_top: Array<{ tag: string; count: number }>
+      bear_top: Array<{ tag: string; count: number }>
+    }
+  > = {}
+  for (const r of reasonAgg.results || []) {
+    const pid = String(r.prediction_id)
+    if (!reasonByPred[pid]) {
+      reasonByPred[pid] = { counts: {}, bull_top: [], bear_top: [] }
+    }
+    const tag = String(r.reason_tag)
+    reasonByPred[pid].counts[tag] = Number(r.total_cnt ?? 0)
+    if (Number(r.bull_cnt ?? 0) > 0) {
+      reasonByPred[pid].bull_top.push({ tag, count: Number(r.bull_cnt) })
+    }
+    if (Number(r.bear_cnt ?? 0) > 0) {
+      reasonByPred[pid].bear_top.push({ tag, count: Number(r.bear_cnt) })
+    }
+  }
+  for (const pid of Object.keys(reasonByPred)) {
+    reasonByPred[pid].bull_top.sort((a, b) => b.count - a.count)
+    reasonByPred[pid].bear_top.sort((a, b) => b.count - a.count)
+  }
+
+  const userVotes: Record<
+    string,
+    {
+      prob_pct: number
+      reason_tag: string
+      early_multiplier: number
+      points_awarded: number
+      brier_score: number | null
+    }
+  > = {}
   if (opts.userId !== null && opts.userId !== undefined) {
     const uRows = await db
-      .prepare('SELECT prediction_id, prob_pct FROM prediction_crowd_votes WHERE user_id = ?1')
+      .prepare(
+        `SELECT prediction_id, prob_pct, reason_tag, early_multiplier, points_awarded, brier_score
+         FROM prediction_crowd_votes WHERE user_id = ?1`,
+      )
       .bind(opts.userId)
-      .all<{ prediction_id: string; prob_pct: number }>()
+      .all<{
+        prediction_id: string
+        prob_pct: number
+        reason_tag: string
+        early_multiplier: number
+        points_awarded: number
+        brier_score: number | null
+      }>()
     for (const r of uRows.results || []) {
-      userVotes[r.prediction_id] = Math.round(Number(r.prob_pct) * 10) / 10
+      userVotes[r.prediction_id] = {
+        prob_pct: Math.round(Number(r.prob_pct) * 10) / 10,
+        reason_tag: String(r.reason_tag || ''),
+        early_multiplier: Number(r.early_multiplier ?? 1),
+        points_awarded: Number(r.points_awarded ?? 0),
+        brier_score: r.brier_score !== null && r.brier_score !== undefined ? Number(r.brier_score) : null,
+      }
     }
   }
 
@@ -323,6 +425,7 @@ export async function getPredictionCrowdStats(
     const pid = String(r.prediction_id)
     const cnt = Number(r.vote_count ?? 0)
     const unlocked = cnt >= threshold
+    const uv = userVotes[pid]
     items[pid] = {
       prediction_id: pid,
       vote_count: cnt,
@@ -331,21 +434,31 @@ export async function getPredictionCrowdStats(
       crowd_avg_pct: unlocked ? Math.round(Number(r.avg_prob) * 10) / 10 : null,
       bull_votes: unlocked ? Number(r.bull_votes ?? 0) : null,
       bear_votes: unlocked ? Number(r.bear_votes ?? 0) : null,
-      user_prob_pct: pid in userVotes ? userVotes[pid] : null,
+      user_prob_pct: uv ? uv.prob_pct : null,
+      user_reason_tag: uv ? uv.reason_tag : '',
+      user_early_multiplier: uv ? uv.early_multiplier : 1.0,
+      user_points_awarded: uv ? uv.points_awarded : 0,
+      user_brier_score: uv ? uv.brier_score : null,
+      reason_breakdown: reasonByPred[pid] || { counts: {}, bull_top: [], bear_top: [] },
     }
   }
 
-  for (const [pid, uProb] of Object.entries(userVotes)) {
+  for (const [pid, uv] of Object.entries(userVotes)) {
     if (!(pid in items)) {
       items[pid] = {
         prediction_id: pid,
         vote_count: 1,
         min_votes: threshold,
         unlocked: threshold <= 1,
-        crowd_avg_pct: threshold <= 1 ? uProb : null,
-        bull_votes: threshold <= 1 ? (uProb > 55 ? 1 : 0) : null,
-        bear_votes: threshold <= 1 ? (uProb < 45 ? 1 : 0) : null,
-        user_prob_pct: uProb,
+        crowd_avg_pct: threshold <= 1 ? uv.prob_pct : null,
+        bull_votes: threshold <= 1 ? (uv.prob_pct > 55 ? 1 : 0) : null,
+        bear_votes: threshold <= 1 ? (uv.prob_pct < 45 ? 1 : 0) : null,
+        user_prob_pct: uv.prob_pct,
+        user_reason_tag: uv.reason_tag,
+        user_early_multiplier: uv.early_multiplier,
+        user_points_awarded: uv.points_awarded,
+        user_brier_score: uv.brier_score,
+        reason_breakdown: reasonByPred[pid] || { counts: {}, bull_top: [], bear_top: [] },
       }
     }
   }
