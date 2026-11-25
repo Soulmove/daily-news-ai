@@ -54,12 +54,9 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  deploy:
+  verify:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
-    env:
-      CLOUDFLARE_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
-      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
+    timeout-minutes: 10
     steps:
       - name: 📥 Checkout repository
         uses: actions/checkout@v4
@@ -83,11 +80,75 @@ jobs:
           npm run typecheck
           npm test
 
+  deploy-worker:
+    needs: verify
+    if: github.event_name != 'workflow_dispatch' || github.event.inputs.deploy_worker == 'true' || github.event.inputs.apply_d1_migrations == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 🟢 Setup Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: worker/package-lock.json
+
+      - name: 📦 Install Worker Dependencies
+        run: cd worker && npm ci
+
       - name: 🗄️ Apply Cloudflare D1 Migrations (mirrorbrief-db)
         if: github.event_name != 'workflow_dispatch' || github.event.inputs.apply_d1_migrations == 'true'
         run: |
           cd worker
           npx wrangler d1 migrations apply mirrorbrief-db --remote
+
+      - name: 🌐 Ensure Account workers.dev Subdomain Exists (for Cron Triggers)
+        if: github.event_name != 'workflow_dispatch' || github.event.inputs.deploy_worker == 'true'
+        run: |
+          python3 - <<'EOF'
+          import json, os, urllib.error, urllib.request
+
+          token = os.environ["CLOUDFLARE_API_TOKEN"]
+          acct = os.environ["CLOUDFLARE_ACCOUNT_ID"]
+
+          def cf_req(method, path, body=None):
+              req = urllib.request.Request(
+                  f"https://api.cloudflare.com/client/v4{path}",
+                  data=json.dumps(body).encode() if body is not None else None,
+                  method=method,
+                  headers={
+                      "Authorization": f"Bearer {token}",
+                      "Content-Type": "application/json",
+                  },
+              )
+              try:
+                  with urllib.request.urlopen(req, timeout=20) as r:
+                      return r.status, json.loads(r.read().decode())
+              except urllib.error.HTTPError as e:
+                  raw = e.read().decode()
+                  try:
+                      return e.code, json.loads(raw)
+                  except Exception:
+                      return e.code, {"raw": raw}
+
+          st, doc = cf_req("GET", f"/accounts/{acct}/workers/subdomain")
+          if st == 200 and isinstance(doc, dict) and (doc.get("result") or {}).get("subdomain"):
+              print("Existing workers.dev subdomain:", doc["result"]["subdomain"])
+              raise SystemExit(0)
+
+          for cand in (f"mirrorbrief-{acct[:8]}", f"mb-{acct[:10]}"):
+              p_st, p_doc = cf_req("PUT", f"/accounts/{acct}/workers/subdomain", {"subdomain": cand})
+              print(f"Create workers.dev subdomain '{cand}':", p_st, p_doc)
+              if 200 <= p_st < 300:
+                  raise SystemExit(0)
+          print("::warning::Could not auto-create workers.dev subdomain via API (may require opening Cloudflare Dashboard -> Workers & Pages once if error 10063 occurs).")
+          EOF
 
       - name: 🔐 Sync Optional Worker Runtime Secrets
         if: github.event_name != 'workflow_dispatch' || github.event.inputs.deploy_worker == 'true'
@@ -129,10 +190,29 @@ jobs:
           ACCESS_MODE="${{ github.event.inputs.site_access_mode || 'invite_only' }}"
           npx wrangler deploy --var "SITE_ACCESS_MODE:${ACCESS_MODE}"
 
+  deploy-pages:
+    needs: verify
+    if: github.event_name != 'workflow_dispatch' || github.event.inputs.deploy_pages == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
+      VITE_DATA_BASE_URL: https://data.mirrorinfo.xyz
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 🟢 Setup Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: 📦 Install Root Dependencies
+        run: npm ci
+
       - name: 🏗️ Build Vue Static Frontend (with R2 Data Origin)
-        if: github.event_name != 'workflow_dispatch' || github.event.inputs.deploy_pages == 'true'
-        env:
-          VITE_DATA_BASE_URL: https://data.mirrorinfo.xyz
         run: |
           npx tsc --noEmit
           npx vite build
@@ -144,10 +224,21 @@ jobs:
           fi
 
       - name: 🌐 Deploy Static Frontend to Cloudflare Pages (mirrorbrief)
-        if: github.event_name != 'workflow_dispatch' || github.event.inputs.deploy_pages == 'true'
         run: |
           npx wrangler pages project create mirrorbrief --production-branch=main || true
           npx wrangler pages deploy dist --project-name=mirrorbrief --branch=main
+
+  post-deploy:
+    needs: [deploy-worker, deploy-pages]
+    if: ${{ !cancelled() && (github.event.inputs.bootstrap_r2_full == 'true' || github.event.inputs.configure_domains == 'true') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
 
       - name: ☁️ Optional Full R2 Backfill (data/ + archives/)
         if: github.event.inputs.bootstrap_r2_full == 'true'
@@ -196,7 +287,6 @@ jobs:
           if zstat != "active":
               raise SystemExit(f"Cloudflare zone mirrorinfo.xyz is currently '{zstat}' (waiting for NS propagation). Retry configure_domains once Active.")
 
-          # 1. Bind data.mirrorinfo.xyz to R2 bucket mirrorbrief-data
           r2_st, r2_res = cf_req(
               "POST",
               f"/accounts/{acct}/r2/buckets/mirrorbrief-data/domains/custom",
@@ -204,7 +294,6 @@ jobs:
           )
           print("R2 custom domain:", r2_st, r2_res)
 
-          # 2. Attach mirrorinfo.xyz and www.mirrorinfo.xyz to Pages project mirrorbrief
           for dom in ("mirrorinfo.xyz", "www.mirrorinfo.xyz"):
               pg_st, pg_res = cf_req(
                   "POST",
@@ -213,7 +302,6 @@ jobs:
               )
               print(f"Pages domain {dom}:", pg_st, pg_res)
 
-          # 3. Ensure proxied CNAME records exist for apex & www
           _, dns_list = cf_req("GET", f"/zones/{zone}/dns_records?per_page=100")
           existing = {(r["name"], r["type"]) for r in (dns_list.get("result") or [])}
           for rec_name in ("mirrorinfo.xyz", "www.mirrorinfo.xyz"):
