@@ -2,12 +2,13 @@ import { readFileSync } from 'node:fs'
 import { DatabaseSync } from 'node:sqlite'
 import { resolve } from 'node:path'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { ensureLatest21hAiSnapshot, resolve21hSettlementWindow } from '../src/aiTelemetry'
 import { decryptJson, encryptJson, hashPassword, signJwt, verifyJwt, verifyPassword } from '../src/crypto'
 import { resetBootstrapCacheForTests } from '../src/db'
 import { createWorkerApp } from '../src/index'
 import { computeSimulatedOnlineCount } from '../src/presence'
 import type { Env } from '../src/types'
-import { inferSeverityAndTag } from '../src/wireCron'
+import { WIRE_R2_EDGE_KEY, getWireLatestDoc, inferSeverityAndTag, mergeWireClusterItems, runWireCron } from '../src/wireCron'
 
 class MockD1PreparedStatement {
   private bound: unknown[] = []
@@ -86,9 +87,11 @@ class MockD1Database {
 
 class MockR2Bucket {
   public store = new Map<string, string>()
+  public metadata = new Map<string, unknown>()
 
-  put(key: string, val: unknown) {
+  put(key: string, val: unknown, opts?: unknown) {
     this.store.set(key, typeof val === 'string' ? val : JSON.stringify(val))
+    if (opts !== undefined) this.metadata.set(key, opts)
     return Promise.resolve({ key })
   }
 
@@ -108,7 +111,8 @@ function createTestEnv(overrides: Partial<Env> = {}): { env: Env; r2: MockR2Buck
   const schemaPath2 = resolve(__dirname, '../migrations/0002_growth_and_interactions.sql')
   const schemaPath3 = resolve(__dirname, '../migrations/0003_prediction_arena.sql')
   const schemaPath4 = resolve(__dirname, '../migrations/0004_presence_and_traffic.sql')
-  const schemaSql = `${readFileSync(schemaPath1, 'utf-8')}\n${readFileSync(schemaPath2, 'utf-8')}\n${readFileSync(schemaPath3, 'utf-8')}\n${readFileSync(schemaPath4, 'utf-8')}`
+  const schemaPath5 = resolve(__dirname, '../migrations/0005_ai_usage_telemetry.sql')
+  const schemaSql = `${readFileSync(schemaPath1, 'utf-8')}\n${readFileSync(schemaPath2, 'utf-8')}\n${readFileSync(schemaPath3, 'utf-8')}\n${readFileSync(schemaPath4, 'utf-8')}\n${readFileSync(schemaPath5, 'utf-8')}`
   const db = new MockD1Database(schemaSql)
   const r2 = new MockR2Bucket()
   const env: Env = {
@@ -1921,5 +1925,387 @@ describe('MirrorBrief Worker Crypto & API Suite', () => {
     expect(corp.reasonTag).not.toBe('地缘与军事突发')
     const cease = inferSeverityAndTag('美俄代表日内瓦签署和平协议', '双方正式达成停火', true)
     expect(cease.reasonTag).toBe('地缘与军事突发')
+  })
+
+  it('clusters cross-source and same-source wire duplicates into multi_source items and publishes edge R2 snapshot', async () => {
+    const merged = mergeWireClusterItems([
+      {
+        id: 'air1',
+        title: '墨西哥总统辛鲍姆表示，正寻求与美国空域管理部门会面，讨论SpaceX使用墨西哥空域的许可事宜。',
+        source_name: '新浪财经 7×24',
+        url: 'https://finance.sina.com.cn/7x24/air1',
+        published_at: '2026-11-26T22:30:00+08:00',
+        severity_tier: 'B',
+        importance: 'normal',
+      },
+      {
+        id: 'bank_wscn',
+        title: '四大商业银行已与上市公司签订股票回购增持贷款合同超6000亿元',
+        source_name: '华尔街见闻 7×24',
+        url: 'https://wallstreetcn.com/livenews/bank1',
+        published_at: '2026-11-26T22:29:00+08:00',
+        severity_tier: 'A',
+        heavy_reason_tag: '元首/央行表态',
+        importance: 'high',
+      },
+      {
+        id: 'bank_sina',
+        title: '四大商业银行已与上市公司签订股票回购增持贷款合同超6000亿元',
+        source_name: '新浪财经 7×24',
+        url: 'https://finance.sina.com.cn/7x24/bank2',
+        published_at: '2026-11-26T22:28:00+08:00',
+        severity_tier: 'A',
+        heavy_reason_tag: '元首/央行表态',
+        importance: 'high',
+      },
+      {
+        id: 'emb_wscn',
+        title: '墨西哥总统辛鲍姆表示，他与美国大使会谈，讨论SpaceX项目。',
+        source_name: '华尔街见闻 7×24',
+        url: 'https://wallstreetcn.com/livenews/emb1',
+        published_at: '2026-11-26T22:25:00+08:00',
+      },
+      {
+        id: 'emb_sina',
+        title: '墨西哥总统辛鲍姆表示，已就SpaceX事宜与美国大使馆会面。',
+        source_name: '新浪财经 7×24',
+        url: 'https://finance.sina.com.cn/7x24/emb2',
+        published_at: '2026-11-26T22:25:00+08:00',
+      },
+      {
+        id: 'trump_1',
+        title: '特朗普：美国的军火库很快就会装满',
+        source_name: '新浪财经 7×24',
+        url: 'https://finance.sina.com.cn/7x24/tr1',
+        published_at: '2026-11-26T22:22:00+08:00',
+      },
+      {
+        id: 'trump_2',
+        title: '特朗普：美国的军火库很快就会装满。',
+        source_name: '新浪财经 7×24',
+        url: 'https://finance.sina.com.cn/7x24/tr2',
+        published_at: '2026-11-26T22:20:00+08:00',
+      },
+      {
+        id: 'meloni_wscn',
+        title: '意大利总理梅洛尼：我认为，（美国+以色列发动的）这场战争不应也不能蔓延至地中海。',
+        source_name: '华尔街见闻 7×24',
+        url: 'https://wallstreetcn.com/livenews/mel1',
+        published_at: '2026-11-26T22:17:00+08:00',
+      },
+      {
+        id: 'meloni_sina',
+        title: '意大利总理梅洛尼：我认为，这场战争不应也不能蔓延至地中海。',
+        source_name: '新浪财经 7×24',
+        url: 'https://finance.sina.com.cn/7x24/mel2',
+        published_at: '2026-11-26T22:16:00+08:00',
+      },
+      {
+        id: 'kuwait_wscn',
+        title: '科威特军方证实两名意大利公民在袭击中丧生。（彭博）',
+        source_name: '华尔街见闻 7×24',
+        url: 'https://wallstreetcn.com/livenews/kw1',
+        published_at: '2026-11-26T22:17:00+08:00',
+      },
+      {
+        id: 'kuwait_sina',
+        title: '科威特军方证实两名意大利公民在袭击中身亡。',
+        source_name: '新浪财经 7×24',
+        url: 'https://finance.sina.com.cn/7x24/kw2',
+        published_at: '2026-11-26T22:14:00+08:00',
+      },
+    ])
+
+    // 11 rows compress cleanly to 6 unique stories (airspace distinct; 4 cross-source multi_source + 1 same-source single_source)
+    expect(merged).toHaveLength(6)
+    const bankCluster = merged.find((m) => m.title.includes('6000亿元'))
+    expect(bankCluster?.source_count).toBe(2)
+    expect(bankCluster?.evidence_status).toBe('multi_source')
+    expect(bankCluster?.merged_sources.map((s) => s.source_name)).toEqual(['华尔街见闻 7×24', '新浪财经 7×24'])
+
+    const embCluster = merged.find((m) => m.title.includes('大使'))
+    expect(embCluster?.source_count).toBe(2)
+    expect(embCluster?.evidence_status).toBe('multi_source')
+    expect(merged.some((m) => m.title.includes('空域管理部门'))).toBe(true)
+
+    const trumpCluster = merged.find((m) => m.title.includes('军火库'))
+    expect(trumpCluster?.source_count).toBe(1)
+    expect(trumpCluster?.merged_count).toBe(2)
+    expect(trumpCluster?.evidence_status).toBe('single_source')
+
+    expect(merged.find((m) => m.title.includes('地中海'))?.source_count).toBe(2)
+    expect(merged.find((m) => m.title.includes('科威特'))?.source_count).toBe(2)
+
+    // Verify runWireCron fetches, inserts both sources into D1, deduplicates on read, and writes live_wire_edge.json to R2
+    const { env, r2 } = createTestEnv({ SITE_ACCESS_MODE: 'public' })
+    const epochSec = Math.floor(Date.now() / 1000) - 60
+    const cstIsoNow = new Date(epochSec * 1000 + 8 * 3600_000).toISOString().slice(0, 19).replace('T', ' ')
+
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async (input: RequestInfo | URL) => {
+        const url = String(input)
+        if (url.includes('global-channel')) {
+          return new Response(
+            JSON.stringify({
+              data: {
+                items: [
+                  {
+                    id: 1001,
+                    title: '四大商业银行已与上市公司签订股票回购增持贷款合同超6000亿元',
+                    content_text: '四大商业银行已与上市公司签订股票回购增持贷款合同超6000亿元。',
+                    display_time: epochSec,
+                    score: 2,
+                    uri: 'https://wallstreetcn.com/livenews/wscn-bank',
+                  },
+                ],
+              },
+            }),
+            { status: 200 },
+          )
+        }
+        if (url.includes('tech-channel')) {
+          return new Response(JSON.stringify({ data: { items: [] } }), { status: 200 })
+        }
+        if (url.includes('zhibo.sina.com.cn')) {
+          return new Response(
+            JSON.stringify({
+              result: {
+                data: {
+                  feed: {
+                    list: [
+                      {
+                        id: 2001,
+                        rich_text: '【四大商业银行已与上市公司签订股票回购增持贷款合同超6000亿元】各大行推进落地。',
+                        create_time: cstIsoNow,
+                        is_focus: 1,
+                        docurl: 'https://finance.sina.com.cn/7x24/sina-bank',
+                      },
+                    ],
+                  },
+                },
+              },
+            }),
+            { status: 200 },
+          )
+        }
+        return new Response('{}', { status: 404 })
+      }),
+    )
+
+    try {
+      const cronRes = await runWireCron(env)
+      expect(cronRes.inserted).toBe(2)
+      const edgeRaw = await r2.get(WIRE_R2_EDGE_KEY)
+      expect(edgeRaw).not.toBeNull()
+      const edgeDoc = (await edgeRaw!.json()) as {
+        status: string
+        items: Array<{ title: string; source_count: number; evidence_status: string }>
+      }
+      expect(edgeDoc.status).toBe('ok')
+      expect(edgeDoc.items).toHaveLength(1)
+      expect(edgeDoc.items[0].source_count).toBe(2)
+      expect(edgeDoc.items[0].evidence_status).toBe('multi_source')
+      expect(r2.metadata.get(WIRE_R2_EDGE_KEY)).toMatchObject({
+        httpMetadata: {
+          contentType: 'application/json; charset=utf-8',
+          cacheControl: 'public, max-age=30',
+        },
+      })
+
+      const docLatest = (await getWireLatestDoc(env)) as { items: Array<{ source_count: number }> }
+      expect(docLatest.items).toHaveLength(1)
+      expect(docLatest.items[0].source_count).toBe(2)
+
+      // Even if R2 put throws transiently, runWireCron still succeeds
+      const origPut = r2.put.bind(r2)
+      r2.put = () => Promise.reject(new Error('R2 temporarily unavailable'))
+      await expect(runWireCron(env)).resolves.toMatchObject({ inserted: 2 })
+      r2.put = origPut
+    } finally {
+      vi.unstubAllGlobals()
+    }
+  })
+
+  it('tracks 24h AI tokens & 13-key rotation with fixed 21:00 CST daily settlement and bootstrap ledger support', async () => {
+    // 1. Verify exact 21:00 CST settlement boundaries before & after 21:00
+    const before21h = Date.parse('2026-11-26T20:30:00+08:00')
+    const wBefore = resolve21hSettlementWindow('settled_21h', undefined, before21h)
+    expect(wBefore.settlement_day).toBe('2026-11-25')
+    expect(wBefore.start_cst).toBe('2026-11-24T21:00:00+08:00')
+    expect(wBefore.end_cst).toBe('2026-11-25T21:00:00+08:00')
+
+    const after21h = Date.parse('2026-11-26T21:15:00+08:00')
+    const wAfter = resolve21hSettlementWindow('settled_21h', undefined, after21h)
+    expect(wAfter.settlement_day).toBe('2026-11-26')
+    expect(wAfter.start_cst).toBe('2026-11-25T21:00:00+08:00')
+    expect(wAfter.end_cst).toBe('2026-11-26T21:00:00+08:00')
+
+    const { env, r2 } = createTestEnv({
+      SITE_ACCESS_MODE: 'public',
+      GEMINI_API_KEY: 'worker-gemini-secret-test',
+      GEMINI_MODEL: 'gemini-2.5-flash',
+    })
+    const app = createWorkerApp()
+
+    const adminLogin = await app.request(
+      'https://mirrorinfo.xyz/api/auth/login',
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username: 'admin', password: 'AdminPass123!' }),
+      },
+      env,
+    )
+    const { token: adminToken } = (await adminLogin.json()) as { token: string }
+
+    // 2. Day-1 Bootstrap check: only gemini_quota_state.json exists on R2 (no ai_usage_telemetry.json yet)
+    await r2.put('data/gemini_quota_state.json', {
+      schema_version: '4.2',
+      date_utc: '2026-11-26',
+      updated_at: new Date().toISOString(),
+      resolved_models: { 'gemini-3-flash': 'gemini-3-flash-preview' },
+      keys: {
+        KEY_TECH: {
+          slot: 'KEY_TECH',
+          fingerprint: '09c80db8',
+          daily_calls: 7,
+          daily_tokens: 0,
+          model_daily_calls: { 'gemini-3.6-flash': 2, 'gemini-3.5-flash-lite': 5 },
+          last_success_at: new Date().toISOString(),
+        },
+      },
+    })
+
+    const bootRes = await app.request(
+      'https://mirrorinfo.xyz/api/admin/ai-usage?mode=settled_21h',
+      { headers: { Authorization: `Bearer ${adminToken}` } },
+      env,
+    )
+    expect(bootRes.status).toBe(200)
+    const bootJson = (await bootRes.json()) as {
+      telemetry_status: { bootstrap_from_quota_ledger: boolean }
+      summary: { total_calls: number }
+      keys: Array<{ slot: string; window_calls: number }>
+      model_routing_guide: { modules: Array<unknown>; switch_rules: Array<unknown> }
+    }
+    expect(bootJson.telemetry_status.bootstrap_from_quota_ledger).toBe(true)
+    expect(bootJson.summary.total_calls).toBe(7)
+    expect(bootJson.keys.find((k) => k.slot === 'KEY_TECH')?.window_calls).toBe(7)
+    expect(bootJson.model_routing_guide.modules.length).toBeGreaterThanOrEqual(6)
+    expect(bootJson.model_routing_guide.switch_rules.length).toBeGreaterThanOrEqual(5)
+
+    // 3. Seed R2 ai_usage_telemetry.json inside latest settled window + hit /api/qa/ask with mocked Gemini usageMetadata
+    await r2.put('analysis_finance.json', {
+      events: [
+        {
+          event_id: 'ev_qa_1',
+          title: '美联储维持利率不变',
+          fact_summary: '美联储FOMC宣布维持基准利率。',
+          ai_analysis: '关注后续点阵图变化。',
+          evidence_status: 'official_confirmed',
+          sources: [{ source_name: '华尔街见闻', published_at: '2026-11-26T08:00:00+08:00', url: 'https://wscn.com/1' }],
+        },
+      ],
+    })
+    const settledNowWin = resolve21hSettlementWindow('settled_21h')
+    const sampleEvMs = settledNowWin.start_ms + 3 * 3600_000
+    await r2.put('data/ai_usage_telemetry.json', {
+      schema_version: '1.0',
+      updated_at: new Date().toISOString(),
+      events: [
+        {
+          id: 'pl_ev_1',
+          ts_utc: new Date(sampleEvMs).toISOString(),
+          ts_cst: new Date(sampleEvMs + 8 * 3600_000).toISOString().slice(0, 19) + '+08:00',
+          ts_ms: sampleEvMs,
+          source: 'pipeline',
+          scope: 'briefing:finance',
+          tier: 'tier1',
+          primary_model: 'gemini-4-hydrogen',
+          model: 'gemini-3.8-flash',
+          model_actual: 'gemini-3.8-flash',
+          is_fallback: true,
+          key_slot: 'KEY_FINANCE',
+          key_fingerprint: 'fin12345',
+          ok: true,
+          error_code: null,
+          prompt_tokens: 1500,
+          output_tokens: 500,
+          total_tokens: 2000,
+          token_source: 'exact',
+          latency_ms: 820,
+        },
+      ],
+    })
+
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () =>
+        new Response(
+          JSON.stringify({
+            candidates: [{ content: { parts: [{ text: '美联储维持利率不变，市场关注后续表态。' }] } }],
+            usageMetadata: { promptTokenCount: 210, candidatesTokenCount: 90, totalTokenCount: 300 },
+          }),
+          { status: 200, headers: { 'Content-Type': 'application/json' } },
+        ),
+      ),
+    )
+
+    try {
+      const qaResp = await app.request(
+        'https://mirrorinfo.xyz/api/qa/ask',
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${adminToken}` },
+          body: JSON.stringify({ question: '美联储利率决议情况如何？', lang: 'zh' }),
+        },
+        env,
+      )
+      expect(qaResp.status).toBe(200)
+    } finally {
+      vi.unstubAllGlobals()
+    }
+
+    // Freeze latest 21:00 settlement snapshot & verify settled_21h + rolling_24h totals
+    const freezeRes = await app.request(
+      'https://mirrorinfo.xyz/api/admin/ai-usage/freeze-now',
+      { method: 'POST', headers: { Authorization: `Bearer ${adminToken}` } },
+      env,
+    )
+    expect(freezeRes.status).toBe(200)
+    const frozenBody = (await freezeRes.json()) as {
+      ok: boolean
+      frozen_day: string
+      report: {
+        window: { is_frozen: boolean; settlement_day: string }
+        summary: { total_tokens: number; fallback_calls: number; total_calls: number }
+        hourly: Array<{ total_tokens: number; hour: number }>
+        models: Array<{ model: string; total_tokens: number; fallback_calls: number }>
+      }
+    }
+    expect(frozenBody.ok).toBe(true)
+    expect(frozenBody.report.window.is_frozen).toBe(true)
+    expect(frozenBody.report.summary.total_tokens).toBe(2000)
+    expect(frozenBody.report.summary.fallback_calls).toBe(1)
+    expect(frozenBody.report.hourly).toHaveLength(24)
+    expect(frozenBody.report.hourly[0].hour).toBe(21)
+    expect(frozenBody.report.models.find((m) => m.model === 'gemini-3.8-flash')?.fallback_calls).toBe(1)
+
+    await ensureLatest21hAiSnapshot(env, Date.now(), false)
+
+    // Rolling 24h includes BOTH the R2 pipeline event (2000) and the just-executed Worker QA event (300)
+    const rollRes = await app.request(
+      'https://mirrorinfo.xyz/api/admin/ai-usage?mode=rolling_24h',
+      { headers: { Authorization: `Bearer ${adminToken}` } },
+      env,
+    )
+    expect(rollRes.status).toBe(200)
+    const rollJson = (await rollRes.json()) as {
+      summary: { total_tokens: number; worker_calls: number; pipeline_calls: number }
+    }
+    expect(rollJson.summary.total_tokens).toBe(2300)
+    expect(rollJson.summary.worker_calls).toBe(1)
+    expect(rollJson.summary.pipeline_calls).toBe(1)
   })
 })

@@ -79,6 +79,8 @@ jobs:
           git config user.name 'Weekly Digest Bot'
           git config user.email 'weekly@bot.com'
           git add -f data/weekly_digest.json data/weekly_digests_index.json data/weekly_digests/
+          if [ -f data/gemini_quota_state.json ]; then git add -f data/gemini_quota_state.json; fi
+          if [ -f data/ai_usage_telemetry.json ]; then git add -f data/ai_usage_telemetry.json; fi
           if git diff --cached --quiet; then
             echo "No weekly digest changes to commit."
             exit 0

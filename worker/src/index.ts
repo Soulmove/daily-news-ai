@@ -1,5 +1,6 @@
 import { Hono } from 'hono'
 import { cors } from 'hono/cors'
+import { cleanupOldAiUsageEvents, ensureLatest21hAiSnapshot } from './aiTelemetry'
 import { attachContextMiddleware } from './authMiddleware'
 import { ensureBootstrapAdmin } from './db'
 import { cleanupOldPresenceAndTraffic } from './presence'
@@ -118,12 +119,19 @@ export default {
           console.error('runPredictionArenaCron failed:', err)
         }
         try {
-          const utcMin = new Date(_controller?.scheduledTime || Date.now()).getUTCMinutes()
-          if (utcMin % 30 < 2) {
+          const schedMs = _controller?.scheduledTime || Date.now()
+          const cstDt = new Date(schedMs + 8 * 3600_000)
+          const cstHour = cstDt.getUTCHours()
+          const cstMin = cstDt.getUTCMinutes()
+          if (cstHour === 21 && cstMin <= 35 && cstMin % 10 < 2) {
+            await ensureLatest21hAiSnapshot(env, schedMs, false)
+          }
+          if (cstMin % 30 < 2) {
             await cleanupOldPresenceAndTraffic(env.DB)
+            await cleanupOldAiUsageEvents(env.DB)
           }
         } catch (err) {
-          console.error('cleanupOldPresenceAndTraffic failed:', err)
+          console.error('periodic telemetry maintenance failed:', err)
         }
       })(),
     )

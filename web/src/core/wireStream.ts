@@ -21,7 +21,12 @@ export interface LiveWireStreamOptions {
   sseUrl?: string
   pollUrl?: string
   aiPollUrl?: string
+  directWireUrl?: string
+  directAiUrl?: string
+  shouldPreferDirectR2?: () => boolean
+  allowStaticFallback?: () => boolean
   pollIntervalMs?: number
+  aiPollIntervalMs?: number
   enableSse?: boolean
 }
 
@@ -31,6 +36,7 @@ export function createLiveWireController(opts: LiveWireStreamOptions): LiveWireS
   const pollUrl = opts.pollUrl ?? `${apiBase}/api/wire/latest`
   const aiPollUrl = opts.aiPollUrl ?? `${apiBase}/api/ai-progress/latest`
   const pollIntervalMs = Math.max(15_000, opts.pollIntervalMs ?? 45_000)
+  const aiPollIntervalMs = Math.max(30_000, opts.aiPollIntervalMs ?? 180_000)
   const enableSse = opts.enableSse ?? false
 
   let stopped = false
@@ -45,6 +51,7 @@ export function createLiveWireController(opts: LiveWireStreamOptions): LiveWireS
 
   let hasSeededAi = false
   let lastAiSig = ''
+  let lastAiPollMs = 0
   const knownAiIds = new Set<string>()
 
   function setMode(next: WireTransportMode) {
@@ -102,6 +109,9 @@ export function createLiveWireController(opts: LiveWireStreamOptions): LiveWireS
     }
     for (const id of incomingIds) knownAiIds.add(id)
     hasSeededAi = true
+    if (fromSeed && doc.timeline.length > 0) {
+      lastAiPollMs = Date.now()
+    }
 
     const sig = computeAiSig(doc)
     if (!fromSeed && sig !== lastAiSig) {
@@ -109,6 +119,21 @@ export function createLiveWireController(opts: LiveWireStreamOptions): LiveWireS
       opts.onAiUpdate?.(doc, newIds)
     } else if (fromSeed) {
       lastAiSig = sig
+    }
+  }
+
+  async function fetchDirectR2Json<T>(url: string): Promise<T | null> {
+    if (typeof fetch === 'undefined') return null
+    try {
+      // Never attach Authorization or random query strings to public R2 so CORS stays simple and ETag 304 works natively
+      const resp = await fetch(url, {
+        cache: 'no-cache',
+        headers: { Accept: 'application/json' },
+      })
+      if (!resp.ok) return null
+      return (await resp.json()) as T
+    } catch {
+      return null
     }
   }
 
@@ -129,36 +154,65 @@ export function createLiveWireController(opts: LiveWireStreamOptions): LiveWireS
     }
   }
 
+  function isValidWireDoc(doc: LiveWireDoc | null | undefined): doc is LiveWireDoc {
+    return Boolean(doc && Array.isArray(doc.items) && doc.items.length > 0 && doc.status !== 'empty')
+  }
+
   async function pollOnce() {
     if (stopped) return
     if (typeof document !== 'undefined' && document.hidden) return
 
-    let wireDoc = await fetchJsonNoStore<LiveWireDoc>(pollUrl)
-    if ((!wireDoc || !Array.isArray(wireDoc.items)) && opts.fetchStaticFallback) {
+    const preferDirectR2 = Boolean(opts.shouldPreferDirectR2?.())
+    const allowFallback = opts.allowStaticFallback ? opts.allowStaticFallback() : true
+
+    let wireDoc: LiveWireDoc | null = null
+    if (preferDirectR2 && opts.directWireUrl) {
+      wireDoc = await fetchDirectR2Json<LiveWireDoc>(opts.directWireUrl)
+      if (!isValidWireDoc(wireDoc)) {
+        wireDoc = await fetchJsonNoStore<LiveWireDoc>(pollUrl)
+      }
+    } else {
+      wireDoc = await fetchJsonNoStore<LiveWireDoc>(pollUrl)
+    }
+
+    if ((!wireDoc || !Array.isArray(wireDoc.items) || wireDoc.items.length === 0) && allowFallback && opts.fetchStaticFallback) {
       try {
         wireDoc = await opts.fetchStaticFallback()
       } catch {
         wireDoc = null
       }
     }
-    if (!wireDoc || !Array.isArray(wireDoc.items)) {
+    if ((!wireDoc || !Array.isArray(wireDoc.items) || wireDoc.items.length === 0) && allowFallback) {
       wireDoc = await fetchJsonNoStore<LiveWireDoc>(resolveDataUrl('data/live_wire.json', true))
     }
     if (!stopped && wireDoc) applyWireDoc(wireDoc, false)
 
     if (!stopped && opts.onAiUpdate) {
-      let aiDoc = await fetchJsonNoStore<AiProgressDoc>(aiPollUrl)
-      if ((!aiDoc || !Array.isArray(aiDoc.timeline)) && opts.fetchAiFallback) {
-        try {
-          aiDoc = await opts.fetchAiFallback()
-        } catch {
-          aiDoc = null
+      const now = Date.now()
+      const aiDue = lastAiPollMs === 0 || now - lastAiPollMs >= aiPollIntervalMs
+      if (aiDue) {
+        lastAiPollMs = now
+        let aiDoc: AiProgressDoc | null = null
+        if (preferDirectR2 && opts.directAiUrl) {
+          aiDoc = await fetchDirectR2Json<AiProgressDoc>(opts.directAiUrl)
+          if (!aiDoc || !Array.isArray(aiDoc.timeline)) {
+            aiDoc = await fetchJsonNoStore<AiProgressDoc>(aiPollUrl)
+          }
+        } else {
+          aiDoc = await fetchJsonNoStore<AiProgressDoc>(aiPollUrl)
         }
+        if ((!aiDoc || !Array.isArray(aiDoc.timeline)) && allowFallback && opts.fetchAiFallback) {
+          try {
+            aiDoc = await opts.fetchAiFallback()
+          } catch {
+            aiDoc = null
+          }
+        }
+        if ((!aiDoc || !Array.isArray(aiDoc.timeline)) && allowFallback) {
+          aiDoc = await fetchJsonNoStore<AiProgressDoc>(resolveDataUrl('data/ai_progress.json', true))
+        }
+        if (!stopped && aiDoc) applyAiDoc(aiDoc, false)
       }
-      if (!aiDoc || !Array.isArray(aiDoc.timeline)) {
-        aiDoc = await fetchJsonNoStore<AiProgressDoc>(resolveDataUrl('data/ai_progress.json', true))
-      }
-      if (!stopped && aiDoc) applyAiDoc(aiDoc, false)
     }
   }
 

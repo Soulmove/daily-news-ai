@@ -1,3 +1,5 @@
+import { recordWorkerAiUsageEvent } from './aiTelemetry'
+import { sha256Hex } from './crypto'
 import { getSiteSettings } from './db'
 import { checkAndHitRateLimit } from './rateLimit'
 import type { Env } from './types'
@@ -203,8 +205,12 @@ export async function handleQaAsk(
 
   // Server-controlled Gemini REST API synthesis when GEMINI_API_KEY is configured
   const geminiKey = (env.GEMINI_API_KEY || '').trim()
+  const primaryModel = (env.GEMINI_MODEL || 'gemini-2.5-flash').trim() || 'gemini-2.5-flash'
+  const keyFp = geminiKey ? (await sha256Hex(geminiKey)).slice(0, 8) : ''
+  let geminiFallbackErrCode: string | null = null
+
   if (geminiKey && topEvs.length > 0) {
-    const modelName = (env.GEMINI_MODEL || 'gemini-2.5-flash').trim()
+    const modelName = primaryModel
     const ctxLines = topEvs.map((ev, i) => {
       const srcs = (Array.isArray(ev.sources) ? (ev.sources as Array<Record<string, unknown>>) : [])
         .slice(0, 2)
@@ -224,6 +230,7 @@ export async function handleQaAsk(
     const sysLang = lang === 'en' ? 'English' : '简体中文'
     const prompt = `You are MirrorBrief's strict evidence-grounded research assistant. Answer in ${sysLang}.\nCRITICAL: Cite only facts/dates/numbers present in the Evidence below; state explicitly if something is missing.\nConversation context:\n${histTxt}\n\nQuestion: ${qRaw}\n\nEvidence:\n${ctxLines.join('\n\n')}`
 
+    const t0 = Date.now()
     try {
       const controller = new AbortController()
       const timer = setTimeout(() => controller.abort(), 12_000)
@@ -240,14 +247,53 @@ export async function handleQaAsk(
             }),
           },
         )
+        const latencyMs = Math.max(0, Date.now() - t0)
         if (resp.ok) {
           const data = (await resp.json()) as {
             candidates?: Array<{ content?: { parts?: Array<{ text?: string }> } }>
+            usageMetadata?: {
+              promptTokenCount?: number
+              candidatesTokenCount?: number
+              thoughtsTokenCount?: number
+              totalTokenCount?: number
+            }
           }
           const ansTxt = cleanQaText(
             data.candidates?.[0]?.content?.parts?.map((p) => p.text || '').join('\n') || '',
           )
           if (ansTxt) {
+            const um = data.usageMetadata
+            const rawPromptTok = Number(um?.promptTokenCount || 0)
+            const rawCandTok = Number(um?.candidatesTokenCount || 0) + Number(um?.thoughtsTokenCount || 0)
+            const rawTotalTok = Number(um?.totalTokenCount || 0)
+            const hasExact = rawTotalTok > 0 || rawPromptTok > 0 || rawCandTok > 0
+            const promptTok = hasExact ? rawPromptTok : Math.max(1, Math.floor(prompt.length / 3))
+            const outTok = hasExact
+              ? rawCandTok > 0
+                ? rawCandTok
+                : Math.max(0, rawTotalTok - rawPromptTok)
+              : Math.max(1, Math.floor(ansTxt.length / 3))
+            const totalTok = hasExact ? (rawTotalTok > 0 ? rawTotalTok : promptTok + outTok) : promptTok + outTok
+            try {
+              await recordWorkerAiUsageEvent(env.DB, {
+                id: `wk_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
+                scope: 'worker_qa',
+                tier: 'tier1',
+                primaryModel: modelName,
+                modelActual: modelName,
+                isFallback: false,
+                keySlot: 'WORKER_GEMINI_API_KEY',
+                keyFingerprint: keyFp,
+                ok: true,
+                promptTokens: promptTok,
+                outputTokens: outTok,
+                totalTokens: totalTok,
+                tokenSource: hasExact ? 'exact' : 'estimated',
+                latencyMs,
+              })
+            } catch {
+              // Telemetry failure must never break user QA response
+            }
             return {
               status: 200,
               payload: {
@@ -266,12 +312,57 @@ export async function handleQaAsk(
               },
             }
           }
+          geminiFallbackErrCode = 'EMPTY_RESPONSE'
+        } else {
+          geminiFallbackErrCode = resp.status === 429 ? 'RATE_LIMIT_429' : `HTTP_${resp.status}`
+        }
+        try {
+          await recordWorkerAiUsageEvent(env.DB, {
+            id: `wk_err_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
+            scope: 'worker_qa',
+            tier: 'tier1',
+            primaryModel: modelName,
+            modelActual: modelName,
+            isFallback: false,
+            keySlot: 'WORKER_GEMINI_API_KEY',
+            keyFingerprint: keyFp,
+            ok: false,
+            errorCode: geminiFallbackErrCode,
+            promptTokens: 0,
+            outputTokens: 0,
+            totalTokens: 0,
+            tokenSource: 'none',
+            latencyMs,
+          })
+        } catch {
+          // Non-fatal
         }
       } finally {
         clearTimeout(timer)
       }
     } catch {
-      // Fall through to deterministic synthesis
+      geminiFallbackErrCode = 'NETWORK_OR_TIMEOUT'
+      try {
+        await recordWorkerAiUsageEvent(env.DB, {
+          id: `wk_err_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
+          scope: 'worker_qa',
+          tier: 'tier1',
+          primaryModel: modelName,
+          modelActual: modelName,
+          isFallback: false,
+          keySlot: 'WORKER_GEMINI_API_KEY',
+          keyFingerprint: keyFp,
+          ok: false,
+          errorCode: geminiFallbackErrCode,
+          promptTokens: 0,
+          outputTokens: 0,
+          totalTokens: 0,
+          tokenSource: 'none',
+          latencyMs: Math.max(0, Date.now() - t0),
+        })
+      } catch {
+        // Non-fatal
+      }
     }
   }
 
@@ -303,6 +394,28 @@ export async function handleQaAsk(
       lines.push('\n**二、市场传导参考**')
       lines.push(`- 市场方向：\`${cleanQaText(impHit.polarity_label || impHit.polarity || '中性观察')}\` — ${cleanQaText(impHit.one_liner || impHit.reasoning)}`)
     }
+  }
+
+  try {
+    await recordWorkerAiUsageEvent(env.DB, {
+      id: `wk_rag_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
+      scope: 'worker_qa',
+      tier: 'edge',
+      primaryModel: geminiKey ? primaryModel : 'worker-grounded-rag',
+      modelActual: 'worker-grounded-rag',
+      isFallback: Boolean(geminiKey),
+      keySlot: geminiKey ? 'WORKER_GEMINI_API_KEY' : 'EDGE_NO_KEY',
+      keyFingerprint: keyFp,
+      ok: true,
+      errorCode: geminiFallbackErrCode,
+      promptTokens: 0,
+      outputTokens: 0,
+      totalTokens: 0,
+      tokenSource: 'none',
+      latencyMs: 0,
+    })
+  } catch {
+    // Non-fatal
   }
 
   return {

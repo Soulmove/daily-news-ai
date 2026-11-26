@@ -104,9 +104,12 @@ TIER2_HIGH_THROUGHPUT_MODELS: Tuple[str, ...] = (
 _POOL_LOCK = threading.RLock()
 _SCOPE_CURSORS: Dict[str, int] = {}
 _MEMORY_STATE: Dict[str, Dict[str, Any]] = {}
+_TELEMETRY_MEMORY: Dict[str, Dict[str, Any]] = {}
 _LAST_CALL_MONO: Dict[Tuple[str, str, str], float] = {}
 _RESOLVED_MODELS_CACHE: Dict[str, Tuple[float, Dict[str, str]]] = {}
 _SKIP_NON_TEXT_RE = re.compile(r"(?:embedding|imagen|veo|tts|audio|robotics|aqa|lyria|gemma-3n-e)", re.I)
+AI_USAGE_TELEMETRY_FILENAME = "ai_usage_telemetry.json"
+_SHANGHAI_TZ = timezone(timedelta(hours=8))
 
 
 @dataclass(frozen=True)
@@ -129,6 +132,11 @@ class GeminiCallResult:
     quota_exhausted: bool = False
     degraded: bool = False
     error_message: Optional[str] = None
+    prompt_tokens: int = 0
+    output_tokens: int = 0
+    total_tokens: int = 0
+    token_source: str = "none"
+    primary_model: Optional[str] = None
 
 
 def _utc_now() -> datetime:
@@ -208,12 +216,17 @@ def _load_quota_ledger(base_dir: Path | str | None = ".") -> Dict[str, Any]:
         if rec_copy.get("date_utc") != today:
             rec_copy["date_utc"] = today
             rec_copy["daily_calls"] = 0
+            rec_copy["daily_tokens"] = 0
             rec_copy["model_daily_calls"] = {}
+            rec_copy["model_daily_tokens"] = {}
             rec_copy["exhausted_until"] = None
             rec_copy["model_exhausted_until"] = {}
         else:
             if not isinstance(rec_copy.get("model_daily_calls"), dict):
                 rec_copy["model_daily_calls"] = {}
+            if not isinstance(rec_copy.get("model_daily_tokens"), dict):
+                rec_copy["model_daily_tokens"] = {}
+            rec_copy["daily_tokens"] = int(rec_copy.get("daily_tokens") or 0)
             ex_dt = _parse_utc(rec_copy.get("exhausted_until"))
             if ex_dt and ex_dt <= now:
                 rec_copy["exhausted_until"] = None
@@ -396,6 +409,86 @@ def _save_quota_ledger(ledger: Dict[str, Any], base_dir: Path | str | None = "."
             pass
 
 
+def _telemetry_file_path(base_dir: Path | str | None) -> Optional[Path]:
+    if base_dir is None:
+        return None
+    return Path(base_dir) / "data" / AI_USAGE_TELEMETRY_FILENAME
+
+
+def _read_attr_or_key(obj: Any, *names: str) -> int:
+    for name in names:
+        raw = obj.get(name) if isinstance(obj, dict) else getattr(obj, name, None)
+        if raw is None:
+            continue
+        try:
+            val = int(raw)
+            if val > 0:
+                return val
+        except (TypeError, ValueError):
+            continue
+    return 0
+
+
+def _extract_usage_tokens(resp: Any, prompt: str, text: str) -> Tuple[int, int, int, str]:
+    usage = (
+        (resp.get("usage_metadata") or resp.get("usageMetadata"))
+        if isinstance(resp, dict)
+        else (getattr(resp, "usage_metadata", None) or getattr(resp, "usageMetadata", None))
+    )
+    if usage is not None:
+        p_tok = _read_attr_or_key(usage, "prompt_token_count", "promptTokenCount")
+        cand_tok = _read_attr_or_key(usage, "candidates_token_count", "candidatesTokenCount")
+        th_tok = _read_attr_or_key(usage, "thoughts_token_count", "thoughtsTokenCount")
+        tot_tok = _read_attr_or_key(usage, "total_token_count", "totalTokenCount")
+        out_tok = cand_tok + th_tok
+        if tot_tok <= 0 and (p_tok > 0 or out_tok > 0):
+            tot_tok = p_tok + out_tok
+        elif tot_tok > 0 and out_tok <= 0 and p_tok > 0 and tot_tok >= p_tok:
+            out_tok = tot_tok - p_tok
+        if tot_tok > 0:
+            return p_tok, out_tok, tot_tok, "exact"
+
+    est_p = max(1, len(prompt or "") // 3) if prompt else 0
+    est_o = max(1, len(text or "") // 3) if (text and text.strip()) else 0
+    est_t = est_p + est_o
+    return est_p, est_o, est_t, ("estimated" if est_t > 0 else "none")
+
+
+def _record_telemetry_event(base_dir: Path | str | None, event: Dict[str, Any]) -> None:
+    """Append AI call telemetry event (zero secrets) to data/ai_usage_telemetry.json with 16-day pruning."""
+    path = _telemetry_file_path(base_dir)
+    mem_key = str(path.resolve()) if path is not None else "__memory__"
+    raw: Any = None
+    if path is not None and path.exists():
+        try:
+            raw = load_json_if_exists(path, default={})
+        except Exception:
+            raw = None
+    if not isinstance(raw, dict):
+        raw = _TELEMETRY_MEMORY.get(mem_key) or {}
+
+    events_in = raw.get("events") if isinstance(raw.get("events"), list) else []
+    now_utc = _utc_now()
+    cutoff_ms = int(now_utc.timestamp() * 1000) - 16 * 86_400_000
+    events = [ev for ev in events_in if isinstance(ev, dict) and int(ev.get("ts_ms") or 0) >= cutoff_ms]
+    events.append(event)
+    if len(events) > 6000:
+        events = events[-6000:]
+
+    doc = {
+        "schema_version": "1.0",
+        "updated_at": _iso_utc(now_utc),
+        "updated_at_cst": now_utc.astimezone(_SHANGHAI_TZ).strftime("%Y-%m-%dT%H:%M:%S+08:00"),
+        "events": events,
+    }
+    _TELEMETRY_MEMORY[mem_key] = doc
+    if path is not None:
+        try:
+            atomic_write_json(path, doc)
+        except Exception:
+            pass
+
+
 def _ensure_slot_record(ledger: Dict[str, Any], slot: KeySlot) -> Dict[str, Any]:
     keys_map = ledger.setdefault("keys", {})
     rec = keys_map.get(slot.slot)
@@ -405,7 +498,9 @@ def _ensure_slot_record(ledger: Dict[str, Any], slot: KeySlot) -> Dict[str, Any]
             "fingerprint": slot.fingerprint,
             "date_utc": _utc_date_str(),
             "daily_calls": 0,
+            "daily_tokens": 0,
             "model_daily_calls": {},
+            "model_daily_tokens": {},
             "cooldown_until": None,
             "exhausted_until": None,
             "model_exhausted_until": {},
@@ -417,6 +512,9 @@ def _ensure_slot_record(ledger: Dict[str, Any], slot: KeySlot) -> Dict[str, Any]
         keys_map[slot.slot] = rec
     else:
         rec["fingerprint"] = slot.fingerprint
+        rec.setdefault("daily_tokens", 0)
+        if not isinstance(rec.get("model_daily_tokens"), dict):
+            rec["model_daily_tokens"] = {}
     return rec
 
 
@@ -547,6 +645,7 @@ def get_quota_summary(base_dir: Path | str | None = ".") -> Dict[str, Any]:
         cooled = 0
         exhausted = 0
         total_calls = 0
+        total_tokens = 0
         key_rows: List[Dict[str, Any]] = []
 
         slot_map = {s.slot: s for s in slots}
@@ -564,7 +663,9 @@ def get_quota_summary(base_dir: Path | str | None = ".") -> Dict[str, Any]:
                 for dt in (_parse_utc(v) for v in (rec.get("model_cooldown_until") or {}).values())
             )
             calls = int(rec.get("daily_calls") or 0)
+            tokens = int(rec.get("daily_tokens") or 0)
             total_calls += calls
+            total_tokens += tokens
             if (ex_dt and ex_dt > now) or has_mod_ex:
                 status = "exhausted"
                 exhausted += 1
@@ -581,6 +682,7 @@ def get_quota_summary(base_dir: Path | str | None = ".") -> Dict[str, Any]:
                     "slot": name,
                     "status": status,
                     "daily_calls": calls,
+                    "daily_tokens": tokens,
                     "cooldown_until": rec.get("cooldown_until"),
                     "exhausted_until": rec.get("exhausted_until"),
                     "last_error_code": rec.get("last_error_code"),
@@ -595,6 +697,7 @@ def get_quota_summary(base_dir: Path | str | None = ".") -> Dict[str, Any]:
             "cooled_down_keys": cooled,
             "exhausted_keys": exhausted,
             "daily_calls_total": total_calls,
+            "daily_tokens_total": total_tokens,
             "date_utc": ledger.get("date_utc"),
             "updated_at": ledger.get("updated_at"),
             "keys": key_rows,
@@ -642,6 +745,8 @@ def call_gemini_raw(
             unique_models.append(mapped_m)
 
     root_key = str(Path(base_dir).resolve()) if base_dir is not None else "__memory__"
+    primary_canonical = _canonical_model_key(unique_models[0]) if unique_models else ""
+    call_tier = str(tier or ("custom" if models else "tier1"))
     unavailable_models: set[str] = set()
     failed_slots_by_model: Dict[str, set[str]] = {}
     per_key_errors: List[Dict[str, str]] = []
@@ -693,6 +798,7 @@ def call_gemini_raw(
                 _LAST_CALL_MONO[(root_key, slot.fingerprint, canon_m)] = time.monotonic()
 
             attempts += 1
+            attempt_t0 = time.monotonic()
             try:
                 http_opts = types.HttpOptions(timeout=req_timeout_ms) if hasattr(types, "HttpOptions") else None
                 client = (
@@ -713,18 +819,52 @@ def call_gemini_raw(
                     config=types.GenerateContentConfig(**cfg_kwargs),
                 )
                 text = getattr(resp, "text", None) or ""
+                latency_ms = max(0, int((time.monotonic() - attempt_t0) * 1000))
                 if text.strip():
+                    prompt_t, output_t, total_t, tok_src = _extract_usage_tokens(resp, prompt, text)
+                    now_ev = _utc_now()
+                    now_ev_cst = now_ev.astimezone(_SHANGHAI_TZ)
+                    ev_ms = int(now_ev.timestamp() * 1000)
+                    is_fb = bool(primary_canonical and canon_m != primary_canonical)
                     with _POOL_LOCK:
                         ledger = _load_quota_ledger(base_dir)
                         rec = _ensure_slot_record(ledger, slot)
                         rec["daily_calls"] = int(rec.get("daily_calls") or 0) + 1
+                        rec["daily_tokens"] = int(rec.get("daily_tokens") or 0) + total_t
                         mod_counts = rec.setdefault("model_daily_calls", {})
                         mod_counts[canon_m] = int(mod_counts.get(canon_m) or 0) + 1
-                        rec["last_success_at"] = _iso_utc(_utc_now())
+                        mod_toks = rec.setdefault("model_daily_tokens", {})
+                        mod_toks[canon_m] = int(mod_toks.get(canon_m) or 0) + total_t
+                        rec["last_success_at"] = _iso_utc(now_ev)
                         rec["last_error_code"] = None
                         rec["last_error"] = None
                         rec["consecutive_errors"] = 0
                         _save_quota_ledger(ledger, base_dir)
+                        _record_telemetry_event(
+                            base_dir,
+                            {
+                                "id": f"pl_{ev_ms}_{slot.fingerprint}_{attempts}",
+                                "ts_utc": _iso_utc(now_ev),
+                                "ts_cst": now_ev_cst.strftime("%Y-%m-%dT%H:%M:%S+08:00"),
+                                "ts_ms": ev_ms,
+                                "source": "pipeline",
+                                "scope": scope,
+                                "tier": call_tier,
+                                "primary_model": primary_canonical or canon_m,
+                                "model": canon_m,
+                                "model_actual": model_name,
+                                "is_fallback": is_fb,
+                                "key_slot": slot.slot,
+                                "key_fingerprint": slot.fingerprint,
+                                "ok": True,
+                                "error_code": None,
+                                "prompt_tokens": prompt_t,
+                                "output_tokens": output_t,
+                                "total_tokens": total_t,
+                                "token_source": tok_src,
+                                "latency_ms": latency_ms,
+                            },
+                        )
                     return GeminiCallResult(
                         ok=True,
                         text=text,
@@ -735,14 +875,76 @@ def call_gemini_raw(
                         per_key_errors=per_key_errors,
                         quota_exhausted=saw_quota_exhaustion,
                         degraded=False,
+                        prompt_tokens=prompt_t,
+                        output_tokens=output_t,
+                        total_tokens=total_t,
+                        token_source=tok_src,
+                        primary_model=primary_canonical or canon_m,
+                    )
+                now_ev = _utc_now()
+                ev_ms = int(now_ev.timestamp() * 1000)
+                with _POOL_LOCK:
+                    _record_telemetry_event(
+                        base_dir,
+                        {
+                            "id": f"pl_{ev_ms}_{slot.fingerprint}_{attempts}",
+                            "ts_utc": _iso_utc(now_ev),
+                            "ts_cst": now_ev.astimezone(_SHANGHAI_TZ).strftime("%Y-%m-%dT%H:%M:%S+08:00"),
+                            "ts_ms": ev_ms,
+                            "source": "pipeline",
+                            "scope": scope,
+                            "tier": call_tier,
+                            "primary_model": primary_canonical or canon_m,
+                            "model": canon_m,
+                            "model_actual": model_name,
+                            "is_fallback": bool(primary_canonical and canon_m != primary_canonical),
+                            "key_slot": slot.slot,
+                            "key_fingerprint": slot.fingerprint,
+                            "ok": False,
+                            "error_code": "EMPTY_RESPONSE",
+                            "prompt_tokens": 0,
+                            "output_tokens": 0,
+                            "total_tokens": 0,
+                            "token_source": "none",
+                            "latency_ms": latency_ms,
+                        },
                     )
                 per_key_errors.append(
                     {"slot": slot.slot, "model": model_name, "code": "EMPTY_RESPONSE", "error": "Empty model response text"}
                 )
             except Exception as exc:
+                latency_ms = max(0, int((time.monotonic() - attempt_t0) * 1000))
                 err_code, short_msg, cd_secs, is_daily, is_missing_model = _classify_gemini_error(exc)
                 if is_missing_model:
                     unavailable_models.add(model_name)
+                    now_ev = _utc_now()
+                    ev_ms = int(now_ev.timestamp() * 1000)
+                    with _POOL_LOCK:
+                        _record_telemetry_event(
+                            base_dir,
+                            {
+                                "id": f"pl_{ev_ms}_{slot.fingerprint}_{attempts}",
+                                "ts_utc": _iso_utc(now_ev),
+                                "ts_cst": now_ev.astimezone(_SHANGHAI_TZ).strftime("%Y-%m-%dT%H:%M:%S+08:00"),
+                                "ts_ms": ev_ms,
+                                "source": "pipeline",
+                                "scope": scope,
+                                "tier": call_tier,
+                                "primary_model": primary_canonical or canon_m,
+                                "model": canon_m,
+                                "model_actual": model_name,
+                                "is_fallback": bool(primary_canonical and canon_m != primary_canonical),
+                                "key_slot": slot.slot,
+                                "key_fingerprint": slot.fingerprint,
+                                "ok": False,
+                                "error_code": err_code,
+                                "prompt_tokens": 0,
+                                "output_tokens": 0,
+                                "total_tokens": 0,
+                                "token_source": "none",
+                                "latency_ms": latency_ms,
+                            },
+                        )
                     per_key_errors.append(
                         {"slot": slot.slot, "model": model_name, "code": err_code, "error": short_msg}
                     )
@@ -757,6 +959,7 @@ def call_gemini_raw(
                         saw_quota_exhaustion = saw_quota_exhaustion or is_daily
                     failed_for_model.add(slot.slot)
 
+                ev_ms = int(now.timestamp() * 1000)
                 with _POOL_LOCK:
                     ledger = _load_quota_ledger(base_dir)
                     rec = _ensure_slot_record(ledger, slot)
@@ -774,6 +977,31 @@ def call_gemini_raw(
                     else:
                         rec.setdefault("model_cooldown_until", {})[canon_m] = until_iso
                     _save_quota_ledger(ledger, base_dir)
+                    _record_telemetry_event(
+                        base_dir,
+                        {
+                            "id": f"pl_{ev_ms}_{slot.fingerprint}_{attempts}",
+                            "ts_utc": _iso_utc(now),
+                            "ts_cst": now.astimezone(_SHANGHAI_TZ).strftime("%Y-%m-%dT%H:%M:%S+08:00"),
+                            "ts_ms": ev_ms,
+                            "source": "pipeline",
+                            "scope": scope,
+                            "tier": call_tier,
+                            "primary_model": primary_canonical or canon_m,
+                            "model": canon_m,
+                            "model_actual": model_name,
+                            "is_fallback": bool(primary_canonical and canon_m != primary_canonical),
+                            "key_slot": slot.slot,
+                            "key_fingerprint": slot.fingerprint,
+                            "ok": False,
+                            "error_code": err_code,
+                            "prompt_tokens": 0,
+                            "output_tokens": 0,
+                            "total_tokens": 0,
+                            "token_source": "none",
+                            "latency_ms": latency_ms,
+                        },
+                    )
 
                 per_key_errors.append(
                     {"slot": slot.slot, "model": model_name, "code": err_code, "error": short_msg}

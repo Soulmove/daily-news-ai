@@ -5,6 +5,7 @@ import EmptySearchState from '../EmptySearchState.vue'
 import LoadingSkeleton from '../LoadingSkeleton.vue'
 import SmartTime from '../SmartTime.vue'
 import type { LiveWireDoc, LiveWireItem, WatchlistItem } from '../../core/types'
+import { dedupeAndMergeWireItems } from '../../core/wireDedup'
 import type { WireTransportMode } from '../../core/wireStream'
 import { extractHeadlineQualifiers, resolveEvidenceTierBadge } from '../../core/evidence'
 import { centerPillIntoView } from '../../core/dom'
@@ -35,7 +36,7 @@ const catFilter = ref<WireCat>('all')
 const expandedId = ref<string | null>(null)
 const effectiveNowMs = computed(() => props.nowMs ?? Date.now())
 
-const items = computed<LiveWireItem[]>(() => props.doc?.items ?? [])
+const items = computed<LiveWireItem[]>(() => dedupeAndMergeWireItems(props.doc?.items ?? []))
 const arrivedSet = computed(() => new Set(props.justArrivedIds ?? []))
 const effectiveQuery = computed(() => (props.searchQuery || '').trim())
 
@@ -241,6 +242,34 @@ function handleToggleExpand(it: LiveWireItem) {
   expandedId.value = expandedId.value === it.id ? null : it.id
 }
 
+function formatMergedSourceLabel(it: LiveWireItem): string {
+  const primary = translateSourceName(it.source_name, it.title) || catLabel(it.category)
+  const cnt = Number(it.source_count || 1)
+  if (cnt >= 2) {
+    return t(`${primary} 等 ${cnt} 源`, `${primary} (${cnt} src)`)
+  }
+  return primary
+}
+
+function getWireEvidenceBadge(it: LiveWireItem) {
+  const badge = resolveEvidenceTierBadge({
+    source_name: it.source_name,
+    sources: it.merged_sources,
+    independent_publisher_count: it.source_count,
+    evidence_status: it.evidence_status,
+    title: it.title,
+    summary: it.excerpt,
+  })
+  const cnt = Number(it.source_count || 1)
+  if (cnt >= 2 && badge.tier === 'corroborated') {
+    return {
+      ...badge,
+      shortLabel: t(`${badge.shortLabel} · ${cnt}源`, `Multi-Source · ${cnt}`),
+    }
+  }
+  return badge
+}
+
 function catLabel(cat: string): string {
   if (cat === 'finance') return t('财经', 'Markets')
   if (cat === 'tech') return t('科技', 'Tech')
@@ -389,11 +418,11 @@ function clearAll() {
                   {{ catLabel(row.item.category) }}
                 </span>
                 <span class="sm:hidden px-1.5 py-0.5 rounded bg-black/[0.04] dark:bg-white/[0.08] text-zinc-600 dark:text-zinc-300 font-medium shrink-0 whitespace-nowrap">
-                  {{ translateSourceName(row.item.source_name, row.item.title) }}
+                  {{ formatMergedSourceLabel(row.item) }}
                 </span>
               </div>
               <span class="hidden sm:block text-[10.5px] text-zinc-400 dark:text-zinc-500 truncate max-w-full">
-                {{ translateSourceName(row.item.source_name, row.item.title) || catLabel(row.item.category) }}
+                {{ formatMergedSourceLabel(row.item) }}
               </span>
               <a
                 v-if="normalizeExternalUrl(row.item.url)"
@@ -442,19 +471,44 @@ function clearAll() {
                 </a>
               </div>
 
-              <p
-                v-if="expandedId === row.item.id && row.item.excerpt && row.item.excerpt !== row.item.title"
-                class="jx-collapse-reveal text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed bg-zinc-50 dark:bg-zinc-800/60 rounded-xl px-2.5 py-2"
+              <div
+                v-if="expandedId === row.item.id && ((row.item.excerpt && row.item.excerpt !== row.item.title) || (row.item.merged_sources && row.item.merged_sources.length >= 2))"
+                class="jx-collapse-reveal space-y-1.5 bg-zinc-50 dark:bg-zinc-800/60 rounded-xl px-2.5 py-2"
               >
-                {{ truncateAtSentence(stripMarkdownArtifacts(row.item.excerpt), 220) }}
-              </p>
+                <p
+                  v-if="row.item.excerpt && row.item.excerpt !== row.item.title"
+                  class="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed"
+                >
+                  {{ truncateAtSentence(stripMarkdownArtifacts(row.item.excerpt), 220) }}
+                </p>
+                <div
+                  v-if="row.item.merged_sources && row.item.merged_sources.length >= 2"
+                  class="flex flex-wrap items-center gap-1.5 pt-0.5 text-[11px] text-zinc-500 dark:text-zinc-400"
+                >
+                  <span class="font-medium text-sky-700 dark:text-sky-300">
+                    {{ t(`已自动合并 ${row.item.merged_sources.length} 路同事件快讯：`, `Merged ${row.item.merged_sources.length} sources:`) }}
+                  </span>
+                  <a
+                    v-for="(src, sIdx) in row.item.merged_sources"
+                    :key="`${row.item.id}-ms-${sIdx}`"
+                    :href="normalizeExternalUrl(src.url) || undefined"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    @click.stop="markWireRead(row.item.id)"
+                    class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-white dark:bg-zinc-900 border border-black/[0.06] dark:border-white/[0.08] text-zinc-700 dark:text-zinc-200 hover:border-blue-500/40 hover:text-blue-600 dark:hover:text-blue-300"
+                  >
+                    <span>{{ translateSourceName(src.source_name, row.item.title) }}</span>
+                    <ExternalLink v-if="normalizeExternalUrl(src.url)" class="w-2.5 h-2.5 opacity-70" />
+                  </a>
+                </div>
+              </div>
 
               <div class="hidden sm:flex flex-wrap items-center gap-1.5 text-[11px] text-zinc-400">
                 <span
                   class="px-1.5 py-0.2 rounded border text-[10px] font-semibold"
-                  :class="resolveEvidenceTierBadge({ source_name: row.item.source_name, title: row.item.title, summary: row.item.excerpt }).badgeClass"
+                  :class="getWireEvidenceBadge(row.item).badgeClass"
                 >
-                  {{ resolveEvidenceTierBadge({ source_name: row.item.source_name, title: row.item.title, summary: row.item.excerpt }).shortLabel }}
+                  {{ getWireEvidenceBadge(row.item).shortLabel }}
                 </span>
                 <span
                   v-if="extractHeadlineQualifiers(row.item.title, row.item.excerpt).effectiveDateLabel"

@@ -9,6 +9,7 @@ import {
   CheckCircle2,
   Clock,
   Copy,
+  Cpu,
   Database,
   Eye,
   EyeOff,
@@ -49,6 +50,7 @@ import {
   apiAdminDeleteEditorialOverride,
   apiAdminDeleteFeedback,
   apiAdminFeedbackList,
+  apiAdminFreezeAiSnapshot,
   apiAdminGetPushConfig,
   apiAdminGetSiteSettings,
   apiAdminInviteCodes,
@@ -70,6 +72,7 @@ import {
   apiAdminSettleDailyPrediction,
   apiAdminSyncNow,
   apiAdminTraffic,
+  apiAdminAiUsage,
   apiAdminUpdateFeedback,
   apiAdminUserData,
   apiAdminUsers,
@@ -78,6 +81,7 @@ import {
   isAdminRole,
   loadAuthSession,
   saveAuthSession,
+  type AdminAiUsageResponse,
   type AdminContentEventRow,
   type AdminContentWireRow,
   type AdminInviteCodeRow,
@@ -101,7 +105,7 @@ import { formatFriendlyBatchId } from '../core/time'
 
 const isDark = ref(readDarkMode())
 const session = ref<AuthSession | null>(loadAuthSession())
-const activeTab = ref<'overview' | 'traffic' | 'feedback' | 'content' | 'users' | 'push' | 'audit'>('overview')
+const activeTab = ref<'overview' | 'traffic' | 'ai_usage' | 'feedback' | 'content' | 'users' | 'push' | 'audit'>('overview')
 
 const loginUser = ref('admin')
 const loginPass = ref('')
@@ -218,6 +222,14 @@ const hoveredHour = ref<number | null>(null)
 const liveNowMs = ref(Date.now())
 let trafficPollTimer: ReturnType<typeof setInterval> | null = null
 let liveClockTimer: ReturnType<typeof setInterval> | null = null
+
+const aiUsageReport = ref<AdminAiUsageResponse | null>(null)
+const aiUsageLoading = ref(false)
+const aiWindowMode = ref<'settled_21h' | 'rolling_24h' | 'current_cycle'>('settled_21h')
+const aiSelectedDay = ref('')
+const aiChartMetric = ref<'tokens' | 'calls'>('tokens')
+const hoveredAiHourIdx = ref<number | null>(null)
+const aiRecentEventsExpanded = ref(false)
 
 interface GrowthControlDraft {
   growth_stage: GrowthStage
@@ -694,13 +706,48 @@ async function loadTrafficReport() {
   }
 }
 
+async function loadAiUsageReport() {
+  if (!session.value || !isAdmin.value) return
+  aiUsageLoading.value = true
+  try {
+    const res = await apiAdminAiUsage(session.value.token, {
+      mode: aiWindowMode.value,
+      day: aiWindowMode.value === 'settled_21h' ? (aiSelectedDay.value || undefined) : undefined,
+    })
+    aiUsageReport.value = res
+    if (aiWindowMode.value === 'settled_21h' && res.window?.settlement_day && !aiSelectedDay.value) {
+      aiSelectedDay.value = res.window.settlement_day
+    }
+  } catch (err) {
+    showToast(err instanceof Error ? err.message : '加载 AI Token 与 Key 监控失败')
+  } finally {
+    aiUsageLoading.value = false
+  }
+}
+
+async function handleFreezeAiSnapshotNow() {
+  if (!session.value || !isAdmin.value) return
+  aiUsageLoading.value = true
+  try {
+    const res = await apiAdminFreezeAiSnapshot(session.value.token)
+    aiUsageReport.value = res.report
+    aiWindowMode.value = 'settled_21h'
+    aiSelectedDay.value = res.frozen_day
+    showToast(`已完成 ${res.frozen_day} 21:00 前 24 小时 AI Token 结算定格`)
+  } catch (err) {
+    showToast(err instanceof Error ? err.message : '执行 21:00 定格失败')
+  } finally {
+    aiUsageLoading.value = false
+  }
+}
+
 async function loadAllAdminData() {
   if (!session.value || !isAdmin.value) return
   loading.value = true
   authError.value = ''
   try {
     const token = session.value.token
-    const [ov, ul, pc, pl, al, ss, fb, ct, invRes, wlRes, propRes, dpRes, trRes] = await Promise.all([
+    const [ov, ul, pc, pl, al, ss, fb, ct, invRes, wlRes, propRes, dpRes, trRes, aiRes] = await Promise.all([
       apiAdminOverview(token),
       apiAdminUsers(token),
       apiAdminGetPushConfig(token),
@@ -720,6 +767,10 @@ async function loadAllAdminData() {
         q: trafficSearch.value.trim(),
         limit: 150,
       }).catch(() => null),
+      apiAdminAiUsage(token, {
+        mode: aiWindowMode.value,
+        day: aiWindowMode.value === 'settled_21h' ? (aiSelectedDay.value || undefined) : undefined,
+      }).catch(() => null),
     ])
     inviteCodes.value = invRes.items || []
     waitlistItems.value = wlRes.items || []
@@ -729,6 +780,12 @@ async function loadAllAdminData() {
       trafficReport.value = trRes
       if (!trafficDay.value && trRes.day) {
         trafficDay.value = trRes.day
+      }
+    }
+    if (aiRes) {
+      aiUsageReport.value = aiRes
+      if (aiWindowMode.value === 'settled_21h' && aiRes.window?.settlement_day && !aiSelectedDay.value) {
+        aiSelectedDay.value = aiRes.window.settlement_day
       }
     }
     overview.value = ov
@@ -1076,6 +1133,82 @@ const hoveredHourlyRow = computed(() => {
   if (hoveredHour.value === null || !trafficReport.value) return null
   return trafficReport.value.hourly.find((h) => h.hour === hoveredHour.value) || null
 })
+
+const aiHourlyMaxMetric = computed(() => {
+  const list = aiUsageReport.value?.hourly || []
+  if (aiChartMetric.value === 'tokens') {
+    return Math.max(1, ...list.map((h) => h.total_tokens))
+  }
+  return Math.max(1, ...list.map((h) => h.calls))
+})
+
+const hoveredAiHourlyRow = computed(() => {
+  if (hoveredAiHourIdx.value === null || !aiUsageReport.value) return null
+  return aiUsageReport.value.hourly[hoveredAiHourIdx.value] || null
+})
+
+function formatCompactTokens(n: number | undefined | null): string {
+  const v = Number(n || 0)
+  if (v >= 1_000_000) return `${(v / 1_000_000).toFixed(2)}M`
+  if (v >= 10_000) return `${(v / 1_000).toFixed(1)}K`
+  return v.toLocaleString('en-US')
+}
+
+function aiStatusLabel(status: string): { text: string; cls: string } {
+  if (status === 'healthy') {
+    return {
+      text: '健康可用',
+      cls: 'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/50 dark:text-emerald-300 dark:border-emerald-900/60',
+    }
+  }
+  if (status === 'cooldown') {
+    return {
+      text: '短时冷却',
+      cls: 'bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950/50 dark:text-amber-300 dark:border-amber-900/60',
+    }
+  }
+  if (status === 'exhausted') {
+    return {
+      text: '配额耗尽/隔离',
+      cls: 'bg-rose-50 text-rose-700 border-rose-200 dark:bg-rose-950/50 dark:text-rose-300 dark:border-rose-900/60',
+    }
+  }
+  return {
+    text: '未配置/空闲',
+    cls: 'bg-slate-100 text-slate-500 border-slate-200 dark:bg-slate-800 dark:text-slate-400 dark:border-slate-700',
+  }
+}
+
+function aiScopeLabel(scope: string): string {
+  const m: Record<string, string> = {
+    'briefing:finance': '财经简报',
+    'briefing:global': '国际简报',
+    'briefing:tech': '科技简报',
+    'briefing:general': '综合简报',
+    'comments:finance': '财经观点',
+    'comments:global': '国际观点',
+    'comments:tech': '科技观点',
+    'comments:general': '综合观点',
+    'briefing:mega': '主链聚合批处理',
+    ai_radar: 'AI 前沿雷达',
+    bilingual: '中英双语翻译',
+    weekly_digest: '每周大事周报',
+    weekly_digest_items: '周报条目前瞻',
+    deep_finance_impact: '股市传导研判',
+    mega_finance_impact: '主链股市传导',
+    deep_ai_matrix: 'AI 模型对比矩阵',
+    deep_github_tools: 'GitHub 工具摘要',
+    deep_storylines: '事件脉络追踪',
+    deep_event_qa: '事件深度 QA',
+    deep_topics_cal: '专题与日历推理',
+    mega_derivative: '衍生脉络推演',
+    mega_predictions: '预测市场出题',
+    mega_pred_settle: '预测自动结算',
+    search_hunter: '搜索突发追踪',
+    worker_qa: '前台 AI 证据问答',
+  }
+  return m[scope] || scope
+}
 
 async function handleSaveOnlineConfig() {
   const cleanBase = Math.max(1, Math.min(99999, Math.round(Number(onlineDraft.value.online_sim_base || 68))))
@@ -1722,6 +1855,22 @@ onBeforeUnmount(() => {
           </button>
           <button
             type="button"
+            @click="activeTab = 'ai_usage'; loadAiUsageReport()"
+            data-testid="admin-tab-ai-usage"
+            class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl border transition-colors"
+            :class="activeTab === 'ai_usage' ? 'bg-slate-900 text-white border-slate-900 dark:bg-blue-600 dark:border-blue-600' : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300'"
+          >
+            <Cpu class="w-4 h-4" />
+            <span>AI Token 与 Key 监控</span>
+            <span
+              v-if="aiUsageReport"
+              class="px-1.5 py-0.5 rounded-full text-[10px] font-bold bg-blue-500/12 text-blue-700 dark:text-blue-300 tabular-nums"
+            >
+              {{ formatCompactTokens(aiUsageReport.summary.total_tokens) }}
+            </span>
+          </button>
+          <button
+            type="button"
             @click="activeTab = 'feedback'"
             class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl border transition-colors"
             :class="activeTab === 'feedback' ? 'bg-slate-900 text-white border-slate-900 dark:bg-blue-600 dark:border-blue-600' : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300'"
@@ -1847,6 +1996,47 @@ onBeforeUnmount(() => {
               class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold transition-colors shrink-0"
             >
               <span>管理在线人数 / 看 24h IP 明细</span>
+              <ArrowRight class="w-3.5 h-3.5" />
+            </button>
+          </div>
+
+          <!-- AI Token 21:00 Daily Settlement & 13-Key Health Quick Strip -->
+          <div class="rounded-2xl border border-blue-200/80 dark:border-blue-900/60 bg-white dark:bg-slate-900 p-4 sm:p-5 flex flex-wrap items-center justify-between gap-3 text-xs sm:text-sm">
+            <div class="flex flex-wrap items-center gap-4">
+              <div>
+                <div class="text-[11px] text-slate-500 flex items-center gap-1.5">
+                  <Cpu class="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
+                  <span>21:00 日结前 24h Token（{{ aiUsageReport?.window?.settlement_day || '最新周期' }}）</span>
+                </div>
+                <div class="font-bold text-slate-900 dark:text-white mt-0.5 tabular-nums">
+                  <span class="text-lg text-blue-600 dark:text-blue-400">{{ formatCompactTokens(aiUsageReport?.summary?.total_tokens ?? 0) }}</span>
+                  <span class="text-xs font-medium text-slate-500 ml-2">
+                    调用 {{ aiUsageReport?.summary?.total_calls ?? 0 }} 次 · 替补 {{ aiUsageReport?.summary?.fallback_calls ?? 0 }} 次
+                  </span>
+                </div>
+              </div>
+              <div class="h-8 w-px bg-slate-200 dark:bg-slate-800 hidden sm:block" />
+              <div>
+                <div class="text-[11px] text-slate-500">13-Key 密钥池健康</div>
+                <div class="font-bold text-slate-900 dark:text-white mt-0.5 tabular-nums">
+                  <span class="text-emerald-600 dark:text-emerald-400">{{ aiUsageReport?.summary?.healthy_pipeline_keys ?? 13 }}</span>
+                  <span class="text-xs font-medium text-slate-500"> / {{ aiUsageReport?.summary?.configured_pipeline_keys ?? 13 }} 健康</span>
+                  <span
+                    v-if="aiUsageReport?.capacity_advice"
+                    class="ml-1.5 px-1.5 py-0.5 rounded text-[10px] font-semibold"
+                    :class="aiUsageReport.capacity_advice.level === 'expand' ? 'bg-rose-100 text-rose-700 dark:bg-rose-950/60 dark:text-rose-300' : aiUsageReport.capacity_advice.level === 'watch' ? 'bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300' : 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300'"
+                  >
+                    {{ aiUsageReport.capacity_advice.level === 'expand' ? '建议扩容 Key' : aiUsageReport.capacity_advice.level === 'watch' ? '建议关注水位' : '额度充裕' }}
+                  </span>
+                </div>
+              </div>
+            </div>
+            <button
+              type="button"
+              @click="activeTab = 'ai_usage'; loadAiUsageReport()"
+              class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold transition-colors shrink-0"
+            >
+              <span>查看模型额度与 Key 轮用明细</span>
               <ArrowRight class="w-3.5 h-3.5" />
             </button>
           </div>
@@ -2807,6 +2997,525 @@ onBeforeUnmount(() => {
                   <span class="font-mono text-[10.5px] text-slate-400 shrink-0">{{ formatCstTimeOnly(s.last_seen_at) }}</span>
                 </div>
               </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Tab 1.8: AI Token Metering (21:00 CST Daily Settlement), 13-Key Rotation & Model Routing -->
+        <section v-if="activeTab === 'ai_usage'" class="space-y-4">
+          <!-- Window Selector & 21:00 Settlement Controls -->
+          <div class="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4 sm:p-5 space-y-3 text-xs sm:text-sm">
+            <div class="flex flex-wrap items-center justify-between gap-3">
+              <div>
+                <h2 class="text-sm sm:text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                  <Cpu class="w-4 h-4 text-blue-600 dark:text-blue-400" />
+                  <span>24 小时 AI 模型 Token 统计 &amp; 13-Key 轮用监控</span>
+                </h2>
+                <p class="text-[11.5px] text-slate-500 mt-0.5">
+                  固定每晚 <strong>21:00（北京时间）</strong> 自动日结统计前 24 小时 Token 与调用频次并定格留存，同时支持查看实时滚动 24 小时与本轮进度。
+                </p>
+              </div>
+              <div class="flex flex-wrap items-center gap-2">
+                <button
+                  type="button"
+                  @click="handleFreezeAiSnapshotNow"
+                  :disabled="aiUsageLoading"
+                  class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold transition-colors disabled:opacity-50"
+                >
+                  <Clock class="w-3.5 h-3.5" />
+                  <span>立即定格最新 21:00 快照</span>
+                </button>
+                <button
+                  type="button"
+                  @click="loadAiUsageReport"
+                  :disabled="aiUsageLoading"
+                  class="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800 disabled:opacity-50"
+                >
+                  <RefreshCw class="w-3.5 h-3.5" :class="aiUsageLoading ? 'animate-spin' : ''" />
+                  <span>刷新</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-slate-100 dark:border-slate-800">
+              <div class="flex flex-wrap items-center gap-1.5">
+                <button
+                  type="button"
+                  @click="aiWindowMode = 'settled_21h'; loadAiUsageReport()"
+                  class="px-3 py-1.5 rounded-lg text-xs font-semibold border transition-colors"
+                  :class="aiWindowMode === 'settled_21h' ? 'bg-slate-900 text-white border-slate-900 dark:bg-blue-600 dark:border-blue-600' : 'border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300'"
+                >
+                  21:00 固定日结（前24h）
+                </button>
+                <button
+                  type="button"
+                  @click="aiWindowMode = 'rolling_24h'; loadAiUsageReport()"
+                  class="px-3 py-1.5 rounded-lg text-xs font-semibold border transition-colors"
+                  :class="aiWindowMode === 'rolling_24h' ? 'bg-slate-900 text-white border-slate-900 dark:bg-blue-600 dark:border-blue-600' : 'border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300'"
+                >
+                  实时滚动 24 小时
+                </button>
+                <button
+                  type="button"
+                  @click="aiWindowMode = 'current_cycle'; loadAiUsageReport()"
+                  class="px-3 py-1.5 rounded-lg text-xs font-semibold border transition-colors"
+                  :class="aiWindowMode === 'current_cycle' ? 'bg-slate-900 text-white border-slate-900 dark:bg-blue-600 dark:border-blue-600' : 'border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300'"
+                >
+                  本轮待结累计
+                </button>
+                <select
+                  v-if="aiWindowMode === 'settled_21h'"
+                  v-model="aiSelectedDay"
+                  @change="loadAiUsageReport"
+                  class="rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-2.5 py-1.5 text-xs font-mono"
+                >
+                  <option
+                    v-for="d in aiUsageReport?.available_settlement_days || (aiSelectedDay ? [aiSelectedDay] : [])"
+                    :key="d"
+                    :value="d"
+                  >
+                    {{ d }} 21:00 结算
+                  </option>
+                </select>
+              </div>
+
+              <div v-if="aiUsageReport?.window" class="flex flex-wrap items-center gap-2 text-[11px]">
+                <span class="px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 font-mono text-slate-600 dark:text-slate-300">
+                  {{ aiUsageReport.window.start_cst.slice(0, 16).replace('T', ' ') }} ~ {{ aiUsageReport.window.end_cst.slice(0, 16).replace('T', ' ') }} CST
+                </span>
+                <span
+                  class="px-2 py-0.5 rounded-md font-semibold"
+                  :class="aiUsageReport.window.is_frozen ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300' : 'bg-blue-50 text-blue-700 dark:bg-blue-950/60 dark:text-blue-300'"
+                >
+                  {{ aiUsageReport.window.is_frozen ? '已定格归档' : '动态实时统计' }}
+                </span>
+                <span class="text-slate-400">
+                  下次 21:00 结算：{{ aiUsageReport.window.next_settlement_cst.slice(0, 16).replace('T', ' ') }}
+                </span>
+              </div>
+            </div>
+
+            <div
+              v-if="aiUsageReport?.telemetry_status?.bootstrap_from_quota_ledger"
+              class="rounded-xl bg-amber-50/90 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900/50 px-3 py-2 text-[11.5px] text-amber-800 dark:text-amber-200"
+            >
+              当前窗口已自动读取 R2 存量配额台账（<code>data/gemini_quota_state.json</code>）中的 Key 轮用与模型调用次数；Token 精确计数（<code>usage_metadata</code>）将在下一次整点跑批写入 <code>data/ai_usage_telemetry.json</code> 后自动完整呈现。
+            </div>
+          </div>
+
+          <!-- KPI Cards -->
+          <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
+            <div class="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4">
+              <div class="text-xs text-slate-500">24h 总 Token 消耗</div>
+              <div class="text-2xl font-bold text-slate-900 dark:text-white mt-1 tabular-nums">
+                {{ formatCompactTokens(aiUsageReport?.summary?.total_tokens ?? 0) }}
+              </div>
+              <div class="text-[11px] text-slate-500 mt-1 tabular-nums">
+                输入 {{ formatCompactTokens(aiUsageReport?.summary?.prompt_tokens ?? 0) }} · 输出 {{ formatCompactTokens(aiUsageReport?.summary?.output_tokens ?? 0) }}
+              </div>
+            </div>
+            <div class="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4">
+              <div class="text-xs text-slate-500">24h AI 调用总频次</div>
+              <div class="text-2xl font-bold text-blue-600 dark:text-blue-400 mt-1 tabular-nums">
+                {{ aiUsageReport?.summary?.total_calls ?? 0 }} 次
+              </div>
+              <div class="text-[11px] text-slate-500 mt-1 tabular-nums">
+                成功 {{ aiUsageReport?.summary?.ok_calls ?? 0 }} · 报错 {{ aiUsageReport?.summary?.error_calls ?? 0 }} · 均频 {{ aiUsageReport?.summary?.avg_calls_per_hour ?? 0 }}/时
+              </div>
+            </div>
+            <div class="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4">
+              <div class="text-xs text-slate-500">模型降级与 429 替代</div>
+              <div class="text-2xl font-bold text-amber-600 dark:text-amber-400 mt-1 tabular-nums">
+                {{ aiUsageReport?.summary?.fallback_calls ?? 0 }} 次
+              </div>
+              <div class="text-[11px] text-slate-500 mt-1 tabular-nums">
+                替补率 {{ aiUsageReport?.summary?.fallback_rate_pct ?? 0 }}% · 429/限流 {{ aiUsageReport?.summary?.rate_limit_calls ?? 0 }} 次
+              </div>
+            </div>
+            <div class="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4">
+              <div class="text-xs text-slate-500">密钥池水位（13-Key）</div>
+              <div class="text-2xl font-bold text-emerald-600 dark:text-emerald-400 mt-1 tabular-nums">
+                {{ aiUsageReport?.summary?.healthy_pipeline_keys ?? 13 }}/{{ aiUsageReport?.summary?.configured_pipeline_keys ?? 13 }} 健康
+              </div>
+              <div class="text-[11px] text-slate-500 mt-1 tabular-nums">
+                冷却 {{ aiUsageReport?.summary?.cooled_pipeline_keys ?? 0 }} · 耗尽 {{ aiUsageReport?.summary?.exhausted_pipeline_keys ?? 0 }} · Tier1 占 {{ aiUsageReport?.summary?.tier1_util_pct ?? 0 }}%
+              </div>
+            </div>
+          </div>
+
+          <!-- Capacity & Key Expansion Recommendation Banner -->
+          <div
+            v-if="aiUsageReport?.capacity_advice"
+            class="rounded-2xl border p-4 text-xs sm:text-sm space-y-1.5"
+            :class="
+              aiUsageReport.capacity_advice.level === 'expand'
+                ? 'border-rose-300 bg-rose-50/70 dark:border-rose-900/60 dark:bg-rose-950/30'
+                : aiUsageReport.capacity_advice.level === 'watch'
+                  ? 'border-amber-300 bg-amber-50/70 dark:border-amber-900/60 dark:bg-amber-950/30'
+                  : 'border-emerald-300 bg-emerald-50/70 dark:border-emerald-900/60 dark:bg-emerald-950/30'
+            "
+          >
+            <div class="font-bold text-slate-900 dark:text-white flex items-center gap-2">
+              <AlertTriangle v-if="aiUsageReport.capacity_advice.level !== 'ok'" class="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0" />
+              <CheckCircle2 v-else class="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
+              <span>Key 扩容评估：{{ aiUsageReport.capacity_advice.headline }}</span>
+            </div>
+            <ul class="space-y-0.5 text-[12px] text-slate-700 dark:text-slate-300 pl-6 list-disc">
+              <li v-for="(reason, rIdx) in aiUsageReport.capacity_advice.reasons" :key="`adv-${rIdx}`">{{ reason }}</li>
+            </ul>
+          </div>
+
+          <!-- 24-Hour Chronological AI Token & Frequency Chart (21:00 -> 20:00 in settled mode) -->
+          <div class="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4 sm:p-5 space-y-3 text-xs">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <div>
+                <h3 class="font-bold text-sm text-slate-900 dark:text-white">
+                  24 小时分时段 {{ aiChartMetric === 'tokens' ? 'Token 消耗分布' : 'AI 调用频次分布' }}
+                </h3>
+                <p class="text-[11px] text-slate-500">
+                  {{ aiWindowMode === 'settled_21h' ? '横轴严格按前一日 21:00 至结算日 20:59 北京时间顺序排列，悬停查看该小时详情。' : '横轴按时间先后显示 24 个小时分桶，悬停查看该小时 Token、次数与主力模型。' }}
+                </p>
+              </div>
+              <div class="flex flex-wrap items-center gap-2">
+                <div class="inline-flex rounded-lg border border-slate-200 dark:border-slate-700 p-0.5 bg-slate-50 dark:bg-slate-800 text-[11px]">
+                  <button
+                    type="button"
+                    @click="aiChartMetric = 'tokens'"
+                    class="px-2.5 py-1 rounded-md font-semibold transition-colors"
+                    :class="aiChartMetric === 'tokens' ? 'bg-white dark:bg-slate-900 text-blue-600 shadow-xs' : 'text-slate-500'"
+                  >
+                    按 Token 量
+                  </button>
+                  <button
+                    type="button"
+                    @click="aiChartMetric = 'calls'"
+                    class="px-2.5 py-1 rounded-md font-semibold transition-colors"
+                    :class="aiChartMetric === 'calls' ? 'bg-white dark:bg-slate-900 text-blue-600 shadow-xs' : 'text-slate-500'"
+                  >
+                    按调用频次
+                  </button>
+                </div>
+                <span
+                  v-if="hoveredAiHourlyRow"
+                  class="px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 font-mono text-[11px] text-slate-700 dark:text-slate-200"
+                >
+                  {{ hoveredAiHourlyRow.day_cst.slice(5) }} {{ hoveredAiHourlyRow.label }} · {{ formatCompactTokens(hoveredAiHourlyRow.total_tokens) }} tok · {{ hoveredAiHourlyRow.calls }} 次（替补 {{ hoveredAiHourlyRow.fallback_calls }}）{{ hoveredAiHourlyRow.top_model ? ` · ${hoveredAiHourlyRow.top_model}` : '' }}
+                </span>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-[repeat(24,minmax(0,1fr))] gap-1 items-end h-32 pt-4 pb-1 px-1 rounded-xl bg-slate-50/70 dark:bg-slate-800/40">
+              <div
+                v-for="(h, hIdx) in aiUsageReport?.hourly || []"
+                :key="`${h.day_cst}-${h.hour}`"
+                @mouseenter="hoveredAiHourIdx = hIdx"
+                @mouseleave="hoveredAiHourIdx = null"
+                class="flex flex-col items-center justify-end h-full group cursor-pointer"
+                :title="`${h.day_cst} ${h.label}: ${h.total_tokens.toLocaleString()} tokens, ${h.calls} calls (${h.fallback_calls} fallback)`"
+              >
+                <div class="w-full max-w-[16px] flex flex-col justify-end h-[88px] rounded-t overflow-hidden bg-slate-200/60 dark:bg-slate-700/40">
+                  <div
+                    class="w-full transition-all"
+                    :class="h.fallback_calls > 0 ? 'bg-amber-500 group-hover:bg-amber-400' : 'bg-blue-500 group-hover:bg-blue-400'"
+                    :style="{
+                      height: `${Math.max((aiChartMetric === 'tokens' ? h.total_tokens : h.calls) > 0 ? 6 : 0, Math.round(((aiChartMetric === 'tokens' ? h.total_tokens : h.calls) / aiHourlyMaxMetric) * 100))}%`,
+                    }"
+                  />
+                </div>
+                <span class="text-[9px] font-mono text-slate-400 mt-1 select-none">{{ String(h.hour).padStart(2, '0') }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Model Quota & Frequency Breakdown Table -->
+          <div class="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4 sm:p-5 space-y-3 text-xs sm:text-sm">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <div>
+                <h3 class="font-bold text-slate-900 dark:text-white">各模型 Token 额度、调用频率与职责定位</h3>
+                <p class="text-[11px] text-slate-500">
+                  13 把 Key 下，Tier 1 单模型池上限 {{ 20 * (aiUsageReport?.summary?.configured_pipeline_keys ?? 13) }} 次/日（5 RPM/Key），Tier 2 高吞吐模型上限 {{ 500 * (aiUsageReport?.summary?.configured_pipeline_keys ?? 13) }} 次/日（15 RPM/Key），全模型全部共享 250K TPM/Key。
+                </p>
+              </div>
+            </div>
+
+            <div class="overflow-x-auto">
+              <table class="w-full text-left border-collapse min-w-[820px] text-xs">
+                <thead>
+                  <tr class="border-b border-slate-200 dark:border-slate-800 text-slate-500">
+                    <th class="py-2 pr-3 font-semibold">模型名称 / 层级</th>
+                    <th class="py-2 px-2 font-semibold">调用频次（24h）</th>
+                    <th class="py-2 px-2 font-semibold">Token 消耗（入 / 出 / 总）</th>
+                    <th class="py-2 px-2 font-semibold">池日额度水位</th>
+                    <th class="py-2 px-2 font-semibold">首选 vs 替补</th>
+                    <th class="py-2 pl-2 font-semibold">主要跑哪些内容与定位</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100 dark:divide-slate-800/80">
+                  <tr
+                    v-for="m in aiUsageReport?.models || []"
+                    :key="m.model"
+                    class="hover:bg-slate-50/80 dark:hover:bg-slate-800/40"
+                    :class="m.calls > 0 ? '' : 'opacity-65'"
+                  >
+                    <td class="py-2.5 pr-3 align-top">
+                      <div class="font-mono font-bold text-slate-900 dark:text-white">{{ m.model }}</div>
+                      <div class="flex flex-wrap items-center gap-1 mt-0.5">
+                        <span
+                          class="px-1.5 py-0.2 rounded text-[10px] font-semibold"
+                          :class="
+                            m.tier === 'tier2'
+                              ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300'
+                              : m.tier === 'edge'
+                                ? 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300'
+                                : 'bg-blue-50 text-blue-700 dark:bg-blue-950/60 dark:text-blue-300'
+                          "
+                        >
+                          {{ m.tier === 'tier2' ? 'Tier2 高吞吐' : m.tier === 'edge' ? 'Worker 本地兜底' : 'Tier1 深度推理' }}
+                        </span>
+                        <span v-if="m.resolved_slug && m.resolved_slug !== m.model" class="font-mono text-[10px] text-slate-400">
+                          -> {{ m.resolved_slug }}
+                        </span>
+                      </div>
+                    </td>
+                    <td class="py-2.5 px-2 align-top tabular-nums">
+                      <div class="font-bold text-slate-900 dark:text-white">{{ m.calls }} 次</div>
+                      <div class="text-[11px] text-slate-500">均 {{ m.avg_calls_per_hour }} 次/时 · 限 {{ m.rpm_limit_per_key > 0 ? `${m.rpm_limit_per_key} RPM` : '无上限' }}</div>
+                    </td>
+                    <td class="py-2.5 px-2 align-top tabular-nums">
+                      <div class="font-bold text-slate-900 dark:text-white">
+                        {{ m.total_tokens.toLocaleString() }}
+                        <span v-if="m.token_share_pct > 0" class="text-[10.5px] font-normal text-slate-400">({{ m.token_share_pct }}%)</span>
+                      </div>
+                      <div class="text-[11px] text-slate-500">
+                        入 {{ formatCompactTokens(m.prompt_tokens) }} / 出 {{ formatCompactTokens(m.output_tokens) }} · 均 {{ formatCompactTokens(m.avg_tokens_per_call) }}/次
+                      </div>
+                    </td>
+                    <td class="py-2.5 px-2 align-top tabular-nums min-w-[130px]">
+                      <template v-if="m.pool_rpd_capacity > 0">
+                        <div class="flex items-center justify-between text-[11px]">
+                          <span class="font-semibold">{{ m.calls }} / {{ m.pool_rpd_capacity }}</span>
+                          <span class="text-slate-500">{{ m.usage_pct_of_pool_rpd }}%</span>
+                        </div>
+                        <div class="w-full h-1.5 rounded-full bg-slate-100 dark:bg-slate-800 mt-1 overflow-hidden">
+                          <div
+                            class="h-full rounded-full"
+                            :class="m.usage_pct_of_pool_rpd >= 75 ? 'bg-rose-500' : m.usage_pct_of_pool_rpd >= 45 ? 'bg-amber-500' : 'bg-blue-500'"
+                            :style="{ width: `${Math.min(100, Math.max(m.calls > 0 ? 3 : 0, m.usage_pct_of_pool_rpd))}%` }"
+                          />
+                        </div>
+                      </template>
+                      <span v-else class="text-[11px] text-slate-400">0 Token · 按需触发</span>
+                    </td>
+                    <td class="py-2.5 px-2 align-top tabular-nums">
+                      <div class="text-emerald-700 dark:text-emerald-300 font-semibold">首选 {{ m.primary_calls }}</div>
+                      <div class="text-[11px]" :class="m.fallback_calls > 0 ? 'text-amber-600 dark:text-amber-400 font-semibold' : 'text-slate-400'">
+                        替补 {{ m.fallback_calls }} 次
+                      </div>
+                    </td>
+                    <td class="py-2.5 pl-2 align-top text-[11.5px] text-slate-600 dark:text-slate-300 max-w-[280px]">
+                      <div class="font-semibold text-slate-800 dark:text-slate-100">{{ m.role_label }}</div>
+                      <div class="text-slate-500 dark:text-slate-400 mt-0.5 leading-snug">{{ m.duties }}</div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- 13-Key + Worker Key Rotation Health & Load Balance Table -->
+          <div class="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4 sm:p-5 space-y-3 text-xs sm:text-sm">
+            <div>
+              <h3 class="font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
+                <KeyRound class="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                <span>各 API Key 轮用负载均衡与健康台账</span>
+              </h3>
+              <p class="text-[11px] text-slate-500 mt-0.5">
+                后台仅展示槽位名称与 8 位 SHA-256 安全指纹（绝不保存或回传明文密钥）。系统按作用域错峰起始位 + 当日最低调用量优先轮换，确保 13 把 Key 均衡分担 RPM/RPD。
+              </p>
+            </div>
+
+            <div class="overflow-x-auto">
+              <table class="w-full text-left border-collapse min-w-[820px] text-xs">
+                <thead>
+                  <tr class="border-b border-slate-200 dark:border-slate-800 text-slate-500">
+                    <th class="py-2 pr-3 font-semibold">Key 槽位 / 安全指纹</th>
+                    <th class="py-2 px-2 font-semibold">当前健康状态</th>
+                    <th class="py-2 px-2 font-semibold">本周期轮用频次（占比）</th>
+                    <th class="py-2 px-2 font-semibold">Token 消耗</th>
+                    <th class="py-2 px-2 font-semibold">单 Key 模型分布</th>
+                    <th class="py-2 pl-2 font-semibold">最近成功 / 异常诊断</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100 dark:divide-slate-800/80">
+                  <tr
+                    v-for="k in aiUsageReport?.keys || []"
+                    :key="k.slot"
+                    class="hover:bg-slate-50/80 dark:hover:bg-slate-800/40"
+                  >
+                    <td class="py-2.5 pr-3 align-top">
+                      <div class="font-mono font-bold text-slate-900 dark:text-white">{{ k.slot }}</div>
+                      <div class="font-mono text-[10.5px] text-slate-400">
+                        {{ k.fingerprint ? `fp:${k.fingerprint}` : '待激活/未记录指纹' }}
+                      </div>
+                    </td>
+                    <td class="py-2.5 px-2 align-top">
+                      <span class="inline-flex px-2 py-0.5 rounded-full border text-[11px] font-semibold" :class="aiStatusLabel(k.status).cls">
+                        {{ aiStatusLabel(k.status).text }}
+                      </span>
+                    </td>
+                    <td class="py-2.5 px-2 align-top tabular-nums min-w-[145px]">
+                      <div class="flex items-center justify-between">
+                        <span class="font-bold text-slate-900 dark:text-white">{{ k.window_calls }} 次</span>
+                        <span class="text-[11px] text-slate-500">{{ k.rotation_share_pct }}%</span>
+                      </div>
+                      <div class="w-full h-1.5 rounded-full bg-slate-100 dark:bg-slate-800 mt-1 overflow-hidden">
+                        <div
+                          class="h-full rounded-full bg-emerald-500"
+                          :style="{ width: `${Math.min(100, Math.max(k.window_calls > 0 ? 4 : 0, k.rotation_share_pct * 4))}%` }"
+                        />
+                      </div>
+                      <div class="text-[10.5px] text-slate-400 mt-0.5">
+                        今日台账 Tier1 {{ k.tier1_calls_today }}/{{ k.tier1_rpd_limit }} · 总 {{ k.total_calls_today }}/{{ k.total_rpd_limit }}
+                      </div>
+                    </td>
+                    <td class="py-2.5 px-2 align-top tabular-nums">
+                      <div class="font-semibold text-slate-900 dark:text-white">{{ k.window_tokens.toLocaleString() }}</div>
+                      <div v-if="k.window_rate_limit_calls > 0 || k.window_error_calls > 0" class="text-[10.5px] text-amber-600 dark:text-amber-400">
+                        429 {{ k.window_rate_limit_calls }} · 错 {{ k.window_error_calls }}
+                      </div>
+                    </td>
+                    <td class="py-2.5 px-2 align-top max-w-[230px]">
+                      <div v-if="Object.keys(k.model_calls || {}).length > 0" class="flex flex-wrap gap-1">
+                        <span
+                          v-for="(mCnt, mKey) in k.model_calls"
+                          :key="`${k.slot}-${mKey}`"
+                          class="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 font-mono text-[10px] text-slate-700 dark:text-slate-300"
+                        >
+                          {{ mKey }} x{{ mCnt }}
+                        </span>
+                      </div>
+                      <span v-else class="text-[11px] text-slate-400">本周期暂无调用</span>
+                    </td>
+                    <td class="py-2.5 pl-2 align-top text-[11px] max-w-[210px]">
+                      <div v-if="k.last_success_at" class="font-mono text-slate-500">{{ k.last_success_at.slice(0, 19).replace('T', ' ') }}</div>
+                      <div v-if="k.last_error_code" class="text-rose-600 dark:text-rose-400 truncate" :title="k.last_error || k.last_error_code">
+                        {{ k.last_error_code }}: {{ k.last_error || '' }}
+                      </div>
+                      <div v-else-if="!k.last_success_at" class="text-slate-400">-</div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Model Workload Guide & Automatic Fallback Rules -->
+          <div v-if="aiUsageReport?.model_routing_guide" class="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4 sm:p-5 space-y-4 text-xs sm:text-sm">
+            <div>
+              <h3 class="font-bold text-slate-900 dark:text-white">模型分工说明与自动替代（降级切换）策略</h3>
+              <p class="text-[11px] text-slate-500 mt-0.5">
+                直观说明镜信平台每项业务默认调用的模型、完整顺位替代链，以及什么情况下会自动切换到替代模型。
+              </p>
+            </div>
+
+            <div class="overflow-x-auto">
+              <table class="w-full text-left border-collapse min-w-[780px] text-xs">
+                <thead>
+                  <tr class="border-b border-slate-200 dark:border-slate-800 text-slate-500">
+                    <th class="py-2 pr-3 font-semibold">业务模块</th>
+                    <th class="py-2 px-2 font-semibold">运行频次</th>
+                    <th class="py-2 px-2 font-semibold">首选主模型</th>
+                    <th class="py-2 px-2 font-semibold">自动替代降级链（依次顺延）</th>
+                    <th class="py-2 pl-2 font-semibold">处理内容</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100 dark:divide-slate-800/80">
+                  <tr v-for="mod in aiUsageReport.model_routing_guide.modules" :key="mod.module_id">
+                    <td class="py-2.5 pr-3 align-top font-semibold text-slate-900 dark:text-white">{{ mod.module_name }}</td>
+                    <td class="py-2.5 px-2 align-top text-[11px] text-slate-500">{{ mod.cadence }}</td>
+                    <td class="py-2.5 px-2 align-top">
+                      <span class="px-2 py-0.5 rounded-md bg-blue-50 text-blue-700 dark:bg-blue-950/60 dark:text-blue-300 font-mono text-[11px] font-semibold">
+                        {{ mod.primary_model }}
+                      </span>
+                    </td>
+                    <td class="py-2.5 px-2 align-top">
+                      <div class="flex flex-wrap items-center gap-1 font-mono text-[10.5px] text-slate-600 dark:text-slate-300">
+                        <span v-for="(fb, fIdx) in mod.fallback_chain" :key="`${mod.module_id}-${fb}`" class="inline-flex items-center gap-1">
+                          <span class="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800">{{ fb }}</span>
+                          <span v-if="fIdx < mod.fallback_chain.length - 1" class="text-slate-400">-&gt;</span>
+                        </span>
+                      </div>
+                    </td>
+                    <td class="py-2.5 pl-2 align-top text-[11.5px] text-slate-600 dark:text-slate-300">{{ mod.duties }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2.5 pt-1">
+              <div
+                v-for="rule in aiUsageReport.model_routing_guide.switch_rules"
+                :key="rule.trigger"
+                class="rounded-xl border border-slate-200/80 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-800/40 p-3 space-y-1"
+              >
+                <div class="text-[11px] font-bold text-blue-700 dark:text-blue-300">{{ rule.trigger }}</div>
+                <div class="text-xs font-semibold text-slate-900 dark:text-white">{{ rule.title }}</div>
+                <p class="text-[11px] text-slate-600 dark:text-slate-300 leading-relaxed">{{ rule.behavior }}</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Expandable Recent Calls & Model Fallback Events -->
+          <div class="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4 sm:p-5 space-y-3 text-xs">
+            <div class="flex items-center justify-between gap-2">
+              <div class="font-bold text-slate-900 dark:text-white">
+                最近 AI 调用与降级替补流水（最新 {{ aiUsageReport?.recent_events?.length ?? 0 }} 条）
+              </div>
+              <button
+                type="button"
+                @click="aiRecentEventsExpanded = !aiRecentEventsExpanded"
+                class="px-2.5 py-1 rounded-lg border border-slate-200 dark:border-slate-700 text-xs font-semibold"
+              >
+                {{ aiRecentEventsExpanded ? '收起流水' : '展开流水详情' }}
+              </button>
+            </div>
+            <div v-if="aiRecentEventsExpanded" class="overflow-x-auto">
+              <div v-if="!aiUsageReport?.recent_events?.length" class="py-4 text-center text-slate-400">
+                当前时间窗口暂无明细流水事件（等待下次整点跑批或前台 AI 问答记录）
+              </div>
+              <table v-else class="w-full text-left border-collapse min-w-[760px] text-[11.5px]">
+                <thead>
+                  <tr class="border-b border-slate-200 dark:border-slate-800 text-slate-500">
+                    <th class="py-1.5 pr-2 font-semibold">时间（CST）</th>
+                    <th class="py-1.5 px-2 font-semibold">业务模块</th>
+                    <th class="py-1.5 px-2 font-semibold">使用 Key</th>
+                    <th class="py-1.5 px-2 font-semibold">实际模型 / 替补状态</th>
+                    <th class="py-1.5 px-2 font-semibold">Token（入/出/总）</th>
+                    <th class="py-1.5 pl-2 font-semibold">状态 / 耗时</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100 dark:divide-slate-800/80">
+                  <tr v-for="ev in aiUsageReport.recent_events" :key="ev.id">
+                    <td class="py-1.5 pr-2 font-mono text-slate-500">{{ ev.ts_cst.slice(5, 19).replace('T', ' ') }}</td>
+                    <td class="py-1.5 px-2 font-medium text-slate-800 dark:text-slate-200">{{ aiScopeLabel(ev.scope) }}</td>
+                    <td class="py-1.5 px-2 font-mono text-slate-700 dark:text-slate-300">{{ ev.key_slot }}</td>
+                    <td class="py-1.5 px-2 font-mono">
+                      <span v-if="ev.is_fallback" class="text-amber-600 dark:text-amber-400 font-semibold">
+                        {{ ev.primary_model }} -&gt; {{ ev.model_actual }}（替补）
+                      </span>
+                      <span v-else class="text-slate-900 dark:text-white">{{ ev.model_actual }}</span>
+                    </td>
+                    <td class="py-1.5 px-2 tabular-nums">
+                      {{ ev.total_tokens.toLocaleString() }}
+                      <span class="text-slate-400">({{ ev.prompt_tokens }}/{{ ev.output_tokens }})</span>
+                    </td>
+                    <td class="py-1.5 pl-2">
+                      <span v-if="ev.ok" class="text-emerald-600 dark:text-emerald-400 font-semibold">成功 {{ ev.latency_ms }}ms</span>
+                      <span v-else class="text-rose-600 dark:text-rose-400 font-semibold">{{ ev.error_code || 'ERR' }} {{ ev.latency_ms }}ms</span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
           </div>
         </section>

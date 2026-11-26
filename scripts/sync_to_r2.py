@@ -63,6 +63,8 @@ def collect_sync_files(base_dir: Path, scope: str = "full", full_archives: bool 
     if scope == "weekly":
         add_rel("data/weekly_digest.json")
         add_rel("data/weekly_digests_index.json")
+        add_rel("data/gemini_quota_state.json")
+        add_rel("data/ai_usage_telemetry.json")
         wd_dir = base_dir / "data" / "weekly_digests"
         if wd_dir.exists():
             for fp in sorted(wd_dir.glob("*.json")):

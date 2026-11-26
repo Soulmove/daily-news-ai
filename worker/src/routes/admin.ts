@@ -1,4 +1,5 @@
 import { Hono } from 'hono'
+import { ensureLatest21hAiSnapshot, getAdminAiUsageReport } from '../aiTelemetry'
 import { requireAdmin, requireSuperAdmin } from '../authMiddleware'
 import { nowShanghaiIso, verifyPassword } from '../crypto'
 import {
@@ -832,4 +833,31 @@ adminRoutes.get('/traffic', async (c) => {
     limit: Number(c.req.query('limit') || 100),
   })
   return c.json(report, 200, { 'Cache-Control': 'no-store' })
+})
+
+// ---------------- 24h AI Token Metering, 21:00 CST Daily Settlement & Key Pool Telemetry ----------------
+
+adminRoutes.get('/ai-usage', async (c) => {
+  const report = await getAdminAiUsageReport(c.env, {
+    mode: c.req.query('mode') || 'settled_21h',
+    day: c.req.query('day') || undefined,
+  })
+  return c.json(report, 200, { 'Cache-Control': 'no-store' })
+})
+
+adminRoutes.post('/ai-usage/freeze-now', async (c) => {
+  const admin = c.get('user')!
+  const snapRes = await ensureLatest21hAiSnapshot(c.env, Date.now(), true)
+  const report = await getAdminAiUsageReport(c.env, {
+    mode: 'settled_21h',
+    day: snapRes.settlement_day,
+  })
+  await logAudit(c.env.DB, {
+    action: 'admin_freeze_ai_usage_21h',
+    userId: admin.id,
+    username: admin.username,
+    detail: `Froze 21:00 CST AI usage 24h snapshot for ${snapRes.settlement_day}`,
+    ip: c.get('clientIp'),
+  })
+  return c.json({ ok: true, frozen_day: snapRes.settlement_day, report }, 200, { 'Cache-Control': 'no-store' })
 })

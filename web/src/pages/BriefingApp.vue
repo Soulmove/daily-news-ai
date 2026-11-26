@@ -85,11 +85,13 @@ import {
   setOnboardingCompleted,
   type WatchlistPresetTemplate,
 } from '../core/thumbnails'
+import { getDataBaseUrl, resolveDataUrl } from '../core/dataBase'
 import {
   createLiveWireController,
   type LiveWireStreamHandle,
   type WireTransportMode,
 } from '../core/wireStream'
+import { dedupeAndMergeWireItems } from '../core/wireDedup'
 import {
   dispatchImportantNewsNotification,
   isAndroidAppShell,
@@ -451,7 +453,8 @@ const showGlobalBanner = computed(() =>
 const effectiveLiveWireDoc = computed<LiveWireDoc | null>(() => {
   const doc = liveWireDoc.value
   if (!doc) return null
-  const patchedItems = applyEditorialOverridesToWire(doc.items || [], editorialOverrides.value)
+  const mergedItems = dedupeAndMergeWireItems(doc.items || [])
+  const patchedItems = applyEditorialOverridesToWire(mergedItems, editorialOverrides.value)
   return { ...doc, items: patchedItems, total: patchedItems.length }
 })
 
@@ -4084,11 +4087,17 @@ function startLiveWorkbench() {
   void loadInitial(false)
   if (!isHistoryMode.value) {
     startGlobalQuotesPolling()
+    const hasDirectR2 = Boolean(getDataBaseUrl())
     wireStreamHandle = createLiveWireController({
+      directWireUrl: hasDirectR2 ? resolveDataUrl('data/live_wire_edge.json', false) : undefined,
+      directAiUrl: hasDirectR2 ? resolveDataUrl('data/ai_progress.json', false) : undefined,
+      shouldPreferDirectR2: () => Boolean(getDataBaseUrl()) && siteAccessMode.value !== 'private_gate',
+      allowStaticFallback: () => siteAccessMode.value !== 'private_gate',
       fetchStaticFallback: () => fetchLiveWire(manifest.value, true),
       fetchAiFallback: () => fetchAiProgress(manifest.value, true),
       getAuthToken: () => authSession.value?.token ?? null,
       pollIntervalMs: 45_000,
+      aiPollIntervalMs: 180_000,
       enableSse: false,
       onTransportChange: (mode) => {
         wireTransportMode.value = mode

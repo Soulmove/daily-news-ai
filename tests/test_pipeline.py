@@ -5282,5 +5282,109 @@ class V3PipelineRegressionTests(unittest.TestCase):
         self.assertEqual(infer_heavy_reason_tag("普通地方项目发布阶段进展"), "要闻聚焦")
 
 
+class GeminiPoolTelemetryTests(unittest.TestCase):
+    def test_gemini_pool_records_tokens_fallback_and_quota_ledger(self) -> None:
+        import os
+        import sys
+        import types as py_types
+        from pipeline.gemini_pool import _extract_usage_tokens, call_gemini_raw, get_quota_summary
+
+        # Verify exact usage_metadata extraction (including thoughts tokens) and estimated fallback
+        class _FakeUsage:
+            prompt_token_count = 320
+            candidates_token_count = 110
+            thoughts_token_count = 40
+            total_token_count = 470
+
+        class _FakeResp:
+            text = "ok"
+            usage_metadata = _FakeUsage()
+
+        self.assertEqual(_extract_usage_tokens(_FakeResp(), "abc" * 10, "ok"), (320, 150, 470, "exact"))
+        ep, eo, et, esrc = _extract_usage_tokens(object(), "a" * 30, "b" * 15)
+        self.assertEqual((ep, eo, et, esrc), (10, 5, 15, "estimated"))
+
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "data").mkdir(parents=True)
+
+            class _FakeHttpOptions:
+                def __init__(self, timeout=None):
+                    self.timeout = timeout
+
+            class _FakeGenConfig:
+                def __init__(self, **kwargs):
+                    self.kwargs = kwargs
+
+            class _FakeModelsApi:
+                def __init__(self):
+                    self.calls = 0
+
+                def list(self):
+                    return []
+
+                def generate_content(self, model=None, contents=None, config=None):
+                    self.calls += 1
+                    if "4-hydrogen" in str(model):
+                        raise RuntimeError("503 Service Unavailable: high demand")
+                    return _FakeResp()
+
+            models_api = _FakeModelsApi()
+
+            class _FakeClient:
+                def __init__(self, api_key=None, http_options=None):
+                    self.models = models_api
+
+            fake_genai = py_types.ModuleType("google.genai")
+            fake_genai.Client = _FakeClient
+            fake_types = py_types.ModuleType("google.genai.types")
+            fake_types.HttpOptions = _FakeHttpOptions
+            fake_types.GenerateContentConfig = _FakeGenConfig
+            fake_genai.types = fake_types
+            fake_google = py_types.ModuleType("google")
+            fake_google.genai = fake_genai
+
+            with patch.dict(
+                os.environ,
+                {"KEY_FINANCE": "fake-secret-fin-1", "KEY_1": "fake-secret-k1-2"},
+                clear=True,
+            ), patch.dict(
+                sys.modules,
+                {"google": fake_google, "google.genai": fake_genai, "google.genai.types": fake_types},
+            ):
+                res = call_gemini_raw(
+                    scope="briefing:finance",
+                    prompt="test prompt telemetry",
+                    models=("gemini-4-hydrogen", "gemini-3.8-flash"),
+                    base_dir=root,
+                )
+                self.assertTrue(res.ok)
+                self.assertEqual(res.model_used, "gemini-3.8-flash")
+                self.assertEqual(res.primary_model, "gemini-4-hydrogen")
+                self.assertEqual(res.total_tokens, 470)
+                self.assertEqual(res.prompt_tokens, 320)
+                self.assertEqual(res.output_tokens, 150)
+                self.assertEqual(res.token_source, "exact")
+
+                tele_path = root / "data" / "ai_usage_telemetry.json"
+                self.assertTrue(tele_path.exists())
+                tele_doc = json.loads(tele_path.read_text(encoding="utf-8"))
+                evs = tele_doc["events"]
+                self.assertEqual(len(evs), 2)
+                err_ev, ok_ev = evs[0], evs[1]
+                self.assertFalse(err_ev["ok"])
+                self.assertEqual(err_ev["error_code"], "TRANSIENT_ERROR")
+                self.assertFalse(err_ev["is_fallback"])
+                self.assertTrue(ok_ev["ok"])
+                self.assertEqual(ok_ev["model"], "gemini-3.8-flash")
+                self.assertEqual(ok_ev["primary_model"], "gemini-4-hydrogen")
+                self.assertTrue(ok_ev["is_fallback"])
+                self.assertEqual(ok_ev["total_tokens"], 470)
+
+                q_sum = get_quota_summary(root)
+                self.assertEqual(q_sum["daily_tokens_total"], 470)
+                self.assertEqual(q_sum["daily_calls_total"], 2)
+
+
 if __name__ == "__main__":
     unittest.main()

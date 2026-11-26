@@ -36,14 +36,14 @@ function toRelativeUrl(relPath: string, cacheBust = false): string {
 
 export async function fetchJson<T>(
   relPath: string,
-  opts: { noStore?: boolean; cacheBust?: boolean; timeoutMs?: number } = {},
+  opts: { noStore?: boolean; cacheMode?: RequestCache; cacheBust?: boolean; timeoutMs?: number } = {},
 ): Promise<T> {
   const controller = new AbortController()
   const timer = setTimeout(() => controller.abort(), opts.timeoutMs ?? 12000)
   try {
     const url = toRelativeUrl(relPath, Boolean(opts.cacheBust))
     const resp = await fetch(url, {
-      cache: opts.noStore ? 'no-store' : 'default',
+      cache: opts.cacheMode ?? (opts.noStore ? 'no-store' : 'default'),
       signal: controller.signal,
     })
     if (!resp.ok) {
@@ -548,6 +548,18 @@ export async function fetchFinanceImpact(manifest?: ManifestV2 | null, forceFres
 }
 
 export async function fetchLiveWire(manifest?: ManifestV2 | null, forceFresh = false): Promise<import('./types').LiveWireDoc | null> {
+  try {
+    const edgeDoc = await fetchJson<import('./types').LiveWireDoc>('data/live_wire_edge.json', {
+      cacheMode: forceFresh ? 'no-store' : 'no-cache',
+      cacheBust: forceFresh,
+      timeoutMs: 8000,
+    })
+    if (edgeDoc && Array.isArray(edgeDoc.items) && edgeDoc.items.length > 0) {
+      return edgeDoc
+    }
+  } catch {
+    // Fall back to static/manifest live_wire path
+  }
   const path = manifest?.v3?.live_wire_path || 'data/live_wire.json'
   try {
     return await fetchJson<import('./types').LiveWireDoc>(path, {

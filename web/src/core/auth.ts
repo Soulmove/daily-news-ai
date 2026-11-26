@@ -1263,3 +1263,185 @@ export async function apiAdminTraffic(
   const suffix = qs.toString() ? `?${qs.toString()}` : ''
   return apiRequest(`/api/admin/traffic${suffix}`, { method: 'GET' }, token)
 }
+
+export interface AdminAiHourlyRow {
+  hour: number
+  day_cst: string
+  label: string
+  total_tokens: number
+  prompt_tokens: number
+  output_tokens: number
+  calls: number
+  ok_calls: number
+  error_calls: number
+  fallback_calls: number
+  top_model: string
+}
+
+export interface AdminAiModelRow {
+  model: string
+  resolved_slug: string
+  tier: 'tier1' | 'tier2' | 'edge'
+  rpm_limit_per_key: number
+  rpd_limit_per_key: number
+  soft_rpd_per_key: number
+  pool_rpd_capacity: number
+  usage_pct_of_pool_rpd: number
+  role_label: string
+  duties: string
+  calls: number
+  avg_calls_per_hour: number
+  ok_calls: number
+  error_calls: number
+  primary_calls: number
+  fallback_calls: number
+  prompt_tokens: number
+  output_tokens: number
+  total_tokens: number
+  token_share_pct: number
+  avg_tokens_per_call: number
+  scopes: string[]
+}
+
+export interface AdminAiKeyRow {
+  slot: string
+  fingerprint: string
+  status: 'healthy' | 'cooldown' | 'exhausted' | 'unconfigured'
+  window_calls: number
+  window_ok_calls: number
+  window_error_calls: number
+  window_rate_limit_calls: number
+  window_fallback_calls: number
+  window_tokens: number
+  window_prompt_tokens: number
+  window_output_tokens: number
+  tier1_calls_today: number
+  total_calls_today: number
+  total_tokens_today: number
+  rotation_share_pct: number
+  tier1_rpd_limit: number
+  total_rpd_limit: number
+  last_success_at: string | null
+  last_error_code: string | null
+  last_error: string | null
+  model_calls: Record<string, number>
+}
+
+export interface AdminAiRoutingModule {
+  module_id: string
+  module_name: string
+  cadence: string
+  primary_model: string
+  fallback_chain: string[]
+  duties: string
+}
+
+export interface AdminAiRecentEvent {
+  id: string
+  ts_cst: string
+  ts_ms: number
+  source: string
+  scope: string
+  tier: string
+  primary_model: string
+  model_canonical: string
+  model_actual: string
+  is_fallback: boolean
+  key_slot: string
+  key_fingerprint: string
+  ok: boolean
+  error_code: string | null
+  prompt_tokens: number
+  output_tokens: number
+  total_tokens: number
+  token_source: string
+  latency_ms: number
+}
+
+export interface AdminAiUsageResponse {
+  window: {
+    mode: 'settled_21h' | 'rolling_24h' | 'current_cycle'
+    settlement_day: string
+    latest_settled_day: string
+    start_ms: number
+    end_ms: number
+    start_cst: string
+    end_cst: string
+    label: string
+    next_settlement_cst: string
+    is_frozen?: boolean
+    frozen_at_cst?: string | null
+  }
+  available_settlement_days: string[]
+  recent_snapshots: Array<{
+    settlement_day: string
+    window_start_cst: string
+    window_end_cst: string
+    frozen_at_cst: string
+    total_tokens: number
+    total_calls: number
+    fallback_calls: number
+  }>
+  summary: {
+    total_tokens: number
+    prompt_tokens: number
+    output_tokens: number
+    exact_token_calls: number
+    estimated_token_calls: number
+    total_calls: number
+    ok_calls: number
+    error_calls: number
+    fallback_calls: number
+    fallback_rate_pct: number
+    rate_limit_calls: number
+    pipeline_calls: number
+    worker_calls: number
+    avg_calls_per_hour: number
+    avg_tokens_per_call: number
+    configured_pipeline_keys: number
+    healthy_pipeline_keys: number
+    cooled_pipeline_keys: number
+    exhausted_pipeline_keys: number
+    tier1_pool_rpd: number
+    total_pool_rpd: number
+    tier1_util_pct: number
+    total_pool_util_pct: number
+  }
+  capacity_advice: {
+    level: 'ok' | 'watch' | 'expand'
+    headline: string
+    reasons: string[]
+  }
+  hourly: AdminAiHourlyRow[]
+  models: AdminAiModelRow[]
+  keys: AdminAiKeyRow[]
+  recent_events: AdminAiRecentEvent[]
+  model_routing_guide: {
+    modules: AdminAiRoutingModule[]
+    switch_rules: Array<{ trigger: string; title: string; behavior: string }>
+  }
+  telemetry_status: {
+    has_r2_telemetry: boolean
+    r2_updated_at: string | null
+    quota_state_updated_at: string | null
+    bootstrap_from_quota_ledger: boolean
+    worker_key_configured: boolean
+  }
+}
+
+export async function apiAdminAiUsage(
+  token: string,
+  params: { mode?: 'settled_21h' | 'rolling_24h' | 'current_cycle'; day?: string } = {},
+): Promise<AdminAiUsageResponse> {
+  const qs = new URLSearchParams()
+  if (params.mode) qs.set('mode', params.mode)
+  if (params.day) qs.set('day', params.day)
+  const suffix = qs.toString() ? `?${qs.toString()}` : ''
+  return apiRequest(`/api/admin/ai-usage${suffix}`, { method: 'GET' }, token)
+}
+
+export async function apiAdminFreezeAiSnapshot(
+  token: string,
+): Promise<{ ok: boolean; frozen_day: string; report: AdminAiUsageResponse }> {
+  return apiRequest('/api/admin/ai-usage/freeze-now', { method: 'POST' }, token)
+}

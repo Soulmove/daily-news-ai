@@ -19,6 +19,7 @@ import {
   wireReadIdSet,
 } from '../../web/src/core/uiPrefs'
 import { createLiveWireController } from '../../web/src/core/wireStream'
+import { dedupeAndMergeWireItems } from '../../web/src/core/wireDedup'
 import { computeSimulatedOnlineCount } from '../../web/src/core/presenceStore'
 import { centerPillIntoView } from '../../web/src/core/dom'
 import { clusterRawPlatforms, computeTitleSimilarity, sanitizeExcerptText } from '../../web/src/core/dedup'
@@ -2248,6 +2249,244 @@ describe('Phase C features: sorting, pagination, confidence, weekly report, echo
       const v = computeSimulatedOnlineCount(5, 10, 5, 1_795_700_000_000 + i * 5000)
       expect(v).toBeGreaterThanOrEqual(1)
       expect(v).toBeLessThanOrEqual(15)
+    }
+  })
+
+  it('routes public wire & AI polling direct to R2 with fallback and merges multi-source wires', async () => {
+    // 1. Verify frontend wire clustering matches backend multi-source rules
+    const clustered = dedupeAndMergeWireItems([
+      {
+        id: 'w_bank_1',
+        title: '四大商业银行已与上市公司签订股票回购增持贷款合同超6000亿元',
+        excerpt: '四大商业银行已与上市公司签订股票回购增持贷款合同超6000亿元',
+        category: 'finance',
+        source_name: '华尔街见闻 7×24',
+        url: 'https://wallstreetcn.com/livenews/1',
+        published_at: '2026-11-26T22:29:00+08:00',
+        importance: 'high',
+        severity_tier: 'A',
+        tag: '央行/政策',
+      },
+      {
+        id: 'w_bank_2',
+        title: '四大商业银行已与上市公司签订股票回购增持贷款合同超6000亿元',
+        excerpt: '四大商业银行已与上市公司签订股票回购增持贷款合同超6000亿元',
+        category: 'finance',
+        source_name: '新浪财经 7×24',
+        url: 'https://finance.sina.com.cn/7x24/2',
+        published_at: '2026-11-26T22:28:00+08:00',
+        importance: 'high',
+        severity_tier: 'A',
+        tag: '央行/政策',
+      },
+      {
+        id: 'w_airspace',
+        title: '墨西哥总统辛鲍姆表示，正寻求与美国空域管理部门会面，讨论SpaceX使用墨西哥空域的许可事宜。',
+        excerpt: '',
+        category: 'global',
+        source_name: '新浪财经 7×24',
+        url: 'https://finance.sina.com.cn/7x24/3',
+        published_at: '2026-11-26T22:30:00+08:00',
+        importance: 'normal',
+        tag: '国际',
+      },
+    ])
+    expect(clustered).toHaveLength(2)
+    const bank = clustered.find((c) => c.title.includes('6000亿元'))
+    expect(bank?.source_count).toBe(2)
+    expect(bank?.evidence_status).toBe('multi_source')
+    expect(bank?.merged_sources?.map((s) => s.source_name)).toEqual(['华尔街见闻 7×24', '新浪财经 7×24'])
+
+    // 2. Plan A direct R2 polling skips Authorization, throttles AI progress to 3 min, and falls back to Worker on R2 failure
+    const calls: Array<{ url: string; cache?: RequestCache; auth?: string }> = []
+    let r2WireShouldFail = false
+    let preferR2 = true
+
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
+        const url = String(input)
+        const headers = (init?.headers as Record<string, string> | undefined) || {}
+        calls.push({ url, cache: init?.cache, auth: headers.Authorization })
+
+        if (url === 'https://data.mirrorinfo.xyz/data/live_wire_edge.json' && r2WireShouldFail) {
+          return { ok: false, status: 404, json: async () => ({}) }
+        }
+        if (url.includes('live_wire_edge.json') || url.includes('/api/wire/latest')) {
+          return {
+            ok: true,
+            json: async () => ({
+              schema_version: '5.1',
+              updated_at: `2026-11-26T22:35:00+08:00_${calls.length}`,
+              status: 'ok',
+              sources_online: 'Edge',
+              total: 1,
+              items: [
+                {
+                  id: `w_r2_${calls.length}`,
+                  title: 'Test live wire item',
+                  excerpt: 'Excerpt',
+                  category: 'finance',
+                  source_name: '华尔街见闻 7×24',
+                  url: 'https://wallstreetcn.com/1',
+                  published_at: '2026-11-26T22:35:00+08:00',
+                  importance: 'normal',
+                  tag: '财经',
+                },
+              ],
+            }),
+          }
+        }
+        return {
+          ok: true,
+          json: async () => ({
+            schema_version: '4.0',
+            generated_at: '2026-11-26T22:15:00+08:00',
+            batch_id: 'b1',
+            weekly_digest: { period_label: '', summary: '', highlights: [] },
+            companies: [],
+            timeline: [{ id: 'ai_1', date: '2026-11-26', title: 'Model update', is_first_hand: true }],
+          }),
+        }
+      }),
+    )
+
+    try {
+      const handle = createLiveWireController({
+        pollUrl: 'https://mirrorinfo.xyz/api/wire/latest',
+        aiPollUrl: 'https://mirrorinfo.xyz/api/ai-progress/latest',
+        directWireUrl: 'https://data.mirrorinfo.xyz/data/live_wire_edge.json',
+        directAiUrl: 'https://data.mirrorinfo.xyz/data/ai_progress.json',
+        shouldPreferDirectR2: () => preferR2,
+        allowStaticFallback: () => preferR2,
+        getAuthToken: () => 'jwt-secret-should-stay-on-worker',
+        pollIntervalMs: 30_000,
+        aiPollIntervalMs: 180_000,
+        onUpdate: () => {},
+        onAiUpdate: () => {},
+      })
+      await new Promise((r) => setTimeout(r, 20))
+
+      // First poll hit direct R2 wire + AI without Authorization and with no-cache (enables 304)
+      expect(calls.some((c) => c.url === 'https://data.mirrorinfo.xyz/data/live_wire_edge.json' && c.cache === 'no-cache' && !c.auth)).toBe(true)
+      expect(calls.some((c) => c.url === 'https://data.mirrorinfo.xyz/data/ai_progress.json' && c.cache === 'no-cache' && !c.auth)).toBe(true)
+      expect(calls.some((c) => c.url.includes('/api/wire/latest'))).toBe(false)
+
+      // R2 404 on directWireUrl falls back cleanly to Worker pollUrl WITH Authorization header
+      calls.length = 0
+      r2WireShouldFail = true
+      handle.stop()
+
+      const fallbackHandle = createLiveWireController({
+        pollUrl: 'https://mirrorinfo.xyz/api/wire/latest',
+        aiPollUrl: 'https://mirrorinfo.xyz/api/ai-progress/latest',
+        directWireUrl: 'https://data.mirrorinfo.xyz/data/live_wire_edge.json',
+        directAiUrl: 'https://data.mirrorinfo.xyz/data/ai_progress.json',
+        shouldPreferDirectR2: () => true,
+        allowStaticFallback: () => true,
+        getAuthToken: () => 'jwt-secret-should-stay-on-worker',
+        onUpdate: () => {},
+        onAiUpdate: () => {},
+      })
+      // Seed non-empty AI timeline immediately so AI poll is throttled within 180s
+      fallbackHandle.seedAiFromDoc({
+        schema_version: '4.0',
+        generated_at: '2026-11-26T22:15:00+08:00',
+        batch_id: 'b1',
+        weekly_digest: { period_label: '', summary: '', highlights: [] },
+        companies: [],
+        timeline: [
+          {
+            id: 'ai_seed_1',
+            date: '2026-11-26',
+            company_id: 'openai',
+            company_name: 'OpenAI',
+            region: 'global',
+            category: '模型与产品',
+            title: 'Seeded',
+            what_it_does: 'Seed summary',
+            limitations: 'None',
+            source_name: 'Official',
+            is_first_hand: true,
+          },
+        ],
+      })
+      await new Promise((r) => setTimeout(r, 20))
+      fallbackHandle.stop()
+      expect(calls.some((c) => c.url === 'https://data.mirrorinfo.xyz/data/live_wire_edge.json')).toBe(true)
+      expect(calls.some((c) => c.url.includes('/api/wire/latest') && c.auth === 'Bearer jwt-secret-should-stay-on-worker')).toBe(true)
+
+      // Test AI 3-minute throttle when seeded before timer fires
+      vi.useFakeTimers()
+      calls.length = 0
+      r2WireShouldFail = false
+      const throttledHandle = createLiveWireController({
+        pollUrl: 'https://mirrorinfo.xyz/api/wire/latest',
+        aiPollUrl: 'https://mirrorinfo.xyz/api/ai-progress/latest',
+        directWireUrl: 'https://data.mirrorinfo.xyz/data/live_wire_edge.json',
+        directAiUrl: 'https://data.mirrorinfo.xyz/data/ai_progress.json',
+        shouldPreferDirectR2: () => true,
+        getAuthToken: () => 'jwt-secret-should-stay-on-worker',
+        pollIntervalMs: 45_000,
+        aiPollIntervalMs: 180_000,
+        onUpdate: () => {},
+        onAiUpdate: () => {},
+      })
+      throttledHandle.seedAiFromDoc({
+        schema_version: '4.0',
+        generated_at: '2026-11-26T22:15:00+08:00',
+        batch_id: 'b1',
+        weekly_digest: { period_label: '', summary: '', highlights: [] },
+        companies: [],
+        timeline: [
+          {
+            id: 'ai_seed_2',
+            date: '2026-11-26',
+            company_id: 'openai',
+            company_name: 'OpenAI',
+            region: 'global',
+            category: '模型与产品',
+            title: 'Seeded',
+            what_it_does: 'Seed summary',
+            limitations: 'None',
+            source_name: 'Official',
+            is_first_hand: true,
+          },
+        ],
+      })
+      await vi.advanceTimersByTimeAsync(95_000)
+      const wireCallsIn95s = calls.filter((c) => c.url.includes('live_wire_edge.json')).length
+      const aiCallsIn95s = calls.filter((c) => c.url.includes('ai_progress.json')).length
+      expect(wireCallsIn95s).toBeGreaterThanOrEqual(2)
+      expect(aiCallsIn95s).toBe(0) // Seeded synchronously before await resumed; suppressed within 180s window
+      await vi.advanceTimersByTimeAsync(90_000)
+      const aiCallsAfter185s = calls.filter((c) => c.url.includes('ai_progress.json')).length
+      expect(aiCallsAfter185s).toBe(1) // Resumes once 180s interval passes
+      throttledHandle.stop()
+      vi.useRealTimers()
+
+      // Verify private_gate routes exclusively to Worker with Authorization and never touches R2
+
+      calls.length = 0
+      preferR2 = false
+      const gatedHandle = createLiveWireController({
+        pollUrl: 'https://mirrorinfo.xyz/api/wire/latest',
+        aiPollUrl: 'https://mirrorinfo.xyz/api/ai-progress/latest',
+        directWireUrl: 'https://data.mirrorinfo.xyz/data/live_wire_edge.json',
+        directAiUrl: 'https://data.mirrorinfo.xyz/data/ai_progress.json',
+        shouldPreferDirectR2: () => preferR2,
+        allowStaticFallback: () => preferR2,
+        getAuthToken: () => 'jwt-secret-should-stay-on-worker',
+        onUpdate: () => {},
+        onAiUpdate: () => {},
+      })
+      await new Promise((r) => setTimeout(r, 20))
+      gatedHandle.stop()
+      expect(calls.some((c) => c.url.includes('/api/wire/latest') && c.auth === 'Bearer jwt-secret-should-stay-on-worker')).toBe(true)
+      expect(calls.some((c) => c.url.includes('/api/ai-progress/latest') && c.auth === 'Bearer jwt-secret-should-stay-on-worker')).toBe(true)
+      expect(calls.some((c) => c.url.includes('data.mirrorinfo.xyz'))).toBe(false)
+    } finally {
+      vi.unstubAllGlobals()
     }
   })
 })

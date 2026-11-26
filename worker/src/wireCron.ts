@@ -4,6 +4,7 @@ import type { Env } from './types'
 
 export const WIRE_CACHE_KEY = 'https://mirrorinfo.xyz/__edge_cache/wire_latest_v1'
 export const AI_PROGRESS_CACHE_KEY = 'https://mirrorinfo.xyz/__edge_cache/ai_progress_latest_v1'
+export const WIRE_R2_EDGE_KEY = 'data/live_wire_edge.json'
 
 const HTML_RE = /<[^>]+>/g
 const URL_TAIL_RE = /https?:\/\/\S+/gi
@@ -146,12 +147,231 @@ function epochToShanghaiIso(tsVal: unknown, fallbackIso: string): string {
   return `${yyyy}-${mm}-${dd}T${hh}:${mi}:${ss}+08:00`
 }
 
-function normalizeDedupKey(title: string): string {
-  return title
+export function normalizeDedupKey(title: string): string {
+  return String(title || '')
     .toLowerCase()
     .replace(/【[^】]+】/g, '')
-    .replace(/[\s\-_·:：,，.。!！?？()（）[\]【】'"%％0-9]+/g, '')
-    .slice(0, 28)
+    .replace(/（[^）]{1,36}）/g, '')
+    .replace(/\([^)]{1,36}\)/g, '')
+    .replace(/[\s\-_·:：,，.。!！?？()（）[\]【】'"%％+、/]+/g, '')
+    .slice(0, 36)
+}
+
+const WIRE_FILLER_RE =
+  /表示|指出|称|透露|宣布|据悉|消息|报道|项目|事宜|方面|进行|已经|已就|有关|相关|的|了|在|中|是|与|和|对|他|她|其|将|为|于/g
+
+function extractSubstantiveCore(title: string): string {
+  return String(title || '')
+    .toLowerCase()
+    .replace(/【[^】]+】/g, '')
+    .replace(/（[^）]{1,36}）/g, '')
+    .replace(/\([^)]{1,36}\)/g, '')
+    .replace(/[\s\-_·:：,，.。!！?？()（）[\]【】'"%％+、/]+/g, '')
+    .replace(WIRE_FILLER_RE, '')
+}
+
+function buildCharBigrams(s: string): Set<string> {
+  const out = new Set<string>()
+  if (s.length < 2) {
+    if (s) out.add(s)
+    return out
+  }
+  for (let i = 0; i < s.length - 1; i++) {
+    out.add(s.slice(i, i + 2))
+  }
+  return out
+}
+
+function parseEpochMs(iso: string): number {
+  const t = Date.parse(String(iso || ''))
+  return Number.isFinite(t) ? t : 0
+}
+
+export function areWireTitlesSimilar(aTitle: string, bTitle: string, aPubIso: string, bPubIso: string): boolean {
+  const tA = parseEpochMs(aPubIso)
+  const tB = parseEpochMs(bPubIso)
+  if (tA > 0 && tB > 0) {
+    const gapMin = Math.abs(tA - tB) / 60_000
+    if (gapMin > 240) return false
+  }
+
+  const keyA = normalizeDedupKey(aTitle)
+  const keyB = normalizeDedupKey(bTitle)
+  if (keyA.length >= 6 && keyA === keyB) {
+    return true
+  }
+
+  const gapMin = tA > 0 && tB > 0 ? Math.abs(tA - tB) / 60_000 : 0
+  if (gapMin > 90) return false
+
+  const aCore = extractSubstantiveCore(aTitle)
+  const bCore = extractSubstantiveCore(bTitle)
+  if (aCore.length < 6 || bCore.length < 6) return false
+
+  // Numeric conflict guard: distinct multi-digit figures without overlap must not fuzzy-merge
+  const numsA = new Set((aTitle.match(/\d{2,}/g) || []))
+  const numsB = new Set((bTitle.match(/\d{2,}/g) || []))
+  if (numsA.size > 0 && numsB.size > 0) {
+    let sharedNum = false
+    for (const n of numsA) {
+      if (numsB.has(n)) {
+        sharedNum = true
+        break
+      }
+    }
+    if (!sharedNum) return false
+  }
+
+  const bgA = buildCharBigrams(aCore)
+  const bgB = buildCharBigrams(bCore)
+  let inter = 0
+  for (const bg of bgA) {
+    if (bgB.has(bg)) inter++
+  }
+  if (inter === 0) return false
+
+  const dice = (2 * inter) / (bgA.size + bgB.size)
+  const minBigrams = Math.max(1, Math.min(bgA.size, bgB.size))
+  const contain = inter / minBigrams
+  const minLen = Math.min(aCore.length, bCore.length)
+  const maxLen = Math.max(aCore.length, bCore.length)
+
+  if (dice >= 0.56) return true
+  if (contain >= 0.72 && minLen >= 10 && maxLen / Math.max(1, minLen) <= 1.65) return true
+
+  if (gapMin <= 20 && Math.abs(aCore.length - bCore.length) <= 8 && dice >= 0.36) {
+    let prefixLen = 0
+    const limit = Math.min(aCore.length, bCore.length)
+    while (prefixLen < limit && aCore[prefixLen] === bCore[prefixLen]) {
+      prefixLen++
+    }
+    const latA = new Set((aTitle.toLowerCase().match(/[a-z0-9]{2,}/g) || []))
+    const latB = new Set((bTitle.toLowerCase().match(/[a-z0-9]{2,}/g) || []))
+    let sharedLat = 0
+    for (const tok of latA) {
+      if (latB.has(tok)) sharedLat++
+    }
+    if (prefixLen >= 6 && sharedLat >= 1) return true
+  }
+
+  return false
+}
+
+export interface WireMergeSourceEntry {
+  source_name: string
+  url: string
+  published_at: string
+}
+
+export interface WireMergeInput {
+  id: string
+  title: string
+  excerpt?: string
+  category?: string
+  source_name: string
+  url: string
+  published_at: string
+  fetched_at?: string
+  severity_tier?: string
+  heavy_reason_tag?: string | null
+  importance?: string
+  tag?: string
+}
+
+export type WireMergedOutput<T extends WireMergeInput> = T & {
+  source_count: number
+  merged_count: number
+  evidence_status: 'multi_source' | 'single_source'
+  merged_sources: WireMergeSourceEntry[]
+}
+
+const SEV_RANK: Record<string, number> = { S: 3, A: 2, B: 1 }
+
+export function mergeWireClusterItems<T extends WireMergeInput>(rows: T[]): Array<WireMergedOutput<T>> {
+  const sorted = [...rows].sort((a, b) => String(b.published_at || '').localeCompare(String(a.published_at || '')))
+  const clusters: T[][] = []
+
+  for (const row of sorted) {
+    if (!row || !row.title) continue
+    let matched: T[] | null = null
+    for (const cl of clusters) {
+      const rep = cl[0]
+      if (areWireTitlesSimilar(rep.title, row.title, rep.published_at, row.published_at)) {
+        matched = cl
+        break
+      }
+    }
+    if (matched) {
+      matched.push(row)
+    } else {
+      clusters.push([row])
+    }
+  }
+
+  return clusters.map((cl) => {
+    const sortedMembers = [...cl].sort((a, b) => {
+      const sevDiff = (SEV_RANK[String(b.severity_tier || 'B')] || 1) - (SEV_RANK[String(a.severity_tier || 'B')] || 1)
+      if (sevDiff !== 0) return sevDiff
+      const lenA = String(a.title || '').length
+      const lenB = String(b.title || '').length
+      if (Math.abs(lenA - lenB) > 2 && lenA <= 110 && lenB <= 110) {
+        return lenB - lenA
+      }
+      return String(b.published_at || '').localeCompare(String(a.published_at || ''))
+    })
+    const primary = sortedMembers[0]
+    const newest = cl[0]
+
+    let bestSev = String(primary.severity_tier || 'B')
+    let bestReason = primary.heavy_reason_tag || null
+    let highImp = String(primary.importance || 'normal') === 'high'
+    let bestExcerpt = String(primary.excerpt || '')
+    for (const m of cl) {
+      const mSev = String(m.severity_tier || 'B')
+      if ((SEV_RANK[mSev] || 1) > (SEV_RANK[bestSev] || 1)) {
+        bestSev = mSev
+      }
+      if (!bestReason && m.heavy_reason_tag) {
+        bestReason = m.heavy_reason_tag
+      }
+      if (String(m.importance || 'normal') === 'high') {
+        highImp = true
+      }
+      const ex = String(m.excerpt || '')
+      if (ex && ex !== m.title && ex.length > bestExcerpt.length) {
+        bestExcerpt = ex
+      }
+    }
+
+    const srcSeen = new Set<string>()
+    const mergedSources: WireMergeSourceEntry[] = []
+    for (const m of cl) {
+      const sName = String(m.source_name || '').trim() || '实时快讯'
+      const normSrc = sName.toLowerCase().replace(/\s+/g, '')
+      if (srcSeen.has(normSrc)) continue
+      srcSeen.add(normSrc)
+      mergedSources.push({
+        source_name: sName,
+        url: String(m.url || ''),
+        published_at: String(m.published_at || newest.published_at || ''),
+      })
+    }
+
+    const sourceCount = Math.max(1, mergedSources.length)
+    return {
+      ...primary,
+      published_at: newest.published_at || primary.published_at,
+      fetched_at: newest.fetched_at || primary.fetched_at,
+      excerpt: bestExcerpt || primary.excerpt || primary.title,
+      severity_tier: bestSev,
+      heavy_reason_tag: bestReason,
+      importance: highImp || bestSev !== 'B' ? 'high' : 'normal',
+      source_count: sourceCount,
+      merged_count: cl.length,
+      evidence_status: sourceCount >= 2 ? 'multi_source' : 'single_source',
+      merged_sources: mergedSources,
+    }
+  })
 }
 
 export interface RawWireCandidate {
@@ -302,13 +522,15 @@ export async function runWireCron(env: Env): Promise<{ inserted: number; total_f
   const seenDedup = new Set<string>()
   const unique: RawWireCandidate[] = []
   for (const item of combined) {
-    if (seenDedup.has(item.dedupKey)) continue
-    seenDedup.add(item.dedupKey)
+    // Dedup per sourceId+dedupKey so different publishers on the same story are preserved for multi-source clustering
+    const perSourceKey = `${item.sourceId}::${item.dedupKey}`
+    if (seenDedup.has(perSourceKey)) continue
+    seenDedup.add(perSourceKey)
     unique.push(item)
   }
 
   if (unique.length > 0) {
-    const stmts = unique.slice(0, 50).map((it) =>
+    const stmts = unique.slice(0, 60).map((it) =>
       env.DB.prepare(
         `INSERT INTO live_wire_items (
            id, dedup_key, source_id, source_name, category, title, excerpt, url,
@@ -351,6 +573,8 @@ export async function runWireCron(env: Env): Promise<{ inserted: number; total_f
     }
   }
 
+  await publishWireSnapshotToR2(env)
+
   return { inserted: unique.length, total_fetched: combined.length, updated_at: fetchedIso }
 }
 
@@ -361,9 +585,31 @@ const CAT_TAG_MAP: Record<string, string> = {
   general: '要闻速递',
 }
 
+export async function publishWireSnapshotToR2(
+  env: Env,
+  prebuiltDoc?: Record<string, unknown>,
+): Promise<boolean> {
+  if (!env.R2_DATA) return false
+  try {
+    const doc = prebuiltDoc ?? (await getWireLatestDoc(env))
+    if (!doc || doc.status !== 'ok' || !Array.isArray(doc.items) || doc.items.length === 0) {
+      return false
+    }
+    await env.R2_DATA.put(WIRE_R2_EDGE_KEY, JSON.stringify(doc), {
+      httpMetadata: {
+        contentType: 'application/json; charset=utf-8',
+        cacheControl: 'public, max-age=30',
+      },
+    })
+    return true
+  } catch {
+    return false
+  }
+}
+
 export async function getWireLatestDoc(env: Env): Promise<Record<string, unknown>> {
   const rows = await env.DB.prepare(
-    'SELECT * FROM live_wire_items ORDER BY published_at DESC LIMIT 80',
+    'SELECT * FROM live_wire_items ORDER BY published_at DESC LIMIT 180',
   ).all<{
     id: string
     dedup_key: string
@@ -383,7 +629,7 @@ export async function getWireLatestDoc(env: Env): Promise<Record<string, unknown
 
   const results = rows.results || []
   if (results.length > 0) {
-    const items = results.map((r) => ({
+    const rawItems = results.map((r) => ({
       id: r.id,
       title: r.title,
       excerpt: r.excerpt || r.title,
@@ -391,11 +637,14 @@ export async function getWireLatestDoc(env: Env): Promise<Record<string, unknown
       source_name: r.source_name,
       url: r.url,
       published_at: r.published_at,
+      fetched_at: r.fetched_at,
       severity_tier: r.severity_tier || 'B',
       heavy_reason_tag: r.heavy_reason_tag,
       importance: r.importance || 'normal',
       tag: r.metric_label || CAT_TAG_MAP[r.category] || '实时快讯',
     }))
+
+    const items = mergeWireClusterItems(rawItems).slice(0, 80)
 
     const breaking = items
       .filter((it) => it.severity_tier === 'S' || it.severity_tier === 'A' || it.importance === 'high')
@@ -410,32 +659,43 @@ export async function getWireLatestDoc(env: Env): Promise<Record<string, unknown
         source_name: it.source_name,
         url: it.url,
         published_at: it.published_at,
+        related_count: it.source_count,
       }))
 
-    const sourceNames = Array.from(new Set(items.map((it) => it.source_name))).join(' · ')
+    const allSrcNames: string[] = []
+    for (const it of items) {
+      for (const ms of it.merged_sources) {
+        if (ms.source_name && !allSrcNames.includes(ms.source_name)) {
+          allSrcNames.push(ms.source_name)
+        }
+      }
+    }
+    const sourceNames = allSrcNames.join(' · ')
     const updatedAt = results[0].fetched_at || nowShanghaiIso()
 
     return {
-      schema_version: '5.0',
+      schema_version: '5.1',
       updated_at: updatedAt,
       generated_at: updatedAt,
       status: 'ok',
-      sources_online: sourceNames || '华尔街见闻 · 财联社 · 新浪7×24',
+      sources_online: sourceNames || '华尔街见闻 · 新浪7×24',
       total: items.length,
       breaking_highlights: breaking,
       items,
     }
   }
 
-  // Fallback gracefully to R2 live_wire.json synced by GitHub Actions
-  try {
-    const r2Obj = await env.R2_DATA.get('data/live_wire.json')
-    if (r2Obj) {
-      const parsed = (await r2Obj.json()) as Record<string, unknown>
-      if (parsed && typeof parsed === 'object') return parsed
+  // Fallback gracefully to R2 edge snapshot first, then GitHub Actions snapshot
+  for (const r2Key of [WIRE_R2_EDGE_KEY, 'data/live_wire.json']) {
+    try {
+      const r2Obj = await env.R2_DATA.get(r2Key)
+      if (r2Obj) {
+        const parsed = (await r2Obj.json()) as Record<string, unknown>
+        if (parsed && typeof parsed === 'object') return parsed
+      }
+    } catch {
+      // Try next fallback key
     }
-  } catch {
-    // Proceed to empty doc
   }
 
   return {

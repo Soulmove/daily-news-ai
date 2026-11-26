@@ -948,6 +948,12 @@ export interface AiProgressDoc {
   }>
 }
 
+export interface LiveWireSourceRef {
+  source_name: string
+  url: string
+  published_at: string
+}
+
 export interface LiveWireItem {
   id: string
   title: string
@@ -958,10 +964,15 @@ export interface LiveWireItem {
   source_name: string
   url: string
   published_at: string
+  fetched_at?: string
   severity_tier?: 'S' | 'A' | 'B'
   heavy_reason_tag?: string | null
   importance: 'high' | 'normal' | string
   tag: string
+  source_count?: number
+  merged_count?: number
+  evidence_status?: string
+  merged_sources?: LiveWireSourceRef[]
 }
 
 export interface BreakingHighlightItem {
