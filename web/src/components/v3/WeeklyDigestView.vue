@@ -32,6 +32,7 @@ import { appLang, t } from '../../core/i18n'
 import { normalizeExternalUrl } from '../../core/legacyAdapter'
 import type {
   PortfolioConfig,
+  WatchlistItem,
   WeeklyDigestDoc,
   WeeklyDigestItem,
   WeeklyDigestsIndexDoc,
@@ -47,7 +48,7 @@ const props = defineProps<{
   selectedWeekId: string | null
   loading: boolean
   siteSettings: PublicSiteSettings
-  watchlist: string[]
+  watchlist: WatchlistItem[]
   portfolio: PortfolioConfig
   bookmarkedIds: Set<string>
   nowMs: number
@@ -292,17 +293,25 @@ function toggleReaction(itemId: string, choice: StanceChoice) {
 // Match watchlist + portfolio against each weekly item
 const personalKeywords = computed<string[]>(() => {
   const out: string[] = []
-  for (const w of props.watchlist) {
-    const clean = w.trim().toLowerCase()
+  const pushKw = (raw: unknown) => {
+    if (typeof raw !== 'string') return
+    const clean = raw.trim().toLowerCase()
     if (clean.length >= 2) out.push(clean)
   }
-  for (const s of props.portfolio.sectors || []) {
-    const clean = s.trim().toLowerCase()
-    if (clean.length >= 2) out.push(clean)
+  for (const w of props.watchlist || []) {
+    if (typeof w === 'string') {
+      pushKw(w)
+      continue
+    }
+    if (!w || w.muted) continue
+    pushKw(w.label)
+    for (const kw of w.keywords || []) pushKw(kw)
   }
-  for (const tk of props.portfolio.tickers || []) {
-    const clean = tk.trim().toLowerCase()
-    if (clean.length >= 2) out.push(clean)
+  for (const s of props.portfolio?.sectors || []) {
+    pushKw(s)
+  }
+  for (const tk of props.portfolio?.tickers || []) {
+    pushKw(tk)
   }
   return Array.from(new Set(out))
 })
@@ -347,10 +356,10 @@ const p0TopHighlights = computed<WeeklyDigestItem[]>(() => {
 const filteredSectors = computed(() => {
   if (!props.doc) return []
   const q = localQuery.value.trim().toLowerCase()
-  return props.doc.sectors
+  return (props.doc.sectors || [])
     .filter((s) => activeSectorFilter.value === 'all' || s.sector_id === activeSectorFilter.value)
     .map((sec) => {
-      const filteredItems = sec.items.filter((it) => {
+      const filteredItems = (sec.items || []).filter((it) => {
         if (priorityFilter.value === 'P0' && it.priority !== 'P0') return false
         if (priorityFilter.value === 'P0_P1' && it.priority === 'P2') return false
         if (onlyMyWatchlist.value && getMatchedPersonalTags(it).length === 0) return false
@@ -577,13 +586,13 @@ async function copyWeeklyDigestText() {
               </span>
 
               <select
-                v-if="indexDoc && indexDoc.issues.length > 1"
+                v-if="indexDoc && (indexDoc.issues || []).length > 1"
                 :value="doc.week_id"
                 @change="(e) => emit('select-week', (e.target as HTMLSelectElement).value)"
                 class="h-7 px-2.5 rounded-full bg-white dark:bg-[#1C1C1E] border border-black/[0.08] dark:border-white/[0.12] text-[11px] font-semibold text-zinc-800 dark:text-zinc-100"
                 :aria-label="t('切换往期周刊', 'Select weekly issue')"
               >
-                <option v-for="iss in indexDoc.issues" :key="iss.week_id" :value="iss.week_id">
+                <option v-for="iss in indexDoc.issues || []" :key="iss.week_id" :value="iss.week_id">
                   {{ iss.week_id }} ({{ iss.date_range }})
                 </option>
               </select>
@@ -612,10 +621,10 @@ async function copyWeeklyDigestText() {
           </div>
 
           <!-- Keywords clickable filter pills -->
-          <div v-if="doc.keywords.length > 0" class="flex flex-wrap items-center gap-1.5">
+          <div v-if="(doc.keywords || []).length > 0" class="flex flex-wrap items-center gap-1.5">
             <span class="text-[11px] font-medium text-zinc-400 mr-0.5">{{ t('本周热词:', 'Themes:') }}</span>
             <button
-              v-for="kw in doc.keywords"
+              v-for="kw in doc.keywords || []"
               :key="kw"
               type="button"
               @click="localQuery = localQuery === kw ? '' : kw; triggerHaptic(6)"
@@ -1237,11 +1246,11 @@ async function copyWeeklyDigestText() {
 
       <!-- 5. Cross-Sector Threads + Next-Week Catalysts Bridge -->
       <div
-        v-if="doc.cross_sector_threads.length > 0 || doc.next_week_catalysts.length > 0"
+        v-if="(doc.cross_sector_threads || []).length > 0 || (doc.next_week_catalysts || []).length > 0"
         class="grid grid-cols-1 lg:grid-cols-2 gap-3"
       >
         <!-- Cross-Sector Causal Threads -->
-        <div v-if="doc.cross_sector_threads.length > 0" class="ios-card p-4 space-y-2.5">
+        <div v-if="(doc.cross_sector_threads || []).length > 0" class="ios-card p-4 space-y-2.5">
           <div class="flex items-center gap-2">
             <Link2 class="w-4 h-4 text-violet-600 dark:text-violet-400 shrink-0" :stroke-width="1.75" />
             <h3 class="text-sm font-bold text-zinc-950 dark:text-white">
@@ -1300,12 +1309,12 @@ async function copyWeeklyDigestText() {
             </button>
           </div>
 
-          <div v-if="doc.next_week_catalysts.length === 0" class="ios-surface-2 p-3 text-xs text-zinc-500">
+          <div v-if="(doc.next_week_catalysts || []).length === 0" class="ios-surface-2 p-3 text-xs text-zinc-500">
             {{ t('下周日历正在随 24h 数据流实时同步，可前往「预测日程」查看完整日程表。', 'Check Forecasts & Calendar tab for full upcoming schedule.') }}
           </div>
           <div v-else class="space-y-2">
             <div
-              v-for="(cat, idx) in doc.next_week_catalysts"
+              v-for="(cat, idx) in doc.next_week_catalysts || []"
               :key="idx"
               class="ios-surface-2 p-3 space-y-1"
             >
