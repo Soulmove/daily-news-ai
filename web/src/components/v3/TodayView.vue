@@ -3,6 +3,7 @@ import { computed, onUnmounted, ref, watch } from 'vue'
 import {
   Bookmark,
   Calendar,
+  CalendarRange,
   CheckCheck,
   ChevronDown,
   ChevronRight,
@@ -996,6 +997,15 @@ const cocoonDiversityPanel = computed(() => {
         class="mobile-quick-entry-strip items-center gap-1.5 overflow-x-auto no-scrollbar scroll-fade-x py-0.5"
         data-testid="mobile-quick-entry-strip"
       >
+        <button
+          type="button"
+          @click="(e) => { centerPillIntoView(e); emit('switch-tab', 'weekly') }"
+          class="mobile-pressable ios-tap inline-flex items-center gap-1.5 min-h-[34px] px-2.5 rounded-xl bg-white dark:bg-[#131823] border border-[#007AFF]/25 text-[11.5px] font-semibold text-[#007AFF] dark:text-[#0A84FF] whitespace-nowrap shrink-0 shadow-[0_1px_2px_rgba(0,0,0,0.03)]"
+          data-testid="quick-entry-weekly"
+        >
+          <CalendarRange class="w-3.5 h-3.5 shrink-0" :stroke-width="1.75" />
+          <span>{{ t('每周盘点 · 一周大事', 'Weekly Digest') }}</span>
+        </button>
         <button
           type="button"
           @click="(e) => { centerPillIntoView(e); emit('switch-tab', 'calendar') }"

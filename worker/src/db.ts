@@ -693,6 +693,10 @@ export const GROWTH_SUPER_ADMIN_KEYS = new Set<string>([
   'prediction_daily_market_enabled',
   'prediction_rewards_enabled',
   'prediction_proposals_enabled',
+  'weekly_digest_enabled',
+  'weekly_digest_day',
+  'weekly_digest_hour',
+  'weekly_digest_minute',
 ])
 
 export function isValidGrowthStage(raw: unknown): raw is GrowthStage {
@@ -706,6 +710,9 @@ const INT_SETTING_BOUNDS: Record<string, { min: number; max: number; fallback: n
   crowd_vote_min_unlock: { min: 1, max: 50, fallback: 3 },
   user_invite_quota: { min: 0, max: 50, fallback: 3 },
   referral_bonus_qa_quota: { min: 0, max: 100, fallback: 15 },
+  weekly_digest_day: { min: 0, max: 6, fallback: 0 },
+  weekly_digest_hour: { min: 0, max: 23, fallback: 18 },
+  weekly_digest_minute: { min: 0, max: 59, fallback: 0 },
 }
 
 export function isValidAccessMode(raw: unknown): raw is AccessMode {
@@ -757,6 +764,10 @@ export async function getSiteSettings(db: D1Database, envFallback?: string): Pro
     prediction_daily_market_enabled: true,
     prediction_rewards_enabled: true,
     prediction_proposals_enabled: true,
+    weekly_digest_enabled: true,
+    weekly_digest_day: 0,
+    weekly_digest_hour: 18,
+    weekly_digest_minute: 0,
   }
   const boolKeys = new Set([
     'monitor_public',
@@ -769,6 +780,7 @@ export async function getSiteSettings(db: D1Database, envFallback?: string): Pro
     'prediction_daily_market_enabled',
     'prediction_rewards_enabled',
     'prediction_proposals_enabled',
+    'weekly_digest_enabled',
   ])
   const rows = await db.prepare('SELECT key, value FROM site_settings').all<{ key: string; value: string }>()
   let dbAccessModeRaw = ''

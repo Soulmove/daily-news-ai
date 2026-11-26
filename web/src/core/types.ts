@@ -51,7 +51,18 @@ export const CATEGORIES: CategoryInfo[] = [
 
 export type EvidenceStatus = 'official_confirmed' | 'multi_source' | 'single_source' | 'needs_verification'
 
-export type WorkbenchTab = 'today' | 'wire' | 'briefing' | 'ai_progress' | 'finance' | 'tracking' | 'calendar' | 'predictions' | 'tools' | 'me'
+export type WorkbenchTab =
+  | 'today'
+  | 'wire'
+  | 'briefing'
+  | 'ai_progress'
+  | 'finance'
+  | 'tracking'
+  | 'calendar'
+  | 'predictions'
+  | 'weekly'
+  | 'tools'
+  | 'me'
 
 export interface FactAtom {
   atom_id: string
@@ -441,6 +452,8 @@ export interface ManifestV2 {
     radar_path: string
     predictions_path: string
     connectors_path: string
+    weekly_digest_path?: string
+    weekly_digests_index_path?: string
     entities_count?: number
     storylines_count?: number
     topics_count?: number
@@ -1169,4 +1182,129 @@ export interface CrowdPredictionStat {
     bull_top: { tag: string; count: number }[]
     bear_top: { tag: string; count: number }[]
   }
+}
+
+export type WeeklySectorId = 'macro_finance' | 'geopolitics' | 'tech_ai' | 'industry_society'
+export type WeeklyPriority = 'P0' | 'P1' | 'P2'
+
+export interface WeeklyDigestSourceRef {
+  source_name: string
+  url: string
+  source_tier?: string
+}
+
+export interface WeeklyDigestEvolutionStep {
+  date: string
+  headline: string
+  detail: string
+}
+
+export interface WeeklyDigestItem {
+  id: string
+  event_id?: string
+  storyline_id?: string | null
+  sector_id: WeeklySectorId
+  priority: WeeklyPriority
+  priority_reason?: string
+  weekly_score: number
+  severity_tier?: 'S' | 'A' | 'B' | string
+  evidence_status?: EvidenceStatus | string
+  heavy_reason_tag?: string | null
+  category?: CategoryKey | string
+  title: string
+  title_en?: string
+  fact_summary: string
+  one_line_takeaway: string
+  why_it_matters: string
+  next_week_watch: string
+  active_days: string[]
+  first_seen: string
+  last_seen: string
+  day_span: number
+  source_count: number
+  sources: WeeklyDigestSourceRef[]
+  entities: string[]
+  impact_tags?: string[]
+  market_polarity?: string | null
+  evolution_steps?: WeeklyDigestEvolutionStep[]
+  last_seen_at?: string
+}
+
+export interface WeeklyDigestSector {
+  sector_id: WeeklySectorId
+  title: string
+  title_en: string
+  subtitle: string
+  subtitle_en?: string
+  accent: string
+  sector_takeaway: string
+  item_count: number
+  p0_count: number
+  items: WeeklyDigestItem[]
+}
+
+export interface WeeklyCrossThread {
+  title: string
+  from_sector: WeeklySectorId
+  to_sector: WeeklySectorId
+  logic: string
+}
+
+export interface WeeklyNextCatalyst {
+  date: string
+  title: string
+  sector_id: WeeklySectorId
+  why_watch: string
+  action_hint: string
+}
+
+export interface WeeklyDigestDoc {
+  schema_version: string
+  week_id: string
+  week_start: string
+  week_end: string
+  date_range_label: string
+  generated_at: string
+  generation_mode: string
+  model_used?: string | null
+  window_mode?: string
+  stats: {
+    raw_scanned: number
+    unique_clusters: number
+    selected_items: number
+    p0_count: number
+  }
+  schedule?: {
+    enabled?: boolean
+    day: number
+    hour: number
+    minute: number
+    label: string
+  }
+  week_theme: string
+  executive_thesis: string[]
+  keywords: string[]
+  sectors: WeeklyDigestSector[]
+  cross_sector_threads: WeeklyCrossThread[]
+  next_week_catalysts: WeeklyNextCatalyst[]
+}
+
+export interface WeeklyDigestIssueSummary {
+  week_id: string
+  label: string
+  date_range: string
+  week_start: string
+  week_end: string
+  week_theme: string
+  generated_at: string
+  total_items: number
+  p0_count: number
+  path: string
+}
+
+export interface WeeklyDigestsIndexDoc {
+  schema_version: string
+  updated_at: string
+  latest_week_id: string
+  issues: WeeklyDigestIssueSummary[]
 }

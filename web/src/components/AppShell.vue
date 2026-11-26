@@ -2,6 +2,7 @@
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import {
   Bookmark,
+  CalendarRange,
   CheckCircle2,
   Cloud,
   Copy,
@@ -55,6 +56,7 @@ const props = defineProps<{
   bookmarkCount?: number
   isRefreshing?: boolean
   showHistoryButton?: boolean
+  showWeeklyButton?: boolean
   showBookmarksButton?: boolean
   showRefreshButton?: boolean
   showAuthButton?: boolean
@@ -74,6 +76,7 @@ const props = defineProps<{
 const emit = defineEmits<{
   (e: 'toggle-dark'): void
   (e: 'open-history'): void
+  (e: 'open-weekly'): void
   (e: 'open-bookmarks'): void
   (e: 'refresh'): void
   (e: 'open-auth', section?: 'profile' | 'security' | 'login' | 'register'): void
@@ -711,6 +714,15 @@ onUnmounted(() => {
             >
               <Bookmark class="w-3.5 h-3.5" :stroke-width="1.5" />
               <span>{{ t('阅读库', 'Library') }} ({{ bookmarkCount ?? 0 }})</span>
+            </button>
+            <button
+              v-if="showWeeklyButton"
+              type="button"
+              @click="mobileMenuOpen = false; emit('open-weekly')"
+              class="inline-flex items-center gap-1.5 min-h-[40px] px-3 rounded-xl text-xs font-semibold whitespace-nowrap bg-black/[0.05] dark:bg-white/[0.08] text-zinc-800 dark:text-zinc-100"
+            >
+              <CalendarRange class="w-3.5 h-3.5 text-[#007AFF]" :stroke-width="1.5" />
+              <span>{{ t('每周盘点', 'Weekly') }}</span>
             </button>
             <button
               v-if="showHistoryButton"

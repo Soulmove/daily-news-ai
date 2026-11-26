@@ -65,6 +65,22 @@ export type ShareCardPayload =
       bearishPoints: string[]
       shareUrl: string
     }
+  | {
+      kind: 'weekly_digest'
+      weekId: string
+      dateRangeLabel: string
+      weekTheme: string
+      totalItems: number
+      p0Count: number
+      streakWeeks?: number
+      readCount?: number
+      sectorHighlights: {
+        sectorLabel: string
+        accentHex: string
+        headline: string
+      }[]
+      shareUrl: string
+    }
 
 const props = defineProps<{
   isOpen: boolean
@@ -86,6 +102,7 @@ const modalTitle = computed(() => {
   if (props.payload.kind === 'prediction_pk') return t('前瞻预测对赌 PK 海报', 'Prediction PK Poster')
   if (props.payload.kind === 'portfolio_radar') return t('今日持仓传导雷达卡（已脱敏）', 'Portfolio Radar Poster')
   if (props.payload.kind === 'event_brief') return t('重大事件三视角核验简报卡', 'Event Brief Poster')
+  if (props.payload.kind === 'weekly_digest') return t('一周大事盘点周刊海报', 'Weekly Digest Poster')
   return t('信息茧房盲区诊断报告卡', 'Echo-Chamber Diagnosis Poster')
 })
 
@@ -94,6 +111,7 @@ const scanHintLabel = computed(() => {
   if (props.payload.kind === 'prediction_pk') return '长按扫码接招 PK'
   if (props.payload.kind === 'portfolio_radar') return '扫码测你的持仓'
   if (props.payload.kind === 'event_brief') return '扫码看完整三视角'
+  if (props.payload.kind === 'weekly_digest') return '扫码 3 分钟速览一周大事'
   return '扫码测你的信息茧房'
 })
 
@@ -531,6 +549,62 @@ function renderCard() {
       ctx.fillText('扫码解锁', W - 102, recBoxY + 136)
       ctx.textAlign = 'left'
     }
+  } else if (data.kind === 'weekly_digest') {
+    ctx.fillStyle = '#FBBF24'
+    ctx.font = 'bold 17px "Inter", "PingFang SC", "Microsoft YaHei", sans-serif'
+    ctx.fillText(`每周盘点 · ${data.weekId} (${data.dateRangeLabel})`, 68, 154)
+
+    if (data.streakWeeks && data.streakWeeks > 0) {
+      const badgeText = `连续追更 ${data.streakWeeks} 周 · 补课 ${data.readCount ?? 0}/${data.totalItems}`
+      ctx.font = 'bold 13px "Inter", "PingFang SC", "Microsoft YaHei", sans-serif'
+      const bw = ctx.measureText(badgeText).width + 22
+      drawRoundRect(ctx, W - 68 - bw, 134, bw, 28, 14)
+      ctx.fillStyle = 'rgba(245, 158, 11, 0.16)'
+      ctx.fill()
+      ctx.strokeStyle = 'rgba(245, 158, 11, 0.45)'
+      ctx.stroke()
+      ctx.fillStyle = '#FDE68A'
+      ctx.fillText(badgeText, W - 68 - bw + 11, 153)
+    }
+
+    ctx.fillStyle = '#FFFFFF'
+    ctx.font = 'bold 25px "Inter", "PingFang SC", "Microsoft YaHei", sans-serif'
+    const afterThemeY = drawWrappedText(ctx, data.weekTheme, 68, 198, W - 136, 34, 2)
+
+    const barY = Math.max(250, afterThemeY + 8)
+    drawRoundRect(ctx, 68, barY, W - 136, 40, 12)
+    ctx.fillStyle = 'rgba(59, 130, 246, 0.14)'
+    ctx.fill()
+    ctx.fillStyle = '#93C5FD'
+    ctx.font = 'bold 14.5px "Inter", "PingFang SC", "Microsoft YaHei", sans-serif'
+    ctx.fillText(
+      `本周精选 ${data.totalItems} 项大事（0 重复） · P0 战略要闻 ${data.p0Count} 条 · 四大板块严格分栏`,
+      86,
+      barY + 25,
+    )
+
+    let sy = barY + 56
+    const itemsList = data.sectorHighlights.slice(0, 4)
+    const availH = Math.max(320, 762 - sy)
+    const cardGap = 10
+    const cardH = Math.floor((availH - cardGap * Math.max(0, itemsList.length - 1)) / Math.max(1, itemsList.length))
+
+    for (const sec of itemsList) {
+      drawRoundRect(ctx, 68, sy, W - 136, cardH, 14)
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.05)'
+      ctx.fill()
+      ctx.fillStyle = sec.accentHex || '#60A5FA'
+      ctx.fillRect(68, sy + 14, 4, Math.max(24, cardH - 28))
+
+      ctx.fillStyle = sec.accentHex || '#60A5FA'
+      ctx.font = 'bold 14.5px "Inter", "PingFang SC", "Microsoft YaHei", sans-serif'
+      ctx.fillText(sec.sectorLabel, 86, sy + 28)
+
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.92)'
+      ctx.font = '15.5px "Inter", "PingFang SC", "Microsoft YaHei", sans-serif'
+      drawWrappedText(ctx, sec.headline, 86, sy + 54, W - 172, 22, cardH >= 100 ? 2 : 1)
+      sy += cardH + cardGap
+    }
   } else {
     // Poster 4: Single Heavy Event 3-Perspective Briefing Card
     ctx.fillStyle = '#38BDF8'
@@ -641,6 +715,9 @@ function buildGroupShareText(): string {
   }
   if (data.kind === 'event_brief') {
     return `【镜信 ${data.sourceCount} 路信源核验简报】${data.title}\n查看官方定调 / 顺风逻辑 / 风险质疑三视角拆解：\n${data.shareUrl}`
+  }
+  if (data.kind === 'weekly_digest') {
+    return `【镜信每周盘点 · ${data.weekId} (${data.dateRangeLabel})】本周总基调：${data.weekTheme}\n全周去重精选 ${data.totalItems} 项大事（P0 战略级 ${data.p0Count} 项），四大板块分栏，支持 3 分钟大概看与深度细看：\n${data.shareUrl}`
   }
   return `我的近 7 日跨领域阅读多样性得分 ${Math.round(data.diversityScore)}/100（${data.personaLabel || data.statusLabel}），扫码或点链接测测你的信息茧房：\n${data.shareUrl}`
 }

@@ -10,6 +10,7 @@ import {
   Bot,
   Building2,
   Calendar,
+  CalendarRange,
   CheckCheck,
   CheckCircle2,
   ChevronDown,
@@ -124,7 +125,6 @@ import {
 import { dedupeVisibleTodayEvents } from '../core/v3Logic'
 import EventCard from '../components/EventCard.vue'
 import SimulatedPerspectives from '../components/SimulatedPerspectives.vue'
-import TimeMachineModal from '../components/TimeMachineModal.vue'
 import AiProgressView from '../components/v3/AiProgressView.vue'
 import CalendarView from '../components/v3/CalendarView.vue'
 import DesktopContextRail from '../components/v3/DesktopContextRail.vue'
@@ -139,6 +139,7 @@ import OnboardingGuideModal from '../components/v3/OnboardingGuideModal.vue'
 import TechToolsView from '../components/v3/TechToolsView.vue'
 import TodayView from '../components/v3/TodayView.vue'
 import TrackingView from '../components/v3/TrackingView.vue'
+import WeeklyDigestView from '../components/v3/WeeklyDigestView.vue'
 import {
   fetchAiProgress,
   fetchCalendarEvents,
@@ -153,6 +154,8 @@ import {
   fetchSmartCategory,
   fetchStorylinesIndex,
   fetchTechTools,
+  fetchWeeklyDigest,
+  fetchWeeklyDigestsIndex,
 } from '../core/fetcher'
 import {
   extractSmartSourceOptions,
@@ -241,6 +244,10 @@ import {
   type StorylineDossier,
   type TechToolEntry,
   type WatchlistItem,
+  type WeeklyDigestDoc,
+  type WeeklyDigestItem,
+  type WeeklyDigestsIndexDoc,
+  type WeeklySectorId,
 } from '../core/types'
 import {
   buildBriefingUrl,
@@ -403,6 +410,18 @@ const financeImpactDoc = ref<FinanceImpactDoc | null>(null)
 const financeImpactLoaded = ref(false)
 const liveWireDoc = ref<LiveWireDoc | null>(null)
 const liveWireLoaded = ref(false)
+const WEEKLY_LAST_SEEN_KEY = 'mirrorbrief_last_seen_week_v1'
+const weeklyDigestDoc = ref<WeeklyDigestDoc | null>(null)
+const weeklyDigestsIndexDoc = ref<WeeklyDigestsIndexDoc | null>(null)
+const selectedWeekId = ref<string | null>(initialUrl.week || null)
+const weeklyLoading = ref(false)
+const weeklyLoaded = ref(false)
+const lastSeenWeekId = ref<string | null>(
+  typeof window !== 'undefined' ? window.localStorage.getItem(WEEKLY_LAST_SEEN_KEY) : null,
+)
+const hasUnreadWeekly = computed(() =>
+  Boolean(weeklyDigestDoc.value?.week_id && weeklyDigestDoc.value.week_id !== lastSeenWeekId.value),
+)
 const siteSettings = ref<PublicSiteSettings>({
   monitor_public: false,
   site_banner_enabled: false,
@@ -556,8 +575,7 @@ const perspectivesOpen = ref(false)
 const perspectivesLoading = ref(false)
 const commentsByKey = ref<Record<string, SimulatedCommentsDoc>>({})
 
-// Time Machine modal
-const historyModalOpen = ref(false)
+// Category history cache for 3D/7D range in Pillars view & diff modal
 const historyEntries = ref<HistoryIndexEntry[]>([])
 const historyLoading = ref(false)
 const historyError = ref<string | null>(null)
@@ -1061,6 +1079,7 @@ function syncUrl(replace = false) {
     event: highlightedEventId.value,
     story: selectedStorylineId.value,
     entity: drawerEntityKey.value,
+    week: activeTab.value === 'weekly' ? selectedWeekId.value : null,
     fresh: freshBucket.value,
     q: searchQuery.value,
     scope: searchScope.value,
@@ -1396,6 +1415,91 @@ function openEventBriefShareCard(ev: SmartEvent) {
   shareCardOpen.value = true
 }
 
+function mapWeeklySectorToCategory(sectorId: WeeklySectorId | string): CategoryKey {
+  if (sectorId === 'macro_finance') return 'finance'
+  if (sectorId === 'geopolitics') return 'global'
+  if (sectorId === 'tech_ai') return 'tech'
+  return 'general'
+}
+
+function openWeeklyPoster(stats: { streakWeeks: number; readCount: number }) {
+  const doc = weeklyDigestDoc.value
+  if (!doc) return
+  const origin = typeof window !== 'undefined' ? window.location.origin : 'https://mirrorinfo.xyz'
+  const accentMap: Record<WeeklySectorId, string> = {
+    macro_finance: '#F59E0B',
+    geopolitics: '#3B82F6',
+    tech_ai: '#8B5CF6',
+    industry_society: '#10B981',
+  }
+  shareCardPayload.value = {
+    kind: 'weekly_digest',
+    weekId: doc.week_id,
+    dateRangeLabel: doc.date_range_label,
+    weekTheme: doc.week_theme,
+    totalItems: doc.stats.selected_items,
+    p0Count: doc.stats.p0_count,
+    streakWeeks: stats.streakWeeks,
+    readCount: stats.readCount,
+    sectorHighlights: doc.sectors.map((s) => ({
+      sectorLabel: `${appLang.value === 'en' ? s.title_en : s.title} (${s.item_count})`,
+      accentHex: accentMap[s.sector_id] || '#60A5FA',
+      headline: s.items[0]?.title || s.sector_takeaway || s.subtitle,
+    })),
+    shareUrl: `${origin}/?tab=weekly&week=${encodeURIComponent(doc.week_id)}`,
+  }
+  shareCardOpen.value = true
+}
+
+function handleToggleWeeklyBookmark(item: WeeklyDigestItem) {
+  const exists = bookmarks.value.some((b) => b.event_id === item.id)
+  if (exists) {
+    removeBookmark(item.id)
+    return
+  }
+  const primary = item.sources?.[0]
+  bookmarks.value = [
+    {
+      event_id: item.id,
+      title: item.title,
+      url: primary?.url || '',
+      category: mapWeeklySectorToCategory(item.sector_id),
+      source_name: primary?.source_name || t('每周盘点', 'Weekly Digest'),
+      batch_id: weeklyDigestDoc.value?.week_id || 'weekly',
+      saved_at: new Date().toISOString(),
+    },
+    ...bookmarks.value,
+  ]
+  saveBookmarkedEvents(bookmarks.value)
+  notifyToast(t('已收入个人阅读库', 'Saved to Personal Library'))
+  scheduleAutoCloudSync()
+}
+
+function openQaForWeeklyItem(item: WeeklyDigestItem) {
+  void Promise.all([ensureAllCategoriesLoaded(), loadFinanceImpact(), loadCalendar()])
+  qaContextEvent.value = null
+  qaContextStoryline.value = null
+  qaContextEntity.value = null
+  qaContextTopic.value = null
+  qaContextPrompt.value = t(
+    `请帮我深度复盘本周大事「${item.title}」：事实摘要为「${item.fact_summary}」。请结合站内近期新闻与市场影响，拆解它为何关键以及下周需重点盯防的风险与催化指标。`,
+    `Review the weekly major event "${item.title}" (${item.fact_summary}). Explain why it matters and key catalysts/risks to monitor next week.`,
+  )
+  qaModalOpen.value = true
+}
+
+function markWeeklyDigestVisited(weekId: string) {
+  if (!weekId) return
+  lastSeenWeekId.value = weekId
+  try {
+    if (typeof window !== 'undefined') {
+      window.localStorage.setItem(WEEKLY_LAST_SEEN_KEY, weekId)
+    }
+  } catch {
+    // ignore storage errors
+  }
+}
+
 async function loadCrowdStats() {
   try {
     const res = await apiFetchPredictionCrowd(authSession.value?.token)
@@ -1607,6 +1711,35 @@ async function loadLiveWire(forceFresh = false) {
   liveWireLoaded.value = true
 }
 
+async function loadWeeklyDigest(weekId?: string | null, forceFresh = false) {
+  const targetWeek = weekId ?? selectedWeekId.value ?? null
+  weeklyLoading.value = true
+  try {
+    const [docRes, idxRes] = await Promise.all([
+      fetchWeeklyDigest(targetWeek, forceFresh),
+      fetchWeeklyDigestsIndex(forceFresh),
+    ])
+    if (docRes) {
+      weeklyDigestDoc.value = docRes
+      if (!selectedWeekId.value && docRes.week_id) {
+        selectedWeekId.value = docRes.week_id
+      }
+    }
+    if (idxRes) {
+      weeklyDigestsIndexDoc.value = idxRes
+    }
+    weeklyLoaded.value = true
+  } finally {
+    weeklyLoading.value = false
+  }
+}
+
+async function handleSelectWeeklyIssue(weekId: string) {
+  selectedWeekId.value = weekId || null
+  syncUrl(false)
+  await loadWeeklyDigest(selectedWeekId.value, false)
+}
+
 async function ensureDataForTab(tab: WorkbenchTab, forceFresh = false) {
   if (tab === 'today' || tab === 'briefing') {
     await Promise.all([
@@ -1619,6 +1752,8 @@ async function ensureDataForTab(tab: WorkbenchTab, forceFresh = false) {
     ])
   } else if (tab === 'wire') {
     await loadLiveWire(forceFresh)
+  } else if (tab === 'weekly') {
+    await loadWeeklyDigest(selectedWeekId.value, forceFresh)
   } else if (tab === 'ai_progress' || tab === 'tools') {
     await Promise.all([loadAiProgress(forceFresh), loadTools(forceFresh), ensureAllCategoriesLoaded(forceFresh)])
   } else if (tab === 'finance') {
@@ -1659,6 +1794,9 @@ async function loadInitial(forceFresh = false) {
       await Promise.all([ensureDataForTab(activeTab.value, forceFresh), refreshSiteSettingsAndOverrides()])
     } else {
       void ensureDataForTab(activeTab.value, forceFresh)
+    }
+    if (!historyPath.value && !weeklyLoaded.value) {
+      void loadWeeklyDigest(selectedWeekId.value, false)
     }
     if (drawerEntityKey.value) {
       void loadEntities(forceFresh)
@@ -1737,7 +1875,7 @@ async function focusHighlightedEventLanding() {
   if (!targetId) return
   const matched = allLoadedEvents.value.find((e) => e.event_id === targetId)
   if (!matched) {
-    notifyToast(t('该事件可能已进入历史归档，请点击左侧「历史归档」回看', 'Event may have moved to Archive'))
+    notifyToast(t('该事件已归档沉淀，可前往「每周盘点」查看本周大事精选或用搜索框检索', 'Event may have moved to Weekly Digest or archive'))
     return
   }
   await nextTick()
@@ -2255,12 +2393,12 @@ const commandPaletteItems = computed<CommandItem[]>(() => {
       },
     },
     {
-      id: 'tool-history',
-      label: t('历史归档时间轴', 'Archive Timeline'),
-      keywords: '历史 归档 history archive time machine',
+      id: 'tool-weekly',
+      label: t('每周盘点 · 一周大事', 'Weekly Digest'),
+      keywords: '每周 盘点 一周大事 周刊 weekly digest',
       run: () => {
         searchOverlayOpen.value = false
-        void openHistoryModal()
+        void switchTab('weekly')
       },
     },
     {
@@ -2524,7 +2662,7 @@ function handleSelectEntity(ent: string) {
   }
 }
 
-const SECONDARY_TABS = new Set<WorkbenchTab>(['tracking'])
+const SECONDARY_TABS = new Set<WorkbenchTab>(['tracking', 'weekly'])
 const isSecondaryTabActive = computed(() => SECONDARY_TABS.has(activeTab.value))
 const previousTab = ref<WorkbenchTab>('today')
 
@@ -3216,13 +3354,6 @@ function handleDeleteResearchNote(noteId: string) {
   })
 }
 
-async function openHistoryModal() {
-  historyModalOpen.value = true
-  if (historyEntries.value.length === 0) {
-    await loadHistoryList()
-  }
-}
-
 function triggerFeedbackDialog() {
   if (typeof window !== 'undefined') {
     window.dispatchEvent(new CustomEvent('infofocus-open-feedback'))
@@ -3375,7 +3506,6 @@ async function selectHistoryEntry(entry: HistoryIndexEntry) {
   todaySection.value = 'pillars'
   pillarDateRange.value = 'archive'
   pillarCalendarOpen.value = false
-  historyModalOpen.value = false
   perspectivesOpen.value = false
   highlightedEventId.value = null
   syncUrl(false)
@@ -3388,7 +3518,6 @@ async function returnToLatest() {
   pillarCalendarOpen.value = false
   pillarSelectedDate.value = ''
   pillarRangeEvents.value = []
-  historyModalOpen.value = false
   perspectivesOpen.value = false
   highlightedEventId.value = null
   syncUrl(false)
@@ -3437,7 +3566,7 @@ async function openPreviousBatch(prevBatchId: string) {
   if (match) {
     await selectHistoryEntry(match)
   } else {
-    historyModalOpen.value = true
+    notifyToast(t('该历史快照暂不可用', 'Historical snapshot unavailable'))
   }
 }
 
@@ -3576,6 +3705,7 @@ function handlePopState() {
   if (next.tab === 'predictions') scheduleSubView.value = 'predictions'
   activeCategory.value = next.cat
   historyPath.value = next.history
+  selectedWeekId.value = next.week || null
   highlightedEventId.value = next.event
   selectedStorylineId.value = next.story
   drawerEntityKey.value = next.entity
@@ -4153,7 +4283,8 @@ onBeforeUnmount(() => {
     :history-display="historyDisplay"
     :bookmark-count="libraryCount"
     :is-refreshing="isRefreshing"
-    :show-history-button="true"
+    :show-history-button="false"
+    :show-weekly-button="true"
     :show-bookmarks-button="true"
     :show-refresh-button="true"
     :show-auth-button="true"
@@ -4169,7 +4300,7 @@ onBeforeUnmount(() => {
     :hide-mobile-footer="activeTab === 'me'"
     :wide-workspace="true"
     @toggle-dark="toggleDark"
-    @open-history="openHistoryModal"
+    @open-weekly="switchTab('weekly')"
     @open-bookmarks="openLibraryModal('saved')"
     @refresh="handleManualRefresh"
     @open-auth="openAuthModal"
@@ -4350,19 +4481,27 @@ onBeforeUnmount(() => {
 
             <button
               type="button"
-              @click="openHistoryModal"
-              :title="t('历史归档', 'Archive')"
-              class="ios-tap w-full min-h-[38px] px-2.5 rounded-xl flex items-center gap-2.5 text-[13px] font-medium transition-colors"
+              @click="switchTab('weekly')"
+              :aria-current="activeTab === 'weekly' ? 'page' : undefined"
+              :title="t('每周盘点 · 一周大事', 'Weekly Digest')"
+              class="ios-tap w-full min-h-[38px] px-2.5 rounded-xl flex items-center gap-2.5 text-[13px] transition-colors"
               :class="[
-                sidebarCollapsed ? 'justify-center' : 'justify-center lg:justify-start',
-                isHistoryMode
-                  ? 'bg-[#007AFF]/12 text-[#007AFF] dark:text-[#0A84FF] font-semibold'
-                  : 'text-zinc-600 dark:text-zinc-400 hover:bg-black/[0.05] dark:hover:bg-white/[0.07]',
+                sidebarCollapsed ? 'justify-center' : 'justify-center lg:justify-between',
+                activeTab === 'weekly'
+                  ? 'bg-[#007AFF] text-white font-semibold shadow-xs'
+                  : 'text-zinc-700 dark:text-zinc-300 hover:bg-black/[0.05] dark:hover:bg-white/[0.07] font-medium',
               ]"
+              data-testid="sidebar-weekly-btn"
             >
-              <History class="w-[18px] h-[18px] shrink-0" :stroke-width="1.5" />
-              <span v-if="!sidebarCollapsed" class="hidden lg:inline truncate">
-                {{ isHistoryMode ? `${t('历史', 'Archive')}` : t('历史归档', 'Archive') }}
+              <span class="inline-flex items-center gap-2.5 min-w-0">
+                <CalendarRange class="w-[18px] h-[18px] shrink-0" :stroke-width="1.5" />
+                <span v-if="!sidebarCollapsed" class="hidden lg:inline truncate">{{ t('每周盘点', 'Weekly') }}</span>
+              </span>
+              <span
+                v-if="!sidebarCollapsed && hasUnreadWeekly && activeTab !== 'weekly'"
+                class="hidden lg:inline-flex items-center px-1.5 py-0.2 rounded-full bg-rose-500 text-white text-[10px] font-bold"
+              >
+                {{ t('新', 'New') }}
               </span>
             </button>
 
@@ -5326,6 +5465,29 @@ onBeforeUnmount(() => {
         </div>
       </template>
 
+      <!-- TAB WEEKLY: Weekly Major Events Digest -->
+      <template v-else-if="activeTab === 'weekly'">
+        <WeeklyDigestView
+          :doc="weeklyDigestDoc"
+          :index-doc="weeklyDigestsIndexDoc"
+          :selected-week-id="selectedWeekId"
+          :loading="weeklyLoading"
+          :site-settings="siteSettings"
+          :watchlist="watchlist"
+          :portfolio="userPortfolio"
+          :bookmarked-ids="bookmarkedIdSet"
+          :now-ms="nowMs"
+          @select-week="handleSelectWeeklyIssue"
+          @refresh="loadWeeklyDigest(selectedWeekId, true)"
+          @toggle-bookmark-item="handleToggleWeeklyBookmark"
+          @open-qa-item="openQaForWeeklyItem"
+          @open-finance-keyword="(kw) => { searchQuery = kw || ''; void switchTab('finance') }"
+          @open-weekly-poster="openWeeklyPoster"
+          @switch-tab="switchTab"
+          @mark-week-visited="markWeeklyDigestVisited"
+        />
+      </template>
+
       <!-- TAB ME: Dedicated Mobile / Android "我的 (Me)" Profile & Workbench Hub Page -->
       <template v-else-if="activeTab === 'me'">
         <MobileMeView
@@ -5348,6 +5510,7 @@ onBeforeUnmount(() => {
           :morning-brief="morningBriefSummary"
           :is-history-mode="isHistoryMode"
           :history-display="historyDisplay"
+          :has-unread-weekly="hasUnreadWeekly"
           :storylines-count="Object.keys(storylinesMap).length || manifest?.v3?.storylines_count || 0"
           :calendar-count="calendarTabTotalCount"
           :tech-tools-count="techTools.length || manifest?.v3?.tech_tools_count || 0"
@@ -5364,7 +5527,6 @@ onBeforeUnmount(() => {
           @sync-now="pushCurrentStateToCloud(false)"
           @switch-tab="switchTab"
           @open-bookmarks="(sub) => openLibraryModal(sub || 'saved')"
-          @open-history="openHistoryModal"
           @open-qa="openQaGlobal"
           @open-weekly-report="weeklyReportOpen = true"
           @open-onboarding="onboardingModalOpen = true"
@@ -5379,9 +5541,9 @@ onBeforeUnmount(() => {
       </template>
         </div>
 
-        <!-- RIGHT RAIL: Sticky Context Sidebar & Split-View Detail Reader (>=1280px; hidden on AI Frontier & Calendar/Predictions for full-width readability) -->
+        <!-- RIGHT RAIL: Sticky Context Sidebar & Split-View Detail Reader (>=1280px; hidden on AI Frontier, Calendar/Predictions & Weekly Digest for full-width readability) -->
         <div
-          v-if="(activeTab !== 'ai_progress' && activeTab !== 'calendar') || Boolean(selectedDetailEvent)"
+          v-if="(activeTab !== 'ai_progress' && activeTab !== 'calendar' && activeTab !== 'weekly') || Boolean(selectedDetailEvent)"
           class="hidden xl:block desktop-shell-only w-[336px] shrink-0 sticky top-[58px] max-h-[calc(100vh-4.25rem)] overflow-y-auto no-scrollbar pb-4"
         >
           <DesktopContextRail
@@ -5474,20 +5636,6 @@ onBeforeUnmount(() => {
         {{ workbenchToast.actionLabel }}
       </button>
     </div>
-
-    <!-- Time Machine Modal -->
-    <TimeMachineModal
-      :is-open="historyModalOpen"
-      mode="smart"
-      :entries="historyEntries"
-      :loading="historyLoading"
-      :error="historyError"
-      :current-history-path="historyPath"
-      @close="historyModalOpen = false"
-      @select="selectHistoryEntry"
-      @return-latest="returnToLatest"
-      @retry="loadHistoryList(true)"
-    />
 
     <!-- Unified Personal Library Modal (Saved + Read Later + Notes) -->
     <div

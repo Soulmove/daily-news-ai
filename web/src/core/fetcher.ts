@@ -24,6 +24,8 @@ import type {
   SmartCategoryDoc,
   StorylineDossier,
   TechToolEntry,
+  WeeklyDigestDoc,
+  WeeklyDigestsIndexDoc,
 } from './types'
 
 const ALL_CATEGORIES: CategoryKey[] = ['finance', 'global', 'tech', 'general']
@@ -549,6 +551,40 @@ export async function fetchLiveWire(manifest?: ManifestV2 | null, forceFresh = f
   const path = manifest?.v3?.live_wire_path || 'data/live_wire.json'
   try {
     return await fetchJson<import('./types').LiveWireDoc>(path, {
+      noStore: true,
+      cacheBust: forceFresh,
+    })
+  } catch {
+    return null
+  }
+}
+
+export async function fetchWeeklyDigest(weekId?: string | null, forceFresh = false): Promise<WeeklyDigestDoc | null> {
+  const cleanWeek = (weekId || '').trim()
+  const path = cleanWeek ? `data/weekly_digests/${encodeURIComponent(cleanWeek)}.json` : 'data/weekly_digest.json'
+  try {
+    return await fetchJson<WeeklyDigestDoc>(path, {
+      noStore: true,
+      cacheBust: forceFresh,
+    })
+  } catch {
+    if (cleanWeek) {
+      try {
+        return await fetchJson<WeeklyDigestDoc>('data/weekly_digest.json', {
+          noStore: true,
+          cacheBust: forceFresh,
+        })
+      } catch {
+        return null
+      }
+    }
+    return null
+  }
+}
+
+export async function fetchWeeklyDigestsIndex(forceFresh = false): Promise<WeeklyDigestsIndexDoc | null> {
+  try {
+    return await fetchJson<WeeklyDigestsIndexDoc>('data/weekly_digests_index.json', {
       noStore: true,
       cacheBust: forceFresh,
     })

@@ -11,7 +11,7 @@ import {
   Filter,
   GitBranch,
   HelpCircle,
-  History,
+  CalendarRange,
   Layers,
   LogOut,
   Moon,
@@ -57,6 +57,7 @@ const props = defineProps<{
   morningBrief?: MorningBriefSummary | null
   isHistoryMode: boolean
   historyDisplay?: string | null
+  hasUnreadWeekly?: boolean
   storylinesCount: number
   calendarCount: number
   techToolsCount: number
@@ -74,7 +75,6 @@ const emit = defineEmits<{
   (e: 'switch-tab', tab: WorkbenchTab): void
   (e: 'open-finance-portfolio'): void
   (e: 'open-bookmarks', subTab?: 'saved' | 'read_later' | 'notes'): void
-  (e: 'open-history'): void
   (e: 'open-qa'): void
   (e: 'open-weekly-report'): void
   (e: 'open-onboarding'): void
@@ -289,11 +289,17 @@ const userDisplayName = computed(() => {
       </button>
       <button
         type="button"
-        @click="emit('open-history')"
-        class="ios-tap min-h-[44px] px-2 rounded-xl flex items-center justify-center gap-1.5 text-zinc-800 dark:text-zinc-100 active:bg-black/[0.04]"
+        @click="emit('switch-tab', 'weekly')"
+        class="ios-tap relative min-h-[44px] px-2 rounded-xl flex items-center justify-center gap-1.5 text-zinc-800 dark:text-zinc-100 active:bg-black/[0.04]"
+        data-testid="me-weekly-digest-btn"
       >
-        <History class="w-4 h-4 text-[#007AFF]" :stroke-width="1.5" />
-        <span class="truncate">{{ t('历史归档', 'Archive') }}</span>
+        <CalendarRange class="w-4 h-4 text-[#007AFF]" :stroke-width="1.5" />
+        <span class="truncate">{{ t('每周盘点', 'Weekly') }}</span>
+        <span
+          v-if="hasUnreadWeekly"
+          class="w-1.5 h-1.5 rounded-full bg-rose-500 shrink-0"
+          :aria-label="t('新刊未读', 'New weekly issue')"
+        />
       </button>
     </div>
 

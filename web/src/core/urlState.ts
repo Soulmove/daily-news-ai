@@ -2,7 +2,7 @@ import type { CategoryKey, EvidenceStatus, WorkbenchTab } from './types'
 
 const VALID_CATEGORIES = new Set<CategoryKey>(['finance', 'global', 'tech', 'general'])
 const VALID_EVIDENCE = new Set<string>(['all', 'official_confirmed', 'multi_source', 'single_source', 'needs_verification'])
-const VALID_TABS = new Set<WorkbenchTab>(['today', 'wire', 'briefing', 'ai_progress', 'finance', 'tracking', 'calendar', 'predictions', 'tools', 'me'])
+const VALID_TABS = new Set<WorkbenchTab>(['today', 'wire', 'briefing', 'ai_progress', 'finance', 'tracking', 'calendar', 'predictions', 'weekly', 'tools', 'me'])
 const VALID_FRESH = new Set<string>(['all', 'unread', 'first_discovery', 'old_progress'])
 
 export type FreshnessBucket = 'all' | 'unread' | 'first_discovery' | 'old_progress'
@@ -14,6 +14,7 @@ export interface BriefingUrlState {
   event: string | null
   story: string | null
   entity: string | null
+  week?: string | null
   q: string
   scope: 'current' | 'all'
   source: string
@@ -80,6 +81,7 @@ export function parseBriefingUrlState(search = typeof window !== 'undefined' ? w
     event: params.get('event')?.trim() || null,
     story: params.get('story')?.trim() || null,
     entity: params.get('entity')?.trim() || null,
+    week: params.get('week')?.trim() || null,
     q: params.get('q') || '',
     scope,
     source: params.get('source') || 'all',
@@ -105,6 +107,7 @@ export function buildBriefingUrl(
   if (state.event) params.set('event', state.event)
   if (state.story) params.set('story', state.story)
   if (state.entity) params.set('entity', state.entity)
+  if (state.week) params.set('week', state.week)
   if (state.q.trim()) params.set('q', state.q.trim())
   if (state.scope === 'all') params.set('scope', 'all')
   if (state.source && state.source !== 'all') params.set('source', state.source)

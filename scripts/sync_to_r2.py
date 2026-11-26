@@ -60,6 +60,16 @@ def collect_sync_files(base_dir: Path, scope: str = "full", full_archives: bool 
             seen.add(clean)
             ordered.append(Path(clean))
 
+    if scope == "weekly":
+        add_rel("data/weekly_digest.json")
+        add_rel("data/weekly_digests_index.json")
+        wd_dir = base_dir / "data" / "weekly_digests"
+        if wd_dir.exists():
+            for fp in sorted(wd_dir.glob("*.json")):
+                if fp.is_file():
+                    add_rel(fp.relative_to(base_dir).as_posix())
+        return ordered
+
     # 1. Core active files (manifest.json deferred strictly to the end)
     root_jsons = (
         ["data_general.json", "data_global.json", "data_tech.json", "data_finance.json"]
@@ -351,7 +361,7 @@ def sync_to_r2(
 
 def main(argv: Optional[List[str]] = None) -> int:
     parser = argparse.ArgumentParser(description="Incremental Cloudflare R2 sync for MirrorBrief")
-    parser.add_argument("--scope", choices=("raw", "full"), default="full")
+    parser.add_argument("--scope", choices=("raw", "full", "weekly"), default="full")
     parser.add_argument("--full-archives", action="store_true", help="Upload all historical archives/ folders incrementally")
     parser.add_argument("--base-dir", default=".")
     parser.add_argument("--dry-run", action="store_true")

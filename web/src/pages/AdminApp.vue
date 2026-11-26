@@ -152,6 +152,10 @@ const siteSettingsForm = ref<PublicSiteSettings>({
   prediction_daily_market_enabled: true,
   prediction_rewards_enabled: true,
   prediction_proposals_enabled: true,
+  weekly_digest_enabled: true,
+  weekly_digest_day: 0,
+  weekly_digest_hour: 18,
+  weekly_digest_minute: 0,
 })
 
 interface GrowthControlDraft {
@@ -169,6 +173,10 @@ interface GrowthControlDraft {
   prediction_daily_market_enabled: boolean
   prediction_rewards_enabled: boolean
   prediction_proposals_enabled: boolean
+  weekly_digest_enabled: boolean
+  weekly_digest_day: number
+  weekly_digest_hour: number
+  weekly_digest_minute: number
 }
 
 const growthDraft = ref<GrowthControlDraft>({
@@ -186,6 +194,10 @@ const growthDraft = ref<GrowthControlDraft>({
   prediction_daily_market_enabled: true,
   prediction_rewards_enabled: true,
   prediction_proposals_enabled: true,
+  weekly_digest_enabled: true,
+  weekly_digest_day: 0,
+  weekly_digest_hour: 18,
+  weekly_digest_minute: 0,
 })
 const privateGateConfirmOpen = ref(false)
 const waitlistItems = ref<WaitlistEntryRow[]>([])
@@ -321,6 +333,10 @@ function buildGrowthDraftFromSettings(s: PublicSiteSettings): GrowthControlDraft
     prediction_daily_market_enabled: s.prediction_daily_market_enabled !== false,
     prediction_rewards_enabled: s.prediction_rewards_enabled !== false,
     prediction_proposals_enabled: s.prediction_proposals_enabled !== false,
+    weekly_digest_enabled: s.weekly_digest_enabled !== false,
+    weekly_digest_day: Number(s.weekly_digest_day ?? 0),
+    weekly_digest_hour: Number(s.weekly_digest_hour ?? 18),
+    weekly_digest_minute: Number(s.weekly_digest_minute ?? 0),
   }
 }
 
@@ -1709,6 +1725,77 @@ onMounted(() => {
               >
                 <label class="block font-bold text-slate-900 dark:text-white">邀请双方 AI 额度加成（0~100）</label>
                 <input v-model.number="growthDraft.referral_bonus_qa_quota" :disabled="!isSuperAdmin" type="number" min="0" max="100" class="w-full h-8 px-2.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 font-mono" />
+              </div>
+            </div>
+
+            <!-- Weekly Major Events Digest Auto-Publish Schedule -->
+            <div
+              class="rounded-xl border p-3.5 space-y-2.5 text-xs"
+              :class="
+                changedGrowthKeys.has('weekly_digest_enabled') ||
+                changedGrowthKeys.has('weekly_digest_day') ||
+                changedGrowthKeys.has('weekly_digest_hour') ||
+                changedGrowthKeys.has('weekly_digest_minute')
+                  ? 'border-amber-400 bg-amber-50/50 dark:bg-amber-950/20'
+                  : 'border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/30'
+              "
+              data-testid="admin-weekly-schedule-panel"
+            >
+              <div class="flex flex-wrap items-center justify-between gap-2">
+                <div>
+                  <div class="font-bold text-slate-900 dark:text-white">每周盘点 · 一周大事自动出刊排班（北京时间 Mon-Sun）</div>
+                  <div class="text-[11px] text-slate-500 dark:text-slate-400">
+                    默认每周日 18:00 汇总本周一至周日去重提纯大事；云端工作流每小时检测本配置并在目标时段自动出刊同步 R2。
+                  </div>
+                </div>
+                <label class="inline-flex items-center gap-2 font-semibold text-slate-800 dark:text-slate-100 cursor-pointer shrink-0">
+                  <input v-model="growthDraft.weekly_digest_enabled" :disabled="!isSuperAdmin" type="checkbox" class="rounded w-4 h-4 text-indigo-600" />
+                  <span>{{ growthDraft.weekly_digest_enabled ? '已开启自动出刊' : '已暂停自动出刊' }}</span>
+                </label>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+                <div class="space-y-1">
+                  <label class="block text-[11px] font-semibold text-slate-600 dark:text-slate-300">每周更新星期</label>
+                  <select
+                    v-model.number="growthDraft.weekly_digest_day"
+                    :disabled="!isSuperAdmin"
+                    class="w-full h-8 px-2.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs font-medium"
+                  >
+                    <option :value="0">每周日（默认）</option>
+                    <option :value="1">每周一</option>
+                    <option :value="2">每周二</option>
+                    <option :value="3">每周三</option>
+                    <option :value="4">每周四</option>
+                    <option :value="5">每周五</option>
+                    <option :value="6">每周六</option>
+                  </select>
+                </div>
+
+                <div class="space-y-1">
+                  <label class="block text-[11px] font-semibold text-slate-600 dark:text-slate-300">更新小时（00-23 CST）</label>
+                  <select
+                    v-model.number="growthDraft.weekly_digest_hour"
+                    :disabled="!isSuperAdmin"
+                    class="w-full h-8 px-2.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs font-mono"
+                  >
+                    <option v-for="h in 24" :key="h - 1" :value="h - 1">
+                      {{ String(h - 1).padStart(2, '0') }} 点
+                    </option>
+                  </select>
+                </div>
+
+                <div class="space-y-1">
+                  <label class="block text-[11px] font-semibold text-slate-600 dark:text-slate-300">展示分钟（00-59）</label>
+                  <input
+                    v-model.number="growthDraft.weekly_digest_minute"
+                    :disabled="!isSuperAdmin"
+                    type="number"
+                    min="0"
+                    max="59"
+                    class="w-full h-8 px-2.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 font-mono"
+                  />
+                </div>
               </div>
             </div>
 

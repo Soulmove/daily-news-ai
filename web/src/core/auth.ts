@@ -762,6 +762,10 @@ export interface PublicSiteSettings {
   prediction_daily_market_enabled?: boolean
   prediction_rewards_enabled?: boolean
   prediction_proposals_enabled?: boolean
+  weekly_digest_enabled?: boolean
+  weekly_digest_day?: number
+  weekly_digest_hour?: number
+  weekly_digest_minute?: number
 }
 
 export async function apiGetPublicSettings(): Promise<PublicSiteSettings> {
@@ -789,6 +793,10 @@ export async function apiGetPublicSettings(): Promise<PublicSiteSettings> {
       prediction_daily_market_enabled: true,
       prediction_rewards_enabled: true,
       prediction_proposals_enabled: true,
+      weekly_digest_enabled: true,
+      weekly_digest_day: 0,
+      weekly_digest_hour: 18,
+      weekly_digest_minute: 0,
     }
   }
 }

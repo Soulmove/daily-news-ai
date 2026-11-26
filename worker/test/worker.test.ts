@@ -1507,4 +1507,84 @@ describe('MirrorBrief Worker Crypto & API Suite', () => {
     expect(privHtml).toContain('镜信 MirrorBrief')
     expect(privHtml).not.toContain('释放长期流动性')
   })
+
+  it('exposes and persists dynamic weekly_digest schedule settings with super_admin RBAC protection', async () => {
+    const { env } = createTestEnv({ SITE_ACCESS_MODE: 'public' })
+    const app = createWorkerApp()
+
+    const pubDefault = await app.request('https://mirrorinfo.xyz/api/public/settings', {}, env)
+    expect(pubDefault.status).toBe(200)
+    expect(await pubDefault.json()).toMatchObject({
+      weekly_digest_enabled: true,
+      weekly_digest_day: 0,
+      weekly_digest_hour: 18,
+      weekly_digest_minute: 0,
+    })
+
+    const superLogin = await app.request(
+      'https://mirrorinfo.xyz/api/auth/login',
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username: 'admin', password: 'AdminPass123!' }),
+      },
+      env,
+    )
+    const superSess = (await superLogin.json()) as { token: string }
+
+    await app.request(
+      'https://mirrorinfo.xyz/api/admin/users',
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${superSess.token}` },
+        body: JSON.stringify({ username: 'weekly_sub_ops', password: 'SubPassword123', role: 'admin' }),
+      },
+      env,
+    )
+    const subLogin = await app.request(
+      'https://mirrorinfo.xyz/api/auth/login',
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username: 'weekly_sub_ops', password: 'SubPassword123' }),
+      },
+      env,
+    )
+    const subSess = (await subLogin.json()) as { token: string }
+
+    const subAttempt = await app.request(
+      'https://mirrorinfo.xyz/api/admin/site-settings',
+      {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${subSess.token}` },
+        body: JSON.stringify({ weekly_digest_hour: 21 }),
+      },
+      env,
+    )
+    expect(subAttempt.status).toBe(403)
+
+    const superSave = await app.request(
+      'https://mirrorinfo.xyz/api/admin/site-settings',
+      {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${superSess.token}` },
+        body: JSON.stringify({
+          weekly_digest_enabled: false,
+          weekly_digest_day: 5,
+          weekly_digest_hour: 21,
+          weekly_digest_minute: 30,
+        }),
+      },
+      env,
+    )
+    expect(superSave.status).toBe(200)
+
+    const pubUpdated = await app.request('https://mirrorinfo.xyz/api/public/settings', {}, env)
+    expect(await pubUpdated.json()).toMatchObject({
+      weekly_digest_enabled: false,
+      weekly_digest_day: 5,
+      weekly_digest_hour: 21,
+      weekly_digest_minute: 30,
+    })
+  })
 })

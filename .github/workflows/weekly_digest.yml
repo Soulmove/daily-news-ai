@@ -1,0 +1,85 @@
+name: Weekly Major Events Digest
+
+on:
+  schedule:
+    # Check hourly at :02 Beijing time against live Admin D1 weekly_digest_* settings (default Sun 18:00)
+    - cron: '2 * * * *'
+  workflow_dispatch:
+    inputs:
+      force:
+        description: 'Force rebuild current Monday-Sunday weekly digest immediately'
+        type: boolean
+        default: true
+
+permissions:
+  contents: write
+
+concurrency:
+  group: data-pipeline-commit
+  cancel-in-progress: false
+
+jobs:
+  weekly-digest-job:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      TZ: 'Asia/Shanghai'
+      PYTHONUNBUFFERED: '1'
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Python 3.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Build Weekly Major Events Digest (Stage 1 Distill + Stage 2 AI Synthesis)
+        env:
+          KEY_1: ${{ secrets.KEY_1 }}
+          KEY_3: ${{ secrets.KEY_3 }}
+          KEY_FINANCE: ${{ secrets.KEY_FINANCE }}
+          KEY_GLOBAL: ${{ secrets.KEY_GLOBAL }}
+          KEY_TECH: ${{ secrets.KEY_TECH }}
+          KEY_GENERAL: ${{ secrets.KEY_GENERAL }}
+          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ github.event.inputs.force }}" != "false" ]; then
+            python -u -m pipeline.weekly_digest --check-schedule-url "https://mirrorinfo.xyz/api/public/settings" --force
+          else
+            python -u -m pipeline.weekly_digest --check-schedule-url "https://mirrorinfo.xyz/api/public/settings"
+          fi
+
+      - name: Incremental Sync Weekly Digest to Cloudflare R2
+        if: success()
+        env:
+          R2_BUCKET: ${{ secrets.R2_BUCKET }}
+          R2_ENDPOINT: ${{ secrets.R2_ENDPOINT }}
+          R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+        run: |
+          if [ -f data/weekly_digest.json ]; then
+            python scripts/sync_to_r2.py --scope weekly
+          fi
+
+      - name: Commit weekly digest snapshot if changed
+        run: |
+          git config user.name 'Weekly Digest Bot'
+          git config user.email 'weekly@bot.com'
+          git add -f data/weekly_digest.json data/weekly_digests_index.json data/weekly_digests/
+          if git diff --cached --quiet; then
+            echo "No weekly digest changes to commit."
+            exit 0
+          fi
+          git commit -m "chore(weekly): update weekly major events digest ($(date '+%Y-%m-%d %H:%M CST'))"
+          for i in 1 2 3; do
+            git fetch origin main && git merge -X ours --no-edit origin/main && git push origin main && exit 0
+            sleep 3
+          done
+          exit 1
