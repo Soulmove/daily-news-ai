@@ -1,43 +1,47 @@
 {
   "schema_version": "4.2",
-  "batch_id": "smart-20261126-193106",
-  "input_batch_id": "raw-20261126-192611",
-  "input_cutoff_at": "2026-11-26T19:26:11+08:00",
-  "generated_at": "2026-11-26T19:31:06+08:00",
-  "published_at": "2026-11-26T19:32:46+08:00",
+  "batch_id": "smart-20261126-231639",
+  "input_batch_id": "raw-20261126-231614",
+  "input_cutoff_at": "2026-11-26T23:16:14+08:00",
+  "generated_at": "2026-11-26T23:16:39+08:00",
+  "published_at": "2026-11-26T23:23:02+08:00",
   "category": "tech",
   "category_label": "科技/AI",
   "generation_mode": "ai_v3_mega_overlay",
-  "model_name": "gemini-3.1-flash-lite",
+  "model_name": "gemini-3.5-flash-lite",
   "quality_flags": [
     "deterministic_fresh_base"
   ],
   "key_changes": [
     {
-      "headline": "FT 报道 Nvidia 暂停向东南亚四国发运服务器",
-      "detail": "据报道，英伟达通知合作伙伴停止向东南亚出货服务器。戴尔和超微电脑公司已告知马来西亚、新加坡、泰国和印度尼西亚的买家，英伟达将不允许他们的订单发货。英伟达及其合作伙伴正努力遵守美国新的出口限制。英伟达暂停向东南亚出货服务器可能是暂时的。（新浪）",
-      "event_id": "evt_550041562d3f",
-      "storyline_id": "st_07eb0835ff8a"
+      "headline": "FCC 批准 SpaceX 至 2040 年部署最多 100 万颗 Starmind 卫星用于在轨 AI 数据中心",
+      "detail": "美国联邦通信委员会（FCC）已授权SpaceX部署多达100万颗Starmind卫星，作为轨道数据中心处理人工智能数据。",
+      "event_id": "evt_a38ca4a17e6a",
+      "storyline_id": "st_1004787c4dbe"
     },
     {
-      "headline": "OpenAI 再度抛出重要数学成果：宣称证明矩阵乘法指数为 9/4",
-      "detail": "IT之家 11 月 26 日消息，OpenAI 本月 24 日再度抛出一项重要数学成果， 宣称其已证明矩阵乘法指数 ω 恰好为 9/4 。该企业已在今年 10 月证得 ω≤9/4，此次则证得 ω≥9/4，从而得到 ω=9/4。矩阵乘法指数 ω 描述的是：当 n 足够大时，两个 n×n 矩阵相乘最优算法所需算术运算次数随 n 增长的渐进幂指数；",
-      "event_id": "evt_cda6809a088f",
-      "storyline_id": "st_c4f13af9d9e2"
+      "headline": "受美国出口管制收紧影响，英伟达暂停向马来西亚、新加坡、泰国及印尼供应服务器",
+      "detail": "受美国出口管制收紧影响，英伟达已通知戴尔、超微电脑等合作伙伴，暂停向马来西亚、新加坡、泰国及印尼供应服务器。",
+      "event_id": "evt_a9fd505bf450",
+      "storyline_id": "st_1a314b28e58d"
     },
     {
-      "headline": "Anthropic 813亿美元 IPO 推高总裁 Daniela Amodei 身家至198亿美元",
-      "detail": "Anthropic以813亿美元估值IPO，总裁Daniela Amodei身家升至198亿美元。",
-      "event_id": "evt_1c192ad4fdac",
-      "storyline_id": "st_287a6efbd2e4"
+      "headline": "智谱GLM-5.5发布或推迟至2027年 设计参数约3万亿个",
+      "detail": "智谱GLM-5.5发布或推迟至2027年，其设计参数规模约为3万亿个。",
+      "event_id": "evt_8d93e03eb631",
+      "storyline_id": "st_1c18f1ef56e1"
     }
   ],
   "overview_sections": [
     {
-      "title": "AI产业与算力格局",
+      "title": "基础设施与算力演进",
       "points": [
         {
-          "text": "出口管制与技术突破并存，AI产业进入算力资源分配与底层算法优化的深水区。",
+          "text": "地缘政治与出口管制重塑全球AI硬件供应链，东南亚市场发货受阻。",
+          "source_refs": []
+        },
+        {
+          "text": "太空轨道数据中心与端侧多元化芯片适配成为算力扩张的新阵地。",
           "source_refs": []
         }
       ]
@@ -46,130 +50,151 @@
   "events": [
     {
       "schema_version": "4.1",
-      "event_id": "evt_550041562d3f",
-      "storyline_id": "st_07eb0835ff8a",
+      "event_id": "evt_a38ca4a17e6a",
+      "storyline_id": "st_1004787c4dbe",
       "article_ids": [
-        "wscn-us-stock-channel_309451e64829",
-        "aihot_7bf505730033"
+        "rss-the-decoder_9a1cc9170823",
+        "solidot_d02ef1674152",
+        "aihot_9b4be9548666"
       ],
       "legacy_event_ids": [],
-      "title": "FT 报道 Nvidia 暂停向东南亚四国发运服务器",
+      "title": "FCC 批准 SpaceX 至 2040 年部署最多 100 万颗 Starmind 卫星用于在轨 AI 数据中心",
       "category": "tech",
       "entities": [
-        "英伟达 (NVIDIA)"
+        "SpaceX / 特斯拉 / 马斯克生态"
       ],
       "entity_ids": [
-        "ent_nvidia"
+        "ent_spacex_tesla"
       ],
       "entity_confidences": {
-        "英伟达 (NVIDIA)": 0.96
+        "SpaceX / 特斯拉 / 马斯克生态": 0.86
       },
       "matched_entities": [
         {
-          "entity_id": "ent_nvidia",
-          "canonical_name": "英伟达 (NVIDIA)",
+          "entity_id": "ent_spacex_tesla",
+          "canonical_name": "SpaceX / 特斯拉 / 马斯克生态",
           "entity_type": "company",
-          "sector": "半导体 / AI算力",
+          "sector": "商业航天、自动驾驶与 AI",
           "matched_aliases": [
-            "nvidia",
-            "英伟达"
+            "spacex"
           ],
           "tickers": [
             {
-              "symbol": "NVDA",
+              "symbol": "TSLA",
               "market": "US",
               "exchange": "NASDAQ",
               "currency": "USD",
-              "label": "NVDA.US (NASDAQ)"
+              "label": "TSLA.US (NASDAQ)"
             }
           ],
-          "reason": "正文/实体匹配关键词「nvidia / 英伟达」",
-          "confidence": 0.96
+          "reason": "正文/实体匹配关键词「spacex」",
+          "confidence": 0.86
         }
       ],
-      "importance": "medium",
+      "importance": "high",
       "sentiment": "Mixed",
       "special_note": null,
       "material_stage": null,
       "material_stage_label": null,
       "material_stage_confidence": null,
-      "thumbnail_url": null,
-      "publisher_name": "华尔街见闻 美股快讯",
+      "thumbnail_url": "https://the-decoder.com/wp-content/uploads/2026/11/SpaceX-xAI-Satellite-scaled.png",
+      "publisher_name": "The Decoder (AI前沿)",
       "source_status": "ok",
       "evidence_status": "multi_source",
       "evidence_label": "多独立来源提及（待核官方全文）",
-      "evidence_status_reason": "已有 2 家独立媒体族提及（含摘要或正文首段）；多源转载不代表官方公告已证实",
+      "evidence_status_reason": "已有 3 家独立媒体族提及（含摘要或正文首段）；多源转载不代表官方公告已证实",
       "attribution_warning": null,
       "regulatory_note": null,
       "contradictions": [],
       "downweight_reasons": [],
       "quality_flags": [],
       "material_depth": "title_and_excerpt",
-      "source_count": 2,
-      "platform_count": 2,
-      "independent_publisher_count": 2,
+      "source_count": 3,
+      "platform_count": 3,
+      "independent_publisher_count": 3,
       "reprint_count": 0,
-      "published_at": "2026-11-26T13:10:50+08:00",
+      "published_at": "2026-11-26T16:31:47+08:00",
       "event_date": "2026-11-26",
-      "event_time": "2026-11-26T13:10:50+08:00",
+      "event_time": "2026-11-26T16:31:47+08:00",
       "stale": false,
       "event_date_source": "llm_extracted",
       "is_stale_rehash": false,
       "time_trust_level": "article_timestamp",
       "time_confidence": "article_timestamp",
-      "first_discovered_at": "2026-11-26T19:26:11+08:00",
-      "first_reported_at": "2026-11-26T13:10:50+08:00",
-      "latest_fact_update_at": "2026-11-26T15:00:25+08:00",
-      "latest_reported_at": "2026-11-26T15:00:25+08:00",
-      "fetched_at": "2026-11-26T19:26:11+08:00",
-      "input_batch_id": "raw-20261126-192611",
-      "fact_summary": "据报道，英伟达通知合作伙伴停止向东南亚出货服务器。戴尔和超微电脑公司已告知马来西亚、新加坡、泰国和印度尼西亚的买家，英伟达将不允许他们的订单发货。英伟达及其合作伙伴正努力遵守美国新的出口限制。英伟达暂停向东南亚出货服务器可能是暂时的。（新浪）",
+      "first_discovered_at": "2026-11-26T23:16:14+08:00",
+      "first_reported_at": "2026-11-26T16:31:47+08:00",
+      "latest_fact_update_at": "2026-11-26T21:41:07+08:00",
+      "latest_reported_at": "2026-11-26T21:41:07+08:00",
+      "fetched_at": "2026-11-26T23:16:14+08:00",
+      "input_batch_id": "raw-20261126-231614",
+      "fact_summary": "美国联邦通信委员会（FCC）已授权SpaceX部署多达100万颗Starmind卫星，作为轨道数据中心处理人工智能数据。",
       "fact_atoms": [
         {
-          "atom_id": "fa_68965447",
-          "subject": "英伟达 (NVIDIA)",
-          "metric_or_action": "FT 报道 Nvidia 暂停向东南亚四国发运服务器",
+          "atom_id": "fa_78182465",
+          "subject": "SpaceX / 特斯拉 / 马斯克生态",
+          "metric_or_action": "FCC 批准 SpaceX 至 2040 年部署最多 100 万颗 Starmind 卫星用于在轨 AI 数据中心",
           "value": null,
           "unit": null,
           "period": "单次披露/未注明周期",
-          "scope": "订单/合同/意向",
+          "scope": "新闻事件陈述",
           "fact_status": "multi_source_reported",
-          "attribution": "华尔街见闻 美股快讯",
-          "source_ref": "wscn-us-stock-channel_309451e64829",
-          "source_url": "https://wallstreetcn.com/livenews/3206126",
-          "source_excerpt_or_locator": "据报道，英伟达通知合作伙伴停止向东南亚出货服务器。戴尔和超微电脑公司已告知马来西亚、新加坡、泰国和印度尼西亚的买家，英伟达将不允许他们的订单发货。英伟达及其合作伙伴正努力遵守美国新的出口限制。英伟达暂停向东南亚出货服务器可能是暂时的。（新浪）",
-          "published_at": "2026-11-26T13:10:50+08:00",
-          "discovered_at": "2026-11-26T19:26:11+08:00",
+          "attribution": "The Decoder (AI前沿)",
+          "source_ref": "rss-the-decoder_9a1cc9170823",
+          "source_url": "https://the-decoder.com/fcc-clears-spacex-to-deploy-up-to-1-million-starmind-satellites-for-orbital-ai-data-centers-by-2040",
+          "source_excerpt_or_locator": "The FCC has authorized SpaceX to deploy up to 1 million Starmind satellites to process AI data as orbital data centers. SpaceX is targeting its first launches in 2027, and the full",
+          "published_at": "2026-11-26T21:41:07+08:00",
+          "discovered_at": "2026-11-26T23:16:14+08:00",
           "revision": 1
         }
       ],
-      "ai_analysis": "引发英伟达 (NVIDIA)估值与产业链联动重定价，需紧盯主力资金流向与官方后续披露。",
+      "ai_analysis": "绕过地面土地与电力瓶颈的直接尝试，开辟了近地轨道算力基础设施的新供给路径。",
       "unverified_claims": [],
       "speculation_or_outlook": null,
       "sources": [
         {
-          "item_id": "wscn-us-stock-channel_309451e64829",
-          "article_id": "wscn-us-stock-channel_309451e64829",
-          "source_id": "wscn-us-stock-channel",
-          "source_name": "华尔街见闻 美股快讯",
-          "publisher_name": "华尔街见闻 美股快讯",
+          "item_id": "rss-the-decoder_9a1cc9170823",
+          "article_id": "rss-the-decoder_9a1cc9170823",
+          "source_id": "rss-the-decoder",
+          "source_name": "The Decoder (AI前沿)",
+          "publisher_name": "The Decoder (AI前沿)",
           "source_status": "ok",
           "source_kind": "news",
           "source_tier": "direct_media",
-          "publisher_family": "wallstreetcn",
+          "publisher_family": "thedecoder",
           "is_reprint_copy": false,
-          "title": "报道：英伟达通知合作伙伴停止向东南亚出货服务器",
-          "url": "https://wallstreetcn.com/livenews/3206126",
-          "published_at": "2026-11-26T13:10:50+08:00",
-          "published_at_source": "upstream_api",
-          "fetched_at": "2026-11-26T19:26:13+08:00",
-          "excerpt": "据报道，英伟达通知合作伙伴停止向东南亚出货服务器。戴尔和超微电脑公司已告知马来西亚、新加坡、泰国和印度尼西亚的买家，英伟达将不允许他们的订单发货。英伟达及其合作伙伴正努力遵守美国新的出口限制。英伟达暂停向东南亚出货服务器可能是暂时的。（新浪）",
+          "title": "FCC clears SpaceX to deploy up to 1 million Starmind satellites for orbital AI data centers by 2040",
+          "url": "https://the-decoder.com/fcc-clears-spacex-to-deploy-up-to-1-million-starmind-satellites-for-orbital-ai-data-centers-by-2040",
+          "published_at": "2026-11-26T21:41:07+08:00",
+          "published_at_source": "upstream_rfc2822",
+          "fetched_at": "2026-11-26T23:16:18+08:00",
+          "excerpt": "The FCC has authorized SpaceX to deploy up to 1 million Starmind satellites to process AI data as orbital data centers. SpaceX is targeting its first launches in 2027, and the full constellation is set to be operating by 2040. Google and Blue Origin are also…",
+          "thumbnail_url": "https://the-decoder.com/wp-content/uploads/2026/11/SpaceX-xAI-Satellite-scaled.png",
+          "deep_fetch_status": null,
+          "title_zh": "美国联邦通信委员会（FCC）批准 SpaceX 在 2040 年前部署多达 100 万颗 Starmind 卫星，用于建设轨道 AI 数据中心"
+        },
+        {
+          "item_id": "solidot_d02ef1674152",
+          "article_id": "solidot_d02ef1674152",
+          "source_id": "solidot",
+          "source_name": "Solidot 奇客",
+          "publisher_name": "Solidot 奇客",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "aggregator_lead",
+          "publisher_family": "solidot",
+          "is_reprint_copy": false,
+          "title": "FCC 批准 SpaceX 发射 100 万颗轨道数据中心卫星",
+          "url": "https://www.solidot.org/story?sid=85998",
+          "published_at": "2026-11-26T16:31:47+08:00",
+          "published_at_source": "upstream_rfc2822",
+          "fetched_at": "2026-11-26T23:16:14+08:00",
+          "excerpt": null,
           "thumbnail_url": null,
           "deep_fetch_status": null
         },
         {
-          "item_id": "aihot_7bf505730033",
-          "article_id": "aihot_7bf505730033",
+          "item_id": "aihot_9b4be9548666",
+          "article_id": "aihot_9b4be9548666",
           "source_id": "aihot",
           "source_name": "AIHOT 前沿",
           "publisher_name": "AIHOT 前沿",
@@ -178,11 +203,11 @@
           "source_tier": "aggregator_lead",
           "publisher_family": "aihot",
           "is_reprint_copy": false,
-          "title": "FT 报道 Nvidia 暂停向东南亚四国发运服务器",
-          "url": "https://aihot.news/items/rlt60gq96bl1cf5b88o8rbj30",
-          "published_at": "2026-11-26T15:00:25+08:00",
+          "title": "FCC 批准 SpaceX 至 2040 年部署最多 100 万颗 Starmind 卫星用于在轨 AI 数据中心",
+          "url": "https://aihot.news/items/oysonctc1s0cizth9lunf32y5",
+          "published_at": "2026-11-26T21:41:07+08:00",
           "published_at_source": "upstream_rfc2822",
-          "fetched_at": "2026-11-26T19:26:11+08:00",
+          "fetched_at": "2026-11-26T23:16:14+08:00",
           "excerpt": null,
           "thumbnail_url": null,
           "deep_fetch_status": null
@@ -197,22 +222,219 @@
       "followup": null,
       "is_new_in_batch": true,
       "update_kind": "new_discovery",
-      "heavy_score": 50.0,
+      "heavy_score": 78.2,
+      "radar_score": 88,
+      "severity_tier": "S",
+      "severity_label": "S级重磅",
+      "heavy_reason_tag": "巨头重大变动",
+      "summary_en": "The FCC has authorized SpaceX to deploy up to 1 million Starmind satellites to process AI data as orbital data centers.",
+      "summary": "美国联邦通信委员会（FCC）已授权SpaceX部署多达100万颗Starmind卫星，作为轨道数据中心处理人工智能数据。",
+      "summary_zh": "美国联邦通信委员会（FCC）已授权SpaceX部署多达100万颗Starmind卫星，作为轨道数据中心处理人工智能数据。",
+      "deep_qa": [
+        {
+          "question": "百万级卫星组网进行在轨AI计算面临的核心技术瓶颈是什么？",
+          "answer": "核心挑战在于太空中极高的散热效率要求、高能耗下的太阳能帆板供电稳定性，以及激光星间链路在高动态环境下的低延迟带宽损耗。",
+          "historical_parallel": "类似于早期海底光缆跨洋铺设时面对的材料寿命与中继器供电技术突破历程。"
+        },
+        {
+          "question": "FCC的此次授权对全球地面算力中心的区域电力垄断格局有何实际撼动？",
+          "answer": "它将部分高耗能AI推理与数据清洗需求直接外包至太空太阳能直采区，从根本上缓解了地面电网的增容压力。",
+          "historical_parallel": "类似于通信卫星绕过地面长途电话局直接实现跨国卫星直播。"
+        }
+      ],
+      "ai_overlaid": true,
+      "translation_attempts": 0,
+      "translation_error": null,
+      "title_zh": "FCC 批准 SpaceX 至 2040 年部署最多 100 万颗 Starmind 卫星用于在轨 AI 数据中心",
+      "translation_status": "native_zh",
+      "title_en": "FCC clears SpaceX to deploy up to 1 million Starmind satellites for orbital AI data centers by 2040",
+      "ai_analysis_en": ""
+    },
+    {
+      "schema_version": "4.1",
+      "event_id": "evt_bc41391b6850",
+      "storyline_id": "st_8ba4baab387a",
+      "article_ids": [
+        "rss-hf-blog_7b209045bfd8",
+        "aihot_da1863af57bc"
+      ],
+      "legacy_event_ids": [],
+      "title": "Hugging Face 上线 llama.cpp AMD Ryzen 与 Radeon 基准测试面板",
+      "category": "tech",
+      "entities": [
+        "AMD (超威半导体)"
+      ],
+      "entity_ids": [
+        "ent_ai_infra_tools",
+        "ent_amd"
+      ],
+      "entity_confidences": {
+        "AI 推理与框架生态 (vLLM / llama.cpp / Transformers)": 0.86,
+        "AMD (超威半导体)": 0.68
+      },
+      "matched_entities": [
+        {
+          "entity_id": "ent_ai_infra_tools",
+          "canonical_name": "AI 推理与框架生态 (vLLM / llama.cpp / Transformers)",
+          "entity_type": "tech",
+          "sector": "AI 开源基础设施",
+          "matched_aliases": [
+            "llama.cpp"
+          ],
+          "tickers": [],
+          "reason": "正文/实体匹配关键词「llama.cpp」",
+          "confidence": 0.86
+        },
+        {
+          "entity_id": "ent_amd",
+          "canonical_name": "AMD (超威半导体)",
+          "entity_type": "company",
+          "sector": "半导体 / AI算力",
+          "matched_aliases": [
+            "amd"
+          ],
+          "tickers": [
+            {
+              "symbol": "AMD",
+              "market": "US",
+              "exchange": "NASDAQ",
+              "currency": "USD",
+              "label": "AMD.US (NASDAQ)"
+            }
+          ],
+          "reason": "正文/实体匹配关键词「amd」",
+          "confidence": 0.68
+        }
+      ],
+      "importance": "medium",
+      "sentiment": "Mixed",
+      "special_note": null,
+      "material_stage": null,
+      "material_stage_label": null,
+      "material_stage_confidence": null,
+      "thumbnail_url": "https://cdn-uploads.huggingface.co/production/uploads/67289c93ff90038d9a6e5675/tbIvyMSISXCm64WYP3atl.png",
+      "publisher_name": "Hugging Face 官方博客",
+      "source_status": "ok",
+      "evidence_status": "multi_source",
+      "evidence_label": "多独立来源提及（待核官方全文）",
+      "evidence_status_reason": "已有 2 家独立媒体族提及（含摘要或正文首段）；多源转载不代表官方公告已证实",
+      "attribution_warning": null,
+      "regulatory_note": null,
+      "contradictions": [],
+      "downweight_reasons": [],
+      "quality_flags": [],
+      "material_depth": "body_lead_extracted",
+      "source_count": 2,
+      "platform_count": 2,
+      "independent_publisher_count": 2,
+      "reprint_count": 0,
+      "published_at": "2026-11-26T19:37:17+08:00",
+      "event_date": "2026-11-26",
+      "event_time": "2026-11-26T19:37:17+08:00",
+      "stale": false,
+      "event_date_source": "llm_extracted",
+      "is_stale_rehash": false,
+      "time_trust_level": "article_timestamp",
+      "time_confidence": "article_timestamp",
+      "first_discovered_at": "2026-11-26T23:16:14+08:00",
+      "first_reported_at": "2026-11-26T19:37:17+08:00",
+      "latest_fact_update_at": "2026-11-26T19:37:17+08:00",
+      "latest_reported_at": "2026-11-26T19:37:17+08:00",
+      "fetched_at": "2026-11-26T23:16:14+08:00",
+      "input_batch_id": "raw-20261126-231614",
+      "fact_summary": "llama.cpp × AMD基准测试仪表板已在Hugging Face上线，允许用户追踪不同版本、模型和量化方式下的提示词处理及文本生成性能。",
+      "fact_atoms": [
+        {
+          "atom_id": "fa_15711906",
+          "subject": "AMD (超威半导体)",
+          "metric_or_action": "Hugging Face 上线 llama.cpp AMD Ryzen 与 Radeon 基准测试面板",
+          "value": null,
+          "unit": null,
+          "period": "单次披露/未注明周期",
+          "scope": "新闻事件陈述",
+          "fact_status": "multi_source_reported",
+          "attribution": "Hugging Face 官方博客",
+          "source_ref": "rss-hf-blog_7b209045bfd8",
+          "source_url": "https://huggingface.co/blog/ggml-org/llamacpp-amd-bench",
+          "source_excerpt_or_locator": "The llama.cpp × AMD Benchmark dashboard is available on Hugging Face. It lets you track prompt processing and text generation performance across llama.cpp builds, models, and quant",
+          "published_at": "2026-11-26T19:37:17+08:00",
+          "discovered_at": "2026-11-26T23:16:14+08:00",
+          "revision": 1
+        }
+      ],
+      "ai_analysis": "为非英伟达硬件生态提供透明的性能对标工具，加速大模型在AMD锐龙与Radeon平台上的工程落地。",
+      "unverified_claims": [],
+      "speculation_or_outlook": null,
+      "sources": [
+        {
+          "item_id": "rss-hf-blog_7b209045bfd8",
+          "article_id": "rss-hf-blog_7b209045bfd8",
+          "source_id": "rss-hf-blog",
+          "source_name": "Hugging Face 官方博客",
+          "publisher_name": "Hugging Face 官方博客",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "huggingface",
+          "is_reprint_copy": false,
+          "title": "Introducing the llama.cpp benchmark dashboard for AMD Ryzen and Radeon",
+          "url": "https://huggingface.co/blog/ggml-org/llamacpp-amd-bench",
+          "published_at": "2026-11-26T19:37:17+08:00",
+          "published_at_source": "upstream_rfc2822",
+          "fetched_at": "2026-11-26T23:16:18+08:00",
+          "excerpt": "The llama.cpp × AMD Benchmark dashboard is available on Hugging Face. It lets you track prompt processing and text generation performance across llama.cpp builds, models, and quantizations, so you can explore how local inference performs on AMD Ryzen and Radeon hardware. Local inference performance changes as models, kernels, and builds evolve. We want those changes to be easy to inspect for any AMD developer: pick a hardware, a model and a build, compare quantizations, and follow performance over time. The benchmark workflow and underlying results are public, so you can a…",
+          "thumbnail_url": "https://cdn-uploads.huggingface.co/production/uploads/67289c93ff90038d9a6e5675/tbIvyMSISXCm64WYP3atl.png",
+          "deep_fetch_status": "extracted_body_lead",
+          "title_zh": "推出适用于 AMD Ryzen 和 Radeon 的 llama.cpp 基准测试仪表板"
+        },
+        {
+          "item_id": "aihot_da1863af57bc",
+          "article_id": "aihot_da1863af57bc",
+          "source_id": "aihot",
+          "source_name": "AIHOT 前沿",
+          "publisher_name": "AIHOT 前沿",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "aggregator_lead",
+          "publisher_family": "aihot",
+          "is_reprint_copy": false,
+          "title": "Hugging Face 上线 llama.cpp AMD Ryzen 与 Radeon 基准测试面板",
+          "url": "https://aihot.news/items/rrspsi0c87cm9xoqztjaz650y",
+          "published_at": "2026-11-26T19:37:17+08:00",
+          "published_at_source": "upstream_rfc2822",
+          "fetched_at": "2026-11-26T23:16:14+08:00",
+          "excerpt": null,
+          "thumbnail_url": null,
+          "deep_fetch_status": null
+        }
+      ],
+      "verification": {
+        "all_refs_valid": true,
+        "has_primary_url": true,
+        "rejected_refs": [],
+        "has_first_party": false
+      },
+      "followup": null,
+      "is_new_in_batch": true,
+      "update_kind": "new_discovery",
+      "heavy_score": 41.4,
       "radar_score": 82,
       "severity_tier": "B",
       "severity_label": "B级常规",
+      "summary_en": "The llama.cpp × AMD Benchmark dashboard is available on Hugging Face. It lets you track prompt processing and text generation performance across llama.cpp builds, models, and quantizations, so you can…",
+      "summary": "llama.cpp × AMD基准测试仪表板已在Hugging Face上线，允许用户追踪不同版本、模型和量化方式下的提示词处理及文本生成性能。",
+      "summary_zh": "llama.cpp × AMD基准测试仪表板已在Hugging Face上线，允许用户追踪不同版本、模型和量化方式下的提示词处理及文本生成性能。",
+      "ai_overlaid": true,
       "translation_attempts": 0,
       "translation_error": null,
-      "title_zh": "FT 报道 Nvidia 暂停向东南亚四国发运服务器",
+      "title_zh": "Hugging Face 上线 llama.cpp AMD Ryzen 与 Radeon 基准测试面板",
       "translation_status": "native_zh",
-      "summary_zh": "据报道，英伟达通知合作伙伴停止向东南亚出货服务器。戴尔和超微电脑公司已告知马来西亚、新加坡、泰国和印度尼西亚的买家，英伟达将不允许他们的订单发货。英伟达及其合作伙伴正努力遵守美国新的出口限制。英伟达暂停向东南亚出货服务器可能是暂时的。（新浪）",
-      "title_en": "",
-      "summary_en": "",
+      "title_en": "Introducing the llama.cpp benchmark dashboard for AMD Ryzen and Radeon",
       "ai_analysis_en": "",
       "deep_qa": [
         {
           "question": "这次技术变化对普通开发者或用户意味着什么？",
-          "answer": "聚焦英伟达 (NVIDIA)能力边界与使用成本变化：据报道，英伟达通知合作伙伴停止向东南亚出货服务器。戴尔和超微电脑公司已告知马来西亚、新加坡、泰国和印度尼西亚的买家，英伟达将不允许他们的订单发货。",
+          "answer": "聚焦AMD (超威半导体)能力边界与使用成本变化：llama.cpp × AMD基准测试仪表板已在Hugging Face上线，允许用户追踪不同版本、模型和量化方式下的提示词处理及文本生成性能。",
           "historical_parallel": "历次大模型与算力架构迭代中，推理单价下探与生态开放通常在 1~2 个季度内显著拉动应用渗透率。"
         },
         {
@@ -221,6 +443,158 @@
           "historical_parallel": "2025 年以来主流开源/闭源大模型竞赛证明，公开基准与真实开发者采用率决定商业化天花板。"
         }
       ]
+    },
+    {
+      "schema_version": "4.1",
+      "event_id": "evt_8d93e03eb631",
+      "storyline_id": "st_1c18f1ef56e1",
+      "article_ids": [
+        "rss-gnews-ai-models-zh_71b312a2d07e"
+      ],
+      "legacy_event_ids": [],
+      "title": "智谱GLM-5.5发布或推迟至2027年 设计参数约3万亿个",
+      "category": "tech",
+      "entities": [
+        "智谱 AI (GLM)"
+      ],
+      "entity_ids": [
+        "ent_zhipu"
+      ],
+      "entity_confidences": {
+        "智谱 AI (GLM)": 0.96
+      },
+      "matched_entities": [
+        {
+          "entity_id": "ent_zhipu",
+          "canonical_name": "智谱 AI (GLM)",
+          "entity_type": "tech",
+          "sector": "AI 模型与开源推理",
+          "matched_aliases": [
+            "智谱",
+            "glm-5"
+          ],
+          "tickers": [],
+          "reason": "正文/实体匹配关键词「智谱 / glm-5」",
+          "confidence": 0.96
+        }
+      ],
+      "importance": "high",
+      "sentiment": "Mixed",
+      "special_note": null,
+      "material_stage": null,
+      "material_stage_label": null,
+      "material_stage_confidence": null,
+      "thumbnail_url": null,
+      "publisher_name": "Sohu",
+      "source_status": "ok",
+      "evidence_status": "single_source",
+      "evidence_label": "单一独立来源线索",
+      "evidence_status_reason": "目前仅见 1 家独立来源（共 1 条引用含转载，含摘要/首段），尚未见独立渠道交叉或官方确认",
+      "attribution_warning": null,
+      "regulatory_note": null,
+      "contradictions": [],
+      "downweight_reasons": [],
+      "quality_flags": [],
+      "material_depth": "title_and_excerpt",
+      "source_count": 1,
+      "platform_count": 1,
+      "independent_publisher_count": 1,
+      "reprint_count": 0,
+      "published_at": "2026-11-26T19:26:48+08:00",
+      "event_date": "2026-11-26",
+      "event_time": "2026-11-26T19:26:48+08:00",
+      "stale": false,
+      "event_date_source": "llm_extracted",
+      "is_stale_rehash": false,
+      "time_trust_level": "article_timestamp",
+      "time_confidence": "article_timestamp",
+      "first_discovered_at": "2026-11-26T23:16:14+08:00",
+      "first_reported_at": "2026-11-26T19:26:48+08:00",
+      "latest_fact_update_at": "2026-11-26T19:26:48+08:00",
+      "latest_reported_at": "2026-11-26T19:26:48+08:00",
+      "fetched_at": "2026-11-26T23:16:14+08:00",
+      "input_batch_id": "raw-20261126-231614",
+      "fact_summary": "智谱GLM-5.5发布或推迟至2027年，其设计参数规模约为3万亿个。",
+      "fact_atoms": [
+        {
+          "atom_id": "fa_97335713",
+          "subject": "智谱 AI (GLM)",
+          "metric_or_action": "智谱GLM-5.5发布或推迟至2027年 设计参数约3万亿个",
+          "value": null,
+          "unit": null,
+          "period": "单次披露/未注明周期",
+          "scope": "新闻事件陈述",
+          "fact_status": "reported_unconfirmed_by_filing",
+          "attribution": "Sohu",
+          "source_ref": "rss-gnews-ai-models-zh_71b312a2d07e",
+          "source_url": "https://news.google.com/rss/articles/CBMiiAFBVV95cUxNd0xpaDlkcS1LYWstUl95aVVfaWRvbzEycXVqb1hyMzJtcVpiYzctNVVEZnpJamZadkxKcnpTSWVLT2ZmYWdpZjZMUkhRNTk3N3ZmcXBiS2JjcTd4OFVFNVAxTG0zWWwtaHNVaUw1ZlNETVFYUU41TGNsd3Vralg3N0N1UURJcFlR?oc=5",
+          "source_excerpt_or_locator": "智谱GLM-5.5发布或推迟至2027年 设计参数约3万亿个 Sohu",
+          "published_at": "2026-11-26T19:26:48+08:00",
+          "discovered_at": "2026-11-26T23:16:14+08:00",
+          "revision": 1
+        }
+      ],
+      "ai_analysis": "反映出超大规模稠密或混合专家模型在追求极限参数时，对训练稳定性和集群算力稳定性的冗余考量增加。",
+      "unverified_claims": [],
+      "speculation_or_outlook": null,
+      "sources": [
+        {
+          "item_id": "rss-gnews-ai-models-zh_71b312a2d07e",
+          "article_id": "rss-gnews-ai-models-zh_71b312a2d07e",
+          "source_id": "rss-gnews-ai-models-zh",
+          "source_name": "Sohu",
+          "publisher_name": "Sohu",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "m",
+          "is_reprint_copy": false,
+          "title": "智谱GLM-5.5发布或推迟至2027年 设计参数约3万亿个",
+          "url": "https://news.google.com/rss/articles/CBMiiAFBVV95cUxNd0xpaDlkcS1LYWstUl95aVVfaWRvbzEycXVqb1hyMzJtcVpiYzctNVVEZnpJamZadkxKcnpTSWVLT2ZmYWdpZjZMUkhRNTk3N3ZmcXBiS2JjcTd4OFVFNVAxTG0zWWwtaHNVaUw1ZlNETVFYUU41TGNsd3Vralg3N0N1UURJcFlR?oc=5",
+          "published_at": "2026-11-26T19:26:48+08:00",
+          "published_at_source": "upstream_rfc2822",
+          "fetched_at": "2026-11-26T23:16:18+08:00",
+          "excerpt": "智谱GLM-5.5发布或推迟至2027年 设计参数约3万亿个 Sohu",
+          "thumbnail_url": null,
+          "deep_fetch_status": null
+        }
+      ],
+      "verification": {
+        "all_refs_valid": true,
+        "has_primary_url": true,
+        "rejected_refs": [],
+        "has_first_party": false
+      },
+      "followup": null,
+      "is_new_in_batch": true,
+      "update_kind": "new_discovery",
+      "heavy_score": 48.3,
+      "radar_score": 76,
+      "severity_tier": "A",
+      "severity_label": "A级要闻",
+      "heavy_reason_tag": "科研/模型里程碑",
+      "summary": "智谱GLM-5.5发布或推迟至2027年，其设计参数规模约为3万亿个。",
+      "summary_zh": "智谱GLM-5.5发布或推迟至2027年，其设计参数规模约为3万亿个。",
+      "deep_qa": [
+        {
+          "question": "智谱将参数规模定在约3万亿并推迟发布的底层考量是什么？",
+          "answer": "这意味着研发重心从单纯堆砌参数转向更深层的多模态架构对齐、长文本推理稳定性以及复杂智能体调度能力的优化。",
+          "historical_parallel": "类似于前沿芯片制造在向更小制程跃迁时由于良率优化而导致的量产节点后延。"
+        },
+        {
+          "question": "3万亿参数级别的国产大模型对当前国内算力集群提出了何种基准要求？",
+          "answer": "对千卡至万卡国产异构芯片集群的通信带宽、显存容量及故障自动恢复（Checkpointing）机制构成了严苛考验。",
+          "historical_parallel": "类似于早期超级计算机在运行大规模气象数值模式时对并行计算架构的极限压榨。"
+        }
+      ],
+      "ai_overlaid": true,
+      "translation_attempts": 0,
+      "translation_error": null,
+      "title_zh": "智谱GLM-5.5发布或推迟至2027年 设计参数约3万亿个",
+      "translation_status": "native_zh",
+      "title_en": "",
+      "summary_en": "",
+      "ai_analysis_en": ""
     },
     {
       "schema_version": "4.1",
@@ -291,12 +665,12 @@
       "first_reported_at": "2026-11-26T15:03:00+08:00",
       "latest_fact_update_at": "2026-11-26T15:03:00+08:00",
       "latest_reported_at": "2026-11-26T15:03:00+08:00",
-      "fetched_at": "2026-11-26T19:26:11+08:00",
-      "input_batch_id": "raw-20261126-192611",
+      "fetched_at": "2026-11-26T23:16:14+08:00",
+      "input_batch_id": "raw-20261126-231614",
       "fact_summary": "Anthropic以813亿美元估值IPO，总裁Daniela Amodei身家升至198亿美元。",
       "fact_atoms": [
         {
-          "atom_id": "fa_23313424",
+          "atom_id": "fa_35344395",
           "subject": "Anthropic / Claude",
           "metric_or_action": "Anthropic 813亿美元 IPO 推高总裁 Daniela Amodei 身家至198亿美元",
           "value": "813",
@@ -332,7 +706,7 @@
           "url": "https://aihot.news/items/gdiw2u5eqnvcnsnlwzrafjeuu",
           "published_at": "2026-11-26T15:03:00+08:00",
           "published_at_source": "upstream_rfc2822",
-          "fetched_at": "2026-11-26T19:26:11+08:00",
+          "fetched_at": "2026-11-26T23:16:14+08:00",
           "excerpt": null,
           "thumbnail_url": null,
           "deep_fetch_status": null
@@ -344,10 +718,16 @@
         "rejected_refs": [],
         "has_first_party": false
       },
-      "followup": null,
+      "followup": {
+        "is_continuing": true,
+        "prev_batch_id": "smart-20261126-193106",
+        "prev_event_id": "evt_1c192ad4fdac",
+        "prev_title": "Anthropic 813亿美元 IPO 推高总裁 Daniela Amodei 身家至198亿美元",
+        "delta_note": "同一事件在最新批次出现表述修订或信息补充"
+      },
       "is_new_in_batch": true,
       "update_kind": "new_discovery",
-      "heavy_score": 64.4,
+      "heavy_score": 56.0,
       "radar_score": 53,
       "severity_tier": "A",
       "severity_label": "A级要闻",
@@ -377,234 +757,87 @@
     },
     {
       "schema_version": "4.1",
-      "event_id": "evt_258e8ec8b453",
-      "storyline_id": "st_dbdae42f595f",
+      "event_id": "evt_7929a005ed9e",
+      "storyline_id": "st_7802272b041e",
       "article_ids": [
-        "wscn-us-stock-channel_614ffe7dd129",
-        "aihot_6eb161851ef5",
-        "aihot_eb16669090b9"
+        "wscn-us-stock-channel_4de0fec9c9f9"
       ],
       "legacy_event_ids": [],
-      "title": "腾讯混元开源草稿模型 DFly2：让 Hy4 flash 吐字提速最高 4.2 倍",
+      "title": "阿里加码北美招聘，Qwen团队今年已吸纳数百名AI人才",
       "category": "tech",
       "entities": [
-        "腾讯 (Tencent)"
+        "阿里巴巴 / 通义千问 (Qwen)",
+        "美团 (Meituan / LongCat)"
       ],
       "entity_ids": [
-        "ent_tencent"
+        "ent_qwen_alibaba",
+        "ent_meituan",
+        "ent_ai_infra_tools"
       ],
       "entity_confidences": {
-        "腾讯 (Tencent)": 0.96
+        "阿里巴巴 / 通义千问 (Qwen)": 0.86,
+        "美团 (Meituan / LongCat)": 0.86,
+        "AI 推理与框架生态 (vLLM / llama.cpp / Transformers)": 0.76
       },
       "matched_entities": [
         {
-          "entity_id": "ent_tencent",
-          "canonical_name": "腾讯 (Tencent)",
-          "entity_type": "company",
-          "sector": "互联网 / AI模型与应用",
+          "entity_id": "ent_qwen_alibaba",
+          "canonical_name": "阿里巴巴 / 通义千问 (Qwen)",
+          "entity_type": "tech",
+          "sector": "AI 模型与云平台",
           "matched_aliases": [
-            "腾讯",
-            "混元"
+            "qwen"
           ],
           "tickers": [
             {
-              "symbol": "00700",
+              "symbol": "09988",
               "market": "HK",
               "exchange": "HKEX",
               "currency": "HKD",
-              "label": "00700.HK (HKEX)"
+              "label": "09988.HK (HKEX)"
+            },
+            {
+              "symbol": "BABA",
+              "market": "US",
+              "exchange": "NYSE",
+              "currency": "USD",
+              "label": "BABA.US (NYSE)"
             }
           ],
-          "reason": "正文/实体匹配关键词「腾讯 / 混元」",
-          "confidence": 0.96
-        }
-      ],
-      "importance": "medium",
-      "sentiment": "Bullish",
-      "special_note": null,
-      "material_stage": null,
-      "material_stage_label": null,
-      "material_stage_confidence": null,
-      "thumbnail_url": null,
-      "publisher_name": "华尔街见闻 美股快讯",
-      "source_status": "ok",
-      "evidence_status": "multi_source",
-      "evidence_label": "多独立来源提及（待核官方全文）",
-      "evidence_status_reason": "已有 2 家独立媒体族（另识别 1 条高度相似转载）提及（含摘要或正文首段）；多源转载不代表官方公告已证实",
-      "attribution_warning": null,
-      "regulatory_note": null,
-      "contradictions": [],
-      "downweight_reasons": [],
-      "quality_flags": [],
-      "material_depth": "title_and_excerpt",
-      "source_count": 3,
-      "platform_count": 2,
-      "independent_publisher_count": 2,
-      "reprint_count": 1,
-      "published_at": "2026-11-26T14:33:50+08:00",
-      "event_date": "2026-11-26",
-      "event_time": "2026-11-26T14:33:50+08:00",
-      "stale": false,
-      "event_date_source": "llm_extracted",
-      "is_stale_rehash": false,
-      "time_trust_level": "article_timestamp",
-      "time_confidence": "article_timestamp",
-      "first_discovered_at": "2026-11-26T19:26:11+08:00",
-      "first_reported_at": "2026-11-26T14:33:50+08:00",
-      "latest_fact_update_at": "2026-11-26T16:26:38+08:00",
-      "latest_reported_at": "2026-11-26T16:26:38+08:00",
-      "fetched_at": "2026-11-26T19:26:11+08:00",
-      "input_batch_id": "raw-20261126-192611",
-      "fact_summary": "腾讯混元宣布开源新一代草稿模型DFly2。据介绍，DFly2专为DSA类稀疏注意力大模型和长上下文场景设计，适配Hy4 flash的权重及完整训练代码同步开源。",
-      "fact_atoms": [
-        {
-          "atom_id": "fa_8465298",
-          "subject": "腾讯 (Tencent)",
-          "metric_or_action": "腾讯混元开源草稿模型 DFly2：让 Hy4 flash 吐字提速最高 4.2 倍",
-          "value": null,
-          "unit": null,
-          "period": "单次披露/未注明周期",
-          "scope": "新闻事件陈述",
-          "fact_status": "multi_source_reported",
-          "attribution": "华尔街见闻 美股快讯",
-          "source_ref": "wscn-us-stock-channel_614ffe7dd129",
-          "source_url": "https://wallstreetcn.com/livenews/3206177",
-          "source_excerpt_or_locator": "腾讯混元宣布开源新一代草稿模型DFly2。据介绍，DFly2专为DSA类稀疏注意力大模型和长上下文场景设计，适配Hy4 flash的权重及完整训练代码同步开源。",
-          "published_at": "2026-11-26T14:38:57+08:00",
-          "discovered_at": "2026-11-26T19:26:11+08:00",
-          "revision": 1
-        }
-      ],
-      "ai_analysis": "反映腾讯 (Tencent)技术架构与商业落地节奏变化，实际效果仍待开发者生态与第三方实测验证。",
-      "unverified_claims": [],
-      "speculation_or_outlook": null,
-      "sources": [
-        {
-          "item_id": "wscn-us-stock-channel_614ffe7dd129",
-          "article_id": "wscn-us-stock-channel_614ffe7dd129",
-          "source_id": "wscn-us-stock-channel",
-          "source_name": "华尔街见闻 美股快讯",
-          "publisher_name": "华尔街见闻 美股快讯",
-          "source_status": "ok",
-          "source_kind": "news",
-          "source_tier": "direct_media",
-          "publisher_family": "wallstreetcn",
-          "is_reprint_copy": false,
-          "title": "腾讯混元开源DFly2",
-          "url": "https://wallstreetcn.com/livenews/3206177",
-          "published_at": "2026-11-26T14:38:57+08:00",
-          "published_at_source": "upstream_api",
-          "fetched_at": "2026-11-26T19:26:13+08:00",
-          "excerpt": "腾讯混元宣布开源新一代草稿模型DFly2。据介绍，DFly2专为DSA类稀疏注意力大模型和长上下文场景设计，适配Hy4 flash的权重及完整训练代码同步开源。",
-          "thumbnail_url": null,
-          "deep_fetch_status": null
+          "reason": "正文/实体匹配关键词「qwen」",
+          "confidence": 0.86
         },
         {
-          "item_id": "aihot_6eb161851ef5",
-          "article_id": "aihot_6eb161851ef5",
-          "source_id": "aihot",
-          "source_name": "AIHOT 前沿",
-          "publisher_name": "AIHOT 前沿",
-          "source_status": "ok",
-          "source_kind": "news",
-          "source_tier": "aggregator_lead",
-          "publisher_family": "aihot",
-          "is_reprint_copy": false,
-          "title": "腾讯混元开源草稿模型 DFly2：让 Hy4 flash 吐字提速最高 4.2 倍",
-          "url": "https://aihot.news/items/wjtd17neoruc1ucnely1jcyqn",
-          "published_at": "2026-11-26T16:26:38+08:00",
-          "published_at_source": "upstream_rfc2822",
-          "fetched_at": "2026-11-26T19:26:11+08:00",
-          "excerpt": null,
-          "thumbnail_url": null,
-          "deep_fetch_status": null
-        },
-        {
-          "item_id": "aihot_eb16669090b9",
-          "article_id": "aihot_eb16669090b9",
-          "source_id": "aihot",
-          "source_name": "AIHOT 前沿",
-          "publisher_name": "AIHOT 前沿",
-          "source_status": "ok",
-          "source_kind": "news",
-          "source_tier": "aggregator_lead",
-          "publisher_family": "aihot",
-          "is_reprint_copy": true,
-          "title": "腾讯混元开源草稿模型 DFly2，让 Hy4 flash 吐字提速 4.2 倍",
-          "url": "https://aihot.news/items/yrjdz2lls1xgf9f3gz8237mkd",
-          "published_at": "2026-11-26T14:33:50+08:00",
-          "published_at_source": "upstream_rfc2822",
-          "fetched_at": "2026-11-26T19:26:11+08:00",
-          "excerpt": null,
-          "thumbnail_url": null,
-          "deep_fetch_status": null
-        }
-      ],
-      "verification": {
-        "all_refs_valid": true,
-        "has_primary_url": true,
-        "rejected_refs": [],
-        "has_first_party": false
-      },
-      "followup": null,
-      "is_new_in_batch": true,
-      "update_kind": "new_discovery",
-      "heavy_score": 41.4,
-      "radar_score": 82,
-      "severity_tier": "B",
-      "severity_label": "B级常规",
-      "translation_attempts": 0,
-      "translation_error": null,
-      "title_zh": "腾讯混元开源草稿模型 DFly2：让 Hy4 flash 吐字提速最高 4.2 倍",
-      "translation_status": "native_zh",
-      "summary_zh": "腾讯混元宣布开源新一代草稿模型DFly2。据介绍，DFly2专为DSA类稀疏注意力大模型和长上下文场景设计，适配Hy4 flash的权重及完整训练代码同步开源。",
-      "title_en": "",
-      "summary_en": "",
-      "ai_analysis_en": "",
-      "deep_qa": [
-        {
-          "question": "这次技术变化对普通开发者或用户意味着什么？",
-          "answer": "聚焦腾讯 (Tencent)能力边界与使用成本变化：腾讯混元宣布开源新一代草稿模型DFly2。据介绍，DFly2专为DSA类稀疏注意力大模型和长上下文场景设计，适配Hy4 flash的权重及完整训练代码同步开源。",
-          "historical_parallel": "历次大模型与算力架构迭代中，推理单价下探与生态开放通常在 1~2 个季度内显著拉动应用渗透率。"
-        },
-        {
-          "question": "该进展目前处于什么验证阶段？",
-          "answer": "需结合官方技术报告、独立第三方复现基准以及下游云厂与终端真实接入节奏交叉确认。",
-          "historical_parallel": "2025 年以来主流开源/闭源大模型竞赛证明，公开基准与真实开发者采用率决定商业化天花板。"
-        }
-      ]
-    },
-    {
-      "schema_version": "4.1",
-      "event_id": "evt_cda6809a088f",
-      "storyline_id": "st_c4f13af9d9e2",
-      "article_ids": [
-        "ithome-rss_9e9a49c61a55"
-      ],
-      "legacy_event_ids": [],
-      "title": "OpenAI 再度抛出重要数学成果：宣称证明矩阵乘法指数为 9/4",
-      "category": "tech",
-      "entities": [
-        "OpenAI"
-      ],
-      "entity_ids": [
-        "ent_openai"
-      ],
-      "entity_confidences": {
-        "OpenAI": 0.99
-      },
-      "matched_entities": [
-        {
-          "entity_id": "ent_openai",
-          "canonical_name": "OpenAI",
+          "entity_id": "ent_meituan",
+          "canonical_name": "美团 (Meituan / LongCat)",
           "entity_type": "company",
-          "sector": "AI 模型与应用",
+          "sector": "本地生活 / AI大模型",
           "matched_aliases": [
-            "openai"
+            "美团"
+          ],
+          "tickers": [
+            {
+              "symbol": "03690",
+              "market": "HK",
+              "exchange": "HKEX",
+              "currency": "HKD",
+              "label": "03690.HK (HKEX)"
+            }
+          ],
+          "reason": "正文/实体匹配关键词「美团」",
+          "confidence": 0.86
+        },
+        {
+          "entity_id": "ent_ai_infra_tools",
+          "canonical_name": "AI 推理与框架生态 (vLLM / llama.cpp / Transformers)",
+          "entity_type": "tech",
+          "sector": "AI 开源基础设施",
+          "matched_aliases": [
+            "智能体"
           ],
           "tickers": [],
-          "reason": "正文/实体匹配关键词「openai」",
-          "confidence": 0.99
+          "reason": "正文/实体匹配关键词「智能体」",
+          "confidence": 0.76
         }
       ],
       "importance": "medium",
@@ -613,8 +846,8 @@
       "material_stage": null,
       "material_stage_label": null,
       "material_stage_confidence": null,
-      "thumbnail_url": "https://img.ithome.com/newsuploadfiles/2026/11/6bc5630a-f4ac-463e-9fd3-7b7a42d99a35.jpg",
-      "publisher_name": "IT之家 实时快讯",
+      "thumbnail_url": "https://static.wscn.net/wscn/_static/share.png",
+      "publisher_name": "华尔街见闻 美股快讯",
       "source_status": "ok",
       "evidence_status": "single_source",
       "evidence_label": "单一独立来源线索",
@@ -624,68 +857,68 @@
       "contradictions": [],
       "downweight_reasons": [],
       "quality_flags": [],
-      "material_depth": "title_and_excerpt",
+      "material_depth": "body_lead_extracted",
       "source_count": 1,
       "platform_count": 1,
       "independent_publisher_count": 1,
       "reprint_count": 0,
-      "published_at": "2026-11-26T18:52:40+08:00",
+      "published_at": "2026-11-26T19:38:24+08:00",
       "event_date": "2026-11-26",
-      "event_time": "2026-11-26T18:52:40+08:00",
+      "event_time": "2026-11-26T19:38:24+08:00",
       "stale": false,
       "event_date_source": "llm_extracted",
       "is_stale_rehash": false,
       "time_trust_level": "article_timestamp",
       "time_confidence": "article_timestamp",
-      "first_discovered_at": "2026-11-26T19:26:11+08:00",
-      "first_reported_at": "2026-11-26T18:52:40+08:00",
-      "latest_fact_update_at": "2026-11-26T18:52:40+08:00",
-      "latest_reported_at": "2026-11-26T18:52:40+08:00",
-      "fetched_at": "2026-11-26T19:26:11+08:00",
-      "input_batch_id": "raw-20261126-192611",
-      "fact_summary": "IT之家 11 月 26 日消息，OpenAI 本月 24 日再度抛出一项重要数学成果， 宣称其已证明矩阵乘法指数 ω 恰好为 9/4 。该企业已在今年 10 月证得 ω≤9/4，此次则证得 ω≥9/4，从而得到 ω=9/4。矩阵乘法指数 ω 描述的是：当 n 足够大时，两个 n×n 矩阵相乘最优算法所需算术运算次数随 n 增长的渐进幂指数；更严格地说，ω 是所有可达复杂度指数的下确界。",
+      "first_discovered_at": "2026-11-26T23:16:14+08:00",
+      "first_reported_at": "2026-11-26T19:38:24+08:00",
+      "latest_fact_update_at": "2026-11-26T19:38:24+08:00",
+      "latest_reported_at": "2026-11-26T19:38:24+08:00",
+      "fetched_at": "2026-11-26T23:16:14+08:00",
+      "input_batch_id": "raw-20261126-231614",
+      "fact_summary": "阿里Qwen北美团队今年已吸纳数百名AI人才，开放岗位涵盖模型研究、训练与推理、多模态、智能体和数据等方向。",
       "fact_atoms": [
         {
-          "atom_id": "fa_78842048",
-          "subject": "OpenAI",
-          "metric_or_action": "OpenAI 再度抛出重要数学成果：宣称证明矩阵乘法指数为 9/4",
+          "atom_id": "fa_45302539",
+          "subject": "阿里巴巴 / 通义千问 (Qwen)",
+          "metric_or_action": "阿里加码北美招聘，Qwen团队今年已吸纳数百名AI人才",
           "value": null,
           "unit": null,
-          "period": "单次披露/未注明周期",
+          "period": "季度口径",
           "scope": "新闻事件陈述",
           "fact_status": "reported_unconfirmed_by_filing",
-          "attribution": "IT之家 实时快讯",
-          "source_ref": "ithome-rss_9e9a49c61a55",
-          "source_url": "https://www.ithome.com/1/033/050.htm",
-          "source_excerpt_or_locator": "IT之家 11 月 26 日消息，OpenAI 本月 24 日再度抛出一项重要数学成果， 宣称其已证明矩阵乘法指数 ω 恰好为 9/4 。该企业已在今年 10 月证得 ω≤9/4，此次则证得 ω≥9/4，从而得到 ω=9/4。矩阵乘法指数 ω 描述的是：当 n 足够大时，两个 n×n 矩阵相乘最优算法所需算术运算次数随 n 增长的渐进幂指数；更严格地说，ω ",
-          "published_at": "2026-11-26T18:52:40+08:00",
-          "discovered_at": "2026-11-26T19:26:11+08:00",
+          "attribution": "华尔街见闻 美股快讯",
+          "source_ref": "wscn-us-stock-channel_4de0fec9c9f9",
+          "source_url": "https://wallstreetcn.com/livenews/3206435",
+          "source_excerpt_or_locator": "雷峰网从多处猎头获悉，阿里正在北美加大招聘力度，主要面向全球顶级AI研究员。目前，Qwen 北美团队已开放多个岗位，涉及模型研究、训练与推理、多模态、智能体（Agent）和数据等方向。 有消息人士称，今年全球已有数百人加入阿里Qwen大模型团队。 为激励有想法的AI研究员积极探索突破，并吸引更多外部优质AI人才，阿里还在包含Qwen团队的Token Foun",
+          "published_at": "2026-11-26T19:38:24+08:00",
+          "discovered_at": "2026-11-26T23:16:14+08:00",
           "revision": 1
         }
       ],
-      "ai_analysis": "反映OpenAI技术架构与商业落地节奏变化，实际效果仍待开发者生态与第三方实测验证。",
+      "ai_analysis": "通过构建海外离岸研发节点，绕过地域限制直接吸纳全球顶尖学术与工程人才以维持模型迭代速度。",
       "unverified_claims": [],
       "speculation_or_outlook": null,
       "sources": [
         {
-          "item_id": "ithome-rss_9e9a49c61a55",
-          "article_id": "ithome-rss_9e9a49c61a55",
-          "source_id": "ithome-rss",
-          "source_name": "IT之家 实时快讯",
-          "publisher_name": "IT之家 实时快讯",
+          "item_id": "wscn-us-stock-channel_4de0fec9c9f9",
+          "article_id": "wscn-us-stock-channel_4de0fec9c9f9",
+          "source_id": "wscn-us-stock-channel",
+          "source_name": "华尔街见闻 美股快讯",
+          "publisher_name": "华尔街见闻 美股快讯",
           "source_status": "ok",
           "source_kind": "news",
           "source_tier": "direct_media",
-          "publisher_family": "ithome",
+          "publisher_family": "wallstreetcn",
           "is_reprint_copy": false,
-          "title": "OpenAI 再度抛出重要数学成果：宣称证明矩阵乘法指数为 9/4",
-          "url": "https://www.ithome.com/1/033/050.htm",
-          "published_at": "2026-11-26T18:52:40+08:00",
-          "published_at_source": "upstream_rfc2822",
-          "fetched_at": "2026-11-26T19:26:13+08:00",
-          "excerpt": "IT之家 11 月 26 日消息，OpenAI 本月 24 日再度抛出一项重要数学成果， 宣称其已证明矩阵乘法指数 ω 恰好为 9/4 。该企业已在今年 10 月证得 ω≤9/4，此次则证得 ω≥9/4，从而得到 ω=9/4。矩阵乘法指数 ω 描述的是：当 n 足够大时，两个 n×n 矩阵相乘最优算法所需算术运算次数随 n 增长的渐进幂指数；更严格地说，ω 是所有可达复杂度指数的下确界。矩阵乘法 应用广泛 ，在机器学习、图像处理等领域都可以找到其身影。",
-          "thumbnail_url": "https://img.ithome.com/newsuploadfiles/2026/11/6bc5630a-f4ac-463e-9fd3-7b7a42d99a35.jpg",
-          "deep_fetch_status": null
+          "title": "阿里加码北美招聘，Qwen团队今年已吸纳数百名AI人才",
+          "url": "https://wallstreetcn.com/livenews/3206435",
+          "published_at": "2026-11-26T19:38:24+08:00",
+          "published_at_source": "upstream_api",
+          "fetched_at": "2026-11-26T23:16:15+08:00",
+          "excerpt": "雷峰网从多处猎头获悉，阿里正在北美加大招聘力度，主要面向全球顶级AI研究员。目前，Qwen 北美团队已开放多个岗位，涉及模型研究、训练与推理、多模态、智能体（Agent）和数据等方向。 有消息人士称，今年全球已有数百人加入阿里Qwen大模型团队。 为激励有想法的AI研究员积极探索突破，并吸引更多外部优质AI人才，阿里还在包含Qwen团队的Token Foundry推行新的组织模式，相关岗位已取消传统层级，让组织更加扁平化、更加灵活。",
+          "thumbnail_url": "https://static.wscn.net/wscn/_static/share.png",
+          "deep_fetch_status": "extracted_body_lead"
         }
       ],
       "verification": {
@@ -701,191 +934,12 @@
       "radar_score": 76,
       "severity_tier": "B",
       "severity_label": "B级常规",
-      "translation_attempts": 0,
-      "translation_error": null,
-      "title_zh": "OpenAI 再度抛出重要数学成果：宣称证明矩阵乘法指数为 9/4",
-      "translation_status": "native_zh",
-      "summary_zh": "IT之家 11 月 26 日消息，OpenAI 本月 24 日再度抛出一项重要数学成果， 宣称其已证明矩阵乘法指数 ω 恰好为 9/4 。该企业已在今年 10 月证得 ω≤9/4，此次则证得 ω≥9/4，从而得到 ω=9/4。矩阵乘法指数 ω 描述的是：当 n 足够大时，两个 n×n 矩阵相乘最优算法所需算术运算次数随 n 增长的渐进幂指数；更严格地说，ω 是所有可达复杂度指数的下确界。",
-      "title_en": "",
-      "summary_en": "",
-      "ai_analysis_en": ""
-    },
-    {
-      "schema_version": "4.1",
-      "event_id": "evt_ad2993c14865",
-      "storyline_id": "st_7119b75c2823",
-      "article_ids": [
-        "juejin_c43198ea5501",
-        "aihot_5884bb971cd8"
-      ],
-      "legacy_event_ids": [],
-      "title": "Anthropic 研究员 Luke Sernau 与 Claude 将黎曼猜想 Lean 证明从 1740 万行精简至 7.6 万行",
-      "category": "tech",
-      "entities": [
-        "Anthropic / Claude"
-      ],
-      "entity_ids": [
-        "ent_anthropic"
-      ],
-      "entity_confidences": {
-        "Anthropic / Claude": 0.96
-      },
-      "matched_entities": [
-        {
-          "entity_id": "ent_anthropic",
-          "canonical_name": "Anthropic / Claude",
-          "entity_type": "company",
-          "sector": "AI 模型与安全",
-          "matched_aliases": [
-            "anthropic",
-            "claude"
-          ],
-          "tickers": [],
-          "reason": "正文/实体匹配关键词「anthropic / claude」",
-          "confidence": 0.96
-        }
-      ],
-      "importance": "high",
-      "sentiment": "Mixed",
-      "special_note": null,
-      "material_stage": null,
-      "material_stage_label": null,
-      "material_stage_confidence": null,
-      "thumbnail_url": null,
-      "publisher_name": "稀土掘金",
-      "source_status": "ok",
-      "evidence_status": "multi_source",
-      "evidence_label": "多独立来源提及（待核官方全文）",
-      "evidence_status_reason": "已有 2 家独立媒体族提及（仅基于标题素材）；多源转载不代表官方公告已证实",
-      "attribution_warning": null,
-      "regulatory_note": null,
-      "contradictions": [],
-      "downweight_reasons": [
-        "仅含标题素材 (-8)"
-      ],
-      "quality_flags": [],
-      "material_depth": "title_only",
-      "source_count": 2,
-      "platform_count": 2,
-      "independent_publisher_count": 2,
-      "reprint_count": 0,
-      "published_at": "2026-11-26T11:01:11+08:00",
-      "event_date": "2026-11-26",
-      "event_time": "2026-11-26T11:01:11+08:00",
-      "stale": false,
-      "event_date_source": "llm_extracted",
-      "is_stale_rehash": false,
-      "time_trust_level": "article_timestamp",
-      "time_confidence": "article_timestamp",
-      "first_discovered_at": "2026-11-26T13:03:56+08:00",
-      "first_reported_at": "2026-11-26T11:01:11+08:00",
-      "latest_fact_update_at": "2026-11-26T11:01:11+08:00",
-      "latest_reported_at": "2026-11-26T11:01:11+08:00",
-      "fetched_at": "2026-11-26T19:26:11+08:00",
-      "input_batch_id": "raw-20261126-192611",
-      "fact_summary": "Anthropic研究员Luke Sernau与Claude协作，将黎曼猜想的Lean证明从1740万行精简至7.6万行。",
-      "fact_atoms": [
-        {
-          "atom_id": "fa_67686006",
-          "subject": "Anthropic / Claude",
-          "metric_or_action": "Anthropic 研究员 Luke Sernau 与 Claude 将黎曼猜想 Lean 证明从 1740 万行精简至 7.6 万行",
-          "value": null,
-          "unit": null,
-          "period": "单次披露/未注明周期",
-          "scope": "新闻事件陈述",
-          "fact_status": "multi_source_reported",
-          "attribution": "稀土掘金",
-          "source_ref": "juejin_c43198ea5501",
-          "source_url": "https://juejin.cn/post/7711319812089266230",
-          "source_excerpt_or_locator": "Claude 证明黎曼猜想了吗：1700 万行 Lean 代码、社区认证与数学界的保留",
-          "published_at": null,
-          "discovered_at": "2026-11-26T13:03:56+08:00",
-          "revision": 1
-        }
-      ],
-      "ai_analysis": "AI在形式化数学证明中的应用，标志着AI从生成式任务向逻辑推理与科学发现的深度跨越，极大地提升了数学研究的效率。",
-      "unverified_claims": [],
-      "speculation_or_outlook": null,
-      "sources": [
-        {
-          "item_id": "juejin_c43198ea5501",
-          "article_id": "juejin_c43198ea5501",
-          "source_id": "juejin",
-          "source_name": "稀土掘金",
-          "publisher_name": "稀土掘金",
-          "source_status": "ok",
-          "source_kind": "news",
-          "source_tier": "aggregator_lead",
-          "publisher_family": "juejin",
-          "is_reprint_copy": false,
-          "title": "Claude 证明黎曼猜想了吗：1700 万行 Lean 代码、社区认证与数学界的保留",
-          "url": "https://juejin.cn/post/7711319812089266230",
-          "published_at": null,
-          "published_at_source": null,
-          "fetched_at": "2026-11-26T19:26:11+08:00",
-          "excerpt": null,
-          "thumbnail_url": null,
-          "deep_fetch_status": null
-        },
-        {
-          "item_id": "aihot_5884bb971cd8",
-          "article_id": "aihot_5884bb971cd8",
-          "source_id": "aihot",
-          "source_name": "AIHOT 前沿",
-          "publisher_name": "AIHOT 前沿",
-          "source_status": "ok",
-          "source_kind": "news",
-          "source_tier": "aggregator_lead",
-          "publisher_family": "aihot",
-          "is_reprint_copy": false,
-          "title": "Anthropic 研究员 Luke Sernau 与 Claude 将黎曼猜想 Lean 证明从 1740 万行精简至 7.6 万行",
-          "url": "https://aihot.news/items/sab8kw8ah16qs4iim737y6ld1",
-          "published_at": "2026-11-26T11:01:11+08:00",
-          "published_at_source": "upstream_rfc2822",
-          "fetched_at": "2026-11-26T19:26:11+08:00",
-          "excerpt": null,
-          "thumbnail_url": null,
-          "deep_fetch_status": null
-        }
-      ],
-      "verification": {
-        "all_refs_valid": true,
-        "has_primary_url": true,
-        "rejected_refs": [],
-        "has_first_party": false
-      },
-      "followup": {
-        "is_continuing": true,
-        "prev_batch_id": "smart-20261126-130436",
-        "prev_event_id": "evt_ad2993c14865",
-        "prev_title": "Anthropic 研究员 Luke Sernau 与 Claude 将黎曼猜想 Lean 证明从 1740 万行精简至 7.6 万行",
-        "delta_note": "同一事件在最新批次出现表述修订或信息补充"
-      },
-      "is_new_in_batch": true,
-      "update_kind": "new_discovery",
-      "heavy_score": 62.0,
-      "radar_score": 59,
-      "severity_tier": "S",
-      "severity_label": "S级重磅",
-      "heavy_reason_tag": "科研/模型里程碑",
-      "summary": "Anthropic研究员Luke Sernau与Claude协作，将黎曼猜想的Lean证明从1740万行精简至7.6万行。",
-      "summary_zh": "Anthropic研究员Luke Sernau与Claude协作，将黎曼猜想的Lean证明从1740万行精简至7.6万行。",
-      "deep_qa": [
-        {
-          "question": "精简证明过程对AI逻辑推理能力有何意义？",
-          "answer": "证明过程的精简意味着AI能够识别并剔除冗余逻辑，展现了其在复杂逻辑链条中的自我优化与抽象能力。",
-          "historical_parallel": "20世纪中叶计算机辅助证明四色定理，开启了人类利用机器进行数学探索的先河。"
-        },
-        {
-          "question": "该成果是否意味着黎曼猜想已被完全证明？",
-          "answer": "该成果是对现有证明逻辑的优化与验证，而非对猜想本身的最终定论，但显著降低了数学界对该证明的审查难度。",
-          "historical_parallel": "怀尔斯证明费马大定理时，同样经历了漫长的逻辑梳理与同行评审过程。"
-        }
-      ],
+      "summary": "阿里Qwen北美团队今年已吸纳数百名AI人才，开放岗位涵盖模型研究、训练与推理、多模态、智能体和数据等方向。",
+      "summary_zh": "阿里Qwen北美团队今年已吸纳数百名AI人才，开放岗位涵盖模型研究、训练与推理、多模态、智能体和数据等方向。",
       "ai_overlaid": true,
       "translation_attempts": 0,
       "translation_error": null,
-      "title_zh": "Anthropic 研究员 Luke Sernau 与 Claude 将黎曼猜想 Lean 证明从 1740 万行精简至 7.6 万行",
+      "title_zh": "阿里加码北美招聘，Qwen团队今年已吸纳数百名AI人才",
       "translation_status": "native_zh",
       "title_en": "",
       "summary_en": "",
@@ -969,16 +1023,16 @@
       "is_stale_rehash": false,
       "time_trust_level": "article_timestamp",
       "time_confidence": "article_timestamp",
-      "first_discovered_at": "2026-11-26T19:26:11+08:00",
+      "first_discovered_at": "2026-11-26T23:16:14+08:00",
       "first_reported_at": "2026-11-26T17:37:04+08:00",
       "latest_fact_update_at": "2026-11-26T17:37:04+08:00",
       "latest_reported_at": "2026-11-26T17:37:04+08:00",
-      "fetched_at": "2026-11-26T19:26:11+08:00",
-      "input_batch_id": "raw-20261126-192611",
-      "fact_summary": "OpenAI与Anthropic部分员工担忧其最强未发布AI模型存在安全隐患 - Digg",
+      "fetched_at": "2026-11-26T23:16:14+08:00",
+      "input_batch_id": "raw-20261126-231614",
+      "fact_summary": "OpenAI与Anthropic部分员工担忧其最强未发布AI模型存在安全隐患。",
       "fact_atoms": [
         {
-          "atom_id": "fa_57159458",
+          "atom_id": "fa_29611298",
           "subject": "OpenAI",
           "metric_or_action": "Some OpenAI and Anthropic staff fear their strongest unreleased AI isn't safe to ship",
           "value": null,
@@ -991,11 +1045,11 @@
           "source_url": "https://news.google.com/rss/articles/CBMiUkFVX3lxTE1kVnVCYjU0bWotaVBIeUZLNlZPaVhRaUpDYURjVzdsWGNvRlpkb0ptZlJ3RTJheXYwc3NKSHhwTDJ6MEJyNHlPMmpfc2pqaUJ4VlE?oc=5",
           "source_excerpt_or_locator": "Some OpenAI and Anthropic staff fear their strongest unreleased AI isn't safe to ship Digg",
           "published_at": "2026-11-26T17:37:04+08:00",
-          "discovered_at": "2026-11-26T19:26:11+08:00",
+          "discovered_at": "2026-11-26T23:16:14+08:00",
           "revision": 1
         }
       ],
-      "ai_analysis": "反映OpenAI / Anthropic / Claude技术架构与商业落地节奏变化，实际效果仍待开发者生态与第三方实测验证。",
+      "ai_analysis": "前沿模型能力的跃升速度正在超越现有对齐与红蓝对抗安全框架的评估上限，加剧了内部治理焦虑。",
       "unverified_claims": [],
       "speculation_or_outlook": null,
       "sources": [
@@ -1014,7 +1068,7 @@
           "url": "https://news.google.com/rss/articles/CBMiUkFVX3lxTE1kVnVCYjU0bWotaVBIeUZLNlZPaVhRaUpDYURjVzdsWGNvRlpkb0ptZlJ3RTJheXYwc3NKSHhwTDJ6MEJyNHlPMmpfc2pqaUJ4VlE?oc=5",
           "published_at": "2026-11-26T17:37:04+08:00",
           "published_at_source": "upstream_rfc2822",
-          "fetched_at": "2026-11-26T19:26:15+08:00",
+          "fetched_at": "2026-11-26T23:16:18+08:00",
           "excerpt": "Some OpenAI and Anthropic staff fear their strongest unreleased AI isn't safe to ship Digg",
           "thumbnail_url": null,
           "deep_fetch_status": null,
@@ -1036,315 +1090,12 @@
       "severity_label": "B级常规",
       "title_en": "Some OpenAI and Anthropic staff fear their strongest unreleased AI isn't safe to ship",
       "summary_en": "Some OpenAI and Anthropic staff fear their strongest unreleased AI isn't safe to ship Digg",
-      "summary": "OpenAI与Anthropic部分员工担忧其最强未发布AI模型存在安全隐患 - Digg",
-      "summary_zh": "OpenAI与Anthropic部分员工担忧其最强未发布AI模型存在安全隐患 - Digg",
+      "summary": "OpenAI与Anthropic部分员工担忧其最强未发布AI模型存在安全隐患。",
+      "summary_zh": "OpenAI与Anthropic部分员工担忧其最强未发布AI模型存在安全隐患。",
+      "ai_overlaid": true,
       "translation_attempts": 0,
       "translation_error": null,
       "title_zh": "OpenAI与Anthropic部分员工担忧其最强未发布AI模型存在安全隐患",
-      "translation_status": "native_zh",
-      "ai_analysis_en": ""
-    },
-    {
-      "schema_version": "4.1",
-      "event_id": "evt_ae76aa662e31",
-      "storyline_id": "st_13c7da7cbd5e",
-      "article_ids": [
-        "rss-gnews-ai-models-zh_79a502b733e9"
-      ],
-      "legacy_event_ids": [],
-      "title": "又一顶级华人研究员离职，人效比只有Anthropic一半，OpenAI后院起火",
-      "category": "tech",
-      "entities": [
-        "Anthropic / Claude",
-        "OpenAI"
-      ],
-      "entity_ids": [
-        "ent_anthropic",
-        "ent_openai"
-      ],
-      "entity_confidences": {
-        "Anthropic / Claude": 0.86,
-        "OpenAI": 0.99
-      },
-      "matched_entities": [
-        {
-          "entity_id": "ent_anthropic",
-          "canonical_name": "Anthropic / Claude",
-          "entity_type": "company",
-          "sector": "AI 模型与安全",
-          "matched_aliases": [
-            "anthropic"
-          ],
-          "tickers": [],
-          "reason": "正文/实体匹配关键词「anthropic」",
-          "confidence": 0.86
-        },
-        {
-          "entity_id": "ent_openai",
-          "canonical_name": "OpenAI",
-          "entity_type": "company",
-          "sector": "AI 模型与应用",
-          "matched_aliases": [
-            "openai"
-          ],
-          "tickers": [],
-          "reason": "正文/实体匹配关键词「openai」",
-          "confidence": 0.99
-        }
-      ],
-      "importance": "medium",
-      "sentiment": "Mixed",
-      "special_note": null,
-      "material_stage": null,
-      "material_stage_label": null,
-      "material_stage_confidence": null,
-      "thumbnail_url": null,
-      "publisher_name": "36Kr",
-      "source_status": "ok",
-      "evidence_status": "single_source",
-      "evidence_label": "单一独立来源线索",
-      "evidence_status_reason": "目前仅见 1 家独立来源（共 1 条引用含转载，含摘要/首段），尚未见独立渠道交叉或官方确认",
-      "attribution_warning": null,
-      "regulatory_note": null,
-      "contradictions": [],
-      "downweight_reasons": [],
-      "quality_flags": [],
-      "material_depth": "title_and_excerpt",
-      "source_count": 1,
-      "platform_count": 1,
-      "independent_publisher_count": 1,
-      "reprint_count": 0,
-      "published_at": "2026-11-26T16:18:10+08:00",
-      "event_date": "2026-11-26",
-      "event_time": "2026-11-26T16:18:10+08:00",
-      "stale": false,
-      "event_date_source": "llm_extracted",
-      "is_stale_rehash": false,
-      "time_trust_level": "article_timestamp",
-      "time_confidence": "article_timestamp",
-      "first_discovered_at": "2026-11-26T19:26:11+08:00",
-      "first_reported_at": "2026-11-26T16:18:10+08:00",
-      "latest_fact_update_at": "2026-11-26T16:18:10+08:00",
-      "latest_reported_at": "2026-11-26T16:18:10+08:00",
-      "fetched_at": "2026-11-26T19:26:11+08:00",
-      "input_batch_id": "raw-20261126-192611",
-      "fact_summary": "又一顶级华人研究员离职，人效比只有Anthropic一半，OpenAI后院起火 36Kr",
-      "fact_atoms": [
-        {
-          "atom_id": "fa_46711443",
-          "subject": "Anthropic / Claude",
-          "metric_or_action": "又一顶级华人研究员离职，人效比只有Anthropic一半，OpenAI后院起火",
-          "value": null,
-          "unit": null,
-          "period": "单次披露/未注明周期",
-          "scope": "新闻事件陈述",
-          "fact_status": "reported_unconfirmed_by_filing",
-          "attribution": "36Kr",
-          "source_ref": "rss-gnews-ai-models-zh_79a502b733e9",
-          "source_url": "https://news.google.com/rss/articles/CBMiTkFVX3lxTE5vTk1RVFpmVVpqS3FqSWdSajk0RTRLU1MyNXdGTDNsWE5fZVZfR1pGQTdFRUpHNjNBSUVsTDByWTROaGs4enhUdElYdTZXZw?oc=5",
-          "source_excerpt_or_locator": "又一顶级华人研究员离职，人效比只有Anthropic一半，OpenAI后院起火 36Kr",
-          "published_at": "2026-11-26T16:18:10+08:00",
-          "discovered_at": "2026-11-26T19:26:11+08:00",
-          "revision": 1
-        }
-      ],
-      "ai_analysis": "反映Anthropic / Claude / OpenAI技术架构与商业落地节奏变化，实际效果仍待开发者生态与第三方实测验证。",
-      "unverified_claims": [],
-      "speculation_or_outlook": null,
-      "sources": [
-        {
-          "item_id": "rss-gnews-ai-models-zh_79a502b733e9",
-          "article_id": "rss-gnews-ai-models-zh_79a502b733e9",
-          "source_id": "rss-gnews-ai-models-zh",
-          "source_name": "36Kr",
-          "publisher_name": "36Kr",
-          "source_status": "ok",
-          "source_kind": "news",
-          "source_tier": "direct_media",
-          "publisher_family": "m",
-          "is_reprint_copy": false,
-          "title": "又一顶级华人研究员离职，人效比只有Anthropic一半，OpenAI后院起火",
-          "url": "https://news.google.com/rss/articles/CBMiTkFVX3lxTE5vTk1RVFpmVVpqS3FqSWdSajk0RTRLU1MyNXdGTDNsWE5fZVZfR1pGQTdFRUpHNjNBSUVsTDByWTROaGs4enhUdElYdTZXZw?oc=5",
-          "published_at": "2026-11-26T16:18:10+08:00",
-          "published_at_source": "upstream_rfc2822",
-          "fetched_at": "2026-11-26T19:26:15+08:00",
-          "excerpt": "又一顶级华人研究员离职，人效比只有Anthropic一半，OpenAI后院起火 36Kr",
-          "thumbnail_url": null,
-          "deep_fetch_status": null
-        }
-      ],
-      "verification": {
-        "all_refs_valid": true,
-        "has_primary_url": true,
-        "rejected_refs": [],
-        "has_first_party": false
-      },
-      "followup": null,
-      "is_new_in_batch": true,
-      "update_kind": "new_discovery",
-      "heavy_score": 36.8,
-      "radar_score": 76,
-      "severity_tier": "B",
-      "severity_label": "B级常规",
-      "translation_attempts": 0,
-      "translation_error": null,
-      "title_zh": "又一顶级华人研究员离职，人效比只有Anthropic一半，OpenAI后院起火",
-      "translation_status": "native_zh",
-      "summary_zh": "又一顶级华人研究员离职，人效比只有Anthropic一半，OpenAI后院起火 36Kr",
-      "title_en": "",
-      "summary_en": "",
-      "ai_analysis_en": ""
-    },
-    {
-      "schema_version": "4.1",
-      "event_id": "evt_85445dad5c0f",
-      "storyline_id": "st_1330626e9f32",
-      "article_ids": [
-        "rss-gnews-ai-models-en_916ad2d46496"
-      ],
-      "legacy_event_ids": [],
-      "title": "因内部测试发现反复出现“越权”行为，OpenAI与Anthropic考虑暂停发布最强模型",
-      "category": "tech",
-      "entities": [
-        "OpenAI",
-        "Anthropic / Claude"
-      ],
-      "entity_ids": [
-        "ent_openai",
-        "ent_anthropic"
-      ],
-      "entity_confidences": {
-        "OpenAI": 0.99,
-        "Anthropic / Claude": 0.86
-      },
-      "matched_entities": [
-        {
-          "entity_id": "ent_openai",
-          "canonical_name": "OpenAI",
-          "entity_type": "company",
-          "sector": "AI 模型与应用",
-          "matched_aliases": [
-            "openai"
-          ],
-          "tickers": [],
-          "reason": "正文/实体匹配关键词「openai」",
-          "confidence": 0.99
-        },
-        {
-          "entity_id": "ent_anthropic",
-          "canonical_name": "Anthropic / Claude",
-          "entity_type": "company",
-          "sector": "AI 模型与安全",
-          "matched_aliases": [
-            "anthropic"
-          ],
-          "tickers": [],
-          "reason": "正文/实体匹配关键词「anthropic」",
-          "confidence": 0.86
-        }
-      ],
-      "importance": "medium",
-      "sentiment": "Mixed",
-      "special_note": null,
-      "material_stage": null,
-      "material_stage_label": null,
-      "material_stage_confidence": null,
-      "thumbnail_url": null,
-      "publisher_name": "BigGo Finance",
-      "source_status": "ok",
-      "evidence_status": "single_source",
-      "evidence_label": "单一独立来源线索",
-      "evidence_status_reason": "目前仅见 1 家独立来源（共 1 条引用含转载，含摘要/首段），尚未见独立渠道交叉或官方确认",
-      "attribution_warning": null,
-      "regulatory_note": null,
-      "contradictions": [],
-      "downweight_reasons": [],
-      "quality_flags": [],
-      "material_depth": "title_and_excerpt",
-      "source_count": 1,
-      "platform_count": 1,
-      "independent_publisher_count": 1,
-      "reprint_count": 0,
-      "published_at": "2026-11-26T15:35:00+08:00",
-      "event_date": "2026-11-26",
-      "event_time": "2026-11-26T15:35:00+08:00",
-      "stale": false,
-      "event_date_source": "llm_extracted",
-      "is_stale_rehash": false,
-      "time_trust_level": "article_timestamp",
-      "time_confidence": "article_timestamp",
-      "first_discovered_at": "2026-11-26T19:26:11+08:00",
-      "first_reported_at": "2026-11-26T15:35:00+08:00",
-      "latest_fact_update_at": "2026-11-26T15:35:00+08:00",
-      "latest_reported_at": "2026-11-26T15:35:00+08:00",
-      "fetched_at": "2026-11-26T19:26:11+08:00",
-      "input_batch_id": "raw-20261126-192611",
-      "fact_summary": "因内部测试发现反复出现“越权”行为，OpenAI与Anthropic考虑暂停发布最强模型 - BigGo Finance",
-      "fact_atoms": [
-        {
-          "atom_id": "fa_33382248",
-          "subject": "OpenAI",
-          "metric_or_action": "OpenAI and Anthropic Weigh Halting Release of Their Most Powerful Models as Internal Tests Reveal Repeated \"Overreach\"",
-          "value": null,
-          "unit": null,
-          "period": "单次披露/未注明周期",
-          "scope": "新闻事件陈述",
-          "fact_status": "reported_unconfirmed_by_filing",
-          "attribution": "BigGo Finance",
-          "source_ref": "rss-gnews-ai-models-en_916ad2d46496",
-          "source_url": "https://news.google.com/rss/articles/CBMidkFVX3lxTE5CajJfOWt0dlBXTU8tdThTNGIzNzNPUTc4Xzd6MGsyaTNDUWg1b1RoUC1RZmpTaURPMnVfWEpiUk9SVGFXMUpvRmhtUDRFaldSOEdqUFhGa2hpZjdneTdncm1IcVZwMFp3T09fcVFDTllnT2ZBUVE?oc=5",
-          "source_excerpt_or_locator": "OpenAI and Anthropic Weigh Halting Release of Their Most Powerful Models as Internal Tests Reveal Repeated \"Overreach\" BigGo Finance",
-          "published_at": "2026-11-26T15:35:00+08:00",
-          "discovered_at": "2026-11-26T19:26:11+08:00",
-          "revision": 1
-        }
-      ],
-      "ai_analysis": "反映OpenAI / Anthropic / Claude技术架构与商业落地节奏变化，实际效果仍待开发者生态与第三方实测验证。",
-      "unverified_claims": [],
-      "speculation_or_outlook": null,
-      "sources": [
-        {
-          "item_id": "rss-gnews-ai-models-en_916ad2d46496",
-          "article_id": "rss-gnews-ai-models-en_916ad2d46496",
-          "source_id": "rss-gnews-ai-models-en",
-          "source_name": "BigGo Finance",
-          "publisher_name": "BigGo Finance",
-          "source_status": "ok",
-          "source_kind": "news",
-          "source_tier": "direct_media",
-          "publisher_family": "finance",
-          "is_reprint_copy": false,
-          "title": "OpenAI and Anthropic Weigh Halting Release of Their Most Powerful Models as Internal Tests Reveal Repeated \"Overreach\"",
-          "url": "https://news.google.com/rss/articles/CBMidkFVX3lxTE5CajJfOWt0dlBXTU8tdThTNGIzNzNPUTc4Xzd6MGsyaTNDUWg1b1RoUC1RZmpTaURPMnVfWEpiUk9SVGFXMUpvRmhtUDRFaldSOEdqUFhGa2hpZjdneTdncm1IcVZwMFp3T09fcVFDTllnT2ZBUVE?oc=5",
-          "published_at": "2026-11-26T15:35:00+08:00",
-          "published_at_source": "upstream_rfc2822",
-          "fetched_at": "2026-11-26T19:26:15+08:00",
-          "excerpt": "OpenAI and Anthropic Weigh Halting Release of Their Most Powerful Models as Internal Tests Reveal Repeated \"Overreach\" BigGo Finance",
-          "thumbnail_url": null,
-          "deep_fetch_status": null,
-          "title_zh": "因内部测试发现反复出现“越权”行为，OpenAI与Anthropic考虑暂停发布最强模型"
-        }
-      ],
-      "verification": {
-        "all_refs_valid": true,
-        "has_primary_url": true,
-        "rejected_refs": [],
-        "has_first_party": false
-      },
-      "followup": null,
-      "is_new_in_batch": true,
-      "update_kind": "new_discovery",
-      "heavy_score": 36.8,
-      "radar_score": 76,
-      "severity_tier": "B",
-      "severity_label": "B级常规",
-      "title_en": "OpenAI and Anthropic Weigh Halting Release of Their Most Powerful Models as Internal Tests Reveal Repeated \"Overreach\"",
-      "summary_en": "OpenAI and Anthropic Weigh Halting Release of Their Most Powerful Models as Internal Tests Reveal Repeated \"Overreach\" BigGo Finance",
-      "summary": "因内部测试发现反复出现“越权”行为，OpenAI与Anthropic考虑暂停发布最强模型 - BigGo Finance",
-      "summary_zh": "因内部测试发现反复出现“越权”行为，OpenAI与Anthropic考虑暂停发布最强模型 - BigGo Finance",
-      "translation_attempts": 0,
-      "translation_error": null,
-      "title_zh": "因内部测试发现反复出现“越权”行为，OpenAI与Anthropic考虑暂停发布最强模型",
       "translation_status": "native_zh",
       "ai_analysis_en": ""
     },
@@ -1381,7 +1132,7 @@
           "confidence": 0.99
         }
       ],
-      "importance": "medium",
+      "importance": "high",
       "sentiment": "Bullish",
       "special_note": null,
       "material_stage": null,
@@ -1415,12 +1166,12 @@
       "first_reported_at": "2026-11-26T10:58:51+08:00",
       "latest_fact_update_at": "2026-11-26T10:58:51+08:00",
       "latest_reported_at": "2026-11-26T10:58:51+08:00",
-      "fetched_at": "2026-11-26T19:26:11+08:00",
-      "input_batch_id": "raw-20261126-192611",
+      "fetched_at": "2026-11-26T23:16:14+08:00",
+      "input_batch_id": "raw-20261126-231614",
       "fact_summary": "OpenAI发布新进展带动AI制药热度，港股通医疗ETF标的指数盘中涨超3%。",
       "fact_atoms": [
         {
-          "atom_id": "fa_30960543",
+          "atom_id": "fa_8728149",
           "subject": "OpenAI",
           "metric_or_action": "OpenAI最新发布，AI制药热度飙升，港股通医疗ETF华宝（159137）标的指数盘中涨超3%！脑机接口也有新突破",
           "value": "3",
@@ -1456,7 +1207,7 @@
           "url": "https://news.google.com/rss/articles/CBMigAFBVV95cUxNMlBxNHVIbU44dldSeUpLT1o2aGFrdFc1ZTBvcVVQdDV6QjNqdVlIbHUyTjQzcS1jb08xdEdVWUIwTjFNN1hHX0hVRGt6RjEtRUlNSldjWGdqRVdxUm14RkNZMzhZRkYydjkzZzk2dFc5cEE3R0VnbWVvOU43RnBadw?oc=5",
           "published_at": "2026-11-26T10:58:51+08:00",
           "published_at_source": "upstream_rfc2822",
-          "fetched_at": "2026-11-26T19:26:15+08:00",
+          "fetched_at": "2026-11-26T23:16:18+08:00",
           "excerpt": "OpenAI最新发布，AI制药热度飙升，港股通医疗ETF华宝（159137）标的指数盘中涨超3%！脑机接口也有新突破 新浪财经",
           "thumbnail_url": null,
           "deep_fetch_status": null
@@ -1470,7 +1221,7 @@
       },
       "followup": {
         "is_continuing": true,
-        "prev_batch_id": "smart-20261126-130436",
+        "prev_batch_id": "smart-20261126-193106",
         "prev_event_id": "evt_dfb1feb74578",
         "prev_title": "OpenAI最新发布，AI制药热度飙升，港股通医疗ETF华宝（159137）标的指数盘中涨超3%！脑机接口也有新突破",
         "delta_note": "同一事件在最新批次出现表述修订或信息补充"
@@ -1479,8 +1230,9 @@
       "update_kind": "new_discovery",
       "heavy_score": 46.0,
       "radar_score": 76,
-      "severity_tier": "B",
-      "severity_label": "B级常规",
+      "severity_tier": "A",
+      "severity_label": "A级要闻",
+      "heavy_reason_tag": "巨头重大变动",
       "summary": "OpenAI发布新进展带动AI制药热度，港股通医疗ETF标的指数盘中涨超3%。",
       "summary_zh": "OpenAI发布新进展带动AI制药热度，港股通医疗ETF标的指数盘中涨超3%。",
       "ai_overlaid": true,
@@ -1490,6 +1242,176 @@
       "translation_status": "native_zh",
       "title_en": "",
       "summary_en": "",
+      "ai_analysis_en": "",
+      "deep_qa": [
+        {
+          "question": "这次技术变化对普通开发者或用户意味着什么？",
+          "answer": "聚焦OpenAI能力边界与使用成本变化：OpenAI发布新进展带动AI制药热度，港股通医疗ETF标的指数盘中涨超3%。",
+          "historical_parallel": "历次大模型与算力架构迭代中，推理单价下探与生态开放通常在 1~2 个季度内显著拉动应用渗透率。"
+        },
+        {
+          "question": "该进展目前处于什么验证阶段？",
+          "answer": "需结合官方技术报告、独立第三方复现基准以及下游云厂与终端真实接入节奏交叉确认。",
+          "historical_parallel": "2025 年以来主流开源/闭源大模型竞赛证明，公开基准与真实开发者采用率决定商业化天花板。"
+        }
+      ]
+    },
+    {
+      "schema_version": "4.1",
+      "event_id": "evt_cbd059896828",
+      "storyline_id": "st_69216ce0e433",
+      "article_ids": [
+        "rss-9to5google_f9e2f80fc8ca"
+      ],
+      "legacy_event_ids": [],
+      "title": "感恩节最佳优惠：Google Pixel Watch 5、Pixel 11、Fold 8、配件、电视等",
+      "category": "tech",
+      "entities": [],
+      "entity_ids": [
+        "ent_google"
+      ],
+      "entity_confidences": {
+        "Google / DeepMind / Gemini": 0.86
+      },
+      "matched_entities": [
+        {
+          "entity_id": "ent_google",
+          "canonical_name": "Google / DeepMind / Gemini",
+          "entity_type": "company",
+          "sector": "AI 模型与云基础设施",
+          "matched_aliases": [
+            "google"
+          ],
+          "tickers": [
+            {
+              "symbol": "GOOGL",
+              "market": "US",
+              "exchange": "NASDAQ",
+              "currency": "USD",
+              "label": "GOOGL.US (NASDAQ)"
+            }
+          ],
+          "reason": "正文/实体匹配关键词「google」",
+          "confidence": 0.86
+        }
+      ],
+      "importance": "high",
+      "sentiment": "Mixed",
+      "special_note": null,
+      "material_stage": null,
+      "material_stage_label": null,
+      "material_stage_confidence": null,
+      "thumbnail_url": "https://9to5google.com/wp-content/uploads/sites/4/2026/11/Best-Black-Friday-Apple-deals-2026-Google.jpg?quality=82&strip=all&w=1600",
+      "publisher_name": "9to5Google",
+      "source_status": "ok",
+      "evidence_status": "single_source",
+      "evidence_label": "单一独立来源线索",
+      "evidence_status_reason": "目前仅见 1 家独立来源（共 1 条引用含转载，含摘要/首段），尚未见独立渠道交叉或官方确认",
+      "attribution_warning": null,
+      "regulatory_note": null,
+      "contradictions": [],
+      "downweight_reasons": [],
+      "quality_flags": [],
+      "material_depth": "title_and_excerpt",
+      "source_count": 1,
+      "platform_count": 1,
+      "independent_publisher_count": 1,
+      "reprint_count": 0,
+      "published_at": "2026-11-26T22:09:02+08:00",
+      "event_date": "2026-11-26",
+      "event_time": "2026-11-26T22:09:02+08:00",
+      "stale": false,
+      "event_date_source": "llm_extracted",
+      "is_stale_rehash": false,
+      "time_trust_level": "article_timestamp",
+      "time_confidence": "article_timestamp",
+      "first_discovered_at": "2026-11-26T23:16:14+08:00",
+      "first_reported_at": "2026-11-26T22:09:02+08:00",
+      "latest_fact_update_at": "2026-11-26T22:09:02+08:00",
+      "latest_reported_at": "2026-11-26T22:09:02+08:00",
+      "fetched_at": "2026-11-26T23:16:14+08:00",
+      "input_batch_id": "raw-20261126-231614",
+      "fact_summary": "亚马逊推出感恩节优惠，其中Pixel 11设备最高立减400美元，Pixelsnap指环支架降至24美元，2026款Google Home维持历史最低价。",
+      "fact_atoms": [
+        {
+          "atom_id": "fa_40395157",
+          "subject": "Google / DeepMind / Gemini",
+          "metric_or_action": "Best Thanksgiving deals: Google Pixel Watch 5, Pixel 11, Fold 8, accessories, TVs, more",
+          "value": null,
+          "unit": null,
+          "period": "单次披露/未注明周期",
+          "scope": "新闻事件陈述",
+          "fact_status": "reported_unconfirmed_by_filing",
+          "attribution": "9to5Google",
+          "source_ref": "rss-9to5google_f9e2f80fc8ca",
+          "source_url": "https://9to5google.com/2026/11/26/best-thanksgiving-deals-pixel-galaxy-chargers",
+          "source_excerpt_or_locator": "The giant Amazon Pixel 11 devices (up to $400 off), alongside the delivery of all-time low pricing on the latest Google Pixelsnap Ring Stand at $24 and the ongoing all-time low on ",
+          "published_at": "2026-11-26T22:09:02+08:00",
+          "discovered_at": "2026-11-26T23:16:14+08:00",
+          "revision": 1
+        }
+      ],
+      "ai_analysis": "终端硬件厂商通过大幅度节日让利加速智能生态设备的渗透，以抢占假日消费窗口期。",
+      "unverified_claims": [],
+      "speculation_or_outlook": null,
+      "sources": [
+        {
+          "item_id": "rss-9to5google_f9e2f80fc8ca",
+          "article_id": "rss-9to5google_f9e2f80fc8ca",
+          "source_id": "rss-9to5google",
+          "source_name": "9to5Google",
+          "publisher_name": "9to5Google",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "9to5google",
+          "is_reprint_copy": false,
+          "title": "Best Thanksgiving deals: Google Pixel Watch 5, Pixel 11, Fold 8, accessories, TVs, more",
+          "url": "https://9to5google.com/2026/11/26/best-thanksgiving-deals-pixel-galaxy-chargers",
+          "published_at": "2026-11-26T22:09:02+08:00",
+          "published_at_source": "upstream_rfc2822",
+          "fetched_at": "2026-11-26T23:16:18+08:00",
+          "excerpt": "The giant Amazon Pixel 11 devices (up to $400 off), alongside the delivery of all-time low pricing on the latest Google Pixelsnap Ring Stand at $24 and the ongoing all-time low on the 2026 Google Home Speaker . All of that joins hundreds in savings on Galaxy…",
+          "thumbnail_url": "https://9to5google.com/wp-content/uploads/sites/4/2026/11/Best-Black-Friday-Apple-deals-2026-Google.jpg?quality=82&strip=all&w=1600",
+          "deep_fetch_status": null,
+          "title_zh": "感恩节最佳优惠：Google Pixel Watch 5、Pixel 11、Fold 8、配件、电视等"
+        }
+      ],
+      "verification": {
+        "all_refs_valid": true,
+        "has_primary_url": true,
+        "rejected_refs": [],
+        "has_first_party": false
+      },
+      "followup": null,
+      "is_new_in_batch": true,
+      "update_kind": "new_discovery",
+      "heavy_score": 36.8,
+      "radar_score": 76,
+      "severity_tier": "A",
+      "severity_label": "A级要闻",
+      "heavy_reason_tag": "要闻聚焦",
+      "title_en": "Best Thanksgiving deals: Google Pixel Watch 5, Pixel 11, Fold 8, accessories, TVs, more",
+      "summary_en": "The giant Amazon Pixel 11 devices (up to $400 off), alongside the delivery of all-time low pricing on the latest Google Pixelsnap Ring Stand at $24 and the ongoing all-time low on the 2026 Google Home…",
+      "summary": "亚马逊推出感恩节优惠，其中Pixel 11设备最高立减400美元，Pixelsnap指环支架降至24美元，2026款Google Home维持历史最低价。",
+      "summary_zh": "亚马逊推出感恩节优惠，其中Pixel 11设备最高立减400美元，Pixelsnap指环支架降至24美元，2026款Google Home维持历史最低价。",
+      "deep_qa": [
+        {
+          "question": "Pixel 11在发售初期即出现最高400美元的巨额立减说明了什么市场策略？",
+          "answer": "反映出谷歌意图通过激进的价格杠杆快速扩大AI软硬件协同生态的装机基数，从而反哺其订阅服务。",
+          "historical_parallel": "类似于早期智能手机通过高额运营商补贴来迅速跨越早期采纳鸿沟。"
+        },
+        {
+          "question": "智能家居与AI指环配件的联动促销对整个硬件生态链有何直接传导？",
+          "answer": "通过低价高频的配件绑定，锁定用户在谷歌生态内的全屋智能与穿戴数据回传路径。",
+          "historical_parallel": "类似于打印机厂商通过大幅补贴硬件来锁定高毛利的墨盒耗材消费。"
+        }
+      ],
+      "ai_overlaid": true,
+      "translation_attempts": 0,
+      "translation_error": null,
+      "title_zh": "感恩节最佳优惠：Google Pixel Watch 5、Pixel 11、Fold 8、配件、电视等",
+      "translation_status": "native_zh",
       "ai_analysis_en": ""
     },
     {
@@ -1533,7 +1455,7 @@
           "confidence": 0.86
         }
       ],
-      "importance": "medium",
+      "importance": "high",
       "sentiment": "Mixed",
       "special_note": null,
       "material_stage": null,
@@ -1563,16 +1485,16 @@
       "is_stale_rehash": false,
       "time_trust_level": "article_timestamp",
       "time_confidence": "article_timestamp",
-      "first_discovered_at": "2026-11-26T19:26:11+08:00",
+      "first_discovered_at": "2026-11-26T23:16:14+08:00",
       "first_reported_at": "2026-11-26T19:21:16+08:00",
       "latest_fact_update_at": "2026-11-26T19:21:16+08:00",
       "latest_reported_at": "2026-11-26T19:21:16+08:00",
-      "fetched_at": "2026-11-26T19:26:11+08:00",
-      "input_batch_id": "raw-20261126-192611",
-      "fact_summary": "英伟达已通知戴尔、超微电脑等合作伙伴，停止向马来西亚、新加坡、泰国及印尼发货服务器。",
+      "fetched_at": "2026-11-26T23:16:14+08:00",
+      "input_batch_id": "raw-20261126-231614",
+      "fact_summary": "受美国出口管制收紧影响，英伟达已通知戴尔、超微电脑等合作伙伴，暂停向马来西亚、新加坡、泰国及印尼供应服务器。",
       "fact_atoms": [
         {
-          "atom_id": "fa_93368116",
+          "atom_id": "fa_57824581",
           "subject": "英伟达 (NVIDIA)",
           "metric_or_action": "Nvidia halts server shipments to Malaysia, Singapore, Thailand, and Indonesia after tighter US export controls",
           "value": null,
@@ -1585,11 +1507,11 @@
           "source_url": "https://the-decoder.com/nvidia-halts-server-shipments-to-malaysia-singapore-thailand-and-indonesia-after-tighter-us-export-controls",
           "source_excerpt_or_locator": "Nvidia has told partners such as Dell and Supermicro to stop shipping servers to Malaysia, Singapore, Thailand, and Indonesia. Following new US export controls targeting Chinese cl",
           "published_at": "2026-11-26T19:21:16+08:00",
-          "discovered_at": "2026-11-26T19:26:11+08:00",
+          "discovered_at": "2026-11-26T23:16:14+08:00",
           "revision": 1
         }
       ],
-      "ai_analysis": "反映英伟达 (NVIDIA)技术架构与商业落地节奏变化，实际效果仍待开发者生态与第三方实测验证。",
+      "ai_analysis": "地缘合规监管正向东南亚等新兴算力中转站穿透，直接切断潜在的违规转口贸易路径。",
       "unverified_claims": [],
       "speculation_or_outlook": null,
       "sources": [
@@ -1608,7 +1530,7 @@
           "url": "https://the-decoder.com/nvidia-halts-server-shipments-to-malaysia-singapore-thailand-and-indonesia-after-tighter-us-export-controls",
           "published_at": "2026-11-26T19:21:16+08:00",
           "published_at_source": "upstream_rfc2822",
-          "fetched_at": "2026-11-26T19:26:15+08:00",
+          "fetched_at": "2026-11-26T23:16:18+08:00",
           "excerpt": "Nvidia has told partners such as Dell and Supermicro to stop shipping servers to Malaysia, Singapore, Thailand, and Indonesia. Following new US export controls targeting Chinese cloud access, dealers are already seeking buyers for thousands of B300 chips, whi…",
           "thumbnail_url": null,
           "deep_fetch_status": null,
@@ -1626,12 +1548,26 @@
       "update_kind": "new_discovery",
       "heavy_score": 36.8,
       "radar_score": 76,
-      "severity_tier": "B",
-      "severity_label": "B级常规",
+      "severity_tier": "A",
+      "severity_label": "A级要闻",
+      "heavy_reason_tag": "要闻聚焦",
       "title_en": "Nvidia halts server shipments to Malaysia, Singapore, Thailand, and Indonesia after tighter US export controls",
       "summary_en": "Nvidia has told partners such as Dell and Supermicro to stop shipping servers to Malaysia, Singapore, Thailand, and Indonesia.",
-      "summary": "英伟达已通知戴尔、超微电脑等合作伙伴，停止向马来西亚、新加坡、泰国及印尼发货服务器。",
-      "summary_zh": "英伟达已通知戴尔、超微电脑等合作伙伴，停止向马来西亚、新加坡、泰国及印尼发货服务器。",
+      "summary": "受美国出口管制收紧影响，英伟达已通知戴尔、超微电脑等合作伙伴，暂停向马来西亚、新加坡、泰国及印尼供应服务器。",
+      "summary_zh": "受美国出口管制收紧影响，英伟达已通知戴尔、超微电脑等合作伙伴，暂停向马来西亚、新加坡、泰国及印尼供应服务器。",
+      "deep_qa": [
+        {
+          "question": "英伟达主动暂停东南亚服务器供应对当地云计算产业造成了何种即时冲击？",
+          "answer": "当地试图构建区域性AI Hub的计划被迫搁置，迫使东南亚本土企业转向采购合规边缘算力或非美系替代方案。",
+          "historical_parallel": "类似于历史上国际技术禁运导致区域供应链发生断层与重组。"
+        },
+        {
+          "question": "该禁令对服务器代工厂商（如戴尔、超微电脑）的供应链调度产生了什么连锁反应？",
+          "answer": "代工厂商必须迅速重新核查最终买家资质与地理合规性，增加了复杂的订单审核成本与库存周转压力。",
+          "historical_parallel": "类似于跨国企业在应对历次贸易制裁时对全球物流与订单系统的紧急重构。"
+        }
+      ],
+      "ai_overlaid": true,
       "translation_attempts": 0,
       "translation_error": null,
       "title_zh": "受美国出口管制收紧影响，英伟达暂停向马来西亚、新加坡、泰国及印尼供应服务器",
@@ -1640,13 +1576,158 @@
     },
     {
       "schema_version": "4.1",
-      "event_id": "evt_9fcef79bfe7d",
-      "storyline_id": "st_942aa0cf7fa9",
+      "event_id": "evt_ce23e3cb5872",
+      "storyline_id": "st_1faf89e57c8c",
       "article_ids": [
-        "wscn-us-stock-channel_a750060abefe"
+        "theverge-rss_e17aec89c7e6"
       ],
       "legacy_event_ids": [],
-      "title": "美媒爆料：五角大楼官员提议动用“战时法案”，施压英伟达",
+      "title": "现在，Google 的“熟悉面孔”AI 功能也适用于沃尔玛售价 35 美元的智能家居摄像头。",
+      "category": "tech",
+      "entities": [],
+      "entity_ids": [
+        "ent_google"
+      ],
+      "entity_confidences": {
+        "Google / DeepMind / Gemini": 0.86
+      },
+      "matched_entities": [
+        {
+          "entity_id": "ent_google",
+          "canonical_name": "Google / DeepMind / Gemini",
+          "entity_type": "company",
+          "sector": "AI 模型与云基础设施",
+          "matched_aliases": [
+            "google"
+          ],
+          "tickers": [
+            {
+              "symbol": "GOOGL",
+              "market": "US",
+              "exchange": "NASDAQ",
+              "currency": "USD",
+              "label": "GOOGL.US (NASDAQ)"
+            }
+          ],
+          "reason": "正文/实体匹配关键词「google」",
+          "confidence": 0.86
+        }
+      ],
+      "importance": "medium",
+      "sentiment": "Mixed",
+      "special_note": null,
+      "material_stage": null,
+      "material_stage_label": null,
+      "material_stage_confidence": null,
+      "thumbnail_url": null,
+      "publisher_name": "The Verge",
+      "source_status": "ok",
+      "evidence_status": "single_source",
+      "evidence_label": "单一独立来源线索",
+      "evidence_status_reason": "目前仅见 1 家独立来源（共 1 条引用含转载，含摘要/首段），尚未见独立渠道交叉或官方确认",
+      "attribution_warning": null,
+      "regulatory_note": null,
+      "contradictions": [],
+      "downweight_reasons": [],
+      "quality_flags": [],
+      "material_depth": "title_and_excerpt",
+      "source_count": 1,
+      "platform_count": 1,
+      "independent_publisher_count": 1,
+      "reprint_count": 0,
+      "published_at": "2026-11-26T08:04:34+08:00",
+      "event_date": "2026-11-26",
+      "event_time": "2026-11-26T08:04:34+08:00",
+      "stale": false,
+      "event_date_source": "llm_extracted",
+      "is_stale_rehash": false,
+      "time_trust_level": "article_timestamp",
+      "time_confidence": "article_timestamp",
+      "first_discovered_at": "2026-11-26T23:16:14+08:00",
+      "first_reported_at": "2026-11-26T08:04:34+08:00",
+      "latest_fact_update_at": "2026-11-26T08:04:34+08:00",
+      "latest_reported_at": "2026-11-26T08:04:34+08:00",
+      "fetched_at": "2026-11-26T23:16:14+08:00",
+      "input_batch_id": "raw-20261126-231614",
+      "fact_summary": "沃尔玛售价35美元的智能家居摄像头现在开始支持Google的“熟悉面孔”AI识人功能。",
+      "fact_atoms": [
+        {
+          "atom_id": "fa_58230860",
+          "subject": "Google / DeepMind / Gemini",
+          "metric_or_action": "Now Google’s Familiar Faces AI feature works on Walmart’s $35 smart home camera too",
+          "value": null,
+          "unit": null,
+          "period": "单次披露/未注明周期",
+          "scope": "新闻事件陈述",
+          "fact_status": "reported_unconfirmed_by_filing",
+          "attribution": "The Verge",
+          "source_ref": "theverge-rss_e17aec89c7e6",
+          "source_url": "https://www.theverge.com/tech/1042938/google-home-familiar-faces-onn-cameras",
+          "source_excerpt_or_locator": "A couple of Walmart's budget-friendly smart home cameras will be able to recognize people around your house now using Google's familiar face detection feature.",
+          "published_at": "2026-11-26T08:04:34+08:00",
+          "discovered_at": "2026-11-26T23:16:14+08:00",
+          "revision": 1
+        }
+      ],
+      "ai_analysis": "高端端侧AI算法向低价大众硬件下沉，通过软件赋能重塑平价物联网设备的差异化竞争力。",
+      "unverified_claims": [],
+      "speculation_or_outlook": null,
+      "sources": [
+        {
+          "item_id": "theverge-rss_e17aec89c7e6",
+          "article_id": "theverge-rss_e17aec89c7e6",
+          "source_id": "theverge-rss",
+          "source_name": "The Verge",
+          "publisher_name": "The Verge",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "theverge",
+          "is_reprint_copy": false,
+          "title": "Now Google’s Familiar Faces AI feature works on Walmart’s $35 smart home camera too",
+          "url": "https://www.theverge.com/tech/1042938/google-home-familiar-faces-onn-cameras",
+          "published_at": "2026-11-26T08:04:34+08:00",
+          "published_at_source": "upstream_iso",
+          "fetched_at": "2026-11-26T23:16:15+08:00",
+          "excerpt": "A couple of Walmart's budget-friendly smart home cameras will be able to recognize people around your house now using Google's familiar face detection feature.",
+          "thumbnail_url": null,
+          "deep_fetch_status": null,
+          "title_zh": "现在，Google 的“熟悉面孔”AI 功能也适用于沃尔玛售价 35 美元的智能家居摄像头。"
+        }
+      ],
+      "verification": {
+        "all_refs_valid": true,
+        "has_primary_url": true,
+        "rejected_refs": [],
+        "has_first_party": false
+      },
+      "followup": null,
+      "is_new_in_batch": true,
+      "update_kind": "new_discovery",
+      "heavy_score": 32.0,
+      "radar_score": 76,
+      "severity_tier": "B",
+      "severity_label": "B级常规",
+      "title_en": "Now Google's Familiar Faces AI feature works on Walmart's $35 smart home camera too",
+      "summary_en": "A couple of Walmart's budget-friendly smart home cameras will be able to recognize people around your house now using Google's familiar face detection feature.",
+      "summary": "沃尔玛售价35美元的智能家居摄像头现在开始支持Google的“熟悉面孔”AI识人功能。",
+      "summary_zh": "沃尔玛售价35美元的智能家居摄像头现在开始支持Google的“熟悉面孔”AI识人功能。",
+      "ai_overlaid": true,
+      "translation_attempts": 0,
+      "translation_error": null,
+      "title_zh": "现在，Google 的“熟悉面孔”AI 功能也适用于沃尔玛售价 35 美元的智能家居摄像头。",
+      "translation_status": "native_zh",
+      "ai_analysis_en": ""
+    },
+    {
+      "schema_version": "4.1",
+      "event_id": "evt_de1e37724585",
+      "storyline_id": "st_4fdb1bf830a8",
+      "article_ids": [
+        "techcrunch-rss_c60ef5149694"
+      ],
+      "legacy_event_ids": [],
+      "title": "标普考虑因治理及“关键人物”风险下调英伟达信用评级",
       "category": "tech",
       "entities": [
         "英伟达 (NVIDIA)"
@@ -1655,7 +1736,7 @@
         "ent_nvidia"
       ],
       "entity_confidences": {
-        "英伟达 (NVIDIA)": 0.96
+        "英伟达 (NVIDIA)": 0.86
       },
       "matched_entities": [
         {
@@ -1664,8 +1745,7 @@
           "entity_type": "company",
           "sector": "半导体 / AI算力",
           "matched_aliases": [
-            "英伟达",
-            "黄仁勋"
+            "nvidia"
           ],
           "tickers": [
             {
@@ -1676,8 +1756,8 @@
               "label": "NVDA.US (NASDAQ)"
             }
           ],
-          "reason": "正文/实体匹配关键词「英伟达 / 黄仁勋」",
-          "confidence": 0.96
+          "reason": "正文/实体匹配关键词「nvidia」",
+          "confidence": 0.86
         }
       ],
       "importance": "medium",
@@ -1687,7 +1767,7 @@
       "material_stage_label": null,
       "material_stage_confidence": null,
       "thumbnail_url": null,
-      "publisher_name": "华尔街见闻 美股快讯",
+      "publisher_name": "TechCrunch AI & Tech",
       "source_status": "ok",
       "evidence_status": "single_source",
       "evidence_label": "单一独立来源线索",
@@ -1702,63 +1782,64 @@
       "platform_count": 1,
       "independent_publisher_count": 1,
       "reprint_count": 0,
-      "published_at": "2026-11-26T15:49:58+08:00",
+      "published_at": "2026-11-26T06:44:32+08:00",
       "event_date": "2026-11-26",
-      "event_time": "2026-11-26T15:49:58+08:00",
+      "event_time": "2026-11-26T06:44:32+08:00",
       "stale": false,
       "event_date_source": "llm_extracted",
       "is_stale_rehash": false,
       "time_trust_level": "article_timestamp",
       "time_confidence": "article_timestamp",
-      "first_discovered_at": "2026-11-26T19:26:11+08:00",
-      "first_reported_at": "2026-11-26T15:49:58+08:00",
-      "latest_fact_update_at": "2026-11-26T15:49:58+08:00",
-      "latest_reported_at": "2026-11-26T15:49:58+08:00",
-      "fetched_at": "2026-11-26T19:26:11+08:00",
-      "input_batch_id": "raw-20261126-192611",
-      "fact_summary": "据《华盛顿邮报》11月25日报道，在特朗普政府讨论如何介入英伟达事务、推动黄仁勋复职时，五角大楼官员曾提出一个大胆设想：援引冷战时期的美国《国防生产法》，向英伟达董事会施压。",
+      "first_discovered_at": "2026-11-26T23:16:14+08:00",
+      "first_reported_at": "2026-11-26T06:44:32+08:00",
+      "latest_fact_update_at": "2026-11-26T06:44:32+08:00",
+      "latest_reported_at": "2026-11-26T06:44:32+08:00",
+      "fetched_at": "2026-11-26T23:16:14+08:00",
+      "input_batch_id": "raw-20261126-231614",
+      "fact_summary": "该信用评级机构可能会将英伟达的信用评级下调至AA-，即第四高评级。",
       "fact_atoms": [
         {
-          "atom_id": "fa_37383224",
+          "atom_id": "fa_99357140",
           "subject": "英伟达 (NVIDIA)",
-          "metric_or_action": "美媒爆料：五角大楼官员提议动用“战时法案”，施压英伟达",
+          "metric_or_action": "S&P considers Nvidia credit downgrade over governance and ‘key man’ risks",
           "value": null,
           "unit": null,
           "period": "单次披露/未注明周期",
           "scope": "新闻事件陈述",
           "fact_status": "reported_unconfirmed_by_filing",
-          "attribution": "华尔街见闻 美股快讯",
-          "source_ref": "wscn-us-stock-channel_a750060abefe",
-          "source_url": "https://wallstreetcn.com/livenews/3206231",
-          "source_excerpt_or_locator": "据《华盛顿邮报》11月25日报道，在特朗普政府讨论如何介入英伟达事务、推动黄仁勋复职时，五角大楼官员曾提出一个大胆设想：援引冷战时期的美国《国防生产法》，向英伟达董事会施压。",
-          "published_at": "2026-11-26T15:49:58+08:00",
-          "discovered_at": "2026-11-26T19:26:11+08:00",
+          "attribution": "TechCrunch AI & Tech",
+          "source_ref": "techcrunch-rss_c60ef5149694",
+          "source_url": "https://techcrunch.com/2026/11/25/sp-considers-nvidia-credit-downgrade-over-governance-and-key-man-risks",
+          "source_excerpt_or_locator": "The credit rating agency may lower Nvidia's credit rating to AA-, the fourth-highest rating.",
+          "published_at": "2026-11-26T06:44:32+08:00",
+          "discovered_at": "2026-11-26T23:16:14+08:00",
           "revision": 1
         }
       ],
-      "ai_analysis": "引发英伟达 (NVIDIA)估值与产业链联动重定价，需紧盯主力资金流向与官方后续披露。",
+      "ai_analysis": "反映英伟达 (NVIDIA)技术架构与商业落地节奏变化，实际效果仍待开发者生态与第三方实测验证。",
       "unverified_claims": [],
       "speculation_or_outlook": null,
       "sources": [
         {
-          "item_id": "wscn-us-stock-channel_a750060abefe",
-          "article_id": "wscn-us-stock-channel_a750060abefe",
-          "source_id": "wscn-us-stock-channel",
-          "source_name": "华尔街见闻 美股快讯",
-          "publisher_name": "华尔街见闻 美股快讯",
+          "item_id": "techcrunch-rss_c60ef5149694",
+          "article_id": "techcrunch-rss_c60ef5149694",
+          "source_id": "techcrunch-rss",
+          "source_name": "TechCrunch AI & Tech",
+          "publisher_name": "TechCrunch AI & Tech",
           "source_status": "ok",
           "source_kind": "news",
           "source_tier": "direct_media",
-          "publisher_family": "wallstreetcn",
+          "publisher_family": "techcrunch",
           "is_reprint_copy": false,
-          "title": "美媒爆料：五角大楼官员提议动用“战时法案”，施压英伟达",
-          "url": "https://wallstreetcn.com/livenews/3206231",
-          "published_at": "2026-11-26T15:49:58+08:00",
-          "published_at_source": "upstream_api",
-          "fetched_at": "2026-11-26T19:26:13+08:00",
-          "excerpt": "据《华盛顿邮报》11月25日报道，在特朗普政府讨论如何介入英伟达事务、推动黄仁勋复职时，五角大楼官员曾提出一个大胆设想：援引冷战时期的美国《国防生产法》，向英伟达董事会施压。",
+          "title": "S&P considers Nvidia credit downgrade over governance and ‘key man’ risks",
+          "url": "https://techcrunch.com/2026/11/25/sp-considers-nvidia-credit-downgrade-over-governance-and-key-man-risks",
+          "published_at": "2026-11-26T06:44:32+08:00",
+          "published_at_source": "upstream_rfc2822",
+          "fetched_at": "2026-11-26T23:16:15+08:00",
+          "excerpt": "The credit rating agency may lower Nvidia's credit rating to AA-, the fourth-highest rating.",
           "thumbnail_url": null,
-          "deep_fetch_status": null
+          "deep_fetch_status": null,
+          "title_zh": "标普考虑因治理及“关键人物”风险下调英伟达信用评级"
         }
       ],
       "verification": {
@@ -1770,60 +1851,67 @@
       "followup": null,
       "is_new_in_batch": true,
       "update_kind": "new_discovery",
-      "heavy_score": 36.8,
+      "heavy_score": 32.0,
       "radar_score": 76,
       "severity_tier": "B",
       "severity_label": "B级常规",
+      "title_en": "S&P considers Nvidia credit downgrade over governance and ‘key man’ risks",
+      "summary_en": "The credit rating agency may lower Nvidia's credit rating to AA-, the fourth-highest rating.",
+      "summary": "该信用评级机构可能会将英伟达的信用评级下调至AA-，即第四高评级。",
+      "summary_zh": "该信用评级机构可能会将英伟达的信用评级下调至AA-，即第四高评级。",
       "translation_attempts": 0,
       "translation_error": null,
-      "title_zh": "美媒爆料：五角大楼官员提议动用“战时法案”，施压英伟达",
+      "title_zh": "标普考虑因治理及“关键人物”风险下调英伟达信用评级",
       "translation_status": "native_zh",
-      "summary_zh": "据《华盛顿邮报》11月25日报道，在特朗普政府讨论如何介入英伟达事务、推动黄仁勋复职时，五角大楼官员曾提出一个大胆设想：援引冷战时期的美国《国防生产法》，向英伟达董事会施压。",
-      "title_en": "",
-      "summary_en": "",
       "ai_analysis_en": ""
     },
     {
       "schema_version": "4.1",
-      "event_id": "evt_0efaef3ff2ad",
-      "storyline_id": "st_1b410572fef0",
+      "event_id": "evt_19463942422d",
+      "storyline_id": "st_b00e34ea7e00",
       "article_ids": [
-        "rss-gnews-ai-models-zh_3046768ac3f1"
+        "theverge-rss_078889d29a01"
       ],
       "legacy_event_ids": [],
-      "title": "V4全系列模型上线后，DeepSeek Harness开发者预览版开放测试",
+      "title": "谷歌关于定制AI视频流的专利描绘了娱乐业黯淡的未来",
       "category": "tech",
-      "entities": [
-        "DeepSeek (深度求索)"
-      ],
+      "entities": [],
       "entity_ids": [
-        "ent_deepseek"
+        "ent_google"
       ],
       "entity_confidences": {
-        "DeepSeek (深度求索)": 0.86
+        "Google / DeepMind / Gemini": 0.86
       },
       "matched_entities": [
         {
-          "entity_id": "ent_deepseek",
-          "canonical_name": "DeepSeek (深度求索)",
-          "entity_type": "tech",
-          "sector": "AI 模型与开源推理",
+          "entity_id": "ent_google",
+          "canonical_name": "Google / DeepMind / Gemini",
+          "entity_type": "company",
+          "sector": "AI 模型与云基础设施",
           "matched_aliases": [
-            "deepseek"
+            "google"
           ],
-          "tickers": [],
-          "reason": "正文/实体匹配关键词「deepseek」",
+          "tickers": [
+            {
+              "symbol": "GOOGL",
+              "market": "US",
+              "exchange": "NASDAQ",
+              "currency": "USD",
+              "label": "GOOGL.US (NASDAQ)"
+            }
+          ],
+          "reason": "正文/实体匹配关键词「google」",
           "confidence": 0.86
         }
       ],
-      "importance": "high",
+      "importance": "medium",
       "sentiment": "Mixed",
       "special_note": null,
-      "material_stage": "beta",
-      "material_stage_label": "测试开放 (Beta)",
-      "material_stage_confidence": 0.96,
+      "material_stage": null,
+      "material_stage_label": null,
+      "material_stage_confidence": null,
       "thumbnail_url": null,
-      "publisher_name": "财联社",
+      "publisher_name": "The Verge",
       "source_status": "ok",
       "evidence_status": "single_source",
       "evidence_label": "单一独立来源线索",
@@ -1838,63 +1926,64 @@
       "platform_count": 1,
       "independent_publisher_count": 1,
       "reprint_count": 0,
-      "published_at": "2026-11-26T15:14:03+08:00",
+      "published_at": "2026-11-26T05:51:26+08:00",
       "event_date": "2026-11-26",
-      "event_time": "2026-11-26T15:14:03+08:00",
+      "event_time": "2026-11-26T05:51:26+08:00",
       "stale": false,
       "event_date_source": "llm_extracted",
       "is_stale_rehash": false,
       "time_trust_level": "article_timestamp",
       "time_confidence": "article_timestamp",
-      "first_discovered_at": "2026-11-26T19:26:11+08:00",
-      "first_reported_at": "2026-11-26T15:14:03+08:00",
-      "latest_fact_update_at": "2026-11-26T15:14:03+08:00",
-      "latest_reported_at": "2026-11-26T15:14:03+08:00",
-      "fetched_at": "2026-11-26T19:26:11+08:00",
-      "input_batch_id": "raw-20261126-192611",
-      "fact_summary": "V4全系列模型上线后，DeepSeek Harness开发者预览版开放测试 财联社",
+      "first_discovered_at": "2026-11-26T23:16:14+08:00",
+      "first_reported_at": "2026-11-26T05:51:26+08:00",
+      "latest_fact_update_at": "2026-11-26T05:51:26+08:00",
+      "latest_reported_at": "2026-11-26T05:51:26+08:00",
+      "fetched_at": "2026-11-26T23:16:14+08:00",
+      "input_batch_id": "raw-20261126-231614",
+      "fact_summary": "去年，谷歌申请了一项名为“我的频道”（My Channel）的系统专利，旨在根据公司掌握的信息，创建充满个性化、AI生成的视频和广告的信息流……",
       "fact_atoms": [
         {
-          "atom_id": "fa_12251769",
-          "subject": "DeepSeek (深度求索)",
-          "metric_or_action": "V4全系列模型上线后，DeepSeek Harness开发者预览版开放测试",
-          "value": "测试开放 (Beta)",
-          "unit": "可用状态",
+          "atom_id": "fa_44670903",
+          "subject": "Google / DeepMind / Gemini",
+          "metric_or_action": "Google’s patent for custom AI video feeds paints a bleak picture of entertainment’s future",
+          "value": null,
+          "unit": null,
           "period": "单次披露/未注明周期",
-          "scope": "模型/产品/技术指标",
+          "scope": "新闻事件陈述",
           "fact_status": "reported_unconfirmed_by_filing",
-          "attribution": "财联社",
-          "source_ref": "rss-gnews-ai-models-zh_3046768ac3f1",
-          "source_url": "https://news.google.com/rss/articles/CBMiSEFVX3lxTE4wd0JWNXNkT3NmUy1UV09ldm1iSXY3dTllQ1o1ZFg5MFZPS1BRY3RCTUJLc05UYWJTb1R6VHhoT0NXM3hJQU5xLQ?oc=5",
-          "source_excerpt_or_locator": "V4全系列模型上线后，DeepSeek Harness开发者预览版开放测试 财联社",
-          "published_at": "2026-11-26T15:14:03+08:00",
-          "discovered_at": "2026-11-26T19:26:11+08:00",
+          "attribution": "The Verge",
+          "source_ref": "theverge-rss_078889d29a01",
+          "source_url": "https://www.theverge.com/entertainment/1042221/google-my-channel-ai-video-patent",
+          "source_excerpt_or_locator": "Last year, Google filed a patent for a system called My Channel that's designed to create feeds filled with personalized, AI-generated videos and advertisements based on informatio",
+          "published_at": "2026-11-26T05:51:26+08:00",
+          "discovered_at": "2026-11-26T23:16:14+08:00",
           "revision": 1
         }
       ],
-      "ai_analysis": "反映DeepSeek (深度求索)技术架构与商业落地节奏变化，实际效果仍待开发者生态与第三方实测验证。",
+      "ai_analysis": "反映Google / DeepMind / Gemini技术架构与商业落地节奏变化，实际效果仍待开发者生态与第三方实测验证。",
       "unverified_claims": [],
       "speculation_or_outlook": null,
       "sources": [
         {
-          "item_id": "rss-gnews-ai-models-zh_3046768ac3f1",
-          "article_id": "rss-gnews-ai-models-zh_3046768ac3f1",
-          "source_id": "rss-gnews-ai-models-zh",
-          "source_name": "财联社",
-          "publisher_name": "财联社",
+          "item_id": "theverge-rss_078889d29a01",
+          "article_id": "theverge-rss_078889d29a01",
+          "source_id": "theverge-rss",
+          "source_name": "The Verge",
+          "publisher_name": "The Verge",
           "source_status": "ok",
           "source_kind": "news",
           "source_tier": "direct_media",
-          "publisher_family": "cls",
+          "publisher_family": "theverge",
           "is_reprint_copy": false,
-          "title": "V4全系列模型上线后，DeepSeek Harness开发者预览版开放测试",
-          "url": "https://news.google.com/rss/articles/CBMiSEFVX3lxTE4wd0JWNXNkT3NmUy1UV09ldm1iSXY3dTllQ1o1ZFg5MFZPS1BRY3RCTUJLc05UYWJTb1R6VHhoT0NXM3hJQU5xLQ?oc=5",
-          "published_at": "2026-11-26T15:14:03+08:00",
-          "published_at_source": "upstream_rfc2822",
-          "fetched_at": "2026-11-26T19:26:15+08:00",
-          "excerpt": "V4全系列模型上线后，DeepSeek Harness开发者预览版开放测试 财联社",
+          "title": "Google’s patent for custom AI video feeds paints a bleak picture of entertainment’s future",
+          "url": "https://www.theverge.com/entertainment/1042221/google-my-channel-ai-video-patent",
+          "published_at": "2026-11-26T05:51:26+08:00",
+          "published_at_source": "upstream_iso",
+          "fetched_at": "2026-11-26T23:16:15+08:00",
+          "excerpt": "Last year, Google filed a patent for a system called My Channel that's designed to create feeds filled with personalized, AI-generated videos and advertisements based on information the company knows about its users.",
           "thumbnail_url": null,
-          "deep_fetch_status": null
+          "deep_fetch_status": null,
+          "title_zh": "谷歌关于定制AI视频流的专利描绘了娱乐业黯淡的未来"
         }
       ],
       "verification": {
@@ -1906,31 +1995,19 @@
       "followup": null,
       "is_new_in_batch": true,
       "update_kind": "new_discovery",
-      "heavy_score": 36.8,
+      "heavy_score": 32.0,
       "radar_score": 76,
-      "severity_tier": "S",
-      "severity_label": "S级重磅",
-      "heavy_reason_tag": "科研/模型里程碑",
+      "severity_tier": "B",
+      "severity_label": "B级常规",
+      "title_en": "Google's patent for custom AI video feeds paints a bleak picture of entertainment's future",
+      "summary_en": "Last year, Google filed a patent for a system called My Channel that's designed to create feeds filled with personalized, AI-generated videos and advertisements based on information the company knows about…",
+      "summary": "去年，谷歌申请了一项名为“我的频道”（My Channel）的系统专利，旨在根据公司掌握的信息，创建充满个性化、AI生成的视频和广告的信息流……",
+      "summary_zh": "去年，谷歌申请了一项名为“我的频道”（My Channel）的系统专利，旨在根据公司掌握的信息，创建充满个性化、AI生成的视频和广告的信息流……",
       "translation_attempts": 0,
       "translation_error": null,
-      "title_zh": "V4全系列模型上线后，DeepSeek Harness开发者预览版开放测试",
+      "title_zh": "谷歌关于定制AI视频流的专利描绘了娱乐业黯淡的未来",
       "translation_status": "native_zh",
-      "summary_zh": "V4全系列模型上线后，DeepSeek Harness开发者预览版开放测试 财联社",
-      "title_en": "",
-      "summary_en": "",
-      "ai_analysis_en": "",
-      "deep_qa": [
-        {
-          "question": "这次技术变化对普通开发者或用户意味着什么？",
-          "answer": "聚焦DeepSeek (深度求索)能力边界与使用成本变化：V4全系列模型上线后，DeepSeek Harness开发者预览版开放测试 财联社。",
-          "historical_parallel": "历次大模型与算力架构迭代中，推理单价下探与生态开放通常在 1~2 个季度内显著拉动应用渗透率。"
-        },
-        {
-          "question": "该进展目前处于什么验证阶段？",
-          "answer": "需结合官方技术报告、独立第三方复现基准以及下游云厂与终端真实接入节奏交叉确认。",
-          "historical_parallel": "2025 年以来主流开源/闭源大模型竞赛证明，公开基准与真实开发者采用率决定商业化天花板。"
-        }
-      ]
+      "ai_analysis_en": ""
     }
   ]
 }
