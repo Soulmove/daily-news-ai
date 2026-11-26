@@ -7,7 +7,7 @@ import {
   nowShanghaiIso,
   verifyPassword,
 } from './crypto'
-import { ONLINE_WINDOW_MS } from './presence'
+import { getRealOnlineCounts } from './presence'
 import type {
   AccessMode,
   CloudSyncCounts,
@@ -655,21 +655,9 @@ export async function getAdminStats(db: D1Database): Promise<Record<string, numb
   let todayTotalVisits = 0
   let todayUniqueIps = 0
   try {
-    const onlineCutoff = Date.now() - ONLINE_WINDOW_MS
     const todayCst = nowShanghaiIso().slice(0, 10)
-    const [onAuth, onGuest, todayAgg] = await Promise.all([
-      db
-        .prepare(
-          'SELECT COUNT(DISTINCT user_id) AS cnt FROM presence_sessions WHERE is_logged_in = 1 AND user_id IS NOT NULL AND last_seen_ms >= ?1',
-        )
-        .bind(onlineCutoff)
-        .first<{ cnt: number }>(),
-      db
-        .prepare(
-          'SELECT COUNT(DISTINCT session_key) AS cnt FROM presence_sessions WHERE is_logged_in = 0 AND last_seen_ms >= ?1',
-        )
-        .bind(onlineCutoff)
-        .first<{ cnt: number }>(),
+    const [realOnline, todayAgg] = await Promise.all([
+      getRealOnlineCounts(db),
       db
         .prepare(
           'SELECT COALESCE(SUM(visit_count), 0) AS tv, COUNT(*) AS uips FROM daily_ip_visits WHERE day_cst = ?1',
@@ -677,9 +665,9 @@ export async function getAdminStats(db: D1Database): Promise<Record<string, numb
         .bind(todayCst)
         .first<{ tv: number; uips: number }>(),
     ])
-    onlineRealLoggedIn = Number(onAuth?.cnt ?? 0)
-    onlineRealGuest = Number(onGuest?.cnt ?? 0)
-    onlineRealTotal = onlineRealLoggedIn + onlineRealGuest
+    onlineRealLoggedIn = realOnline.logged_in
+    onlineRealGuest = realOnline.guest
+    onlineRealTotal = realOnline.total
     todayTotalVisits = Number(todayAgg?.tv ?? 0)
     todayUniqueIps = Number(todayAgg?.uips ?? 0)
   } catch {

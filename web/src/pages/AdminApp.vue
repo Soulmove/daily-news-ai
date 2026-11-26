@@ -2254,9 +2254,9 @@ onMounted(() => {
               <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
                 <label
                   v-for="opt in [
-                    { id: 'all', title: '全部在线（登录 + 未登录）', desc: '同时统计已登录账号（按用户去重）与未登录访客' },
-                    { id: 'logged_in', title: '仅显示已登录用户', desc: '只展示当前活跃的注册登录账号人数' },
-                    { id: 'guest', title: '仅显示未登录访客', desc: '只展示当前未登录访问设备的在线人数' },
+                    { id: 'all', title: '全部在线（登录 + 未登录）', desc: '同时统计已登录与未登录访客（同一 IP 多浏览器合并计为 1 人）' },
+                    { id: 'logged_in', title: '仅显示已登录用户', desc: '只展示当前有已登录会话的活跃 IP 人数' },
+                    { id: 'guest', title: '仅显示未登录访客', desc: '只展示纯未登录访客的活跃 IP 人数' },
                   ] as const"
                   :key="opt.id"
                   class="rounded-xl border p-2.5 flex items-start gap-2 cursor-pointer transition-colors"
@@ -2631,7 +2631,7 @@ onMounted(() => {
             <div class="flex items-center justify-between gap-2">
               <h3 class="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
                 <Clock class="w-4 h-4 text-emerald-500" />
-                <span>当前活跃在线会话列表（{{ trafficReport?.active_sessions?.length ?? 0 }} 条，最近 2 分钟心跳）</span>
+                <span>当前活跃在线会话列表（去重后 {{ trafficReport?.online?.real_total ?? 0 }} 人在线 · {{ trafficReport?.active_sessions?.length ?? 0 }} 个浏览器会话，最近 2 分钟心跳）</span>
               </h3>
               <button
                 type="button"

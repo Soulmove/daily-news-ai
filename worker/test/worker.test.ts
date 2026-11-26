@@ -1719,8 +1719,39 @@ describe('MirrorBrief Worker Crypto & API Suite', () => {
       env,
     )
     const guestBeatData = (await pGuestBeat.json()) as { count: number; mode: string }
-    // 1 logged-in user (deduped across 2 devices) + 1 guest = 2 total online
+    // 1 logged-in IP (203.0.113.10 across 2 devices) + 1 guest IP (198.51.100.25) = 2 total online
     expect(guestBeatData).toMatchObject({ count: 2, mode: 'real' })
+
+    // Second browser on SAME guest IP 198.51.100.25 must still count as 1 person (total stays 2)
+    await app.request(
+      'https://mirrorinfo.xyz/api/presence/ping',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'cf-connecting-ip': '198.51.100.25',
+          'X-Device-ID': 'dev_guest_0002',
+        },
+        body: JSON.stringify({ is_visit: true, platform: 'desktop', tab: 'today' }),
+      },
+      env,
+    )
+
+    // Guest/incognito browser on SAME IP 203.0.113.10 where user is already logged in must merge into 1 logged-in IP
+    const sameIpMixed = await app.request(
+      'https://mirrorinfo.xyz/api/presence/ping',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'cf-connecting-ip': '203.0.113.10',
+          'X-Device-ID': 'dev_sameip_guest',
+        },
+        body: JSON.stringify({ is_visit: true, platform: 'desktop', tab: 'wire' }),
+      },
+      env,
+    )
+    expect(await sameIpMixed.json()).toMatchObject({ count: 2, mode: 'real' })
 
     // Switch real_scope = 'logged_in' -> displays 1
     await app.request(
@@ -1820,18 +1851,19 @@ describe('MirrorBrief Worker Crypto & API Suite', () => {
       }>
     }
     expect(tr.online).toMatchObject({ real_total: 2, real_logged_in: 1, real_guest: 1 })
-    expect(tr.summary).toMatchObject({ total_visits: 3, auth_visits: 2, guest_visits: 1, unique_ips: 2 })
+    expect(tr.summary).toMatchObject({ total_visits: 5, auth_visits: 2, guest_visits: 3, unique_ips: 2 })
     expect(tr.hourly).toHaveLength(24)
     const ipAuth = tr.ip_rows.find((r) => r.ip === '203.0.113.10')
     const ipGuest = tr.ip_rows.find((r) => r.ip === '198.51.100.25')
-    expect(ipAuth?.visit_count).toBe(2)
+    expect(ipAuth?.visit_count).toBe(3)
     expect(ipAuth?.auth_visit_count).toBe(2)
+    expect(ipAuth?.guest_visit_count).toBe(1)
     expect(ipAuth?.usernames).toContain('presence_user')
     expect(ipAuth?.platforms).toContain('android')
-    expect(ipGuest?.visit_count).toBe(1)
-    expect(ipGuest?.heartbeat_count).toBe(2)
+    expect(ipGuest?.visit_count).toBe(2)
+    expect(ipGuest?.heartbeat_count).toBe(3)
 
-    // Leave beacon removes guest session immediately
+    // Leaving ONE browser on 198.51.100.25 keeps the IP online because dev_guest_0002 is still open
     await app.request(
       'https://mirrorinfo.xyz/api/presence/leave',
       {
@@ -1841,10 +1873,25 @@ describe('MirrorBrief Worker Crypto & API Suite', () => {
       },
       env,
     )
-    const afterLeave = (await (await app.request('https://mirrorinfo.xyz/api/presence/status', {}, env)).json()) as {
+    const afterOneLeave = (await (await app.request('https://mirrorinfo.xyz/api/presence/status', {}, env)).json()) as {
       count: number
     }
-    expect(afterLeave.count).toBe(1)
+    expect(afterOneLeave.count).toBe(2)
+
+    // Leaving the second browser on 198.51.100.25 drops online count to 1
+    await app.request(
+      'https://mirrorinfo.xyz/api/presence/leave',
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ device_id: 'dev_guest_0002' }),
+      },
+      env,
+    )
+    const afterBothLeave = (await (await app.request('https://mirrorinfo.xyz/api/presence/status', {}, env)).json()) as {
+      count: number
+    }
+    expect(afterBothLeave.count).toBe(1)
 
     // Corporate debt restructuring agreement must NOT be tagged '地缘与军事突发'
     const corp = inferSeverityAndTag('荣盛发展：拟与平安信托进行债务重组 涉及债务本金9.29亿元', '双方已签署协议推进债务化解', false)

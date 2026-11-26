@@ -109,26 +109,27 @@ function appendUniqueLimited(list: string[], value: string, maxLen: number): str
 
 export async function getRealOnlineCounts(db: D1Database, nowMs = Date.now()): Promise<RealOnlineCounts> {
   const cutoff = nowMs - ONLINE_WINDOW_MS
-  const [authRow, guestRow] = await Promise.all([
-    db
-      .prepare(
-        'SELECT COUNT(DISTINCT user_id) AS cnt FROM presence_sessions WHERE is_logged_in = 1 AND user_id IS NOT NULL AND last_seen_ms >= ?1',
-      )
-      .bind(cutoff)
-      .first<{ cnt: number }>(),
-    db
-      .prepare(
-        'SELECT COUNT(DISTINCT session_key) AS cnt FROM presence_sessions WHERE is_logged_in = 0 AND last_seen_ms >= ?1',
-      )
-      .bind(cutoff)
-      .first<{ cnt: number }>(),
-  ])
-  const loggedIn = Number(authRow?.cnt ?? 0)
-  const guest = Number(guestRow?.cnt ?? 0)
+  const row = await db
+    .prepare(
+      `SELECT
+         COUNT(*) AS total,
+         COALESCE(SUM(CASE WHEN has_auth = 1 THEN 1 ELSE 0 END), 0) AS logged_in,
+         COALESCE(SUM(CASE WHEN has_auth = 0 THEN 1 ELSE 0 END), 0) AS guest
+       FROM (
+         SELECT
+           CASE WHEN ip != '' AND ip != 'unknown' THEN 'ip:' || ip ELSE 'sess:' || session_key END AS person_key,
+           MAX(CASE WHEN is_logged_in = 1 AND user_id IS NOT NULL THEN 1 ELSE 0 END) AS has_auth
+         FROM presence_sessions
+         WHERE last_seen_ms >= ?1
+         GROUP BY person_key
+       )`,
+    )
+    .bind(cutoff)
+    .first<{ total: number; logged_in: number; guest: number }>()
   return {
-    total: loggedIn + guest,
-    logged_in: loggedIn,
-    guest,
+    total: Number(row?.total ?? 0),
+    logged_in: Number(row?.logged_in ?? 0),
+    guest: Number(row?.guest ?? 0),
   }
 }
 
