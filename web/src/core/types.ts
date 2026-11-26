@@ -1212,6 +1212,7 @@ export interface WeeklyDigestItem {
   heavy_reason_tag?: string | null
   category?: CategoryKey | string
   title: string
+  plain_title?: string
   title_en?: string
   fact_summary: string
   one_line_takeaway: string
@@ -1258,6 +1259,22 @@ export interface WeeklyNextCatalyst {
   action_hint: string
 }
 
+export type WeeklyOutlookDirection = 'up' | 'down' | 'volatile' | 'watch'
+
+export interface WeeklyNextOutlookItem {
+  id: string
+  sector_id: WeeklySectorId
+  topic: string
+  direction: WeeklyOutlookDirection
+  direction_label: string
+  confidence_pct: number
+  plain_forecast: string
+  if_up_trigger: string
+  if_down_trigger: string
+  watch_time: string
+  linked_prediction_id?: string | null
+}
+
 export interface WeeklyDigestDoc {
   schema_version: string
   week_id: string
@@ -1287,6 +1304,7 @@ export interface WeeklyDigestDoc {
   sectors: WeeklyDigestSector[]
   cross_sector_threads: WeeklyCrossThread[]
   next_week_catalysts: WeeklyNextCatalyst[]
+  next_week_outlook?: WeeklyNextOutlookItem[]
 }
 
 export interface WeeklyDigestIssueSummary {

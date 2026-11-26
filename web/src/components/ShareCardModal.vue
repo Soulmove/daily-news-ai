@@ -74,6 +74,7 @@ export type ShareCardPayload =
       p0Count: number
       streakWeeks?: number
       readCount?: number
+      nextWeekCallout?: string
       sectorHighlights: {
         sectorLabel: string
         accentHex: string
@@ -583,10 +584,10 @@ function renderCard() {
       barY + 25,
     )
 
-    let sy = barY + 56
+    let sy = barY + 52
     const itemsList = data.sectorHighlights.slice(0, 4)
-    const availH = Math.max(320, 762 - sy)
-    const cardGap = 10
+    const availH = data.nextWeekCallout ? Math.max(270, 706 - sy) : Math.max(320, 762 - sy)
+    const cardGap = 9
     const cardH = Math.floor((availH - cardGap * Math.max(0, itemsList.length - 1)) / Math.max(1, itemsList.length))
 
     for (const sec of itemsList) {
@@ -594,16 +595,27 @@ function renderCard() {
       ctx.fillStyle = 'rgba(255, 255, 255, 0.05)'
       ctx.fill()
       ctx.fillStyle = sec.accentHex || '#60A5FA'
-      ctx.fillRect(68, sy + 14, 4, Math.max(24, cardH - 28))
+      ctx.fillRect(68, sy + 12, 4, Math.max(22, cardH - 24))
 
       ctx.fillStyle = sec.accentHex || '#60A5FA'
-      ctx.font = 'bold 14.5px "Inter", "PingFang SC", "Microsoft YaHei", sans-serif'
-      ctx.fillText(sec.sectorLabel, 86, sy + 28)
+      ctx.font = 'bold 14px "Inter", "PingFang SC", "Microsoft YaHei", sans-serif'
+      ctx.fillText(sec.sectorLabel, 86, sy + 26)
 
       ctx.fillStyle = 'rgba(255, 255, 255, 0.92)'
-      ctx.font = '15.5px "Inter", "PingFang SC", "Microsoft YaHei", sans-serif'
-      drawWrappedText(ctx, sec.headline, 86, sy + 54, W - 172, 22, cardH >= 100 ? 2 : 1)
+      ctx.font = '15px "Inter", "PingFang SC", "Microsoft YaHei", sans-serif'
+      drawWrappedText(ctx, sec.headline, 86, sy + 50, W - 172, 21, cardH >= 96 ? 2 : 1)
       sy += cardH + cardGap
+    }
+
+    if (data.nextWeekCallout) {
+      drawRoundRect(ctx, 68, 720, W - 136, 42, 12)
+      ctx.fillStyle = 'rgba(16, 185, 129, 0.14)'
+      ctx.fill()
+      ctx.strokeStyle = 'rgba(16, 185, 129, 0.35)'
+      ctx.stroke()
+      ctx.fillStyle = '#6EE7B7'
+      ctx.font = 'bold 14px "Inter", "PingFang SC", "Microsoft YaHei", sans-serif'
+      drawWrappedText(ctx, `下周先看：${data.nextWeekCallout}`, 86, 746, W - 172, 20, 1)
     }
   } else {
     // Poster 4: Single Heavy Event 3-Perspective Briefing Card

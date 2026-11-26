@@ -98,13 +98,22 @@ _INDUSTRY_CORP_RE = re.compile(
     re.I,
 )
 _WEEKLY_INTRADAY_NOISE_RE = re.compile(
-    r"(?:^美股盘前|半日涨超|高开低走|低开高走|午评|收评|集体回落|集体收跌|打包粤菜|被撞亡|U17|国少|早间要闻)",
+    r"(?:^美股盘前|半日涨超|高开低走|低开高走|午评|收评|集体回落|集体收跌|逆市高开|CPO概念震荡反弹|打包粤菜|被撞亡|U17|国少|早间要闻|学生课间|说四川话|被认定违纪)",
     re.I,
 )
 _SUBJECT_ANCHORS_RE = re.compile(
-    r"(?:英伟达|nvidia|黄仁勋|anthropic|openai|DeepSeek|马斯克|特朗普|美联储|央行|黄金|白银|原油|霍尔木兹|利比亚|神舟二十四|COP31)",
+    r"(?:英伟达|nvidia|黄仁勋|anthropic|openai|DeepSeek|马斯克|特朗普|美联储|央行|mlf|逆回购|黄金|白银|原油|油轮|霍尔木兹|利比亚|俄罗斯|俄军|乌克兰|航天员|神舟二十四|神舟|COP31|保证金)",
     re.I,
 )
+_CLICHE_PATTERNS = re.compile(
+    r"(?:持续推进|坚决拥护|全面从严|开放包容|深化[\u4e00-\u9fff]{0,8}交流|坚实支撑|常态化阶段|里程碑式突破|"
+    r"核心变量变化|边际变化|定价逻辑|跨境资本流向发生方向性调整|精细化管理意图|合理充裕|存量博弈|虹吸与切换|"
+    r"平抑[\u4e00-\u9fff]{0,8}波动|持续跟踪[\u4e00-\u9fff]{0,12}进展|关注官方[\u4e00-\u9fff]{0,12}通报|"
+    r"关注后续[\u4e00-\u9fff]{0,12}外溢|引发舆论关注|引发广泛关注|引发市场广泛关注|多起重大热点|实际效果待实测验证|"
+    r"展现[\u4e00-\u9fff]{0,10}意愿|彰显[\u4e00-\u9fff]{0,10}信心|维持流动性平稳的同时|引导资金结构优化|进一步观察|密切关注后续动态)",
+    re.I,
+)
+_VALID_OUTLOOK_DIRECTIONS = ("up", "down", "volatile", "watch")
 _EVIDENCE_RANK = {
     "official_confirmed": 4,
     "multi_source": 3,
@@ -120,6 +129,54 @@ def _clean_text(raw: Any, max_len: int = 320) -> str:
     if len(txt) > max_len:
         return txt[: max_len - 1].rstrip("，。；,; ") + "…"
     return txt
+
+
+def _scrub_cliches(text: Any, fallback: str = "", max_len: int = 240) -> str:
+    """Remove boilerplate officialese and empty analyst filler; keep plain concrete facts."""
+    txt = _clean_text(text, max_len=max_len)
+    if not txt:
+        return fallback
+    parts = [p.strip() for p in re.split(r"(?<=[。；;！!])\s*", txt) if p.strip()]
+    kept = [p for p in parts if not _CLICHE_PATTERNS.search(p)]
+    if not kept:
+        # Also test whole string in case it lacked punctuation
+        if not _CLICHE_PATTERNS.search(txt):
+            return txt
+        return fallback
+    joined = "".join(kept)
+    useful = re.sub(r"[\s，。；;！!：:、\-—（）()]+", "", joined)
+    if len(useful) < 8:
+        return fallback
+    return _clean_text(joined, max_len=max_len)
+
+
+def _is_title_parrot(takeaway: str, title: str) -> bool:
+    """Detect when takeaway merely repeats or slightly trims the headline without new insight."""
+    if not takeaway or not title:
+        return True
+    if title_similarity(takeaway, title) >= 0.72:
+        return True
+    bg_t = _cjk_bigrams(takeaway)
+    bg_h = _cjk_bigrams(title)
+    if bg_t and bg_h:
+        overlap = len(bg_t & bg_h)
+        if (overlap / len(bg_t | bg_h)) >= 0.65:
+            return True
+        # Catch shorter takeaways that merely trim the headline without adding new substance
+        if (overlap / len(bg_t)) >= 0.72:
+            return True
+    return False
+
+
+def _make_plain_title(raw_title: str) -> str:
+    """Shorten dateline-prefixed or overly bureaucratic notices into direct plain Chinese."""
+    t = _clean_text(raw_title, 140)
+    t = re.sub(r"^(?:财联社|华尔街见闻|格隆汇|证券时报|新浪财经)\d{1,2}月\d{1,2}日电[，,:：\s]*", "", t)
+    t = re.sub(r"^(?:市场消息|外媒|报道|快讯)[：:]\s*", "", t)
+    m_mlf = re.search(r"央行.*?(\d+亿元)\s*MLF", t, re.I)
+    if m_mlf and "保持银行体系流动性" in t:
+        return f"央行放出 {m_mlf.group(1)} 1年期流动性，大资金年末更稳了"
+    return _clean_text(t, 64)
 
 
 def _cjk_bigrams(text: str) -> set[str]:
@@ -291,6 +348,33 @@ def distill_weekly_candidates(
     if not isinstance(raw_cal_events, list):
         raw_cal_events = []
 
+    preds_doc = load_json_if_exists(base_path / "data" / "predictions_public.json") or {}
+    raw_preds = preds_doc.get("predictions") if isinstance(preds_doc, dict) else []
+    if not isinstance(raw_preds, list):
+        raw_preds = []
+    open_predictions: List[Dict[str, Any]] = []
+    for pr in raw_preds:
+        if not isinstance(pr, dict):
+            continue
+        if str(pr.get("status") or "").lower() != "open":
+            continue
+        pid = str(pr.get("prediction_id") or "").strip()
+        ptitle = _clean_text(pr.get("title") or pr.get("question") or "", 90)
+        if not pid or not ptitle:
+            continue
+        open_predictions.append(
+            {
+                "prediction_id": pid,
+                "title": ptitle,
+                "due_at": str(pr.get("due_at") or "")[:16],
+                "probability_pct": pr.get("probability_pct"),
+                "win_rule": _clean_text(pr.get("win_rule") or "", 110),
+                "current_judgment": _clean_text(pr.get("current_judgment") or "", 120),
+                "invalidation_trigger": _clean_text(pr.get("invalidation_trigger") or "", 100),
+                "category": str(pr.get("category") or "macro"),
+            }
+        )
+
     raw_event_count = 0
     clusters: Dict[str, Dict[str, Any]] = {}
 
@@ -444,6 +528,12 @@ def distill_weekly_candidates(
 
         sector_id = classify_weekly_sector(item)
         days_sorted = sorted(item["active_days"])
+        plain_title = _make_plain_title(item["title"])
+        clean_fact = _scrub_cliches(item["fact_summary"], fallback=item["title"], max_len=300)
+        fallback_why = f"件事主要卡在：{clean_fact[:110]}" if len(clean_fact) > 12 else "重点看后续有没有实打实的数字或落地方案出台。"
+        clean_why = _scrub_cliches(item["ai_analysis"], fallback=clean_fact[:160] or fallback_why, max_len=220)
+        clean_watch = _scrub_cliches(item["speculation_or_outlook"], fallback="下周盯官方正式口径和市场资金有没有真正跟进。", max_len=140)
+        one_line = clean_fact if not _is_title_parrot(clean_fact, item["title"]) else clean_why
         scored.append(
             {
                 "id": f"wk_{week_info['week_id'].replace('-', '_').lower()}_{item['event_id'] or item['cluster_key']}",
@@ -457,11 +547,12 @@ def distill_weekly_candidates(
                 "evidence_status": item["evidence_status"],
                 "heavy_reason_tag": item["heavy_reason_tag"],
                 "title": item["title"],
+                "plain_title": plain_title,
                 "title_en": item["title_en"],
-                "fact_summary": item["fact_summary"],
-                "one_line_takeaway": _clean_text(item["fact_summary"] or item["title"], 96),
-                "why_it_matters": _clean_text(item["ai_analysis"] or item["fact_summary"], 220),
-                "next_week_watch": _clean_text(item["speculation_or_outlook"], 140),
+                "fact_summary": clean_fact,
+                "one_line_takeaway": _clean_text(one_line or item["title"], 96),
+                "why_it_matters": clean_why,
+                "next_week_watch": clean_watch,
                 "active_days": days_sorted,
                 "first_seen": days_sorted[0] if days_sorted else week_info["week_start"],
                 "last_seen": days_sorted[-1] if days_sorted else week_info["week_end"],
@@ -537,16 +628,27 @@ def distill_weekly_candidates(
             it["priority_reason"] = " · ".join(reason_parts[:3])
             all_selected.append(it)
 
-    # Next-week upcoming catalysts from calendar.json
-    week_end_str = week_info["week_end"]
+    # Next-week upcoming catalysts from calendar.json (use scheduled_at, scheduled_date, or date; skip past events)
+    today_str = today_date.isoformat()
     upcoming_cal: List[Dict[str, Any]] = []
     for ce in raw_cal_events:
-        if not isinstance(ce, dict):
+        if not isinstance(ce, dict) or ce.get("is_past"):
             continue
-        date_str = str(ce.get("scheduled_date") or ce.get("date") or "")[:10]
-        if date_str and date_str >= week_end_str:
-            upcoming_cal.append(ce)
-    upcoming_cal.sort(key=lambda x: str(x.get("scheduled_date") or x.get("date") or "9999"))
+        raw_dt = str(ce.get("scheduled_at") or ce.get("scheduled_date") or ce.get("date") or "").strip()
+        date_str = raw_dt[:10] if re.match(r"^\d{4}-\d{2}-\d{2}", raw_dt) else ""
+        if date_str and date_str >= today_str:
+            upcoming_cal.append({**ce, "_resolved_date": date_str})
+    # Also include upcoming non-past items with original_time_note when scheduled_at is missing
+    if len(upcoming_cal) < 4:
+        seen_cal_t = {str(c.get("title") or "") for c in upcoming_cal}
+        for ce in raw_cal_events:
+            if not isinstance(ce, dict) or ce.get("is_past"):
+                continue
+            ct = str(ce.get("title") or "")
+            if ct and ct not in seen_cal_t:
+                upcoming_cal.append({**ce, "_resolved_date": str(ce.get("original_time_note") or "近期窗口")[:16]})
+                seen_cal_t.add(ct)
+    upcoming_cal.sort(key=lambda x: str(x.get("_resolved_date") or "9999"))
 
     return {
         "week_info": week_info,
@@ -556,27 +658,59 @@ def distill_weekly_candidates(
         "sector_buckets": sector_buckets,
         "items": all_selected,
         "upcoming_calendar": upcoming_cal[:8],
+        "open_predictions": open_predictions[:10],
     }
+
+
+def _match_prediction_id(topic_text: str, sector_id: str, open_preds: Sequence[Dict[str, Any]]) -> Optional[str]:
+    if not open_preds:
+        return None
+    blob = (topic_text or "").lower()
+    key_terms = ("美联储", "加息", "降息", "两融", "保证金", "黄仁勋", "英伟达", "qwen", "阿里", "anthropic", "神舟", "油", "黄金")
+    for pr in open_preds:
+        pt = str(pr.get("title") or "").lower()
+        for k in key_terms:
+            if k in blob and k in pt:
+                return str(pr["prediction_id"])
+    sec_cat_map = {
+        "macro_finance": ("macro", "market", "finance"),
+        "geopolitics": ("global", "geopolitics", "global_space"),
+        "tech_ai": ("tech_ai", "tech"),
+        "industry_society": ("industry", "general", "global_space"),
+    }
+    cats = sec_cat_map.get(sector_id, ())
+    for pr in open_preds:
+        if str(pr.get("category") or "").lower() in cats:
+            return str(pr["prediction_id"])
+    return None
 
 
 def _build_deterministic_synthesis(stage1: Dict[str, Any]) -> Dict[str, Any]:
     buckets: Dict[str, List[Dict[str, Any]]] = stage1["sector_buckets"]
+    open_preds: List[Dict[str, Any]] = stage1.get("open_predictions") or []
     p0_items = [it for it in stage1["items"] if it["priority"] == "P0"]
-    top_titles = [it["title"] for it in sorted(p0_items, key=lambda x: -x["weekly_score"])[:3]]
+    top_titles = [it.get("plain_title") or it["title"] for it in sorted(p0_items, key=lambda x: -x["weekly_score"])[:3]]
 
     week_theme = (
-        f"本周核心脉络：{'；'.join(t[:24] for t in top_titles[:2])}"
+        f"本周最影响钱袋子和局势的事：{'、'.join(t[:18] for t in top_titles[:2])}"
         if top_titles
-        else "本周全球市场与产业关键进展全景盘点"
+        else "本周全球市场与科技产业关键变化大白话盘点"
     )
     thesis: List[str] = []
+    plain_prefixes = {
+        "macro_finance": "钱袋子主线",
+        "geopolitics": "外部局势",
+        "tech_ai": "AI 和科技圈",
+        "industry_society": "行业大事件",
+    }
     for sid in ("macro_finance", "geopolitics", "tech_ai"):
         b = buckets.get(sid) or []
         if b:
-            meta = next(m for m in SECTOR_META if m["sector_id"] == sid)
-            thesis.append(f"【{meta['title']}】{b[0]['title']}——{b[0]['one_line_takeaway']}")
+            headline = b[0].get("plain_title") or b[0]["title"]
+            detail = _scrub_cliches(b[0]["fact_summary"], fallback=b[0]["one_line_takeaway"], max_len=70)
+            thesis.append(f"【{plain_prefixes[sid]}】{headline[:26]}——{detail[:52]}")
     if not thesis:
-        thesis = ["本周各核心板块已完成多源交叉去重与优先级分级，点击条目可按大概看或细看切换。"]
+        thesis = ["本周四大板块重要消息已完成去重整理，可先大概看主线，再挑重点深挖。"]
 
     keywords: List[str] = []
     for it in sorted(stage1["items"], key=lambda x: -x["weekly_score"]):
@@ -590,45 +724,126 @@ def _build_deterministic_synthesis(stage1: Dict[str, Any]) -> Dict[str, Any]:
         sid = meta["sector_id"]
         b = buckets.get(sid) or []
         if b:
-            sectors_summary[sid] = f"本周共收录 {len(b)} 项高权重进展，核心围绕「{b[0]['title'][:28]}」展开。"
+            head_p = b[0].get("plain_title") or b[0]["title"]
+            if len(b) > 1:
+                second_p = b[1].get("plain_title") or b[1]["title"]
+                sectors_summary[sid] = f"本周 {len(b)} 件大事里，最牵动全局的是「{head_p[:20]}」和「{second_p[:18]}」。"
+            else:
+                sectors_summary[sid] = f"这周重点盯住一件事：{head_p[:30]}。"
         else:
-            sectors_summary[sid] = "本统计周期内该板块暂无高优先级异动。"
+            sectors_summary[sid] = "这周该板块没有太大动静，属于正常过渡期。"
 
     cross_threads: List[Dict[str, str]] = []
     if buckets["geopolitics"] and buckets["macro_finance"]:
+        geo_h = buckets["geopolitics"][0].get("plain_title") or buckets["geopolitics"][0]["title"]
+        fin_h = buckets["macro_finance"][0].get("plain_title") or buckets["macro_finance"][0]["title"]
         cross_threads.append(
             {
-                "title": "地缘风险外溢 -> 大宗商品与股指避险重定价",
+                "title": "外面一打架或闹僵，原油黄金和汇率最先抖三抖",
                 "from_sector": "geopolitics",
                 "to_sector": "macro_finance",
-                "logic": f"地缘侧「{buckets['geopolitics'][0]['title'][:24]}」与金融侧「{buckets['macro_finance'][0]['title'][:24]}」形成共振定价。",
+                "logic": f"一边是「{geo_h[:20]}」，另一边钱袋子盯着「{fin_h[:20]}」，避险资金容易来回倒腾。",
             }
         )
     if buckets["tech_ai"] and (buckets["industry_society"] or buckets["macro_finance"]):
+        ai_h = buckets["tech_ai"][0].get("plain_title") or buckets["tech_ai"][0]["title"]
         cross_threads.append(
             {
-                "title": "AI 前沿演进与算力链 -> 科技估值与产业资本开支",
+                "title": "AI 大厂一边拼技术发布，一边马上要面对能不能赚回钱的考题",
                 "from_sector": "tech_ai",
-                "to_sector": "industry_society" if buckets["industry_society"] else "macro_finance",
-                "logic": f"AI 侧「{buckets['tech_ai'][0]['title'][:24]}」持续牵引下游产业与资本开支预期。",
+                "to_sector": "macro_finance",
+                "logic": f"像「{ai_h[:22]}」这种大动作出来后，下周资金会更较真地看估值划不划算。",
             }
         )
 
     next_catalysts: List[Dict[str, str]] = []
-    for ce in stage1["upcoming_calendar"][:3]:
+    for ce in stage1["upcoming_calendar"][:4]:
         ce_title = _clean_text(ce.get("title") or ce.get("event_name") or "", 60)
         if not ce_title:
             continue
-        ce_date = str(ce.get("scheduled_date") or ce.get("date") or "下周待定")[:10]
+        ce_date = str(ce.get("_resolved_date") or ce.get("scheduled_date") or ce.get("date") or "下周待定")[:16]
+        watch_raw = ce.get("watch_variable") or ce.get("pre_expectation") or ce.get("description") or "看实际公布结果跟大家事先猜的是高还是低"
         next_catalysts.append(
             {
                 "date": ce_date,
                 "title": ce_title,
                 "sector_id": classify_weekly_sector({"title": ce_title, "category": ce.get("category") or "finance"}),
-                "why_watch": _clean_text(ce.get("watch_focus") or ce.get("description") or "验证市场预期与官方数据是否一致", 90),
-                "action_hint": "可前往前瞻验证区参与概率预判",
+                "why_watch": _scrub_cliches(watch_raw, fallback="到点核对官方正式结果，看跟市场事前预期差多少", max_len=95),
+                "action_hint": "可点进前瞻验证直接押一个判断",
             }
         )
+
+    next_week_outlook: List[Dict[str, Any]] = []
+    used_preds: set[str] = set()
+    for meta in SECTOR_META:
+        sid = meta["sector_id"]
+        b = buckets.get(sid) or []
+        if not b and sid not in ("macro_finance", "tech_ai"):
+            continue
+        lead = b[0] if b else None
+        lead_title = (lead.get("plain_title") or lead["title"]) if lead else meta["title"]
+        matched_pid = _match_prediction_id(lead_title, sid, [p for p in open_preds if p["prediction_id"] not in used_preds])
+        if matched_pid:
+            used_preds.add(matched_pid)
+        matched_pr = next((p for p in open_preds if p["prediction_id"] == matched_pid), None)
+
+        if sid == "macro_finance":
+            outlook_row = {
+                "id": "outlook_macro_finance",
+                "sector_id": sid,
+                "topic": "A股/美股流动性与利率预期走向",
+                "direction": "volatile",
+                "direction_label": "大概率先涨后分化",
+                "confidence_pct": 66,
+                "plain_forecast": f"下周市场最先试探真钱进不进场：一边看「{lead_title[:22]}」，另一边等美国关键通胀/议息消息落听，资金不敢一口气梭哈。",
+                "if_up_trigger": "如果两融成交明显放大且美元回落，前期跌多的成长与蓝筹能走一波顺风行情。",
+                "if_down_trigger": "如果出现放量高开低走或通胀数据高于预期，就容易重演当天冲高回落、资金缩回防守。",
+                "watch_time": (matched_pr or {}).get("due_at")[:10] if matched_pr else "下周一开盘至周中",
+                "linked_prediction_id": matched_pid,
+            }
+        elif sid == "geopolitics":
+            outlook_row = {
+                "id": "outlook_geopolitics",
+                "sector_id": sid,
+                "topic": "地缘冲突外溢与能源航运风险",
+                "direction": "volatile",
+                "direction_label": "容易突然跳一下、来回拉扯",
+                "confidence_pct": 64,
+                "plain_forecast": f"本周「{lead_title[:24]}」说明摩擦还在往外扩，下周各方嘴上喊话和局部动作都会多，但短期一次彻底谈拢的难度依然大。",
+                "if_up_trigger": "一旦主要产油国或海峡护航传出缓和协议，油价和运价溢价会很快回吐。",
+                "if_down_trigger": "如果周末或下周初再传出商船遇袭或报复升级，原油、航运和黄金又会瞬间跳涨避险。",
+                "watch_time": "下周全周突发窗口",
+                "linked_prediction_id": matched_pid,
+            }
+        elif sid == "tech_ai":
+            outlook_row = {
+                "id": "outlook_tech_ai",
+                "sector_id": sid,
+                "topic": "AI 龙头股价与新模型/高估值考验",
+                "direction": "watch",
+                "direction_label": "看业绩和真本事，分化会很狠",
+                "confidence_pct": 68,
+                "plain_forecast": f"从「{lead_title[:24]}」能看出来，现在光讲概念已经不够用了：有真芯片出货或实测好用的公司能撑住，纯讲高估值的随时面临回调。",
+                "if_up_trigger": "如果有大厂明确开源或上调明年算力订单，硬件和核心软件龙头还能带队往上走。",
+                "if_down_trigger": "如果新股继续破发或大模型实测口碑翻车，高位 AI 股要防资金趁利好兑现砸盘。",
+                "watch_time": (matched_pr or {}).get("due_at")[:10] if matched_pr else "下周三至周末",
+                "linked_prediction_id": matched_pid,
+            }
+        else:
+            outlook_row = {
+                "id": "outlook_industry_society",
+                "sector_id": sid,
+                "topic": "大宗产油合作与产业并购落地",
+                "direction": "watch",
+                "direction_label": "看各自算盘和监管点不点头",
+                "confidence_pct": 58,
+                "plain_forecast": f"围绕「{lead_title[:24]}」，产业链里各家都在抢筹码或重新谈价钱，下周重点看原本卡住的并购融资、配额争端能不能给出准话。",
+                "if_up_trigger": "如果有头部企业顺利落地并购方案或重大工程进展传出，对应赛道情绪会明显转暖。",
+                "if_down_trigger": "如果监管卡审或产油/产业链内讧闹大，相关板块得做好横盘震荡的准备。",
+                "watch_time": "下周中后期",
+                "linked_prediction_id": matched_pid,
+            }
+        next_week_outlook.append(outlook_row)
 
     return {
         "generation_mode": "deterministic_weekly_v1",
@@ -639,6 +854,7 @@ def _build_deterministic_synthesis(stage1: Dict[str, Any]) -> Dict[str, Any]:
         "sectors_summary": sectors_summary,
         "cross_sector_threads": cross_threads,
         "next_week_catalysts": next_catalysts,
+        "next_week_outlook": next_week_outlook,
         "item_overrides": {},
     }
 
@@ -664,35 +880,59 @@ def _enrich_with_ai(stage1: Dict[str, Any], base_path: Path, use_ai: bool = True
     ]
     compact_cal = [
         {
-            "date": str(c.get("scheduled_date") or c.get("date") or "")[:10],
+            "date": str(c.get("_resolved_date") or c.get("scheduled_date") or c.get("date") or "")[:16],
             "title": str(c.get("title") or "")[:60],
+            "watch_variable": _clean_text(c.get("watch_variable") or "", 70),
+            "pre_expectation": _clean_text(c.get("pre_expectation") or "", 70),
         }
         for c in stage1["upcoming_calendar"][:5]
     ]
+    open_preds = stage1.get("open_predictions") or []
+    compact_preds = [
+        {
+            "prediction_id": p["prediction_id"],
+            "title": p["title"],
+            "due_at": p["due_at"],
+            "probability_pct": p.get("probability_pct"),
+            "win_rule": p.get("win_rule", ""),
+        }
+        for p in open_preds[:8]
+    ]
 
     prompt = (
-        "你是镜信 MirrorBrief 周刊首席主编。以下是本周经过去重、分板块提纯后的重大新闻事件清单（4 个板块已固定，不得增删 ID 或重复编排）：\n"
-        f"{json.dumps(compact_candidates, ensure_ascii=False)}\n\n"
-        f"下周日程参考：{json.dumps(compact_cal, ensure_ascii=False)}\n\n"
-        "请用极其凝练、客观、克制的中文输出严格 JSON 对象（禁止任何表情符号 emoji）：\n"
+        "你是镜信 MirrorBrief 周刊首席主编。请你像一个思维犀利、长期跟踪全球政经科技的老朋友那样，"
+        "用【大白话、讲人话、直接给判断】把本周这批已经去重、分好 4 个板块的重大新闻讲透，再给出可检验的下周走向预测。\n\n"
+        f"本周候选事件（4 个板块已固定，不得增删 ID）：\n{json.dumps(compact_candidates, ensure_ascii=False)}\n\n"
+        f"下周重点时间表：{json.dumps(compact_cal, ensure_ascii=False)}\n\n"
+        f"站内正在进行的预测题目（可用于关联 linked_prediction_id）：\n{json.dumps(compact_preds, ensure_ascii=False)}\n\n"
+        "【严格写作铁律（违反会被程序直接拦截删改）】:\n"
+        "1. 绝对禁止一切公文套话与券商空话，包括但不限于：持续推进、坚决拥护、全面从严、开放包容、深化交流、坚实支撑、常态化阶段、里程碑式突破、核心变量变化、边际变化、定价逻辑、方向性调整、精细化管理、合理充裕、存量博弈、虹吸效应、平抑波动、持续跟踪进展、关注官方通报、关注后续外溢、引发广泛关注、实际效果待实测验证、展现意愿。\n"
+        "2. one_line_takeaway 禁止直接复读或截断原标题（例如标题写“央行8000亿MLF”，精华不能再写“央行开展8000亿MLF”），必须直接点破“到底干了啥、谁受影响”。\n"
+        "3. why_it_matters 用大白话讲清楚：这件事和普通投资者/行业里的人有什么实际关系、谁得利谁难受、下一步会卡在哪。\n"
+        "4. next_week_watch 必须写具体可验证的数字、时间或指标（如“看下周一两融成交能不能冲上1.8万亿”），严禁写“继续观察/持续关注后续动态”。\n"
+        "5. 下周走向预测（next_week_outlook）必须给 4~5 条硬核、具体、敢亮方向的推演，写明如果出现什么具体信号怎么走（if_up_trigger），踩到什么红线怎么小心（if_down_trigger）。\n"
+        "6. 禁止任何表情符号 emoji，只输出严格 JSON 对象：\n"
         "{\n"
-        '  "week_theme": "一句话点透本周总基调（<=32字）",\n'
-        '  "executive_thesis": ["3条高度浓缩的本周核心主线结论，每条<=55字"],\n'
+        '  "week_theme": "大白话一句话点透这周最大主线（<=32字）",\n'
+        '  "executive_thesis": ["3条大白话总结这周最核心的3件事，每条<=55字"],\n'
         '  "keywords": ["4到6个本周高频关键词"],\n'
         '  "sectors_summary": {\n'
-        '    "macro_finance": "宏观金融板块本周一句总结",\n'
-        '    "geopolitics": "国际地缘政策板块本周一句总结",\n'
-        '    "tech_ai": "科技与AI板块本周一句总结",\n'
-        '    "industry_society": "产业综合板块本周一句总结"\n'
+        '    "macro_finance": "大白话总结本周钱和市场板块",\n'
+        '    "geopolitics": "大白话总结本周国际局势板块",\n'
+        '    "tech_ai": "大白话总结本周科技与AI板块",\n'
+        '    "industry_society": "大白话总结本周产业和社会板块"\n'
         "  },\n"
         '  "items": [\n'
-        '    {"id": "对应id", "one_line_takeaway": "适合大概看的一句话精华(<=45字)", "why_it_matters": "适合细看的深度影响研判(60-110字)", "next_week_watch": "下周跟踪看点(<=45字)"}\n'
+        '    {"id": "对应id", "plain_title": "帮用户把长公文/绕口新闻改写成<=26字的直白短标题", "one_line_takeaway": "大概看一句话点破干了啥(<=45字，不许复读标题)", "why_it_matters": "细看大白话：到底有啥实际影响(55-105字)", "next_week_watch": "具体可验证的下周信号(<=45字)"}\n'
         "  ],\n"
         '  "cross_sector_threads": [\n'
-        '    {"title": "跨板块暗线标题", "from_sector": "macro_finance|geopolitics|tech_ai|industry_society", "to_sector": "macro_finance|geopolitics|tech_ai|industry_society", "logic": "一句话因果链"}\n'
+        '    {"title": "大白话跨板块联动标题", "from_sector": "macro_finance|geopolitics|tech_ai|industry_society", "to_sector": "macro_finance|geopolitics|tech_ai|industry_society", "logic": "一句话讲清这几件事是怎么互相咬合影响的"}\n'
         "  ],\n"
         '  "next_week_catalysts": [\n'
-        '    {"date": "YYYY-MM-DD", "title": "下周重点盯防事件", "sector_id": "macro_finance|geopolitics|tech_ai|industry_society", "why_watch": "核心看点", "action_hint": "建议结合站内某功能验证"}\n'
+        '    {"date": "YYYY-MM-DD", "title": "下周重点时间点或事件", "sector_id": "macro_finance|geopolitics|tech_ai|industry_society", "why_watch": "直白点明当天盯什么数据/表态", "action_hint": "直白行动提示"}\n'
+        "  ],\n"
+        '  "next_week_outlook": [\n'
+        '    {"id": "outlook_1", "sector_id": "macro_finance|geopolitics|tech_ai|industry_society", "topic": "要判断的方向主题（<=20字）", "direction": "up|down|volatile|watch", "direction_label": "直白结论标签如 先涨后分化/来回拉扯/偏顺风", "confidence_pct": 65, "plain_forecast": "大白话推演下周大概率怎么走、为什么（55-100字）", "if_up_trigger": "顺风剧本：如果出现什么具体数字/动作就偏强", "if_down_trigger": "逆风红线：如果踩到什么具体坑就要小心", "watch_time": "关键验证时间窗口", "linked_prediction_id": "从站内预测题目里匹配最相关的一条prediction_id，没有则写null"}\n'
         "  ]\n"
         "}"
     )
@@ -701,34 +941,48 @@ def _enrich_with_ai(stage1: Dict[str, Any], base_path: Path, use_ai: bool = True
         scope="weekly_digest",
         prompt=prompt,
         tier="tier1",
-        temperature=0.2,
-        timeout_ms=28_000,
+        temperature=0.25,
+        timeout_ms=42_000,
         base_dir=base_path,
     )
     if not res.ok or not isinstance(res.data, dict):
         return fallback
 
     data = res.data
+    items_by_id = {it["id"]: it for it in items}
     overrides: Dict[str, Dict[str, str]] = {}
     for row in data.get("items") or []:
-        if isinstance(row, dict) and row.get("id"):
-            overrides[str(row["id"])] = {
-                "one_line_takeaway": _clean_text(row.get("one_line_takeaway") or "", 110),
-                "why_it_matters": _clean_text(row.get("why_it_matters") or "", 240),
-                "next_week_watch": _clean_text(row.get("next_week_watch") or "", 120),
-            }
+        if not isinstance(row, dict) or not row.get("id"):
+            continue
+        rid = str(row["id"])
+        orig_it = items_by_id.get(rid) or {}
+        orig_title = str(orig_it.get("title") or "")
+        pt = _clean_text(row.get("plain_title") or "", 64)
+        ot_raw = _scrub_cliches(row.get("one_line_takeaway") or "", fallback="", max_len=110)
+        if ot_raw and orig_title and _is_title_parrot(ot_raw, orig_title):
+            ot_raw = ""
+        why_raw = _scrub_cliches(row.get("why_it_matters") or "", fallback="", max_len=240)
+        watch_raw = _scrub_cliches(row.get("next_week_watch") or "", fallback="", max_len=120)
+        overrides[rid] = {
+            "plain_title": pt,
+            "one_line_takeaway": ot_raw,
+            "why_it_matters": why_raw,
+            "next_week_watch": watch_raw,
+        }
 
     sectors_summary = dict(fallback["sectors_summary"])
     if isinstance(data.get("sectors_summary"), dict):
         for sid in SECTOR_IDS:
-            val = _clean_text(data["sectors_summary"].get(sid) or "", 110)
+            val = _scrub_cliches(data["sectors_summary"].get(sid) or "", fallback="", max_len=110)
             if val:
                 sectors_summary[sid] = val
 
     thesis = [
-        _clean_text(x, 120)
+        cleaned
         for x in (data.get("executive_thesis") or [])
-        if isinstance(x, str) and len(x.strip()) >= 6
+        if isinstance(x, str)
+        for cleaned in [_scrub_cliches(x, fallback="", max_len=120)]
+        if len(cleaned) >= 8
     ][:4]
 
     keywords = [
@@ -742,12 +996,15 @@ def _enrich_with_ai(stage1: Dict[str, Any], base_path: Path, use_ai: bool = True
         if isinstance(th, dict) and th.get("title") and th.get("logic"):
             fs = str(th.get("from_sector") or "geopolitics")
             ts = str(th.get("to_sector") or "macro_finance")
+            logic_clean = _scrub_cliches(th["logic"], fallback="", max_len=140)
+            if not logic_clean:
+                continue
             threads.append(
                 {
                     "title": _clean_text(th["title"], 60),
                     "from_sector": fs if fs in SECTOR_IDS else "geopolitics",
                     "to_sector": ts if ts in SECTOR_IDS else "macro_finance",
-                    "logic": _clean_text(th["logic"], 140),
+                    "logic": logic_clean,
                 }
             )
 
@@ -755,25 +1012,66 @@ def _enrich_with_ai(stage1: Dict[str, Any], base_path: Path, use_ai: bool = True
     for cat in (data.get("next_week_catalysts") or [])[:4]:
         if isinstance(cat, dict) and cat.get("title"):
             sid = str(cat.get("sector_id") or "macro_finance")
+            why_w = _scrub_cliches(cat.get("why_watch") or "", fallback="到点盯紧公布数值或官方原话跟预期差多少", max_len=110)
             catalysts.append(
                 {
                     "date": _clean_text(cat.get("date") or "下周", 24),
                     "title": _clean_text(cat["title"], 70),
                     "sector_id": sid if sid in SECTOR_IDS else "macro_finance",
-                    "why_watch": _clean_text(cat.get("why_watch") or "", 110),
-                    "action_hint": _clean_text(cat.get("action_hint") or "前瞻验证与事件追踪同步盯防", 60),
+                    "why_watch": why_w,
+                    "action_hint": _clean_text(cat.get("action_hint") or "去前瞻验证押一个判断", 60),
                 }
             )
 
+    valid_pred_ids = {p["prediction_id"] for p in open_preds}
+    outlooks: List[Dict[str, Any]] = []
+    for idx_o, out_item in enumerate((data.get("next_week_outlook") or [])[:5]):
+        if not isinstance(out_item, dict) or not out_item.get("topic") or not out_item.get("plain_forecast"):
+            continue
+        sid = str(out_item.get("sector_id") or "macro_finance")
+        if sid not in SECTOR_IDS:
+            sid = "macro_finance"
+        direction = str(out_item.get("direction") or "watch").lower()
+        if direction not in _VALID_OUTLOOK_DIRECTIONS:
+            direction = "watch"
+        try:
+            conf = max(35, min(88, int(out_item.get("confidence_pct") or 60)))
+        except (TypeError, ValueError):
+            conf = 60
+        forecast_clean = _scrub_cliches(out_item.get("plain_forecast"), fallback="", max_len=180)
+        up_clean = _scrub_cliches(out_item.get("if_up_trigger"), fallback="放量突破或数据明显超预期时再顺势跟进", max_len=120)
+        down_clean = _scrub_cliches(out_item.get("if_down_trigger"), fallback="若低于底线预期或再度冲击则先降仓防守", max_len=120)
+        if not forecast_clean:
+            continue
+        raw_pid = out_item.get("linked_prediction_id")
+        pid = str(raw_pid).strip() if isinstance(raw_pid, str) and raw_pid.strip() in valid_pred_ids else _match_prediction_id(str(out_item.get("topic") or ""), sid, open_preds)
+        outlooks.append(
+            {
+                "id": _clean_text(out_item.get("id") or f"outlook_{idx_o + 1}", 36),
+                "sector_id": sid,
+                "topic": _clean_text(out_item["topic"], 44),
+                "direction": direction,
+                "direction_label": _clean_text(out_item.get("direction_label") or "盯关键信号再动手", 22),
+                "confidence_pct": conf,
+                "plain_forecast": forecast_clean,
+                "if_up_trigger": up_clean,
+                "if_down_trigger": down_clean,
+                "watch_time": _clean_text(out_item.get("watch_time") or "下周重要窗口", 32),
+                "linked_prediction_id": pid,
+            }
+        )
+
+    theme_clean = _scrub_cliches(data.get("week_theme") or "", fallback="", max_len=70)
     return {
         "generation_mode": "ai_weekly_assisted_v1",
         "model_used": res.model_used,
-        "week_theme": _clean_text(data.get("week_theme") or fallback["week_theme"], 70) or fallback["week_theme"],
+        "week_theme": theme_clean or fallback["week_theme"],
         "executive_thesis": thesis or fallback["executive_thesis"],
         "keywords": keywords or fallback["keywords"],
         "sectors_summary": sectors_summary,
         "cross_sector_threads": threads or fallback["cross_sector_threads"],
         "next_week_catalysts": catalysts or fallback["next_week_catalysts"],
+        "next_week_outlook": outlooks or fallback["next_week_outlook"],
         "item_overrides": overrides,
     }
 
@@ -801,6 +1099,7 @@ def build_and_write_weekly_digest(
             ov = overrides.get(raw_it["id"]) or {}
             clean_it = {
                 **raw_it,
+                "plain_title": ov.get("plain_title") or raw_it.get("plain_title") or raw_it["title"],
                 "one_line_takeaway": ov.get("one_line_takeaway") or raw_it["one_line_takeaway"],
                 "why_it_matters": ov.get("why_it_matters") or raw_it["why_it_matters"],
                 "next_week_watch": ov.get("next_week_watch") or raw_it["next_week_watch"],
@@ -847,6 +1146,7 @@ def build_and_write_weekly_digest(
         "sectors": sectors_out,
         "cross_sector_threads": synth["cross_sector_threads"],
         "next_week_catalysts": synth["next_week_catalysts"],
+        "next_week_outlook": synth.get("next_week_outlook") or [],
     }
 
     data_dir = base_path / "data"

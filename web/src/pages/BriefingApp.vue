@@ -1432,6 +1432,7 @@ function openWeeklyPoster(stats: { streakWeeks: number; readCount: number }) {
     tech_ai: '#8B5CF6',
     industry_society: '#10B981',
   }
+  const leadOutlook = doc.next_week_outlook?.[0]
   shareCardPayload.value = {
     kind: 'weekly_digest',
     weekId: doc.week_id,
@@ -1441,10 +1442,11 @@ function openWeeklyPoster(stats: { streakWeeks: number; readCount: number }) {
     p0Count: doc.stats.p0_count,
     streakWeeks: stats.streakWeeks,
     readCount: stats.readCount,
+    nextWeekCallout: leadOutlook ? `${leadOutlook.topic}（${leadOutlook.direction_label}）` : undefined,
     sectorHighlights: doc.sectors.map((s) => ({
       sectorLabel: `${appLang.value === 'en' ? s.title_en : s.title} (${s.item_count})`,
       accentHex: accentMap[s.sector_id] || '#60A5FA',
-      headline: s.items[0]?.title || s.sector_takeaway || s.subtitle,
+      headline: s.items[0]?.plain_title || s.items[0]?.title || s.sector_takeaway || s.subtitle,
     })),
     shareUrl: `${origin}/?tab=weekly&week=${encodeURIComponent(doc.week_id)}`,
   }
@@ -1498,6 +1500,18 @@ function markWeeklyDigestVisited(weekId: string) {
   } catch {
     // ignore storage errors
   }
+}
+
+async function handleJumpToPredictionFromWeekly(predictionId?: string | null) {
+  await switchTab('predictions')
+  if (!predictionId) return
+  await nextTick()
+  setTimeout(() => {
+    if (typeof document !== 'undefined') {
+      const el = document.getElementById(`pred-card-${predictionId}`)
+      el?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    }
+  }, 220)
 }
 
 async function loadCrowdStats() {
@@ -1753,7 +1767,11 @@ async function ensureDataForTab(tab: WorkbenchTab, forceFresh = false) {
   } else if (tab === 'wire') {
     await loadLiveWire(forceFresh)
   } else if (tab === 'weekly') {
-    await loadWeeklyDigest(selectedWeekId.value, forceFresh)
+    await Promise.all([
+      loadWeeklyDigest(selectedWeekId.value, forceFresh),
+      loadPredictions(forceFresh),
+      loadCalendar(forceFresh),
+    ])
   } else if (tab === 'ai_progress' || tab === 'tools') {
     await Promise.all([loadAiProgress(forceFresh), loadTools(forceFresh), ensureAllCategoriesLoaded(forceFresh)])
   } else if (tab === 'finance') {
@@ -5476,14 +5494,19 @@ onBeforeUnmount(() => {
           :watchlist="watchlist"
           :portfolio="userPortfolio"
           :bookmarked-ids="bookmarkedIdSet"
+          :predictions="mergedPredictions"
+          :crowd-stats="crowdStatsMap"
+          :calendar-events="mergedServerCalendarEvents"
           :now-ms="nowMs"
           @select-week="handleSelectWeeklyIssue"
-          @refresh="loadWeeklyDigest(selectedWeekId, true)"
+          @refresh="loadWeeklyDigest(selectedWeekId, true); void loadPredictions(true); void loadCalendar(true)"
           @toggle-bookmark-item="handleToggleWeeklyBookmark"
           @open-qa-item="openQaForWeeklyItem"
           @open-finance-keyword="(kw) => { searchQuery = kw || ''; void switchTab('finance') }"
           @open-weekly-poster="openWeeklyPoster"
           @switch-tab="switchTab"
+          @jump-prediction="handleJumpToPredictionFromWeekly"
+          @open-qa-prediction="openQaForPrediction"
           @mark-week-visited="markWeeklyDigestVisited"
         />
       </template>

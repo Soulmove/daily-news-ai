@@ -10,7 +10,11 @@ import unittest
 
 from pipeline.time_utils import SHANGHAI_TZ
 from pipeline.weekly_digest import (
+    _CLICHE_PATTERNS,
     SECTOR_IDS,
+    _is_title_parrot,
+    _make_plain_title,
+    _scrub_cliches,
     build_and_write_weekly_digest,
     compute_natural_week_bounds,
     distill_weekly_candidates,
@@ -28,6 +32,7 @@ def _sample_event(
     source_name: str = "路透社",
     url: str = "https://www.reuters.com/world/sample",
     summary: str = "权威多源交叉核验核心进展与关键数据披露。",
+    ai_analysis: str = "这件事直接关系接下来几天的资金风向和产业链节奏。",
 ) -> dict:
     return {
         "event_id": eid,
@@ -37,7 +42,7 @@ def _sample_event(
         "severity_tier": severity,
         "evidence_status": evidence_status,
         "fact_summary": summary,
-        "ai_analysis": "该事件对产业链与市场预期存在实质性影响。",
+        "ai_analysis": ai_analysis,
         "speculation_or_outlook": "下周需跟踪官方最新统计口径。",
         "entities": ["重点实体"],
         "sources": [{"source_name": source_name, "url": url, "source_tier": "direct_media"}],
@@ -159,3 +164,99 @@ class WeeklyDigestTests(unittest.TestCase):
             self.assertTrue((root / "data" / "weekly_digests" / "2026-W48.json").is_file())
             idx = json.loads((root / "data" / "weekly_digests_index.json").read_text(encoding="utf-8"))
             self.assertEqual(idx["latest_week_id"], "2026-W48")
+
+    def test_plain_language_cliche_scrub_and_next_week_outlook_with_live_predictions(self) -> None:
+        self.assertEqual(
+            _scrub_cliches("持续推进全面从严，深化国际航天领域的科技交流。央行放出8000亿资金托底市场。", fallback="备选"),
+            "央行放出8000亿资金托底市场。",
+        )
+        self.assertEqual(_scrub_cliches("展现开放包容姿态，密切关注后续动态。", fallback="等真金白银落地再看"), "等真金白银落地再看")
+        self.assertTrue(_is_title_parrot("黄仁勋回归重任英伟达CEO", "黄仁勋回归，重任CEO！英伟达盘前暴涨"))
+        self.assertFalse(_is_title_parrot("换帅风波两天后收场，开盘直接大涨26%", "黄仁勋回归，重任CEO！英伟达盘前暴涨"))
+        self.assertIn("8000亿元", _make_plain_title("央行：为保持银行体系流动性充裕，2026年11月25日开展8000亿元MLF操作"))
+
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            day2 = root / "archives" / "smart" / "2026-11-26" / "13-00"
+            day2.mkdir(parents=True)
+            (root / "data").mkdir(parents=True, exist_ok=True)
+
+            ev_fomc = _sample_event(
+                "evt_fed",
+                "美联储12月加息概率升至97%",
+                "finance",
+                severity="S",
+                summary="交易员几乎认定下月还会加一次息，美元走高压住大宗商品。",
+                ai_analysis="持续推进货币紧缩引发市场广泛关注。美元走高会让新兴市场资金承压。",
+            )
+            ev_ai = _sample_event(
+                "evt_ai",
+                "Qwen 4 即将开源引爆算力预期",
+                "tech",
+                severity="S",
+                summary="开源旗舰将压低推理成本，中小团队能用更便宜显卡跑大模型。",
+            )
+            (day2 / "analysis_finance.json").write_text(json.dumps({"events": [ev_fomc]}, ensure_ascii=False), encoding="utf-8")
+            (day2 / "analysis_tech.json").write_text(json.dumps({"events": [ev_ai]}, ensure_ascii=False), encoding="utf-8")
+
+            (root / "data" / "calendar.json").write_text(
+                json.dumps(
+                    {
+                        "events": [
+                            {
+                                "title": "美国核心PCE物价数据公布",
+                                "category": "finance",
+                                "scheduled_at": "2026-11-28T21:30:00+08:00",
+                                "is_past": False,
+                                "watch_variable": "看核心同比有没有超过2.8%",
+                            },
+                            {
+                                "title": "已结束历史日程",
+                                "category": "global",
+                                "scheduled_at": "2026-11-20T10:00:00+08:00",
+                                "is_past": True,
+                            },
+                        ]
+                    },
+                    ensure_ascii=False,
+                ),
+                encoding="utf-8",
+            )
+            (root / "data" / "predictions_public.json").write_text(
+                json.dumps(
+                    {
+                        "predictions": [
+                            {
+                                "prediction_id": "pred_fed_dec",
+                                "title": "美联储12月议息会议是否继续加息25个基点？",
+                                "status": "open",
+                                "category": "macro",
+                                "due_at": "2026-12-10T04:30:00+08:00",
+                                "probability_pct": 82,
+                                "win_rule": "官方宣布加息25bp即判YES",
+                            },
+                            {
+                                "prediction_id": "pred_qwen_ga",
+                                "title": "阿里 Qwen 4 旗舰模型能否在 12 月 16 日前开源？",
+                                "status": "open",
+                                "category": "tech_ai",
+                                "due_at": "2026-12-16T20:00:00+08:00",
+                                "probability_pct": 74,
+                            },
+                        ]
+                    },
+                    ensure_ascii=False,
+                ),
+                encoding="utf-8",
+            )
+
+            thu = datetime(2026, 11, 26, 18, 0, tzinfo=SHANGHAI_TZ)
+            doc = build_and_write_weekly_digest(root, ref_dt=thu, use_ai=False)
+            self.assertGreaterEqual(len(doc["next_week_outlook"]), 2)
+            linked_ids = {o.get("linked_prediction_id") for o in doc["next_week_outlook"]}
+            self.assertTrue("pred_fed_dec" in linked_ids or "pred_qwen_ga" in linked_ids)
+            self.assertTrue(any("PCE" in c["title"] for c in doc["next_week_catalysts"]))
+            self.assertFalse(any("已结束" in c["title"] for c in doc["next_week_catalysts"]))
+
+            serialized = json.dumps(doc, ensure_ascii=False)
+            self.assertIsNone(_CLICHE_PATTERNS.search(serialized))
