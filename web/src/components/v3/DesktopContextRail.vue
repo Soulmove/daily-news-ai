@@ -401,14 +401,14 @@ onUnmounted(() => {
             </div>
             <div class="flex items-baseline justify-between gap-1 font-mono tabular-nums">
               <span class="text-[12px] font-semibold text-zinc-900 dark:text-white">
-                <OdometerNumber :value="idx.price" />
+                <OdometerNumber :value="idx.price" :decimals="2" />
               </span>
               <span
                 v-if="idx.pct_change != null"
                 class="text-[11px] font-semibold"
                 :class="idx.pct_change >= 0 ? marketUpTextClass() : marketDownTextClass()"
               >
-                {{ idx.pct_change >= 0 ? `+${idx.pct_change}%` : `${idx.pct_change}%` }}
+                {{ idx.pct_change >= 0 ? `+${idx.pct_change.toFixed(2)}%` : `${idx.pct_change.toFixed(2)}%` }}
               </span>
             </div>
           </div>

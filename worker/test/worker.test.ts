@@ -1424,6 +1424,16 @@ describe('MirrorBrief Worker Crypto & API Suite', () => {
         ],
       }),
     )
+    await r2.put(
+      'data/weekly_digests/2026-W48.json',
+      JSON.stringify({
+        week_id: '2026-W48',
+        date_range_label: '11.23 - 11.29',
+        week_theme: '大资金稳字当头，AI 开始拼真成本落地',
+        executive_thesis: ['央行放水稳住年末资金。', 'AI 龙头估值进入实测检验期。'],
+        stats: { selected_items: 24, p0_count: 6 },
+      }),
+    )
 
     const adminLogin = await app.request(
       'https://mirrorinfo.xyz/api/auth/login',
@@ -1486,6 +1496,25 @@ describe('MirrorBrief Worker Crypto & API Suite', () => {
     )
     expect(evBrowser.status).toBe(302)
     expect(evBrowser.headers.get('location')).toBe('https://mirrorinfo.xyz/?event=ev_share_og_1')
+
+    // Weekly digest OG HTML & deep-link redirect
+    const wkBot = await app.request(
+      'https://mirrorinfo.xyz/s/weekly/2026-W48',
+      { headers: { 'User-Agent': 'MicroMessenger/8.0' } },
+      env,
+    )
+    expect(wkBot.status).toBe(200)
+    const wkHtml = await wkBot.text()
+    expect(wkHtml).toContain('2026-W48 一周大事：大资金稳字当头')
+    expect(wkHtml).toContain('精选 24 件本周真大事')
+
+    const wkBrowser = await app.request(
+      'https://mirrorinfo.xyz/s/weekly/2026-W48',
+      { headers: { 'User-Agent': 'Mozilla/5.0' } },
+      env,
+    )
+    expect(wkBrowser.status).toBe(302)
+    expect(wkBrowser.headers.get('location')).toBe('https://mirrorinfo.xyz/?tab=weekly&week=2026-W48')
 
     // Under private_gate, OG HTML must NOT expose internal titles
     await app.request(

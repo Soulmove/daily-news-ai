@@ -89,6 +89,21 @@
     .ios-card:hover {
       box-shadow: 0 2px 6px rgba(15, 23, 42, 0.04), 0 8px 20px rgba(15, 23, 42, 0.04);
     }
+    .jx-card-interactive:hover {
+      transform: translateY(-1.5px);
+      border-color: rgba(0, 122, 255, 0.24);
+      box-shadow: 0 4px 10px rgba(15, 23, 42, 0.05), 0 12px 24px rgba(15, 23, 42, 0.06);
+    }
+    .dark .jx-card-interactive:hover {
+      border-color: rgba(10, 132, 255, 0.34);
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.42);
+    }
+  }
+  .jx-card-interactive {
+    transition: transform 170ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 170ms ease, border-color 170ms ease, background-color 160ms ease;
+  }
+  .jx-card-interactive:active {
+    transform: scale(0.992);
   }
   .dark .ios-card {
     background-color: #131823;
@@ -242,6 +257,35 @@
 
   .jx-collapse-reveal {
     animation: jxCollapseIn 220ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .jx-progress-shimmer {
+    position: relative;
+    overflow: hidden;
+  }
+  .jx-progress-shimmer::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.38) 50%, transparent 100%);
+    transform: translateX(-100%);
+    animation: jxShimmerSweep 2.6s ease-in-out infinite;
+    pointer-events: none;
+  }
+
+  .jx-tab-enter-active {
+    transition: opacity 180ms cubic-bezier(0.22, 1, 0.36, 1), transform 180ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .jx-tab-leave-active {
+    transition: opacity 110ms ease-in, transform 110ms ease-in;
+  }
+  .jx-tab-enter-from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  .jx-tab-leave-to {
+    opacity: 0;
+    transform: translateY(-4px);
   }
 
   .mobile-sticky-subbar {
@@ -474,6 +518,15 @@
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@keyframes jxShimmerSweep {
+  0% {
+    transform: translateX(-100%);
+  }
+  65%, 100% {
+    transform: translateX(120%);
   }
 }
 

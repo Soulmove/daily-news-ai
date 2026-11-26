@@ -2,7 +2,6 @@
 import { computed, onUnmounted, ref, watch } from 'vue'
 import {
   Bookmark,
-  Calendar,
   CalendarRange,
   CheckCheck,
   ChevronDown,
@@ -12,7 +11,6 @@ import {
   GitBranch,
   Plus,
   RotateCcw,
-  Scale,
   SlidersHorizontal,
   Sparkles,
   Trash2,
@@ -769,6 +767,14 @@ const interwovenFeedRows = computed<FeedRenderRow[]>(() => {
   return out
 })
 
+const dismissedBreakingIds = ref<Set<string>>(new Set())
+
+function dismissBreakingHighlight(id: string) {
+  const next = new Set(dismissedBreakingIds.value)
+  next.add(id)
+  dismissedBreakingIds.value = next
+}
+
 const activeBreakingHighlights = computed<BreakingHighlightItem[]>(() => {
   if (
     onlyReadLater.value ||
@@ -780,7 +786,10 @@ const activeBreakingHighlights = computed<BreakingHighlightItem[]>(() => {
   }
   const topEvents = interwovenFeedRows.value.map((r) => r.item.event)
   const filteredBh = (props.breakingHighlights || []).filter(
-    (bh) => !props.mutedSet.has(bh.id) && !(bh.id && props.mutedSet.has(bh.id.replace(/^brk_/, ''))),
+    (bh) =>
+      !dismissedBreakingIds.value.has(bh.id) &&
+      !props.mutedSet.has(bh.id) &&
+      !(bh.id && props.mutedSet.has(bh.id.replace(/^brk_/, ''))),
   )
   // P0 noise reduction: cap home breaking banners to at most 1 genuine S-tier item so Lead Story stays above the fold on mobile & desktop.
   return filterActiveBreakingHighlights(filteredBh, topEvents, props.nowMs)
@@ -826,7 +835,7 @@ const cocoonDiversityPanel = computed(() => {
       class="mobile-sticky-subbar flex items-center justify-between gap-x-1.5 px-0.5"
       data-testid="today-sticky-subbar"
     >
-      <div class="flex items-center gap-0.5 sm:gap-1 min-w-0 overflow-x-auto no-scrollbar">
+      <div class="flex items-center gap-0.5 sm:gap-1 min-w-0 flex-1 overflow-x-auto no-scrollbar scroll-fade-x pr-5">
         <button
           v-for="sec in ([
             { id: 'feed', label: t('精选', 'Top'), show: true },
@@ -859,7 +868,7 @@ const cocoonDiversityPanel = computed(() => {
           type="button"
           @click="if (todaySection !== 'feed') { todaySection = 'feed'; onlyHeavy = true } else { onlyHeavy = !onlyHeavy }"
           :aria-pressed="todaySection === 'feed' && onlyHeavy"
-          class="inline-flex items-center gap-1.5 min-h-[30px] px-2 sm:px-2.5 rounded-full text-[11.5px] font-bold whitespace-nowrap shrink-0 transition-all ml-0.5"
+          class="inline-flex items-center gap-1 min-h-[34px] sm:min-h-[30px] px-2.5 rounded-full text-[11.5px] font-bold whitespace-nowrap shrink-0 transition-all ml-0.5"
           :class="
             todaySection === 'feed' && onlyHeavy
               ? 'bg-[#DC2626] text-white shadow-xs jx-heavy-capsule'
@@ -871,11 +880,12 @@ const cocoonDiversityPanel = computed(() => {
             class="jx-sonar-dot"
             :class="todaySection === 'feed' && onlyHeavy ? 'jx-sonar-white' : 'jx-sonar-red'"
           />
-          <span>{{ t(`重磅 (${heavyTodayCount})`, `Heavy (${heavyTodayCount})`) }}</span>
+          <span class="sm:hidden">{{ t(`重磅 ${heavyTodayCount}`, `Heavy ${heavyTodayCount}`) }}</span>
+          <span class="hidden sm:inline">{{ t(`重磅 (${heavyTodayCount})`, `Heavy (${heavyTodayCount})`) }}</span>
         </button>
       </div>
 
-      <div class="flex items-center gap-1 shrink-0">
+      <div class="flex items-center gap-1 shrink-0 pl-1.5 border-l border-black/[0.06] dark:border-white/[0.08]">
         <!-- Mark all visible unread as read -->
         <button
           v-if="todaySection === 'feed' && visibleUnreadEvents.length > 0"
@@ -963,7 +973,7 @@ const cocoonDiversityPanel = computed(() => {
             v-if="wirePulseItems.length > 1"
             type="button"
             @click="wirePulseIdx = (wirePulseIdx + 1) % wirePulseItems.length"
-            class="px-1.5 min-h-[26px] rounded-lg bg-[#F2F2F7] dark:bg-[#2C2C2E] text-[10px] font-mono text-zinc-500 dark:text-zinc-300 tabular-nums whitespace-nowrap"
+            class="px-2 min-h-[32px] rounded-lg bg-[#F2F2F7] dark:bg-[#2C2C2E] text-[10.5px] font-mono text-zinc-500 dark:text-zinc-300 tabular-nums whitespace-nowrap"
             :title="t('切换下一条快讯', 'Next flash wire')"
           >
             {{ (wirePulseIdx % wirePulseItems.length) + 1 }}/{{ wirePulseItems.length }}
@@ -971,7 +981,7 @@ const cocoonDiversityPanel = computed(() => {
           <button
             type="button"
             @click="emit('switch-tab', 'wire')"
-            class="inline-flex items-center gap-0.5 px-2 min-h-[26px] rounded-lg text-[11px] font-semibold text-[#007AFF] dark:text-[#0A84FF] hover:bg-[#007AFF]/10 whitespace-nowrap"
+            class="inline-flex items-center gap-0.5 px-2 min-h-[32px] rounded-lg text-[11px] font-semibold text-[#007AFF] dark:text-[#0A84FF] hover:bg-[#007AFF]/10 whitespace-nowrap"
           >
             <span>{{ t('快讯流', 'Wire') }}</span>
             <ChevronRight class="w-3 h-3" />
@@ -981,7 +991,7 @@ const cocoonDiversityPanel = computed(() => {
 
       <div
         v-if="wirePulseExpanded && activeWirePulse"
-        class="rounded-xl bg-[#F5F5F7] dark:bg-[#2C2C2E] px-3 py-2 text-xs text-zinc-600 dark:text-zinc-300 space-y-1"
+        class="jx-collapse-reveal rounded-xl bg-[#F5F5F7] dark:bg-[#2C2C2E] px-3 py-2 text-xs text-zinc-600 dark:text-zinc-300 space-y-1"
       >
         <div class="flex items-center justify-between gap-2 text-[11px] text-zinc-400">
           <span>{{ activeWirePulse.source_name }}</span>
@@ -992,46 +1002,28 @@ const cocoonDiversityPanel = computed(() => {
         </p>
       </div>
 
-      <!-- Mobile / Android Quick-Entry Chip Strip for Core Intelligence Modules -->
+      <!-- Mobile / Android Quick-Entry Chip Strip (strictly 2 unique modules absent from bottom nav, zero clipping) -->
       <div
-        class="mobile-quick-entry-strip items-center gap-1.5 overflow-x-auto no-scrollbar scroll-fade-x py-0.5"
+        class="mobile-quick-entry-strip grid grid-cols-2 gap-1.5"
         data-testid="mobile-quick-entry-strip"
       >
         <button
           type="button"
-          @click="(e) => { centerPillIntoView(e); emit('switch-tab', 'weekly') }"
-          class="mobile-pressable ios-tap inline-flex items-center gap-1.5 min-h-[34px] px-2.5 rounded-xl bg-white dark:bg-[#131823] border border-[#007AFF]/25 text-[11.5px] font-semibold text-[#007AFF] dark:text-[#0A84FF] whitespace-nowrap shrink-0 shadow-[0_1px_2px_rgba(0,0,0,0.03)]"
+          @click="emit('switch-tab', 'weekly')"
+          class="mobile-pressable ios-tap inline-flex items-center justify-center gap-1.5 min-h-[34px] px-2.5 rounded-xl bg-white dark:bg-[#131823] border border-[#007AFF]/25 text-[11.5px] font-semibold text-[#007AFF] dark:text-[#0A84FF] whitespace-nowrap shadow-[0_1px_2px_rgba(0,0,0,0.03)]"
           data-testid="quick-entry-weekly"
         >
           <CalendarRange class="w-3.5 h-3.5 shrink-0" :stroke-width="1.75" />
-          <span>{{ t('每周盘点 · 一周大事', 'Weekly Digest') }}</span>
+          <span class="truncate">{{ t('每周盘点 · 一周大事', 'Weekly Digest') }}</span>
         </button>
         <button
           type="button"
-          @click="(e) => { centerPillIntoView(e); emit('switch-tab', 'calendar') }"
-          class="mobile-pressable ios-tap inline-flex items-center gap-1.5 min-h-[34px] px-2.5 rounded-xl bg-white dark:bg-[#131823] border border-black/[0.06] dark:border-white/[0.08] text-[11.5px] font-semibold text-zinc-800 dark:text-zinc-100 whitespace-nowrap shrink-0 shadow-[0_1px_2px_rgba(0,0,0,0.03)]"
-          data-testid="quick-entry-calendar"
-        >
-          <Calendar class="w-3.5 h-3.5 text-[#007AFF] shrink-0" :stroke-width="1.75" />
-          <span>{{ t('催化日程 · 今日/本周重点', 'Calendar · Key Dates') }}</span>
-        </button>
-        <button
-          type="button"
-          @click="(e) => { centerPillIntoView(e); emit('switch-tab', 'tracking') }"
-          class="mobile-pressable ios-tap inline-flex items-center gap-1.5 min-h-[34px] px-2.5 rounded-xl bg-white dark:bg-[#131823] border border-black/[0.06] dark:border-white/[0.08] text-[11.5px] font-semibold text-zinc-800 dark:text-zinc-100 whitespace-nowrap shrink-0 shadow-[0_1px_2px_rgba(0,0,0,0.03)]"
+          @click="emit('switch-tab', 'tracking')"
+          class="mobile-pressable ios-tap inline-flex items-center justify-center gap-1.5 min-h-[34px] px-2.5 rounded-xl bg-white dark:bg-[#131823] border border-black/[0.06] dark:border-white/[0.08] text-[11.5px] font-semibold text-zinc-800 dark:text-zinc-100 whitespace-nowrap shadow-[0_1px_2px_rgba(0,0,0,0.03)]"
           data-testid="quick-entry-tracking"
         >
           <GitBranch class="w-3.5 h-3.5 text-violet-600 dark:text-violet-400 shrink-0" :stroke-width="1.75" />
-          <span>{{ t('事件追踪 · 脉络档案', 'Tracking · Storylines') }}</span>
-        </button>
-        <button
-          type="button"
-          @click="(e) => { centerPillIntoView(e); emit('switch-tab', 'predictions') }"
-          class="mobile-pressable ios-tap inline-flex items-center gap-1.5 min-h-[34px] px-2.5 rounded-xl bg-white dark:bg-[#131823] border border-emerald-500/25 text-[11.5px] font-semibold text-emerald-700 dark:text-emerald-300 whitespace-nowrap shrink-0 shadow-[0_1px_2px_rgba(0,0,0,0.03)]"
-          data-testid="quick-entry-predictions"
-        >
-          <Scale class="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" :stroke-width="1.75" />
-          <span>{{ t('每日 3 题极速预测', '3 Daily Predictions') }}</span>
+          <span class="truncate">{{ t('事件追踪 · 脉络', 'Tracking · Storylines') }}</span>
         </button>
       </div>
     </div>
@@ -1257,7 +1249,7 @@ const cocoonDiversityPanel = computed(() => {
 
     <!-- Primary Top Feed: Fast-Track S-Tier Breaking + #1 Lead Story + iOS Inset Grouped List (#2+ incl. interwoven Cross-Domain Blindspot Cards) -->
     <div v-else class="space-y-2.5">
-      <!-- Fast-Track S-Tier Breaking Promotion (capped at max 1 compact banner so Lead Story renders above the fold) -->
+      <!-- Fast-Track S-Tier Breaking Promotion (compact dismissible strip so Lead Story renders above the fold) -->
       <div
         v-if="activeBreakingHighlights.length > 0"
         class="space-y-1.5"
@@ -1266,25 +1258,35 @@ const cocoonDiversityPanel = computed(() => {
         <div
           v-for="bh in activeBreakingHighlights"
           :key="bh.id"
-          class="ios-card border border-rose-500/25 bg-gradient-to-br from-rose-50/90 via-white to-white dark:from-rose-950/35 dark:via-[#1C1C1E] dark:to-[#1C1C1E] px-3 py-2.5 space-y-1.5"
+          class="ios-card border border-rose-500/25 bg-gradient-to-br from-rose-50/90 via-white to-white dark:from-rose-950/35 dark:via-[#1C1C1E] dark:to-[#1C1C1E] px-3 py-2 space-y-1"
         >
           <div class="flex items-center justify-between gap-2 text-[11px]">
-            <div class="flex flex-wrap items-center gap-x-1.5 gap-y-0.5 min-w-0">
-              <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-[#DC2626] text-white font-bold tracking-tight shrink-0 whitespace-nowrap">
+            <div class="flex items-center gap-1.5 min-w-0 overflow-hidden">
+              <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-[#DC2626] text-white font-bold tracking-tight shrink-0 whitespace-nowrap text-[10px]">
                 <span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
-                <span>{{ t(bh.breaking_label || '刚刚突发 · 重磅', 'BREAKING · HEAVY') }}</span>
+                <span>{{ t(bh.breaking_label || '刚刚突发 · 重磅', 'BREAKING') }}</span>
               </span>
               <span class="font-medium text-rose-700 dark:text-rose-300 shrink-0 whitespace-nowrap">{{ bh.source_name }}</span>
               <span class="text-zinc-300 dark:text-zinc-600 shrink-0">·</span>
-              <SmartTime :iso="bh.published_at" :now-ms="nowMs" class="text-zinc-500 dark:text-zinc-400 tabular-nums shrink-0 whitespace-nowrap" />
+              <SmartTime :iso="bh.published_at" :now-ms="nowMs" class="text-zinc-500 dark:text-zinc-400 tabular-nums shrink-0 whitespace-nowrap truncate" />
             </div>
-            <button
-              type="button"
-              @click="emit('switch-tab', 'wire')"
-              class="text-[11px] font-semibold text-rose-600 dark:text-rose-400 hover:underline shrink-0 whitespace-nowrap"
-            >
-              {{ t('7×24 快讯 →', 'Wire →') }}
-            </button>
+            <div class="flex items-center gap-1 shrink-0">
+              <button
+                type="button"
+                @click="emit('switch-tab', 'wire')"
+                class="text-[11px] font-semibold text-rose-600 dark:text-rose-400 hover:underline whitespace-nowrap px-1"
+              >
+                {{ t('快讯 →', 'Wire →') }}
+              </button>
+              <button
+                type="button"
+                @click.stop="dismissBreakingHighlight(bh.id)"
+                class="w-6 h-6 inline-flex items-center justify-center rounded-full text-zinc-400 hover:bg-black/[0.06] dark:hover:bg-white/[0.1] hover:text-zinc-700"
+                :aria-label="t('收起突发快讯条', 'Dismiss alert')"
+              >
+                <X class="w-3.5 h-3.5" />
+              </button>
+            </div>
           </div>
           <a
             v-if="normalizeExternalUrl(bh.url)"
@@ -1292,11 +1294,11 @@ const cocoonDiversityPanel = computed(() => {
             target="_blank"
             rel="noopener noreferrer"
             @click.stop
-            class="block text-[14.5px] sm:text-[15.5px] font-bold text-zinc-950 dark:text-white leading-[1.35] line-clamp-2 hover:text-[#007AFF] dark:hover:text-[#0A84FF] transition-colors"
+            class="block text-[14px] sm:text-[15px] font-bold text-zinc-950 dark:text-white leading-[1.32] line-clamp-1 sm:line-clamp-2 hover:text-[#007AFF] dark:hover:text-[#0A84FF] transition-colors"
           >
             {{ bh.title }}
           </a>
-          <h3 v-else class="text-[14.5px] sm:text-[15.5px] font-bold text-zinc-950 dark:text-white leading-[1.35] line-clamp-2">
+          <h3 v-else class="text-[14px] sm:text-[15px] font-bold text-zinc-950 dark:text-white leading-[1.32] line-clamp-1 sm:line-clamp-2">
             {{ bh.title }}
           </h3>
         </div>

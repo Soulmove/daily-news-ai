@@ -29,6 +29,7 @@ import {
   Search,
   Share2,
   ShieldAlert,
+  SlidersHorizontal,
   Sparkles,
   Target,
   TrendingUp,
@@ -37,6 +38,13 @@ import {
 import type { PublicSiteSettings } from '../../core/auth'
 import { appLang, t } from '../../core/i18n'
 import { normalizeExternalUrl } from '../../core/legacyAdapter'
+import {
+  loadWeeklyHabitState,
+  saveWeeklyHabitState,
+  type WeeklyHabitState,
+  type WeeklyItemStanceChoice,
+  type WeeklyOutlookIntuitionChoice,
+} from '../../core/storage'
 import type {
   CatalystEvent,
   CrowdPredictionStat,
@@ -66,6 +74,7 @@ const props = defineProps<{
   predictions?: PredictionRecord[]
   crowdStats?: Record<string, CrowdPredictionStat>
   calendarEvents?: CatalystEvent[]
+  habitSyncNonce?: number
   nowMs: number
 }>()
 
@@ -80,72 +89,44 @@ const emit = defineEmits<{
   (e: 'jump-prediction', predictionId?: string | null): void
   (e: 'open-qa-prediction', rec: PredictionRecord): void
   (e: 'mark-week-visited', weekId: string): void
+  (e: 'habit-changed'): void
 }>()
 
-const WEEKLY_HABIT_KEY = 'mirrorbrief_weekly_habit_v1'
-type StanceChoice = 'bull' | 'bear' | 'neutral'
-type OutlookIntuition = 'up' | 'volatile' | 'down'
+type StanceChoice = WeeklyItemStanceChoice
+type OutlookIntuition = WeeklyOutlookIntuitionChoice
 
-interface WeeklyHabitState {
-  readByWeek: Record<string, string[]>
-  completedWeeks: string[]
-  reactionsByItem: Record<string, StanceChoice>
-  outlookStancesById: Record<string, OutlookIntuition>
-  lastVisitedWeekId: string | null
-}
-
-function loadWeeklyHabit(): WeeklyHabitState {
-  try {
-    const raw = typeof window !== 'undefined' ? window.localStorage.getItem(WEEKLY_HABIT_KEY) : null
-    if (!raw) {
-      return {
-        readByWeek: {},
-        completedWeeks: [],
-        reactionsByItem: {},
-        outlookStancesById: {},
-        lastVisitedWeekId: null,
-      }
-    }
-    const parsed = JSON.parse(raw) as Partial<WeeklyHabitState>
-    return {
-      readByWeek: parsed.readByWeek && typeof parsed.readByWeek === 'object' ? parsed.readByWeek : {},
-      completedWeeks: Array.isArray(parsed.completedWeeks) ? parsed.completedWeeks : [],
-      reactionsByItem: parsed.reactionsByItem && typeof parsed.reactionsByItem === 'object' ? parsed.reactionsByItem : {},
-      outlookStancesById:
-        parsed.outlookStancesById && typeof parsed.outlookStancesById === 'object' ? parsed.outlookStancesById : {},
-      lastVisitedWeekId: typeof parsed.lastVisitedWeekId === 'string' ? parsed.lastVisitedWeekId : null,
-    }
-  } catch {
-    return {
-      readByWeek: {},
-      completedWeeks: [],
-      reactionsByItem: {},
-      outlookStancesById: {},
-      lastVisitedWeekId: null,
-    }
-  }
-}
-
-function saveWeeklyHabit(state: WeeklyHabitState) {
-  try {
-    if (typeof window !== 'undefined') {
-      window.localStorage.setItem(WEEKLY_HABIT_KEY, JSON.stringify(state))
-    }
-  } catch {
-    // ignore storage quota errors
-  }
-}
-
-const habit = ref<WeeklyHabitState>(loadWeeklyHabit())
+const habit = ref<WeeklyHabitState>(loadWeeklyHabitState())
 const viewMode = ref<'skim' | 'deep' | 'outlook'>('skim')
 const activeSectorFilter = ref<'all' | WeeklySectorId>('all')
 const priorityFilter = ref<'all' | 'P0' | 'P0_P1'>('all')
 const onlyMyWatchlist = ref(false)
 const localQuery = ref('')
+const filtersOpen = ref(false)
 const expandedIds = ref<Set<string>>(new Set())
-const thesisExpanded = ref(true)
+const thesisExpanded = ref(typeof window !== 'undefined' ? window.innerWidth >= 640 : true)
 const copiedDigest = ref(false)
 const justCompletedCelebration = ref(false)
+const popBurstKey = ref('')
+let popBurstTimer: ReturnType<typeof setTimeout> | null = null
+
+function triggerPopBurst(key: string) {
+  popBurstKey.value = key
+  if (popBurstTimer) clearTimeout(popBurstTimer)
+  popBurstTimer = setTimeout(() => {
+    popBurstKey.value = ''
+  }, 520)
+}
+
+watch(
+  () => props.habitSyncNonce,
+  () => {
+    habit.value = loadWeeklyHabitState()
+  },
+)
+
+const hasActiveSecondaryFilters = computed(
+  () => priorityFilter.value !== 'all' || onlyMyWatchlist.value || Boolean(localQuery.value.trim()),
+)
 
 const SECTOR_VISUALS: Record<
   WeeklySectorId,
@@ -195,7 +176,7 @@ watch(
     if (!wid) return
     if (habit.value.lastVisitedWeekId !== wid) {
       habit.value = { ...habit.value, lastVisitedWeekId: wid }
-      saveWeeklyHabit(habit.value)
+      saveWeeklyHabitState(habit.value)
     }
     emit('mark-week-visited', wid)
   },
@@ -266,13 +247,15 @@ function syncCompletionForWeek(wid: string, nextReadSet: Set<string>) {
     },
     completedWeeks: Array.from(nextCompleted).sort(),
   }
-  saveWeeklyHabit(habit.value)
+  saveWeeklyHabitState(habit.value)
+  emit('habit-changed')
 }
 
 function toggleItemRead(itemId: string) {
   const wid = currentWeekId.value
   if (!wid) return
   triggerHaptic(10)
+  triggerPopBurst(`read-${itemId}`)
   const next = new Set(readIdSetForWeek.value)
   if (next.has(itemId)) {
     next.delete(itemId)
@@ -286,6 +269,7 @@ function markAllWeekItemsRead() {
   const wid = currentWeekId.value
   if (!wid || !props.doc) return
   triggerHaptic(14)
+  triggerPopBurst('read-all')
   const next = new Set<string>()
   for (const s of props.doc.sectors || []) {
     for (const it of s.items || []) {
@@ -308,6 +292,7 @@ function toggleItemExpand(itemId: string) {
 
 function toggleReaction(itemId: string, choice: StanceChoice) {
   triggerHaptic(10)
+  triggerPopBurst(`react-${itemId}-${choice}`)
   const cur = habit.value.reactionsByItem[itemId]
   const nextMap = { ...habit.value.reactionsByItem }
   if (cur === choice) {
@@ -319,11 +304,13 @@ function toggleReaction(itemId: string, choice: StanceChoice) {
     ...habit.value,
     reactionsByItem: nextMap,
   }
-  saveWeeklyHabit(habit.value)
+  saveWeeklyHabitState(habit.value)
+  emit('habit-changed')
 }
 
 function toggleOutlookIntuition(outlookId: string, choice: OutlookIntuition) {
   triggerHaptic(10)
+  triggerPopBurst(`outlook-${outlookId}-${choice}`)
   const key = `${currentWeekId.value || 'cur'}::${outlookId}`
   const cur = habit.value.outlookStancesById[key]
   const nextMap = { ...habit.value.outlookStancesById }
@@ -336,7 +323,8 @@ function toggleOutlookIntuition(outlookId: string, choice: OutlookIntuition) {
     ...habit.value,
     outlookStancesById: nextMap,
   }
-  saveWeeklyHabit(habit.value)
+  saveWeeklyHabitState(habit.value)
+  emit('habit-changed')
 }
 
 function getOutlookIntuition(outlookId: string): OutlookIntuition | undefined {
@@ -775,24 +763,22 @@ async function copyWeeklyDigestText() {
           </div>
 
           <!-- Plain Theme Headline -->
-          <div class="space-y-1.5">
-            <h1 class="text-lg sm:text-[21px] font-bold tracking-tight text-zinc-950 dark:text-white leading-snug">
+          <div class="space-y-1">
+            <h1 class="text-[17px] sm:text-[20px] font-bold tracking-tight text-zinc-950 dark:text-white leading-snug">
               {{ doc.week_theme }}
             </h1>
-            <div class="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11.5px] text-zinc-500 dark:text-zinc-400">
-              <span>
-                {{
-                  t(
-                    `从 ${doc.stats.raw_scanned} 条日间快讯里筛掉重复与水文，只留 ${doc.stats.selected_items} 件真大事（${doc.stats.p0_count} 件必看重磅）`,
-                    `Distilled ${doc.stats.raw_scanned} items into ${doc.stats.selected_items} key events (${doc.stats.p0_count} P0)`,
-                  )
-                }}
-              </span>
+            <div class="text-[11px] sm:text-[11.5px] text-zinc-500 dark:text-zinc-400">
+              {{
+                t(
+                  `筛掉 ${doc.stats.raw_scanned} 条快讯水文，只留 ${doc.stats.selected_items} 件真大事（${doc.stats.p0_count} 件 P0 重磅）`,
+                  `Distilled ${doc.stats.raw_scanned} items into ${doc.stats.selected_items} key events (${doc.stats.p0_count} P0)`,
+                )
+              }}
             </div>
           </div>
 
-          <!-- Clickable Keyword Pills -->
-          <div v-if="(doc.keywords || []).length > 0" class="flex flex-wrap items-center gap-1.5">
+          <!-- Clickable Keyword Pills (desktop / tablet only to preserve mobile first-screen feed visibility) -->
+          <div v-if="(doc.keywords || []).length > 0" class="hidden sm:flex flex-wrap items-center gap-1.5">
             <span class="text-[11px] font-medium text-zinc-400 mr-0.5">{{ t('本周关键词:', 'Themes:') }}</span>
             <button
               v-for="kw in doc.keywords || []"
@@ -810,38 +796,39 @@ async function copyWeeklyDigestText() {
             </button>
           </div>
 
-          <!-- Habit Progress Bar -->
-          <div class="rounded-2xl bg-white/80 dark:bg-[#1C1C1E]/80 border border-black/[0.06] dark:border-white/[0.08] px-3.5 py-2.5 space-y-2">
-            <div class="flex flex-wrap items-center justify-between gap-2 text-xs">
-              <div class="flex items-center gap-2 font-semibold text-zinc-900 dark:text-zinc-100">
-                <span>{{ t('本周大事补课进度', 'Weekly Catch-up') }}</span>
-                <span class="font-mono text-[#007AFF] dark:text-[#0A84FF] tabular-nums">
+          <!-- Slim Habit Progress Bar -->
+          <div class="rounded-xl bg-white/85 dark:bg-[#1C1C1E]/85 border border-black/[0.06] dark:border-white/[0.08] px-3 py-2 space-y-1.5">
+            <div class="flex items-center justify-between gap-2 text-xs">
+              <div class="flex items-center gap-1.5 font-semibold text-zinc-900 dark:text-zinc-100 min-w-0">
+                <span class="truncate">{{ t('追更进度', 'Catch-up') }}</span>
+                <span class="font-mono text-[#007AFF] dark:text-[#0A84FF] tabular-nums shrink-0">
                   {{ readCountForWeek }}/{{ totalItemCount }} ({{ progressPct }}%)
                 </span>
-                <span v-if="progressPct === 100 && totalItemCount > 0" class="jx-badge bg-emerald-500/15 text-emerald-700 dark:text-emerald-300">
+                <span v-if="progressPct === 100 && totalItemCount > 0" class="jx-badge bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 shrink-0">
                   <Check class="w-3 h-3" :stroke-width="2" />
-                  <span>{{ t('本周已扫清', 'Completed') }}</span>
+                  <span>{{ t('已扫清', 'Done') }}</span>
                 </span>
               </div>
 
-              <div class="flex items-center gap-1.5">
+              <div class="flex items-center gap-1.5 shrink-0">
                 <button
                   v-if="totalItemCount > 0 && readCountForWeek < totalItemCount"
                   type="button"
                   @click="markAllWeekItemsRead"
-                  class="ios-tap mobile-pressable inline-flex items-center gap-1 px-2.5 h-7 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-[11px] font-semibold"
+                  class="ios-tap mobile-pressable inline-flex items-center gap-1 px-2.5 min-h-[30px] rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-[11px] font-semibold"
+                  :class="popBurstKey === 'read-all' ? 'jx-pop-active jx-burst-ring' : ''"
                 >
                   <CheckCheck class="w-3.5 h-3.5" :stroke-width="1.75" />
-                  <span>{{ t('一键全标已看', 'Mark All Done') }}</span>
+                  <span>{{ t('全标已看', 'Mark All') }}</span>
                 </button>
                 <button
                   v-else-if="totalItemCount > 0"
                   type="button"
                   @click="emit('open-weekly-poster', { streakWeeks, readCount: readCountForWeek })"
-                  class="ios-tap mobile-pressable inline-flex items-center gap-1 px-2.5 h-7 rounded-xl bg-amber-500 hover:bg-amber-600 text-white text-[11px] font-semibold"
+                  class="ios-tap mobile-pressable inline-flex items-center gap-1 px-2.5 min-h-[30px] rounded-lg bg-amber-500 hover:bg-amber-600 text-white text-[11px] font-semibold"
                 >
                   <Share2 class="w-3 h-3" />
-                  <span>{{ t('晒本周战绩海报', 'Share Completion') }}</span>
+                  <span>{{ t('晒战绩海报', 'Share Poster') }}</span>
                 </button>
               </div>
             </div>
@@ -849,6 +836,7 @@ async function copyWeeklyDigestText() {
             <div class="h-1.5 w-full rounded-full bg-black/[0.06] dark:bg-white/[0.08] overflow-hidden">
               <div
                 class="h-full rounded-full bg-gradient-to-r from-[#007AFF] to-emerald-500 transition-all duration-300"
+                :class="progressPct > 0 ? 'jx-progress-shimmer' : ''"
                 :style="{ width: `${progressPct}%` }"
               />
             </div>
@@ -858,62 +846,65 @@ async function copyWeeklyDigestText() {
               class="jx-collapse-reveal text-[11px] font-semibold text-emerald-700 dark:text-emerald-300 flex items-center gap-1.5"
             >
               <Check class="w-3.5 h-3.5 shrink-0" />
-              <span>{{ t('这周大事已全部盘完，已累计连续追更记录，下周日 18:00 新刊见。', 'All weekly events reviewed! Streak updated.') }}</span>
+              <span>{{ t(`这周大事已全部盘完，${scheduleBadgeText} 新刊见。`, `All weekly events reviewed! Streak updated (${scheduleBadgeText}).`) }}</span>
             </div>
           </div>
 
-          <!-- 3-Mode Switcher + Share / Copy / Refresh Actions -->
+          <!-- 3-Mode Switcher (fits 390px cleanly with zero right-edge clipping) + Actions -->
           <div class="flex flex-wrap items-center justify-between gap-2 pt-0.5">
-            <div class="ios-segmented p-1 overflow-x-auto no-scrollbar max-w-full" role="tablist" :aria-label="t('周刊视图切换', 'Weekly mode switcher')">
+            <div class="ios-segmented p-1 grid grid-cols-3 w-full sm:w-auto sm:inline-flex" role="tablist" :aria-label="t('周刊视图切换', 'Weekly mode switcher')">
               <button
                 type="button"
                 role="tab"
                 :aria-selected="viewMode === 'skim'"
                 @click="viewMode = 'skim'; triggerHaptic(10)"
-                class="ios-segmented-btn min-h-[34px] px-3 text-xs sm:text-[13px] gap-1.5"
+                class="ios-segmented-btn min-h-[36px] px-2 sm:px-3 text-xs sm:text-[13px] gap-1"
                 :class="viewMode === 'skim' ? 'ios-segmented-btn-active' : 'text-zinc-600 dark:text-zinc-400'"
                 data-testid="weekly-mode-skim"
               >
-                <Layers class="w-3.5 h-3.5 text-[#007AFF]" :stroke-width="1.75" />
-                <span>{{ t('大概看 · 3分钟', 'Skim') }}</span>
+                <Layers class="w-3.5 h-3.5 text-[#007AFF] shrink-0" :stroke-width="1.75" />
+                <span class="sm:hidden">{{ t('大概看', 'Skim') }}</span>
+                <span class="hidden sm:inline">{{ t('大概看 · 3分钟', 'Skim · 3m') }}</span>
               </button>
               <button
                 type="button"
                 role="tab"
                 :aria-selected="viewMode === 'deep'"
                 @click="viewMode = 'deep'; triggerHaptic(10)"
-                class="ios-segmented-btn min-h-[34px] px-3 text-xs sm:text-[13px] gap-1.5"
+                class="ios-segmented-btn min-h-[36px] px-2 sm:px-3 text-xs sm:text-[13px] gap-1"
                 :class="viewMode === 'deep' ? 'ios-segmented-btn-active' : 'text-zinc-600 dark:text-zinc-400'"
                 data-testid="weekly-mode-deep"
               >
-                <Bot class="w-3.5 h-3.5 text-violet-600 dark:text-violet-400" :stroke-width="1.75" />
-                <span>{{ t('细看 · 4板块', 'Deep Dive') }}</span>
+                <Bot class="w-3.5 h-3.5 text-violet-600 dark:text-violet-400 shrink-0" :stroke-width="1.75" />
+                <span class="sm:hidden">{{ t('细看', 'Deep') }}</span>
+                <span class="hidden sm:inline">{{ t('细看 · 4板块', 'Deep Dive') }}</span>
               </button>
               <button
                 type="button"
                 role="tab"
                 :aria-selected="viewMode === 'outlook'"
                 @click="viewMode = 'outlook'; triggerHaptic(10)"
-                class="ios-segmented-btn min-h-[34px] px-3 text-xs sm:text-[13px] gap-1.5"
+                class="ios-segmented-btn min-h-[36px] px-2 sm:px-3 text-xs sm:text-[13px] gap-1"
                 :class="viewMode === 'outlook' ? 'ios-segmented-btn-active' : 'text-zinc-600 dark:text-zinc-400'"
                 data-testid="weekly-mode-outlook"
               >
-                <span class="jx-sonar-dot jx-sonar-emerald" aria-hidden="true" />
-                <span>{{ t('下周走向 · 动态', 'Next Week') }}</span>
+                <span class="jx-sonar-dot jx-sonar-emerald shrink-0" aria-hidden="true" />
+                <span class="sm:hidden">{{ t('下周走向', 'Outlook') }}</span>
+                <span class="hidden sm:inline">{{ t('下周走向 · 动态', 'Next Week') }}</span>
                 <span
                   v-if="(doc.next_week_outlook || []).length > 0"
-                  class="px-1.5 py-0.2 rounded-md bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 text-[10px] font-mono tabular-nums"
+                  class="px-1.5 py-0.2 rounded-md bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 text-[10px] font-mono tabular-nums shrink-0"
                 >
                   {{ (doc.next_week_outlook || []).length }}
                 </span>
               </button>
             </div>
 
-            <div class="flex flex-wrap items-center gap-1.5">
+            <div class="flex flex-wrap items-center gap-1.5 w-full sm:w-auto justify-end">
               <button
                 type="button"
                 @click="emit('open-weekly-poster', { streakWeeks, readCount: readCountForWeek })"
-                class="ios-tap mobile-pressable inline-flex items-center gap-1.5 min-h-[34px] px-3 rounded-xl bg-[#007AFF] hover:bg-[#0066D6] text-white text-xs font-semibold shadow-xs"
+                class="ios-tap mobile-pressable inline-flex items-center gap-1.5 min-h-[36px] px-3 rounded-xl bg-[#007AFF] hover:bg-[#0066D6] text-white text-xs font-semibold shadow-xs"
                 data-testid="weekly-poster-btn"
               >
                 <Share2 class="w-3.5 h-3.5" :stroke-width="1.75" />
@@ -922,18 +913,19 @@ async function copyWeeklyDigestText() {
               <button
                 type="button"
                 @click="copyWeeklyDigestText"
-                class="ios-tap mobile-pressable inline-flex items-center gap-1.5 min-h-[34px] px-3 rounded-xl bg-white dark:bg-[#1C1C1E] border border-black/[0.08] dark:border-white/[0.12] text-zinc-800 dark:text-zinc-100 text-xs font-semibold"
+                class="ios-tap mobile-pressable inline-flex items-center gap-1.5 min-h-[36px] px-3 rounded-xl bg-white dark:bg-[#1C1C1E] border border-black/[0.08] dark:border-white/[0.12] text-zinc-800 dark:text-zinc-100 text-xs font-semibold"
                 data-testid="weekly-copy-btn"
               >
                 <Check v-if="copiedDigest" class="w-3.5 h-3.5 text-emerald-500" />
                 <Copy v-else class="w-3.5 h-3.5" />
-                <span>{{ copiedDigest ? t('已复制复盘', 'Copied') : t('复制本周复盘', 'Copy Text') }}</span>
+                <span>{{ copiedDigest ? t('已复制', 'Copied') : t('复制本周复盘', 'Copy Text') }}</span>
               </button>
               <button
                 type="button"
                 @click="emit('refresh')"
-                class="ios-tap mobile-pressable inline-flex items-center justify-center w-[34px] h-[34px] rounded-xl bg-white dark:bg-[#1C1C1E] border border-black/[0.08] dark:border-white/[0.12] text-zinc-600 dark:text-zinc-300"
+                class="ios-tap mobile-pressable inline-flex items-center justify-center w-9 h-9 rounded-xl bg-white dark:bg-[#1C1C1E] border border-black/[0.08] dark:border-white/[0.12] text-zinc-600 dark:text-zinc-300"
                 :title="t('刷新周刊与实时预测', 'Refresh')"
+                :aria-label="t('刷新周刊与实时预测', 'Refresh')"
               >
                 <RefreshCw class="w-3.5 h-3.5" :class="{ 'animate-spin': loading }" />
               </button>
@@ -942,9 +934,9 @@ async function copyWeeklyDigestText() {
         </div>
       </div>
 
-      <!-- 2. Compact 1-Row Sticky Sector Switcher (Leaves Maximum Viewport on 390x844 Mobile) -->
-      <div class="ios-card px-2.5 py-2 mobile-sticky-subbar">
-        <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar scroll-fade-x">
+      <!-- 2. Compact 1-Row Sticky Sector Switcher + Inline Filter Trigger -->
+      <div class="ios-card px-2.5 py-2 mobile-sticky-subbar flex items-center gap-1.5">
+        <div class="flex items-center gap-1.5 min-w-0 flex-1 overflow-x-auto no-scrollbar scroll-fade-x pr-4">
           <button
             type="button"
             @click="activeSectorFilter = 'all'; triggerHaptic(6)"
@@ -956,7 +948,7 @@ async function copyWeeklyDigestText() {
             "
             data-testid="weekly-sector-all"
           >
-            <span>{{ t('全部 4 大板块', 'All 4 Sectors') }}</span>
+            <span>{{ t('全部板块', 'All Sectors') }}</span>
             <span class="font-mono text-[10.5px] opacity-80">{{ doc.stats.selected_items }}</span>
           </button>
 
@@ -978,10 +970,29 @@ async function copyWeeklyDigestText() {
             <span class="font-mono text-[10.5px] opacity-80">{{ sec.item_count }}</span>
           </button>
         </div>
+
+        <button
+          v-if="viewMode !== 'outlook'"
+          type="button"
+          @click="filtersOpen = !filtersOpen; triggerHaptic(6)"
+          class="ios-tap mobile-pressable inline-flex items-center gap-1 h-8 px-2.5 rounded-xl text-[11.5px] font-semibold shrink-0 transition-colors border"
+          :class="
+            filtersOpen || hasActiveSecondaryFilters
+              ? 'bg-[#007AFF] text-white border-[#007AFF]'
+              : 'bg-[#F5F5F7] dark:bg-[#2C2C2E] text-zinc-700 dark:text-zinc-200 border-transparent'
+          "
+          data-testid="weekly-filter-toggle"
+        >
+          <SlidersHorizontal class="w-3.5 h-3.5" />
+          <span class="hidden sm:inline">{{ t('筛选', 'Filter') }}</span>
+        </button>
       </div>
 
-      <!-- Secondary Filter Strip (Priority + Watchlist Resonance + Search — Non-Sticky) -->
-      <div v-if="viewMode !== 'outlook'" class="ios-card px-3 py-2.5 flex flex-wrap items-center justify-between gap-2">
+      <!-- Collapsible Secondary Filter Strip (hidden by default to pull real news above the fold) -->
+      <div
+        v-if="viewMode !== 'outlook' && (filtersOpen || hasActiveSecondaryFilters)"
+        class="jx-collapse-reveal ios-card px-3 py-2.5 flex flex-wrap items-center justify-between gap-2"
+      >
         <div class="flex flex-wrap items-center gap-1.5">
           <div class="ios-segmented p-0.5">
             <button
@@ -1046,11 +1057,12 @@ async function copyWeeklyDigestText() {
         </div>
       </div>
 
+      <!-- Smooth Animated Mode Transition (Skim / Deep Dive / Next-Week Outlook) -->
+      <Transition name="jx-tab" mode="out-in">
       <!-- ====================================================================== -->
       <!-- MODE 3: NEXT-WEEK OUTLOOK & LIVE PREDICTIONS (下周预测走向动态)          -->
       <!-- ====================================================================== -->
-      <template v-if="viewMode === 'outlook'">
-        <div class="space-y-3.5 jx-collapse-reveal" data-testid="weekly-outlook-panel">
+      <div v-if="viewMode === 'outlook'" key="outlook" class="space-y-3.5" data-testid="weekly-outlook-panel">
           <!-- Intro strip -->
           <div class="ios-card px-4 py-3 flex flex-wrap items-center justify-between gap-2 bg-gradient-to-r from-emerald-500/[0.06] via-white to-[#007AFF]/[0.05] dark:from-emerald-500/[0.12] dark:via-[#131823] dark:to-[#0A84FF]/[0.08]">
             <div class="space-y-0.5">
@@ -1080,7 +1092,7 @@ async function copyWeeklyDigestText() {
             <article
               v-for="item in outlookItems"
               :key="item.id"
-              class="ios-card p-4 space-y-3"
+              class="ios-card jx-card-interactive p-4 space-y-3"
               :class="outlookDirectionMeta(item.direction).borderClass"
               :data-testid="`weekly-outlook-card-${item.id}`"
             >
@@ -1184,7 +1196,9 @@ async function copyWeeklyDigestText() {
                         </span>
                       </template>
                       <template v-else>
-                        <span>{{ t('截止:', 'Due:') }} {{ resolveLinkedPrediction(item)!.due_at.slice(0, 10) }}</span>
+                        <span class="text-[#007AFF] dark:text-[#0A84FF] font-semibold">
+                          {{ t(`抢先成为首位预判者 · 截止 ${resolveLinkedPrediction(item)!.due_at.slice(0, 10)}`, `Be first to forecast · Due ${resolveLinkedPrediction(item)!.due_at.slice(0, 10)}`) }}
+                        </span>
                       </template>
                     </div>
 
@@ -1221,11 +1235,12 @@ async function copyWeeklyDigestText() {
                     type="button"
                     @click="toggleOutlookIntuition(item.id, 'up')"
                     class="ios-tap px-2.5 h-7 rounded-lg font-semibold border transition-colors"
-                    :class="
+                    :class="[
                       getOutlookIntuition(item.id) === 'up'
                         ? 'bg-emerald-600 text-white border-emerald-600'
-                        : 'bg-white dark:bg-[#1C1C1E] text-zinc-600 dark:text-zinc-300 border-black/[0.08] dark:border-white/[0.1]'
-                    "
+                        : 'bg-white dark:bg-[#1C1C1E] text-zinc-600 dark:text-zinc-300 border-black/[0.08] dark:border-white/[0.1]',
+                      popBurstKey === `outlook-${item.id}-up` ? 'jx-pop-active jx-burst-ring' : '',
+                    ]"
                     data-testid="outlook-stance-up"
                   >
                     {{ t('我看顺风', 'Bullish') }}
@@ -1234,11 +1249,12 @@ async function copyWeeklyDigestText() {
                     type="button"
                     @click="toggleOutlookIntuition(item.id, 'volatile')"
                     class="ios-tap px-2.5 h-7 rounded-lg font-semibold border transition-colors"
-                    :class="
+                    :class="[
                       getOutlookIntuition(item.id) === 'volatile'
                         ? 'bg-amber-500 text-white border-amber-500'
-                        : 'bg-white dark:bg-[#1C1C1E] text-zinc-600 dark:text-zinc-300 border-black/[0.08] dark:border-white/[0.1]'
-                    "
+                        : 'bg-white dark:bg-[#1C1C1E] text-zinc-600 dark:text-zinc-300 border-black/[0.08] dark:border-white/[0.1]',
+                      popBurstKey === `outlook-${item.id}-volatile` ? 'jx-pop-active jx-burst-ring' : '',
+                    ]"
                   >
                     {{ t('我看震荡', 'Choppy') }}
                   </button>
@@ -1246,11 +1262,12 @@ async function copyWeeklyDigestText() {
                     type="button"
                     @click="toggleOutlookIntuition(item.id, 'down')"
                     class="ios-tap px-2.5 h-7 rounded-lg font-semibold border transition-colors"
-                    :class="
+                    :class="[
                       getOutlookIntuition(item.id) === 'down'
                         ? 'bg-rose-600 text-white border-rose-600'
-                        : 'bg-white dark:bg-[#1C1C1E] text-zinc-600 dark:text-zinc-300 border-black/[0.08] dark:border-white/[0.1]'
-                    "
+                        : 'bg-white dark:bg-[#1C1C1E] text-zinc-600 dark:text-zinc-300 border-black/[0.08] dark:border-white/[0.1]',
+                      popBurstKey === `outlook-${item.id}-down` ? 'jx-pop-active jx-burst-ring' : '',
+                    ]"
                   >
                     {{ t('我看承压', 'Cautious') }}
                   </button>
@@ -1335,12 +1352,10 @@ async function copyWeeklyDigestText() {
             </div>
           </div>
         </div>
-      </template>
-
       <!-- ====================================================================== -->
       <!-- MODES 1 & 2: SKIM / DEEP DIVE WEEKLY EVENTS                             -->
       <!-- ====================================================================== -->
-      <template v-else>
+      <div v-else :key="viewMode" class="space-y-3.5">
         <!-- Executive 3-Bullet Plain Thesis & P0 Fast Overview -->
         <div class="ios-card overflow-hidden">
           <button
@@ -1451,7 +1466,7 @@ async function copyWeeklyDigestText() {
               <article
                 v-for="item in sec.filteredItems"
                 :key="item.id"
-                class="px-4 py-3.5 transition-colors"
+                class="px-4 py-3.5 transition-colors hover:bg-black/[0.015] dark:hover:bg-white/[0.02]"
                 :class="[
                   item.priority === 'P0' ? 'border-l-[3px] border-l-[#DC2626]' : '',
                   readIdSetForWeek.has(item.id) ? 'bg-black/[0.015] dark:bg-white/[0.015]' : '',
@@ -1465,11 +1480,12 @@ async function copyWeeklyDigestText() {
                       type="button"
                       @click="toggleItemRead(item.id)"
                       class="ios-tap mt-0.5 w-6 h-6 rounded-full border flex items-center justify-center shrink-0 transition-all"
-                      :class="
+                      :class="[
                         readIdSetForWeek.has(item.id)
                           ? 'bg-emerald-500 border-emerald-500 text-white scale-105'
-                          : 'border-zinc-300 dark:border-zinc-600 text-transparent hover:border-[#007AFF]'
-                      "
+                          : 'border-zinc-300 dark:border-zinc-600 text-transparent hover:border-[#007AFF]',
+                        popBurstKey === `read-${item.id}` ? 'jx-pop-active jx-burst-ring' : '',
+                      ]"
                       :title="readIdSetForWeek.has(item.id) ? t('取消已看', 'Mark unread') : t('打卡：我已看完', 'Mark reviewed')"
                       :data-testid="`weekly-check-${item.id}`"
                     >
@@ -1659,11 +1675,12 @@ async function copyWeeklyDigestText() {
                           type="button"
                           @click="toggleItemRead(item.id)"
                           class="ios-tap mobile-pressable inline-flex items-center gap-1.5 h-8 px-3 rounded-xl text-xs font-semibold transition-all"
-                          :class="
+                          :class="[
                             readIdSetForWeek.has(item.id)
                               ? 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30'
-                              : 'bg-[#F5F5F7] dark:bg-[#2C2C2E] text-zinc-700 dark:text-zinc-200 hover:bg-emerald-500/10'
-                          "
+                              : 'bg-[#F5F5F7] dark:bg-[#2C2C2E] text-zinc-700 dark:text-zinc-200 hover:bg-emerald-500/10',
+                            popBurstKey === `read-${item.id}` ? 'jx-pop-active jx-burst-ring' : '',
+                          ]"
                           :data-testid="`weekly-deep-check-${item.id}`"
                         >
                           <Check class="w-3.5 h-3.5" :stroke-width="2.2" />
@@ -1674,11 +1691,12 @@ async function copyWeeklyDigestText() {
                           type="button"
                           @click="toggleReaction(item.id, 'bull')"
                           class="ios-tap mobile-pressable inline-flex items-center gap-1 h-8 px-2.5 rounded-xl text-[11px] font-semibold border transition-colors"
-                          :class="
+                          :class="[
                             habit.reactionsByItem[item.id] === 'bull'
                               ? 'bg-emerald-600 text-white border-emerald-600'
-                              : 'bg-white dark:bg-[#1C1C1E] text-zinc-600 dark:text-zinc-300 border-black/[0.08] dark:border-white/[0.1]'
-                          "
+                              : 'bg-white dark:bg-[#1C1C1E] text-zinc-600 dark:text-zinc-300 border-black/[0.08] dark:border-white/[0.1]',
+                            popBurstKey === `react-${item.id}-bull` ? 'jx-pop-active jx-burst-ring' : '',
+                          ]"
                         >
                           <span>{{ t('还会发酵', 'Ongoing') }}</span>
                         </button>
@@ -1686,11 +1704,12 @@ async function copyWeeklyDigestText() {
                           type="button"
                           @click="toggleReaction(item.id, 'bear')"
                           class="ios-tap mobile-pressable inline-flex items-center gap-1 h-8 px-2.5 rounded-xl text-[11px] font-semibold border transition-colors"
-                          :class="
+                          :class="[
                             habit.reactionsByItem[item.id] === 'bear'
                               ? 'bg-rose-600 text-white border-rose-600'
-                              : 'bg-white dark:bg-[#1C1C1E] text-zinc-600 dark:text-zinc-300 border-black/[0.08] dark:border-white/[0.1]'
-                          "
+                              : 'bg-white dark:bg-[#1C1C1E] text-zinc-600 dark:text-zinc-300 border-black/[0.08] dark:border-white/[0.1]',
+                            popBurstKey === `react-${item.id}-bear` ? 'jx-pop-active jx-burst-ring' : '',
+                          ]"
                         >
                           <span>{{ t('小心反转', 'Reversal Risk') }}</span>
                         </button>
@@ -1859,7 +1878,8 @@ async function copyWeeklyDigestText() {
             </div>
           </div>
         </div>
-      </template>
+      </div>
+      </Transition>
     </template>
   </section>
 </template>

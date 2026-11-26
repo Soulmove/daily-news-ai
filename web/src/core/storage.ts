@@ -112,6 +112,7 @@ const KEYS = {
   V3_READ_LATER_META: 'insight_v3_read_later_meta',
   V3_PREDICTION_STANCES: 'insight_v3_prediction_stances',
   V3_USER_AVATAR: 'insight_v3_user_avatar',
+  V3_WEEKLY_HABIT: 'mirrorbrief_weekly_habit_v1',
 } as const
 
 export const LOCAL_STORAGE_NOTICE =
@@ -724,6 +725,81 @@ export function saveUserAvatar(avatar: string, storage?: StorageLike): string {
   return clean
 }
 
+export type WeeklyItemStanceChoice = 'bull' | 'bear' | 'neutral'
+export type WeeklyOutlookIntuitionChoice = 'up' | 'volatile' | 'down'
+
+export interface WeeklyHabitState {
+  readByWeek: Record<string, string[]>
+  completedWeeks: string[]
+  reactionsByItem: Record<string, WeeklyItemStanceChoice>
+  outlookStancesById: Record<string, WeeklyOutlookIntuitionChoice>
+  lastVisitedWeekId: string | null
+}
+
+function emptyWeeklyHabitState(): WeeklyHabitState {
+  return {
+    readByWeek: {},
+    completedWeeks: [],
+    reactionsByItem: {},
+    outlookStancesById: {},
+    lastVisitedWeekId: null,
+  }
+}
+
+export function normalizeWeeklyHabitState(raw: unknown): WeeklyHabitState {
+  if (!raw || typeof raw !== 'object' || Array.isArray(raw)) {
+    return emptyWeeklyHabitState()
+  }
+  const src = raw as Partial<WeeklyHabitState>
+  const readByWeek: Record<string, string[]> = {}
+  if (src.readByWeek && typeof src.readByWeek === 'object' && !Array.isArray(src.readByWeek)) {
+    for (const [wid, arr] of Object.entries(src.readByWeek)) {
+      if (typeof wid === 'string' && wid && Array.isArray(arr)) {
+        readByWeek[wid] = Array.from(new Set(arr.filter((x): x is string => typeof x === 'string' && x.length > 0)))
+      }
+    }
+  }
+  const completedWeeks = Array.isArray(src.completedWeeks)
+    ? Array.from(new Set(src.completedWeeks.filter((w): w is string => typeof w === 'string' && w.length > 0))).sort()
+    : []
+  const reactionsByItem: Record<string, WeeklyItemStanceChoice> = {}
+  if (src.reactionsByItem && typeof src.reactionsByItem === 'object' && !Array.isArray(src.reactionsByItem)) {
+    for (const [k, v] of Object.entries(src.reactionsByItem)) {
+      if (v === 'bull' || v === 'bear' || v === 'neutral') reactionsByItem[k] = v
+    }
+  }
+  const outlookStancesById: Record<string, WeeklyOutlookIntuitionChoice> = {}
+  if (src.outlookStancesById && typeof src.outlookStancesById === 'object' && !Array.isArray(src.outlookStancesById)) {
+    for (const [k, v] of Object.entries(src.outlookStancesById)) {
+      if (v === 'up' || v === 'volatile' || v === 'down') outlookStancesById[k] = v
+    }
+  }
+  return {
+    readByWeek,
+    completedWeeks,
+    reactionsByItem,
+    outlookStancesById,
+    lastVisitedWeekId: typeof src.lastVisitedWeekId === 'string' && src.lastVisitedWeekId ? src.lastVisitedWeekId : null,
+  }
+}
+
+export function loadWeeklyHabitState(storage?: StorageLike): WeeklyHabitState {
+  const s = getSafeStorage(storage)
+  try {
+    const raw = s.getItem(KEYS.V3_WEEKLY_HABIT)
+    if (!raw) return emptyWeeklyHabitState()
+    return normalizeWeeklyHabitState(JSON.parse(raw))
+  } catch {
+    return emptyWeeklyHabitState()
+  }
+}
+
+export function saveWeeklyHabitState(state: WeeklyHabitState, storage?: StorageLike): WeeklyHabitState {
+  const normalized = normalizeWeeklyHabitState(state)
+  safeStorageSet(KEYS.V3_WEEKLY_HABIT, JSON.stringify(normalized), storage)
+  return normalized
+}
+
 export function exportAllResearchState(storage?: StorageLike): string {
   const { readIds, legacyReadTitles } = loadReadState(storage)
   const payload = {
@@ -747,6 +823,7 @@ export function exportAllResearchState(storage?: StorageLike): string {
     portfolio: loadPortfolioConfig(storage),
     read_later_meta: loadReadLaterMetaMap(storage),
     prediction_stances: loadPredictionStances(storage),
+    weekly_habit: loadWeeklyHabitState(storage),
     read_ids: Array.from(readIds),
     legacy_read_titles: Array.from(legacyReadTitles),
     favorite_sources: Array.from(loadFavoriteSourceIds(storage)),
@@ -812,6 +889,13 @@ export function importResearchStateJson(
     if (data.prediction_stances && typeof data.prediction_stances === 'object' && !Array.isArray(data.prediction_stances)) {
       savePredictionStances(data.prediction_stances as Record<string, PredictionStance>, storage)
       count += Object.keys(data.prediction_stances).length
+    }
+    if (data.weekly_habit && typeof data.weekly_habit === 'object' && !Array.isArray(data.weekly_habit)) {
+      const normalizedHabit = saveWeeklyHabitState(data.weekly_habit as WeeklyHabitState, storage)
+      count +=
+        normalizedHabit.completedWeeks.length +
+        Object.keys(normalizedHabit.reactionsByItem).length +
+        Object.keys(normalizedHabit.outlookStancesById).length
     }
     if (Array.isArray(data.muted)) {
       saveStringSetKey('muted', new Set(data.muted), storage)
@@ -1015,6 +1099,51 @@ export function mergeResearchStateJson(
     if (Object.keys(mergedStances).length > 0) {
       savePredictionStances(mergedStances, storage)
       if (Object.keys(localStances).length > Object.keys(cloudStances).length) needsPush = true
+    }
+
+    const localHabit = loadWeeklyHabitState(storage)
+    const cloudHabit = normalizeWeeklyHabitState(cloud.weekly_habit)
+    const mergedReadByWeek: Record<string, string[]> = { ...cloudHabit.readByWeek }
+    for (const [wid, localArr] of Object.entries(localHabit.readByWeek)) {
+      const cloudArr = mergedReadByWeek[wid] || []
+      const union = Array.from(new Set([...cloudArr, ...localArr]))
+      if (union.length > cloudArr.length) needsPush = true
+      mergedReadByWeek[wid] = union
+    }
+    const mergedCompleted = Array.from(new Set([...cloudHabit.completedWeeks, ...localHabit.completedWeeks])).sort()
+    if (mergedCompleted.length > cloudHabit.completedWeeks.length) needsPush = true
+    const mergedReactions = { ...cloudHabit.reactionsByItem, ...localHabit.reactionsByItem }
+    if (
+      Object.keys(localHabit.reactionsByItem).some(
+        (k) => localHabit.reactionsByItem[k] !== cloudHabit.reactionsByItem[k],
+      )
+    ) {
+      needsPush = true
+    }
+    const mergedOutlook = { ...cloudHabit.outlookStancesById, ...localHabit.outlookStancesById }
+    if (
+      Object.keys(localHabit.outlookStancesById).some(
+        (k) => localHabit.outlookStancesById[k] !== cloudHabit.outlookStancesById[k],
+      )
+    ) {
+      needsPush = true
+    }
+    const mergedHabit: WeeklyHabitState = {
+      readByWeek: mergedReadByWeek,
+      completedWeeks: mergedCompleted,
+      reactionsByItem: mergedReactions,
+      outlookStancesById: mergedOutlook,
+      lastVisitedWeekId: localHabit.lastVisitedWeekId || cloudHabit.lastVisitedWeekId,
+    }
+    if (
+      Object.keys(mergedReadByWeek).length > 0 ||
+      mergedCompleted.length > 0 ||
+      Object.keys(mergedReactions).length > 0 ||
+      Object.keys(mergedOutlook).length > 0 ||
+      mergedHabit.lastVisitedWeekId
+    ) {
+      saveWeeklyHabitState(mergedHabit, storage)
+      mergedCount += 1
     }
 
     const localAvatar = loadUserAvatar(storage)

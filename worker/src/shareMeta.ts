@@ -48,10 +48,45 @@ async function findEventSummaryForShare(
   return null
 }
 
+async function findWeeklyDigestForShare(
+  env: Env,
+  weekId: string,
+): Promise<{ weekId: string; dateRange: string; weekTheme: string; thesisSummary: string } | null> {
+  const candidates = weekId === 'latest' ? ['data/weekly_digest.json'] : [`data/weekly_digests/${weekId}.json`, 'data/weekly_digest.json']
+  for (const key of candidates) {
+    try {
+      const obj = await env.R2_DATA.get(key)
+      if (!obj) continue
+      const doc = (await obj.json()) as {
+        week_id?: string
+        date_range_label?: string
+        week_theme?: string
+        executive_thesis?: string[]
+        stats?: { selected_items?: number; p0_count?: number }
+      }
+      const theme = String(doc.week_theme || '').trim()
+      if (!theme) continue
+      const bullets = Array.isArray(doc.executive_thesis) ? doc.executive_thesis.filter(Boolean).slice(0, 2) : []
+      const statPrefix = doc.stats?.selected_items
+        ? `精选 ${doc.stats.selected_items} 件本周真大事（${doc.stats.p0_count || 0} 件 P0 重磅）· `
+        : ''
+      return {
+        weekId: String(doc.week_id || weekId),
+        dateRange: String(doc.date_range_label || ''),
+        weekTheme: theme,
+        thesisSummary: `${statPrefix}${bullets.join(' ')}`.trim().slice(0, 155),
+      }
+    } catch {
+      continue
+    }
+  }
+  return null
+}
+
 export async function resolveShareMeta(
   env: Env,
   opts: {
-    type: 'pred' | 'event'
+    type: 'pred' | 'event' | 'weekly'
     id: string
     p?: string
     ref?: string
@@ -60,6 +95,40 @@ export async function resolveShareMeta(
   const siteUrl = getSiteOrigin(env)
   const accessMode = await getEffectiveAccessMode(env.DB, env.SITE_ACCESS_MODE)
   const id = opts.id.trim().slice(0, 120)
+
+  if (opts.type === 'weekly') {
+    const dest = new URL(`${siteUrl}/`)
+    dest.searchParams.set('tab', 'weekly')
+    if (id && id !== 'latest') {
+      dest.searchParams.set('week', id)
+    }
+
+    if (accessMode === 'private_gate') {
+      return {
+        title: '镜信 MirrorBrief · 每周大事盘点与下周走向',
+        description: '登录镜信查看周一至周日去重精炼大事盘点、四大板块拆解与下周走向剧本。',
+        target_url: dest.toString(),
+        found: false,
+      }
+    }
+
+    const wk = await findWeeklyDigestForShare(env, id || 'latest')
+    if (wk) {
+      return {
+        title: `${wk.weekId} 一周大事：${wk.weekTheme} · 镜信`,
+        description: wk.thesisSummary || `${wk.dateRange} 全球政经与 AI 核心大事一图看透。`,
+        target_url: dest.toString(),
+        found: true,
+      }
+    }
+
+    return {
+      title: '镜信 MirrorBrief · 每周大事盘点',
+      description: '每周一至周日全球重要事件去重精炼 · 4 大板块拆解 + 下周走向动态。',
+      target_url: dest.toString(),
+      found: false,
+    }
+  }
 
   if (opts.type === 'pred') {
     const dest = new URL(`${siteUrl}/`)
@@ -177,9 +246,9 @@ async function handleShareRedirect(
     }
     env: Env
   },
-  type: 'pred' | 'event',
+  type: 'pred' | 'event' | 'weekly',
 ) {
-  const id = decodeURIComponent(c.req.param('id') || '').trim()
+  const id = decodeURIComponent(c.req.param('id') || c.req.param('weekId') || '').trim()
   if (!id) {
     return Response.redirect(`${getSiteOrigin(c.env)}/`, 302)
   }
@@ -206,3 +275,4 @@ async function handleShareRedirect(
 
 shareMetaRoutes.get('/pred/:id', (c) => handleShareRedirect(c, 'pred'))
 shareMetaRoutes.get('/event/:id', (c) => handleShareRedirect(c, 'event'))
+shareMetaRoutes.get('/weekly/:weekId', (c) => handleShareRedirect(c, 'weekly'))

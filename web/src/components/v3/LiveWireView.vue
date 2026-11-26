@@ -444,7 +444,7 @@ function clearAll() {
 
               <p
                 v-if="expandedId === row.item.id && row.item.excerpt && row.item.excerpt !== row.item.title"
-                class="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed bg-zinc-50 dark:bg-zinc-800/60 rounded-xl px-2.5 py-2"
+                class="jx-collapse-reveal text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed bg-zinc-50 dark:bg-zinc-800/60 rounded-xl px-2.5 py-2"
               >
                 {{ truncateAtSentence(stripMarkdownArtifacts(row.item.excerpt), 220) }}
               </p>
@@ -469,8 +469,6 @@ function clearAll() {
                   {{ extractHeadlineQualifiers(row.item.title, row.item.excerpt).qualifierBadge }}
                 </span>
                 <span>{{ catLabel(row.item.category) }}</span>
-                <span>·</span>
-                <span>{{ translateSourceName(row.item.source_name, row.item.title) }}</span>
               </div>
             </div>
           </article>

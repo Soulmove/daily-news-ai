@@ -1448,7 +1448,7 @@ function openWeeklyPoster(stats: { streakWeeks: number; readCount: number }) {
       accentHex: accentMap[s.sector_id] || '#60A5FA',
       headline: s.items[0]?.plain_title || s.items[0]?.title || s.sector_takeaway || s.subtitle,
     })),
-    shareUrl: `${origin}/?tab=weekly&week=${encodeURIComponent(doc.week_id)}`,
+    shareUrl: `${origin}/s/weekly/${encodeURIComponent(doc.week_id)}`,
   }
   shareCardOpen.value = true
 }
@@ -3852,6 +3852,7 @@ function handleMarketColorChanged(redUp: boolean) {
 const userAvatar = ref<string>(loadUserAvatar() || authSession.value?.user?.avatar || '')
 const cloudSyncBusy = ref(false)
 const lastSyncedAt = ref<string | null>(null)
+const habitSyncNonce = ref(0)
 let cloudSyncTimer: ReturnType<typeof setTimeout> | null = null
 let suppressAutoSync = false
 
@@ -3875,6 +3876,7 @@ function reloadAllLocalStateRefs() {
   const refreshedRead = loadReadState()
   readIds.value = refreshedRead.readIds
   legacyReadTitles.value = refreshedRead.legacyReadTitles
+  habitSyncNonce.value += 1
 }
 
 async function handleSelectAvatar(nextAvatar: string) {
@@ -4257,14 +4259,12 @@ onBeforeUnmount(() => {
 <template>
   <div
     v-if="!authSession && !siteSettingsLoaded"
-    class="min-h-screen flex flex-col items-center justify-center p-4 bg-slate-100 dark:bg-slate-950"
+    class="min-h-screen bg-slate-100 dark:bg-slate-950 px-3 sm:px-6 py-4"
     data-testid="site-gate-loading"
   >
-    <div class="flex flex-col items-center gap-3 text-center">
-      <div class="w-8 h-8 rounded-full border-2 border-slate-300 dark:border-slate-700 border-t-blue-600 dark:border-t-blue-400 animate-spin" />
-      <div class="text-xs font-medium text-slate-500 dark:text-slate-400">
-        {{ t('正在校验站点访问状态...', 'Checking workspace access...') }}
-      </div>
+    <div class="max-w-5xl mx-auto space-y-4">
+      <div class="h-11 rounded-2xl bg-white/80 dark:bg-[#1C1C1E]/80 border border-black/[0.06] dark:border-white/[0.08] animate-pulse" />
+      <LoadingSkeleton variant="cards" :count="4" />
     </div>
   </div>
 
@@ -4614,21 +4614,9 @@ onBeforeUnmount(() => {
 
         <!-- MIDDLE RAIL: Primary Feed (680~760px optimal reading width on list views) -->
         <div
-          class="min-w-0 flex-1 space-y-2.5 ios-fade-in"
+          class="min-w-0 flex-1 space-y-2.5"
           :class="(activeTab === 'today' || activeTab === 'briefing') ? 'xl:max-w-[760px] xl:mx-auto' : ''"
         >
-          <!-- 768~1279px Compact Context Drawer Trigger -->
-          <div class="hidden md:flex xl:hidden desktop-shell-only items-center justify-end">
-            <button
-              type="button"
-              @click="rightDrawerOpen = true"
-              class="ios-tap inline-flex items-center gap-1.5 h-8 px-3 rounded-xl bg-white dark:bg-[#1C1C1E] text-[12px] font-medium text-zinc-600 dark:text-zinc-300 shadow-[0_1px_2px_rgba(0,0,0,0.04)]"
-            >
-              <PanelRightOpen class="w-3.5 h-3.5 text-[#007AFF]" :stroke-width="1.5" />
-              <span>{{ t('行情与上下文', 'Context Rail') }}</span>
-            </button>
-          </div>
-
           <!-- Active Search Chip (shown only when a search query is active; full search opens via topbar ⌘K icon) -->
           <div
             v-if="searchQuery.trim() && activeTab !== 'me'"
@@ -4675,6 +4663,8 @@ onBeforeUnmount(() => {
         </div>
       </div>
 
+      <Transition name="jx-tab" mode="out-in">
+      <div :key="activeTab" class="space-y-2.5">
       <!-- TAB 1: Personalized My Today Workbench -->
       <template v-if="activeTab === 'today'">
         <!-- Cold-Start 30-Second Value Hero (guest-only, compact & permanently dismissible) -->
@@ -5389,19 +5379,9 @@ onBeforeUnmount(() => {
         </div>
       </template>
 
-      <!-- TAB SCHEDULE & OUTLOOK: Consolidated Calendar + Predictions -->
+      <!-- TAB SCHEDULE & OUTLOOK: Consolidated Calendar + Predictions (top-level mobile tab; no redundant back bar) -->
       <template v-else-if="activeTab === 'calendar'">
         <div class="space-y-3">
-          <div class="mobile-quick-entry-strip items-center justify-between gap-2">
-            <button
-              type="button"
-              @click="handleSecondaryBack()"
-              class="mobile-pressable ios-tap inline-flex items-center gap-1.5 min-h-[38px] px-3 rounded-xl bg-white dark:bg-[#1C1C1E] text-xs font-semibold text-zinc-700 dark:text-zinc-200 shadow-[0_1px_2px_rgba(0,0,0,0.04)]"
-            >
-              <ArrowLeft class="w-3.5 h-3.5" :stroke-width="1.5" />
-              <span>{{ t('返回', 'Back') }}</span>
-            </button>
-          </div>
           <div class="ios-segmented">
             <button
               type="button"
@@ -5497,6 +5477,7 @@ onBeforeUnmount(() => {
           :predictions="mergedPredictions"
           :crowd-stats="crowdStatsMap"
           :calendar-events="mergedServerCalendarEvents"
+          :habit-sync-nonce="habitSyncNonce"
           :now-ms="nowMs"
           @select-week="handleSelectWeeklyIssue"
           @refresh="loadWeeklyDigest(selectedWeekId, true); void loadPredictions(true); void loadCalendar(true)"
@@ -5508,6 +5489,7 @@ onBeforeUnmount(() => {
           @jump-prediction="handleJumpToPredictionFromWeekly"
           @open-qa-prediction="openQaForPrediction"
           @mark-week-visited="markWeeklyDigestVisited"
+          @habit-changed="scheduleCloudPush()"
         />
       </template>
 
@@ -5562,7 +5544,20 @@ onBeforeUnmount(() => {
           @request-clear-local="clearConfirmModalOpen = true"
         />
       </template>
+      </div>
+      </Transition>
         </div>
+
+        <!-- 768~1279px Compact Floating Context Drawer Trigger (zero top-of-feed blank row) -->
+        <button
+          v-if="activeTab !== 'weekly' && activeTab !== 'calendar' && activeTab !== 'ai_progress'"
+          type="button"
+          @click="rightDrawerOpen = true"
+          class="hidden md:inline-flex xl:hidden desktop-shell-only ios-tap fixed bottom-5 right-5 z-30 items-center gap-1.5 h-9 px-3.5 rounded-full ios-glass border border-black/[0.08] dark:border-white/[0.12] text-xs font-semibold text-zinc-700 dark:text-zinc-200 shadow-lg hover:border-[#007AFF]/40"
+        >
+          <PanelRightOpen class="w-3.5 h-3.5 text-[#007AFF]" :stroke-width="1.75" />
+          <span>{{ t('行情与上下文', 'Context Rail') }}</span>
+        </button>
 
         <!-- RIGHT RAIL: Sticky Context Sidebar & Split-View Detail Reader (>=1280px; hidden on AI Frontier, Calendar/Predictions & Weekly Digest for full-width readability) -->
         <div

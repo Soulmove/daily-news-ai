@@ -7,6 +7,7 @@ import json
 from pathlib import Path
 import tempfile
 import unittest
+from unittest.mock import patch
 
 from pipeline.time_utils import SHANGHAI_TZ
 from pipeline.weekly_digest import (
@@ -16,8 +17,10 @@ from pipeline.weekly_digest import (
     _make_plain_title,
     _scrub_cliches,
     build_and_write_weekly_digest,
+    classify_weekly_sector,
     compute_natural_week_bounds,
     distill_weekly_candidates,
+    is_weekly_intraday_noise,
 )
 
 
@@ -260,3 +263,161 @@ class WeeklyDigestTests(unittest.TestCase):
 
             serialized = json.dumps(doc, ensure_ascii=False)
             self.assertIsNone(_CLICHE_PATTERNS.search(serialized))
+
+    def test_intraday_tick_filter_sector_routing_and_two_call_batched_ai(self) -> None:
+        self.assertTrue(is_weekly_intraday_noise("WTI原油日内下跌1%，现报80.50美元/桶。布伦特原油现跌0.8%。"))
+        self.assertTrue(is_weekly_intraday_noise("恒指、恒生科技指数均转跌。"))
+        self.assertTrue(is_weekly_intraday_noise("三星电子跌幅扩大至9%，SK海力士跌8.6%。"))
+        self.assertEqual(
+            classify_weekly_sector(
+                {
+                    "category": "global",
+                    "title": "三星电子与SK海力士签署新一代HBM4存储芯片量产供应协议",
+                    "fact_summary": "韩国存储芯片两大厂商推进下一代AI算力高带宽内存研发。",
+                }
+            ),
+            "tech_ai",
+        )
+
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            day = root / "archives" / "smart" / "2026-11-26" / "13-00"
+            day.mkdir(parents=True)
+            distinct_finance = [
+                ("央行开展8000亿中期借贷便利操作缓解年末资金压力", ["央行"]),
+                ("财政部增发3000亿超长期特别国债支持装备更新", ["财政部"]),
+                ("两融融资保证金下调方案引发沪深券商开户回暖", ["证监会"]),
+                ("十年期美债收益率回落至4.15%带动新兴市场汇市走稳", ["美债"]),
+                ("欧洲央行释放十二月可能暂停降息的最新会议纪要", ["欧央行"]),
+                ("日本央行行长暗示春季薪资谈判若超预期将继续加息", ["日央行"]),
+            ]
+            distinct_tech = [
+                ("阿里通义千问发布下一代旗舰开源推理模型降低调用费", ["Qwen"]),
+                ("台积电熊本二厂提前进入三纳米光刻机安装调试阶段", ["台积电"]),
+                ("微软宣布向欧洲工业云基础设施追加一百亿美元资本开支", ["微软"]),
+                ("华为升腾新一代算力集群完成万卡训练兼容性验证", ["华为"]),
+                ("谷歌发布轻量端侧多模态小模型适配安卓旗舰芯片", ["谷歌"]),
+                ("宇树人形机器人完成汽车总装线连续八小时实景测试", ["宇树"]),
+            ]
+            distinct_geo = [
+                ("联合国安理会审议红海商业航道护航机制延期草案", ["联合国"]),
+                ("欧盟与印尼签署关键矿产加工关税减免框架协议", ["欧盟"]),
+                ("OPEC主要产油国部长会议讨论明年一季度配额执行率", ["OPEC"]),
+                ("拉美四国宣布打通跨境光伏电站特高压联网标准", ["拉美"]),
+            ]
+            fin_evs = [
+                _sample_event(
+                    f"evt_m_{i}",
+                    title,
+                    "finance",
+                    summary=f"{title}，坚决拥护上级决策。核心资金规模达到 {100 + i * 37} 亿元。",
+                )
+                for i, (title, _ents) in enumerate(distinct_finance)
+            ]
+            for ev, (_, ents) in zip(fin_evs, distinct_finance):
+                ev["entities"] = ents
+            tech_evs = [
+                _sample_event(
+                    f"evt_t_{i}",
+                    title,
+                    "tech",
+                    summary=f"{title}，推理成本下降 {20 + i * 5}%，开发者今日可直接部署。",
+                )
+                for i, (title, _ents) in enumerate(distinct_tech)
+            ]
+            for ev, (_, ents) in zip(tech_evs, distinct_tech):
+                ev["entities"] = ents
+            geo_evs = [
+                _sample_event(
+                    f"evt_g_{i}",
+                    title,
+                    "global",
+                    summary=f"{title}，正式文本已于周四对外公布时间表。",
+                )
+                for i, (title, _ents) in enumerate(distinct_geo)
+            ]
+            for ev, (_, ents) in zip(geo_evs, distinct_geo):
+                ev["entities"] = ents
+            tick_ev = _sample_event("evt_tick_noise", "WTI原油日内下跌1%，现报80.50美元/桶。", "finance")
+
+            (day / "analysis_finance.json").write_text(json.dumps({"events": fin_evs + [tick_ev]}, ensure_ascii=False), encoding="utf-8")
+            (day / "analysis_tech.json").write_text(json.dumps({"events": tech_evs}, ensure_ascii=False), encoding="utf-8")
+            (day / "analysis_global.json").write_text(json.dumps({"events": geo_evs}, ensure_ascii=False), encoding="utf-8")
+
+            calls: list[dict] = []
+
+            class _FakeRes:
+                def __init__(self, data: dict):
+                    self.ok = True
+                    self.data = data
+                    self.model_used = "gemini-3-flash-preview"
+
+            def fake_gemini(scope: str, prompt: str, **kwargs):
+                calls.append({"scope": scope, "prompt": prompt})
+                if scope == "weekly_digest":
+                    return _FakeRes(
+                        {
+                            "week_theme": "大资金稳字当头，AI 拼成本落地",
+                            "executive_thesis": ["央行放水稳住资金面。", "大模型开始拼实打实的推理成本。", "贸易谈判先挑硬骨头啃。"],
+                            "keywords": ["央行流动性", "AI 降本"],
+                            "sectors_summary": {
+                                "macro_finance": "钱袋子稳住了",
+                                "geopolitics": "谈判桌上有松动",
+                                "tech_ai": "推理越做越便宜",
+                                "industry_society": "产业链忙着抢单",
+                            },
+                            "cross_sector_threads": [
+                                {"title": "算力降本传导制造", "from_sector": "tech_ai", "to_sector": "macro_finance", "logic": "芯片降本推高软件盈利预期。"}
+                            ],
+                            "next_week_catalysts": [
+                                {"date": "2026-12-01", "title": "制造业PMI出炉", "sector_id": "macro_finance", "why_watch": "看有没有站上50荣枯线", "action_hint": "盯紧资金开盘流向"}
+                            ],
+                            "next_week_outlook": [
+                                {
+                                    "id": "outlook_1",
+                                    "sector_id": "macro_finance",
+                                    "topic": "大盘开盘承接力度",
+                                    "direction": "volatile",
+                                    "direction_label": "先震荡后选方向",
+                                    "confidence_pct": 66,
+                                    "plain_forecast": "资金会在前两天先试探量能能不能站稳，再决定加仓还是缩手。",
+                                    "if_up_trigger": "成交量连续两天放大就偏强。",
+                                    "if_down_trigger": "高开低走就小心。",
+                                    "watch_time": "下周一二",
+                                    "linked_prediction_id": None,
+                                }
+                            ],
+                        }
+                    )
+                # Batch rewrite items call: extract IDs requested in batch prompt
+                import re as _re
+                ids = _re.findall(r'"(wk_[^"]+)"', prompt)
+                return _FakeRes(
+                    {
+                        "items": [
+                            {
+                                "id": rid,
+                                "plain_title": f"大白话短标 {rid[-4:]}",
+                                "one_line_takeaway": f"真金白银落地影响资金节奏 {rid[-4:]}",
+                                "why_it_matters": f"这件事直接改变行业里的订单和资金成本预期，影响接下来两周排产 {rid[-4:]}。",
+                                "next_week_watch": f"下周三前盯紧具体成交与招标数字 {rid[-4:]}",
+                            }
+                            for rid in dict.fromkeys(ids)
+                        ]
+                    }
+                )
+
+            thu = datetime(2026, 11, 26, 18, 0, tzinfo=SHANGHAI_TZ)
+            with patch("pipeline.weekly_digest.count_healthy_keys", return_value=5), patch(
+                "pipeline.weekly_digest.call_gemini_json", side_effect=fake_gemini
+            ):
+                doc = build_and_write_weekly_digest(root, ref_dt=thu, use_ai=True)
+
+            self.assertEqual(doc["generation_mode"], "ai_weekly_assisted_v1")
+            all_items = [it for sec in doc["sectors"] for it in sec["items"]]
+            self.assertEqual(len(all_items), 16)
+            self.assertFalse(any("WTI原油" in it["title"] for it in all_items))
+            self.assertTrue(all(it["next_week_watch"].startswith("下周三前盯紧") for it in all_items))
+            # 1 editorial call + 2 batched item calls for 16 items (12 + 4)
+            self.assertEqual([c["scope"] for c in calls], ["weekly_digest", "weekly_digest_items", "weekly_digest_items"])
+            self.assertNotIn("坚决拥护", json.dumps(doc, ensure_ascii=False))

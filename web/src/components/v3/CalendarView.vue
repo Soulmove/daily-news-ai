@@ -777,15 +777,21 @@ function resetAll() {
           </button>
         </div>
         <div class="flex flex-wrap items-center gap-1.5">
-          <select
-            v-model="certaintyFilter"
-            :aria-label="t('确定性', 'Certainty')"
-            class="h-8 px-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-[#F5F5F7] dark:bg-slate-800 text-slate-800 dark:text-slate-100 font-medium shrink-0"
-          >
-            <option value="all">{{ t('全部时效', 'All Timing') }}</option>
-            <option value="confirmed_official">{{ t('已确认时间', 'Confirmed') }}</option>
-            <option value="tbd">{{ t('时间待定', 'TBD') }}</option>
-          </select>
+          <div class="relative inline-flex items-center h-8 pl-2.5 pr-6 rounded-lg border border-slate-200 dark:border-slate-700 bg-[#F5F5F7] dark:bg-slate-800 text-slate-800 dark:text-slate-100 font-medium shrink-0">
+            <span class="pointer-events-none whitespace-nowrap">
+              {{ certaintyFilter === 'confirmed_official' ? t('已确认时间', 'Confirmed') : certaintyFilter === 'tbd' ? t('时间待定', 'TBD') : t('全部时效', 'All Timing') }}
+            </span>
+            <ChevronDown class="w-3.5 h-3.5 text-slate-400 pointer-events-none absolute right-1.5" />
+            <select
+              v-model="certaintyFilter"
+              :aria-label="t('确定性', 'Certainty')"
+              class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+            >
+              <option value="all">{{ t('全部时效', 'All Timing') }}</option>
+              <option value="confirmed_official">{{ t('已确认时间', 'Confirmed') }}</option>
+              <option value="tbd">{{ t('时间待定', 'TBD') }}</option>
+            </select>
+          </div>
           <button
             type="button"
             @click="onlyWatched = !onlyWatched"

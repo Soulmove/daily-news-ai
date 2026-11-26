@@ -186,10 +186,16 @@ async function fetchJsonWithTimeout(url: string, headers: Record<string, string>
   }
 }
 
-async function fetchWallstreetcnWire(fetchedIso: string): Promise<RawWireCandidate[]> {
+async function fetchWallstreetcnWireChannel(
+  channel: 'global-channel' | 'tech-channel' | 'us-stock-channel',
+  defaultCategory: 'finance' | 'tech' | 'global',
+  sourceId: string,
+  sourceName: string,
+  fetchedIso: string,
+): Promise<RawWireCandidate[]> {
   const urls = [
-    'https://api-one.wallstcn.com/apiv1/content/lives?channel=global-channel&limit=20',
-    'https://api-one-wscn.awtmt.com/apiv1/content/lives?channel=global-channel&limit=20',
+    `https://api-one.wallstcn.com/apiv1/content/lives?channel=${channel}&limit=20`,
+    `https://api-one-wscn.awtmt.com/apiv1/content/lives?channel=${channel}&limit=20`,
   ]
   let data: Record<string, unknown> | null = null
   for (const u of urls) {
@@ -220,9 +226,9 @@ async function fetchWallstreetcnWire(fetchedIso: string): Promise<RawWireCandida
     out.push({
       id,
       dedupKey: normalizeDedupKey(title) || id,
-      sourceId: 'wscn-global-channel',
-      sourceName: '华尔街见闻 7×24',
-      category: classifyWireItem(title, content, 'finance'),
+      sourceId,
+      sourceName,
+      category: classifyWireItem(title, content, defaultCategory),
       title,
       excerpt: content && content !== title ? content : '',
       url,
@@ -232,48 +238,6 @@ async function fetchWallstreetcnWire(fetchedIso: string): Promise<RawWireCandida
       severityTier: sev.tier,
       heavyReasonTag: sev.reasonTag,
       metricLabel: high ? '重要快讯' : null,
-      thumbnailUrl: null,
-    })
-  }
-  return out
-}
-
-async function fetchClsWire(fetchedIso: string): Promise<RawWireCandidate[]> {
-  const data = (await fetchJsonWithTimeout(
-    'https://www.cls.cn/nodeapi/telegraphList?app=CailianpressWeb&os=web&rn=20&sv=8.4.6',
-    { 'User-Agent': 'Mozilla/5.0 MirrorBrief/5.2', Referer: 'https://www.cls.cn/telegraph' },
-  )) as Record<string, unknown> | null
-  const rows = ((data?.data as Record<string, unknown> | undefined)?.roll_data as Array<Record<string, unknown>>) || []
-  const out: RawWireCandidate[] = []
-  for (const row of rows) {
-    const content = cleanWireText(row.content || row.brief, 260)
-    let title = cleanWireText(row.title, 150)
-    if (!title && content) {
-      const m = content.match(/【([^】]{4,80})】/)
-      title = m ? m[1] : cleanWireText(content, 88)
-    }
-    if (!title || title.length < 4 || PROMO_FLUFF_RE.test(title) || isEmptyClockWire(title, content)) continue
-    const url = String(row.shareurl || `https://www.cls.cn/detail/${row.id || ''}`).trim()
-    const pubIso = epochToShanghaiIso(row.ctime, fetchedIso)
-    const lvl = String(row.level || 'C').toUpperCase()
-    const high = lvl === 'A' || lvl === 'B'
-    const sev = inferSeverityAndTag(title, content, high)
-    const id = `cls_${await sha256Hex(`${url}|${title}`)}`.slice(0, 32)
-    out.push({
-      id,
-      dedupKey: normalizeDedupKey(title) || id,
-      sourceId: 'cls-live',
-      sourceName: '财联社 7×24 电报',
-      category: classifyWireItem(title, content, 'finance'),
-      title,
-      excerpt: content && content !== title ? content : '',
-      url,
-      publishedAt: pubIso,
-      fetchedAt: fetchedIso,
-      importance: high || sev.tier !== 'B' ? 'high' : 'normal',
-      severityTier: sev.tier,
-      heavyReasonTag: sev.reasonTag,
-      metricLabel: high ? '加红电报' : null,
       thumbnailUrl: null,
     })
   }
@@ -328,13 +292,13 @@ async function fetchSinaWire(fetchedIso: string): Promise<RawWireCandidate[]> {
 
 export async function runWireCron(env: Env): Promise<{ inserted: number; total_fetched: number; updated_at: string }> {
   const fetchedIso = nowShanghaiIso()
-  const [wscn, cls, sina] = await Promise.all([
-    fetchWallstreetcnWire(fetchedIso),
-    fetchClsWire(fetchedIso),
+  const [wscnGlobal, wscnTech, sina] = await Promise.all([
+    fetchWallstreetcnWireChannel('global-channel', 'finance', 'wscn-global-channel', '华尔街见闻 7×24', fetchedIso),
+    fetchWallstreetcnWireChannel('tech-channel', 'tech', 'wscn-tech-channel', '华尔街见闻 科技AI', fetchedIso),
     fetchSinaWire(fetchedIso),
   ])
 
-  const combined = [...wscn, ...cls, ...sina].sort((a, b) => b.publishedAt.localeCompare(a.publishedAt))
+  const combined = [...wscnGlobal, ...wscnTech, ...sina].sort((a, b) => b.publishedAt.localeCompare(a.publishedAt))
   const seenDedup = new Set<string>()
   const unique: RawWireCandidate[] = []
   for (const item of combined) {

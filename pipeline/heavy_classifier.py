@@ -26,6 +26,7 @@ HEAVY_NOISE_EXCLUDE_RE = re.compile(
     r"中间价|上海钢联|现货报价|提议设|提议(?:将|用).{0,24}限制|呼吁限制|"
     r"涨停|持续活跃|短剧|影视股|概念股拉升|盘中拉升|探底回升|重仓股曝光|"
     r"离婚案|财产分割|离婚诉讼|和解方案|赡养费|婚变|SK集团会长.{0,12}离婚|"
+    r"打包粤菜|潮粤菜|品尝.{0,8}菜|下榻.{0,12}酒店|打卡.{0,8}美食|网友热议|冲上热搜|趣闻|花絮|表情包|穿搭|晒照|偶遇|走红网络|课间.{0,8}说话|被认定违纪|U17|国少|"
     r"(?:省委书记|省委常委|省长|副省长|市委书记|市长|副市长|区委书记|区长|县委书记|县长|省政协|市政协).{0,24}(?:会见|调研|考察|座谈|签约|致辞|出席|强调)|"
     r"(?:会见|接待).{0,20}(?:董事长|总裁|一行|代表团)|"
     r"台湾|台湾地区|只要.*诉求|立场明确|呼吁对话|传递想法|保持密切对话)",
@@ -233,12 +234,12 @@ def infer_heavy_reason_tag(title: str, summary_or_excerpt: str = "") -> str:
             return "元首/央行表态"
         if re.search(r"暴跌|涨超|跌超|飙升|破发|腰斩|熔断|闪崩|危机|抛售|IPO|垃圾级|440亿|比特币|市值", chunk, re.I):
             return "市场剧震"
-        return "巨头重大变动" if allow_fallback else None
+        return "要闻聚焦" if allow_fallback else None
 
     hit = _classify(title or "", allow_fallback=False)
     if hit:
         return hit
-    return _classify(summary_or_excerpt or "", allow_fallback=True) or "巨头重大变动"
+    return _classify(summary_or_excerpt or "", allow_fallback=True) or "要闻聚焦"
 
 
 def _event_ts_age_hours(ev: dict, now_dt: Any) -> Tuple[str, float]:

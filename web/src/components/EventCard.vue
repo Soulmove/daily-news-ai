@@ -465,10 +465,12 @@ function runSheetAction(fn: () => void) {
       :class="[
         grouped
           ? 'bg-white dark:bg-[#1C1C1E] hover:bg-black/[0.015] dark:hover:bg-[#242426]'
-          : 'ios-card hover:shadow-[0_4px_14px_rgba(0,0,0,0.06)] dark:hover:bg-[#242426]',
+          : 'ios-card jx-card-interactive dark:hover:bg-[#242426]',
         isHighlighted || isKeyboardFocused ? 'ring-2 ring-inset ring-[#007AFF]/50' : '',
-        (event.severity_tier === 'S' || event.severity_tier === 'A' || event.importance === 'high') && !isRead ? 'border-l-[3px] border-l-[#DC2626]' : '',
-        isRead && !expanded ? 'opacity-70' : '',
+        (event.severity_tier === 'S' || event.severity_tier === 'A' || event.importance === 'high')
+          ? (isRead ? 'border-l-[3px] border-l-rose-400/45 dark:border-l-rose-500/40' : 'border-l-[3px] border-l-[#DC2626]')
+          : '',
+        isRead && !expanded ? 'opacity-75' : '',
       ]"
     >
       <!-- Swipe Toast Pill -->
@@ -484,7 +486,7 @@ function runSheetAction(fn: () => void) {
         }}
       </div>
 
-      <div :class="featured ? 'p-4 sm:p-5' : isCompact ? 'px-3.5 py-3' : 'p-4 sm:p-5'">
+      <div :class="featured ? (isCompact ? 'p-3.5 sm:p-4' : 'p-4 sm:p-5') : isCompact ? 'px-3.5 py-3' : 'p-4 sm:p-5'">
         <!-- Lead Eyebrow (only on Lead Story #1) or Cross-Domain Blindspot Eyebrow -->
         <div v-if="crossDomainBadge" class="mb-1.5 flex flex-wrap items-center gap-2 text-[11px]">
           <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-indigo-500/12 text-indigo-700 dark:bg-indigo-400/15 dark:text-indigo-300 font-semibold">
@@ -542,13 +544,13 @@ function runSheetAction(fn: () => void) {
               {{ pickBiText(event.title_zh || event.title, event.title_en || event.title) }}
             </h3>
 
-            <!-- Lead Story & Standard mode show summary inline; Compact mode fills 1-line snippet when thumbnail present to avoid vertical whitespace -->
+            <!-- Lead Story & Standard mode show summary inline; Compact mode fills 1-line snippet -->
             <p
               v-if="featured || !isCompact || expanded || (realThumbUrl && !thumbLoadFailed && cleanFactSummary)"
               class="text-zinc-600 dark:text-zinc-300 leading-[1.45]"
               :class="[
-                isCompact && !featured && !expanded ? 'text-[13px] line-clamp-1' : 'text-[14px] sm:text-[15px]',
-                !expanded && !(isCompact && !featured) ? 'line-clamp-2' : '',
+                isCompact && !expanded ? 'text-[13px] line-clamp-1' : 'text-[14px] sm:text-[15px]',
+                !expanded && !isCompact ? 'line-clamp-2' : '',
               ]"
             >
               <template v-if="isPlaceholderOrUntranslatedSummary">
@@ -572,7 +574,7 @@ function runSheetAction(fn: () => void) {
                   data-testid="deep-qa-pill"
                 >
                   <HelpCircle class="w-3 h-3 shrink-0 text-[#007AFF]" :stroke-width="1.8" />
-                  <span class="truncate max-w-[230px]">{{ qa.question }}</span>
+                  <span class="truncate max-w-[240px] sm:max-w-[440px] lg:max-w-[520px]">{{ qa.question }}</span>
                 </button>
               </div>
               <div

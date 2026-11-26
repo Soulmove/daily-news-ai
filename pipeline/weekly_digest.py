@@ -77,7 +77,7 @@ DAY_LABELS_ZH: Tuple[str, ...] = ("周日", "周一", "周二", "周三", "周�
 
 _TECH_AI_RE = re.compile(
     r"(?:openai|anthropic|claude|gpt-?\d|gemini|deepseek|qwen|llama|mistral|hugging\s?face|arxiv|大模型|"
-    r"人工智能|\bai\b|aigc|算力|芯片|半导体|晶圆|光刻机|hbm|英伟达|nvidia|amd|tsmc|台积电|asml|"
+    r"人工智能|\bai\b|aigc|算力|芯片|半导体|存储芯片|三星电子|sk海力士|海力士|晶圆|光刻机|hbm|英伟达|nvidia|amd|tsmc|台积电|asml|"
     r"开源模型|github|微软.*ai|谷歌.*ai|苹果.*ai|马斯克.*xai|机器人|自动驾驶|量子计算|云计算)",
     re.I,
 )
@@ -94,13 +94,41 @@ _MACRO_FINANCE_RE = re.compile(
     re.I,
 )
 _INDUSTRY_CORP_RE = re.compile(
-    r"(?:利润|营收|盈利|净利润|财报|亏损|利润预警|裁员|并购|收购|销量|航司|燃油成本|汽车|订单|产能|破产|门店|消费|零售|制造)",
+    r"(?:利润|营收|盈利|净利润|财报|亏损|利润预警|裁员|并购|收购|销量|航司|燃油成本|汽车|订单|产能|破产|门店|消费|零售|制造|光储|光伏|储能|逆变器)",
     re.I,
 )
 _WEEKLY_INTRADAY_NOISE_RE = re.compile(
     r"(?:^美股盘前|半日涨超|高开低走|低开高走|午评|收评|集体回落|集体收跌|逆市高开|CPO概念震荡反弹|打包粤菜|被撞亡|U17|国少|早间要闻|学生课间|说四川话|被认定违纪)",
     re.I,
 )
+_WEEKLY_INTRADAY_TICK_RE = re.compile(
+    r"(?:日内下跌|日内上涨|日内跌超|日内涨超|现报\d|均转跌|均转涨|(?:指数|恒指|沪指|创指)[^\n]{0,12}转跌|跌幅扩大至|涨幅扩大至|"
+    r"盘中大涨|盘中大跌|盘中跌超|盘中涨超|短线拉升|短线跳水|盘中走强|盘中走弱)",
+    re.I,
+)
+_WEEKLY_CATALYST_EXEMPT_RE = re.compile(
+    r"(?:美联储|央行|降息|加息|财报|营收|利润|并购|收购|关税|制裁|停火|袭击|法案|证监会|交易所|FCC|黄仁勋|回归)",
+    re.I,
+)
+_WEEKLY_BARE_TICK_LEAD_RE = re.compile(
+    r"^[^，。]{0,24}(?:现报|均转[涨跌]|日内(?:下跌|上涨|跌超|涨超)|[涨跌]幅扩大至)",
+    re.I,
+)
+
+
+def is_weekly_intraday_noise(title: str, summary: str = "") -> bool:
+    """Filter ephemeral intraday price fluctuations while retaining catalyst-driven market moves."""
+    t = str(title or "").strip()
+    if not t:
+        return True
+    if _WEEKLY_INTRADAY_NOISE_RE.search(t):
+        return True
+    if _WEEKLY_INTRADAY_TICK_RE.search(t):
+        if _WEEKLY_BARE_TICK_LEAD_RE.search(t) and len(t) <= 52:
+            return True
+        if not _WEEKLY_CATALYST_EXEMPT_RE.search(f"{t} {summary[:120]}"):
+            return True
+    return False
 _SUBJECT_ANCHORS_RE = re.compile(
     r"(?:英伟达|nvidia|黄仁勋|anthropic|openai|DeepSeek|马斯克|特朗普|美联储|央行|mlf|逆回购|黄金|白银|原油|油轮|霍尔木兹|利比亚|俄罗斯|俄军|乌克兰|航天员|神舟二十四|神舟|COP31|保证金)",
     re.I,
@@ -389,7 +417,7 @@ def distill_weekly_candidates(
                 continue
             if is_omnibus_digest_title(title) or is_consumer_promo_or_fluff(title, summary):
                 continue
-            if is_heavy_noise_excluded(title, summary) or _WEEKLY_INTRADAY_NOISE_RE.search(title):
+            if is_heavy_noise_excluded(title, summary) or is_weekly_intraday_noise(title, summary):
                 continue
 
             sources = [s for s in (ev.get("sources") or []) if isinstance(s, dict)]
@@ -488,8 +516,8 @@ def distill_weekly_candidates(
                 entry["evolution_steps"].append(
                     {
                         "date": snap_time_label or snap_date,
-                        "headline": title,
-                        "detail": summary[:140],
+                        "headline": _scrub_cliches(title, fallback=_clean_text(title, 88), max_len=90),
+                        "detail": _scrub_cliches(summary, fallback=_clean_text(title, 90), max_len=140),
                     }
                 )
 
@@ -859,6 +887,83 @@ def _build_deterministic_synthesis(stage1: Dict[str, Any]) -> Dict[str, Any]:
     }
 
 
+_WRITING_IRON_RULES = (
+    "【严格写作铁律（违反会被程序直接拦截删改）】:\n"
+    "1. 绝对禁止一切公文套话与券商空话，包括但不限于：持续推进、坚决拥护、全面从严、开放包容、深化交流、坚实支撑、常态化阶段、里程碑式突破、核心变量变化、边际变化、定价逻辑、方向性调整、精细化管理、合理充裕、存量博弈、虹吸效应、平抑波动、持续跟踪进展、关注官方通报、关注后续外溢、引发广泛关注、实际效果待实测验证、展现意愿。\n"
+    "2. one_line_takeaway 禁止直接复读或截断原标题（例如标题写“央行8000亿MLF”，精华不能再写“央行开展8000亿MLF”），必须直接点破“到底干了啥、谁受影响”。\n"
+    "3. why_it_matters 用大白话讲清楚：这件事和普通投资者/行业里的人有什么实际关系、谁得利谁难受、下一步会卡在哪。\n"
+    "4. next_week_watch 必须写具体可验证的数字、时间或指标（如“看下周一两融成交能不能冲上1.8万亿”），严禁写“继续观察/持续关注后续动态/看官方口径”。\n"
+    "5. 禁止任何表情符号 emoji，只输出严格 JSON 对象。"
+)
+
+
+def _extract_item_overrides(
+    raw_rows: Any,
+    items_by_id: Dict[str, Dict[str, Any]],
+) -> Dict[str, Dict[str, str]]:
+    overrides: Dict[str, Dict[str, str]] = {}
+    if not isinstance(raw_rows, list):
+        return overrides
+    for row in raw_rows:
+        if not isinstance(row, dict) or not row.get("id"):
+            continue
+        rid = str(row["id"])
+        orig_it = items_by_id.get(rid) or {}
+        orig_title = str(orig_it.get("title") or "")
+        pt = _clean_text(row.get("plain_title") or "", 64)
+        ot_raw = _scrub_cliches(row.get("one_line_takeaway") or "", fallback="", max_len=110)
+        if ot_raw and orig_title and _is_title_parrot(ot_raw, orig_title):
+            ot_raw = ""
+        why_raw = _scrub_cliches(row.get("why_it_matters") or "", fallback="", max_len=240)
+        watch_raw = _scrub_cliches(row.get("next_week_watch") or "", fallback="", max_len=120)
+        overrides[rid] = {
+            "plain_title": pt,
+            "one_line_takeaway": ot_raw,
+            "why_it_matters": why_raw,
+            "next_week_watch": watch_raw,
+        }
+    return overrides
+
+
+def _rewrite_item_batch_with_ai(
+    batch_candidates: List[Dict[str, Any]],
+    items_by_id: Dict[str, Dict[str, Any]],
+    base_path: Path,
+) -> Tuple[Dict[str, Dict[str, str]], Optional[str]]:
+    if not batch_candidates:
+        return {}, None
+    batch_ids = [c["id"] for c in batch_candidates]
+    batch_prompt = (
+        "你是镜信 MirrorBrief 周刊首席主编。请用【大白话、讲人话、直接给判断】逐条改写下面这一批本周大事。\n"
+        f"必须覆盖全部 {len(batch_candidates)} 个 ID，一个都不能漏（ID 列表：{json.dumps(batch_ids, ensure_ascii=False)}）。\n\n"
+        f"事件列表：\n{json.dumps(batch_candidates, ensure_ascii=False)}\n\n"
+        f"{_WRITING_IRON_RULES}\n"
+        "请只输出以下 JSON 结构：\n"
+        "{\n"
+        '  "items": [\n'
+        '    {\n'
+        '      "id": "必须与输入id完全一致",\n'
+        '      "plain_title": "帮用户把长公文/绕口新闻改写成<=26字的直白短标题",\n'
+        '      "one_line_takeaway": "大概看一句话点破干了啥与谁受影响(<=45字，禁止复读标题)",\n'
+        '      "why_it_matters": "细看大白话：到底有啥实际影响、谁赚谁亏、卡在哪(55-105字)",\n'
+        '      "next_week_watch": "具体可验证的下周时间点、数值或市场指标(<=45字)"\n'
+        "    }\n"
+        "  ]\n"
+        "}"
+    )
+    res = call_gemini_json(
+        scope="weekly_digest_items",
+        prompt=batch_prompt,
+        tier="tier1",
+        temperature=0.25,
+        timeout_ms=42_000,
+        base_dir=base_path,
+    )
+    if not res.ok or not isinstance(res.data, dict):
+        return {}, None
+    return _extract_item_overrides(res.data.get("items"), items_by_id), res.model_used
+
+
 def _enrich_with_ai(stage1: Dict[str, Any], base_path: Path, use_ai: bool = True) -> Dict[str, Any]:
     fallback = _build_deterministic_synthesis(stage1)
     items = stage1["items"]
@@ -899,19 +1004,16 @@ def _enrich_with_ai(stage1: Dict[str, Any], base_path: Path, use_ai: bool = True
         for p in open_preds[:8]
     ]
 
+    # Call 1: Editorial synthesis + 4 sector leads + cross-sector logic + concrete next-week outlook
     prompt = (
         "你是镜信 MirrorBrief 周刊首席主编。请你像一个思维犀利、长期跟踪全球政经科技的老朋友那样，"
-        "用【大白话、讲人话、直接给判断】把本周这批已经去重、分好 4 个板块的重大新闻讲透，再给出可检验的下周走向预测。\n\n"
-        f"本周候选事件（4 个板块已固定，不得增删 ID）：\n{json.dumps(compact_candidates, ensure_ascii=False)}\n\n"
+        "用【大白话、讲人话、直接给判断】总结本周全局主线，并给出可检验的下周走向预测。\n\n"
+        f"本周重点候选事件（共 {len(compact_candidates)} 条）：\n{json.dumps(compact_candidates, ensure_ascii=False)}\n\n"
         f"下周重点时间表：{json.dumps(compact_cal, ensure_ascii=False)}\n\n"
         f"站内正在进行的预测题目（可用于关联 linked_prediction_id）：\n{json.dumps(compact_preds, ensure_ascii=False)}\n\n"
-        "【严格写作铁律（违反会被程序直接拦截删改）】:\n"
-        "1. 绝对禁止一切公文套话与券商空话，包括但不限于：持续推进、坚决拥护、全面从严、开放包容、深化交流、坚实支撑、常态化阶段、里程碑式突破、核心变量变化、边际变化、定价逻辑、方向性调整、精细化管理、合理充裕、存量博弈、虹吸效应、平抑波动、持续跟踪进展、关注官方通报、关注后续外溢、引发广泛关注、实际效果待实测验证、展现意愿。\n"
-        "2. one_line_takeaway 禁止直接复读或截断原标题（例如标题写“央行8000亿MLF”，精华不能再写“央行开展8000亿MLF”），必须直接点破“到底干了啥、谁受影响”。\n"
-        "3. why_it_matters 用大白话讲清楚：这件事和普通投资者/行业里的人有什么实际关系、谁得利谁难受、下一步会卡在哪。\n"
-        "4. next_week_watch 必须写具体可验证的数字、时间或指标（如“看下周一两融成交能不能冲上1.8万亿”），严禁写“继续观察/持续关注后续动态”。\n"
-        "5. 下周走向预测（next_week_outlook）必须给 4~5 条硬核、具体、敢亮方向的推演，写明如果出现什么具体信号怎么走（if_up_trigger），踩到什么红线怎么小心（if_down_trigger）。\n"
-        "6. 禁止任何表情符号 emoji，只输出严格 JSON 对象：\n"
+        f"{_WRITING_IRON_RULES}\n"
+        "5. 下周走向预测（next_week_outlook）必须给 4~5 条硬核、具体、敢亮方向的推演，写明如果出现什么具体信号怎么走（if_up_trigger），踩到什么红线怎么小心（if_down_trigger）。\n\n"
+        "只输出严格 JSON 对象：\n"
         "{\n"
         '  "week_theme": "大白话一句话点透这周最大主线（<=32字）",\n'
         '  "executive_thesis": ["3条大白话总结这周最核心的3件事，每条<=55字"],\n'
@@ -922,9 +1024,6 @@ def _enrich_with_ai(stage1: Dict[str, Any], base_path: Path, use_ai: bool = True
         '    "tech_ai": "大白话总结本周科技与AI板块",\n'
         '    "industry_society": "大白话总结本周产业和社会板块"\n'
         "  },\n"
-        '  "items": [\n'
-        '    {"id": "对应id", "plain_title": "帮用户把长公文/绕口新闻改写成<=26字的直白短标题", "one_line_takeaway": "大概看一句话点破干了啥(<=45字，不许复读标题)", "why_it_matters": "细看大白话：到底有啥实际影响(55-105字)", "next_week_watch": "具体可验证的下周信号(<=45字)"}\n'
-        "  ],\n"
         '  "cross_sector_threads": [\n'
         '    {"title": "大白话跨板块联动标题", "from_sector": "macro_finance|geopolitics|tech_ai|industry_society", "to_sector": "macro_finance|geopolitics|tech_ai|industry_society", "logic": "一句话讲清这几件事是怎么互相咬合影响的"}\n'
         "  ],\n"
@@ -945,30 +1044,23 @@ def _enrich_with_ai(stage1: Dict[str, Any], base_path: Path, use_ai: bool = True
         timeout_ms=42_000,
         base_dir=base_path,
     )
-    if not res.ok or not isinstance(res.data, dict):
-        return fallback
-
-    data = res.data
+    data = res.data if (res.ok and isinstance(res.data, dict)) else {}
     items_by_id = {it["id"]: it for it in items}
-    overrides: Dict[str, Dict[str, str]] = {}
-    for row in data.get("items") or []:
-        if not isinstance(row, dict) or not row.get("id"):
-            continue
-        rid = str(row["id"])
-        orig_it = items_by_id.get(rid) or {}
-        orig_title = str(orig_it.get("title") or "")
-        pt = _clean_text(row.get("plain_title") or "", 64)
-        ot_raw = _scrub_cliches(row.get("one_line_takeaway") or "", fallback="", max_len=110)
-        if ot_raw and orig_title and _is_title_parrot(ot_raw, orig_title):
-            ot_raw = ""
-        why_raw = _scrub_cliches(row.get("why_it_matters") or "", fallback="", max_len=240)
-        watch_raw = _scrub_cliches(row.get("next_week_watch") or "", fallback="", max_len=120)
-        overrides[rid] = {
-            "plain_title": pt,
-            "one_line_takeaway": ot_raw,
-            "why_it_matters": why_raw,
-            "next_week_watch": watch_raw,
-        }
+    overrides: Dict[str, Dict[str, str]] = _extract_item_overrides(data.get("items"), items_by_id)
+    model_used = res.model_used if res.ok else None
+
+    # Call 2+: Batched per-item plain-talk rewrites so all 24 items reach 100% coverage without truncation
+    missing_candidates = [c for c in compact_candidates if c["id"] not in overrides]
+    batch_size = 12
+    for start in range(0, len(missing_candidates), batch_size):
+        batch = missing_candidates[start : start + batch_size]
+        batch_ov, batch_model = _rewrite_item_batch_with_ai(batch, items_by_id, base_path)
+        overrides.update(batch_ov)
+        if not model_used and batch_model:
+            model_used = batch_model
+
+    if not data and not overrides:
+        return fallback
 
     sectors_summary = dict(fallback["sectors_summary"])
     if isinstance(data.get("sectors_summary"), dict):
@@ -1064,7 +1156,7 @@ def _enrich_with_ai(stage1: Dict[str, Any], base_path: Path, use_ai: bool = True
     theme_clean = _scrub_cliches(data.get("week_theme") or "", fallback="", max_len=70)
     return {
         "generation_mode": "ai_weekly_assisted_v1",
-        "model_used": res.model_used,
+        "model_used": model_used,
         "week_theme": theme_clean or fallback["week_theme"],
         "executive_thesis": thesis or fallback["executive_thesis"],
         "keywords": keywords or fallback["keywords"],
@@ -1099,6 +1191,7 @@ def build_and_write_weekly_digest(
             ov = overrides.get(raw_it["id"]) or {}
             clean_it = {
                 **raw_it,
+                "fact_summary": _scrub_cliches(raw_it.get("fact_summary") or "", fallback=raw_it["title"], max_len=300),
                 "plain_title": ov.get("plain_title") or raw_it.get("plain_title") or raw_it["title"],
                 "one_line_takeaway": ov.get("one_line_takeaway") or raw_it["one_line_takeaway"],
                 "why_it_matters": ov.get("why_it_matters") or raw_it["why_it_matters"],

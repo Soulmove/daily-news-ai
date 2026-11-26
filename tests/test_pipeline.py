@@ -5251,7 +5251,11 @@ class V3PipelineRegressionTests(unittest.TestCase):
                 self.assertNotIn("2026-11-12", json.dumps(v, ensure_ascii=False))
 
     def test_heavy_classifier_excludes_local_official_routine_meetings(self):
-        from pipeline.heavy_classifier import is_heavy_noise_excluded, infer_heavy_reason_tag
+        from pipeline.heavy_classifier import (
+            compute_deterministic_heavy_score,
+            infer_heavy_reason_tag,
+            is_heavy_noise_excluded,
+        )
 
         local_title = "某省省委书记会见跨国企业董事长一行并座谈"
         self.assertTrue(is_heavy_noise_excluded(local_title))
@@ -5264,6 +5268,18 @@ class V3PipelineRegressionTests(unittest.TestCase):
         fomc_title = "美联储FOMC维持基准利率不变，鲍威尔称仍需观察通胀走势"
         self.assertFalse(is_heavy_noise_excluded(fomc_title))
         self.assertEqual(infer_heavy_reason_tag(fomc_title), "元首/央行表态")
+
+        cantonese_title = "普京专门打包粤菜上飞机"
+        self.assertTrue(is_heavy_noise_excluded(cantonese_title))
+        self.assertEqual(
+            compute_deterministic_heavy_score(
+                cantonese_title,
+                "俄罗斯总统在酒店点名品尝潮粤菜并打包带走。",
+                independent_publishers=2,
+            ),
+            0.0,
+        )
+        self.assertEqual(infer_heavy_reason_tag("普通地方项目发布阶段进展"), "要闻聚焦")
 
 
 if __name__ == "__main__":

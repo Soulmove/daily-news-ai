@@ -475,12 +475,12 @@ watch(
     <!-- Mobile/Tablet Only Horizontal Benchmark Quotes Strip (hidden on xl desktop where right rail shows indices without duplication) -->
     <div
       v-if="displayIndices.length > 0"
-      class="xl:hidden grid grid-cols-2 sm:flex sm:flex-wrap items-center gap-1.5 pb-0.5"
+      class="xl:hidden grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-1.5 pb-0.5"
     >
       <div
         v-for="idx in displayIndices"
         :key="idx.ticker"
-        class="ios-card px-2.5 py-1.5 flex items-center justify-between sm:justify-start gap-1.5 sm:gap-2 text-xs min-w-0 transition-all duration-300"
+        class="ios-card px-2.5 py-1.5 flex items-center justify-between gap-1.5 text-xs min-w-0 transition-all duration-300"
         :class="
           flashingTickers[idx.ticker] === 'up'
             ? (isRedUp() ? 'jx-tick-up ring-1 ring-rose-500/40' : 'jx-tick-up ring-1 ring-emerald-500/40')
@@ -494,14 +494,14 @@ watch(
         </span>
         <span class="inline-flex items-center gap-1 shrink-0">
           <span class="font-mono font-bold text-zinc-950 dark:text-white tabular-nums">
-            <OdometerNumber :value="idx.price" />
+            <OdometerNumber :value="idx.price" :decimals="2" />
           </span>
           <span
             v-if="idx.pct_change != null"
             class="font-mono text-[11px] font-semibold tabular-nums"
             :class="idx.pct_change >= 0 ? marketUpTextClass() : marketDownTextClass()"
           >
-            {{ idx.pct_change >= 0 ? `+${idx.pct_change}%` : `${idx.pct_change}%` }}
+            {{ idx.pct_change >= 0 ? `+${idx.pct_change.toFixed(2)}%` : `${idx.pct_change.toFixed(2)}%` }}
           </span>
         </span>
       </div>

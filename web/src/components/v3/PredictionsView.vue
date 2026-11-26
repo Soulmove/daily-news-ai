@@ -93,9 +93,9 @@ const emit = defineEmits<{
 }>()
 
 const categoryFilter = ref<'all' | PredictionCategory | 'settled'>('all')
-const showLeaderboard = ref(true)
-const arenaBoardOpen = ref(true)
-const summaryOpenMobile = ref(false)
+const showLeaderboard = ref(false)
+const arenaBoardOpen = ref(false)
+const sprintCollapsed = ref(false)
 const brierHelpOpen = ref(false)
 const expandedResearchIds = ref<Set<string>>(new Set())
 const leaderboardCopied = ref(false)
@@ -723,7 +723,7 @@ function submitSettle(id: string) {
       <!-- Left: Daily 3-Question Speed Sprint -->
       <div
         v-if="sprintQuestions.length > 0"
-        class="lg:col-span-7 rounded-2xl border border-emerald-500/25 bg-gradient-to-br from-emerald-500/[0.06] via-white to-white dark:from-emerald-400/[0.08] dark:via-slate-900 dark:to-slate-900 p-3.5 sm:p-4 space-y-2.5 shadow-xs"
+        class="lg:col-span-7 rounded-2xl border border-emerald-500/25 bg-gradient-to-br from-emerald-500/[0.06] via-white to-white dark:from-emerald-400/[0.08] dark:via-slate-900 dark:to-slate-900 p-3 sm:p-3.5 space-y-2 shadow-xs"
         data-testid="daily-sprint-card"
       >
         <div class="flex flex-wrap items-center justify-between gap-2">
@@ -739,10 +739,10 @@ function submitSettle(id: string) {
               v-for="(sq, idx) in sprintQuestions"
               :key="`sp-dot-${sq.prediction_id}`"
               type="button"
-              @click="sprintIdx = idx"
-              class="px-2 py-0.5 rounded-md font-mono text-[11px] font-semibold border transition-colors"
+              @click="sprintCollapsed = false; sprintIdx = idx"
+              class="min-w-[34px] min-h-[30px] px-2 rounded-lg font-mono text-[11px] font-semibold border transition-colors"
               :class="
-                idx === sprintIdx % sprintQuestions.length
+                idx === sprintIdx % sprintQuestions.length && !sprintCollapsed
                   ? 'bg-emerald-600 text-white border-emerald-600'
                   : hasUserForecasted(sq.prediction_id)
                     ? 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border-emerald-500/30'
@@ -751,10 +751,19 @@ function submitSettle(id: string) {
             >
               #{{ idx + 1 }}
             </button>
+            <button
+              type="button"
+              @click="sprintCollapsed = !sprintCollapsed"
+              class="w-8 h-8 rounded-lg inline-flex items-center justify-center text-slate-400 hover:text-slate-700 dark:hover:text-slate-200"
+              :aria-label="sprintCollapsed ? t('展开极速打卡', 'Expand sprint') : t('收起极速打卡', 'Collapse sprint')"
+            >
+              <ChevronDown class="w-4 h-4 transition-transform" :class="{ 'rotate-180': !sprintCollapsed }" />
+            </button>
           </div>
         </div>
 
-        <template v-if="currentSprintRec">
+        <template v-if="currentSprintRec && !sprintCollapsed">
+          <div class="jx-collapse-reveal space-y-2">
           <div class="space-y-1">
             <div class="flex flex-wrap items-center gap-1.5 text-[11px]">
               <span
@@ -810,13 +819,13 @@ function submitSettle(id: string) {
           </div>
 
           <div class="flex flex-wrap items-center justify-between gap-2">
-            <div class="flex flex-wrap items-center gap-1">
+            <div class="flex sm:flex-wrap items-center gap-1 overflow-x-auto no-scrollbar scroll-fade-x w-full sm:w-auto pb-0.5 sm:pb-0">
               <button
                 v-for="tag in reasonTagsList"
                 :key="`sp-tag-${tag}`"
                 type="button"
                 @click="toggleReasonDraft(currentSprintRec.prediction_id, tag)"
-                class="px-2 py-0.5 rounded-full text-[11px] border transition-colors"
+                class="px-2.5 min-h-[28px] rounded-full text-[11px] border transition-colors whitespace-nowrap shrink-0"
                 :class="
                   getReasonDraft(currentSprintRec) === tag
                     ? 'bg-slate-900 text-white border-slate-900 dark:bg-blue-600 dark:border-blue-600'
@@ -830,7 +839,7 @@ function submitSettle(id: string) {
               <button
                 type="button"
                 @click="emit('open-qa-prediction', currentSprintRec)"
-                class="inline-flex items-center gap-1 px-2.5 min-h-[32px] rounded-xl border border-blue-200 dark:border-blue-800 text-[#007AFF] dark:text-[#64D2FF] font-semibold hover:bg-blue-50 dark:hover:bg-blue-950/30"
+                class="inline-flex items-center gap-1 px-2.5 min-h-[34px] rounded-xl border border-blue-200 dark:border-blue-800 text-[#007AFF] dark:text-[#64D2FF] font-semibold hover:bg-blue-50 dark:hover:bg-blue-950/30"
               >
                 <MessageSquareText class="w-3.5 h-3.5" />
                 <span>{{ t('AI 查证据', 'Ask AI') }}</span>
@@ -838,7 +847,7 @@ function submitSettle(id: string) {
               <button
                 type="button"
                 @click="openSprintResearch(currentSprintRec)"
-                class="inline-flex items-center gap-1 px-2.5 min-h-[32px] rounded-xl border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 font-semibold hover:bg-slate-50 dark:hover:bg-slate-800"
+                class="inline-flex items-center gap-1 px-2.5 min-h-[34px] rounded-xl border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 font-semibold hover:bg-slate-50 dark:hover:bg-slate-800"
               >
                 <BookOpen class="w-3.5 h-3.5" />
                 <span>{{ t('看关联数据', 'Data') }}</span>
@@ -846,7 +855,7 @@ function submitSettle(id: string) {
               <button
                 type="button"
                 @click="submitSprintAndAdvance"
-                class="px-3 min-h-[32px] rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold"
+                class="px-3 min-h-[34px] rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold"
                 data-testid="sprint-submit-btn"
               >
                 {{
@@ -861,26 +870,27 @@ function submitSettle(id: string) {
                 v-if="sprintDoneCount >= sprintQuestions.length"
                 type="button"
                 @click="emit('open-share-pk', { rec: currentSprintRec, probPct: getVoteDraft(currentSprintRec) })"
-                class="inline-flex items-center gap-1 px-3 min-h-[32px] rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold"
+                class="inline-flex items-center gap-1 px-3 min-h-[34px] rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold"
               >
                 <Share2 class="w-3.5 h-3.5" />
-                <span>{{ t('今日打卡完成 · 晒 PK 卡', 'Done · Share PK') }}</span>
+                <span>{{ t('晒 PK 卡', 'Share PK') }}</span>
               </button>
             </div>
+          </div>
           </div>
         </template>
       </div>
 
-      <!-- Right: Personal Calibration Rank & Rewards -->
+      <!-- Right: Personal Calibration Rank & Rewards (slimmed for first-screen feed room) -->
       <div
-        class="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-3.5 sm:p-4 space-y-2.5 shadow-xs flex flex-col justify-between"
+        class="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-3 sm:p-3.5 space-y-2 shadow-xs flex flex-col justify-between"
         :class="sprintQuestions.length > 0 ? 'lg:col-span-5' : 'lg:col-span-12'"
         data-testid="personal-arena-profile"
       >
         <div class="flex items-center justify-between gap-2">
-          <div class="flex items-center gap-1.5 font-bold text-slate-900 dark:text-white text-[13.5px]">
+          <div class="flex items-center gap-1.5 font-bold text-slate-900 dark:text-white text-[13px]">
             <Award class="w-4 h-4 text-amber-500 shrink-0" :stroke-width="2" />
-            <span>{{ t('我的校准战绩与站内特权', 'My Calibration Rank & Perks') }}</span>
+            <span>{{ t('我的校准战绩与特权', 'Calibration Rank') }}</span>
           </div>
           <span v-if="seasonKey" class="px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 font-mono text-[10.5px] text-slate-500">
             {{ seasonKey }} 赛季
@@ -906,37 +916,39 @@ function submitSettle(id: string) {
             </div>
           </div>
           <div class="grid grid-cols-2 gap-2 text-[11px]">
-            <div class="rounded-xl bg-[#F5F5F7] dark:bg-slate-800/80 px-2.5 py-2">
-              <div class="text-slate-500">{{ t('连胜 / 前30% AI额度奖励', 'Streak / Top 30% AI Bonus') }}</div>
+            <div class="rounded-xl bg-[#F5F5F7] dark:bg-slate-800/80 px-2.5 py-1.5">
+              <div class="text-slate-500">{{ t('连胜 AI 加成', 'AI Bonus') }}</div>
               <div class="font-bold text-[#007AFF] dark:text-[#0A84FF] mt-0.5">
-                {{ arenaProfile.bonus_qa_quota > 0 ? `+${arenaProfile.bonus_qa_quota} 次/日（7天有效）` : t('3 连胜或月榜前 30% 解锁 +10', '3-streak unlocks +10/day') }}
+                {{ arenaProfile.bonus_qa_quota > 0 ? `+${arenaProfile.bonus_qa_quota} 次/日` : t('3 连胜解锁 +10/日', '3-streak -> +10/day') }}
               </div>
             </div>
-            <div class="rounded-xl bg-[#F5F5F7] dark:bg-slate-800/80 px-2.5 py-2">
-              <div class="text-slate-500">{{ t('荣誉邀请码配额加成', 'Invite Quota Unlocked') }}</div>
+            <div class="rounded-xl bg-[#F5F5F7] dark:bg-slate-800/80 px-2.5 py-1.5">
+              <div class="text-slate-500">{{ t('荣誉邀请码', 'Invites') }}</div>
               <div class="font-bold text-emerald-600 dark:text-emerald-400 mt-0.5">
-                {{ arenaProfile.unlocked_referral_bonus > 0 ? `+${arenaProfile.unlocked_referral_bonus} 枚额外邀请码` : t('升至趋势捕手解锁 +2 枚', 'Tier 2 unlocks +2 invites') }}
+                {{ arenaProfile.unlocked_referral_bonus > 0 ? `+${arenaProfile.unlocked_referral_bonus} 枚` : t('升段解锁 +2 枚', 'Tier 2 -> +2') }}
               </div>
             </div>
           </div>
         </template>
         <template v-else>
-          <p class="text-slate-600 dark:text-slate-300 leading-relaxed">
-            {{ t('登录后自动累积每月洞察分、连胜记录与 Brier 校准段位：3 连胜或进月榜前 30% 解锁 +10 次/日 AI 问答额度，出题采纳奖 +100 分与 +1 邀请码。', 'Sign in to earn monthly insight points & calibration tiers: 3-streak or Top 30% unlocks +10 daily AI Q&As and bonus invite codes.') }}
-          </p>
-          <button
-            type="button"
-            @click="emit('open-auth')"
-            class="self-start px-3.5 py-1.5 rounded-xl bg-[#007AFF] hover:bg-[#0066D6] text-white font-semibold"
-          >
-            {{ t('登录绑定个人战绩', 'Sign In to Save Stats') }}
-          </button>
+          <div class="flex items-center justify-between gap-2.5">
+            <p class="text-[11.5px] text-slate-600 dark:text-slate-300 leading-snug">
+              {{ t('登录记分与 Brier 段位，3 连胜或月榜前 30% 解锁 +10 次/日 AI 问答额度。', 'Sign in for Brier rank: 3-streak / Top 30% unlocks +10 daily AI Q&As.') }}
+            </p>
+            <button
+              type="button"
+              @click="emit('open-auth')"
+              class="px-3 min-h-[34px] rounded-xl bg-[#007AFF] hover:bg-[#0066D6] text-white font-semibold shrink-0 whitespace-nowrap"
+            >
+              {{ t('登录记分', 'Sign In') }}
+            </button>
+          </div>
         </template>
       </div>
     </div>
 
-    <div class="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-3 sm:p-4 space-y-3 shadow-xs">
-      <!-- Slim Top Header + ? Explainer -->
+    <div class="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-3 sm:p-4 space-y-2.5 shadow-xs">
+      <!-- Slim Top Header + ? Explainer + Leaderboard Drawer Toggle -->
       <div class="flex flex-wrap items-center justify-between gap-2">
         <div class="min-w-0">
           <h2 class="text-[15px] sm:text-lg font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
@@ -945,25 +957,37 @@ function submitSettle(id: string) {
             <button
               type="button"
               @click="brierHelpOpen = !brierHelpOpen"
-              class="w-5 h-5 rounded-full inline-flex items-center justify-center text-slate-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-950/50"
+              class="w-6 h-6 rounded-full inline-flex items-center justify-center text-slate-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-950/50"
               :aria-label="t('查看验证闭环与 Brier 精度说明', 'Verification & Brier explainer')"
             >
               <HelpCircle class="w-3.5 h-3.5" />
             </button>
           </h2>
-          <p class="hidden sm:block text-xs text-slate-500 dark:text-slate-400">
-            {{ cleanPredText(publicNote) || t('纯智识荣誉激励，零资金充值或水评；每次预判均严格锁定到期前 30 分钟封盘与不可篡改核验。', 'Zero cash, zero open comments. Strict 30-min lock before settlement & objective calibration.') }}
-          </p>
         </div>
 
         <div class="flex flex-wrap items-center gap-1.5 text-xs">
           <button
             type="button"
+            @click="arenaBoardOpen = !arenaBoardOpen; showLeaderboard = arenaBoardOpen"
+            class="inline-flex items-center gap-1 px-2.5 min-h-[34px] rounded-xl border font-semibold transition-colors whitespace-nowrap"
+            :class="
+              arenaBoardOpen || showLeaderboard
+                ? 'bg-amber-500/15 border-amber-500/35 text-amber-700 dark:text-amber-300'
+                : 'bg-[#F5F5F7] dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200'
+            "
+            data-testid="toggle-leaderboard-btn"
+          >
+            <Trophy class="w-3.5 h-3.5 text-amber-500" />
+            <span>{{ t('战绩与榜单', 'Ranks & Stats') }}</span>
+            <ChevronDown class="w-3.5 h-3.5 transition-transform" :class="{ 'rotate-180': arenaBoardOpen || showLeaderboard }" />
+          </button>
+          <button
+            type="button"
             @click="showNewForm = !showNewForm"
-            class="inline-flex items-center gap-1 px-3 min-h-[32px] rounded-xl sm:rounded-lg bg-blue-600 text-white font-semibold hover:bg-blue-700 whitespace-nowrap"
+            class="inline-flex items-center gap-1 px-3 min-h-[34px] rounded-xl bg-blue-600 text-white font-semibold hover:bg-blue-700 whitespace-nowrap"
           >
             <Plus class="w-3.5 h-3.5" />
-            <span>{{ t('新建', 'New') }}<span class="hidden sm:inline">{{ t('可验证假设 / 共创投稿', ' Hypothesis') }}</span></span>
+            <span>{{ t('新建', 'New') }}<span class="hidden sm:inline">{{ t('可验证假设', ' Hypothesis') }}</span></span>
           </button>
           <button
             v-if="props.localPredictionIds && props.localPredictionIds.size > 0"
@@ -991,24 +1015,8 @@ function submitSettle(id: string) {
         </p>
       </div>
 
-      <!-- Mobile Collapsible Overview Bar (< sm) -->
-      <button
-        type="button"
-        @click="summaryOpenMobile = !summaryOpenMobile"
-        class="sm:hidden w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-[#F5F5F7] dark:bg-slate-800/80 px-3 py-2 flex items-center justify-between gap-2 text-xs text-left"
-      >
-        <span class="font-semibold text-slate-800 dark:text-slate-100 truncate tabular-nums">
-          {{
-            liveBoard.liveSettledDecisive > 0
-              ? t(`验证战绩（进行中 ${stats.live.openCount} · 已结 ${liveBoard.liveSettledDecisive}）`, `Summary (${stats.live.openCount} Open · ${liveBoard.liveSettledDecisive} Settled)`)
-              : t(`月度赛季榜单 & 战绩总览（进行中 ${stats.live.openCount}）`, `Leaderboard & Stats (${stats.live.openCount} Open)`)
-          }}
-        </span>
-        <ChevronDown class="w-4 h-4 text-slate-500 shrink-0 transition-transform" :class="{ 'rotate-180': summaryOpenMobile }" />
-      </button>
-
-      <!-- Dual Calibration Cards + Monthly Season Leaderboard -->
-      <div :class="summaryOpenMobile ? 'block space-y-3' : 'hidden sm:block space-y-3'">
+      <!-- Collapsible Dual Calibration Cards + Monthly Season Leaderboard (hidden by default so prediction cards appear above fold) -->
+      <div v-if="arenaBoardOpen || showLeaderboard" class="jx-collapse-reveal space-y-3">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
           <div class="rounded-xl bg-emerald-500/8 dark:bg-emerald-400/10 p-3 space-y-1">
             <div class="flex items-start justify-between gap-2">
@@ -1240,7 +1248,7 @@ function submitSettle(id: string) {
         v-for="rec in filteredRecords"
         :key="rec.prediction_id"
         :id="`pred-card-${rec.prediction_id}`"
-        class="rounded-xl border bg-white dark:bg-slate-900 p-3.5 sm:p-4 flex flex-col justify-between gap-3"
+        class="jx-card-interactive rounded-xl border bg-white dark:bg-slate-900 p-3.5 sm:p-4 flex flex-col justify-between gap-3"
         :class="incomingPkChallenge?.predId === rec.prediction_id ? 'border-[#007AFF] ring-2 ring-[#007AFF]/25' : 'border-slate-200 dark:border-slate-800'"
       >
         <div class="space-y-3">
@@ -1586,7 +1594,7 @@ function submitSettle(id: string) {
 
             <div
               v-if="expandedResearchIds.has(rec.prediction_id)"
-              class="px-3 pb-3 pt-2 border-t border-slate-200/70 dark:border-slate-700/70 space-y-2.5 bg-white/60 dark:bg-slate-900/40"
+              class="jx-collapse-reveal px-3 pb-3 pt-2 border-t border-slate-200/70 dark:border-slate-700/70 space-y-2.5 bg-white/60 dark:bg-slate-900/40"
               data-testid="prediction-research-panel"
             >
               <!-- 1. Real-time Market Reference vs Threshold -->

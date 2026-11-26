@@ -1,17 +1,25 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 
 const props = withDefaults(
   defineProps<{
     value: number | string
     prefix?: string
     suffix?: string
+    decimals?: number
   }>(),
   {
     prefix: '',
     suffix: '',
   },
 )
+
+const displayText = computed(() => {
+  if (typeof props.decimals === 'number' && typeof props.value === 'number' && Number.isFinite(props.value)) {
+    return props.value.toFixed(props.decimals)
+  }
+  return props.value
+})
 
 const rollDir = ref<'up' | 'down' | null>(null)
 const rollKey = ref(0)
@@ -38,6 +46,6 @@ watch(
       :key="rollKey"
       class="inline-block"
       :class="rollDir === 'up' ? 'jx-odo-up' : rollDir === 'down' ? 'jx-odo-down' : ''"
-    >{{ prefix }}{{ value }}{{ suffix }}</span>
+    >{{ prefix }}{{ displayText }}{{ suffix }}</span>
   </span>
 </template>

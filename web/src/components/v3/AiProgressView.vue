@@ -600,18 +600,18 @@ function resetLocalFilters() {
             </div>
           </div>
 
-          <div v-else class="px-3.5 py-2.5 border-b border-black/[0.05] dark:border-white/[0.06] bg-gradient-to-r from-[#007AFF]/[0.05] via-transparent to-emerald-500/[0.04]">
-            <div class="flex flex-wrap items-center gap-1.5">
-              <span class="text-[11px] font-semibold text-zinc-600 dark:text-zinc-300 inline-flex items-center gap-1 mr-1">
+          <div v-else class="px-3.5 py-2 border-b border-black/[0.05] dark:border-white/[0.06] bg-gradient-to-r from-[#007AFF]/[0.05] via-transparent to-emerald-500/[0.04]">
+            <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar scroll-fade-x whitespace-nowrap">
+              <span class="text-[11px] font-semibold text-zinc-600 dark:text-zinc-300 inline-flex items-center gap-1 mr-0.5 shrink-0">
                 <Sparkles class="w-3.5 h-3.5 text-[#007AFF]" :stroke-width="1.75" />
-                <span>{{ t('热门巨头演进谱系直达：', 'Giant Lineages:') }}</span>
+                <span>{{ t('热门巨头演进谱系：', 'Giant Lineages:') }}</span>
               </span>
               <button
                 v-for="gc in quickLineageCompanies"
                 :key="'ql_' + gc.company_id"
                 type="button"
-                @click="selectCompany(gc.company_id)"
-                class="ios-tap px-2.5 py-1 rounded-full border border-[#007AFF]/25 bg-white/90 dark:bg-zinc-900/90 text-[11px] font-semibold text-[#007AFF] dark:text-[#66B2FF] hover:bg-[#007AFF] hover:text-white transition-colors"
+                @click="(e) => { selectCompany(gc.company_id); centerPillIntoView(e) }"
+                class="ios-tap mobile-pressable px-2.5 min-h-[30px] rounded-full border border-[#007AFF]/25 bg-white/90 dark:bg-zinc-900/90 text-[11px] font-semibold text-[#007AFF] dark:text-[#66B2FF] hover:bg-[#007AFF] hover:text-white transition-colors shrink-0 whitespace-nowrap"
               >
                 {{ quickLineageShortName(gc) }}
               </button>

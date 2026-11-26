@@ -43,7 +43,13 @@ jobs:
       - name: Build Weekly Major Events Digest (Stage 1 Distill + Stage 2 AI Synthesis)
         env:
           KEY_1: ${{ secrets.KEY_1 }}
+          KEY_2: ${{ secrets.KEY_2 }}
           KEY_3: ${{ secrets.KEY_3 }}
+          KEY_4: ${{ secrets.KEY_4 }}
+          KEY_5: ${{ secrets.KEY_5 }}
+          KEY_6: ${{ secrets.KEY_6 }}
+          KEY_7: ${{ secrets.KEY_7 }}
+          KEY_8: ${{ secrets.KEY_8 }}
           KEY_FINANCE: ${{ secrets.KEY_FINANCE }}
           KEY_GLOBAL: ${{ secrets.KEY_GLOBAL }}
           KEY_TECH: ${{ secrets.KEY_TECH }}

@@ -51,6 +51,7 @@ import {
   loadPortfolioConfig,
   loadPredictionStances,
   loadReadState,
+  loadWeeklyHabitState,
   migrateCollidingEventStates,
   readDarkMode,
   resolveReadLaterEventsList,
@@ -60,6 +61,7 @@ import {
   savePortfolioConfig,
   savePredictionStances,
   saveReadState,
+  saveWeeklyHabitState,
   writeDarkMode,
   loadResearchNotes,
   loadStringSetKey,
@@ -2193,5 +2195,44 @@ describe('Phase C features: sorting, pagination, confidence, weekly report, echo
     expect(md).toContain('镜信 MirrorBrief')
     expect(md).not.toContain('InfoFocus')
     vi.unstubAllGlobals()
+  })
+
+  it('persists, exports, and bi-directionally merges weekly digest habit streak & stances', () => {
+    const store = createMemoryStorage()
+    saveWeeklyHabitState(
+      {
+        readByWeek: { '2026-W48': ['wk_a', 'wk_b'] },
+        completedWeeks: ['2026-W47'],
+        reactionsByItem: { wk_a: 'bull' },
+        outlookStancesById: { '2026-W48::outlook_1': 'up' },
+        lastVisitedWeekId: '2026-W48',
+      },
+      store,
+    )
+    const exported = JSON.parse(exportAllResearchState(store))
+    expect(exported.weekly_habit.readByWeek['2026-W48']).toEqual(['wk_a', 'wk_b'])
+
+    const mergeRes = mergeResearchStateJson(
+      JSON.stringify({
+        weekly_habit: {
+          readByWeek: { '2026-W48': ['wk_b', 'wk_c'], '2026-W47': ['wk_old'] },
+          completedWeeks: ['2026-W46'],
+          reactionsByItem: { wk_z: 'bear' },
+          outlookStancesById: { '2026-W48::outlook_2': 'down' },
+          lastVisitedWeekId: '2026-W47',
+        },
+      }),
+      store,
+    )
+    expect(mergeRes.ok).toBe(true)
+    expect(mergeRes.needsPush).toBe(true)
+    const merged = loadWeeklyHabitState(store)
+    expect(merged.readByWeek['2026-W48']).toEqual(['wk_b', 'wk_c', 'wk_a'])
+    expect(merged.completedWeeks).toEqual(['2026-W46', '2026-W47'])
+    expect(merged.reactionsByItem).toEqual({ wk_z: 'bear', wk_a: 'bull' })
+    expect(merged.outlookStancesById).toEqual({
+      '2026-W48::outlook_2': 'down',
+      '2026-W48::outlook_1': 'up',
+    })
   })
 })
