@@ -3,8 +3,10 @@ import { requireUser } from '../authMiddleware'
 import { nowShanghaiIso } from '../crypto'
 import { getSiteSettings, getUserState, logAudit, sanitizeAvatarValue, saveUserState } from '../db'
 import {
+  PRESENCE_STATUS_CACHE_KEY,
   getRealOnlineCounts,
   markPresenceLeave,
+  purgePresenceStatusEdgeCache,
   recordPresencePing,
   resolveOnlineDisplay,
 } from '../presence'
@@ -100,6 +102,9 @@ publicAndCoreRoutes.post('/presence/ping', async (c) => {
     userAgent: c.req.header('user-agent') || '',
     isVisit: Boolean(body.is_visit),
   })
+  if (body.is_visit) {
+    await purgePresenceStatusEdgeCache()
+  }
   const [settings, realCounts] = await Promise.all([
     getSiteSettings(c.env.DB, c.env.SITE_ACCESS_MODE),
     getRealOnlineCounts(c.env.DB),
@@ -117,16 +122,61 @@ publicAndCoreRoutes.post('/presence/leave', async (c) => {
       ? `dev:${rawDev}`
       : c.get('deviceId')
   await markPresenceLeave(c.env.DB, sessionKey)
+  await purgePresenceStatusEdgeCache()
   return c.json({ ok: true }, 200, { 'Cache-Control': 'no-store' })
 })
 
 publicAndCoreRoutes.get('/presence/status', async (c) => {
+  const cache = getDefaultEdgeCache()
+  const cacheReq = new Request(PRESENCE_STATUS_CACHE_KEY)
+
+  if (cache) {
+    try {
+      const hit = await cache.match(cacheReq)
+      if (hit) {
+        return new Response(hit.body, {
+          status: 200,
+          headers: {
+            'Content-Type': 'application/json; charset=utf-8',
+            'Cache-Control': 'no-store',
+            'X-MirrorBrief-Cache': 'HIT',
+          },
+        })
+      }
+    } catch {
+      // Ignore cache miss error
+    }
+  }
+
   const [settings, realCounts] = await Promise.all([
     getSiteSettings(c.env.DB, c.env.SITE_ACCESS_MODE),
     getRealOnlineCounts(c.env.DB),
   ])
-  return c.json({ ok: true, ...resolveOnlineDisplay(settings, realCounts) }, 200, {
-    'Cache-Control': 'no-store',
+  const bodyStr = JSON.stringify({ ok: true, ...resolveOnlineDisplay(settings, realCounts) })
+
+  if (cache) {
+    const cacheResp = new Response(bodyStr, {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json; charset=utf-8',
+        'Cache-Control': 'public, max-age=8',
+      },
+    })
+    const execCtx = c.executionCtx
+    if (execCtx && typeof execCtx.waitUntil === 'function') {
+      execCtx.waitUntil(cache.put(cacheReq, cacheResp.clone()))
+    } else {
+      await cache.put(cacheReq, cacheResp.clone())
+    }
+  }
+
+  return new Response(bodyStr, {
+    status: 200,
+    headers: {
+      'Content-Type': 'application/json; charset=utf-8',
+      'Cache-Control': 'no-store',
+      'X-MirrorBrief-Cache': 'MISS',
+    },
   })
 })
 

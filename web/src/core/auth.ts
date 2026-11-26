@@ -1213,11 +1213,16 @@ export async function apiPresencePing(
     '/api/presence/ping',
     {
       method: 'POST',
+      cache: 'no-store',
       headers: { 'X-Device-ID': getOrCreateDeviceId() },
       body: JSON.stringify(payload),
     },
     token || undefined,
   )
+}
+
+export async function apiPresenceStatus(): Promise<PresencePingResponse> {
+  return apiRequest('/api/presence/status', { method: 'GET', cache: 'no-store' })
 }
 
 export function apiPresenceLeave(): void {

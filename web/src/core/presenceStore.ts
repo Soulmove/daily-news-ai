@@ -1,6 +1,13 @@
 import { reactive } from 'vue'
-import { apiPresenceLeave, apiPresencePing, type PresencePingResponse } from './auth'
+import { apiPresenceLeave, apiPresencePing, apiPresenceStatus, type PresencePingResponse } from './auth'
 import { isAndroidAppShell } from './mobilePush'
+
+export const PRESENCE_CONFIG_SYNC_KEY = 'mirrorbrief_presence_sync_ts'
+export const PRESENCE_CACHE_KEY = 'mirrorbrief_presence_cache_v1'
+
+const HEARTBEAT_INTERVAL_MS = 50_000
+const STATUS_POLL_INTERVAL_MS = 25_000
+const IDLE_SLEEP_MS = 10 * 60_000
 
 export interface PresenceClientState {
   enabled: boolean
@@ -57,8 +64,12 @@ export function computeSimulatedOnlineCount(
 }
 
 let heartbeatTimer: ReturnType<typeof setInterval> | null = null
+let statusPollTimer: ReturnType<typeof setInterval> | null = null
 let simDriftTimer: ReturnType<typeof setInterval> | null = null
 let activeDriftSig = ''
+let serverClockOffsetMs = 0
+let lastSyncAtMs = 0
+let lastActivityAtMs = Date.now()
 let currentTokenGetter: () => string | null = () => null
 let currentTabGetter: () => string = () => 'today'
 let lastHiddenAtMs: number | null = null
@@ -71,6 +82,11 @@ function detectClientPlatform(): 'desktop' | 'mobile' | 'android' {
   return 'desktop'
 }
 
+function isClientActive(): boolean {
+  if (typeof document !== 'undefined' && document.visibilityState === 'hidden') return false
+  return Date.now() - lastActivityAtMs < IDLE_SLEEP_MS
+}
+
 function clearSimDriftTimer() {
   if (simDriftTimer) {
     clearInterval(simDriftTimer)
@@ -79,11 +95,25 @@ function clearSimDriftTimer() {
   activeDriftSig = ''
 }
 
-function applyPresenceResponse(res: PresencePingResponse) {
+function applyPresenceResponse(res: PresencePingResponse, fromBroadcast = false) {
+  lastSyncAtMs = Date.now()
+  if (typeof res.server_time_ms === 'number' && Number.isFinite(res.server_time_ms)) {
+    serverClockOffsetMs = res.server_time_ms - Date.now()
+  }
   presenceState.enabled = Boolean(res.enabled)
   presenceState.label = res.label || '在线'
   presenceState.mode = res.mode === 'simulated' ? 'simulated' : 'real'
   presenceState.loaded = true
+
+  if (!fromBroadcast) {
+    try {
+      if (typeof window !== 'undefined' && window.localStorage) {
+        window.localStorage.setItem(PRESENCE_CACHE_KEY, JSON.stringify({ ts: lastSyncAtMs, res }))
+      }
+    } catch {
+      // Ignore storage errors
+    }
+  }
 
   if (!res.enabled) {
     presenceState.count = 0
@@ -94,19 +124,43 @@ function applyPresenceResponse(res: PresencePingResponse) {
   if (res.mode === 'simulated' && res.sim_drift) {
     const { base, delta, interval_sec } = res.sim_drift
     const sig = `${base}:${delta}:${interval_sec}`
-    presenceState.count = computeSimulatedOnlineCount(base, delta, interval_sec, Date.now())
+    presenceState.count = computeSimulatedOnlineCount(
+      base,
+      delta,
+      interval_sec,
+      Date.now() + serverClockOffsetMs,
+    )
     if (sig !== activeDriftSig) {
       clearSimDriftTimer()
       activeDriftSig = sig
-      const stepMs = Math.max(3000, Math.min(300_000, interval_sec * 1000))
+      // Check every 1s with zero network requests so transitions happen cleanly on the exact interval_sec slot
       simDriftTimer = setInterval(() => {
         if (typeof document !== 'undefined' && document.visibilityState === 'hidden') return
-        presenceState.count = computeSimulatedOnlineCount(base, delta, interval_sec, Date.now())
-      }, stepMs)
+        const nextCount = computeSimulatedOnlineCount(
+          base,
+          delta,
+          interval_sec,
+          Date.now() + serverClockOffsetMs,
+        )
+        if (nextCount !== presenceState.count) {
+          presenceState.count = nextCount
+        }
+      }, 1_000)
     }
   } else {
     clearSimDriftTimer()
     presenceState.count = Math.max(0, Math.round(Number(res.count ?? 0)))
+  }
+}
+
+export async function refreshPresenceStatusNow(): Promise<void> {
+  try {
+    const res = await apiPresenceStatus()
+    if (res && typeof res.count === 'number') {
+      applyPresenceResponse(res)
+    }
+  } catch {
+    // Silent fallback
   }
 }
 
@@ -128,16 +182,60 @@ export async function triggerPresenceHeartbeat(isVisit = false): Promise<void> {
   }
 }
 
+export function broadcastPresenceConfigChange(): void {
+  try {
+    if (typeof window !== 'undefined' && window.localStorage) {
+      window.localStorage.setItem(PRESENCE_CONFIG_SYNC_KEY, String(Date.now()))
+    }
+  } catch {
+    // Ignore storage quota/sandbox errors
+  }
+}
+
+function recordUserActivity() {
+  const now = Date.now()
+  if (now - lastActivityAtMs < 15_000) return
+  const wasIdle = now - lastActivityAtMs >= IDLE_SLEEP_MS
+  lastActivityAtMs = now
+  if (wasIdle) {
+    void triggerPresenceHeartbeat(false)
+  }
+}
+
 function onVisibilityChange() {
   if (typeof document === 'undefined') return
   if (document.visibilityState === 'hidden') {
     lastHiddenAtMs = Date.now()
     return
   }
+  lastActivityAtMs = Date.now()
   const hiddenDuration = lastHiddenAtMs !== null ? Date.now() - lastHiddenAtMs : 0
   lastHiddenAtMs = null
   const countAsNewVisit = hiddenDuration >= 10 * 60_000
   void triggerPresenceHeartbeat(countAsNewVisit)
+}
+
+function onWindowFocus() {
+  lastActivityAtMs = Date.now()
+  if (Date.now() - lastSyncAtMs < 5_000) return
+  void refreshPresenceStatusNow()
+}
+
+function onStorageSync(e: StorageEvent) {
+  if (e.key === PRESENCE_CONFIG_SYNC_KEY) {
+    void refreshPresenceStatusNow()
+    return
+  }
+  if (e.key === PRESENCE_CACHE_KEY && e.newValue) {
+    try {
+      const parsed = JSON.parse(e.newValue) as { ts?: number; res?: PresencePingResponse }
+      if (parsed?.res && typeof parsed.res.count === 'number') {
+        applyPresenceResponse(parsed.res, true)
+      }
+    } catch {
+      // Ignore malformed cache payload
+    }
+  }
 }
 
 function onPageHide() {
@@ -150,21 +248,51 @@ export function startPresenceTracking(opts: {
 }): void {
   currentTokenGetter = opts.getToken
   currentTabGetter = opts.getTab
+  lastActivityAtMs = Date.now()
+
+  // Seed instant UI display from shared tab cache before initial ping completes
+  try {
+    if (typeof window !== 'undefined' && window.localStorage) {
+      const raw = window.localStorage.getItem(PRESENCE_CACHE_KEY)
+      if (raw) {
+        const parsed = JSON.parse(raw) as { ts?: number; res?: PresencePingResponse }
+        if (parsed?.res && typeof parsed.ts === 'number' && Date.now() - parsed.ts < 60_000) {
+          applyPresenceResponse(parsed.res, true)
+        }
+      }
+    }
+  } catch {
+    // Ignore
+  }
+
   const isFirstStart = !trackingStarted
   trackingStarted = true
   void triggerPresenceHeartbeat(isFirstStart)
 
   if (!heartbeatTimer) {
     heartbeatTimer = setInterval(() => {
-      if (typeof document !== 'undefined' && document.visibilityState === 'hidden') return
+      if (!isClientActive()) return
       void triggerPresenceHeartbeat(false)
-    }, 45_000)
+    }, HEARTBEAT_INTERVAL_MS)
+  }
+
+  if (!statusPollTimer) {
+    statusPollTimer = setInterval(() => {
+      if (!isClientActive()) return
+      if (Date.now() - lastSyncAtMs < 20_000) return
+      void refreshPresenceStatusNow()
+    }, STATUS_POLL_INTERVAL_MS)
   }
 
   if (typeof window !== 'undefined' && !listenersBound) {
     listenersBound = true
     document.addEventListener('visibilitychange', onVisibilityChange)
+    window.addEventListener('focus', onWindowFocus)
+    window.addEventListener('storage', onStorageSync)
     window.addEventListener('pagehide', onPageHide)
+    window.addEventListener('pointerdown', recordUserActivity, { passive: true })
+    window.addEventListener('keydown', recordUserActivity, { passive: true })
+    window.addEventListener('scroll', recordUserActivity, { passive: true })
   }
 }
 
@@ -173,11 +301,20 @@ export function stopPresenceTracking(): void {
     clearInterval(heartbeatTimer)
     heartbeatTimer = null
   }
+  if (statusPollTimer) {
+    clearInterval(statusPollTimer)
+    statusPollTimer = null
+  }
   clearSimDriftTimer()
   trackingStarted = false
   if (typeof window !== 'undefined' && listenersBound) {
     listenersBound = false
     document.removeEventListener('visibilitychange', onVisibilityChange)
+    window.removeEventListener('focus', onWindowFocus)
+    window.removeEventListener('storage', onStorageSync)
     window.removeEventListener('pagehide', onPageHide)
+    window.removeEventListener('pointerdown', recordUserActivity)
+    window.removeEventListener('keydown', recordUserActivity)
+    window.removeEventListener('scroll', recordUserActivity)
   }
 }

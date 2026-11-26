@@ -1813,6 +1813,29 @@ describe('MirrorBrief Worker Crypto & API Suite', () => {
     expect(simStatus.count).toBeLessThanOrEqual(230)
     expect(computeSimulatedOnlineCount(50, 0, 10, Date.now())).toBe(50)
 
+    // While simulated fake count is active, Admin traffic API still reports exact real IP-deduplicated online counts
+    const simTrafficRes = await app.request(
+      'https://mirrorinfo.xyz/api/admin/traffic',
+      { headers: { Authorization: `Bearer ${adminSess.token}` } },
+      env,
+    )
+    expect(simTrafficRes.status).toBe(200)
+    const simTraffic = (await simTrafficRes.json()) as {
+      online: {
+        real_total: number
+        real_logged_in: number
+        real_guest: number
+        display_count: number
+        mode: string
+      }
+    }
+    expect(simTraffic.online.mode).toBe('simulated')
+    expect(simTraffic.online.real_total).toBe(2)
+    expect(simTraffic.online.real_logged_in).toBe(1)
+    expect(simTraffic.online.real_guest).toBe(1)
+    expect(simTraffic.online.display_count).toBeGreaterThanOrEqual(170)
+    expect(simTraffic.online.display_count).toBeLessThanOrEqual(230)
+
     // Revert back to real 'all'
     await app.request(
       'https://mirrorinfo.xyz/api/admin/site-settings',
@@ -1861,7 +1884,7 @@ describe('MirrorBrief Worker Crypto & API Suite', () => {
     expect(ipAuth?.usernames).toContain('presence_user')
     expect(ipAuth?.platforms).toContain('android')
     expect(ipGuest?.visit_count).toBe(2)
-    expect(ipGuest?.heartbeat_count).toBe(3)
+    expect(ipGuest?.heartbeat_count).toBe(2)
 
     // Leaving ONE browser on 198.51.100.25 keeps the IP online because dev_guest_0002 is still open
     await app.request(

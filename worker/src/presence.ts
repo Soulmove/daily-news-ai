@@ -1,7 +1,19 @@
+import { getDefaultEdgeCache } from './quotes'
 import type { UserRow } from './types'
 
 export const ONLINE_WINDOW_MS = 120_000
-export const PRESENCE_POLL_INTERVAL_SEC = 45
+export const PRESENCE_POLL_INTERVAL_SEC = 50
+export const PRESENCE_STATUS_CACHE_KEY = 'https://mirrorinfo.xyz/__edge_cache/presence_status_v1'
+
+export async function purgePresenceStatusEdgeCache(): Promise<void> {
+  const cache = getDefaultEdgeCache()
+  if (!cache) return
+  try {
+    await cache.delete(new Request(PRESENCE_STATUS_CACHE_KEY))
+  } catch {
+    // Ignore edge cache deletion failures
+  }
+}
 
 export type OnlineCounterMode = 'real' | 'simulated'
 export type OnlineRealScope = 'all' | 'logged_in' | 'guest'
@@ -202,51 +214,58 @@ export async function recordPresencePing(
     .bind(dayCst, cleanIp)
     .first<{ visit_count: number; usernames_json: string; platforms_json: string }>()
 
+  const prevUsernames = parseJsonStringArray(existingIp?.usernames_json)
+  const prevPlatforms = parseJsonStringArray(existingIp?.platforms_json)
   const effectiveIsVisit = Boolean(opts.isVisit) || !existingIp
-  const visitInc = effectiveIsVisit ? 1 : 0
-  const authVisitInc = effectiveIsVisit && isLoggedIn === 1 ? 1 : 0
-  const guestVisitInc = effectiveIsVisit && isLoggedIn === 0 ? 1 : 0
+  const hasNewUsername = Boolean(username && !prevUsernames.includes(username))
+  const hasNewPlatform = !prevPlatforms.includes(platform)
 
-  const usernamesArr = appendUniqueLimited(parseJsonStringArray(existingIp?.usernames_json), username, 12)
-  const platformsArr = appendUniqueLimited(parseJsonStringArray(existingIp?.platforms_json), platform, 6)
-  const usernamesJson = JSON.stringify(usernamesArr)
-  const platformsJson = JSON.stringify(platformsArr)
+  if (effectiveIsVisit || hasNewUsername || hasNewPlatform) {
+    const visitInc = effectiveIsVisit ? 1 : 0
+    const authVisitInc = effectiveIsVisit && isLoggedIn === 1 ? 1 : 0
+    const guestVisitInc = effectiveIsVisit && isLoggedIn === 0 ? 1 : 0
 
-  await db
-    .prepare(
-      `INSERT INTO daily_ip_visits (
-         day_cst, ip, country, visit_count, auth_visit_count, guest_visit_count,
-         heartbeat_count, last_user_id, last_username, usernames_json, platforms_json,
-         last_tab, first_seen_at, last_seen_at
-       ) VALUES (?1, ?2, ?3, ?4, ?5, ?6, 1, ?7, ?8, ?9, ?10, ?11, ?12, ?12)
-       ON CONFLICT(day_cst, ip) DO UPDATE SET
-         country = CASE WHEN excluded.country != '' THEN excluded.country ELSE daily_ip_visits.country END,
-         visit_count = daily_ip_visits.visit_count + ?4,
-         auth_visit_count = daily_ip_visits.auth_visit_count + ?5,
-         guest_visit_count = daily_ip_visits.guest_visit_count + ?6,
-         heartbeat_count = daily_ip_visits.heartbeat_count + 1,
-         last_user_id = COALESCE(excluded.last_user_id, daily_ip_visits.last_user_id),
-         last_username = CASE WHEN excluded.last_username != '' THEN excluded.last_username ELSE daily_ip_visits.last_username END,
-         usernames_json = excluded.usernames_json,
-         platforms_json = excluded.platforms_json,
-         last_tab = excluded.last_tab,
-         last_seen_at = excluded.last_seen_at`,
-    )
-    .bind(
-      dayCst,
-      cleanIp,
-      cleanCountry,
-      visitInc,
-      authVisitInc,
-      guestVisitInc,
-      userId,
-      username,
-      usernamesJson,
-      platformsJson,
-      tab,
-      nowIso,
-    )
-    .run()
+    const usernamesArr = appendUniqueLimited(prevUsernames, username, 12)
+    const platformsArr = appendUniqueLimited(prevPlatforms, platform, 6)
+    const usernamesJson = JSON.stringify(usernamesArr)
+    const platformsJson = JSON.stringify(platformsArr)
+
+    await db
+      .prepare(
+        `INSERT INTO daily_ip_visits (
+           day_cst, ip, country, visit_count, auth_visit_count, guest_visit_count,
+           heartbeat_count, last_user_id, last_username, usernames_json, platforms_json,
+           last_tab, first_seen_at, last_seen_at
+         ) VALUES (?1, ?2, ?3, ?4, ?5, ?6, 1, ?7, ?8, ?9, ?10, ?11, ?12, ?12)
+         ON CONFLICT(day_cst, ip) DO UPDATE SET
+           country = CASE WHEN excluded.country != '' THEN excluded.country ELSE daily_ip_visits.country END,
+           visit_count = daily_ip_visits.visit_count + ?4,
+           auth_visit_count = daily_ip_visits.auth_visit_count + ?5,
+           guest_visit_count = daily_ip_visits.guest_visit_count + ?6,
+           heartbeat_count = daily_ip_visits.heartbeat_count + 1,
+           last_user_id = COALESCE(excluded.last_user_id, daily_ip_visits.last_user_id),
+           last_username = CASE WHEN excluded.last_username != '' THEN excluded.last_username ELSE daily_ip_visits.last_username END,
+           usernames_json = excluded.usernames_json,
+           platforms_json = excluded.platforms_json,
+           last_tab = excluded.last_tab,
+           last_seen_at = excluded.last_seen_at`,
+      )
+      .bind(
+        dayCst,
+        cleanIp,
+        cleanCountry,
+        visitInc,
+        authVisitInc,
+        guestVisitInc,
+        userId,
+        username,
+        usernamesJson,
+        platformsJson,
+        tab,
+        nowIso,
+      )
+      .run()
+  }
 
   if (effectiveIsVisit) {
     await Promise.all([

@@ -49,7 +49,7 @@ import {
   runPredictionArenaCron,
   settleDailyPrediction,
 } from '../predictionArena'
-import { getAdminTrafficReport } from '../presence'
+import { getAdminTrafficReport, purgePresenceStatusEdgeCache } from '../presence'
 import { QUOTES_CACHE_KEY, fetchAndBuildMarketQuotes, getDefaultEdgeCache } from '../quotes'
 import type { AccessMode, Env, HonoVariables, UserRole } from '../types'
 import { getWireLatestDoc, runWireCron } from '../wireCron'
@@ -435,6 +435,9 @@ adminRoutes.put('/site-settings', async (c) => {
   }
 
   const res = await saveSiteSettings(c.env.DB, body, c.env.SITE_ACCESS_MODE)
+  if (Object.keys(body).some((k) => k.startsWith('online_'))) {
+    await purgePresenceStatusEdgeCache()
+  }
   await logAudit(c.env.DB, {
     action: 'admin_update_site_settings',
     userId: admin.id,

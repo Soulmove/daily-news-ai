@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import {
   Activity,
   AlertTriangle,
@@ -38,7 +38,7 @@ import AppShell from '../components/AppShell.vue'
 import DialogDirtyGuard from '../components/DialogDirtyGuard.vue'
 import UserAvatar from '../components/UserAvatar.vue'
 import { useDialogBehavior } from '../core/dialog'
-import { computeSimulatedOnlineCount } from '../core/presenceStore'
+import { broadcastPresenceConfigChange, computeSimulatedOnlineCount } from '../core/presenceStore'
 import {
   apiAdminApprovePredictionProposal,
   apiAdminApproveWaitlist,
@@ -215,6 +215,9 @@ const trafficSort = ref<'visits' | 'recent'>('visits')
 const trafficSearch = ref('')
 const trafficSessionsExpanded = ref(true)
 const hoveredHour = ref<number | null>(null)
+const liveNowMs = ref(Date.now())
+let trafficPollTimer: ReturnType<typeof setInterval> | null = null
+let liveClockTimer: ReturnType<typeof setInterval> | null = null
 
 interface GrowthControlDraft {
   growth_stage: GrowthStage
@@ -1004,9 +1007,50 @@ const simulatedPreviewRange = computed(() => {
   return {
     min: Math.max(1, base - delta),
     max: Math.max(1, base + delta),
-    sample: computeSimulatedOnlineCount(base, delta, interval, Date.now()),
+    sample: computeSimulatedOnlineCount(base, delta, interval, liveNowMs.value),
   }
 })
+
+const liveRealOnline = computed(() => ({
+  total: trafficReport.value?.online?.real_total ?? overview.value?.stats?.online_real_total ?? 0,
+  logged_in: trafficReport.value?.online?.real_logged_in ?? overview.value?.stats?.online_real_logged_in ?? 0,
+  guest: trafficReport.value?.online?.real_guest ?? overview.value?.stats?.online_real_guest ?? 0,
+}))
+
+const liveDisplayedOnlineCount = computed(() => {
+  if (siteSettingsForm.value.online_counter_enabled === false) return 0
+  if (siteSettingsForm.value.online_counter_mode === 'simulated') {
+    return computeSimulatedOnlineCount(
+      Number(siteSettingsForm.value.online_sim_base ?? 68),
+      Number(siteSettingsForm.value.online_sim_delta ?? 12),
+      Number(siteSettingsForm.value.online_sim_interval_sec ?? 12),
+      liveNowMs.value,
+    )
+  }
+  const scope = siteSettingsForm.value.online_real_scope || 'all'
+  if (scope === 'logged_in') return liveRealOnline.value.logged_in
+  if (scope === 'guest') return liveRealOnline.value.guest
+  return liveRealOnline.value.total
+})
+
+async function refreshTrafficSilently() {
+  if (!session.value || !isAdmin.value || trafficLoading.value) return
+  try {
+    const res = await apiAdminTraffic(session.value.token, {
+      day: trafficDay.value || undefined,
+      filter: trafficFilter.value,
+      sort: trafficSort.value,
+      q: trafficSearch.value.trim(),
+      limit: 150,
+    })
+    trafficReport.value = res
+    if (!trafficDay.value && res.day) {
+      trafficDay.value = res.day
+    }
+  } catch {
+    // Silent background poll
+  }
+}
 
 const filteredTrafficRows = computed(() => {
   const rows = trafficReport.value?.ip_rows || []
@@ -1051,6 +1095,7 @@ async function handleSaveOnlineConfig() {
       ? `自定义在线人数已生效（基准 ${cleanBase} · 浮动 ±${cleanDelta} · 每 ${cleanInterval} 秒变动）`
       : '在线人数真实统计配置已保存并全站生效！',
   )
+  broadcastPresenceConfigChange()
   await loadTrafficReport()
 }
 
@@ -1065,6 +1110,7 @@ async function handleRevertRealOnline() {
     },
     '已调回显示平台真实在线人数！',
   )
+  broadcastPresenceConfigChange()
   await loadTrafficReport()
 }
 
@@ -1469,6 +1515,26 @@ onMounted(() => {
   if (isAdmin.value) {
     void loadAllAdminData()
   }
+  liveClockTimer = setInterval(() => {
+    if (typeof document !== 'undefined' && document.visibilityState === 'hidden') return
+    liveNowMs.value = Date.now()
+  }, 1_000)
+  trafficPollTimer = setInterval(() => {
+    if (!isAdmin.value) return
+    if (typeof document !== 'undefined' && document.visibilityState === 'hidden') return
+    void refreshTrafficSilently()
+  }, 30_000)
+})
+
+onBeforeUnmount(() => {
+  if (liveClockTimer) {
+    clearInterval(liveClockTimer)
+    liveClockTimer = null
+  }
+  if (trafficPollTimer) {
+    clearInterval(trafficPollTimer)
+    trafficPollTimer = null
+  }
 })
 </script>
 
@@ -1553,13 +1619,29 @@ onMounted(() => {
               <Shield class="w-5 h-5" />
             </div>
             <div>
-              <h1 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+              <h1 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white flex flex-wrap items-center gap-2">
                 <span>私有云管理控制台</span>
                 <span
                   class="px-2 py-0.5 rounded-full text-[11px] font-semibold"
                   :class="isSuperAdmin ? 'bg-rose-100 text-rose-700 dark:bg-rose-950/60 dark:text-rose-300' : 'bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300'"
                 >
                   {{ isSuperAdmin ? '超级管理员（全权限）' : '运营管理员（受限权限）' }}
+                </span>
+                <button
+                  type="button"
+                  @click="activeTab = 'traffic'; loadTrafficReport()"
+                  data-testid="admin-header-real-online-pill"
+                  class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-500/12 text-emerald-700 dark:text-emerald-300 border border-emerald-500/25 hover:bg-emerald-500/20 transition-colors tabular-nums"
+                  title="点击查看实时在线与 IP 访问详情（真实在线不受假人数影响）"
+                >
+                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                  <span>真实在线 {{ liveRealOnline.total }} 人（登 {{ liveRealOnline.logged_in }} / 客 {{ liveRealOnline.guest }}）</span>
+                </button>
+                <span
+                  v-if="siteSettingsForm.online_counter_mode === 'simulated'"
+                  class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-semibold bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300 tabular-nums"
+                >
+                  <span>前台假人数展示中：{{ siteSettingsForm.online_counter_enabled === false ? '已隐藏' : `${liveDisplayedOnlineCount} 人` }}</span>
                 </span>
               </h1>
               <p class="text-xs text-slate-500">
@@ -1728,12 +1810,12 @@ onMounted(() => {
               <div>
                 <div class="text-[11px] text-slate-500 flex items-center gap-1.5">
                   <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                  <span>当前真实在线（2 分钟心跳）</span>
+                  <span>当前真实在线（2 分钟心跳 · 同 IP 去重）</span>
                 </div>
                 <div class="font-bold text-slate-900 dark:text-white mt-0.5 tabular-nums">
-                  <span class="text-lg text-emerald-600 dark:text-emerald-400">{{ trafficReport?.online?.real_total ?? overview.stats.online_real_total ?? 0 }}</span>
+                  <span class="text-lg text-emerald-600 dark:text-emerald-400">{{ liveRealOnline.total }}</span>
                   <span class="text-xs font-medium text-slate-500 ml-2">
-                    已登录 {{ trafficReport?.online?.real_logged_in ?? overview.stats.online_real_logged_in ?? 0 }} · 未登录 {{ trafficReport?.online?.real_guest ?? overview.stats.online_real_guest ?? 0 }}
+                    已登录 {{ liveRealOnline.logged_in }} · 未登录 {{ liveRealOnline.guest }}
                   </span>
                 </div>
               </div>
@@ -1741,12 +1823,12 @@ onMounted(() => {
               <div>
                 <div class="text-[11px] text-slate-500">前台顶栏当前展示</div>
                 <div class="font-bold text-slate-900 dark:text-white mt-0.5 tabular-nums">
-                  <span>{{ trafficReport?.online?.enabled === false ? '已隐藏' : `${trafficReport?.online?.display_count ?? overview.stats.online_real_total ?? 0} ${trafficReport?.online?.label || '在线'}` }}</span>
+                  <span>{{ siteSettingsForm.online_counter_enabled === false ? '已隐藏' : `${liveDisplayedOnlineCount} ${siteSettingsForm.online_counter_label || '在线'}` }}</span>
                   <span
                     class="ml-1.5 px-1.5 py-0.5 rounded text-[10px] font-semibold"
                     :class="siteSettingsForm.online_counter_mode === 'simulated' ? 'bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300' : 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300'"
                   >
-                    {{ siteSettingsForm.online_counter_mode === 'simulated' ? '自定义浮动值' : '真实在线' }}
+                    {{ siteSettingsForm.online_counter_mode === 'simulated' ? '自定义浮动假人数' : '真实在线' }}
                   </span>
                 </div>
               </div>
@@ -2169,14 +2251,11 @@ onMounted(() => {
                     class="px-2 py-0.5 rounded-full text-[11px] font-semibold"
                     :class="siteSettingsForm.online_counter_mode === 'simulated' ? 'bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300' : 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300'"
                   >
-                    {{ siteSettingsForm.online_counter_mode === 'simulated' ? '当前线上：自定义浮动演示值' : '当前线上：真实统计在线人数' }}
+                    {{ siteSettingsForm.online_counter_mode === 'simulated' ? '当前线上：自定义浮动假人数' : '当前线上：真实统计在线人数' }}
                   </span>
                 </div>
                 <p class="text-xs text-slate-500">
-                  真实同时在线（最近 2 分钟心跳）：<strong class="text-emerald-600 dark:text-emerald-400 tabular-nums">{{ trafficReport?.online?.real_total ?? overview?.stats?.online_real_total ?? 0 }}</strong> 人
-                  （已登录 <strong class="tabular-nums">{{ trafficReport?.online?.real_logged_in ?? overview?.stats?.online_real_logged_in ?? 0 }}</strong> ·
-                  未登录 <strong class="tabular-nums">{{ trafficReport?.online?.real_guest ?? overview?.stats?.online_real_guest ?? 0 }}</strong>）·
-                  前台当前展示：<strong class="text-slate-900 dark:text-white tabular-nums">{{ trafficReport?.online?.enabled === false ? '已隐藏' : `${trafficReport?.online?.display_count ?? 0} ${trafficReport?.online?.label || '在线'}` }}</strong>
+                  后台每 30 秒自动刷新真实数据，即使前台开启假人数，管理员仍可实时掌握真实活跃人数与登录构成。
                 </p>
               </div>
               <div class="flex flex-wrap items-center gap-2">
@@ -2197,6 +2276,66 @@ onMounted(() => {
                 >
                   {{ changedOnlineKeys.size }} 项待保存
                 </span>
+              </div>
+            </div>
+
+            <!-- Prominent Dual Real vs Displayed Comparison Cards (Real stays visible even under Simulated Mode) -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs" data-testid="admin-online-real-vs-display">
+              <div class="rounded-xl border border-emerald-200 dark:border-emerald-900/70 bg-emerald-50/50 dark:bg-emerald-950/20 p-3.5 space-y-1.5">
+                <div class="flex items-center justify-between gap-2">
+                  <span class="font-bold text-emerald-900 dark:text-emerald-200 flex items-center gap-1.5">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                    <span>真实同时在线人数（按 IP 去重 · 仅后台可见）</span>
+                  </span>
+                  <button
+                    type="button"
+                    @click="loadTrafficReport"
+                    class="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-700 dark:text-emerald-300 hover:underline"
+                    title="立即刷新真实在线数据"
+                  >
+                    <RefreshCw class="w-3 h-3" :class="{ 'animate-spin': trafficLoading }" />
+                    <span>30s 自动刷新</span>
+                  </button>
+                </div>
+                <div class="flex items-baseline gap-2.5">
+                  <span class="text-2xl font-bold text-emerald-700 dark:text-emerald-300 tabular-nums">{{ liveRealOnline.total }} 人</span>
+                  <span class="text-slate-600 dark:text-slate-300 tabular-nums">
+                    已登录 <strong class="text-slate-900 dark:text-white">{{ liveRealOnline.logged_in }}</strong> ·
+                    未登录 <strong class="text-slate-900 dark:text-white">{{ liveRealOnline.guest }}</strong> ·
+                    活跃窗口 2 分钟（{{ trafficReport?.active_sessions?.length ?? 0 }} 会话）
+                  </span>
+                </div>
+              </div>
+
+              <div
+                class="rounded-xl border p-3.5 space-y-1.5"
+                :class="siteSettingsForm.online_counter_mode === 'simulated' ? 'border-amber-200 dark:border-amber-900/70 bg-amber-50/50 dark:bg-amber-950/20' : 'border-indigo-200 dark:border-indigo-900/70 bg-indigo-50/40 dark:bg-indigo-950/20'"
+              >
+                <div class="flex items-center justify-between gap-2">
+                  <span class="font-bold text-slate-900 dark:text-white">前台顶栏对外实时展示</span>
+                  <span
+                    class="px-2 py-0.5 rounded-full text-[10.5px] font-semibold"
+                    :class="siteSettingsForm.online_counter_mode === 'simulated' ? 'bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300' : 'bg-indigo-100 text-indigo-700 dark:bg-indigo-950/60 dark:text-indigo-300'"
+                  >
+                    {{ siteSettingsForm.online_counter_mode === 'simulated' ? '模拟假人数模式' : '同步真实在线' }}
+                  </span>
+                </div>
+                <div class="flex items-baseline gap-2.5">
+                  <span
+                    class="text-2xl font-bold tabular-nums"
+                    :class="siteSettingsForm.online_counter_mode === 'simulated' ? 'text-amber-700 dark:text-amber-300' : 'text-indigo-700 dark:text-indigo-300'"
+                  >
+                    {{ siteSettingsForm.online_counter_enabled === false ? '已隐藏' : `${liveDisplayedOnlineCount} ${siteSettingsForm.online_counter_label || '在线'}` }}
+                  </span>
+                  <span class="text-slate-600 dark:text-slate-300 tabular-nums">
+                    <template v-if="siteSettingsForm.online_counter_mode === 'simulated'">
+                      基准 {{ siteSettingsForm.online_sim_base ?? 68 }} · 浮动 ±{{ siteSettingsForm.online_sim_delta ?? 12 }} · 每 {{ siteSettingsForm.online_sim_interval_sec ?? 12 }}s 变动（真实统计仍独立运行）
+                    </template>
+                    <template v-else>
+                      当前展示口径：{{ siteSettingsForm.online_real_scope === 'logged_in' ? '仅已登录用户' : siteSettingsForm.online_real_scope === 'guest' ? '仅未登录访客' : '全部在线（登录 + 未登录）' }}
+                    </template>
+                  </span>
+                </div>
               </div>
             </div>
 
@@ -2360,7 +2499,7 @@ onMounted(() => {
             <div class="flex flex-wrap items-center justify-between gap-2">
               <div>
                 <h2 class="text-sm sm:text-base font-bold text-slate-900 dark:text-white">单日网页访问频率分析（登录 + 未登录 · 北京时间）</h2>
-                <p class="text-xs text-slate-500">每次页面进入、关闭切回超过 10 分钟计为 1 次独立访问，45 秒心跳仅累计活跃心跳与当前在线状态。</p>
+                <p class="text-xs text-slate-500">每次页面进入、关闭切回超过 10 分钟计为 1 次独立访问，50 秒保活心跳（静置 10 分钟自动休眠节省免费额度）。</p>
               </div>
               <div class="flex flex-wrap items-center gap-2 text-xs">
                 <select
@@ -2631,7 +2770,7 @@ onMounted(() => {
             <div class="flex items-center justify-between gap-2">
               <h3 class="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
                 <Clock class="w-4 h-4 text-emerald-500" />
-                <span>当前活跃在线会话列表（去重后 {{ trafficReport?.online?.real_total ?? 0 }} 人在线 · {{ trafficReport?.active_sessions?.length ?? 0 }} 个浏览器会话，最近 2 分钟心跳）</span>
+                <span>当前活跃在线会话列表（去重后 {{ liveRealOnline.total }} 人在线 · {{ trafficReport?.active_sessions?.length ?? 0 }} 个浏览器会话，最近 2 分钟心跳）</span>
               </h3>
               <button
                 type="button"
