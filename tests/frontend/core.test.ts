@@ -19,6 +19,7 @@ import {
   wireReadIdSet,
 } from '../../web/src/core/uiPrefs'
 import { createLiveWireController } from '../../web/src/core/wireStream'
+import { computeSimulatedOnlineCount } from '../../web/src/core/presenceStore'
 import { centerPillIntoView } from '../../web/src/core/dom'
 import { clusterRawPlatforms, computeTitleSimilarity, sanitizeExcerptText } from '../../web/src/core/dedup'
 import {
@@ -2234,5 +2235,19 @@ describe('Phase C features: sorting, pagination, confidence, weekly report, echo
       '2026-W48::outlook_2': 'down',
       '2026-W48::outlook_1': 'up',
     })
+  })
+
+  it('computes deterministic bounded simulated online counts across configurable intervals', () => {
+    expect(computeSimulatedOnlineCount(120, 0, 10, 1_795_700_000_000)).toBe(120)
+    const sampleA1 = computeSimulatedOnlineCount(120, 20, 10, 1_795_700_000_000)
+    const sampleA2 = computeSimulatedOnlineCount(120, 20, 10, 1_795_700_005_000)
+    const sampleB = computeSimulatedOnlineCount(120, 20, 10, 1_795_700_010_000)
+    expect(sampleA1).toBe(sampleA2)
+    expect(sampleA1).not.toBe(sampleB)
+    for (let i = 0; i < 40; i++) {
+      const v = computeSimulatedOnlineCount(5, 10, 5, 1_795_700_000_000 + i * 5000)
+      expect(v).toBeGreaterThanOrEqual(1)
+      expect(v).toBeLessThanOrEqual(15)
+    }
   })
 })

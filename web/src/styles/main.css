@@ -362,7 +362,9 @@
       display: none;
     }
   }
-  html.android-shell .mobile-quick-entry-strip,
+  html.android-shell .mobile-quick-entry-strip {
+    display: grid !important;
+  }
   html.android-shell .mobile-pull-indicator {
     display: flex !important;
   }
@@ -547,7 +549,11 @@
 html.android-shell .mobile-shell-nav {
   display: block !important;
 }
-html.android-shell .desktop-shell-only {
+html.android-shell .mobile-online-pill {
+  display: inline-flex !important;
+}
+html.android-shell .desktop-shell-only,
+html.android-shell .desktop-online-pill {
   display: none !important;
 }
 html.android-shell main#main-content {
@@ -557,7 +563,11 @@ html.android-shell main#main-content {
   .mobile-shell-nav {
     display: block !important;
   }
-  .desktop-shell-only {
+  .mobile-online-pill {
+    display: inline-flex !important;
+  }
+  .desktop-shell-only,
+  .desktop-online-pill {
     display: none !important;
   }
   main#main-content {

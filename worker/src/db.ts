@@ -7,6 +7,7 @@ import {
   nowShanghaiIso,
   verifyPassword,
 } from './crypto'
+import { ONLINE_WINDOW_MS } from './presence'
 import type {
   AccessMode,
   CloudSyncCounts,
@@ -648,6 +649,43 @@ export async function getAdminStats(db: D1Database): Promise<Record<string, numb
     db.prepare("SELECT COUNT(*) AS cnt FROM push_logs WHERE status != 'ok'").first<{ cnt: number }>(),
   ])
 
+  let onlineRealTotal = 0
+  let onlineRealLoggedIn = 0
+  let onlineRealGuest = 0
+  let todayTotalVisits = 0
+  let todayUniqueIps = 0
+  try {
+    const onlineCutoff = Date.now() - ONLINE_WINDOW_MS
+    const todayCst = nowShanghaiIso().slice(0, 10)
+    const [onAuth, onGuest, todayAgg] = await Promise.all([
+      db
+        .prepare(
+          'SELECT COUNT(DISTINCT user_id) AS cnt FROM presence_sessions WHERE is_logged_in = 1 AND user_id IS NOT NULL AND last_seen_ms >= ?1',
+        )
+        .bind(onlineCutoff)
+        .first<{ cnt: number }>(),
+      db
+        .prepare(
+          'SELECT COUNT(DISTINCT session_key) AS cnt FROM presence_sessions WHERE is_logged_in = 0 AND last_seen_ms >= ?1',
+        )
+        .bind(onlineCutoff)
+        .first<{ cnt: number }>(),
+      db
+        .prepare(
+          'SELECT COALESCE(SUM(visit_count), 0) AS tv, COUNT(*) AS uips FROM daily_ip_visits WHERE day_cst = ?1',
+        )
+        .bind(todayCst)
+        .first<{ tv: number; uips: number }>(),
+    ])
+    onlineRealLoggedIn = Number(onAuth?.cnt ?? 0)
+    onlineRealGuest = Number(onGuest?.cnt ?? 0)
+    onlineRealTotal = onlineRealLoggedIn + onlineRealGuest
+    todayTotalVisits = Number(todayAgg?.tv ?? 0)
+    todayUniqueIps = Number(todayAgg?.uips ?? 0)
+  } catch {
+    // Graceful fallback if migration 0004 tables are not yet created
+  }
+
   return {
     total_users: Number(totalUsers?.cnt ?? 0),
     super_admin_count: Number(superAdminCount?.cnt ?? 0),
@@ -668,6 +706,11 @@ export async function getAdminStats(db: D1Database): Promise<Record<string, numb
     db_file_bytes: 0,
     push_ok_count: Number(pushOk?.cnt ?? 0),
     push_error_count: Number(pushErr?.cnt ?? 0),
+    online_real_total: onlineRealTotal,
+    online_real_logged_in: onlineRealLoggedIn,
+    online_real_guest: onlineRealGuest,
+    today_total_visits: todayTotalVisits,
+    today_unique_ips: todayUniqueIps,
   }
 }
 
@@ -713,6 +756,17 @@ const INT_SETTING_BOUNDS: Record<string, { min: number; max: number; fallback: n
   weekly_digest_day: { min: 0, max: 6, fallback: 0 },
   weekly_digest_hour: { min: 0, max: 23, fallback: 18 },
   weekly_digest_minute: { min: 0, max: 59, fallback: 0 },
+  online_sim_base: { min: 1, max: 99999, fallback: 68 },
+  online_sim_delta: { min: 0, max: 50000, fallback: 12 },
+  online_sim_interval_sec: { min: 3, max: 300, fallback: 12 },
+}
+
+export function isValidOnlineCounterMode(raw: unknown): raw is 'real' | 'simulated' {
+  return typeof raw === 'string' && (raw === 'real' || raw === 'simulated')
+}
+
+export function isValidOnlineRealScope(raw: unknown): raw is 'all' | 'logged_in' | 'guest' {
+  return typeof raw === 'string' && (raw === 'all' || raw === 'logged_in' || raw === 'guest')
 }
 
 export function isValidAccessMode(raw: unknown): raw is AccessMode {
@@ -768,6 +822,13 @@ export async function getSiteSettings(db: D1Database, envFallback?: string): Pro
     weekly_digest_day: 0,
     weekly_digest_hour: 18,
     weekly_digest_minute: 0,
+    online_counter_enabled: true,
+    online_counter_mode: 'real',
+    online_real_scope: 'all',
+    online_sim_base: 68,
+    online_sim_delta: 12,
+    online_sim_interval_sec: 12,
+    online_counter_label: '在线',
   }
   const boolKeys = new Set([
     'monitor_public',
@@ -781,6 +842,7 @@ export async function getSiteSettings(db: D1Database, envFallback?: string): Pro
     'prediction_rewards_enabled',
     'prediction_proposals_enabled',
     'weekly_digest_enabled',
+    'online_counter_enabled',
   ])
   const rows = await db.prepare('SELECT key, value FROM site_settings').all<{ key: string; value: string }>()
   let dbAccessModeRaw = ''
@@ -801,6 +863,15 @@ export async function getSiteSettings(db: D1Database, envFallback?: string): Pro
     } else if (r.key === 'growth_stage') {
       const stRaw = String(r.value || '').trim()
       if (isValidGrowthStage(stRaw)) defaults[r.key] = stRaw
+    } else if (r.key === 'online_counter_mode') {
+      const mRaw = String(r.value || '').trim()
+      if (isValidOnlineCounterMode(mRaw)) defaults[r.key] = mRaw
+    } else if (r.key === 'online_real_scope') {
+      const scRaw = String(r.value || '').trim()
+      if (isValidOnlineRealScope(scRaw)) defaults[r.key] = scRaw
+    } else if (r.key === 'online_counter_label') {
+      const lb = String(r.value || '').trim().slice(0, 16)
+      if (lb) defaults[r.key] = lb
     } else {
       defaults[r.key] = String(r.value)
     }
@@ -855,6 +926,20 @@ export async function saveSiteSettings(
         : bound.fallback
       serialized = String(n)
       current[k] = n
+    } else if (k === 'online_counter_mode') {
+      const candidate = typeof v === 'string' ? v.trim() : ''
+      if (!isValidOnlineCounterMode(candidate)) continue
+      serialized = candidate
+      current[k] = candidate
+    } else if (k === 'online_real_scope') {
+      const candidate = typeof v === 'string' ? v.trim() : ''
+      if (!isValidOnlineRealScope(candidate)) continue
+      serialized = candidate
+      current[k] = candidate
+    } else if (k === 'online_counter_label') {
+      const label = String(v).trim().slice(0, 16) || '在线'
+      serialized = label
+      current[k] = label
     } else if (k === 'site_banner_tone') {
       const tone = ['info', 'warning', 'important'].includes(String(v).trim()) ? String(v).trim() : 'info'
       serialized = tone

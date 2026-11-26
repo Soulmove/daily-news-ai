@@ -3,6 +3,12 @@ import { requireUser } from '../authMiddleware'
 import { nowShanghaiIso } from '../crypto'
 import { getSiteSettings, getUserState, logAudit, sanitizeAvatarValue, saveUserState } from '../db'
 import {
+  getRealOnlineCounts,
+  markPresenceLeave,
+  recordPresencePing,
+  resolveOnlineDisplay,
+} from '../presence'
+import {
   ALLOWED_REACTION_KEYS,
   countRecentFeedback,
   createWaitlistEntry,
@@ -61,8 +67,67 @@ publicAndCoreRoutes.get('/public/access-config', (c) => {
 })
 
 publicAndCoreRoutes.get('/public/settings', async (c) => {
-  const settings = await getSiteSettings(c.env.DB, c.env.SITE_ACCESS_MODE)
-  return c.json(settings, 200, { 'Cache-Control': 'no-store' })
+  const rawSettings = await getSiteSettings(c.env.DB, c.env.SITE_ACCESS_MODE)
+  const {
+    online_counter_mode: _m,
+    online_real_scope: _s,
+    online_sim_base: _b,
+    online_sim_delta: _d,
+    online_sim_interval_sec: _i,
+    ...publicSettings
+  } = rawSettings
+  return c.json(publicSettings, 200, { 'Cache-Control': 'no-store' })
+})
+
+// ---------------- Live Online Presence & Visit Telemetry ----------------
+
+publicAndCoreRoutes.post('/presence/ping', async (c) => {
+  const body = (await c.req.json().catch(() => ({}))) as {
+    is_visit?: boolean
+    platform?: string
+    tab?: string
+  }
+  const cfCountry = String(
+    c.req.header('cf-ipcountry') || (c.req.raw as { cf?: { country?: string } }).cf?.country || '',
+  ).trim()
+  await recordPresencePing(c.env.DB, {
+    sessionKey: c.get('deviceId'),
+    ip: c.get('clientIp'),
+    country: cfCountry,
+    user: c.get('user'),
+    platform: body.platform,
+    tab: body.tab,
+    userAgent: c.req.header('user-agent') || '',
+    isVisit: Boolean(body.is_visit),
+  })
+  const [settings, realCounts] = await Promise.all([
+    getSiteSettings(c.env.DB, c.env.SITE_ACCESS_MODE),
+    getRealOnlineCounts(c.env.DB),
+  ])
+  return c.json({ ok: true, ...resolveOnlineDisplay(settings, realCounts) }, 200, {
+    'Cache-Control': 'no-store',
+  })
+})
+
+publicAndCoreRoutes.post('/presence/leave', async (c) => {
+  const body = (await c.req.json().catch(() => ({}))) as { device_id?: string }
+  const rawDev = typeof body.device_id === 'string' ? body.device_id.trim() : ''
+  const sessionKey =
+    rawDev.length >= 8 && rawDev.length <= 128 && /^[A-Za-z0-9_.:-]+$/.test(rawDev)
+      ? `dev:${rawDev}`
+      : c.get('deviceId')
+  await markPresenceLeave(c.env.DB, sessionKey)
+  return c.json({ ok: true }, 200, { 'Cache-Control': 'no-store' })
+})
+
+publicAndCoreRoutes.get('/presence/status', async (c) => {
+  const [settings, realCounts] = await Promise.all([
+    getSiteSettings(c.env.DB, c.env.SITE_ACCESS_MODE),
+    getRealOnlineCounts(c.env.DB),
+  ])
+  return c.json({ ok: true, ...resolveOnlineDisplay(settings, realCounts) }, 200, {
+    'Cache-Control': 'no-store',
+  })
 })
 
 publicAndCoreRoutes.get('/public/overrides', async (c) => {

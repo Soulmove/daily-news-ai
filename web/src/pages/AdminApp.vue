@@ -4,8 +4,10 @@ import {
   Activity,
   AlertTriangle,
   ArrowRight,
+  BarChart3,
   Bell,
   CheckCircle2,
+  Clock,
   Copy,
   Database,
   Eye,
@@ -22,8 +24,10 @@ import {
   Plus,
   RefreshCw,
   RotateCcw,
+  Search,
   Send,
   Shield,
+  SlidersHorizontal,
   Smartphone,
   Ticket,
   Trash2,
@@ -34,6 +38,7 @@ import AppShell from '../components/AppShell.vue'
 import DialogDirtyGuard from '../components/DialogDirtyGuard.vue'
 import UserAvatar from '../components/UserAvatar.vue'
 import { useDialogBehavior } from '../core/dialog'
+import { computeSimulatedOnlineCount } from '../core/presenceStore'
 import {
   apiAdminApprovePredictionProposal,
   apiAdminApproveWaitlist,
@@ -64,6 +69,7 @@ import {
   apiAdminSaveSiteSettings,
   apiAdminSettleDailyPrediction,
   apiAdminSyncNow,
+  apiAdminTraffic,
   apiAdminUpdateFeedback,
   apiAdminUserData,
   apiAdminUsers,
@@ -77,6 +83,7 @@ import {
   type AdminInviteCodeRow,
   type AdminOverviewResponse,
   type AdminPushConfig,
+  type AdminTrafficResponse,
   type AdminUserRow,
   type AuthSession,
   type DailyPredictionRow,
@@ -94,7 +101,7 @@ import { formatFriendlyBatchId } from '../core/time'
 
 const isDark = ref(readDarkMode())
 const session = ref<AuthSession | null>(loadAuthSession())
-const activeTab = ref<'overview' | 'feedback' | 'content' | 'users' | 'push' | 'audit'>('overview')
+const activeTab = ref<'overview' | 'traffic' | 'feedback' | 'content' | 'users' | 'push' | 'audit'>('overview')
 
 const loginUser = ref('admin')
 const loginPass = ref('')
@@ -156,7 +163,58 @@ const siteSettingsForm = ref<PublicSiteSettings>({
   weekly_digest_day: 0,
   weekly_digest_hour: 18,
   weekly_digest_minute: 0,
+  online_counter_enabled: true,
+  online_counter_mode: 'real',
+  online_real_scope: 'all',
+  online_sim_base: 68,
+  online_sim_delta: 12,
+  online_sim_interval_sec: 12,
+  online_counter_label: '在线',
 })
+
+interface OnlineControlDraft {
+  online_counter_enabled: boolean
+  online_counter_mode: 'real' | 'simulated'
+  online_real_scope: 'all' | 'logged_in' | 'guest'
+  online_sim_base: number
+  online_sim_delta: number
+  online_sim_interval_sec: number
+  online_counter_label: string
+}
+
+function buildOnlineDraftFromSettings(s: PublicSiteSettings): OnlineControlDraft {
+  return {
+    online_counter_enabled: s.online_counter_enabled !== false,
+    online_counter_mode: s.online_counter_mode === 'simulated' ? 'simulated' : 'real',
+    online_real_scope:
+      s.online_real_scope === 'logged_in' || s.online_real_scope === 'guest' || s.online_real_scope === 'all'
+        ? s.online_real_scope
+        : 'all',
+    online_sim_base: Number(s.online_sim_base ?? 68),
+    online_sim_delta: Number(s.online_sim_delta ?? 12),
+    online_sim_interval_sec: Number(s.online_sim_interval_sec ?? 12),
+    online_counter_label: (s.online_counter_label || '在线').trim() || '在线',
+  }
+}
+
+const onlineDraft = ref<OnlineControlDraft>({
+  online_counter_enabled: true,
+  online_counter_mode: 'real',
+  online_real_scope: 'all',
+  online_sim_base: 68,
+  online_sim_delta: 12,
+  online_sim_interval_sec: 12,
+  online_counter_label: '在线',
+})
+
+const trafficReport = ref<AdminTrafficResponse | null>(null)
+const trafficLoading = ref(false)
+const trafficDay = ref('')
+const trafficFilter = ref<'all' | 'auth' | 'guest' | 'online'>('all')
+const trafficSort = ref<'visits' | 'recent'>('visits')
+const trafficSearch = ref('')
+const trafficSessionsExpanded = ref(true)
+const hoveredHour = ref<number | null>(null)
 
 interface GrowthControlDraft {
   growth_stage: GrowthStage
@@ -611,13 +669,35 @@ async function loadFeedbackList() {
   }
 }
 
+async function loadTrafficReport() {
+  if (!session.value || !isAdmin.value) return
+  trafficLoading.value = true
+  try {
+    const res = await apiAdminTraffic(session.value.token, {
+      day: trafficDay.value || undefined,
+      filter: trafficFilter.value,
+      sort: trafficSort.value,
+      q: trafficSearch.value.trim(),
+      limit: 150,
+    })
+    trafficReport.value = res
+    if (!trafficDay.value && res.day) {
+      trafficDay.value = res.day
+    }
+  } catch (err) {
+    showToast(err instanceof Error ? err.message : '加载在线与访问统计失败')
+  } finally {
+    trafficLoading.value = false
+  }
+}
+
 async function loadAllAdminData() {
   if (!session.value || !isAdmin.value) return
   loading.value = true
   authError.value = ''
   try {
     const token = session.value.token
-    const [ov, ul, pc, pl, al, ss, fb, ct, invRes, wlRes, propRes, dpRes] = await Promise.all([
+    const [ov, ul, pc, pl, al, ss, fb, ct, invRes, wlRes, propRes, dpRes, trRes] = await Promise.all([
       apiAdminOverview(token),
       apiAdminUsers(token),
       apiAdminGetPushConfig(token),
@@ -630,11 +710,24 @@ async function loadAllAdminData() {
       apiAdminListWaitlist(token).catch(() => ({ items: [] })),
       apiAdminListPredictionProposals(token).catch(() => ({ items: [] })),
       apiAdminListDailyPredictions(token).catch(() => ({ items: [] })),
+      apiAdminTraffic(token, {
+        day: trafficDay.value || undefined,
+        filter: trafficFilter.value,
+        sort: trafficSort.value,
+        q: trafficSearch.value.trim(),
+        limit: 150,
+      }).catch(() => null),
     ])
     inviteCodes.value = invRes.items || []
     waitlistItems.value = wlRes.items || []
     predictionProposals.value = propRes.items || []
     dailyPredictions.value = dpRes.items || []
+    if (trRes) {
+      trafficReport.value = trRes
+      if (!trafficDay.value && trRes.day) {
+        trafficDay.value = trRes.day
+      }
+    }
     overview.value = ov
     users.value = ul.users
     pushConfig.value = pc.config
@@ -669,8 +762,23 @@ async function loadAllAdminData() {
       prediction_daily_market_enabled: ss.prediction_daily_market_enabled !== false,
       prediction_rewards_enabled: ss.prediction_rewards_enabled !== false,
       prediction_proposals_enabled: ss.prediction_proposals_enabled !== false,
+      weekly_digest_enabled: ss.weekly_digest_enabled !== false,
+      weekly_digest_day: ss.weekly_digest_day ?? 0,
+      weekly_digest_hour: ss.weekly_digest_hour ?? 18,
+      weekly_digest_minute: ss.weekly_digest_minute ?? 0,
+      online_counter_enabled: ss.online_counter_enabled !== false,
+      online_counter_mode: ss.online_counter_mode === 'simulated' ? 'simulated' : 'real',
+      online_real_scope:
+        ss.online_real_scope === 'logged_in' || ss.online_real_scope === 'guest' || ss.online_real_scope === 'all'
+          ? ss.online_real_scope
+          : 'all',
+      online_sim_base: ss.online_sim_base ?? 68,
+      online_sim_delta: ss.online_sim_delta ?? 12,
+      online_sim_interval_sec: ss.online_sim_interval_sec ?? 12,
+      online_counter_label: ss.online_counter_label || '在线',
     }
     growthDraft.value = buildGrowthDraftFromSettings(siteSettingsForm.value)
+    onlineDraft.value = buildOnlineDraftFromSettings(siteSettingsForm.value)
     feedbackItems.value = fb.items || []
     const drafts: Record<number, { status: string; admin_reply: string }> = {}
     for (const item of feedbackItems.value) {
@@ -869,11 +977,133 @@ async function saveSiteSettingsPartial(patch: Partial<PublicSiteSettings>, succe
       ...res,
     }
     growthDraft.value = buildGrowthDraftFromSettings(siteSettingsForm.value)
+    onlineDraft.value = buildOnlineDraftFromSettings(siteSettingsForm.value)
     showToast(successMsg)
   } catch (err) {
     showToast(err instanceof Error ? err.message : '设置保存失败')
   } finally {
     busyAction.value = false
+  }
+}
+
+const currentLiveOnline = computed(() => buildOnlineDraftFromSettings(siteSettingsForm.value))
+const changedOnlineKeys = computed<Set<keyof OnlineControlDraft>>(() => {
+  const out = new Set<keyof OnlineControlDraft>()
+  const cur = currentLiveOnline.value
+  const d = onlineDraft.value
+  for (const k of Object.keys(d) as Array<keyof OnlineControlDraft>) {
+    if (d[k] !== cur[k]) out.add(k)
+  }
+  return out
+})
+
+const simulatedPreviewRange = computed(() => {
+  const base = Math.max(1, Math.round(Number(onlineDraft.value.online_sim_base || 1)))
+  const delta = Math.max(0, Math.round(Number(onlineDraft.value.online_sim_delta || 0)))
+  const interval = Math.max(3, Math.min(300, Math.round(Number(onlineDraft.value.online_sim_interval_sec || 12))))
+  return {
+    min: Math.max(1, base - delta),
+    max: Math.max(1, base + delta),
+    sample: computeSimulatedOnlineCount(base, delta, interval, Date.now()),
+  }
+})
+
+const filteredTrafficRows = computed(() => {
+  const rows = trafficReport.value?.ip_rows || []
+  const q = trafficSearch.value.trim().toLowerCase()
+  return rows.filter((row) => {
+    if (trafficFilter.value === 'auth' && !row.has_auth) return false
+    if (trafficFilter.value === 'guest' && row.has_auth) return false
+    if (trafficFilter.value === 'online' && !row.is_online) return false
+    if (q) {
+      const hay = `${row.ip} ${row.country} ${row.last_username} ${row.usernames.join(' ')} ${row.last_tab}`.toLowerCase()
+      if (!hay.includes(q)) return false
+    }
+    return true
+  })
+})
+
+const hourlyMaxVisits = computed(() => {
+  const list = trafficReport.value?.hourly || []
+  return Math.max(1, ...list.map((h) => h.total_visits))
+})
+
+const hoveredHourlyRow = computed(() => {
+  if (hoveredHour.value === null || !trafficReport.value) return null
+  return trafficReport.value.hourly.find((h) => h.hour === hoveredHour.value) || null
+})
+
+async function handleSaveOnlineConfig() {
+  const cleanBase = Math.max(1, Math.min(99999, Math.round(Number(onlineDraft.value.online_sim_base || 68))))
+  const cleanDelta = Math.max(0, Math.min(50000, Math.round(Number(onlineDraft.value.online_sim_delta || 0))))
+  const cleanInterval = Math.max(3, Math.min(300, Math.round(Number(onlineDraft.value.online_sim_interval_sec || 12))))
+  const cleanLabel = (onlineDraft.value.online_counter_label || '').trim().slice(0, 16) || '在线'
+  onlineDraft.value = {
+    ...onlineDraft.value,
+    online_sim_base: cleanBase,
+    online_sim_delta: cleanDelta,
+    online_sim_interval_sec: cleanInterval,
+    online_counter_label: cleanLabel,
+  }
+  await saveSiteSettingsPartial(
+    { ...onlineDraft.value },
+    onlineDraft.value.online_counter_mode === 'simulated'
+      ? `自定义在线人数已生效（基准 ${cleanBase} · 浮动 ±${cleanDelta} · 每 ${cleanInterval} 秒变动）`
+      : '在线人数真实统计配置已保存并全站生效！',
+  )
+  await loadTrafficReport()
+}
+
+async function handleRevertRealOnline() {
+  onlineDraft.value.online_counter_enabled = true
+  onlineDraft.value.online_counter_mode = 'real'
+  await saveSiteSettingsPartial(
+    {
+      online_counter_enabled: true,
+      online_counter_mode: 'real',
+      online_real_scope: onlineDraft.value.online_real_scope,
+    },
+    '已调回显示平台真实在线人数！',
+  )
+  await loadTrafficReport()
+}
+
+function resetOnlineDraft() {
+  onlineDraft.value = buildOnlineDraftFromSettings(siteSettingsForm.value)
+}
+
+function platformLabel(p: string): string {
+  if (p === 'android') return '安卓端'
+  if (p === 'mobile') return '手机网页'
+  return '桌面网页'
+}
+
+function tabLabel(tb: string): string {
+  const map: Record<string, string> = {
+    today: '精选要闻',
+    wire: '7×24 快讯',
+    finance: '股市传导',
+    ai_progress: 'AI 前沿',
+    calendar: '预测/日程',
+    weekly: '每周盘点',
+    tracking: '追踪',
+    me: '我的',
+  }
+  return map[tb] || tb || '首页'
+}
+
+function formatCstTimeOnly(iso?: string | null): string {
+  if (!iso) return '-'
+  const m = String(iso).match(/T(\d{2}:\d{2}:\d{2})/)
+  return m ? m[1] : String(iso).slice(0, 19).replace('T', ' ')
+}
+
+async function copyIpAddress(ip: string) {
+  try {
+    await navigator.clipboard.writeText(ip)
+    showToast(`已复制 IP：${ip}`)
+  } catch {
+    showToast(`请手动复制 IP：${ip}`)
   }
 }
 
@@ -1396,6 +1626,20 @@ onMounted(() => {
           </button>
           <button
             type="button"
+            @click="activeTab = 'traffic'; loadTrafficReport()"
+            data-testid="admin-tab-traffic"
+            class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl border transition-colors"
+            :class="activeTab === 'traffic' ? 'bg-slate-900 text-white border-slate-900 dark:bg-blue-600 dark:border-blue-600' : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300'"
+          >
+            <BarChart3 class="w-4 h-4" />
+            <span>在线与访问统计</span>
+            <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 tabular-nums">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+              {{ trafficReport?.online?.real_total ?? overview?.stats?.online_real_total ?? 0 }}
+            </span>
+          </button>
+          <button
+            type="button"
             @click="activeTab = 'feedback'"
             class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl border transition-colors"
             :class="activeTab === 'feedback' ? 'bg-slate-900 text-white border-slate-900 dark:bg-blue-600 dark:border-blue-600' : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300'"
@@ -1476,6 +1720,53 @@ onMounted(() => {
               <div class="text-2xl font-bold text-emerald-600 dark:text-emerald-400 mt-1 tabular-nums">{{ overview.stats.push_ok_count }}</div>
               <div class="text-[11px] text-slate-500 mt-1">失败 {{ overview.stats.push_error_count }} 次 · 加密载荷 {{ formatBytes(overview.stats.encrypted_storage_bytes) }}</div>
             </div>
+          </div>
+
+          <!-- Real-Time Online & Daily IP Frequency Quick Strip -->
+          <div class="rounded-2xl border border-emerald-200/80 dark:border-emerald-900/60 bg-white dark:bg-slate-900 p-4 sm:p-5 flex flex-wrap items-center justify-between gap-3 text-xs sm:text-sm">
+            <div class="flex flex-wrap items-center gap-4">
+              <div>
+                <div class="text-[11px] text-slate-500 flex items-center gap-1.5">
+                  <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                  <span>当前真实在线（2 分钟心跳）</span>
+                </div>
+                <div class="font-bold text-slate-900 dark:text-white mt-0.5 tabular-nums">
+                  <span class="text-lg text-emerald-600 dark:text-emerald-400">{{ trafficReport?.online?.real_total ?? overview.stats.online_real_total ?? 0 }}</span>
+                  <span class="text-xs font-medium text-slate-500 ml-2">
+                    已登录 {{ trafficReport?.online?.real_logged_in ?? overview.stats.online_real_logged_in ?? 0 }} · 未登录 {{ trafficReport?.online?.real_guest ?? overview.stats.online_real_guest ?? 0 }}
+                  </span>
+                </div>
+              </div>
+              <div class="h-8 w-px bg-slate-200 dark:bg-slate-800 hidden sm:block" />
+              <div>
+                <div class="text-[11px] text-slate-500">前台顶栏当前展示</div>
+                <div class="font-bold text-slate-900 dark:text-white mt-0.5 tabular-nums">
+                  <span>{{ trafficReport?.online?.enabled === false ? '已隐藏' : `${trafficReport?.online?.display_count ?? overview.stats.online_real_total ?? 0} ${trafficReport?.online?.label || '在线'}` }}</span>
+                  <span
+                    class="ml-1.5 px-1.5 py-0.5 rounded text-[10px] font-semibold"
+                    :class="siteSettingsForm.online_counter_mode === 'simulated' ? 'bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300' : 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300'"
+                  >
+                    {{ siteSettingsForm.online_counter_mode === 'simulated' ? '自定义浮动值' : '真实在线' }}
+                  </span>
+                </div>
+              </div>
+              <div class="h-8 w-px bg-slate-200 dark:bg-slate-800 hidden sm:block" />
+              <div>
+                <div class="text-[11px] text-slate-500">今日全站访问 / 独立 IP</div>
+                <div class="font-bold text-slate-900 dark:text-white mt-0.5 tabular-nums">
+                  <span>{{ overview.stats.today_total_visits ?? trafficReport?.summary?.total_visits ?? 0 }} 次</span>
+                  <span class="text-xs font-medium text-slate-500 ml-1.5">/ {{ overview.stats.today_unique_ips ?? trafficReport?.summary?.unique_ips ?? 0 }} IP</span>
+                </div>
+              </div>
+            </div>
+            <button
+              type="button"
+              @click="activeTab = 'traffic'; loadTrafficReport()"
+              class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold transition-colors shrink-0"
+            >
+              <span>管理在线人数 / 看 24h IP 明细</span>
+              <ArrowRight class="w-3.5 h-3.5" />
+            </button>
           </div>
 
           <div class="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 space-y-2 text-xs sm:text-sm">
@@ -1856,6 +2147,527 @@ onMounted(() => {
               >
                 {{ monitorPublic ? '改为仅管理员可见' : '开放给普通用户查看' }}
               </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- Tab 1.5: Live Online Counter Console & Daily IP Visit Frequency Analytics -->
+        <section v-if="activeTab === 'traffic'" class="space-y-4">
+          <!-- Card A: Front-end Online Counter Control Panel -->
+          <div
+            class="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 space-y-4 text-xs sm:text-sm"
+            data-testid="admin-online-config-card"
+          >
+            <div class="flex flex-wrap items-start justify-between gap-3">
+              <div class="space-y-1">
+                <div class="flex flex-wrap items-center gap-2">
+                  <SlidersHorizontal class="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                  <h2 class="text-sm sm:text-base font-bold text-slate-900 dark:text-white">
+                    平台同时在线人数控制（网页端 &amp; 安卓端同步生效）
+                  </h2>
+                  <span
+                    class="px-2 py-0.5 rounded-full text-[11px] font-semibold"
+                    :class="siteSettingsForm.online_counter_mode === 'simulated' ? 'bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300' : 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300'"
+                  >
+                    {{ siteSettingsForm.online_counter_mode === 'simulated' ? '当前线上：自定义浮动演示值' : '当前线上：真实统计在线人数' }}
+                  </span>
+                </div>
+                <p class="text-xs text-slate-500">
+                  真实同时在线（最近 2 分钟心跳）：<strong class="text-emerald-600 dark:text-emerald-400 tabular-nums">{{ trafficReport?.online?.real_total ?? overview?.stats?.online_real_total ?? 0 }}</strong> 人
+                  （已登录 <strong class="tabular-nums">{{ trafficReport?.online?.real_logged_in ?? overview?.stats?.online_real_logged_in ?? 0 }}</strong> ·
+                  未登录 <strong class="tabular-nums">{{ trafficReport?.online?.real_guest ?? overview?.stats?.online_real_guest ?? 0 }}</strong>）·
+                  前台当前展示：<strong class="text-slate-900 dark:text-white tabular-nums">{{ trafficReport?.online?.enabled === false ? '已隐藏' : `${trafficReport?.online?.display_count ?? 0} ${trafficReport?.online?.label || '在线'}` }}</strong>
+                </p>
+              </div>
+              <div class="flex flex-wrap items-center gap-2">
+                <button
+                  v-if="siteSettingsForm.online_counter_mode === 'simulated' || onlineDraft.online_counter_mode === 'simulated'"
+                  type="button"
+                  :disabled="busyAction"
+                  @click="handleRevertRealOnline"
+                  data-testid="admin-revert-real-online-btn"
+                  class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold transition-colors"
+                >
+                  <RotateCcw class="w-3.5 h-3.5" />
+                  <span>一键调回真实在线人数</span>
+                </button>
+                <span
+                  v-if="changedOnlineKeys.size > 0"
+                  class="px-2.5 py-1 rounded-full bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300 text-xs font-semibold"
+                >
+                  {{ changedOnlineKeys.size }} 项待保存
+                </span>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs pt-1 border-t border-slate-100 dark:border-slate-800">
+              <label class="rounded-xl border border-slate-200 dark:border-slate-800 p-3 flex items-center justify-between gap-2 cursor-pointer">
+                <div>
+                  <div class="font-bold text-slate-900 dark:text-white">前台顶栏显示在线人数</div>
+                  <div class="text-[11px] text-slate-500">开启后 PC / 手机 / 安卓端顶部均显示在线胶囊</div>
+                </div>
+                <input v-model="onlineDraft.online_counter_enabled" type="checkbox" class="rounded w-4 h-4 text-emerald-600" />
+              </label>
+
+              <div class="rounded-xl border border-slate-200 dark:border-slate-800 p-3 space-y-1">
+                <label class="block font-bold text-slate-900 dark:text-white">在线文案后缀（默认：在线）</label>
+                <input
+                  v-model="onlineDraft.online_counter_label"
+                  type="text"
+                  maxlength="16"
+                  placeholder="在线"
+                  class="w-full h-8 px-2.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs"
+                />
+              </div>
+
+              <div class="rounded-xl border border-slate-200 dark:border-slate-800 p-3 space-y-1.5">
+                <div class="font-bold text-slate-900 dark:text-white">在线统计口径模式</div>
+                <div class="grid grid-cols-2 gap-1.5">
+                  <button
+                    type="button"
+                    @click="onlineDraft.online_counter_mode = 'real'"
+                    data-testid="online-mode-real"
+                    class="h-8 px-2 rounded-lg text-xs font-semibold border transition-colors"
+                    :class="onlineDraft.online_counter_mode === 'real' ? 'bg-emerald-600 text-white border-emerald-600' : 'border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300'"
+                  >
+                    真实在线人数
+                  </button>
+                  <button
+                    type="button"
+                    @click="onlineDraft.online_counter_mode = 'simulated'"
+                    data-testid="online-mode-simulated"
+                    class="h-8 px-2 rounded-lg text-xs font-semibold border transition-colors"
+                    :class="onlineDraft.online_counter_mode === 'simulated' ? 'bg-amber-600 text-white border-amber-600' : 'border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300'"
+                  >
+                    自定义/伪造人数
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Real Scope Selector -->
+            <div
+              v-if="onlineDraft.online_counter_mode === 'real'"
+              class="rounded-xl border border-emerald-200/80 dark:border-emerald-900/60 bg-emerald-50/40 dark:bg-emerald-950/15 p-3.5 space-y-2 text-xs"
+            >
+              <div class="font-bold text-slate-900 dark:text-white">选择真实在线人群展示范围</div>
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                <label
+                  v-for="opt in [
+                    { id: 'all', title: '全部在线（登录 + 未登录）', desc: '同时统计已登录账号（按用户去重）与未登录访客' },
+                    { id: 'logged_in', title: '仅显示已登录用户', desc: '只展示当前活跃的注册登录账号人数' },
+                    { id: 'guest', title: '仅显示未登录访客', desc: '只展示当前未登录访问设备的在线人数' },
+                  ] as const"
+                  :key="opt.id"
+                  class="rounded-xl border p-2.5 flex items-start gap-2 cursor-pointer transition-colors"
+                  :class="onlineDraft.online_real_scope === opt.id ? 'border-emerald-500 bg-white dark:bg-slate-900 ring-1 ring-emerald-500' : 'border-slate-200 dark:border-slate-800 bg-white/60 dark:bg-slate-900/50'"
+                >
+                  <input v-model="onlineDraft.online_real_scope" type="radio" :value="opt.id" class="mt-0.5 text-emerald-600" />
+                  <div>
+                    <div class="font-bold text-slate-900 dark:text-white">{{ opt.title }}</div>
+                    <div class="text-[11px] text-slate-500 leading-relaxed">{{ opt.desc }}</div>
+                  </div>
+                </label>
+              </div>
+            </div>
+
+            <!-- Simulated Online Config -->
+            <div
+              v-else
+              class="rounded-xl border border-amber-200 dark:border-amber-900/70 bg-amber-50/50 dark:bg-amber-950/20 p-3.5 space-y-3 text-xs"
+            >
+              <div class="flex flex-wrap items-center justify-between gap-2">
+                <div class="font-bold text-slate-900 dark:text-white">自定义（伪造）在线人数与波动参数</div>
+                <span class="text-[11px] font-semibold text-amber-800 dark:text-amber-300 tabular-nums">
+                  波动范围预览：{{ simulatedPreviewRange.min }} ~ {{ simulatedPreviewRange.max }} 人（当前时刻计算值：{{ simulatedPreviewRange.sample }}）
+                </span>
+              </div>
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div class="space-y-1">
+                  <label class="block font-semibold text-slate-700 dark:text-slate-300">基准在线人数（1 ~ 99999）</label>
+                  <input
+                    v-model.number="onlineDraft.online_sim_base"
+                    type="number"
+                    min="1"
+                    max="99999"
+                    class="w-full h-9 px-3 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 font-mono"
+                  />
+                </div>
+                <div class="space-y-1">
+                  <label class="block font-semibold text-slate-700 dark:text-slate-300">上下浮动幅度（±N，0 ~ 50000）</label>
+                  <input
+                    v-model.number="onlineDraft.online_sim_delta"
+                    type="number"
+                    min="0"
+                    max="50000"
+                    class="w-full h-9 px-3 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 font-mono"
+                  />
+                </div>
+                <div class="space-y-1">
+                  <label class="block font-semibold text-slate-700 dark:text-slate-300">人数变动频率（秒，3 ~ 300）</label>
+                  <input
+                    v-model.number="onlineDraft.online_sim_interval_sec"
+                    type="number"
+                    min="3"
+                    max="300"
+                    class="w-full h-9 px-3 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 font-mono"
+                  />
+                  <div class="flex flex-wrap gap-1 pt-0.5">
+                    <button
+                      v-for="sec in [5, 10, 15, 30, 60]"
+                      :key="sec"
+                      type="button"
+                      @click="onlineDraft.online_sim_interval_sec = sec"
+                      class="px-2 py-0.5 rounded border text-[11px] font-mono"
+                      :class="onlineDraft.online_sim_interval_sec === sec ? 'bg-amber-600 text-white border-amber-600' : 'border-slate-300 dark:border-slate-700 text-slate-600 dark:text-slate-300'"
+                    >
+                      {{ sec }}s
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <p class="text-[11px] text-slate-500">
+                提示：所有在线访客看到的人数将按相同时间槽平滑游走、在您设定的基准值上下自然跳动，不会每次刷新乱跳；任何时候点击「一键调回真实在线人数」即可立即切回真实心跳统计。
+              </p>
+            </div>
+
+            <div class="flex flex-wrap items-center justify-end gap-2">
+              <button
+                v-if="changedOnlineKeys.size > 0"
+                type="button"
+                @click="resetOnlineDraft"
+                class="px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 text-xs font-medium"
+              >
+                还原未保存修改
+              </button>
+              <button
+                type="button"
+                :disabled="busyAction"
+                @click="handleSaveOnlineConfig"
+                data-testid="save-online-config-btn"
+                class="px-4 py-2 rounded-xl bg-slate-900 dark:bg-blue-600 text-white text-xs font-semibold hover:opacity-95 disabled:opacity-50"
+              >
+                {{ busyAction ? '保存中...' : '保存在线人数配置' }}
+              </button>
+            </div>
+          </div>
+
+          <!-- Card B: Daily Web Traffic Frequency & 24-Hour Distribution -->
+          <div
+            class="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 space-y-4 text-xs sm:text-sm"
+            data-testid="admin-traffic-overview-card"
+          >
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <div>
+                <h2 class="text-sm sm:text-base font-bold text-slate-900 dark:text-white">单日网页访问频率分析（登录 + 未登录 · 北京时间）</h2>
+                <p class="text-xs text-slate-500">每次页面进入、关闭切回超过 10 分钟计为 1 次独立访问，45 秒心跳仅累计活跃心跳与当前在线状态。</p>
+              </div>
+              <div class="flex flex-wrap items-center gap-2 text-xs">
+                <select
+                  v-model="trafficDay"
+                  @change="loadTrafficReport"
+                  class="h-8 px-2.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 font-mono"
+                >
+                  <option v-for="d in trafficReport?.available_days || (trafficDay ? [trafficDay] : [])" :key="d" :value="d">
+                    {{ d }}{{ d === trafficReport?.today_cst ? '（今日）' : '' }}
+                  </option>
+                </select>
+                <button
+                  type="button"
+                  :disabled="trafficLoading"
+                  @click="loadTrafficReport"
+                  class="inline-flex items-center gap-1 h-8 px-3 rounded-lg border border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 font-medium"
+                >
+                  <RefreshCw class="w-3.5 h-3.5" :class="{ 'animate-spin': trafficLoading }" />
+                  <span>刷新统计</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
+              <div class="rounded-xl bg-slate-50 dark:bg-slate-800/60 p-3.5">
+                <div class="text-slate-500">当日总访问次数</div>
+                <div class="text-xl font-bold text-slate-900 dark:text-white mt-1 tabular-nums">
+                  {{ trafficReport?.summary?.total_visits ?? 0 }}
+                </div>
+                <div class="text-[11px] text-slate-500 mt-1 tabular-nums">
+                  已登录 {{ trafficReport?.summary?.auth_visits ?? 0 }} · 未登录 {{ trafficReport?.summary?.guest_visits ?? 0 }}
+                </div>
+              </div>
+              <div class="rounded-xl bg-slate-50 dark:bg-slate-800/60 p-3.5">
+                <div class="text-slate-500">当日独立 IP 数</div>
+                <div class="text-xl font-bold text-indigo-600 dark:text-indigo-400 mt-1 tabular-nums">
+                  {{ trafficReport?.summary?.unique_ips ?? 0 }}
+                </div>
+                <div class="text-[11px] text-slate-500 mt-1 tabular-nums">
+                  含登录 IP {{ trafficReport?.summary?.auth_ips ?? 0 }} · 纯访客 IP {{ trafficReport?.summary?.guest_only_ips ?? 0 }}
+                </div>
+              </div>
+              <div class="rounded-xl bg-slate-50 dark:bg-slate-800/60 p-3.5">
+                <div class="text-slate-500">平均每 IP 访问频次</div>
+                <div class="text-xl font-bold text-emerald-600 dark:text-emerald-400 mt-1 tabular-nums">
+                  {{ (trafficReport?.summary?.avg_visits_per_ip ?? 0).toFixed(2) }}x
+                </div>
+                <div class="text-[11px] text-slate-500 mt-1 tabular-nums">
+                  回头高频 IP（&ge;2 次）{{ trafficReport?.summary?.repeat_ips ?? 0 }} 个
+                </div>
+              </div>
+              <div class="rounded-xl bg-slate-50 dark:bg-slate-800/60 p-3.5">
+                <div class="text-slate-500">访问高峰时段（CST）</div>
+                <div class="text-xl font-bold text-amber-600 dark:text-amber-400 mt-1 font-mono tabular-nums">
+                  {{ trafficReport?.summary?.peak_hour ? trafficReport.summary.peak_hour.label : '--:--' }}
+                </div>
+                <div class="text-[11px] text-slate-500 mt-1 tabular-nums">
+                  高峰 {{ trafficReport?.summary?.peak_hour?.total_visits ?? 0 }} 次 · 总心跳 {{ trafficReport?.summary?.total_heartbeats ?? 0 }}
+                </div>
+              </div>
+            </div>
+
+            <!-- 24h Hourly Stacked Bar Chart -->
+            <div class="space-y-2 pt-1">
+              <div class="flex flex-wrap items-center justify-between gap-2 text-[11px] text-slate-500">
+                <div class="flex items-center gap-3">
+                  <span class="inline-flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-xs bg-indigo-500" /> 已登录访问</span>
+                  <span class="inline-flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-xs bg-sky-400" /> 未登录访问</span>
+                </div>
+                <div v-if="hoveredHourlyRow" class="font-mono text-slate-700 dark:text-slate-200 font-semibold">
+                  {{ hoveredHourlyRow.label }}：共 {{ hoveredHourlyRow.total_visits }} 次（登录 {{ hoveredHourlyRow.auth_visits }} · 访客 {{ hoveredHourlyRow.guest_visits }} · 独立 IP {{ hoveredHourlyRow.unique_ips }}）
+                </div>
+                <div v-else>悬停或点击柱状条查看各小时频次详情</div>
+              </div>
+
+              <div class="grid grid-cols-[repeat(24,minmax(0,1fr))] gap-1 items-end h-28 pt-3 px-2 pb-1 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200/70 dark:border-slate-800">
+                <button
+                  v-for="h in trafficReport?.hourly || []"
+                  :key="h.hour"
+                  type="button"
+                  @mouseenter="hoveredHour = h.hour"
+                  @focus="hoveredHour = h.hour"
+                  @click="hoveredHour = h.hour"
+                  class="group relative flex flex-col justify-end items-stretch h-full rounded-t focus:outline-none"
+                  :title="`${h.label} · 总 ${h.total_visits} 次（登录 ${h.auth_visits} / 访客 ${h.guest_visits} / 独立IP ${h.unique_ips}）`"
+                >
+                  <div
+                    class="w-full flex flex-col justify-end overflow-hidden rounded-t-sm transition-all"
+                    :style="{ height: `${h.total_visits > 0 ? Math.max(8, Math.round((h.total_visits / hourlyMaxVisits) * 100)) : 2}%` }"
+                    :class="hoveredHour === h.hour ? 'ring-1 ring-slate-900 dark:ring-white' : ''"
+                  >
+                    <div
+                      v-if="h.guest_visits > 0"
+                      class="w-full bg-sky-400 dark:bg-sky-500"
+                      :style="{ height: `${Math.round((h.guest_visits / Math.max(1, h.total_visits)) * 100)}%` }"
+                    />
+                    <div
+                      v-if="h.auth_visits > 0"
+                      class="w-full bg-indigo-500 dark:bg-indigo-400"
+                      :style="{ height: `${Math.round((h.auth_visits / Math.max(1, h.total_visits)) * 100)}%` }"
+                    />
+                    <div
+                      v-if="h.total_visits === 0"
+                      class="w-full h-full bg-slate-200 dark:bg-slate-700/60"
+                    />
+                  </div>
+                </button>
+              </div>
+              <div class="flex justify-between text-[10px] font-mono text-slate-400 px-1">
+                <span>00:00</span>
+                <span>06:00</span>
+                <span>12:00</span>
+                <span>18:00</span>
+                <span>23:00</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card C: IP Visit Frequency Breakdown Table -->
+          <div
+            class="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 space-y-3 text-xs"
+            data-testid="admin-traffic-ip-table"
+          >
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <div>
+                <h3 class="text-sm sm:text-base font-bold text-slate-900 dark:text-white">
+                  按 IP 统计的当日访问明细（共 {{ filteredTrafficRows.length }} / {{ trafficReport?.filtered_total ?? filteredTrafficRows.length }} 个 IP）
+                </h3>
+                <p class="text-[11px] text-slate-500">精确记录每个 IP 当日访问总次数、登录 vs 未登录拆分、关联账号、访问端及活跃时间。</p>
+              </div>
+              <div class="flex flex-wrap items-center gap-1.5">
+                <button
+                  v-for="f in [
+                    { id: 'all', label: '全部 IP' },
+                    { id: 'auth', label: '含已登录' },
+                    { id: 'guest', label: '仅未登录' },
+                    { id: 'online', label: '当前在线' },
+                  ] as const"
+                  :key="f.id"
+                  type="button"
+                  @click="trafficFilter = f.id"
+                  class="px-2.5 py-1 rounded-lg border font-medium transition-colors"
+                  :class="trafficFilter === f.id ? 'bg-slate-900 text-white border-slate-900 dark:bg-blue-600 dark:border-blue-600' : 'border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300'"
+                >
+                  {{ f.label }}
+                </button>
+              </div>
+            </div>
+
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <div class="relative flex-1 min-w-[200px] max-w-sm">
+                <Search class="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-1/2 -translate-y-1/2" />
+                <input
+                  v-model="trafficSearch"
+                  type="text"
+                  placeholder="搜索 IP、关联用户名、国家/地区或停留板块..."
+                  class="w-full h-8 pl-8 pr-3 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs"
+                />
+              </div>
+              <div class="flex items-center gap-1.5">
+                <button
+                  type="button"
+                  @click="trafficSort = 'visits'; loadTrafficReport()"
+                  class="px-2.5 py-1 rounded-lg border font-medium"
+                  :class="trafficSort === 'visits' ? 'bg-indigo-600 text-white border-indigo-600' : 'border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300'"
+                >
+                  按当日访问次数
+                </button>
+                <button
+                  type="button"
+                  @click="trafficSort = 'recent'; loadTrafficReport()"
+                  class="px-2.5 py-1 rounded-lg border font-medium"
+                  :class="trafficSort === 'recent' ? 'bg-indigo-600 text-white border-indigo-600' : 'border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300'"
+                >
+                  按最近活跃时间
+                </button>
+              </div>
+            </div>
+
+            <div v-if="!filteredTrafficRows.length" class="py-8 text-center text-slate-400">
+              当日暂无匹配的 IP 访问记录
+            </div>
+            <div v-else class="overflow-x-auto">
+              <table class="w-full text-left border-collapse text-xs">
+                <thead>
+                  <tr class="border-b border-slate-200 dark:border-slate-800 text-slate-500">
+                    <th class="py-2 pr-3 font-semibold">IP 地址 / 地区</th>
+                    <th class="py-2 px-3 font-semibold">当日访问次数</th>
+                    <th class="py-2 px-3 font-semibold">身份与关联账号</th>
+                    <th class="py-2 px-3 font-semibold">终端与最近板块</th>
+                    <th class="py-2 pl-3 font-semibold">首访 / 最近活跃 (CST)</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100 dark:divide-slate-800/70">
+                  <tr
+                    v-for="row in filteredTrafficRows"
+                    :key="`${row.day_cst}:${row.ip}`"
+                    class="hover:bg-slate-50/80 dark:hover:bg-slate-800/30"
+                  >
+                    <td class="py-2.5 pr-3 whitespace-nowrap">
+                      <div class="flex items-center gap-1.5">
+                        <span
+                          class="w-2 h-2 rounded-full shrink-0"
+                          :class="row.is_online ? 'bg-emerald-500' : 'bg-slate-300 dark:bg-slate-700'"
+                          :title="row.is_online ? '当前在线' : '离线'"
+                        />
+                        <span class="font-mono font-semibold text-slate-900 dark:text-white">{{ row.ip }}</span>
+                        <button
+                          type="button"
+                          @click="copyIpAddress(row.ip)"
+                          class="text-slate-400 hover:text-slate-700 dark:hover:text-white p-0.5"
+                          title="复制 IP"
+                        >
+                          <Copy class="w-3 h-3" />
+                        </button>
+                        <span
+                          v-if="row.country"
+                          class="px-1.5 py-0.2 rounded bg-slate-100 dark:bg-slate-800 text-[10px] font-mono text-slate-500"
+                        >
+                          {{ row.country }}
+                        </span>
+                      </div>
+                    </td>
+                    <td class="py-2.5 px-3 whitespace-nowrap tabular-nums">
+                      <div class="font-bold text-slate-900 dark:text-white text-[13px]">{{ row.visit_count }} 次</div>
+                      <div class="text-[11px] text-slate-500">
+                        登录 {{ row.auth_visit_count }} · 访客 {{ row.guest_visit_count }} · 心跳 {{ row.heartbeat_count }}
+                      </div>
+                    </td>
+                    <td class="py-2.5 px-3">
+                      <div v-if="row.usernames.length > 0" class="flex flex-wrap gap-1">
+                        <span
+                          v-for="uname in row.usernames"
+                          :key="uname"
+                          class="px-1.5 py-0.5 rounded bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 font-semibold"
+                        >
+                          @{{ uname }}
+                        </span>
+                      </div>
+                      <span v-else class="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-500">
+                        未登录访客
+                      </span>
+                    </td>
+                    <td class="py-2.5 px-3 whitespace-nowrap">
+                      <div class="flex flex-wrap items-center gap-1">
+                        <span
+                          v-for="pl in row.platforms"
+                          :key="pl"
+                          class="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-[10px]"
+                        >
+                          {{ platformLabel(pl) }}
+                        </span>
+                        <span class="text-[11px] text-slate-500">· {{ tabLabel(row.last_tab) }}</span>
+                      </div>
+                    </td>
+                    <td class="py-2.5 pl-3 whitespace-nowrap font-mono text-[11px] text-slate-500 tabular-nums">
+                      <div>末 {{ formatCstTimeOnly(row.last_seen_at) }}</div>
+                      <div class="text-slate-400">首 {{ formatCstTimeOnly(row.first_seen_at) }}</div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Card D: Live Active Sessions Drawer -->
+          <div class="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 space-y-3 text-xs">
+            <div class="flex items-center justify-between gap-2">
+              <h3 class="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                <Clock class="w-4 h-4 text-emerald-500" />
+                <span>当前活跃在线会话列表（{{ trafficReport?.active_sessions?.length ?? 0 }} 条，最近 2 分钟心跳）</span>
+              </h3>
+              <button
+                type="button"
+                @click="trafficSessionsExpanded = !trafficSessionsExpanded"
+                class="text-xs text-blue-600 dark:text-blue-400 font-semibold"
+              >
+                {{ trafficSessionsExpanded ? '收起' : '展开' }}
+              </button>
+            </div>
+            <div v-if="trafficSessionsExpanded">
+              <div v-if="!trafficReport?.active_sessions?.length" class="py-4 text-center text-slate-400">
+                当前 2 分钟窗口内暂无活跃会话心跳
+              </div>
+              <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
+                <div
+                  v-for="s in trafficReport.active_sessions"
+                  :key="s.session_key"
+                  class="rounded-xl border border-slate-200/80 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-800/40 p-3 flex items-center justify-between gap-2"
+                >
+                  <div class="min-w-0 space-y-0.5">
+                    <div class="flex items-center gap-1.5">
+                      <span class="w-2 h-2 rounded-full bg-emerald-500 shrink-0" />
+                      <span class="font-semibold text-slate-900 dark:text-white truncate">
+                        {{ s.is_logged_in ? `@${s.username}` : '未登录访客' }}
+                      </span>
+                      <span class="px-1.5 py-0.2 rounded bg-white dark:bg-slate-900 text-[10px] text-slate-500 shrink-0">
+                        {{ platformLabel(s.platform) }}
+                      </span>
+                    </div>
+                    <div class="font-mono text-[11px] text-slate-500 truncate">
+                      {{ s.ip }}{{ s.country ? ` · ${s.country}` : '' }} · {{ tabLabel(s.current_tab) }}
+                    </div>
+                  </div>
+                  <span class="font-mono text-[10.5px] text-slate-400 shrink-0">{{ formatCstTimeOnly(s.last_seen_at) }}</span>
+                </div>
+              </div>
             </div>
           </div>
         </section>

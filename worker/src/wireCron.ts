@@ -20,7 +20,7 @@ const PROMO_FLUFF_RE =
   /(?:剧场版|动画电影|斗破苍穹|首支单曲|主题曲|演唱会|节气|天气预报|刑拘|逮捕|派出所|优惠券|拼多多|大促|首发价|促销|史低)/i
 
 const HEAVY_GEO_RE =
-  /(?:宣布停火|达成停火|停火协议|签署协议|开战|正式宣战|击落|遇袭|空袭|导弹袭击|关闭海峡|封锁航道|全面制裁|紧急状态|核武|军演|战机|航母)/i
+  /(?:宣布停火|达成停火|停火协议|签署(?:和平|停火|安保|防务|贸易|关税|核)协议|开战|正式宣战|击落|遇袭|空袭|导弹袭击|关闭海峡|封锁航道|全面制裁|紧急状态|核武|军演|战机|航母)/i
 const LOCAL_GOV_ROUTINE_RE =
   /(?:省委书记|省委常委|省长|副省长|市委书记|市长|副市长|区委书记|区长|县委书记|县长|省政协|市政协).{0,24}(?:会见|调研|考察|座谈|签约|致辞|出席|强调)|(?:会见|接待).{0,20}(?:董事长|总裁|CEO|一行|代表团)/i
 const HEAVY_GOV_RE =
@@ -105,7 +105,7 @@ function classifyWireItem(title: string, content: string, defaultCat: string): s
   return defaultCat
 }
 
-function inferSeverityAndTag(
+export function inferSeverityAndTag(
   title: string,
   content: string,
   baseImportant: boolean,

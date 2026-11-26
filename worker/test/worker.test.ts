@@ -5,7 +5,9 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { decryptJson, encryptJson, hashPassword, signJwt, verifyJwt, verifyPassword } from '../src/crypto'
 import { resetBootstrapCacheForTests } from '../src/db'
 import { createWorkerApp } from '../src/index'
+import { computeSimulatedOnlineCount } from '../src/presence'
 import type { Env } from '../src/types'
+import { inferSeverityAndTag } from '../src/wireCron'
 
 class MockD1PreparedStatement {
   private bound: unknown[] = []
@@ -105,7 +107,8 @@ function createTestEnv(overrides: Partial<Env> = {}): { env: Env; r2: MockR2Buck
   const schemaPath1 = resolve(__dirname, '../migrations/0001_init.sql')
   const schemaPath2 = resolve(__dirname, '../migrations/0002_growth_and_interactions.sql')
   const schemaPath3 = resolve(__dirname, '../migrations/0003_prediction_arena.sql')
-  const schemaSql = `${readFileSync(schemaPath1, 'utf-8')}\n${readFileSync(schemaPath2, 'utf-8')}\n${readFileSync(schemaPath3, 'utf-8')}`
+  const schemaPath4 = resolve(__dirname, '../migrations/0004_presence_and_traffic.sql')
+  const schemaSql = `${readFileSync(schemaPath1, 'utf-8')}\n${readFileSync(schemaPath2, 'utf-8')}\n${readFileSync(schemaPath3, 'utf-8')}\n${readFileSync(schemaPath4, 'utf-8')}`
   const db = new MockD1Database(schemaSql)
   const r2 = new MockR2Bucket()
   const env: Env = {
@@ -1615,5 +1618,238 @@ describe('MirrorBrief Worker Crypto & API Suite', () => {
       weekly_digest_hour: 21,
       weekly_digest_minute: 30,
     })
+  })
+
+  it('tracks live online presence scopes, simulated drift, revert-to-real, daily IP visits, and avoids corporate signing geo false positives', async () => {
+    const { env } = createTestEnv({ SITE_ACCESS_MODE: 'public' })
+    const app = createWorkerApp()
+
+    // Public settings must NOT leak internal simulation knobs
+    const pubSettingsRes = await app.request('https://mirrorinfo.xyz/api/public/settings', {}, env)
+    expect(pubSettingsRes.status).toBe(200)
+    const pubSettings = (await pubSettingsRes.json()) as Record<string, unknown>
+    expect(pubSettings.online_counter_enabled).toBe(true)
+    expect(pubSettings.online_counter_mode).toBeUndefined()
+    expect(pubSettings.online_sim_base).toBeUndefined()
+
+    // Admin login + register 1 member user
+    const adminLogin = await app.request(
+      'https://mirrorinfo.xyz/api/auth/login',
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username: 'admin', password: 'AdminPass123!' }),
+      },
+      env,
+    )
+    const adminSess = (await adminLogin.json()) as { token: string }
+
+    const userReg = await app.request(
+      'https://mirrorinfo.xyz/api/auth/register',
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'cf-connecting-ip': '203.0.113.10' },
+        body: JSON.stringify({ username: 'presence_user', password: 'Password123', display_name: 'Tester' }),
+      },
+      env,
+    )
+    const userSess = (await userReg.json()) as { token: string }
+
+    // Same IP sends 2 visits logged in (desktop + android deviceId -> deduped to 1 logged_in user, 2 visits on IP)
+    const p1 = await app.request(
+      'https://mirrorinfo.xyz/api/presence/ping',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${userSess.token}`,
+          'cf-connecting-ip': '203.0.113.10',
+          'cf-ipcountry': 'CN',
+          'X-Device-ID': 'dev_web_000001',
+        },
+        body: JSON.stringify({ is_visit: true, platform: 'desktop', tab: 'today' }),
+      },
+      env,
+    )
+    expect(p1.status).toBe(200)
+
+    const p2 = await app.request(
+      'https://mirrorinfo.xyz/api/presence/ping',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${userSess.token}`,
+          'cf-connecting-ip': '203.0.113.10',
+          'cf-ipcountry': 'CN',
+          'X-Device-ID': 'dev_android_001',
+        },
+        body: JSON.stringify({ is_visit: true, platform: 'android', tab: 'finance' }),
+      },
+      env,
+    )
+    expect(p2.status).toBe(200)
+
+    // Guest device on another IP: 1 visit + 1 heartbeat (visit_count stays 1, heartbeat_count becomes 2)
+    await app.request(
+      'https://mirrorinfo.xyz/api/presence/ping',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'cf-connecting-ip': '198.51.100.25',
+          'cf-ipcountry': 'US',
+          'X-Device-ID': 'dev_guest_0001',
+        },
+        body: JSON.stringify({ is_visit: true, platform: 'mobile', tab: 'weekly' }),
+      },
+      env,
+    )
+    const pGuestBeat = await app.request(
+      'https://mirrorinfo.xyz/api/presence/ping',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'cf-connecting-ip': '198.51.100.25',
+          'X-Device-ID': 'dev_guest_0001',
+        },
+        body: JSON.stringify({ is_visit: false, platform: 'mobile', tab: 'weekly' }),
+      },
+      env,
+    )
+    const guestBeatData = (await pGuestBeat.json()) as { count: number; mode: string }
+    // 1 logged-in user (deduped across 2 devices) + 1 guest = 2 total online
+    expect(guestBeatData).toMatchObject({ count: 2, mode: 'real' })
+
+    // Switch real_scope = 'logged_in' -> displays 1
+    await app.request(
+      'https://mirrorinfo.xyz/api/admin/site-settings',
+      {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${adminSess.token}` },
+        body: JSON.stringify({ online_counter_mode: 'real', online_real_scope: 'logged_in' }),
+      },
+      env,
+    )
+    const onlyAuth = (await (await app.request('https://mirrorinfo.xyz/api/presence/status', {}, env)).json()) as {
+      count: number
+      real_scope: string
+    }
+    expect(onlyAuth.real_scope).toBe('logged_in')
+    expect(onlyAuth.count).toBe(1)
+
+    // Switch real_scope = 'guest' -> displays 1
+    await app.request(
+      'https://mirrorinfo.xyz/api/admin/site-settings',
+      {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${adminSess.token}` },
+        body: JSON.stringify({ online_real_scope: 'guest' }),
+      },
+      env,
+    )
+    const onlyGuest = (await (await app.request('https://mirrorinfo.xyz/api/presence/status', {}, env)).json()) as {
+      count: number
+      real_scope: string
+    }
+    expect(onlyGuest.real_scope).toBe('guest')
+    expect(onlyGuest.count).toBe(1)
+
+    // Enable simulated count (base=200, delta=30, interval=10s) -> bounded [170, 230]
+    await app.request(
+      'https://mirrorinfo.xyz/api/admin/site-settings',
+      {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${adminSess.token}` },
+        body: JSON.stringify({
+          online_counter_mode: 'simulated',
+          online_sim_base: 200,
+          online_sim_delta: 30,
+          online_sim_interval_sec: 10,
+        }),
+      },
+      env,
+    )
+    const simStatus = (await (await app.request('https://mirrorinfo.xyz/api/presence/status', {}, env)).json()) as {
+      count: number
+      mode: string
+      sim_drift: { base: number; delta: number; interval_sec: number } | null
+    }
+    expect(simStatus.mode).toBe('simulated')
+    expect(simStatus.sim_drift).toEqual({ base: 200, delta: 30, interval_sec: 10 })
+    expect(simStatus.count).toBeGreaterThanOrEqual(170)
+    expect(simStatus.count).toBeLessThanOrEqual(230)
+    expect(computeSimulatedOnlineCount(50, 0, 10, Date.now())).toBe(50)
+
+    // Revert back to real 'all'
+    await app.request(
+      'https://mirrorinfo.xyz/api/admin/site-settings',
+      {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${adminSess.token}` },
+        body: JSON.stringify({ online_counter_mode: 'real', online_real_scope: 'all' }),
+      },
+      env,
+    )
+    const revertedStatus = (await (await app.request('https://mirrorinfo.xyz/api/presence/status', {}, env)).json()) as {
+      count: number
+      mode: string
+    }
+    expect(revertedStatus).toMatchObject({ mode: 'real', count: 2 })
+
+    // Verify Admin IP traffic report & 24h hourly breakdown before/after leave
+    const trRes = await app.request(
+      'https://mirrorinfo.xyz/api/admin/traffic',
+      { headers: { Authorization: `Bearer ${adminSess.token}` } },
+      env,
+    )
+    expect(trRes.status).toBe(200)
+    const tr = (await trRes.json()) as {
+      online: { real_total: number; real_logged_in: number; real_guest: number }
+      summary: { total_visits: number; auth_visits: number; guest_visits: number; unique_ips: number }
+      hourly: Array<{ hour: number; total_visits: number }>
+      ip_rows: Array<{
+        ip: string
+        visit_count: number
+        auth_visit_count: number
+        guest_visit_count: number
+        heartbeat_count: number
+        usernames: string[]
+        platforms: string[]
+      }>
+    }
+    expect(tr.online).toMatchObject({ real_total: 2, real_logged_in: 1, real_guest: 1 })
+    expect(tr.summary).toMatchObject({ total_visits: 3, auth_visits: 2, guest_visits: 1, unique_ips: 2 })
+    expect(tr.hourly).toHaveLength(24)
+    const ipAuth = tr.ip_rows.find((r) => r.ip === '203.0.113.10')
+    const ipGuest = tr.ip_rows.find((r) => r.ip === '198.51.100.25')
+    expect(ipAuth?.visit_count).toBe(2)
+    expect(ipAuth?.auth_visit_count).toBe(2)
+    expect(ipAuth?.usernames).toContain('presence_user')
+    expect(ipAuth?.platforms).toContain('android')
+    expect(ipGuest?.visit_count).toBe(1)
+    expect(ipGuest?.heartbeat_count).toBe(2)
+
+    // Leave beacon removes guest session immediately
+    await app.request(
+      'https://mirrorinfo.xyz/api/presence/leave',
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ device_id: 'dev_guest_0001' }),
+      },
+      env,
+    )
+    const afterLeave = (await (await app.request('https://mirrorinfo.xyz/api/presence/status', {}, env)).json()) as {
+      count: number
+    }
+    expect(afterLeave.count).toBe(1)
+
+    // Corporate debt restructuring agreement must NOT be tagged '地缘与军事突发'
+    const corp = inferSeverityAndTag('荣盛发展：拟与平安信托进行债务重组 涉及债务本金9.29亿元', '双方已签署协议推进债务化解', false)
+    expect(corp.reasonTag).not.toBe('地缘与军事突发')
+    const cease = inferSeverityAndTag('美俄代表日内瓦签署和平协议', '双方正式达成停火', true)
+    expect(cease.reasonTag).toBe('地缘与军事突发')
   })
 })

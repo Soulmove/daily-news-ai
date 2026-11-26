@@ -27,8 +27,10 @@ import {
   Sun,
   Trash2,
   User,
+  Users,
   X,
 } from 'lucide-vue-next'
+import OdometerNumber from './OdometerNumber.vue'
 import SmartTime from './SmartTime.vue'
 import UserAvatar from './UserAvatar.vue'
 import {
@@ -43,6 +45,7 @@ import {
 } from '../core/auth'
 import { appLang, syncHtmlLangAttr, t } from '../core/i18n'
 import { isAndroidAppShell } from '../core/mobilePush'
+import { presenceState } from '../core/presenceStore'
 import { formatShanghaiDateTime, parseTimestampMs } from '../core/time'
 import { lockBodyScroll, isRedUp, toggleMarketColorMode, unlockBodyScroll } from '../core/uiPrefs'
 
@@ -71,6 +74,7 @@ const props = defineProps<{
   cloudSyncBusy?: boolean
   hideMobileFooter?: boolean
   wideWorkspace?: boolean
+  showOnlinePill?: boolean
 }>()
 
 const emit = defineEmits<{
@@ -218,6 +222,19 @@ const shortUpdateLabel = computed(() => {
   if (h < 24) return t(`${h}h前更新`, `Updated ${h}h ago`)
   const d = Math.floor(h / 24)
   return t(`${d}d前更新`, `Updated ${d}d ago`)
+})
+
+const compactUpdateLabel = computed(() => {
+  if (!props.updatedAtIso) return ''
+  const ms = parseTimestampMs(props.updatedAtIso)
+  if (ms === null) return ''
+  const diffMin = Math.max(0, Math.floor(((props.nowMs ?? Date.now()) - ms) / 60_000))
+  if (diffMin < 1) return t('刚刚', 'now')
+  if (diffMin < 60) return t(`${diffMin}m前`, `${diffMin}m`)
+  const h = Math.floor(diffMin / 60)
+  if (h < 24) return t(`${h}h前`, `${h}h`)
+  const d = Math.floor(h / 24)
+  return t(`${d}d前`, `${d}d`)
 })
 
 const updatedTooltipLabel = computed(() => {
@@ -381,14 +398,14 @@ onUnmounted(() => {
       class="sticky top-0 z-40 ios-glass border-b border-black/[0.06] dark:border-white/[0.08] transition-transform duration-200 will-change-transform"
       :class="headerHidden ? '-translate-y-full md:translate-y-0' : 'translate-y-0'"
     >
-      <div class="mx-auto px-2.5 sm:px-5" :class="containerWidthClass">
-        <div class="flex items-center justify-between gap-2 h-12">
-          <!-- Left: Brand + Compact Status Dot + Ultra-Short Relative Age -->
-          <div class="flex items-center gap-1.5 min-w-0">
+      <div class="mx-auto px-2 sm:px-5" :class="containerWidthClass">
+        <div class="relative flex items-center justify-between gap-1.5 sm:gap-2 h-12">
+          <!-- Left: Brand + Compact Status Dot + Ultra-Short Relative Age + Mobile/Android Live Online Pill -->
+          <div class="flex items-center gap-1 sm:gap-1.5 min-w-0 shrink-0">
             <a
               href="./index.html"
               @click.prevent="handleBrandClick"
-              class="flex items-center gap-1.5 sm:gap-2 min-h-[44px] py-1 pr-0.5 rounded-xl shrink-0 whitespace-nowrap"
+              class="flex items-center gap-1 sm:gap-2 min-h-[44px] py-1 pr-0.5 rounded-xl shrink-0 whitespace-nowrap"
               :aria-label="t('镜信首页', 'MirrorBrief Home')"
             >
               <img
@@ -396,7 +413,7 @@ onUnmounted(() => {
                 alt="镜信 MirrorBrief"
                 class="w-6 h-6 sm:w-7 sm:h-7 rounded-lg bg-[#FAFAFA] object-cover shrink-0 shadow-[0_1px_2px_rgba(0,0,0,0.08)]"
               />
-              <span class="font-bold text-[15px] tracking-tight text-zinc-950 dark:text-white whitespace-nowrap">
+              <span class="font-bold text-[14.5px] sm:text-[15px] tracking-tight text-zinc-950 dark:text-white whitespace-nowrap">
                 {{ t('镜信', 'MirrorBrief') }}
               </span>
             </a>
@@ -405,13 +422,38 @@ onUnmounted(() => {
               v-if="updatedAtIso"
               type="button"
               @click="emit('open-batch-info')"
-              class="inline-flex items-center gap-1 min-h-[44px] md:min-h-[34px] px-1 sm:px-1.5 rounded-lg text-[11px] sm:text-[12px] text-zinc-500 dark:text-zinc-400 hover:bg-black/[0.04] dark:hover:bg-white/[0.06] transition-colors shrink-0 whitespace-nowrap"
+              class="inline-flex items-center gap-1 min-h-[40px] md:min-h-[34px] px-1 sm:px-1.5 rounded-lg text-[10.5px] sm:text-[12px] text-zinc-500 dark:text-zinc-400 hover:bg-black/[0.04] dark:hover:bg-white/[0.06] transition-colors shrink-0 whitespace-nowrap"
               :title="updatedTooltipLabel"
               :aria-label="updatedTooltipLabel"
             >
               <span class="jx-sonar-dot" :class="statusDotClass" />
-              <span class="tabular-nums font-medium">{{ shortUpdateLabel }}</span>
+              <span class="sm:hidden tabular-nums font-medium">{{ compactUpdateLabel }}</span>
+              <span class="hidden sm:inline tabular-nums font-medium">{{ shortUpdateLabel }}</span>
             </button>
+
+            <span
+              v-if="showOnlinePill && presenceState.enabled && presenceState.loaded"
+              class="mobile-online-pill md:hidden inline-flex items-center gap-1 h-6 px-1.5 rounded-full bg-emerald-500/[0.10] dark:bg-emerald-500/[0.16] border border-emerald-500/20 text-[10.5px] font-semibold text-emerald-700 dark:text-emerald-300 tabular-nums shrink-0 whitespace-nowrap select-none"
+              data-testid="mobile-online-pill"
+              :title="t('当前平台实时在线人数', 'Live online users across Web & Android')"
+            >
+              <span class="jx-sonar-dot jx-sonar-emerald" aria-hidden="true" />
+              <OdometerNumber :value="presenceState.count" />
+              <span>{{ appLang === 'en' ? '' : (presenceState.label || '在线') }}</span>
+            </span>
+          </div>
+
+          <!-- Center (Desktop Web): Centered Live Platform Online Counter Pill -->
+          <div
+            v-if="showOnlinePill && presenceState.enabled && presenceState.loaded"
+            class="desktop-online-pill hidden md:inline-flex desktop-shell-only xl:absolute xl:left-1/2 xl:-translate-x-1/2 items-center gap-1.5 h-7 px-2.5 lg:px-3 rounded-full bg-emerald-500/[0.08] dark:bg-emerald-500/[0.14] border border-emerald-500/20 text-[12px] font-medium text-emerald-700 dark:text-emerald-300 tabular-nums whitespace-nowrap select-none pointer-events-none shrink-0"
+            data-testid="desktop-online-pill"
+            :title="t('当前平台实时在线人数', 'Live online users across Web & Android')"
+          >
+            <span class="jx-sonar-dot jx-sonar-emerald" aria-hidden="true" />
+            <Users class="w-3.5 h-3.5 shrink-0" :stroke-width="1.75" />
+            <OdometerNumber :value="presenceState.count" class="font-semibold" />
+            <span>{{ appLang === 'en' ? 'online' : `人${presenceState.label || '在线'}` }}</span>
           </div>
 
           <!-- Right: Mobile keeps ONLY Search + AI Q&A + Menu (zero overlap at 360px/393px); Desktop adds Theme + Avatar Menu -->
@@ -421,7 +463,7 @@ onUnmounted(() => {
               v-if="showSearchButton"
               type="button"
               @click="emit('open-search')"
-              class="ios-tap inline-flex items-center justify-center gap-1.5 w-10 h-10 sm:w-11 sm:h-11 md:w-auto md:h-8 md:px-2.5 rounded-xl md:rounded-lg transition-colors"
+              class="ios-tap inline-flex items-center justify-center gap-1.5 w-8 h-9 sm:w-10 sm:h-10 md:w-auto md:h-8 md:px-2.5 rounded-xl md:rounded-lg transition-colors"
               :class="
                 searchActive
                   ? 'text-[#007AFF] dark:text-[#0A84FF] bg-[#007AFF]/10'
@@ -430,7 +472,7 @@ onUnmounted(() => {
               :aria-label="t('全局搜索', 'Search')"
               :title="t('搜索与命令面板 (⌘K 或 /)', 'Search & Command Palette (⌘K or /)')"
             >
-              <Search class="w-[18px] h-[18px] md:w-3.5 md:h-3.5 shrink-0" :stroke-width="1.5" />
+              <Search class="w-[17px] h-[17px] md:w-3.5 md:h-3.5 shrink-0" :stroke-width="1.5" />
               <span class="hidden md:inline text-[12px] font-medium text-zinc-500 dark:text-zinc-400">
                 {{ t('搜索', 'Search') }}
               </span>
@@ -443,11 +485,11 @@ onUnmounted(() => {
               v-if="showQaButton"
               type="button"
               @click="emit('open-qa')"
-              class="ios-tap inline-flex items-center justify-center gap-1 w-10 h-10 sm:w-11 sm:h-11 md:w-auto md:h-8 md:px-2.5 rounded-xl md:rounded-lg text-[#007AFF] dark:text-[#0A84FF] hover:bg-[#007AFF]/10 transition-colors shrink-0 whitespace-nowrap"
+              class="ios-tap inline-flex items-center justify-center gap-1 w-8 h-9 sm:w-10 sm:h-10 md:w-auto md:h-8 md:px-2.5 rounded-xl md:rounded-lg text-[#007AFF] dark:text-[#0A84FF] hover:bg-[#007AFF]/10 transition-colors shrink-0 whitespace-nowrap"
               :title="t('AI 证据问答', 'AI Evidence Q&A')"
               :aria-label="t('AI 证据问答', 'AI Evidence Q&A')"
             >
-              <Sparkles class="w-[18px] h-[18px] md:w-3.5 md:h-3.5 shrink-0" :stroke-width="1.5" />
+              <Sparkles class="w-[17px] h-[17px] md:w-3.5 md:h-3.5 shrink-0" :stroke-width="1.5" />
               <span class="hidden md:inline text-[12px] font-semibold">{{ t('AI 问答', 'AI Q&A') }}</span>
             </button>
 
@@ -455,7 +497,7 @@ onUnmounted(() => {
               v-if="showAuthButton && !effectiveUser"
               type="button"
               @click="emit('open-auth', 'login')"
-              class="ios-tap inline-flex items-center justify-center gap-1 h-8 px-2.5 sm:px-3 rounded-xl md:rounded-lg bg-[#007AFF] hover:bg-[#0066D6] text-white text-[12px] font-semibold transition-colors shrink-0 whitespace-nowrap shadow-xs"
+              class="ios-tap inline-flex items-center justify-center gap-1 h-7 sm:h-8 px-2 sm:px-3 rounded-xl md:rounded-lg bg-[#007AFF] hover:bg-[#0066D6] text-white text-[11px] sm:text-[12px] font-semibold transition-colors shrink-0 whitespace-nowrap shadow-xs"
               data-testid="topbar-login-register-btn"
             >
               <User class="w-3.5 h-3.5 hidden sm:inline shrink-0" :stroke-width="1.75" />
@@ -674,7 +716,7 @@ onUnmounted(() => {
             <button
               type="button"
               @click="mobileMenuOpen = !mobileMenuOpen"
-              class="md:hidden ios-tap inline-flex items-center justify-center w-10 h-10 sm:w-11 sm:h-11 rounded-xl text-zinc-700 dark:text-zinc-200 hover:bg-black/[0.05] dark:hover:bg-white/[0.08]"
+              class="md:hidden ios-tap inline-flex items-center justify-center w-8 h-9 sm:w-10 sm:h-10 rounded-xl text-zinc-700 dark:text-zinc-200 hover:bg-black/[0.05] dark:hover:bg-white/[0.08]"
               :aria-expanded="mobileMenuOpen"
               :aria-label="mobileMenuOpen ? t('收起菜单', 'Close menu') : t('打开菜单', 'Open menu')"
             >

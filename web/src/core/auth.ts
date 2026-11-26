@@ -138,6 +138,7 @@ function normalizeValidationFieldMsg(field: string, rawMsg: string): string {
 async function apiRequest<T>(path: string, init: RequestInit = {}, token?: string | null): Promise<T> {
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
+    'X-Device-ID': getOrCreateDeviceId(),
     ...((init.headers as Record<string, string>) || {}),
   }
   if (token) {
@@ -588,6 +589,11 @@ export interface AdminOverviewResponse {
     db_file_bytes: number
     push_ok_count: number
     push_error_count: number
+    online_real_total?: number
+    online_real_logged_in?: number
+    online_real_guest?: number
+    today_total_visits?: number
+    today_unique_ips?: number
   }
   data_status: {
     smart_batch_id?: string
@@ -766,6 +772,13 @@ export interface PublicSiteSettings {
   weekly_digest_day?: number
   weekly_digest_hour?: number
   weekly_digest_minute?: number
+  online_counter_enabled?: boolean
+  online_counter_mode?: 'real' | 'simulated'
+  online_real_scope?: 'all' | 'logged_in' | 'guest'
+  online_sim_base?: number
+  online_sim_delta?: number
+  online_sim_interval_sec?: number
+  online_counter_label?: string
 }
 
 export async function apiGetPublicSettings(): Promise<PublicSiteSettings> {
@@ -797,6 +810,8 @@ export async function apiGetPublicSettings(): Promise<PublicSiteSettings> {
       weekly_digest_day: 0,
       weekly_digest_hour: 18,
       weekly_digest_minute: 0,
+      online_counter_enabled: true,
+      online_counter_label: '在线',
     }
   }
 }
@@ -1092,4 +1107,154 @@ export async function apiSubmitReaction(
     },
     token || undefined,
   )
+}
+
+// ---------------- Live Online Presence & Admin IP Visit Analytics ----------------
+
+export interface PresencePingResponse {
+  ok: boolean
+  enabled: boolean
+  count: number
+  label: string
+  mode: 'real' | 'simulated'
+  real_scope: 'all' | 'logged_in' | 'guest'
+  server_time_ms: number
+  poll_interval_sec: number
+  sim_drift: {
+    base: number
+    delta: number
+    interval_sec: number
+  } | null
+}
+
+export interface AdminTrafficHourlyRow {
+  hour: number
+  label: string
+  total_visits: number
+  auth_visits: number
+  guest_visits: number
+  unique_ips: number
+}
+
+export interface AdminTrafficIpRow {
+  day_cst: string
+  ip: string
+  country: string
+  visit_count: number
+  auth_visit_count: number
+  guest_visit_count: number
+  heartbeat_count: number
+  last_user_id: number | null
+  last_username: string
+  usernames: string[]
+  platforms: string[]
+  last_tab: string
+  first_seen_at: string
+  last_seen_at: string
+  is_online: boolean
+  has_auth: boolean
+}
+
+export interface AdminActiveSessionRow {
+  session_key: string
+  ip: string
+  country: string
+  user_id: number | null
+  username: string
+  display_name: string
+  is_logged_in: boolean
+  platform: 'desktop' | 'mobile' | 'android' | string
+  current_tab: string
+  last_seen_at: string
+}
+
+export interface AdminTrafficResponse {
+  day: string
+  today_cst: string
+  available_days: string[]
+  online: {
+    real_total: number
+    real_logged_in: number
+    real_guest: number
+    display_count: number
+    enabled: boolean
+    mode: 'real' | 'simulated'
+    real_scope: 'all' | 'logged_in' | 'guest'
+    label: string
+    sim_base: number
+    sim_delta: number
+    sim_interval_sec: number
+    window_sec: number
+  }
+  summary: {
+    total_visits: number
+    auth_visits: number
+    guest_visits: number
+    unique_ips: number
+    auth_ips: number
+    guest_only_ips: number
+    repeat_ips: number
+    total_heartbeats: number
+    avg_visits_per_ip: number
+    peak_hour: { hour: number; label: string; total_visits: number } | null
+  }
+  hourly: AdminTrafficHourlyRow[]
+  ip_rows: AdminTrafficIpRow[]
+  filtered_total: number
+  active_sessions: AdminActiveSessionRow[]
+  server_time_ms: number
+}
+
+export async function apiPresencePing(
+  payload: { is_visit?: boolean; platform?: 'desktop' | 'mobile' | 'android'; tab?: string },
+  token?: string | null,
+): Promise<PresencePingResponse> {
+  return apiRequest(
+    '/api/presence/ping',
+    {
+      method: 'POST',
+      headers: { 'X-Device-ID': getOrCreateDeviceId() },
+      body: JSON.stringify(payload),
+    },
+    token || undefined,
+  )
+}
+
+export function apiPresenceLeave(): void {
+  if (typeof window === 'undefined' || typeof navigator === 'undefined') return
+  const url = `${getApiBase()}/api/presence/leave`
+  const payload = JSON.stringify({ device_id: getOrCreateDeviceId() })
+  try {
+    if (typeof navigator.sendBeacon === 'function') {
+      const blob = new Blob([payload], { type: 'application/json' })
+      navigator.sendBeacon(url, blob)
+      return
+    }
+  } catch {
+    // Fallback below
+  }
+  try {
+    void fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-Device-ID': getOrCreateDeviceId() },
+      body: payload,
+      keepalive: true,
+    })
+  } catch {
+    // Ignore unload errors
+  }
+}
+
+export async function apiAdminTraffic(
+  token: string,
+  params: { day?: string; filter?: string; sort?: string; q?: string; limit?: number } = {},
+): Promise<AdminTrafficResponse> {
+  const qs = new URLSearchParams()
+  if (params.day) qs.set('day', params.day)
+  if (params.filter) qs.set('filter', params.filter)
+  if (params.sort) qs.set('sort', params.sort)
+  if (params.q) qs.set('q', params.q)
+  if (params.limit) qs.set('limit', String(params.limit))
+  const suffix = qs.toString() ? `?${qs.toString()}` : ''
+  return apiRequest(`/api/admin/traffic${suffix}`, { method: 'GET' }, token)
 }

@@ -165,6 +165,11 @@ import {
   matchesSmartQuery,
 } from '../core/search'
 import {
+  startPresenceTracking,
+  stopPresenceTracking,
+  triggerPresenceHeartbeat,
+} from '../core/presenceStore'
+import {
   type BookmarkedEvent,
   type CatalystOverrideEntry,
   type LocalToolState,
@@ -4157,6 +4162,13 @@ watch([siteSettingsLoaded, isPrivateGateLocked], ([loaded, locked]) => {
   }
 })
 
+watch(
+  () => [authSession.value?.user?.id ?? null, activeTab.value],
+  () => {
+    void triggerPresenceHeartbeat(false)
+  },
+)
+
 onMounted(async () => {
   syncHtmlLangAttr()
   applyDarkClass(isDark.value)
@@ -4219,6 +4231,10 @@ onMounted(async () => {
     }
   }
   await refreshSiteSettingsAndOverrides()
+  startPresenceTracking({
+    getToken: () => authSession.value?.token || null,
+    getTab: () => activeTab.value,
+  })
   if (!isPrivateGateLocked.value) {
     startLiveWorkbench()
   }
@@ -4238,6 +4254,7 @@ onMounted(async () => {
 })
 
 onBeforeUnmount(() => {
+  stopPresenceTracking()
   saveDailyReadingState(dailyReading.value)
   syncDailyStateToHistory(dailyReading.value, Date.now())
   wireStreamHandle?.stop()
@@ -4317,6 +4334,7 @@ onBeforeUnmount(() => {
     :cloud-sync-busy="cloudSyncBusy"
     :hide-mobile-footer="activeTab === 'me'"
     :wide-workspace="true"
+    :show-online-pill="true"
     @toggle-dark="toggleDark"
     @open-weekly="switchTab('weekly')"
     @open-bookmarks="openLibraryModal('saved')"

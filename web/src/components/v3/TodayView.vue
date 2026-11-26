@@ -1004,7 +1004,7 @@ const cocoonDiversityPanel = computed(() => {
 
       <!-- Mobile / Android Quick-Entry Chip Strip (strictly 2 unique modules absent from bottom nav, zero clipping) -->
       <div
-        class="mobile-quick-entry-strip grid grid-cols-2 gap-1.5"
+        class="mobile-quick-entry-strip md:hidden grid grid-cols-2 gap-1.5"
         data-testid="mobile-quick-entry-strip"
       >
         <button

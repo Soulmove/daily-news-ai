@@ -2,6 +2,7 @@ import { Hono } from 'hono'
 import { cors } from 'hono/cors'
 import { attachContextMiddleware } from './authMiddleware'
 import { ensureBootstrapAdmin } from './db'
+import { cleanupOldPresenceAndTraffic } from './presence'
 import { runPredictionArenaCron } from './predictionArena'
 import { adminRoutes } from './routes/admin'
 import { publicAndCoreRoutes } from './routes/appRoutes'
@@ -15,6 +16,9 @@ const PRIVATE_GATE_PUBLIC_ALLOWLIST = new Set([
   '/api/public/settings',
   '/api/public/access-config',
   '/api/public/waitlist',
+  '/api/presence/ping',
+  '/api/presence/leave',
+  '/api/presence/status',
   '/api/share/meta',
   '/api/auth/login',
   '/api/auth/register',
@@ -112,6 +116,14 @@ export default {
           await runPredictionArenaCron(env)
         } catch (err) {
           console.error('runPredictionArenaCron failed:', err)
+        }
+        try {
+          const utcMin = new Date(_controller?.scheduledTime || Date.now()).getUTCMinutes()
+          if (utcMin % 30 < 2) {
+            await cleanupOldPresenceAndTraffic(env.DB)
+          }
+        } catch (err) {
+          console.error('cleanupOldPresenceAndTraffic failed:', err)
         }
       })(),
     )

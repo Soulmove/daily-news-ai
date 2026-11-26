@@ -15,6 +15,8 @@ import {
   getUserState,
   isValidAccessMode,
   isValidGrowthStage,
+  isValidOnlineCounterMode,
+  isValidOnlineRealScope,
   listInviteCodes,
   listUsersWithStats,
   logAudit,
@@ -47,6 +49,7 @@ import {
   runPredictionArenaCron,
   settleDailyPrediction,
 } from '../predictionArena'
+import { getAdminTrafficReport } from '../presence'
 import { QUOTES_CACHE_KEY, fetchAndBuildMarketQuotes, getDefaultEdgeCache } from '../quotes'
 import type { AccessMode, Env, HonoVariables, UserRole } from '../types'
 import { getWireLatestDoc, runWireCron } from '../wireCron'
@@ -413,6 +416,22 @@ adminRoutes.put('/site-settings', async (c) => {
       )
     }
     body.growth_stage = rawStage
+  }
+
+  if (Object.prototype.hasOwnProperty.call(body, 'online_counter_mode') && body.online_counter_mode !== undefined) {
+    const rawOnlineMode = typeof body.online_counter_mode === 'string' ? body.online_counter_mode.trim() : ''
+    if (!isValidOnlineCounterMode(rawOnlineMode)) {
+      return c.json({ detail: '无效的在线人数模式，仅支持 real / simulated' }, 400)
+    }
+    body.online_counter_mode = rawOnlineMode
+  }
+
+  if (Object.prototype.hasOwnProperty.call(body, 'online_real_scope') && body.online_real_scope !== undefined) {
+    const rawScope = typeof body.online_real_scope === 'string' ? body.online_real_scope.trim() : ''
+    if (!isValidOnlineRealScope(rawScope)) {
+      return c.json({ detail: '无效的真实在线范围，仅支持 all / logged_in / guest' }, 400)
+    }
+    body.online_real_scope = rawScope
   }
 
   const res = await saveSiteSettings(c.env.DB, body, c.env.SITE_ACCESS_MODE)
@@ -796,4 +815,18 @@ adminRoutes.post('/predictions/run-daily-cron', async (c) => {
     ip: c.get('clientIp'),
   })
   return c.json({ ok: true, ...res })
+})
+
+// ---------------- Live Online Presence & Daily IP Traffic Analytics ----------------
+
+adminRoutes.get('/traffic', async (c) => {
+  const settings = await getSiteSettings(c.env.DB, c.env.SITE_ACCESS_MODE)
+  const report = await getAdminTrafficReport(c.env.DB, settings, {
+    day: c.req.query('day') || undefined,
+    filter: c.req.query('filter') || 'all',
+    sort: c.req.query('sort') || 'visits',
+    q: c.req.query('q') || '',
+    limit: Number(c.req.query('limit') || 100),
+  })
+  return c.json(report, 200, { 'Cache-Control': 'no-store' })
 })
