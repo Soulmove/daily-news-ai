@@ -763,7 +763,7 @@ function submitSettle(id: string) {
         </div>
 
         <template v-if="currentSprintRec && !sprintCollapsed">
-          <div class="jx-collapse-reveal space-y-2">
+          <div class="space-y-2">
           <div class="space-y-1">
             <div class="flex flex-wrap items-center gap-1.5 text-[11px]">
               <span

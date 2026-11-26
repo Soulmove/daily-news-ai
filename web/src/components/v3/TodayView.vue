@@ -832,10 +832,10 @@ const cocoonDiversityPanel = computed(() => {
   <section class="space-y-2.5" :aria-label="t('今日要闻', 'Today Top Stories')">
     <!-- Responsive Smart-Sticky Sub-Bar (fits 360px/393px ZH & EN cleanly; sticks on <768px & Android) -->
     <div
-      class="mobile-sticky-subbar flex items-center justify-between gap-x-1.5 px-0.5"
+      class="mobile-sticky-subbar flex items-center justify-between gap-x-1 px-0.5"
       data-testid="today-sticky-subbar"
     >
-      <div class="flex items-center gap-0.5 sm:gap-1 min-w-0 flex-1 overflow-x-auto no-scrollbar scroll-fade-x pr-5">
+      <div class="flex items-center gap-0.5 sm:gap-1 min-w-0 flex-1 overflow-x-auto no-scrollbar pr-1">
         <button
           v-for="sec in ([
             { id: 'feed', label: t('精选', 'Top'), show: true },
@@ -846,7 +846,7 @@ const cocoonDiversityPanel = computed(() => {
           :key="sec.id"
           type="button"
           @click="todaySection = sec.id; if (sec.id === 'topics') markTopicsTabSeen()"
-          class="mobile-pressable ios-tap inline-flex items-center gap-1 min-h-[34px] px-2 sm:px-2.5 rounded-xl text-[13px] font-semibold whitespace-nowrap shrink-0 transition-colors"
+          class="mobile-pressable ios-tap inline-flex items-center gap-0.5 sm:gap-1 min-h-[34px] px-1.5 sm:px-2.5 rounded-xl text-[12.5px] sm:text-[13px] font-semibold whitespace-nowrap shrink-0 transition-colors"
           :class="
             todaySection === sec.id
               ? 'bg-zinc-900 text-white dark:bg-white dark:text-zinc-950'
@@ -856,7 +856,7 @@ const cocoonDiversityPanel = computed(() => {
           <span>{{ sec.label }}</span>
           <span
             v-if="sec.id === 'topics' && topicsUnseenBadgeCount > 0 && todaySection !== 'topics'"
-            class="px-1.5 py-0.2 rounded-full text-[10px] font-bold tabular-nums bg-[#007AFF]/15 text-[#007AFF] dark:bg-[#0A84FF]/25 dark:text-[#66B2FF]"
+            class="px-1 sm:px-1.5 py-0.2 rounded-full text-[9.5px] sm:text-[10px] font-bold tabular-nums bg-[#007AFF]/15 text-[#007AFF] dark:bg-[#0A84FF]/25 dark:text-[#66B2FF]"
             data-testid="topics-unread-badge"
           >
             {{ topicsUnseenBadgeCount }}
@@ -868,7 +868,7 @@ const cocoonDiversityPanel = computed(() => {
           type="button"
           @click="if (todaySection !== 'feed') { todaySection = 'feed'; onlyHeavy = true } else { onlyHeavy = !onlyHeavy }"
           :aria-pressed="todaySection === 'feed' && onlyHeavy"
-          class="inline-flex items-center gap-1 min-h-[34px] sm:min-h-[30px] px-2.5 rounded-full text-[11.5px] font-bold whitespace-nowrap shrink-0 transition-all ml-0.5"
+          class="inline-flex items-center gap-1 min-h-[32px] sm:min-h-[30px] px-2 sm:px-2.5 rounded-full text-[11px] sm:text-[11.5px] font-bold whitespace-nowrap shrink-0 transition-all ml-0.5"
           :class="
             todaySection === 'feed' && onlyHeavy
               ? 'bg-[#DC2626] text-white shadow-xs jx-heavy-capsule'
@@ -880,18 +880,18 @@ const cocoonDiversityPanel = computed(() => {
             class="jx-sonar-dot"
             :class="todaySection === 'feed' && onlyHeavy ? 'jx-sonar-white' : 'jx-sonar-red'"
           />
-          <span class="sm:hidden">{{ t(`重磅 ${heavyTodayCount}`, `Heavy ${heavyTodayCount}`) }}</span>
+          <span class="sm:hidden">{{ t(`重磅${heavyTodayCount}`, `Heavy ${heavyTodayCount}`) }}</span>
           <span class="hidden sm:inline">{{ t(`重磅 (${heavyTodayCount})`, `Heavy (${heavyTodayCount})`) }}</span>
         </button>
       </div>
 
-      <div class="flex items-center gap-1 shrink-0 pl-1.5 border-l border-black/[0.06] dark:border-white/[0.08]">
+      <div class="flex items-center gap-0.5 sm:gap-1 shrink-0 pl-1 sm:pl-1.5 border-l border-black/[0.06] dark:border-white/[0.08]">
         <!-- Mark all visible unread as read -->
         <button
           v-if="todaySection === 'feed' && visibleUnreadEvents.length > 0"
           type="button"
           @click="emit('mark-all-read', visibleUnreadEvents)"
-          class="inline-flex items-center justify-center w-9 h-9 sm:w-auto sm:h-8 sm:px-2.5 sm:gap-1 rounded-xl text-xs font-medium text-zinc-600 dark:text-zinc-300 hover:bg-black/[0.05] dark:hover:bg-white/[0.08] transition-colors"
+          class="inline-flex items-center justify-center w-8 h-8 sm:w-auto sm:h-8 sm:px-2.5 sm:gap-1 rounded-xl text-xs font-medium text-zinc-600 dark:text-zinc-300 hover:bg-black/[0.05] dark:hover:bg-white/[0.08] transition-colors"
           :title="t('全部标为已读', 'Mark all read')"
           :aria-label="t('全部标为已读', 'Mark all read')"
         >
@@ -924,7 +924,7 @@ const cocoonDiversityPanel = computed(() => {
           v-if="todaySection === 'feed'"
           type="button"
           @click="filterDrawerOpen = true"
-          class="relative inline-flex items-center justify-center gap-1 h-9 sm:h-8 px-2.5 rounded-xl text-xs font-semibold transition-colors whitespace-nowrap"
+          class="relative inline-flex items-center justify-center gap-1 h-8 px-2 sm:px-2.5 rounded-xl text-[11.5px] sm:text-xs font-semibold transition-colors whitespace-nowrap"
           :class="
             activeFilterCount > 0
               ? 'bg-[#007AFF] text-white'
