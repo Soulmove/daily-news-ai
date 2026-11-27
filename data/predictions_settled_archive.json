@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "updated_at": "2026-11-27T17:41:51+08:00",
+  "updated_at": "2026-11-28T03:29:03+08:00",
   "settled": {
     "pred_seed_nvda_sec_502": {
       "prediction_id": "pred_seed_nvda_sec_502",
@@ -347,6 +347,58 @@
         "evidence_title": "国际金价实时报价突破 3,700 美元（3706.86）",
         "note": "国际金价已重新站上 3,700 美元/盎司上方（核验参考：3706.86），预测提前命中！",
         "brier_score": 0.2704
+      }
+    },
+    "pred_live_zhipu_glm54_launch": {
+      "prediction_id": "pred_live_zhipu_glm54_launch",
+      "mode": "live",
+      "status": "settled",
+      "category": "tech_ai",
+      "title": "智谱 GLM-5.4 轻量旗舰能否在 11 月 30 日前如期正式发布？",
+      "title_en": "Will Zhipu AI officially release GLM-5.4 lightweight flagship model by Nov 30?",
+      "target_entity_id": "ent_zhipu",
+      "target_entity": "智谱 AI (Zhipu / GLM)",
+      "question": "11 月 30 日前，智谱 AI 官方或开源社区是否正式上线 GLM-5.4 并公布定价或权重？",
+      "question_en": "By Nov 30, 2026, will Zhipu AI officially launch GLM-5.4 with weights or API docs?",
+      "created_at": "2026-11-24T12:11:51+08:00",
+      "due_at": "2026-11-30T22:00:00+08:00",
+      "win_rule": "智谱开放平台或 GitHub / Hugging Face 官方仓库正式发布 GLM-5.4",
+      "lose_rule": "11 月底前未见 GLM-5.4 正式发布或官方宣布延后至 12 月",
+      "indeterminate_rule": "仅发布小范围盲测代号但未公开型号名称",
+      "supporting_evidence": [
+        "独立开发者实测 Z.ai GLM-5.4 性能出色，多家科技媒体跟进测试进展"
+      ],
+      "opposing_evidence": [
+        "近期国产大模型多采用灰度盲测节奏，正式定名发布周期偶有后延"
+      ],
+      "core_assumption": "以智谱 AI 官方公告、bigmodel.cn 文档或官方开源仓库为准",
+      "invalidation_trigger": "智谱官方宣布推迟或更名发布",
+      "probability_pct": 68,
+      "probability_note": "基于公开官方日程与权威信源建立的客观验证观察题，事件实锤或到期后自动核验开奖",
+      "current_judgment": "根据2026年11月27日人工智能前沿媒体报道，因合规与数据限制，智谱AI不得不推迟下一代旗舰模型的发布，未能在11月底前正式发布。",
+      "versions": [
+        {
+          "version": 1,
+          "updated_at": "2026-11-24T12:11:51+08:00",
+          "judgment": "Z.ai 已出现高口碑 GLM-5.4 实测版本，11 月底前官宣并开放全量 API 概率较高",
+          "probability_pct": 68,
+          "reason": "近期科技圈密集实测智谱 GLM-5.4 新版本"
+        },
+        {
+          "version": 2,
+          "updated_at": "2026-11-28T03:29:03+08:00",
+          "judgment": "根据2026年11月27日人工智能前沿媒体报道，因合规与数据限制，智谱AI不得不推迟下一代旗舰模型的发布，未能在11月底前正式发布。",
+          "probability_pct": 0,
+          "reason": "事件实锤达成开奖条件，自动结算完成"
+        }
+      ],
+      "settlement": {
+        "outcome": "incorrect",
+        "settled_at": "2026-11-28T03:29:03+08:00",
+        "evidence_url": "https://the-decoder.com/after-openai-and-anthropic-shut-the-door-on-their-data-a-chinese-ai-developer-is-turning-to-google-and-meta-instead",
+        "evidence_title": "随着中国AI开发者面临延误，OpenAI、谷歌和Anthropic获得喘息之机",
+        "note": "根据2026年11月27日人工智能前沿媒体报道，因合规与数据限制，智谱AI不得不推迟下一代旗舰模型的发布，未能在11月底前正式发布。",
+        "brier_score": 0.4624
       }
     }
   }

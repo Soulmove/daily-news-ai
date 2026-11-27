@@ -1,7 +1,7 @@
 {
   "schema_version": "4.1",
-  "generated_at": "2026-11-27T17:41:51+08:00",
-  "batch_id": "smart-20261127-174151",
+  "generated_at": "2026-11-28T03:29:03+08:00",
+  "batch_id": "smart-20261128-032903",
   "note": "基于公开官方日程与权威信源建立的客观验证观察题，事件实锤或到期后自动核验开奖。",
   "predictions": [
     {
@@ -182,9 +182,9 @@
       ],
       "core_assumption": "直接以美联储官网 12 月 10 日 03:00 FOMC 正式决议数字结算",
       "invalidation_trigger": "11 月 25 日核心 PCE 与 12 月非农就业超预期回落",
-      "probability_pct": 62,
+      "probability_pct": 46,
       "probability_note": "锚定北京时间 2026 年 12 月 10 日 03:00 美联储议息声明官方利率数字自动开奖",
-      "current_judgment": "最新动态：欧元区消费者大幅上调通胀预期 为欧洲央行加息提供了依据；聚焦 11 月 25 日 PCE 与 12 月非农对北京时间 12 月 10 日 03:00 FOMC 决议的定价指引",
+      "current_judgment": "最新动态：周五（11月27日），美联储隔夜逆回购协议（RRP）使用规模为3.5亿美元…；聚焦 11 月 25 日 PCE 与 12 月非农对北京时间 12 月 10 日 03:00 FOMC 决议的定价指引",
       "current_judgment_en": "Fed officials highlight sticky inflation; PCE & NFP will decide whether Dec 10 brings another hike.",
       "versions": [
         {
@@ -238,10 +238,10 @@
         },
         {
           "version": 8,
-          "updated_at": "2026-11-27T17:41:51+08:00",
-          "judgment": "最新动态：欧元区消费者大幅上调通胀预期 为欧洲央行加息提供了依据；聚焦 11 月 25 日 PCE 与 12 月非农对北京时间 12 月 10 日 03:00 FOMC 决议的定价指引",
-          "probability_pct": 62,
-          "reason": "参考最新美联储报道：欧元区消费者大幅上调通胀预期 为欧洲央行加息提供了依据"
+          "updated_at": "2026-11-28T03:29:03+08:00",
+          "judgment": "最新动态：周五（11月27日），美联储隔夜逆回购协议（RRP）使用规模为3.5亿美元…；聚焦 11 月 25 日 PCE 与 12 月非农对北京时间 12 月 10 日 03:00 FOMC 决议的定价指引",
+          "probability_pct": 46,
+          "reason": "参考最新美联储报道：周五（11月27日），美联储隔夜逆回购协议（RRP）使用规模为…"
         }
       ],
       "settlement": null
@@ -482,7 +482,7 @@
     {
       "prediction_id": "pred_live_zhipu_glm54_launch",
       "mode": "live",
-      "status": "open",
+      "status": "settled",
       "category": "tech_ai",
       "title": "智谱 GLM-5.4 轻量旗舰能否在 11 月 30 日前如期正式发布？",
       "title_en": "Will Zhipu AI officially release GLM-5.4 lightweight flagship model by Nov 30?",
@@ -505,7 +505,7 @@
       "invalidation_trigger": "智谱官方宣布推迟或更名发布",
       "probability_pct": 68,
       "probability_note": "基于公开官方日程与权威信源建立的客观验证观察题，事件实锤或到期后自动核验开奖",
-      "current_judgment": "Z.ai 已出现高口碑 GLM-5.4 实测版本，11 月底前官宣并开放全量 API 概率较高",
+      "current_judgment": "根据2026年11月27日人工智能前沿媒体报道，因合规与数据限制，智谱AI不得不推迟下一代旗舰模型的发布，未能在11月底前正式发布。",
       "versions": [
         {
           "version": 1,
@@ -513,9 +513,23 @@
           "judgment": "Z.ai 已出现高口碑 GLM-5.4 实测版本，11 月底前官宣并开放全量 API 概率较高",
           "probability_pct": 68,
           "reason": "近期科技圈密集实测智谱 GLM-5.4 新版本"
+        },
+        {
+          "version": 2,
+          "updated_at": "2026-11-28T03:29:03+08:00",
+          "judgment": "根据2026年11月27日人工智能前沿媒体报道，因合规与数据限制，智谱AI不得不推迟下一代旗舰模型的发布，未能在11月底前正式发布。",
+          "probability_pct": 0,
+          "reason": "事件实锤达成开奖条件，自动结算完成"
         }
       ],
-      "settlement": null
+      "settlement": {
+        "outcome": "incorrect",
+        "settled_at": "2026-11-28T03:29:03+08:00",
+        "evidence_url": "https://the-decoder.com/after-openai-and-anthropic-shut-the-door-on-their-data-a-chinese-ai-developer-is-turning-to-google-and-meta-instead",
+        "evidence_title": "随着中国AI开发者面临延误，OpenAI、谷歌和Anthropic获得喘息之机",
+        "note": "根据2026年11月27日人工智能前沿媒体报道，因合规与数据限制，智谱AI不得不推迟下一代旗舰模型的发布，未能在11月底前正式发布。",
+        "brier_score": 0.4624
+      }
     },
     {
       "prediction_id": "pred_live_anthropic_ipo_hold",

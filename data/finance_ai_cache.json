@@ -1,6 +1,6 @@
 {
-  "ts": 1795772719.0640054,
-  "updated_at": "2026-11-27T17:41:51+08:00",
+  "ts": 1795807948.9142866,
+  "updated_at": "2026-11-28T03:29:03+08:00",
   "items": {
     "evt_b6aa617a290d": {
       "one_liner": "华尔街交易极端紧缩后的剧烈衰退转向预期，利好长期美债与黄金，利空美元现金资产。",
@@ -6809,6 +6809,746 @@
         }
       ],
       "_ts": 1795772719.0640054
+    },
+    "evt_2b29e2659f92": {
+      "one_liner": "美制禁令穿透与国内算力黑市兑现，直接利好算力租赁及地下供应链，利空纯合规智算服务商预期。",
+      "expectation_gap": "市场此前完全计价极度严格的出口管制，Blackwell实物落地打破制裁封锁预期差，推升灰色算力溢价。",
+      "transmission_layers": [
+        {
+          "tier": 1,
+          "tier_label": "一阶直接冲击（核心受益或受损主体）",
+          "summary": "地下算力供应链及相关数据中心运营方获直接增量业务，合规智算租赁面临价格战分流。",
+          "stocks": [
+            {
+              "name": "首都在线",
+              "code": "300846.SZ",
+              "market": "A股",
+              "exposure_logic": "国内智算中心及算力租赁供应商，受益于高端算力刚需",
+              "direction": "positive"
+            }
+          ]
+        },
+        {
+          "tier": 2,
+          "tier_label": "二阶产业链传导",
+          "summary": "高功耗芯片密集部署带动液冷与电力配套基础设施需求超预期释放。",
+          "stocks": [
+            {
+              "name": "英维克",
+              "code": "002837.SZ",
+              "market": "A股",
+              "exposure_logic": "精密温控与液冷解决方案龙头，深度绑定高密度数据中心",
+              "direction": "positive"
+            }
+          ]
+        },
+        {
+          "tier": 3,
+          "tier_label": "三阶宏观或避险跷跷板",
+          "summary": "若美国商务部升级对华供应链审计，科技股整体风险偏好阶段性承压。",
+          "stocks": [
+            {
+              "name": "标普科技ETF",
+              "code": "XLK",
+              "market": "美股",
+              "exposure_logic": "美国科技巨头合规敞口受地缘政策溢出效应扰动",
+              "direction": "negative"
+            }
+          ]
+        }
+      ],
+      "historical_precedents": [
+        {
+          "date": "2023-11-01",
+          "event_title": "H800禁令后国内算力黑市曝光事件",
+          "t1_reaction": "算力租赁概念股开盘急速拉升，板块整体大涨",
+          "t5_reaction": "随监管合规核查趋严，概念股冲高回落震荡走低",
+          "lesson": "灰色供应链消息刺激具有爆发性但持续性受制于监管边际收紧"
+        }
+      ],
+      "quant_if_then": [
+        {
+          "case": "bull",
+          "label": "正向验证阈值",
+          "trigger_metric": "国内算力租赁价格指数",
+          "threshold": "环比上涨超15%",
+          "action_implication": "加仓算力基建与液冷板块核心标的"
+        },
+        {
+          "case": "bear",
+          "label": "证伪退出阈值",
+          "trigger_metric": "商务部或美方突击联合执法公告频次",
+          "threshold": "一周内多部门发文清查",
+          "action_implication": "立即止盈灰色算力题材，回避政策不确定性"
+        }
+      ],
+      "_ts": 1795807948.9142866
+    },
+    "bloomberg曝光被禁nvidiablackwell": {
+      "one_liner": "美制禁令穿透与国内算力黑市兑现，直接利好算力租赁及地下供应链，利空纯合规智算服务商预期。",
+      "expectation_gap": "市场此前完全计价极度严格的出口管制，Blackwell实物落地打破制裁封锁预期差，推升灰色算力溢价。",
+      "transmission_layers": [
+        {
+          "tier": 1,
+          "tier_label": "一阶直接冲击（核心受益或受损主体）",
+          "summary": "地下算力供应链及相关数据中心运营方获直接增量业务，合规智算租赁面临价格战分流。",
+          "stocks": [
+            {
+              "name": "首都在线",
+              "code": "300846.SZ",
+              "market": "A股",
+              "exposure_logic": "国内智算中心及算力租赁供应商，受益于高端算力刚需",
+              "direction": "positive"
+            }
+          ]
+        },
+        {
+          "tier": 2,
+          "tier_label": "二阶产业链传导",
+          "summary": "高功耗芯片密集部署带动液冷与电力配套基础设施需求超预期释放。",
+          "stocks": [
+            {
+              "name": "英维克",
+              "code": "002837.SZ",
+              "market": "A股",
+              "exposure_logic": "精密温控与液冷解决方案龙头，深度绑定高密度数据中心",
+              "direction": "positive"
+            }
+          ]
+        },
+        {
+          "tier": 3,
+          "tier_label": "三阶宏观或避险跷跷板",
+          "summary": "若美国商务部升级对华供应链审计，科技股整体风险偏好阶段性承压。",
+          "stocks": [
+            {
+              "name": "标普科技ETF",
+              "code": "XLK",
+              "market": "美股",
+              "exposure_logic": "美国科技巨头合规敞口受地缘政策溢出效应扰动",
+              "direction": "negative"
+            }
+          ]
+        }
+      ],
+      "historical_precedents": [
+        {
+          "date": "2023-11-01",
+          "event_title": "H800禁令后国内算力黑市曝光事件",
+          "t1_reaction": "算力租赁概念股开盘急速拉升，板块整体大涨",
+          "t5_reaction": "随监管合规核查趋严，概念股冲高回落震荡走低",
+          "lesson": "灰色供应链消息刺激具有爆发性但持续性受制于监管边际收紧"
+        }
+      ],
+      "quant_if_then": [
+        {
+          "case": "bull",
+          "label": "正向验证阈值",
+          "trigger_metric": "国内算力租赁价格指数",
+          "threshold": "环比上涨超15%",
+          "action_implication": "加仓算力基建与液冷板块核心标的"
+        },
+        {
+          "case": "bear",
+          "label": "证伪退出阈值",
+          "trigger_metric": "商务部或美方突击联合执法公告频次",
+          "threshold": "一周内多部门发文清查",
+          "action_implication": "立即止盈灰色算力题材，回避政策不确定性"
+        }
+      ],
+      "_ts": 1795807948.9142866
+    },
+    "evt_8adf6f61deb2": {
+      "one_liner": "内存周期分歧加剧，短空长多格局下，AI端侧放量对冲传统消费电子疲软。",
+      "expectation_gap": "高盛2027年超级短缺预期与TrendForce短期NAND下跌预测存在时间差，市场低估长期资本开支不足风险。",
+      "transmission_layers": [
+        {
+          "tier": 1,
+          "tier_label": "一阶直接冲击（核心受益或受损主体）",
+          "summary": "存储原厂受益于长期供需缺口预期，短期模组厂面临库存跌价压力。",
+          "stocks": [
+            {
+              "name": "SK海力士",
+              "code": "000660.KS",
+              "market": "美股",
+              "exposure_logic": "HBM与高端DRAM绝对龙头，远期订单确定性极高",
+              "direction": "positive"
+            }
+          ]
+        },
+        {
+          "tier": 2,
+          "tier_label": "二阶产业链传导",
+          "summary": "存储价格波动直接传导至下游服务器整机及AI终端成本毛利率。",
+          "stocks": [
+            {
+              "name": "澜起科技",
+              "code": "688008.SH",
+              "market": "A股",
+              "exposure_logic": "内存接口芯片龙头，受益于服务器内存升级迭代",
+              "direction": "positive"
+            }
+          ]
+        },
+        {
+          "tier": 3,
+          "tier_label": "三阶宏观或避险跷跷板",
+          "summary": "半导体资本开支周期切换引发全球科技股估值再平衡。",
+          "stocks": [
+            {
+              "name": "费城半导体指数",
+              "code": "SOX",
+              "market": "美股",
+              "exposure_logic": "全球半导体景气度风向标，反映周期分歧下的波动",
+              "direction": "mixed"
+            }
+          ]
+        }
+      ],
+      "historical_precedents": [
+        {
+          "date": "2021-08-15",
+          "event_title": "摩根士丹利发布内存行业寒冬警示报告",
+          "t1_reaction": "全球存储芯片股遭遇重挫，板块集体大跌超5%",
+          "t5_reaction": "市场随后进入震荡筑底期，龙头开启新一轮供给侧出清",
+          "lesson": "机构观点分歧期往往伴随高波动，需紧盯原厂资本开支指引"
+        }
+      ],
+      "quant_if_then": [
+        {
+          "case": "bull",
+          "label": "正向验证阈值",
+          "trigger_metric": "DRAM合约价跌幅收窄且Server端需求环比转正",
+          "threshold": "跌幅环比缩窄50%",
+          "action_implication": "左侧布局存储芯片设计与封测环节"
+        },
+        {
+          "case": "bear",
+          "label": "证伪退出阈值",
+          "trigger_metric": "NAND现货价连续三周跌幅扩大",
+          "threshold": "周跌幅超3%",
+          "action_implication": "减仓下游模组及消费电子存储标的"
+        }
+      ],
+      "_ts": 1795807948.9142866
+    },
+    "内存市场将何去何从分析师争论dram和nand明年会否遇": {
+      "one_liner": "内存周期分歧加剧，短空长多格局下，AI端侧放量对冲传统消费电子疲软。",
+      "expectation_gap": "高盛2027年超级短缺预期与TrendForce短期NAND下跌预测存在时间差，市场低估长期资本开支不足风险。",
+      "transmission_layers": [
+        {
+          "tier": 1,
+          "tier_label": "一阶直接冲击（核心受益或受损主体）",
+          "summary": "存储原厂受益于长期供需缺口预期，短期模组厂面临库存跌价压力。",
+          "stocks": [
+            {
+              "name": "SK海力士",
+              "code": "000660.KS",
+              "market": "美股",
+              "exposure_logic": "HBM与高端DRAM绝对龙头，远期订单确定性极高",
+              "direction": "positive"
+            }
+          ]
+        },
+        {
+          "tier": 2,
+          "tier_label": "二阶产业链传导",
+          "summary": "存储价格波动直接传导至下游服务器整机及AI终端成本毛利率。",
+          "stocks": [
+            {
+              "name": "澜起科技",
+              "code": "688008.SH",
+              "market": "A股",
+              "exposure_logic": "内存接口芯片龙头，受益于服务器内存升级迭代",
+              "direction": "positive"
+            }
+          ]
+        },
+        {
+          "tier": 3,
+          "tier_label": "三阶宏观或避险跷跷板",
+          "summary": "半导体资本开支周期切换引发全球科技股估值再平衡。",
+          "stocks": [
+            {
+              "name": "费城半导体指数",
+              "code": "SOX",
+              "market": "美股",
+              "exposure_logic": "全球半导体景气度风向标，反映周期分歧下的波动",
+              "direction": "mixed"
+            }
+          ]
+        }
+      ],
+      "historical_precedents": [
+        {
+          "date": "2021-08-15",
+          "event_title": "摩根士丹利发布内存行业寒冬警示报告",
+          "t1_reaction": "全球存储芯片股遭遇重挫，板块集体大跌超5%",
+          "t5_reaction": "市场随后进入震荡筑底期，龙头开启新一轮供给侧出清",
+          "lesson": "机构观点分歧期往往伴随高波动，需紧盯原厂资本开支指引"
+        }
+      ],
+      "quant_if_then": [
+        {
+          "case": "bull",
+          "label": "正向验证阈值",
+          "trigger_metric": "DRAM合约价跌幅收窄且Server端需求环比转正",
+          "threshold": "跌幅环比缩窄50%",
+          "action_implication": "左侧布局存储芯片设计与封测环节"
+        },
+        {
+          "case": "bear",
+          "label": "证伪退出阈值",
+          "trigger_metric": "NAND现货价连续三周跌幅扩大",
+          "threshold": "周跌幅超3%",
+          "action_implication": "减仓下游模组及消费电子存储标的"
+        }
+      ],
+      "_ts": 1795807948.9142866
+    },
+    "evt_e4cf2214e28a": {
+      "one_liner": "海湾地缘政治骤然升级，直接引发原油供应链风险溢价飙升及避险资产买盘。",
+      "expectation_gap": "市场此前低估中东外溢至非交战国的摩擦概率，地缘政治风险从红海向波斯湾全域扩散。",
+      "transmission_layers": [
+        {
+          "tier": 1,
+          "tier_label": "一阶直接冲击（核心受益或受损主体）",
+          "summary": "中东原油供给安全受到实质性质疑，油气开采及运输板块直接受益。",
+          "stocks": [
+            {
+              "name": "中国海油",
+              "code": "600938.SH",
+              "market": "A股",
+              "exposure_logic": "国内油气开采龙头，受益于油价上涨带来的高弹性业绩",
+              "direction": "positive"
+            }
+          ]
+        },
+        {
+          "tier": 2,
+          "tier_label": "二阶产业链传导",
+          "summary": "中东航线安全隐患推高全球远洋油轮运费及国防军工需求。",
+          "stocks": [
+            {
+              "name": "中远海能",
+              "code": "600026.SH",
+              "market": "A股",
+              "exposure_logic": "全球油轮运输巨头，地缘冲突推升中远期运费预期",
+              "direction": "positive"
+            }
+          ]
+        },
+        {
+          "tier": 3,
+          "tier_label": "三阶宏观或避险跷跷板",
+          "summary": "避险资金涌入黄金与美元资产，全球风险资产估值承压。",
+          "stocks": [
+            {
+              "name": "黄金ETF",
+              "code": "GLD",
+              "market": "美股",
+              "exposure_logic": "全球最具代表性的黄金避险资产，受益于地缘局势恶化",
+              "direction": "positive"
+            }
+          ]
+        }
+      ],
+      "historical_precedents": [
+        {
+          "date": "2019-09-14",
+          "event_title": "沙特阿美石油设施遭无人机袭击事件",
+          "t1_reaction": "国际油价开盘暴涨近15%，黄金与军工股全线大涨",
+          "t5_reaction": "随产能恢复速度超预期，油价逐步回吐大部分涨幅",
+          "lesson": "地缘突发事件带来的油价脉冲式上涨若无持续供给中断则难持久"
+        }
+      ],
+      "quant_if_then": [
+        {
+          "case": "bull",
+          "label": "正向验证阈值",
+          "trigger_metric": "布伦特原油主力合约",
+          "threshold": "突破85美元/桶且日涨幅超3%",
+          "action_implication": "增持上游能源及黄金避险资产"
+        },
+        {
+          "case": "bear",
+          "label": "证伪退出阈值",
+          "trigger_metric": "外交斡旋实质性进展及联合国联合声明发布",
+          "threshold": "冲突未进一步蔓延至能源设施",
+          "action_implication": "迅速平仓地缘溢价带来的油气多头头寸"
+        }
+      ],
+      "_ts": 1795807948.9142866
+    },
+    "科威特召见伊朗大使抗议周四发生的袭击事件": {
+      "one_liner": "海湾地缘政治骤然升级，直接引发原油供应链风险溢价飙升及避险资产买盘。",
+      "expectation_gap": "市场此前低估中东外溢至非交战国的摩擦概率，地缘政治风险从红海向波斯湾全域扩散。",
+      "transmission_layers": [
+        {
+          "tier": 1,
+          "tier_label": "一阶直接冲击（核心受益或受损主体）",
+          "summary": "中东原油供给安全受到实质性质疑，油气开采及运输板块直接受益。",
+          "stocks": [
+            {
+              "name": "中国海油",
+              "code": "600938.SH",
+              "market": "A股",
+              "exposure_logic": "国内油气开采龙头，受益于油价上涨带来的高弹性业绩",
+              "direction": "positive"
+            }
+          ]
+        },
+        {
+          "tier": 2,
+          "tier_label": "二阶产业链传导",
+          "summary": "中东航线安全隐患推高全球远洋油轮运费及国防军工需求。",
+          "stocks": [
+            {
+              "name": "中远海能",
+              "code": "600026.SH",
+              "market": "A股",
+              "exposure_logic": "全球油轮运输巨头，地缘冲突推升中远期运费预期",
+              "direction": "positive"
+            }
+          ]
+        },
+        {
+          "tier": 3,
+          "tier_label": "三阶宏观或避险跷跷板",
+          "summary": "避险资金涌入黄金与美元资产，全球风险资产估值承压。",
+          "stocks": [
+            {
+              "name": "黄金ETF",
+              "code": "GLD",
+              "market": "美股",
+              "exposure_logic": "全球最具代表性的黄金避险资产，受益于地缘局势恶化",
+              "direction": "positive"
+            }
+          ]
+        }
+      ],
+      "historical_precedents": [
+        {
+          "date": "2019-09-14",
+          "event_title": "沙特阿美石油设施遭无人机袭击事件",
+          "t1_reaction": "国际油价开盘暴涨近15%，黄金与军工股全线大涨",
+          "t5_reaction": "随产能恢复速度超预期，油价逐步回吐大部分涨幅",
+          "lesson": "地缘突发事件带来的油价脉冲式上涨若无持续供给中断则难持久"
+        }
+      ],
+      "quant_if_then": [
+        {
+          "case": "bull",
+          "label": "正向验证阈值",
+          "trigger_metric": "布伦特原油主力合约",
+          "threshold": "突破85美元/桶且日涨幅超3%",
+          "action_implication": "增持上游能源及黄金避险资产"
+        },
+        {
+          "case": "bear",
+          "label": "证伪退出阈值",
+          "trigger_metric": "外交斡旋实质性进展及联合国联合声明发布",
+          "threshold": "冲突未进一步蔓延至能源设施",
+          "action_implication": "迅速平仓地缘溢价带来的油气多头头寸"
+        }
+      ],
+      "_ts": 1795807948.9142866
+    },
+    "evt_62e45389796b": {
+      "one_liner": "开源大模型加速本地化部署生态成熟，利好端侧AI硬件及边缘计算降本增效。",
+      "expectation_gap": "市场此前聚焦云端大厂军备竞赛，中小企业及个人本地化低成本部署能力被严重低估。",
+      "transmission_layers": [
+        {
+          "tier": 1,
+          "tier_label": "一阶直接冲击（核心受益或受损主体）",
+          "summary": "腾讯自身AI生态及 llama.cpp 关联开发者社区生态获得实质赋能。",
+          "stocks": [
+            {
+              "name": "腾讯控股",
+              "code": "00700.HK",
+              "market": "港股",
+              "exposure_logic": "混元大模型拥有者，开源生态有助于巩固B端及开发者心智",
+              "direction": "positive"
+            }
+          ]
+        },
+        {
+          "tier": 2,
+          "tier_label": "二阶产业链传导",
+          "summary": "大模型本地化运行推升边缘端算力芯片及大内存PC/AI手机换机需求。",
+          "stocks": [
+            {
+              "name": "寒武纪",
+              "code": "688256.SH",
+              "market": "A股",
+              "exposure_logic": "国产AI芯片核心供应商，受益于终端与边缘AI推理需求",
+              "direction": "positive"
+            }
+          ]
+        },
+        {
+          "tier": 3,
+          "tier_label": "三阶宏观或避险跷跷板",
+          "summary": "云厂商API调用收入预期面临分流压力，SaaS软件服务商迎来重构机遇。",
+          "stocks": [
+            {
+              "name": "金山办公",
+              "code": "688111.SH",
+              "market": "A股",
+              "exposure_logic": "国产办公软件龙头，可借助本地化小模型实现数据隐私保护升级",
+              "direction": "positive"
+            }
+          ]
+        }
+      ],
+      "historical_precedents": [
+        {
+          "date": "2023-07-18",
+          "event_title": "Meta发布Llama 2并支持本地部署生态",
+          "t1_reaction": "开源AI概念股集体走强，算力及软件板块活跃",
+          "t5_reaction": "端侧AI应用开发案例密集落地，板块迎来持续两个月的估值修复",
+          "lesson": "优质开源模型的生态兼容性突破是催生下游应用爆发的关键奇点"
+        }
+      ],
+      "quant_if_then": [
+        {
+          "case": "bull",
+          "label": "正向验证阈值",
+          "trigger_metric": "GitHub上llama.cpp项目相关Fork与Star日增量",
+          "threshold": "环比激增超50%",
+          "action_implication": "加仓端侧AI硬件与边缘计算产业链"
+        },
+        {
+          "case": "bear",
+          "label": "证伪退出阈值",
+          "trigger_metric": "本地部署性能评测暴露出高显存崩溃或推理延迟过高",
+          "threshold": "实用性指标低于主流云端大模型50%",
+          "action_implication": "回归云端算力主线，回避边缘伪需求题材"
+        }
+      ],
+      "_ts": 1795807948.9142866
+    },
+    "腾讯混元hymt330ba3b发布gguf版本支持lla": {
+      "one_liner": "开源大模型加速本地化部署生态成熟，利好端侧AI硬件及边缘计算降本增效。",
+      "expectation_gap": "市场此前聚焦云端大厂军备竞赛，中小企业及个人本地化低成本部署能力被严重低估。",
+      "transmission_layers": [
+        {
+          "tier": 1,
+          "tier_label": "一阶直接冲击（核心受益或受损主体）",
+          "summary": "腾讯自身AI生态及 llama.cpp 关联开发者社区生态获得实质赋能。",
+          "stocks": [
+            {
+              "name": "腾讯控股",
+              "code": "00700.HK",
+              "market": "港股",
+              "exposure_logic": "混元大模型拥有者，开源生态有助于巩固B端及开发者心智",
+              "direction": "positive"
+            }
+          ]
+        },
+        {
+          "tier": 2,
+          "tier_label": "二阶产业链传导",
+          "summary": "大模型本地化运行推升边缘端算力芯片及大内存PC/AI手机换机需求。",
+          "stocks": [
+            {
+              "name": "寒武纪",
+              "code": "688256.SH",
+              "market": "A股",
+              "exposure_logic": "国产AI芯片核心供应商，受益于终端与边缘AI推理需求",
+              "direction": "positive"
+            }
+          ]
+        },
+        {
+          "tier": 3,
+          "tier_label": "三阶宏观或避险跷跷板",
+          "summary": "云厂商API调用收入预期面临分流压力，SaaS软件服务商迎来重构机遇。",
+          "stocks": [
+            {
+              "name": "金山办公",
+              "code": "688111.SH",
+              "market": "A股",
+              "exposure_logic": "国产办公软件龙头，可借助本地化小模型实现数据隐私保护升级",
+              "direction": "positive"
+            }
+          ]
+        }
+      ],
+      "historical_precedents": [
+        {
+          "date": "2023-07-18",
+          "event_title": "Meta发布Llama 2并支持本地部署生态",
+          "t1_reaction": "开源AI概念股集体走强，算力及软件板块活跃",
+          "t5_reaction": "端侧AI应用开发案例密集落地，板块迎来持续两个月的估值修复",
+          "lesson": "优质开源模型的生态兼容性突破是催生下游应用爆发的关键奇点"
+        }
+      ],
+      "quant_if_then": [
+        {
+          "case": "bull",
+          "label": "正向验证阈值",
+          "trigger_metric": "GitHub上llama.cpp项目相关Fork与Star日增量",
+          "threshold": "环比激增超50%",
+          "action_implication": "加仓端侧AI硬件与边缘计算产业链"
+        },
+        {
+          "case": "bear",
+          "label": "证伪退出阈值",
+          "trigger_metric": "本地部署性能评测暴露出高显存崩溃或推理延迟过高",
+          "threshold": "实用性指标低于主流云端大模型50%",
+          "action_implication": "回归云端算力主线，回避边缘伪需求题材"
+        }
+      ],
+      "_ts": 1795807948.9142866
+    },
+    "evt_5dffb45e21df": {
+      "one_liner": "波斯湾军事对峙持续升级，霍尔木兹海峡航运安全受威胁压制全球风险偏好。",
+      "expectation_gap": "市场尚未将美伊直接军事摩擦概率完全计入全球航运及大宗商品价格之中。",
+      "transmission_layers": [
+        {
+          "tier": 1,
+          "tier_label": "一阶直接冲击（核心受益或受损主体）",
+          "summary": "中东区域防空及军工板块直接受益于地缘军事对峙紧张升级。",
+          "stocks": [
+            {
+              "name": "洛克希德马丁",
+              "code": "LMT",
+              "market": "美股",
+              "exposure_logic": "全球顶级国防军工巨头，直接受益于美军中东战备需求",
+              "direction": "positive"
+            }
+          ]
+        },
+        {
+          "tier": 2,
+          "tier_label": "二阶产业链传导",
+          "summary": "霍尔木兹海峡航运管制威胁推高全球液化天然气及原油运输溢价。",
+          "stocks": [
+            {
+              "name": "中远海特",
+              "code": "600428.SH",
+              "market": "A股",
+              "exposure_logic": "专业船队运营商，受地缘航线扰动及运价弹性影响",
+              "direction": "positive"
+            }
+          ]
+        },
+        {
+          "tier": 3,
+          "tier_label": "三阶宏观或避险跷跷板",
+          "summary": "全球资本从高风险权益市场撤出，流向美元及贵金属避险资产。",
+          "stocks": [
+            {
+              "name": "美元ETF",
+              "code": "UUP",
+              "market": "美股",
+              "exposure_logic": "跟踪美元指数的ETF，地缘政治危机中的核心避险蓄水池",
+              "direction": "positive"
+            }
+          ]
+        }
+      ],
+      "historical_precedents": [
+        {
+          "date": "2020-01-03",
+          "event_title": "美军空袭苏莱曼尼事件",
+          "t1_reaction": "国际油价跳涨超3%，黄金大涨，全球股市普遍回调",
+          "t5_reaction": "美伊未爆发全面战争，风险情绪随后在数周内逐步平复",
+          "lesson": "军事摩擦初期往往引发避险资产脉冲，若未演变为热战则资产价格终将回归基本面"
+        }
+      ],
+      "quant_if_then": [
+        {
+          "case": "bull",
+          "label": "正向验证阈值",
+          "trigger_metric": "波斯湾航运保险费率与美军航母战斗群调动频率",
+          "threshold": "保险费率环比暴涨超30%",
+          "action_implication": "增持黄金、原油及军工板块避险头寸"
+        },
+        {
+          "case": "bear",
+          "label": "证伪退出阈值",
+          "trigger_metric": "双方官方通过第三国渠道发表降温缓和声明",
+          "threshold": "24小时内未发生进一步交火",
+          "action_implication": "迅速止盈避险资产，回归科技与成长主线"
+        }
+      ],
+      "_ts": 1795807948.9142866
+    },
+    "伊朗称一美国f16战机遭伊方防空系统警告射击": {
+      "one_liner": "波斯湾军事对峙持续升级，霍尔木兹海峡航运安全受威胁压制全球风险偏好。",
+      "expectation_gap": "市场尚未将美伊直接军事摩擦概率完全计入全球航运及大宗商品价格之中。",
+      "transmission_layers": [
+        {
+          "tier": 1,
+          "tier_label": "一阶直接冲击（核心受益或受损主体）",
+          "summary": "中东区域防空及军工板块直接受益于地缘军事对峙紧张升级。",
+          "stocks": [
+            {
+              "name": "洛克希德马丁",
+              "code": "LMT",
+              "market": "美股",
+              "exposure_logic": "全球顶级国防军工巨头，直接受益于美军中东战备需求",
+              "direction": "positive"
+            }
+          ]
+        },
+        {
+          "tier": 2,
+          "tier_label": "二阶产业链传导",
+          "summary": "霍尔木兹海峡航运管制威胁推高全球液化天然气及原油运输溢价。",
+          "stocks": [
+            {
+              "name": "中远海特",
+              "code": "600428.SH",
+              "market": "A股",
+              "exposure_logic": "专业船队运营商，受地缘航线扰动及运价弹性影响",
+              "direction": "positive"
+            }
+          ]
+        },
+        {
+          "tier": 3,
+          "tier_label": "三阶宏观或避险跷跷板",
+          "summary": "全球资本从高风险权益市场撤出，流向美元及贵金属避险资产。",
+          "stocks": [
+            {
+              "name": "美元ETF",
+              "code": "UUP",
+              "market": "美股",
+              "exposure_logic": "跟踪美元指数的ETF，地缘政治危机中的核心避险蓄水池",
+              "direction": "positive"
+            }
+          ]
+        }
+      ],
+      "historical_precedents": [
+        {
+          "date": "2020-01-03",
+          "event_title": "美军空袭苏莱曼尼事件",
+          "t1_reaction": "国际油价跳涨超3%，黄金大涨，全球股市普遍回调",
+          "t5_reaction": "美伊未爆发全面战争，风险情绪随后在数周内逐步平复",
+          "lesson": "军事摩擦初期往往引发避险资产脉冲，若未演变为热战则资产价格终将回归基本面"
+        }
+      ],
+      "quant_if_then": [
+        {
+          "case": "bull",
+          "label": "正向验证阈值",
+          "trigger_metric": "波斯湾航运保险费率与美军航母战斗群调动频率",
+          "threshold": "保险费率环比暴涨超30%",
+          "action_implication": "增持黄金、原油及军工板块避险头寸"
+        },
+        {
+          "case": "bear",
+          "label": "证伪退出阈值",
+          "trigger_metric": "双方官方通过第三国渠道发表降温缓和声明",
+          "threshold": "24小时内未发生进一步交火",
+          "action_implication": "迅速止盈避险资产，回归科技与成长主线"
+        }
+      ],
+      "_ts": 1795807948.9142866
     }
   }
 }
