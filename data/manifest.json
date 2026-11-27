@@ -1,6 +1,6 @@
 {
   "schema_version": "4.1",
-  "site_published_at": "2026-11-27T08:38:42+08:00",
+  "site_published_at": "2026-11-27T11:10:26+08:00",
   "smart": {
     "latest_batch_id": "smart-20261127-083618",
     "latest_path": "archives/smart/2026-11-27/08-36/",
@@ -81,89 +81,89 @@
     }
   },
   "raw": {
-    "latest_batch_id": "raw-20261127-083530",
-    "latest_path": "archives/raw/2026-11-27/08-35/",
-    "meta_path": "archives/raw/2026-11-27/08-35/meta.json",
-    "connectors_path": "archives/raw/2026-11-27/08-35/connectors.json",
-    "fetched_at": "2026-11-27T08:35:30+08:00",
-    "published_at": "2026-11-27T08:36:14+08:00",
+    "latest_batch_id": "raw-20261127-111008",
+    "latest_path": "archives/raw/2026-11-27/11-10/",
+    "meta_path": "archives/raw/2026-11-27/11-10/meta.json",
+    "connectors_path": "archives/raw/2026-11-27/11-10/connectors.json",
+    "fetched_at": "2026-11-27T11:10:08+08:00",
+    "published_at": "2026-11-27T11:10:26+08:00",
     "target_cadence_minutes": 15,
-    "schedule_source": "ai_compensation_schedule",
+    "schedule_source": "schedule",
     "status": "partial",
     "summary": {
       "configured_sources": 84,
-      "ok_sources": 78,
+      "ok_sources": 79,
       "empty_sources": 0,
-      "error_sources": 3,
+      "error_sources": 2,
       "stale_sources": 3,
       "retired_sources": 5,
-      "total_raw_items": 1547,
+      "total_raw_items": 1565,
       "first_party_items": 26,
       "healthy_connectors": 7,
       "total_connectors": 7,
-      "deep_fetched_enriched": 20,
-      "deduped_events": 1291
+      "deep_fetched_enriched": 17,
+      "deduped_events": 1296
     },
     "categories": {
       "finance": {
         "file": "data_finance.json",
-        "path": "archives/raw/2026-11-27/08-35/data_finance.json",
+        "path": "archives/raw/2026-11-27/11-10/data_finance.json",
         "status": "partial",
         "source_count": 20,
         "ok_sources": 16,
         "error_sources": 1,
         "empty_sources": 0,
         "stale_sources": 3,
-        "item_count": 387
+        "item_count": 380
       },
       "global": {
         "file": "data_global.json",
-        "path": "archives/raw/2026-11-27/08-35/data_global.json",
+        "path": "archives/raw/2026-11-27/11-10/data_global.json",
         "status": "partial",
         "source_count": 15,
         "ok_sources": 14,
         "error_sources": 1,
         "empty_sources": 0,
         "stale_sources": 0,
-        "item_count": 282
+        "item_count": 290
       },
       "tech": {
         "file": "data_tech.json",
-        "path": "archives/raw/2026-11-27/08-35/data_tech.json",
-        "status": "partial",
+        "path": "archives/raw/2026-11-27/11-10/data_tech.json",
+        "status": "ok",
         "source_count": 34,
-        "ok_sources": 33,
-        "error_sources": 1,
+        "ok_sources": 34,
+        "error_sources": 0,
         "empty_sources": 0,
         "stale_sources": 0,
-        "item_count": 535
+        "item_count": 562
       },
       "general": {
         "file": "data_general.json",
-        "path": "archives/raw/2026-11-27/08-35/data_general.json",
+        "path": "archives/raw/2026-11-27/11-10/data_general.json",
         "status": "ok",
         "source_count": 15,
         "ok_sources": 15,
         "error_sources": 0,
         "empty_sources": 0,
         "stale_sources": 0,
-        "item_count": 343
+        "item_count": 333
       }
     }
   },
   "scheduler": {
-    "provider": "cloud_engine",
+    "provider": "cloud_runner",
     "raw_cron": "*/15 * * * *",
     "smart_cron": "15 */1 * * *",
-    "note": "云端全天候错峰智能采编与多源交叉核验。"
+    "note": "高频错峰调度（原始抓取每 15 分钟 / 深度研报每小时）；服务端静默增量同步。"
   },
   "connectors": {
     "latest_path": "data/connectors_latest.json",
-    "fetched_at": "2026-11-27T08:35:30+08:00",
+    "fetched_at": "2026-11-27T11:10:08+08:00",
     "summary": {
       "total_connectors": 7,
       "healthy_connectors": 7,
-      "total_first_party_items": 584,
+      "total_first_party_items": 616,
       "tech_tools_count": 31,
       "calendar_events_count": 5
     }
@@ -204,159 +204,165 @@
     "radar_count": 46
   },
   "degraded": true,
-  "alerts": [],
+  "alerts": [
+    {
+      "code": "raw_crawl_degraded",
+      "severity": "warning",
+      "message": "原始抓取状态：partial（错误源 2 个）"
+    }
+  ],
   "gemini_quota": {
     "total_configured_keys": 12,
     "healthy_keys": 12,
     "cooled_down_keys": 0,
     "exhausted_keys": 0,
-    "daily_calls_total": 9,
-    "daily_tokens_total": 14515,
+    "daily_calls_total": 40,
+    "daily_tokens_total": 40272,
     "date_utc": "2026-11-27",
-    "updated_at": "2026-11-27T00:38:42Z",
+    "updated_at": "2026-11-27T03:10:14Z",
     "keys": [
       {
         "slot": "KEY_TECH",
         "status": "healthy",
-        "daily_calls": 1,
-        "daily_tokens": 0,
+        "daily_calls": 3,
+        "daily_tokens": 7200,
         "cooldown_until": null,
         "exhausted_until": null,
-        "last_error_code": "TRANSIENT_ERROR",
-        "last_error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status':",
-        "last_success_at": "2026-11-26T11:34:24Z"
+        "last_error_code": null,
+        "last_error": null,
+        "last_success_at": "2026-11-27T00:39:58Z"
       },
       {
         "slot": "KEY_GLOBAL",
         "status": "healthy",
-        "daily_calls": 1,
-        "daily_tokens": 0,
-        "cooldown_until": null,
-        "exhausted_until": null,
-        "last_error_code": "TRANSIENT_ERROR",
-        "last_error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status':",
-        "last_success_at": "2026-11-26T15:26:22Z"
-      },
-      {
-        "slot": "KEY_FINANCE",
-        "status": "healthy",
-        "daily_calls": 1,
-        "daily_tokens": 0,
-        "cooldown_until": null,
-        "exhausted_until": null,
-        "last_error_code": "TRANSIENT_ERROR",
-        "last_error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status':",
-        "last_success_at": "2026-11-26T11:34:15Z"
-      },
-      {
-        "slot": "KEY_GENERAL",
-        "status": "healthy",
-        "daily_calls": 1,
-        "daily_tokens": 0,
-        "cooldown_until": null,
-        "exhausted_until": null,
-        "last_error_code": "TRANSIENT_ERROR",
-        "last_error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'The request timed out. Please try again.', 'status': 'DEADLIN",
-        "last_success_at": "2026-11-25T22:35:19Z"
-      },
-      {
-        "slot": "KEY_1",
-        "status": "healthy",
-        "daily_calls": 1,
-        "daily_tokens": 0,
-        "cooldown_until": null,
-        "exhausted_until": null,
-        "last_error_code": "TRANSIENT_ERROR",
-        "last_error": "ReadTimeout: The read operation timed out",
-        "last_success_at": "2026-11-26T15:21:05Z"
-      },
-      {
-        "slot": "KEY_2",
-        "status": "healthy",
-        "daily_calls": 1,
-        "daily_tokens": 900,
-        "cooldown_until": null,
-        "exhausted_until": null,
-        "last_error_code": null,
-        "last_error": null,
-        "last_success_at": "2026-11-27T00:36:23Z"
-      },
-      {
-        "slot": "KEY_3",
-        "status": "healthy",
-        "daily_calls": 1,
-        "daily_tokens": 13279,
-        "cooldown_until": null,
-        "exhausted_until": null,
-        "last_error_code": null,
-        "last_error": null,
-        "last_success_at": "2026-11-27T00:38:41Z"
-      },
-      {
-        "slot": "KEY_4",
-        "status": "healthy",
-        "daily_calls": 1,
-        "daily_tokens": 140,
-        "cooldown_until": null,
-        "exhausted_until": null,
-        "last_error_code": null,
-        "last_error": null,
-        "last_success_at": "2026-11-27T00:38:42Z"
-      },
-      {
-        "slot": "KEY_5",
-        "status": "healthy",
-        "daily_calls": 0,
+        "daily_calls": 3,
         "daily_tokens": 0,
         "cooldown_until": null,
         "exhausted_until": null,
         "last_error_code": "RATE_LIMIT_429",
         "last_error": "ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and ",
-        "last_success_at": "2026-11-26T15:24:14Z"
+        "last_success_at": "2026-11-26T15:26:22Z"
       },
       {
-        "slot": "KEY_6",
+        "slot": "KEY_FINANCE",
         "status": "healthy",
-        "daily_calls": 1,
-        "daily_tokens": 196,
+        "daily_calls": 3,
+        "daily_tokens": 0,
+        "cooldown_until": null,
+        "exhausted_until": null,
+        "last_error_code": "RATE_LIMIT_429",
+        "last_error": "ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and ",
+        "last_success_at": "2026-11-26T11:34:15Z"
+      },
+      {
+        "slot": "KEY_GENERAL",
+        "status": "healthy",
+        "daily_calls": 3,
+        "daily_tokens": 0,
+        "cooldown_until": null,
+        "exhausted_until": null,
+        "last_error_code": "RATE_LIMIT_429",
+        "last_error": "ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and ",
+        "last_success_at": "2026-11-25T22:35:19Z"
+      },
+      {
+        "slot": "KEY_1",
+        "status": "healthy",
+        "daily_calls": 3,
+        "daily_tokens": 0,
+        "cooldown_until": null,
+        "exhausted_until": null,
+        "last_error_code": "RATE_LIMIT_429",
+        "last_error": "ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and ",
+        "last_success_at": "2026-11-26T15:21:05Z"
+      },
+      {
+        "slot": "KEY_2",
+        "status": "healthy",
+        "daily_calls": 3,
+        "daily_tokens": 900,
+        "cooldown_until": null,
+        "exhausted_until": null,
+        "last_error_code": "RATE_LIMIT_429",
+        "last_error": "ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and ",
+        "last_success_at": "2026-11-27T00:36:23Z"
+      },
+      {
+        "slot": "KEY_3",
+        "status": "healthy",
+        "daily_calls": 3,
+        "daily_tokens": 13279,
+        "cooldown_until": null,
+        "exhausted_until": null,
+        "last_error_code": "RATE_LIMIT_429",
+        "last_error": "ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and ",
+        "last_success_at": "2026-11-27T00:38:41Z"
+      },
+      {
+        "slot": "KEY_4",
+        "status": "healthy",
+        "daily_calls": 3,
+        "daily_tokens": 140,
+        "cooldown_until": null,
+        "exhausted_until": null,
+        "last_error_code": "RATE_LIMIT_429",
+        "last_error": "ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and ",
+        "last_success_at": "2026-11-27T00:38:42Z"
+      },
+      {
+        "slot": "KEY_5",
+        "status": "healthy",
+        "daily_calls": 3,
+        "daily_tokens": 4804,
         "cooldown_until": null,
         "exhausted_until": null,
         "last_error_code": null,
         "last_error": null,
+        "last_success_at": "2026-11-27T00:40:12Z"
+      },
+      {
+        "slot": "KEY_6",
+        "status": "healthy",
+        "daily_calls": 3,
+        "daily_tokens": 196,
+        "cooldown_until": null,
+        "exhausted_until": null,
+        "last_error_code": "RATE_LIMIT_429",
+        "last_error": "ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and ",
         "last_success_at": "2026-11-27T00:38:42Z"
       },
       {
         "slot": "KEY_7",
         "status": "healthy",
-        "daily_calls": 0,
+        "daily_calls": 2,
         "daily_tokens": 0,
         "cooldown_until": null,
         "exhausted_until": null,
-        "last_error_code": "TRANSIENT_ERROR",
-        "last_error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status':",
+        "last_error_code": "RATE_LIMIT_429",
+        "last_error": "ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and ",
         "last_success_at": "2026-11-26T11:33:56Z"
       },
       {
         "slot": "KEY_8",
         "status": "healthy",
-        "daily_calls": 0,
-        "daily_tokens": 0,
+        "daily_calls": 4,
+        "daily_tokens": 7185,
         "cooldown_until": null,
         "exhausted_until": null,
-        "last_error_code": null,
-        "last_error": null,
-        "last_success_at": "2026-11-26T15:24:21Z"
+        "last_error_code": "RATE_LIMIT_429",
+        "last_error": "ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and ",
+        "last_success_at": "2026-11-27T00:39:56Z"
       },
       {
         "slot": "GOOGLE_API_KEY",
         "status": "unconfigured",
-        "daily_calls": 0,
-        "daily_tokens": 0,
+        "daily_calls": 4,
+        "daily_tokens": 6568,
         "cooldown_until": null,
         "exhausted_until": null,
         "last_error_code": null,
         "last_error": null,
-        "last_success_at": "2026-11-26T15:24:39Z"
+        "last_success_at": "2026-11-27T00:40:22Z"
       }
     ]
   },
@@ -365,153 +371,153 @@
     "healthy_keys": 12,
     "cooled_down_keys": 0,
     "exhausted_keys": 0,
-    "daily_calls_total": 9,
-    "daily_tokens_total": 14515,
+    "daily_calls_total": 40,
+    "daily_tokens_total": 40272,
     "date_utc": "2026-11-27",
-    "updated_at": "2026-11-27T00:38:42Z",
+    "updated_at": "2026-11-27T03:10:14Z",
     "keys": [
       {
         "slot": "KEY_TECH",
         "status": "healthy",
-        "daily_calls": 1,
-        "daily_tokens": 0,
+        "daily_calls": 3,
+        "daily_tokens": 7200,
         "cooldown_until": null,
         "exhausted_until": null,
-        "last_error_code": "TRANSIENT_ERROR",
-        "last_error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status':",
-        "last_success_at": "2026-11-26T11:34:24Z"
+        "last_error_code": null,
+        "last_error": null,
+        "last_success_at": "2026-11-27T00:39:58Z"
       },
       {
         "slot": "KEY_GLOBAL",
         "status": "healthy",
-        "daily_calls": 1,
-        "daily_tokens": 0,
-        "cooldown_until": null,
-        "exhausted_until": null,
-        "last_error_code": "TRANSIENT_ERROR",
-        "last_error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status':",
-        "last_success_at": "2026-11-26T15:26:22Z"
-      },
-      {
-        "slot": "KEY_FINANCE",
-        "status": "healthy",
-        "daily_calls": 1,
-        "daily_tokens": 0,
-        "cooldown_until": null,
-        "exhausted_until": null,
-        "last_error_code": "TRANSIENT_ERROR",
-        "last_error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status':",
-        "last_success_at": "2026-11-26T11:34:15Z"
-      },
-      {
-        "slot": "KEY_GENERAL",
-        "status": "healthy",
-        "daily_calls": 1,
-        "daily_tokens": 0,
-        "cooldown_until": null,
-        "exhausted_until": null,
-        "last_error_code": "TRANSIENT_ERROR",
-        "last_error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'The request timed out. Please try again.', 'status': 'DEADLIN",
-        "last_success_at": "2026-11-25T22:35:19Z"
-      },
-      {
-        "slot": "KEY_1",
-        "status": "healthy",
-        "daily_calls": 1,
-        "daily_tokens": 0,
-        "cooldown_until": null,
-        "exhausted_until": null,
-        "last_error_code": "TRANSIENT_ERROR",
-        "last_error": "ReadTimeout: The read operation timed out",
-        "last_success_at": "2026-11-26T15:21:05Z"
-      },
-      {
-        "slot": "KEY_2",
-        "status": "healthy",
-        "daily_calls": 1,
-        "daily_tokens": 900,
-        "cooldown_until": null,
-        "exhausted_until": null,
-        "last_error_code": null,
-        "last_error": null,
-        "last_success_at": "2026-11-27T00:36:23Z"
-      },
-      {
-        "slot": "KEY_3",
-        "status": "healthy",
-        "daily_calls": 1,
-        "daily_tokens": 13279,
-        "cooldown_until": null,
-        "exhausted_until": null,
-        "last_error_code": null,
-        "last_error": null,
-        "last_success_at": "2026-11-27T00:38:41Z"
-      },
-      {
-        "slot": "KEY_4",
-        "status": "healthy",
-        "daily_calls": 1,
-        "daily_tokens": 140,
-        "cooldown_until": null,
-        "exhausted_until": null,
-        "last_error_code": null,
-        "last_error": null,
-        "last_success_at": "2026-11-27T00:38:42Z"
-      },
-      {
-        "slot": "KEY_5",
-        "status": "healthy",
-        "daily_calls": 0,
+        "daily_calls": 3,
         "daily_tokens": 0,
         "cooldown_until": null,
         "exhausted_until": null,
         "last_error_code": "RATE_LIMIT_429",
         "last_error": "ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and ",
-        "last_success_at": "2026-11-26T15:24:14Z"
+        "last_success_at": "2026-11-26T15:26:22Z"
       },
       {
-        "slot": "KEY_6",
+        "slot": "KEY_FINANCE",
         "status": "healthy",
-        "daily_calls": 1,
-        "daily_tokens": 196,
+        "daily_calls": 3,
+        "daily_tokens": 0,
+        "cooldown_until": null,
+        "exhausted_until": null,
+        "last_error_code": "RATE_LIMIT_429",
+        "last_error": "ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and ",
+        "last_success_at": "2026-11-26T11:34:15Z"
+      },
+      {
+        "slot": "KEY_GENERAL",
+        "status": "healthy",
+        "daily_calls": 3,
+        "daily_tokens": 0,
+        "cooldown_until": null,
+        "exhausted_until": null,
+        "last_error_code": "RATE_LIMIT_429",
+        "last_error": "ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and ",
+        "last_success_at": "2026-11-25T22:35:19Z"
+      },
+      {
+        "slot": "KEY_1",
+        "status": "healthy",
+        "daily_calls": 3,
+        "daily_tokens": 0,
+        "cooldown_until": null,
+        "exhausted_until": null,
+        "last_error_code": "RATE_LIMIT_429",
+        "last_error": "ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and ",
+        "last_success_at": "2026-11-26T15:21:05Z"
+      },
+      {
+        "slot": "KEY_2",
+        "status": "healthy",
+        "daily_calls": 3,
+        "daily_tokens": 900,
+        "cooldown_until": null,
+        "exhausted_until": null,
+        "last_error_code": "RATE_LIMIT_429",
+        "last_error": "ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and ",
+        "last_success_at": "2026-11-27T00:36:23Z"
+      },
+      {
+        "slot": "KEY_3",
+        "status": "healthy",
+        "daily_calls": 3,
+        "daily_tokens": 13279,
+        "cooldown_until": null,
+        "exhausted_until": null,
+        "last_error_code": "RATE_LIMIT_429",
+        "last_error": "ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and ",
+        "last_success_at": "2026-11-27T00:38:41Z"
+      },
+      {
+        "slot": "KEY_4",
+        "status": "healthy",
+        "daily_calls": 3,
+        "daily_tokens": 140,
+        "cooldown_until": null,
+        "exhausted_until": null,
+        "last_error_code": "RATE_LIMIT_429",
+        "last_error": "ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and ",
+        "last_success_at": "2026-11-27T00:38:42Z"
+      },
+      {
+        "slot": "KEY_5",
+        "status": "healthy",
+        "daily_calls": 3,
+        "daily_tokens": 4804,
         "cooldown_until": null,
         "exhausted_until": null,
         "last_error_code": null,
         "last_error": null,
+        "last_success_at": "2026-11-27T00:40:12Z"
+      },
+      {
+        "slot": "KEY_6",
+        "status": "healthy",
+        "daily_calls": 3,
+        "daily_tokens": 196,
+        "cooldown_until": null,
+        "exhausted_until": null,
+        "last_error_code": "RATE_LIMIT_429",
+        "last_error": "ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and ",
         "last_success_at": "2026-11-27T00:38:42Z"
       },
       {
         "slot": "KEY_7",
         "status": "healthy",
-        "daily_calls": 0,
+        "daily_calls": 2,
         "daily_tokens": 0,
         "cooldown_until": null,
         "exhausted_until": null,
-        "last_error_code": "TRANSIENT_ERROR",
-        "last_error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status':",
+        "last_error_code": "RATE_LIMIT_429",
+        "last_error": "ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and ",
         "last_success_at": "2026-11-26T11:33:56Z"
       },
       {
         "slot": "KEY_8",
         "status": "healthy",
-        "daily_calls": 0,
-        "daily_tokens": 0,
+        "daily_calls": 4,
+        "daily_tokens": 7185,
         "cooldown_until": null,
         "exhausted_until": null,
-        "last_error_code": null,
-        "last_error": null,
-        "last_success_at": "2026-11-26T15:24:21Z"
+        "last_error_code": "RATE_LIMIT_429",
+        "last_error": "ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and ",
+        "last_success_at": "2026-11-27T00:39:56Z"
       },
       {
         "slot": "GOOGLE_API_KEY",
         "status": "unconfigured",
-        "daily_calls": 0,
-        "daily_tokens": 0,
+        "daily_calls": 4,
+        "daily_tokens": 6568,
         "cooldown_until": null,
         "exhausted_until": null,
         "last_error_code": null,
         "last_error": null,
-        "last_success_at": "2026-11-26T15:24:39Z"
+        "last_success_at": "2026-11-27T00:40:22Z"
       }
     ]
   }
