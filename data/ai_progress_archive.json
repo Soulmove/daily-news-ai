@@ -1,17 +1,17 @@
 {
   "schema_version": "4.2",
-  "generated_at": "2026-11-27T08:36:18+08:00",
-  "batch_id": "smart-20261127-083618",
+  "generated_at": "2026-11-27T17:41:51+08:00",
+  "batch_id": "smart-20261127-174151",
   "mode": "archive_180d",
   "weekly_digest": {
     "period_label": "全球 AI 机构 180 天完整历史演进库（截至 2026-11-27）",
     "period_label_en": "Global AI Digest (as of 2026-11-27)",
-    "summary": "追踪 23 家前沿实验室共 186 项独立 AI 进展（海外 114 · 国内 48 · 开源生态 43 · 一手官方 65）。支持按代际演进谱系、5 大技术维度及 180 天完整历史归档库切换检索。",
-    "summary_en": "Tracking 186 deduplicated AI milestones across 23 frontier labs (114 global, 48 China, 43 open-source, 65 first-hand official).",
+    "summary": "追踪 23 家前沿实验室共 192 项独立 AI 进展（海外 114 · 国内 54 · 开源生态 42 · 一手官方 62）。支持按代际演进谱系、5 大技术维度及 180 天完整历史归档库切换检索。",
+    "summary_en": "Tracking 192 deduplicated AI milestones across 23 frontier labs (114 global, 54 China, 42 open-source, 62 first-hand official).",
     "highlights": [
       {
         "id": "ai_ev_evt_d3b0609e21aa",
-        "date": "2026-11-27T08:36:18+08:00",
+        "date": "2026-11-27T17:41:51+08:00",
         "company_id": "tencent_hunyuan",
         "company_name": "腾讯混元 (Hunyuan)",
         "region": "国内",
@@ -44,31 +44,133 @@
         "is_recent_72h": true
       },
       {
-        "id": "ai_ev_evt_f6da37e9185b",
-        "date": "2026-11-27T08:21:03+08:00",
+        "id": "ai_raw_github-releases_cf84a3f5646f",
+        "date": "2026-11-27T16:11:21+08:00",
+        "company_id": "indie_opensource",
+        "company_name": "独立实验室 & 开源黑马",
+        "region": "全球开源",
+        "category": "开源突破",
+        "category_en": "Open Source",
+        "title": "[GitHub Release] Ollama 发布 v0.40.19-rc0",
+        "title_en": "[GitHub Release] Ollama 发布 v0.40.19-rc0",
+        "what_it_does": "量化工具新增目标文件大小与比特率的自动最优类型选择功能；重构帕累托优化、拉格朗日惩罚及量化检查函数",
+        "what_it_does_en": "版本 v0.40.19-rc0（Pre-release/RC | 许可: MIT）。",
+        "who_cares": "",
+        "limitations": "",
+        "limitations_en": "",
+        "source_id": "github-releases",
+        "source_name": "GitHub Releases 官方版本",
+        "source_url": "https://github.com/ollama/ollama/releases/tag/v0.40.19-rc0",
+        "is_first_hand": true,
+        "source_tier": "first_party",
+        "is_open_source": true,
+        "milestone_dim": "open_source_eco",
+        "milestone_dim_label": "开源权重与生态",
+        "milestone_dim_label_en": "Open Source",
+        "is_recent_72h": true,
+        "related_sources": [
+          {
+            "source_name": "GitHub Releases 官方版本",
+            "url": "https://github.com/ollama/ollama/releases/tag/v0.40.19-rc0",
+            "is_first_hand": true
+          },
+          {
+            "source_name": "GitHub Releases 官方版本",
+            "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12810",
+            "is_first_hand": true
+          },
+          {
+            "source_name": "GitHub Releases 官方版本",
+            "url": "https://github.com/ggml-org/llama.cpp/releases/tag/v1.1.0",
+            "is_first_hand": true
+          },
+          {
+            "source_name": "GitHub Releases 官方版本",
+            "url": "https://github.com/ollama/ollama/releases/tag/v0.40.18",
+            "is_first_hand": true
+          },
+          {
+            "source_name": "GitHub Releases 官方版本",
+            "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12755",
+            "is_first_hand": true
+          },
+          {
+            "source_name": "GitHub Releases 官方版本",
+            "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12734",
+            "is_first_hand": true
+          },
+          {
+            "source_name": "GitHub Releases 官方版本",
+            "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12721",
+            "is_first_hand": true
+          },
+          {
+            "source_name": "GitHub Releases 官方版本",
+            "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12686",
+            "is_first_hand": true
+          }
+        ]
+      },
+      {
+        "id": "ai_ev_evt_81511ef63fbd",
+        "date": "2026-11-27T15:26:10+08:00",
         "company_id": "deepseek",
         "company_name": "DeepSeek",
         "region": "国内",
         "category": "模型与产品",
         "category_en": "Model & Product",
-        "title": "DeepSeek 灰度测试“消耗额度”：直观展示对话成本，此前已实施限额",
-        "title_en": "DeepSeek 灰度测试“消耗额度”：直观展示对话成本，此前已实施限额",
-        "what_it_does": "IT之家 11 月 27 日消息，昨日起，有部分 DeepSeek 用户反馈，网页端和移动端 App 内正在灰度测试“显示本轮消耗额度”功能。用户在完成一轮对话后，界面会弹出详情页，展示本次交互消耗的 Token 数量及其对应的估算金额…",
-        "what_it_does_en": "IT之家 11 月 27 日消息，昨日起，有部分 DeepSeek 用户反馈，网页端和移动端 App 内正在灰度测试“显示本轮消耗额度”功能。用户在完成一轮对话后，界面会弹出详情页，展示本次交互消耗的 Token 数量及其对应的估算金额（价格和 API 持平）。尽管当前面向个人用户的对话服务依然免费，但该功能让单次对话",
+        "title": "知乎成为DeepSeek影子股_公司新闻",
+        "title_en": "知乎成为DeepSeek影子股_公司新闻",
+        "what_it_does": "",
+        "what_it_does_en": "知乎成为DeepSeek影子股_公司新闻 证券之星",
         "who_cares": "",
         "limitations": "",
         "limitations_en": "",
-        "source_id": "ithome-rss",
-        "source_name": "IT之家 实时快讯",
-        "source_url": "https://www.ithome.com/1/033/157.htm",
+        "source_id": "rss-gnews-ai-models-zh",
+        "source_name": "证券之星",
+        "source_url": "https://news.google.com/rss/articles/CBMiZEFVX3lxTE5rclJQNDhwMWl3S0loUzVnZEJBR1JlandONFhpc3VhVnpxVk1rbUhEYUJPQnNpRFo4MkZCRmRWLTdKYWJMOW9zRjB5eUExMDVrVW5LVHlaWDl2TjB3Sl9zVmxKWGQ?oc=5",
         "is_first_hand": false,
         "source_tier": "wire_media",
-        "event_id": "evt_f6da37e9185b",
+        "event_id": "evt_81511ef63fbd",
         "is_open_source": false,
         "related_sources": [
           {
-            "source_name": "IT之家 实时快讯",
-            "url": "https://www.ithome.com/1/033/157.htm",
+            "source_name": "证券之星",
+            "url": "https://news.google.com/rss/articles/CBMiZEFVX3lxTE5rclJQNDhwMWl3S0loUzVnZEJBR1JlandONFhpc3VhVnpxVk1rbUhEYUJPQnNpRFo4MkZCRmRWLTdKYWJMOW9zRjB5eUExMDVrVW5LVHlaWDl2TjB3Sl9zVmxKWGQ?oc=5",
+            "is_first_hand": false
+          }
+        ],
+        "milestone_dim": "flagship_release",
+        "milestone_dim_label": "旗舰模型发布",
+        "milestone_dim_label_en": "Flagship Model",
+        "is_recent_72h": true
+      },
+      {
+        "id": "ai_ev_evt_e6fbe196f54d",
+        "date": "2026-11-27T15:05:43+08:00",
+        "company_id": "openai",
+        "company_name": "OpenAI",
+        "region": "海外",
+        "category": "模型与产品",
+        "category_en": "Model & Product",
+        "title": "刚刚，Tibo承诺「连续28天发布或重置」，OpenAI遭遇信任危机",
+        "title_en": "刚刚，Tibo承诺「连续28天发布或重置」，OpenAI遭遇信任危机",
+        "what_it_does": "",
+        "what_it_does_en": "刚刚，Tibo承诺「连续28天发布或重置」，OpenAI遭遇信任危机 36Kr",
+        "who_cares": "",
+        "limitations": "",
+        "limitations_en": "",
+        "source_id": "rss-gnews-ai-models-zh",
+        "source_name": "36Kr",
+        "source_url": "https://news.google.com/rss/articles/CBMiTkFVX3lxTFBQNTQ5aDRoZ3JCMlV0bFFlVHlFTWtvNDZ1WnlIZ1NkVzJXZFNxT2hDb2xYY21BeFZfQXltRVVGZUkxU0x5b2RyYlhlS0F1QQ?oc=5",
+        "is_first_hand": false,
+        "source_tier": "wire_media",
+        "event_id": "evt_e6fbe196f54d",
+        "is_open_source": false,
+        "related_sources": [
+          {
+            "source_name": "36Kr",
+            "url": "https://news.google.com/rss/articles/CBMiTkFVX3lxTFBQNTQ5aDRoZ3JCMlV0bFFlVHlFTWtvNDZ1WnlIZ1NkVzJXZFNxT2hDb2xYY21BeFZfQXltRVVGZUkxU0x5b2RyYlhlS0F1QQ?oc=5",
             "is_first_hand": false
           }
         ],
@@ -141,93 +243,6 @@
           {
             "source_name": "AIHOT 前沿",
             "url": "https://aihot.news/items/lhfu46wizfknen95q1puf8wnf",
-            "is_first_hand": false
-          }
-        ],
-        "milestone_dim": "flagship_release",
-        "milestone_dim_label": "旗舰模型发布",
-        "milestone_dim_label_en": "Flagship Model",
-        "is_recent_72h": true
-      },
-      {
-        "id": "ai_raw_wscn-a-stock-channel_f3745fd61447",
-        "date": "2026-11-27T07:16:36+08:00",
-        "company_id": "indie_opensource",
-        "company_name": "独立实验室 & 开源黑马",
-        "region": "全球开源",
-        "category": "最新动态",
-        "category_en": "Latest Release",
-        "title": "首个农耕文明领域大模型“天稷”发布",
-        "title_en": "首个农耕文明领域大模型“天稷”发布",
-        "what_it_does": "",
-        "what_it_does_en": "从农业农村部了解到，日前首个农耕文明领域大模型“天稷”发布。该模型涵盖8000万条覆盖传统农耕技艺、现代智慧农业与农耕文明演进脉络的知识条目，为农业生产提出智慧决策建议。（央视）",
-        "who_cares": "",
-        "limitations": "",
-        "limitations_en": "",
-        "source_id": "wscn-a-stock-channel",
-        "source_name": "华尔街见闻 A股快讯",
-        "source_url": "https://wallstreetcn.com/livenews/3206657",
-        "is_first_hand": false,
-        "source_tier": "wire_media",
-        "is_open_source": false,
-        "milestone_dim": "flagship_release",
-        "milestone_dim_label": "旗舰模型发布",
-        "milestone_dim_label_en": "Flagship Model",
-        "is_recent_72h": true,
-        "related_sources": [
-          {
-            "source_name": "华尔街见闻 A股快讯",
-            "url": "https://wallstreetcn.com/livenews/3206657",
-            "is_first_hand": false
-          },
-          {
-            "source_name": "中国青年",
-            "url": "https://news.google.com/rss/articles/CBMiZEFVX3lxTE1MdUNOMWZiWHBBLXN0eDhsSnh1ZjZuMU1yeGg0MEN4a1FxSlRYc2tnTEd1aHMwS2hWZUlZUE96Y1c4dFFxYWN3bzNIZ1hwcWltMG5jVEg1d0paSjVyNDBZSE92aW8?oc=5",
-            "is_first_hand": false
-          }
-        ]
-      },
-      {
-        "id": "ai_ev_evt_46a81e353183",
-        "date": "2026-11-27T06:59:06+08:00",
-        "company_id": "openai",
-        "company_name": "OpenAI",
-        "region": "海外",
-        "category": "模型与产品",
-        "category_en": "Model & Product",
-        "title": "OpenAI 承认 GPT-6.2 计费出错并修复，Astra 额度消耗加快 40%、Sol 加快 25%",
-        "title_en": "GPT-6.2 Astra users now hit limits 40% faster after OpenAI patched a pricing error",
-        "what_it_does": "",
-        "what_it_does_en": "OpenAI says a billing bug gave GPT-6.2 users incorrect discounts. After the fix, Astra and Sol users hit their limits 40 and 25 percent faster than last week.",
-        "who_cares": "",
-        "limitations": "",
-        "limitations_en": "",
-        "source_id": "rss-the-decoder",
-        "source_name": "The Decoder (AI前沿)",
-        "source_url": "https://the-decoder.com/gpt-6-2-astra-users-now-hit-limits-40-faster-after-openai-patched-a-pricing-error",
-        "is_first_hand": false,
-        "source_tier": "wire_media",
-        "event_id": "evt_46a81e353183",
-        "is_open_source": false,
-        "related_sources": [
-          {
-            "source_name": "The Decoder (AI前沿)",
-            "url": "https://the-decoder.com/gpt-6-2-astra-users-now-hit-limits-40-faster-after-openai-patched-a-pricing-error",
-            "is_first_hand": false
-          },
-          {
-            "source_name": "IT之家",
-            "url": "https://www.ithome.com/1/033/138.htm",
-            "is_first_hand": false
-          },
-          {
-            "source_name": "AIHOT 前沿",
-            "url": "https://aihot.news/items/lj1rskqimfkpe2i2cmlvv76lj",
-            "is_first_hand": false
-          },
-          {
-            "source_name": "AIHOT 前沿",
-            "url": "https://aihot.news/items/lk9a23znjvexu4h331w0cvnkq",
             "is_first_hand": false
           }
         ],
@@ -1293,7 +1308,7 @@
         }
       ],
       "recent_count": 24,
-      "archive_count": 28,
+      "archive_count": 26,
       "latest_date": "2026-11-27T07:17:19+08:00",
       "latest_headline": "Anthropic 平台工程负责人莱斯谈 AI 如何改变工程师晋升与面试标准",
       "items": [
@@ -1328,6 +1343,45 @@
             {
               "source_name": "AIHOT 前沿",
               "url": "https://aihot.news/items/lhfu46wizfknen95q1puf8wnf",
+              "is_first_hand": false
+            }
+          ],
+          "milestone_dim": "flagship_release",
+          "milestone_dim_label": "旗舰模型发布",
+          "milestone_dim_label_en": "Flagship Model",
+          "is_recent_72h": true
+        },
+        {
+          "id": "ai_ev_evt_b9f41baf7513",
+          "date": "2026-11-27T04:10:23+08:00",
+          "company_id": "anthropic",
+          "company_name": "Anthropic",
+          "region": "海外",
+          "category": "模型与产品",
+          "category_en": "Model & Product",
+          "title": "在OpenAI和Anthropic对其数据关闭大门后，一家中国AI开发者转而求助谷歌和Meta",
+          "title_en": "After OpenAI and Anthropic shut the door on their data, a Chinese AI developer is turning to Google and Meta instead",
+          "what_it_does": "中国AI公司智谱AI（Z.AI）和月之暗面（Moonshot AI）不得不推迟其下一代旗舰模型的发布，并正在寻找新的训练数据源。",
+          "what_it_does_en": "Chinese AI companies Z.AI and Moonshot AI have to delay their next flagship models and are looking for new sources of training data.",
+          "who_cares": "",
+          "limitations": "",
+          "limitations_en": "",
+          "source_id": "rss-the-decoder",
+          "source_name": "The Decoder (AI前沿)",
+          "source_url": "https://the-decoder.com/after-openai-and-anthropic-shut-the-door-on-their-data-a-chinese-ai-developer-is-turning-to-google-and-meta-instead",
+          "is_first_hand": false,
+          "source_tier": "wire_media",
+          "event_id": "evt_b9f41baf7513",
+          "is_open_source": false,
+          "related_sources": [
+            {
+              "source_name": "The Decoder (AI前沿)",
+              "url": "https://the-decoder.com/after-openai-and-anthropic-shut-the-door-on-their-data-a-chinese-ai-developer-is-turning-to-google-and-meta-instead",
+              "is_first_hand": false
+            },
+            {
+              "source_name": "Coinpaper",
+              "url": "https://news.google.com/rss/articles/CBMiswFBVV95cUxQcXQ1eVp0Y0xQTGZDWURXQndNR0tTS1VRdmFxMUpYOFp2OGdjUWh3M0xUcUpuZk9BVU92R2hrRElhaTlSWlhPRWZrVkpid3hkcnoxOHRlOElZRzhtOW9kRTBoUzRDdkNfUk5WQzRTLW9IYXhTTzQ3a2VQT2FoR0lEYldCdURlVE5Qd05SLUFkSnVySnBrbDVNZTItT1dpWVBlVUtXdVpqTi1LejBWR2E0MHkwTQ?oc=5",
               "is_first_hand": false
             }
           ],
@@ -1376,62 +1430,23 @@
           "is_recent_72h": true
         },
         {
-          "id": "ai_ev_evt_189f28d79064",
-          "date": "2026-11-26T23:45:08+08:00",
-          "company_id": "anthropic",
-          "company_name": "Anthropic",
-          "region": "海外",
-          "category": "模型与产品",
-          "category_en": "Model & Product",
-          "title": "OpenAI 官方公布反蒸馏防护进展：GPT-6.2 Astra 思考链提取成功率从 54% 降至 0.2%",
-          "title_en": "在 OpenAI 和 Anthropic 封禁蒸馏数据后，月之暗面转向 Google 与 Meta 模型获取训练数据",
-          "what_it_does": "通过 API 行为指纹识别、诱饵响应混淆与大规模账号封禁体系，阻断竞争对手利用自动化批量调用窃取闭源旗舰推理思维链与模型能力。",
-          "what_it_does_en": "在OpenAI和Anthropic封禁蒸馏数据后，中国AI开发者转而向Google与Meta的模型获取训练数据。",
-          "who_cares": "",
-          "limitations": "",
-          "limitations_en": "",
-          "source_id": "aihot",
-          "source_name": "OpenAI Official",
-          "source_url": "https://openai.com/news/#anti-distillation-gpt-6-2",
-          "is_first_hand": true,
-          "source_tier": "first_party",
-          "event_id": "evt_189f28d79064",
-          "is_open_source": false,
-          "related_sources": [
-            {
-              "source_name": "AIHOT 前沿",
-              "url": "https://aihot.news/items/g7y9qa582hic2dmfdwpmgp1i4",
-              "is_first_hand": false
-            },
-            {
-              "source_name": "OpenAI Official",
-              "url": "https://openai.com/news/#anti-distillation-gpt-6-2",
-              "is_first_hand": true
-            }
-          ],
-          "milestone_dim": "commercial_governance",
-          "milestone_dim_label": "商业化与安全治理",
-          "milestone_dim_label_en": "Governance & Commercial",
-          "is_recent_72h": true
-        },
-        {
-          "id": "ai_raw_rss-gnews-opensource-ai_8082aba16341",
+          "id": "ai_raw_rss-gnews-ai-models-en_dee2911783ce",
           "date": "2026-11-26T17:37:04+08:00",
           "company_id": "anthropic",
           "company_name": "Anthropic",
           "region": "海外",
           "category": "最新动态",
           "category_en": "Latest Release",
-          "title": "【全球 AI 动态】Staff at Anthropic and Open AI sound alarm on advanced models too powerful to release",
-          "title_en": "Staff at Anthropic and Open AI sound alarm on advanced models too powerful to release",
+          "title": "【国际外交动态】Anthropic and OpenAI staff doubt unreleased frontier models can ship safely, Axios reports",
+          "title_en": "Anthropic and OpenAI staff doubt unreleased frontier models can ship safely, Axios reports",
           "what_it_does": "",
-          "what_it_does_en": "Staff at Anthropic and Open AI sound alarm on advanced models too powerful to release SiliconANGLE",
+          "what_it_does_en": "Anthropic and OpenAI staff doubt unreleased frontier models can ship safely, Axios reports CASRAI",
           "who_cares": "",
           "limitations": "",
           "limitations_en": "",
-          "source_id": "rss-gnews-opensource-ai",
-          "source_name": "SiliconANGLE",
-          "source_url": "https://news.google.com/rss/articles/CBMivwFBVV95cUxPQXpHa0RwVHVTMDFmaVpkVzZBRmNxdmJuTVlPUDV0UWl2c0xzeERhY1VyQ2x3cng4QTRpMTB2MzNnclNDOHJCNWhSNlhsY3QxMXFxU1dMYnBLNVVBa3RiamcxMFd4cVd1ZFVOcFJEcVFNR29PR051c3NMRllTczlqVUlUUzVGUDBObmZJRVplbkZTVlRVdlZFU014aEJJTEVwM1lfYWpydU9LY1BraG1vNjZoY1d1S2g3U1RsSTF1RQ?oc=5",
+          "source_id": "rss-gnews-ai-models-en",
+          "source_name": "CASRAI",
+          "source_url": "https://news.google.com/rss/articles/CBMijwFBVV95cUxPMW43QW5vSHpwcmR3c1hjOVFHNy1ReXRhZGhQNXpZSmlsNUVhRnRuNGZROE5BM2hkWGlQcTZsVmNDc1Jnc1ByZGlSd3h6UWJZOWtUZXRva3dFMFp0d3k3Sk9LZ2xzUVBQMnNVRDRyYkFJNzVTVnlteVZyOWc1RmZpaVRiQnMteWNIZUk2aHVqTQ?oc=5",
           "is_first_hand": false,
           "source_tier": "wire_media",
           "is_open_source": false,
@@ -1441,8 +1456,8 @@
           "is_recent_72h": true,
           "related_sources": [
             {
-              "source_name": "SiliconANGLE",
-              "url": "https://news.google.com/rss/articles/CBMivwFBVV95cUxPQXpHa0RwVHVTMDFmaVpkVzZBRmNxdmJuTVlPUDV0UWl2c0xzeERhY1VyQ2x3cng4QTRpMTB2MzNnclNDOHJCNWhSNlhsY3QxMXFxU1dMYnBLNVVBa3RiamcxMFd4cVd1ZFVOcFJEcVFNR29PR051c3NMRllTczlqVUlUUzVGUDBObmZJRVplbkZTVlRVdlZFU014aEJJTEVwM1lfYWpydU9LY1BraG1vNjZoY1d1S2g3U1RsSTF1RQ?oc=5",
+              "source_name": "CASRAI",
+              "url": "https://news.google.com/rss/articles/CBMijwFBVV95cUxPMW43QW5vSHpwcmR3c1hjOVFHNy1ReXRhZGhQNXpZSmlsNUVhRnRuNGZROE5BM2hkWGlQcTZsVmNDc1Jnc1ByZGlSd3h6UWJZOWtUZXRva3dFMFp0d3k3Sk9LZ2xzUVBQMnNVRDRyYkFJNzVTVnlteVZyOWc1RmZpaVRiQnMteWNIZUk2aHVqTQ?oc=5",
               "is_first_hand": false
             },
             {
@@ -1451,13 +1466,13 @@
               "is_first_hand": false
             },
             {
-              "source_name": "BigGo Finance",
-              "url": "https://news.google.com/rss/articles/CBMidkFVX3lxTE5CajJfOWt0dlBXTU8tdThTNGIzNzNPUTc4Xzd6MGsyaTNDUWg1b1RoUC1RZmpTaURPMnVfWEpiUk9SVGFXMUpvRmhtUDRFaldSOEdqUFhGa2hpZjdneTdncm1IcVZwMFp3T09fcVFDTllnT2ZBUVE?oc=5",
+              "source_name": "SiliconANGLE",
+              "url": "https://news.google.com/rss/articles/CBMivwFBVV95cUxPQXpHa0RwVHVTMDFmaVpkVzZBRmNxdmJuTVlPUDV0UWl2c0xzeERhY1VyQ2x3cng4QTRpMTB2MzNnclNDOHJCNWhSNlhsY3QxMXFxU1dMYnBLNVVBa3RiamcxMFd4cVd1ZFVOcFJEcVFNR29PR051c3NMRllTczlqVUlUUzVGUDBObmZJRVplbkZTVlRVdlZFU014aEJJTEVwM1lfYWpydU9LY1BraG1vNjZoY1d1S2g3U1RsSTF1RQ?oc=5",
               "is_first_hand": false
             },
             {
-              "source_name": "CASRAI",
-              "url": "https://news.google.com/rss/articles/CBMijwFBVV95cUxPMW43QW5vSHpwcmR3c1hjOVFHNy1ReXRhZGhQNXpZSmlsNUVhRnRuNGZROE5BM2hkWGlQcTZsVmNDc1Jnc1ByZGlSd3h6UWJZOWtUZXRva3dFMFp0d3k3Sk9LZ2xzUVBQMnNVRDRyYkFJNzVTVnlteVZyOWc1RmZpaVRiQnMteWNIZUk2aHVqTQ?oc=5",
+              "source_name": "BigGo Finance",
+              "url": "https://news.google.com/rss/articles/CBMidkFVX3lxTE5CajJfOWt0dlBXTU8tdThTNGIzNzNPUTc4Xzd6MGsyaTNDUWg1b1RoUC1RZmpTaURPMnVfWEpiUk9SVGFXMUpvRmhtUDRFaldSOEdqUFhGa2hpZjdneTdncm1IcVZwMFp3T09fcVFDTllnT2ZBUVE?oc=5",
               "is_first_hand": false
             },
             {
@@ -1550,6 +1565,74 @@
           "milestone_dim_label": "旗舰模型发布",
           "milestone_dim_label_en": "Flagship Model",
           "is_recent_72h": true
+        },
+        {
+          "id": "ai_raw_rss-gnews-opensource-ai_8082aba16341",
+          "date": "2026-11-26T17:37:04+08:00",
+          "company_id": "anthropic",
+          "company_name": "Anthropic",
+          "region": "海外",
+          "category": "最新动态",
+          "category_en": "Latest Release",
+          "title": "Anthropic和OpenAI员工对过于强大而无法发布的先进模型发出警报",
+          "title_en": "Staff at Anthropic and Open AI sound alarm on advanced models too powerful to release",
+          "what_it_does": "",
+          "what_it_does_en": "",
+          "who_cares": "",
+          "limitations": "",
+          "limitations_en": "",
+          "source_id": "rss-gnews-opensource-ai",
+          "source_name": "SiliconANGLE",
+          "source_url": "https://news.google.com/rss/articles/CBMivwFBVV95cUxPQXpHa0RwVHVTMDFmaVpkVzZBRmNxdmJuTVlPUDV0UWl2c0xzeERhY1VyQ2x3cng4QTRpMTB2MzNnclNDOHJCNWhSNlhsY3QxMXFxU1dMYnBLNVVBa3RiamcxMFd4cVd1ZFVOcFJEcVFNR29PR051c3NMRllTczlqVUlUUzVGUDBObmZJRVplbkZTVlRVdlZFU014aEJJTEVwM1lfYWpydU9LY1BraG1vNjZoY1d1S2g3U1RsSTF1RQ?oc=5",
+          "is_first_hand": false,
+          "source_tier": "wire_media",
+          "is_open_source": false,
+          "milestone_dim": "flagship_release",
+          "milestone_dim_label": "旗舰模型发布",
+          "milestone_dim_label_en": "Flagship Model",
+          "is_recent_72h": true,
+          "related_sources": [
+            {
+              "source_name": "SiliconANGLE",
+              "url": "https://news.google.com/rss/articles/CBMivwFBVV95cUxPQXpHa0RwVHVTMDFmaVpkVzZBRmNxdmJuTVlPUDV0UWl2c0xzeERhY1VyQ2x3cng4QTRpMTB2MzNnclNDOHJCNWhSNlhsY3QxMXFxU1dMYnBLNVVBa3RiamcxMFd4cVd1ZFVOcFJEcVFNR29PR051c3NMRllTczlqVUlUUzVGUDBObmZJRVplbkZTVlRVdlZFU014aEJJTEVwM1lfYWpydU9LY1BraG1vNjZoY1d1S2g3U1RsSTF1RQ?oc=5",
+              "is_first_hand": false
+            },
+            {
+              "source_name": "Digg",
+              "url": "https://news.google.com/rss/articles/CBMiUkFVX3lxTE1kVnVCYjU0bWotaVBIeUZLNlZPaVhRaUpDYURjVzdsWGNvRlpkb0ptZlJ3RTJheXYwc3NKSHhwTDJ6MEJyNHlPMmpfc2pqaUJ4VlE?oc=5",
+              "is_first_hand": false
+            },
+            {
+              "source_name": "BigGo Finance",
+              "url": "https://news.google.com/rss/articles/CBMidkFVX3lxTE5CajJfOWt0dlBXTU8tdThTNGIzNzNPUTc4Xzd6MGsyaTNDUWg1b1RoUC1RZmpTaURPMnVfWEpiUk9SVGFXMUpvRmhtUDRFaldSOEdqUFhGa2hpZjdneTdncm1IcVZwMFp3T09fcVFDTllnT2ZBUVE?oc=5",
+              "is_first_hand": false
+            },
+            {
+              "source_name": "CASRAI",
+              "url": "https://news.google.com/rss/articles/CBMijwFBVV95cUxPMW43QW5vSHpwcmR3c1hjOVFHNy1ReXRhZGhQNXpZSmlsNUVhRnRuNGZROE5BM2hkWGlQcTZsVmNDc1Jnc1ByZGlSd3h6UWJZOWtUZXRva3dFMFp0d3k3Sk9LZ2xzUVBQMnNVRDRyYkFJNzVTVnlteVZyOWc1RmZpaVRiQnMteWNIZUk2aHVqTQ?oc=5",
+              "is_first_hand": false
+            },
+            {
+              "source_name": "Decrypt",
+              "url": "https://news.google.com/rss/articles/CBMikwFBVV95cUxNcnkzb3R3VlF2RnJLRlRVUnV6LWFqM0RjRHRPcENHd3I2aDNZc2ZyRUhXbVB2aDVoaDZTQWtWUUtZdGJIZmEyektwVENxYWs3UGs4SkpBMm45S2prR3hKVlRPNUZtem1GUDJUR29jbW03SmMtVVg0cThMV1U3T2h6ZThSYTROTXozWWNqZTVQcHZxRm8?oc=5",
+              "is_first_hand": false
+            },
+            {
+              "source_name": "Tom's Hardware",
+              "url": "https://news.google.com/rss/articles/CBMikgNBVV95cUxPUDBvdGZPSXFmVHpDeGFIc1gyZTM2SDVpY1lsRF80djNqaDNzSkF5Uy1kbFdaT3ZFcG1abTRHVFFHYmFyZmVfMmVtUERkNVM0bU9xYlZUUF9qY3Vpa0tKRXlhZ2RqdVo2UmRvSjN1SklUOXA4anJfX2t4cURCLWQwTXJycUJURjNEZVB6ellRTUF4QWt4ZS1TOWZTNHNmUkN0elFXTFBNak5IMG5ONWpRM3QzUjZDTTAzcmgxcGFDMWFYd1NFc09LS1dDTTRvU1MwZ092ZEhsSkFHcW5zbTdpTjgxcmVzTHo2eUdZbUwta0VyT0h0am40MDhaMlZBeUJiUVluVy05TUlPbGRmdkptbDBUMHpLbFlBOFAweUR2OWlSUVN3R1NESHExdG5zOGE3U2pHWTdhOWFla040TUVHOWFRcXRaS2NGeV90MXFNd3NqMGRPRUlBR0tBcjAwMXlSTHJjOWVBM2dPZmdJd0VfNUtXNmcyQV91QTAtc0JGNU9kUTBKRXQ2VkpXUUo0aFBrOGc?oc=5",
+              "is_first_hand": false
+            },
+            {
+              "source_name": "Nacionale",
+              "url": "https://news.google.com/rss/articles/CBMivwFBVV95cUxOUllFa3RaMEdGVE1xamJUakRpNnNaWXpPYkFjRkhhLTdfczFfVVhuQTNMLTNLWDRybUpOQmpFQUJKVFFQeEl3SzZKRUdaSzZ2MWlxR1hmT1NINnBBa09HaktPWXBfYXh0M0p5bFFaOXNsWVZNVEw2X1laOVpZam01LW5NRkd3Tl96cDMtYTFRZWNNcVcxbE02Z1k1ZER1RmUzRThJUWtMU3dVM3FUMEEySlJqZlg3YzgtMmtEUHItMA?oc=5",
+              "is_first_hand": false
+            },
+            {
+              "source_name": "Axios",
+              "url": "https://news.google.com/rss/articles/CBMiggFBVV95cUxNWnJmY2hLTWlhTHcwN3pVSEhYOXlYUThYQXJ3RWxobVlPR2lweWpSQUY1NklSLVNVUHI4c0wwdnN3azBiV05wTVV6ZmRMTllRR1dvcmNYdjRheHZDOUNVaTBxUFpuS3BZUVBvZ2tpMlpTSS1oYWZ3SC16RVZEME51a0FB?oc=5",
+              "is_first_hand": false
+            }
+          ]
         },
         {
           "id": "ai_ev_evt_ae76aa662e31",
@@ -2192,45 +2275,6 @@
           "is_recent_72h": true
         },
         {
-          "id": "ai_ev_evt_375e763c2235",
-          "date": "2026-11-25T18:02:48+08:00",
-          "company_id": "anthropic",
-          "company_name": "Anthropic",
-          "region": "海外",
-          "category": "模型与产品",
-          "category_en": "Model & Product",
-          "title": "Axios报道称，Anthropic和OpenAI员工怀疑未发布的前沿模型能否安全上线",
-          "title_en": "Anthropic and OpenAI staff doubt unreleased frontier models can ship safely, Axios reports",
-          "what_it_does": "",
-          "what_it_does_en": "Anthropic and OpenAI staff doubt unreleased frontier models can ship safely, Axios reports CASRAI",
-          "who_cares": "",
-          "limitations": "",
-          "limitations_en": "",
-          "source_id": "rss-gnews-ai-models-en",
-          "source_name": "CASRAI",
-          "source_url": "https://news.google.com/rss/articles/CBMijwFBVV95cUxPMW43QW5vSHpwcmR3c1hjOVFHNy1ReXRhZGhQNXpZSmlsNUVhRnRuNGZROE5BM2hkWGlQcTZsVmNDc1Jnc1ByZGlSd3h6UWJZOWtUZXRva3dFMFp0d3k3Sk9LZ2xzUVBQMnNVRDRyYkFJNzVTVnlteVZyOWc1RmZpaVRiQnMteWNIZUk2aHVqTQ?oc=5",
-          "is_first_hand": false,
-          "source_tier": "wire_media",
-          "event_id": "evt_375e763c2235",
-          "is_open_source": false,
-          "related_sources": [
-            {
-              "source_name": "CASRAI",
-              "url": "https://news.google.com/rss/articles/CBMijwFBVV95cUxPMW43QW5vSHpwcmR3c1hjOVFHNy1ReXRhZGhQNXpZSmlsNUVhRnRuNGZROE5BM2hkWGlQcTZsVmNDc1Jnc1ByZGlSd3h6UWJZOWtUZXRva3dFMFp0d3k3Sk9LZ2xzUVBQMnNVRDRyYkFJNzVTVnlteVZyOWc1RmZpaVRiQnMteWNIZUk2aHVqTQ?oc=5",
-              "is_first_hand": false
-            },
-            {
-              "source_name": "ForkLog",
-              "url": "https://news.google.com/rss/articles/CBMipwFBVV95cUxNREczVUFHb0ZYb3d0WXVIb1NGb29JemQzYkVkTEp3SWVGalRfVmZXelZadEMzN0V6SXZFV1BpQ09EbEsxUzU1bDNzbmRnUWJMdlYxVDc5YzZKTnhXcFp1b0M1UUluRU9qWFIzOWE0Q2tWM28tV3RZTW90LTEyal8tMUZyYUFGMDlqV21hcDVWOFRyY0JRTWpfemFJX1RaQ082aFhKcEVDVQ?oc=5",
-              "is_first_hand": false
-            }
-          ],
-          "milestone_dim": "flagship_release",
-          "milestone_dim_label": "旗舰模型发布",
-          "milestone_dim_label_en": "Flagship Model",
-          "is_recent_72h": true
-        },
-        {
           "id": "ai_live_rss-gnews-ai-models-en_124b418ac0a6",
           "date": "2026-11-25T09:02:27+08:00",
           "company_id": "anthropic",
@@ -2424,10 +2468,110 @@
         }
       ],
       "recent_count": 24,
-      "archive_count": 34,
-      "latest_date": "2026-11-27T06:59:06+08:00",
-      "latest_headline": "OpenAI 承认 GPT-6.2 计费出错并修复，Astra 额度消耗加快 40%、Sol 加快 25%",
+      "archive_count": 36,
+      "latest_date": "2026-11-27T15:05:43+08:00",
+      "latest_headline": "刚刚，Tibo承诺「连续28天发布或重置」，OpenAI遭遇信任危机",
       "items": [
+        {
+          "id": "ai_ev_evt_e6fbe196f54d",
+          "date": "2026-11-27T15:05:43+08:00",
+          "company_id": "openai",
+          "company_name": "OpenAI",
+          "region": "海外",
+          "category": "模型与产品",
+          "category_en": "Model & Product",
+          "title": "刚刚，Tibo承诺「连续28天发布或重置」，OpenAI遭遇信任危机",
+          "title_en": "刚刚，Tibo承诺「连续28天发布或重置」，OpenAI遭遇信任危机",
+          "what_it_does": "",
+          "what_it_does_en": "刚刚，Tibo承诺「连续28天发布或重置」，OpenAI遭遇信任危机 36Kr",
+          "who_cares": "",
+          "limitations": "",
+          "limitations_en": "",
+          "source_id": "rss-gnews-ai-models-zh",
+          "source_name": "36Kr",
+          "source_url": "https://news.google.com/rss/articles/CBMiTkFVX3lxTFBQNTQ5aDRoZ3JCMlV0bFFlVHlFTWtvNDZ1WnlIZ1NkVzJXZFNxT2hDb2xYY21BeFZfQXltRVVGZUkxU0x5b2RyYlhlS0F1QQ?oc=5",
+          "is_first_hand": false,
+          "source_tier": "wire_media",
+          "event_id": "evt_e6fbe196f54d",
+          "is_open_source": false,
+          "related_sources": [
+            {
+              "source_name": "36Kr",
+              "url": "https://news.google.com/rss/articles/CBMiTkFVX3lxTFBQNTQ5aDRoZ3JCMlV0bFFlVHlFTWtvNDZ1WnlIZ1NkVzJXZFNxT2hDb2xYY21BeFZfQXltRVVGZUkxU0x5b2RyYlhlS0F1QQ?oc=5",
+              "is_first_hand": false
+            }
+          ],
+          "milestone_dim": "flagship_release",
+          "milestone_dim_label": "旗舰模型发布",
+          "milestone_dim_label_en": "Flagship Model",
+          "is_recent_72h": true
+        },
+        {
+          "id": "ai_raw_rss-gnews-ai-models-zh_916af419ac19",
+          "date": "2026-11-27T09:21:00+08:00",
+          "company_id": "openai",
+          "company_name": "OpenAI",
+          "region": "海外",
+          "category": "最新动态",
+          "category_en": "Latest Release",
+          "title": "资讯 | 通用人工智能企业竞争力指数发布，OpenAI列第一",
+          "title_en": "资讯 | 通用人工智能企业竞争力指数发布，OpenAI列第一",
+          "what_it_does": "",
+          "what_it_does_en": "资讯 | 通用人工智能企业竞争力指数发布，OpenAI列第一 上观新闻",
+          "who_cares": "",
+          "limitations": "",
+          "limitations_en": "",
+          "source_id": "rss-gnews-ai-models-zh",
+          "source_name": "上观",
+          "source_url": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE5yYjBWdktrQjc2Yllta2hLdXFhYldENzNmYkRPOTRTa01wXy1Dd2Nna2ZGVEVwNERJb0JuQTlOOEdzTl9Tcy1kYlNmdFlVd2ZNcUFQTm9IVDVaQQ?oc=5",
+          "is_first_hand": false,
+          "source_tier": "wire_media",
+          "is_open_source": false,
+          "milestone_dim": "flagship_release",
+          "milestone_dim_label": "旗舰模型发布",
+          "milestone_dim_label_en": "Flagship Model",
+          "is_recent_72h": true,
+          "related_sources": [
+            {
+              "source_name": "上观",
+              "url": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE5yYjBWdktrQjc2Yllta2hLdXFhYldENzNmYkRPOTRTa01wXy1Dd2Nna2ZGVEVwNERJb0JuQTlOOEdzTl9Tcy1kYlNmdFlVd2ZNcUFQTm9IVDVaQQ?oc=5",
+              "is_first_hand": false
+            }
+          ]
+        },
+        {
+          "id": "ai_raw_rss-gnews-ai-models-zh_19789111f54e",
+          "date": "2026-11-27T08:55:08+08:00",
+          "company_id": "openai",
+          "company_name": "OpenAI",
+          "region": "海外",
+          "category": "最新动态",
+          "category_en": "Latest Release",
+          "title": "中信证券：OpenAI发布GPT-6.2 Astra与Sol 看好物理AI，关注国产硬件供应链_滚动新闻",
+          "title_en": "【券商聚焦】中信证券：OpenAI发布GPT-6.2 Astra与Sol 看好物理AI，关注国产硬件供应链_滚动新闻",
+          "what_it_does": "",
+          "what_it_does_en": "【券商聚焦】中信证券：OpenAI发布GPT-6.2 Astra与Sol 看好物理AI，关注国产硬件供应链_滚动新闻 证券之星",
+          "who_cares": "",
+          "limitations": "",
+          "limitations_en": "",
+          "source_id": "rss-gnews-ai-models-zh",
+          "source_name": "证券之星",
+          "source_url": "https://news.google.com/rss/articles/CBMiZEFVX3lxTE12Q2VUWXBkT2E3QjNuNU1nV1JWMGZHbTlpMmFpZERZMEZpYzdNdkFFQkxfV1BvWlpMT1FBWG43V0NJUlcwOWFhcWd3T3dnVlJCUnBCS1gwWXUxZWpIQzRZMWR4clo?oc=5",
+          "is_first_hand": false,
+          "source_tier": "wire_media",
+          "is_open_source": false,
+          "milestone_dim": "flagship_release",
+          "milestone_dim_label": "旗舰模型发布",
+          "milestone_dim_label_en": "Flagship Model",
+          "is_recent_72h": true,
+          "related_sources": [
+            {
+              "source_name": "证券之星",
+              "url": "https://news.google.com/rss/articles/CBMiZEFVX3lxTE12Q2VUWXBkT2E3QjNuNU1nV1JWMGZHbTlpMmFpZERZMEZpYzdNdkFFQkxfV1BvWlpMT1FBWG43V0NJUlcwOWFhcWd3T3dnVlJCUnBCS1gwWXUxZWpIQzRZMWR4clo?oc=5",
+              "is_first_hand": false
+            }
+          ]
+        },
         {
           "id": "ai_ev_evt_46a81e353183",
           "date": "2026-11-27T06:59:06+08:00",
@@ -2544,6 +2688,45 @@
           ]
         },
         {
+          "id": "ai_base_openai_anti_distillation",
+          "date": "2026-11-26T23:45:08+08:00",
+          "company_id": "openai",
+          "company_name": "OpenAI",
+          "region": "海外",
+          "category": "安全治理与防提取",
+          "category_en": "Safety & Governance",
+          "title": "OpenAI 官方公布反蒸馏防护进展：GPT-6.2 Astra 思考链提取成功率从 54% 降至 0.2%",
+          "title_en": "OpenAI details anti-distillation defenses cutting GPT-6.2 Astra CoT extraction from 54% to 0.2%",
+          "what_it_does": "通过 API 行为指纹识别、诱饵响应混淆与大规模账号封禁体系，阻断竞争对手利用自动化批量调用窃取闭源旗舰推理思维链与模型能力。",
+          "what_it_does_en": "Hardens closed frontier APIs against unauthorized chain-of-thought scraping and automated model distillation.",
+          "who_cares": "模型安全工程师、大模型厂商与企业 API 架构师",
+          "limitations": "仅限 OpenAI 闭源托管 API 内部安全策略，不开放权重与检测算法细节。",
+          "limitations_en": "Proprietary server-side enforcement on OpenAI closed endpoints.",
+          "source_name": "OpenAI Official",
+          "source_url": "https://openai.com/news/#anti-distillation-gpt-6-2",
+          "is_open_source": false,
+          "is_first_hand": true,
+          "source_tier": "first_party",
+          "milestone_dim": "commercial_governance",
+          "is_baseline_milestone": true,
+          "milestone_dim_label": "商业化与安全治理",
+          "milestone_dim_label_en": "Governance & Commercial",
+          "is_recent_72h": true,
+          "related_sources": [
+            {
+              "source_name": "OpenAI Official",
+              "url": "https://openai.com/news/#anti-distillation-gpt-6-2",
+              "is_first_hand": true
+            },
+            {
+              "source_name": "AIHOT 前沿",
+              "url": "https://aihot.news/items/g7y9qa582hic2dmfdwpmgp1i4",
+              "is_first_hand": false
+            }
+          ],
+          "event_id": "evt_189f28d79064"
+        },
+        {
           "id": "ai_ev_evt_cda6809a088f",
           "date": "2026-11-26T18:52:40+08:00",
           "company_id": "openai",
@@ -2576,39 +2759,6 @@
           "milestone_dim_label": "旗舰模型发布",
           "milestone_dim_label_en": "Flagship Model",
           "is_recent_72h": true
-        },
-        {
-          "id": "ai_raw_rss-gnews-ai-models-zh_02a44dd46606",
-          "date": "2026-11-26T16:20:43+08:00",
-          "company_id": "openai",
-          "company_name": "OpenAI",
-          "region": "海外",
-          "category": "最新动态",
-          "category_en": "Latest Release",
-          "title": "刚刚，Tibo承诺「连续28天发布或重置」，OpenAI遭遇信任危机",
-          "title_en": "刚刚，Tibo承诺「连续28天发布或重置」，OpenAI遭遇信任危机",
-          "what_it_does": "",
-          "what_it_does_en": "刚刚，Tibo承诺「连续28天发布或重置」，OpenAI遭遇信任危机 36Kr",
-          "who_cares": "",
-          "limitations": "",
-          "limitations_en": "",
-          "source_id": "rss-gnews-ai-models-zh",
-          "source_name": "36Kr",
-          "source_url": "https://news.google.com/rss/articles/CBMiTkFVX3lxTFBQNTQ5aDRoZ3JCMlV0bFFlVHlFTWtvNDZ1WnlIZ1NkVzJXZFNxT2hDb2xYY21BeFZfQXltRVVGZUkxU0x5b2RyYlhlS0F1QQ?oc=5",
-          "is_first_hand": false,
-          "source_tier": "wire_media",
-          "is_open_source": false,
-          "milestone_dim": "flagship_release",
-          "milestone_dim_label": "旗舰模型发布",
-          "milestone_dim_label_en": "Flagship Model",
-          "is_recent_72h": true,
-          "related_sources": [
-            {
-              "source_name": "36Kr",
-              "url": "https://news.google.com/rss/articles/CBMiTkFVX3lxTFBQNTQ5aDRoZ3JCMlV0bFFlVHlFTWtvNDZ1WnlIZ1NkVzJXZFNxT2hDb2xYY21BeFZfQXltRVVGZUkxU0x5b2RyYlhlS0F1QQ?oc=5",
-              "is_first_hand": false
-            }
-          ]
         },
         {
           "id": "ai_raw_github-releases_40294f668002",
@@ -3232,105 +3382,6 @@
           "milestone_dim_label": "旗舰模型发布",
           "milestone_dim_label_en": "Flagship Model",
           "is_recent_72h": true
-        },
-        {
-          "id": "ai_raw_openai-news-rss_a8844c1994b5",
-          "date": "2026-11-24T21:00:00+08:00",
-          "company_id": "openai",
-          "company_name": "OpenAI",
-          "region": "海外",
-          "category": "官方一手",
-          "category_en": "First-Hand Official",
-          "title": "【全球 AI 动态】GPT-6 models demonstrate intrinsic protein-design capabilities",
-          "title_en": "GPT-6 models demonstrate intrinsic protein-design capabilities",
-          "what_it_does": "",
-          "what_it_does_en": "GPT-6 models design protein structures and sequences using reasoning and code. Lab tests found evidence of binding across five targets.",
-          "who_cares": "",
-          "limitations": "",
-          "limitations_en": "",
-          "source_id": "openai-news-rss",
-          "source_name": "OpenAI 官方动态",
-          "source_url": "https://openai.com/index/gpt-6-models-demonstrate-intrinsic-protein-design-capabilities",
-          "is_first_hand": true,
-          "source_tier": "first_party",
-          "is_open_source": false,
-          "milestone_dim": "flagship_release",
-          "milestone_dim_label": "旗舰模型发布",
-          "milestone_dim_label_en": "Flagship Model",
-          "is_recent_72h": true,
-          "related_sources": [
-            {
-              "source_name": "OpenAI 官方动态",
-              "url": "https://openai.com/index/gpt-6-models-demonstrate-intrinsic-protein-design-capabilities",
-              "is_first_hand": true
-            }
-          ]
-        },
-        {
-          "id": "ai_raw_rss-gnews-ai-models-zh_f24c4a672b8c",
-          "date": "2026-11-24T20:14:16+08:00",
-          "company_id": "openai",
-          "company_name": "OpenAI",
-          "region": "海外",
-          "category": "最新动态",
-          "category_en": "Latest Release",
-          "title": "在 OpenAI 发布会上演示模型的王若宸回国了",
-          "title_en": "在 OpenAI 发布会上演示模型的王若宸回国了",
-          "what_it_does": "",
-          "what_it_does_en": "在 OpenAI 发布会上演示模型的王若宸回国了 Sohu",
-          "who_cares": "",
-          "limitations": "",
-          "limitations_en": "",
-          "source_id": "rss-gnews-ai-models-zh",
-          "source_name": "Sohu",
-          "source_url": "https://news.google.com/rss/articles/CBMijAFBVV95cUxPbHg0bHozTjQxVUV1VnFVSVptWWNnd1dCWHY2cDY2V1dMRGczV25IcUJMa2RwOTFKUDhheXF4eTlacjBvRW5mVjMweWhDd3JETmR3OUNVZTlNckIxcEZYbXhQMllZcWMxZ1oySVVuLUtYWG1LVTc4RjJ6QjNXa19wUE1uMzQ1S0FlcXgwMw?oc=5",
-          "is_first_hand": false,
-          "source_tier": "wire_media",
-          "is_open_source": false,
-          "milestone_dim": "flagship_release",
-          "milestone_dim_label": "旗舰模型发布",
-          "milestone_dim_label_en": "Flagship Model",
-          "is_recent_72h": true,
-          "related_sources": [
-            {
-              "source_name": "Sohu",
-              "url": "https://news.google.com/rss/articles/CBMijAFBVV95cUxPbHg0bHozTjQxVUV1VnFVSVptWWNnd1dCWHY2cDY2V1dMRGczV25IcUJMa2RwOTFKUDhheXF4eTlacjBvRW5mVjMweWhDd3JETmR3OUNVZTlNckIxcEZYbXhQMllZcWMxZ1oySVVuLUtYWG1LVTc4RjJ6QjNXa19wUE1uMzQ1S0FlcXgwMw?oc=5",
-              "is_first_hand": false
-            }
-          ]
-        },
-        {
-          "id": "ai_raw_openai-news-rss_29914bdc7ac0",
-          "date": "2026-11-24T19:00:00+08:00",
-          "company_id": "openai",
-          "company_name": "OpenAI",
-          "region": "海外",
-          "category": "官方一手",
-          "category_en": "First-Hand Official",
-          "title": "【外媒快讯】Searching for distant planets with Astra",
-          "title_en": "Searching for distant planets with Astra",
-          "what_it_does": "",
-          "what_it_does_en": "See how two amateur astronomers used Codex and Astra to find potential exoplanets in public data from NASA’s Kepler and TESS space telescopes.",
-          "who_cares": "",
-          "limitations": "",
-          "limitations_en": "",
-          "source_id": "openai-news-rss",
-          "source_name": "OpenAI 官方动态",
-          "source_url": "https://openai.com/index/searching-for-distant-planets-with-astra",
-          "is_first_hand": true,
-          "source_tier": "first_party",
-          "is_open_source": false,
-          "milestone_dim": "flagship_release",
-          "milestone_dim_label": "旗舰模型发布",
-          "milestone_dim_label_en": "Flagship Model",
-          "is_recent_72h": true,
-          "related_sources": [
-            {
-              "source_name": "OpenAI 官方动态",
-              "url": "https://openai.com/index/searching-for-distant-planets-with-astra",
-              "is_first_hand": true
-            }
-          ]
         }
       ]
     },
@@ -3506,22 +3557,22 @@
           ]
         },
         {
-          "id": "ai_raw_huggingface-hub_9183737a66f3",
+          "id": "ai_tool_tool_hf_qwen_qwen2-vl-2b-instruct",
           "date": "2026-11-20T14:46:42+08:00",
           "company_id": "qwen",
           "company_name": "阿里千问 (Qwen)",
           "region": "国内",
-          "category": "开源突破",
-          "category_en": "Open Source",
-          "title": "【外媒快讯】[HF 模型卡] Qwen/Qwen2-VL-2B-Instruct 更新 (apache-2.0)",
-          "title_en": "[HF 模型卡] Qwen/Qwen2-VL-2B-Instruct 更新 (apache-2.0)",
-          "what_it_does": "阿里通义千问 (Qwen) 旗下 Qwen2-VL-2B-Instruct（2B 参数档 · 跨模态视觉感知）：图文多模态理解与对话生成；支持输入图像与文本并生成精准分析回复，适用于视觉问答、图表解析与多模态代理（近期下载 90.6 万…",
-          "what_it_does_en": "Hugging Face 官方机构 Qwen 更新模型 Qwen/Qwen2-VL-2B-Instruct（开源权重可用 (GA)，许可：apache-2.0，近期下载：906211）。",
+          "category": "开源权重",
+          "category_en": "Open Weights",
+          "title": "开源模型权重：Qwen2-VL-2B-Instruct (APACHE-2.0)",
+          "title_en": "Open-source release: Qwen2-VL-2B-Instruct",
+          "what_it_does": "阿里通义千问 (Qwen) 旗下 Qwen2-VL-2B-Instruct（2B 参数档 · 跨模态视觉感知）：图文多模态理解与对话生成；支持输入图像与文本并生成精准分析回复，适用于视觉问答、图表解析与多模态代理（近期下载 90.5 万…",
+          "what_it_does_en": "阿里通义千问 (Qwen) 旗下 Qwen2-VL-2B-Instruct（2B 参数档 · 跨模态视觉感知）：图文多模态理解与对话生成；支持输入图像与文本并生成精准分析回复，适用于视觉问答、图表解析与多模态代理（近期下载 90.5 万次）",
           "who_cares": "",
-          "limitations": "",
-          "limitations_en": "",
+          "limitations": "许可证：apache-2.0",
+          "limitations_en": "License: apache-2.0",
           "source_id": "huggingface-hub",
-          "source_name": "Hugging Face 官方模型库",
+          "source_name": "Hugging Face Hub API",
           "source_url": "https://huggingface.co/Qwen/Qwen2-VL-2B-Instruct",
           "is_first_hand": true,
           "source_tier": "first_party",
@@ -3532,7 +3583,7 @@
           "is_recent_72h": false,
           "related_sources": [
             {
-              "source_name": "Hugging Face 官方模型库",
+              "source_name": "Hugging Face Hub API",
               "url": "https://huggingface.co/Qwen/Qwen2-VL-2B-Instruct",
               "is_first_hand": true
             }
@@ -3753,7 +3804,7 @@
           "milestone_dim": "api_agent_eng",
           "milestone_dim_label": "API 与 Agent 工程",
           "milestone_dim_label_en": "API & Agent Eng",
-          "is_recent_72h": true,
+          "is_recent_72h": false,
           "related_sources": [
             {
               "source_name": "Fello AI",
@@ -3854,14 +3905,14 @@
           "highlight": "发布即完成沐曦国产 GPU 全栈适配，Hy4 Flash 首日调用突破 50 万亿"
         }
       ],
-      "recent_count": 6,
-      "archive_count": 6,
-      "latest_date": "2026-11-27T08:36:18+08:00",
+      "recent_count": 11,
+      "archive_count": 11,
+      "latest_date": "2026-11-27T17:41:51+08:00",
       "latest_headline": "摩根大通：大模型用量暴增79%，但价格大跌，存储只剩DRAM在涨",
       "items": [
         {
           "id": "ai_ev_evt_d3b0609e21aa",
-          "date": "2026-11-27T08:36:18+08:00",
+          "date": "2026-11-27T17:41:51+08:00",
           "company_id": "tencent_hunyuan",
           "company_name": "腾讯混元 (Hunyuan)",
           "region": "国内",
@@ -3892,6 +3943,207 @@
           "milestone_dim_label": "旗舰模型发布",
           "milestone_dim_label_en": "Flagship Model",
           "is_recent_72h": true
+        },
+        {
+          "id": "ai_raw_rss-gnews-ai-models-zh_c88d236d813e",
+          "date": "2026-11-27T15:16:00+08:00",
+          "company_id": "tencent_hunyuan",
+          "company_name": "腾讯混元 (Hunyuan)",
+          "region": "国内",
+          "category": "最新动态",
+          "category_en": "Latest Release",
+          "title": "一张图片就能生成3D模型！腾讯发布新一代3D大模型Hy3D 3.6",
+          "title_en": "一张图片就能生成3D模型！腾讯发布新一代3D大模型Hy3D 3.6",
+          "what_it_does": "",
+          "what_it_does_en": "一张图片就能生成3D模型！腾讯发布新一代3D大模型Hy3D 3.6 驱动之家",
+          "who_cares": "",
+          "limitations": "",
+          "limitations_en": "",
+          "source_id": "rss-gnews-ai-models-zh",
+          "source_name": "驱动之家",
+          "source_url": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE1GMU1ZUUZ1dUlMYUJ5MjJULUFYcTBhZ0c4TzZXZ2FmcnBtSG9BNmNFdE84b2YzVkEyMEZYTVVmMGJlbTVyckx2Rm9JZjFIM2ZzRnRwa2JYWUU?oc=5",
+          "is_first_hand": false,
+          "source_tier": "wire_media",
+          "is_open_source": false,
+          "milestone_dim": "flagship_release",
+          "milestone_dim_label": "旗舰模型发布",
+          "milestone_dim_label_en": "Flagship Model",
+          "is_recent_72h": true,
+          "related_sources": [
+            {
+              "source_name": "驱动之家",
+              "url": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE1GMU1ZUUZ1dUlMYUJ5MjJULUFYcTBhZ0c4TzZXZ2FmcnBtSG9BNmNFdE84b2YzVkEyMEZYTVVmMGJlbTVyckx2Rm9JZjFIM2ZzRnRwa2JYWUU?oc=5",
+              "is_first_hand": false
+            }
+          ]
+        },
+        {
+          "id": "ai_ev_evt_032ac3aa81c2",
+          "date": "2026-11-27T14:14:08+08:00",
+          "company_id": "tencent_hunyuan",
+          "company_name": "腾讯混元 (Hunyuan)",
+          "region": "国内",
+          "category": "模型与产品",
+          "category_en": "Model & Product",
+          "title": "腾讯混元发布 3D 生成大模型 Hy3D 3.6，面向专业 3D 创作",
+          "title_en": "腾讯混元发布 3D 生成大模型 Hy3D 3.6，面向专业 3D 创作",
+          "what_it_does": "",
+          "what_it_does_en": "腾讯混元发布3D生成大模型Hy3D 3.6，旨在服务专业3D创作领域。",
+          "who_cares": "",
+          "limitations": "",
+          "limitations_en": "",
+          "source_id": "rss-gnews-ai-models-zh",
+          "source_name": "智东西",
+          "source_url": "https://news.google.com/rss/articles/CBMiS0FVX3lxTE1CR3JDVFhtMkpmSWdsS1NhUkM1UEtjNVFEaGJFb2VidE9QM0xoOWJCS0RpT1Vybzdrd0xKNDdDVXMxOENEUW1Qemt1NA?oc=5",
+          "is_first_hand": false,
+          "source_tier": "wire_media",
+          "event_id": "evt_032ac3aa81c2",
+          "is_open_source": false,
+          "related_sources": [
+            {
+              "source_name": "智东西",
+              "url": "https://news.google.com/rss/articles/CBMiS0FVX3lxTE1CR3JDVFhtMkpmSWdsS1NhUkM1UEtjNVFEaGJFb2VidE9QM0xoOWJCS0RpT1Vybzdrd0xKNDdDVXMxOENEUW1Qemt1NA?oc=5",
+              "is_first_hand": false
+            },
+            {
+              "source_name": "电子工程专辑EE Times China",
+              "url": "https://news.google.com/rss/articles/CBMiU0FVX3lxTE5IOV9JbHRtYlM2ZlNoYld5WW1fRkZ1ZzJLM0JiZC1KSFFSSXB1VEZrRzdybWdIdUFCd1ZTbmhna0lmWjVRMTdjcEN0cXlrSmRqclkw?oc=5",
+              "is_first_hand": false
+            },
+            {
+              "source_name": "新浪财经_金融信息服务商",
+              "url": "https://news.google.com/rss/articles/CBMipwFBVV95cUxPd3VGeHk0NmVmQVpKTkpOSW1QRTZERWxheWtRUFl3Z2ZOamo3YlJuSUoxa2dyby1uX3IwMEtEbjBqdnpfVTFoejZwME4xeE1RSGRvSTFsUUp6WGI2YnJvblN5QV9UNmFGc2g2ZHowRHNZRnZJU0ZaMmYyS2hBYkNrUU1pSGdqVjBoWkpEX2pqUW1yd2U4aHYzTGlYbEZZZVZlekUzYWRoSQ?oc=5",
+              "is_first_hand": false
+            },
+            {
+              "source_name": "维度网",
+              "url": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE8zSVBnRWxQY2J6NUdRN3dQTXpGNV9oLW9jNGhOdW1jTUJGNXZFekZXY0hfUGt0dU93OXhiZEVmaG1PVGNqTGIwWmlyaXJwWHljY0EtYmNUTjU?oc=5",
+              "is_first_hand": false
+            },
+            {
+              "source_name": "Sohu",
+              "url": "https://news.google.com/rss/articles/CBMiiAFBVV95cUxPdDV0XzJSWmJ1ajNIb004ZnNYQ1duc2xIQURteXlRT2pqZ01sR043bWpPWkMxMF9XVlhnaEpLQ0lrX0E1V0lKT29obUpfcklBZk10Rm9mWVA1ZUp1YmtLMXlway03MEQtR1RFemRWX05ianhmZnZ0OXNPemhDbVBFV0paN0dUX20t?oc=5",
+              "is_first_hand": false
+            },
+            {
+              "source_name": "新浪",
+              "url": "https://news.google.com/rss/articles/CBMifEFVX3lxTE16dDhiclFvWUE3VGRRNnhrWHNGTkRCTFo4aDlqSEFqbGxZQUk3bGMwQ2tTaE9pN1ZfeFFRRHZVNEhCMk9jR2tfSDM5MkJ2YXlxMGdyLVNwU1RnVUQzZVh6WDI0X1RrRWxqd0VfelFFczBnb2NtWS03SXJDLXU?oc=5",
+              "is_first_hand": false
+            },
+            {
+              "source_name": "新浪",
+              "url": "https://news.google.com/rss/articles/CBMicEFVX3lxTE1xU2hLc0dNdXU1dUw4U283dlY4aGNicjFhaDcwMHlBTkZUNmY4dlZwRUYwZktNQjYzS3dXSmlmU0wtd0VqSDJmMmpaYzZ4QzBCbjByZUJrbF9yRHRVdUJBQ0lNcWI5Z1NxTWs3S3czcFg?oc=5",
+              "is_first_hand": false
+            }
+          ],
+          "milestone_dim": "flagship_release",
+          "milestone_dim_label": "旗舰模型发布",
+          "milestone_dim_label_en": "Flagship Model",
+          "is_recent_72h": true
+        },
+        {
+          "id": "ai_raw_rss-gnews-ai-models-zh_c5b4a0af1145",
+          "date": "2026-11-27T14:05:00+08:00",
+          "company_id": "tencent_hunyuan",
+          "company_name": "腾讯混元 (Hunyuan)",
+          "region": "国内",
+          "category": "最新动态",
+          "category_en": "Latest Release",
+          "title": "腾讯混元发布最新一代3D大模型Hy3D 3.6 - 新浪财经_金融信息服务商",
+          "title_en": "腾讯混元发布最新一代3D大模型Hy3D 3.6 - 新浪财经_金融信息服务商",
+          "what_it_does": "",
+          "what_it_does_en": "腾讯混元发布最新一代3D大模型Hy3D 3.6 新浪财经_金融信息服务商",
+          "who_cares": "",
+          "limitations": "",
+          "limitations_en": "",
+          "source_id": "rss-gnews-ai-models-zh",
+          "source_name": "新浪财经_金融信息服务商",
+          "source_url": "https://news.google.com/rss/articles/CBMipwFBVV95cUxPd3VGeHk0NmVmQVpKTkpOSW1QRTZERWxheWtRUFl3Z2ZOamo3YlJuSUoxa2dyby1uX3IwMEtEbjBqdnpfVTFoejZwME4xeE1RSGRvSTFsUUp6WGI2YnJvblN5QV9UNmFGc2g2ZHowRHNZRnZJU0ZaMmYyS2hBYkNrUU1pSGdqVjBoWkpEX2pqUW1yd2U4aHYzTGlYbEZZZVZlekUzYWRoSQ?oc=5",
+          "is_first_hand": false,
+          "source_tier": "wire_media",
+          "is_open_source": false,
+          "milestone_dim": "flagship_release",
+          "milestone_dim_label": "旗舰模型发布",
+          "milestone_dim_label_en": "Flagship Model",
+          "is_recent_72h": true,
+          "related_sources": [
+            {
+              "source_name": "新浪财经_金融信息服务商",
+              "url": "https://news.google.com/rss/articles/CBMipwFBVV95cUxPd3VGeHk0NmVmQVpKTkpOSW1QRTZERWxheWtRUFl3Z2ZOamo3YlJuSUoxa2dyby1uX3IwMEtEbjBqdnpfVTFoejZwME4xeE1RSGRvSTFsUUp6WGI2YnJvblN5QV9UNmFGc2g2ZHowRHNZRnZJU0ZaMmYyS2hBYkNrUU1pSGdqVjBoWkpEX2pqUW1yd2U4aHYzTGlYbEZZZVZlekUzYWRoSQ?oc=5",
+              "is_first_hand": false
+            },
+            {
+              "source_name": "维度",
+              "url": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE8zSVBnRWxQY2J6NUdRN3dQTXpGNV9oLW9jNGhOdW1jTUJGNXZFekZXY0hfUGt0dU93OXhiZEVmaG1PVGNqTGIwWmlyaXJwWHljY0EtYmNUTjU?oc=5",
+              "is_first_hand": false
+            }
+          ]
+        },
+        {
+          "id": "ai_raw_rss-gnews-ai-models-zh_15201b862c5b",
+          "date": "2026-11-27T11:46:54+08:00",
+          "company_id": "tencent_hunyuan",
+          "company_name": "腾讯混元 (Hunyuan)",
+          "region": "国内",
+          "category": "最新动态",
+          "category_en": "Latest Release",
+          "title": "腾讯混元推出3D大模型Hy3D 3.6，面数升至200万、贴图分辨率升级至8K",
+          "title_en": "腾讯混元推出3D大模型Hy3D 3.6，面数升至200万、贴图分辨率升级至8K",
+          "what_it_does": "",
+          "what_it_does_en": "腾讯混元推出3D大模型Hy3D 3.6，面数升至200万、贴图分辨率升级至8K 金融界",
+          "who_cares": "",
+          "limitations": "",
+          "limitations_en": "",
+          "source_id": "rss-gnews-ai-models-zh",
+          "source_name": "金融界",
+          "source_url": "https://news.google.com/rss/articles/CBMiZkFVX3lxTE9OVGFGNXpvcDdNa0hlRTdSdzh0b0tYZEpiUVhvYml3azJfUVF3WHZtRmlPSU1NSHo3OURHaG5LSDZ6dTQwcVNDVDM5ZWJfVGdzdU5hVEVJOEZXYWpCMk5LODY0RGF4dw?oc=5",
+          "is_first_hand": false,
+          "source_tier": "wire_media",
+          "is_open_source": false,
+          "milestone_dim": "flagship_release",
+          "milestone_dim_label": "旗舰模型发布",
+          "milestone_dim_label_en": "Flagship Model",
+          "is_recent_72h": true,
+          "related_sources": [
+            {
+              "source_name": "金融界",
+              "url": "https://news.google.com/rss/articles/CBMiZkFVX3lxTE9OVGFGNXpvcDdNa0hlRTdSdzh0b0tYZEpiUVhvYml3azJfUVF3WHZtRmlPSU1NSHo3OURHaG5LSDZ6dTQwcVNDVDM5ZWJfVGdzdU5hVEVJOEZXYWpCMk5LODY0RGF4dw?oc=5",
+              "is_first_hand": false
+            }
+          ]
+        },
+        {
+          "id": "ai_raw_rss-gnews-ai-models-zh_cfcd745e46e9",
+          "date": "2026-11-27T11:09:29+08:00",
+          "company_id": "tencent_hunyuan",
+          "company_name": "腾讯混元 (Hunyuan)",
+          "region": "国内",
+          "category": "最新动态",
+          "category_en": "Latest Release",
+          "title": "混元 Hy3D 3.6 发布：优化高模和 PBR 材质贴图生成能力",
+          "title_en": "混元 Hy3D 3.6 发布：优化高模和 PBR 材质贴图生成能力",
+          "what_it_does": "",
+          "what_it_does_en": "混元 Hy3D 3.6 发布：优化高模和 PBR 材质贴图生成能力 DoNews",
+          "who_cares": "",
+          "limitations": "",
+          "limitations_en": "",
+          "source_id": "rss-gnews-ai-models-zh",
+          "source_name": "DoNews",
+          "source_url": "https://news.google.com/rss/articles/CBMiXkFVX3lxTE9RUm91VWtKU0UzeG5pYmNFZzdwOGY5bVNJcTRqRE42aXU2U0ZCUFNRSDZ2VHZBSkdteGd5aU96dXp4NEwzRjhYTTZla3dSXzV3UTBKck40ekdzSVl0WlE?oc=5",
+          "is_first_hand": false,
+          "source_tier": "wire_media",
+          "is_open_source": false,
+          "milestone_dim": "flagship_release",
+          "milestone_dim_label": "旗舰模型发布",
+          "milestone_dim_label_en": "Flagship Model",
+          "is_recent_72h": true,
+          "related_sources": [
+            {
+              "source_name": "DoNews",
+              "url": "https://news.google.com/rss/articles/CBMiXkFVX3lxTE9RUm91VWtKU0UzeG5pYmNFZzdwOGY5bVNJcTRqRE42aXU2U0ZCUFNRSDZ2VHZBSkdteGd5aU96dXp4NEwzRjhYTTZla3dSXzV3UTBKck40ekdzSVl0WlE?oc=5",
+              "is_first_hand": false
+            }
+          ]
         },
         {
           "id": "ai_live_wscn-us-stock-channel_8b71c8c7f676",
@@ -4204,11 +4456,79 @@
           "highlight": "DeepSeek 旗下 DeepSeek-V4.1-Flash-1017（支持 FP8 量化）：图文多模态理解与对话生成；支持输入图像与文本并生成精准分析回复，适用于视觉问答、图表"
         }
       ],
-      "recent_count": 12,
-      "archive_count": 12,
-      "latest_date": "2026-11-27T08:21:03+08:00",
-      "latest_headline": "DeepSeek 灰度测试“消耗额度”：直观展示对话成本，此前已实施限额",
+      "recent_count": 13,
+      "archive_count": 13,
+      "latest_date": "2026-11-27T15:26:10+08:00",
+      "latest_headline": "知乎成为DeepSeek影子股_公司新闻",
       "items": [
+        {
+          "id": "ai_ev_evt_81511ef63fbd",
+          "date": "2026-11-27T15:26:10+08:00",
+          "company_id": "deepseek",
+          "company_name": "DeepSeek",
+          "region": "国内",
+          "category": "模型与产品",
+          "category_en": "Model & Product",
+          "title": "知乎成为DeepSeek影子股_公司新闻",
+          "title_en": "知乎成为DeepSeek影子股_公司新闻",
+          "what_it_does": "",
+          "what_it_does_en": "知乎成为DeepSeek影子股_公司新闻 证券之星",
+          "who_cares": "",
+          "limitations": "",
+          "limitations_en": "",
+          "source_id": "rss-gnews-ai-models-zh",
+          "source_name": "证券之星",
+          "source_url": "https://news.google.com/rss/articles/CBMiZEFVX3lxTE5rclJQNDhwMWl3S0loUzVnZEJBR1JlandONFhpc3VhVnpxVk1rbUhEYUJPQnNpRFo4MkZCRmRWLTdKYWJMOW9zRjB5eUExMDVrVW5LVHlaWDl2TjB3Sl9zVmxKWGQ?oc=5",
+          "is_first_hand": false,
+          "source_tier": "wire_media",
+          "event_id": "evt_81511ef63fbd",
+          "is_open_source": false,
+          "related_sources": [
+            {
+              "source_name": "证券之星",
+              "url": "https://news.google.com/rss/articles/CBMiZEFVX3lxTE5rclJQNDhwMWl3S0loUzVnZEJBR1JlandONFhpc3VhVnpxVk1rbUhEYUJPQnNpRFo4MkZCRmRWLTdKYWJMOW9zRjB5eUExMDVrVW5LVHlaWDl2TjB3Sl9zVmxKWGQ?oc=5",
+              "is_first_hand": false
+            }
+          ],
+          "milestone_dim": "flagship_release",
+          "milestone_dim_label": "旗舰模型发布",
+          "milestone_dim_label_en": "Flagship Model",
+          "is_recent_72h": true
+        },
+        {
+          "id": "ai_ev_evt_0efaef3ff2ad",
+          "date": "2026-11-27T14:37:30+08:00",
+          "company_id": "deepseek",
+          "company_name": "DeepSeek",
+          "region": "国内",
+          "category": "模型与产品",
+          "category_en": "Model & Product",
+          "title": "V4全系列模型上线后，DeepSeek Harness开发者预览版开放测试",
+          "title_en": "V4全系列模型上线后，DeepSeek Harness开发者预览版开放测试",
+          "what_it_does": "",
+          "what_it_does_en": "V4全系列模型上线后，DeepSeek Harness开发者预览版开放测试 财联社",
+          "who_cares": "",
+          "limitations": "",
+          "limitations_en": "",
+          "source_id": "rss-gnews-ai-models-zh",
+          "source_name": "财联社",
+          "source_url": "https://news.google.com/rss/articles/CBMiSEFVX3lxTE4wd0JWNXNkT3NmUy1UV09ldm1iSXY3dTllQ1o1ZFg5MFZPS1BRY3RCTUJLc05UYWJTb1R6VHhoT0NXM3hJQU5xLQ?oc=5",
+          "is_first_hand": false,
+          "source_tier": "wire_media",
+          "event_id": "evt_0efaef3ff2ad",
+          "is_open_source": false,
+          "related_sources": [
+            {
+              "source_name": "财联社",
+              "url": "https://news.google.com/rss/articles/CBMiSEFVX3lxTE4wd0JWNXNkT3NmUy1UV09ldm1iSXY3dTllQ1o1ZFg5MFZPS1BRY3RCTUJLc05UYWJTb1R6VHhoT0NXM3hJQU5xLQ?oc=5",
+              "is_first_hand": false
+            }
+          ],
+          "milestone_dim": "flagship_release",
+          "milestone_dim_label": "旗舰模型发布",
+          "milestone_dim_label_en": "Flagship Model",
+          "is_recent_72h": true
+        },
         {
           "id": "ai_ev_evt_f6da37e9185b",
           "date": "2026-11-27T08:21:03+08:00",
@@ -4242,39 +4562,6 @@
           "milestone_dim_label": "旗舰模型发布",
           "milestone_dim_label_en": "Flagship Model",
           "is_recent_72h": true
-        },
-        {
-          "id": "ai_raw_rss-gnews-ai-models-zh_3046768ac3f1",
-          "date": "2026-11-27T01:40:55+08:00",
-          "company_id": "deepseek",
-          "company_name": "DeepSeek",
-          "region": "国内",
-          "category": "最新动态",
-          "category_en": "Latest Release",
-          "title": "V4全系列模型上线后，DeepSeek Harness开发者预览版开放测试",
-          "title_en": "V4全系列模型上线后，DeepSeek Harness开发者预览版开放测试",
-          "what_it_does": "",
-          "what_it_does_en": "V4全系列模型上线后，DeepSeek Harness开发者预览版开放测试 财联社",
-          "who_cares": "",
-          "limitations": "",
-          "limitations_en": "",
-          "source_id": "rss-gnews-ai-models-zh",
-          "source_name": "财联社",
-          "source_url": "https://news.google.com/rss/articles/CBMiSEFVX3lxTE4wd0JWNXNkT3NmUy1UV09ldm1iSXY3dTllQ1o1ZFg5MFZPS1BRY3RCTUJLc05UYWJTb1R6VHhoT0NXM3hJQU5xLQ?oc=5",
-          "is_first_hand": false,
-          "source_tier": "wire_media",
-          "is_open_source": false,
-          "milestone_dim": "flagship_release",
-          "milestone_dim_label": "旗舰模型发布",
-          "milestone_dim_label_en": "Flagship Model",
-          "is_recent_72h": true,
-          "related_sources": [
-            {
-              "source_name": "财联社",
-              "url": "https://news.google.com/rss/articles/CBMiSEFVX3lxTE4wd0JWNXNkT3NmUy1UV09ldm1iSXY3dTllQ1o1ZFg5MFZPS1BRY3RCTUJLc05UYWJTb1R6VHhoT0NXM3hJQU5xLQ?oc=5",
-              "is_first_hand": false
-            }
-          ]
         },
         {
           "id": "ai_raw_rss-gnews-ai-models-zh_6bf1aeafe46e",
@@ -4793,7 +5080,7 @@
               "is_first_hand": false
             }
           ],
-          "is_recent_72h": true
+          "is_recent_72h": false
         },
         {
           "id": "ai_base_microsoft_phi_copilot",
@@ -5578,7 +5865,7 @@
           "milestone_dim": "commercial_governance",
           "milestone_dim_label": "商业化与安全治理",
           "milestone_dim_label_en": "Governance & Commercial",
-          "is_recent_72h": true
+          "is_recent_72h": false
         },
         {
           "id": "ai_raw_rss-arstechnica_a117f1705d1a",
@@ -6027,7 +6314,7 @@
           "milestone_dim": "flagship_release",
           "milestone_dim_label": "旗舰模型发布",
           "milestone_dim_label_en": "Flagship Model",
-          "is_recent_72h": true
+          "is_recent_72h": false
         },
         {
           "id": "ai_ev_evt_f9ef03b883d8",
@@ -6081,7 +6368,7 @@
           "milestone_dim": "flagship_release",
           "milestone_dim_label": "旗舰模型发布",
           "milestone_dim_label_en": "Flagship Model",
-          "is_recent_72h": true
+          "is_recent_72h": false
         },
         {
           "id": "ai_live_ithome-rss_1c28e96e4792",
@@ -6223,31 +6510,36 @@
       "latest_headline": "智谱 AI 推进「GLM-5.4 与 GLM-5.5」旗舰及「GLM-5.3-Flash」，持续开放 THUDM 与 zai-org 开源权重",
       "items": [
         {
-          "id": "ai_raw_rss-gnews-ai-models-zh_537e6bd96ff3",
+          "id": "ai_base_zhipu_glm54_55",
           "date": "2026-11-26T22:07:00+08:00",
           "company_id": "zhipu_glm",
           "company_name": "智谱 AI (GLM)",
           "region": "国内",
-          "category": "最新动态",
-          "category_en": "Latest Release",
+          "category": "旗舰与开源编程",
+          "category_en": "Flagship & Open Coding",
           "title": "智谱 AI 推进「GLM-5.4 与 GLM-5.5」旗舰及「GLM-5.3-Flash」，持续开放 THUDM 与 zai-org 开源权重",
-          "title_en": "智谱GLM-5.5延期是老外造谣：性能Fable级、上万张国产AI卡进展顺利",
+          "title_en": "Zhipu AI advances GLM-5.4 / GLM-5.5 flagships and GLM-5.3-Flash alongside open-weight releases",
           "what_it_does": "记者获悉，智谱GLM-5.4于今日中午上线Coding Plan订阅体系，官方尚未正式发布。另据智谱官方社群消息，GLM-5.4采用Loop Transformer架构，是国内首款基于该架构的旗舰模型。内测用户反馈其综合表现优于3万亿级…",
-          "what_it_does_en": "智谱GLM-5.5延期是老外造谣：性能Fable级、上万张国产AI卡进展顺利 驱动之家",
-          "who_cares": "",
-          "limitations": "",
-          "limitations_en": "",
-          "source_id": "rss-gnews-ai-models-zh",
+          "what_it_does_en": "Upgrades repo-level coding, structured Chinese tool-use, and high-throughput Flash API inference.",
+          "who_cares": "中文企业私有化团队、Agent 工程团队与开源开发者",
+          "limitations": "旗舰超大规模版本以 MaaS 云 API 为主，轻量级与中小参数权重开源发布。",
+          "limitations_en": "Frontier weights via BigModel API; compact/open tiers on Hugging Face & GitHub.",
           "source_name": "Zhipu AI 官方",
           "source_url": "https://bigmodel.cn/",
+          "is_open_source": true,
           "is_first_hand": true,
           "source_tier": "first_party",
-          "is_open_source": true,
           "milestone_dim": "open_source_eco",
+          "is_baseline_milestone": true,
           "milestone_dim_label": "开源权重与生态",
           "milestone_dim_label_en": "Open Source",
           "is_recent_72h": true,
           "related_sources": [
+            {
+              "source_name": "Zhipu AI 官方",
+              "url": "https://bigmodel.cn/",
+              "is_first_hand": true
+            },
             {
               "source_name": "驱动之家",
               "url": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE4yRDVINVAtdUZkcmJ2dFV1M3dhMnhLXzBnSGVCZlRSaHVHYk5kRmhvQVAyZ1RKejYtZWpJZGIwZlh5NlZDZTlhcHNnQTQyWHZzdEE1QlJMdzQ?oc=5",
@@ -6257,11 +6549,6 @@
               "source_name": "Sohu",
               "url": "https://news.google.com/rss/articles/CBMiiAFBVV95cUxNd0xpaDlkcS1LYWstUl95aVVfaWRvbzEycXVqb1hyMzJtcVpiYzctNVVEZnpJamZadkxKcnpTSWVLT2ZmYWdpZjZMUkhRNTk3N3ZmcXBiS2JjcTd4OFVFNVAxTG0zWWwtaHNVaUw1ZlNETVFYUU41TGNsd3Vralg3N0N1UURJcFlR?oc=5",
               "is_first_hand": false
-            },
-            {
-              "source_name": "Zhipu AI 官方",
-              "url": "https://bigmodel.cn/",
-              "is_first_hand": true
             },
             {
               "source_name": "MarkTechPost (AI论文/模型)",
@@ -6588,7 +6875,7 @@
           "milestone_dim": "flagship_release",
           "milestone_dim_label": "旗舰模型发布",
           "milestone_dim_label_en": "Flagship Model",
-          "is_recent_72h": true,
+          "is_recent_72h": false,
           "related_sources": [
             {
               "source_name": "观点",
@@ -6804,7 +7091,7 @@
           "milestone_dim": "open_source_eco",
           "milestone_dim_label": "开源权重与生态",
           "milestone_dim_label_en": "Open Source",
-          "is_recent_72h": true,
+          "is_recent_72h": false,
           "related_sources": [
             {
               "source_name": "IT之家",
@@ -7211,7 +7498,7 @@
               "is_first_hand": false
             }
           ],
-          "is_recent_72h": true
+          "is_recent_72h": false
         },
         {
           "id": "ai_base_apple_foundation_mlx",
@@ -7892,28 +8179,202 @@
         }
       ],
       "recent_count": 24,
-      "archive_count": 37,
-      "latest_date": "2026-11-27T07:16:36+08:00",
-      "latest_headline": "首个农耕文明领域大模型“天稷”发布",
+      "archive_count": 36,
+      "latest_date": "2026-11-27T16:18:27+08:00",
+      "latest_headline": "开源工具更新：n8n stable",
       "items": [
         {
-          "id": "ai_raw_wscn-a-stock-channel_f3745fd61447",
-          "date": "2026-11-27T07:16:36+08:00",
+          "id": "ai_tool_tool_gh_n8n-io_n8n",
+          "date": "2026-11-27T16:18:27+08:00",
+          "company_id": "indie_opensource",
+          "company_name": "独立实验室 & 开源黑马",
+          "region": "全球开源",
+          "category": "开源工具/仓库",
+          "category_en": "Open-Source Repo",
+          "title": "开源工具更新：n8n stable",
+          "title_en": "Open-source release: n8n stable",
+          "what_it_does": "AI 智能体节点现已支持过滤空白聊天记忆；AI 构建器允许字段引用检查通过未列出的输出架构字段；并为所有工作流的归档与取消发布操作应用“总是允许”策略。",
+          "what_it_does_en": "详见官方 Release 说明。",
+          "who_cares": "",
+          "limitations": "许可证：多许可证/自定义条款 (见仓库 LICENSE)",
+          "limitations_en": "License: 多许可证/自定义条款 (见仓库 LICENSE)",
+          "source_id": "github-releases",
+          "source_name": "GitHub Releases API",
+          "source_url": "https://github.com/n8n-io/n8n/releases/tag/stable",
+          "is_first_hand": true,
+          "source_tier": "first_party",
+          "is_open_source": true,
+          "milestone_dim": "api_agent_eng",
+          "milestone_dim_label": "API 与 Agent 工程",
+          "milestone_dim_label_en": "API & Agent Eng",
+          "is_recent_72h": true,
+          "related_sources": [
+            {
+              "source_name": "GitHub Releases API",
+              "url": "https://github.com/n8n-io/n8n/releases/tag/stable",
+              "is_first_hand": true
+            },
+            {
+              "source_name": "GitHub Releases API",
+              "url": "https://github.com/n8n-io/n8n/releases/tag/n8n%403.4.0",
+              "is_first_hand": true
+            }
+          ]
+        },
+        {
+          "id": "ai_raw_github-releases_cf84a3f5646f",
+          "date": "2026-11-27T16:11:21+08:00",
+          "company_id": "indie_opensource",
+          "company_name": "独立实验室 & 开源黑马",
+          "region": "全球开源",
+          "category": "开源突破",
+          "category_en": "Open Source",
+          "title": "[GitHub Release] Ollama 发布 v0.40.19-rc0",
+          "title_en": "[GitHub Release] Ollama 发布 v0.40.19-rc0",
+          "what_it_does": "量化工具新增目标文件大小与比特率的自动最优类型选择功能；重构帕累托优化、拉格朗日惩罚及量化检查函数",
+          "what_it_does_en": "版本 v0.40.19-rc0（Pre-release/RC | 许可: MIT）。",
+          "who_cares": "",
+          "limitations": "",
+          "limitations_en": "",
+          "source_id": "github-releases",
+          "source_name": "GitHub Releases 官方版本",
+          "source_url": "https://github.com/ollama/ollama/releases/tag/v0.40.19-rc0",
+          "is_first_hand": true,
+          "source_tier": "first_party",
+          "is_open_source": true,
+          "milestone_dim": "open_source_eco",
+          "milestone_dim_label": "开源权重与生态",
+          "milestone_dim_label_en": "Open Source",
+          "is_recent_72h": true,
+          "related_sources": [
+            {
+              "source_name": "GitHub Releases 官方版本",
+              "url": "https://github.com/ollama/ollama/releases/tag/v0.40.19-rc0",
+              "is_first_hand": true
+            },
+            {
+              "source_name": "GitHub Releases 官方版本",
+              "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12810",
+              "is_first_hand": true
+            },
+            {
+              "source_name": "GitHub Releases 官方版本",
+              "url": "https://github.com/ggml-org/llama.cpp/releases/tag/v1.1.0",
+              "is_first_hand": true
+            },
+            {
+              "source_name": "GitHub Releases 官方版本",
+              "url": "https://github.com/ollama/ollama/releases/tag/v0.40.18",
+              "is_first_hand": true
+            },
+            {
+              "source_name": "GitHub Releases 官方版本",
+              "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12755",
+              "is_first_hand": true
+            },
+            {
+              "source_name": "GitHub Releases 官方版本",
+              "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12734",
+              "is_first_hand": true
+            },
+            {
+              "source_name": "GitHub Releases 官方版本",
+              "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12721",
+              "is_first_hand": true
+            },
+            {
+              "source_name": "GitHub Releases 官方版本",
+              "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12686",
+              "is_first_hand": true
+            }
+          ]
+        },
+        {
+          "id": "ai_tool_tool_gh_ggml-org_llama.cpp",
+          "date": "2026-11-27T16:11:21+08:00",
+          "company_id": "indie_opensource",
+          "company_name": "独立实验室 & 开源黑马",
+          "region": "全球开源",
+          "category": "开源工具/仓库",
+          "category_en": "Open-Source Repo",
+          "title": "开源工具更新：llama.cpp b12810",
+          "title_en": "Open-source release: llama.cpp b12810",
+          "what_it_does": "新增支持 Inkling 2、Domyn Edge 4B 等多种模型架构；将 DFlash 推测解码拆分为独立方法；弃用旧版 llama_batch API 并全面转向 llama_batch_ext。",
+          "what_it_does_en": "修复了激活值与权重缩放中的准确性问题；移除了不再需要的 w8a8 与 f16 混合量化模式。",
+          "who_cares": "",
+          "limitations": "许可证：MIT",
+          "limitations_en": "License: MIT",
+          "source_id": "github-releases",
+          "source_name": "GitHub Releases API",
+          "source_url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12810",
+          "is_first_hand": true,
+          "source_tier": "first_party",
+          "is_open_source": true,
+          "milestone_dim": "api_agent_eng",
+          "milestone_dim_label": "API 与 Agent 工程",
+          "milestone_dim_label_en": "API & Agent Eng",
+          "is_recent_72h": true,
+          "related_sources": [
+            {
+              "source_name": "GitHub Releases API",
+              "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12810",
+              "is_first_hand": true
+            },
+            {
+              "source_name": "GitHub Releases API",
+              "url": "https://github.com/ggml-org/llama.cpp/releases/tag/v1.1.0",
+              "is_first_hand": true
+            },
+            {
+              "source_name": "GitHub Releases API",
+              "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12755",
+              "is_first_hand": true
+            },
+            {
+              "source_name": "GitHub Releases API",
+              "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12734",
+              "is_first_hand": true
+            },
+            {
+              "source_name": "GitHub Releases API",
+              "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12721",
+              "is_first_hand": true
+            },
+            {
+              "source_name": "GitHub Releases API",
+              "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12686",
+              "is_first_hand": true
+            },
+            {
+              "source_name": "GitHub Releases API",
+              "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12676",
+              "is_first_hand": true
+            },
+            {
+              "source_name": "GitHub Releases API",
+              "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12671",
+              "is_first_hand": true
+            }
+          ]
+        },
+        {
+          "id": "ai_raw_rss-gnews-ai-models-zh_a13db4ffdb75",
+          "date": "2026-11-27T10:22:00+08:00",
           "company_id": "indie_opensource",
           "company_name": "独立实验室 & 开源黑马",
           "region": "全球开源",
           "category": "最新动态",
           "category_en": "Latest Release",
-          "title": "首个农耕文明领域大模型“天稷”发布",
-          "title_en": "首个农耕文明领域大模型“天稷”发布",
+          "title": "农业农村部：首个农耕文明领域大模型“天稷”发布",
+          "title_en": "农业农村部：首个农耕文明领域大模型“天稷”发布",
           "what_it_does": "",
-          "what_it_does_en": "从农业农村部了解到，日前首个农耕文明领域大模型“天稷”发布。该模型涵盖8000万条覆盖传统农耕技艺、现代智慧农业与农耕文明演进脉络的知识条目，为农业生产提出智慧决策建议。（央视）",
+          "what_it_does_en": "农业农村部：首个农耕文明领域大模型“天稷”发布 中国新闻网",
           "who_cares": "",
           "limitations": "",
           "limitations_en": "",
-          "source_id": "wscn-a-stock-channel",
-          "source_name": "华尔街见闻 A股快讯",
-          "source_url": "https://wallstreetcn.com/livenews/3206657",
+          "source_id": "rss-gnews-ai-models-zh",
+          "source_name": "中国",
+          "source_url": "https://news.google.com/rss/articles/CBMibEFVX3lxTE5ySDRLU0w3aHN1QkNFWG82UXY0cWpqa0NzRUtYSW1VSEtDT01KUWkyZVNTTlBVRDRxQm5fWm5Mb1hmbGt6ZmxpazFNUng1QTdFV3RkSVlOOXhQNXVrbHJjcmlla2FBaUh6eGxvSg?oc=5",
           "is_first_hand": false,
           "source_tier": "wire_media",
           "is_open_source": false,
@@ -7923,6 +8384,16 @@
           "is_recent_72h": true,
           "related_sources": [
             {
+              "source_name": "中国",
+              "url": "https://news.google.com/rss/articles/CBMibEFVX3lxTE5ySDRLU0w3aHN1QkNFWG82UXY0cWpqa0NzRUtYSW1VSEtDT01KUWkyZVNTTlBVRDRxQm5fWm5Mb1hmbGt6ZmxpazFNUng1QTdFV3RkSVlOOXhQNXVrbHJjcmlla2FBaUh6eGxvSg?oc=5",
+              "is_first_hand": false
+            },
+            {
+              "source_name": "中国",
+              "url": "https://news.google.com/rss/articles/CBMiaEFVX3lxTE5UWF9oaFV5VzQ3eERiaEhrTFllaHF1WldqVURJMkxkTjFOX3U0TXAzUDRGNzFSNFRoaU41Q3Y5d2VtdzJGZHg2REZUbi1ycGlxUEZQYmRkaDJ0T3d5TllmU3o3YUJ6OUp1?oc=5",
+              "is_first_hand": false
+            },
+            {
               "source_name": "华尔街见闻 A股快讯",
               "url": "https://wallstreetcn.com/livenews/3206657",
               "is_first_hand": false
@@ -7930,6 +8401,39 @@
             {
               "source_name": "中国青年",
               "url": "https://news.google.com/rss/articles/CBMiZEFVX3lxTE1MdUNOMWZiWHBBLXN0eDhsSnh1ZjZuMU1yeGg0MEN4a1FxSlRYc2tnTEd1aHMwS2hWZUlZUE96Y1c4dFFxYWN3bzNIZ1hwcWltMG5jVEg1d0paSjVyNDBZSE92aW8?oc=5",
+              "is_first_hand": false
+            }
+          ]
+        },
+        {
+          "id": "ai_raw_rss-gnews-opensource-ai_adf39844c488",
+          "date": "2026-11-27T08:00:00+08:00",
+          "company_id": "indie_opensource",
+          "company_name": "独立实验室 & 开源黑马",
+          "region": "全球开源",
+          "category": "最新动态",
+          "category_en": "Latest Release",
+          "title": "【全球 AI 动态】Sage-Med-Preview: 3B-Active Medical AI Tops 31 Benchmarks",
+          "title_en": "Sage-Med-Preview: 3B-Active Medical AI Tops 31 Benchmarks",
+          "what_it_does": "",
+          "what_it_does_en": "Sage-Med-Preview: 3B-Active Medical AI Tops 31 Benchmarks explainx.ai",
+          "who_cares": "",
+          "limitations": "",
+          "limitations_en": "",
+          "source_id": "rss-gnews-opensource-ai",
+          "source_name": "explainx.ai",
+          "source_url": "https://news.google.com/rss/articles/CBMisAFBVV95cUxNUmlmcWZ1VWFqZWtUUmxBdjNxVXRQdFFKQXZrM0ZPS0FES3BDa3dtTDFFNFZQTWozX0t0d2lLSzNmcWpQT01WTWJOcUtXaFo0b3ZBMVF0a180a2tCWThBbG0yS01lbm4zaFZTTEtiT1R6aEhGZFY1VW9rQTFPUGJjbF9aVTNEd2hFbF95N3VFLVZ1R3hTdWo2TzlkcTlhbFVHYzNpNlBRb1dVMkxkUGcxTg?oc=5",
+          "is_first_hand": false,
+          "source_tier": "wire_media",
+          "is_open_source": false,
+          "milestone_dim": "research_breakthrough",
+          "milestone_dim_label": "算法与科研突破",
+          "milestone_dim_label_en": "Research & Math",
+          "is_recent_72h": true,
+          "related_sources": [
+            {
+              "source_name": "explainx.ai",
+              "url": "https://news.google.com/rss/articles/CBMisAFBVV95cUxNUmlmcWZ1VWFqZWtUUmxBdjNxVXRQdFFKQXZrM0ZPS0FES3BDa3dtTDFFNFZQTWozX0t0d2lLSzNmcWpQT01WTWJOcUtXaFo0b3ZBMVF0a180a2tCWThBbG0yS01lbm4zaFZTTEtiT1R6aEhGZFY1VW9rQTFPUGJjbF9aVTNEd2hFbF95N3VFLVZ1R3hTdWo2TzlkcTlhbFVHYzNpNlBRb1dVMkxkUGcxTg?oc=5",
               "is_first_hand": false
             }
           ]
@@ -7963,74 +8467,6 @@
             {
               "source_name": "GitHub Releases API",
               "url": "https://github.com/browser-use/browser-use/releases/tag/1.0.9",
-              "is_first_hand": true
-            }
-          ]
-        },
-        {
-          "id": "ai_raw_github-releases_cf84a3f5646f",
-          "date": "2026-11-27T01:52:02+08:00",
-          "company_id": "indie_opensource",
-          "company_name": "独立实验室 & 开源黑马",
-          "region": "全球开源",
-          "category": "开源突破",
-          "category_en": "Open Source",
-          "title": "[GitHub Release] Ollama 发布 v0.40.19-rc0",
-          "title_en": "[GitHub Release] Ollama 发布 v0.40.19-rc0",
-          "what_it_does": "量化工具新增目标文件大小与比特率的自动最优类型选择功能；重构帕累托优化、拉格朗日惩罚及量化检查函数",
-          "what_it_does_en": "版本 v0.40.19-rc0（Pre-release/RC | 许可: MIT）。",
-          "who_cares": "",
-          "limitations": "",
-          "limitations_en": "",
-          "source_id": "github-releases",
-          "source_name": "GitHub Releases 官方版本",
-          "source_url": "https://github.com/ollama/ollama/releases/tag/v0.40.19-rc0",
-          "is_first_hand": true,
-          "source_tier": "first_party",
-          "is_open_source": true,
-          "milestone_dim": "open_source_eco",
-          "milestone_dim_label": "开源权重与生态",
-          "milestone_dim_label_en": "Open Source",
-          "is_recent_72h": true,
-          "related_sources": [
-            {
-              "source_name": "GitHub Releases 官方版本",
-              "url": "https://github.com/ollama/ollama/releases/tag/v0.40.19-rc0",
-              "is_first_hand": true
-            },
-            {
-              "source_name": "GitHub Releases 官方版本",
-              "url": "https://github.com/ggml-org/llama.cpp/releases/tag/v1.1.0",
-              "is_first_hand": true
-            },
-            {
-              "source_name": "GitHub Releases 官方版本",
-              "url": "https://github.com/ollama/ollama/releases/tag/v0.40.18",
-              "is_first_hand": true
-            },
-            {
-              "source_name": "GitHub Releases 官方版本",
-              "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12755",
-              "is_first_hand": true
-            },
-            {
-              "source_name": "GitHub Releases 官方版本",
-              "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12734",
-              "is_first_hand": true
-            },
-            {
-              "source_name": "GitHub Releases 官方版本",
-              "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12721",
-              "is_first_hand": true
-            },
-            {
-              "source_name": "GitHub Releases 官方版本",
-              "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12686",
-              "is_first_hand": true
-            },
-            {
-              "source_name": "GitHub Releases 官方版本",
-              "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12676",
               "is_first_hand": true
             }
           ]
@@ -8150,74 +8586,6 @@
           ]
         },
         {
-          "id": "ai_tool_tool_gh_ggml-org_llama.cpp",
-          "date": "2026-11-26T17:16:47+08:00",
-          "company_id": "indie_opensource",
-          "company_name": "独立实验室 & 开源黑马",
-          "region": "全球开源",
-          "category": "开源工具/仓库",
-          "category_en": "Open-Source Repo",
-          "title": "开源工具更新：llama.cpp v1.1.0",
-          "title_en": "Open-source release: llama.cpp v1.1.0",
-          "what_it_does": "新增支持 Inkling 2、Domyn Edge 4B 等多种模型架构；将 DFlash 推测解码拆分为独立方法；弃用旧版 llama_batch API 并全面转向 llama_batch_ext。",
-          "what_it_does_en": "新增支持 Inkling 2、Domyn Edge 4B 等多种模型架构；将 DFlash 推测解码拆分为独立方法；弃用旧版 llama_batch API 并全面转向 llama_batch_ext。",
-          "who_cares": "",
-          "limitations": "许可证：MIT",
-          "limitations_en": "License: MIT",
-          "source_id": "github-releases",
-          "source_name": "GitHub Releases API",
-          "source_url": "https://github.com/ggml-org/llama.cpp/releases/tag/v1.1.0",
-          "is_first_hand": true,
-          "source_tier": "first_party",
-          "is_open_source": true,
-          "milestone_dim": "api_agent_eng",
-          "milestone_dim_label": "API 与 Agent 工程",
-          "milestone_dim_label_en": "API & Agent Eng",
-          "is_recent_72h": true,
-          "related_sources": [
-            {
-              "source_name": "GitHub Releases API",
-              "url": "https://github.com/ggml-org/llama.cpp/releases/tag/v1.1.0",
-              "is_first_hand": true
-            },
-            {
-              "source_name": "GitHub Releases API",
-              "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12755",
-              "is_first_hand": true
-            },
-            {
-              "source_name": "GitHub Releases API",
-              "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12734",
-              "is_first_hand": true
-            },
-            {
-              "source_name": "GitHub Releases API",
-              "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12721",
-              "is_first_hand": true
-            },
-            {
-              "source_name": "GitHub Releases API",
-              "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12686",
-              "is_first_hand": true
-            },
-            {
-              "source_name": "GitHub Releases API",
-              "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12676",
-              "is_first_hand": true
-            },
-            {
-              "source_name": "GitHub Releases API",
-              "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12671",
-              "is_first_hand": true
-            },
-            {
-              "source_name": "GitHub Releases API",
-              "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12649",
-              "is_first_hand": true
-            }
-          ]
-        },
-        {
           "id": "ai_raw_rss-gnews-ai-models-en_01fab095bab8",
           "date": "2026-11-26T15:29:08+08:00",
           "company_id": "indie_opensource",
@@ -8280,44 +8648,6 @@
               "source_name": "凤凰",
               "url": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE0xRGt3NnpTUmFQbnpJYjIxZ3plX3Jsd2RqQkhlazR2V1NzOE1wWW5abWFET0FwcHctSzVJeTA5ZzI1NWJ4NEhSc3V5S1pwMGc?oc=5",
               "is_first_hand": false
-            }
-          ]
-        },
-        {
-          "id": "ai_tool_tool_gh_n8n-io_n8n",
-          "date": "2026-11-26T15:23:36+08:00",
-          "company_id": "indie_opensource",
-          "company_name": "独立实验室 & 开源黑马",
-          "region": "全球开源",
-          "category": "开源工具/仓库",
-          "category_en": "Open-Source Repo",
-          "title": "开源工具更新：n8n stable",
-          "title_en": "Open-source release: n8n stable",
-          "what_it_does": "AI 智能体节点现已支持过滤空白聊天记忆；AI 构建器允许字段引用检查通过未列出的输出架构字段；并为所有工作流的归档与取消发布操作应用“总是允许”策略。",
-          "what_it_does_en": "MCP 执行数据增加大小限制以提升稳定性；统一表达式引擎的 URL 路径提取逻辑；优化工作流数据数组拼接的内存占用。",
-          "who_cares": "",
-          "limitations": "许可证：多许可证/自定义条款 (见仓库 LICENSE)",
-          "limitations_en": "License: 多许可证/自定义条款 (见仓库 LICENSE)",
-          "source_id": "github-releases",
-          "source_name": "GitHub Releases API",
-          "source_url": "https://github.com/n8n-io/n8n/releases/tag/stable",
-          "is_first_hand": true,
-          "source_tier": "first_party",
-          "is_open_source": true,
-          "milestone_dim": "api_agent_eng",
-          "milestone_dim_label": "API 与 Agent 工程",
-          "milestone_dim_label_en": "API & Agent Eng",
-          "is_recent_72h": true,
-          "related_sources": [
-            {
-              "source_name": "GitHub Releases API",
-              "url": "https://github.com/n8n-io/n8n/releases/tag/stable",
-              "is_first_hand": true
-            },
-            {
-              "source_name": "GitHub Releases API",
-              "url": "https://github.com/n8n-io/n8n/releases/tag/n8n%403.4.0",
-              "is_first_hand": true
             }
           ]
         },
@@ -8780,49 +9110,6 @@
               "is_first_hand": true
             }
           ]
-        },
-        {
-          "id": "ai_tool_tool_gh_all-hands-ai_openhands",
-          "date": "2026-11-25T22:13:07+08:00",
-          "company_id": "indie_opensource",
-          "company_name": "独立实验室 & 开源黑马",
-          "region": "全球开源",
-          "category": "开源工具/仓库",
-          "category_en": "Open-Source Repo",
-          "title": "开源工具更新：OpenHands v1.46.0",
-          "title_en": "Open-source release: OpenHands v1.46.0",
-          "what_it_does": "更新了相关项目文档并进行了常规维护；补充了 macOS 系统的安装注意事项。",
-          "what_it_does_en": "例行维护与更新；提示macOS系统下未签名应用的安装说明",
-          "who_cares": "",
-          "limitations": "许可证：MIT",
-          "limitations_en": "License: MIT",
-          "source_id": "github-releases",
-          "source_name": "GitHub Releases API",
-          "source_url": "https://github.com/OpenHands/OpenHands/releases/tag/v1.46.0",
-          "is_first_hand": true,
-          "source_tier": "first_party",
-          "is_open_source": true,
-          "milestone_dim": "open_source_eco",
-          "milestone_dim_label": "开源权重与生态",
-          "milestone_dim_label_en": "Open Source",
-          "is_recent_72h": true,
-          "related_sources": [
-            {
-              "source_name": "GitHub Releases API",
-              "url": "https://github.com/OpenHands/OpenHands/releases/tag/v1.46.0",
-              "is_first_hand": true
-            },
-            {
-              "source_name": "GitHub Releases API",
-              "url": "https://github.com/OpenHands/OpenHands/releases/tag/v1.45.0",
-              "is_first_hand": true
-            },
-            {
-              "source_name": "GitHub Releases API",
-              "url": "https://github.com/OpenHands/OpenHands/releases/tag/v1.44.0",
-              "is_first_hand": true
-            }
-          ]
         }
       ]
     }
@@ -8830,7 +9117,7 @@
   "timeline": [
     {
       "id": "ai_ev_evt_d3b0609e21aa",
-      "date": "2026-11-27T08:36:18+08:00",
+      "date": "2026-11-27T17:41:51+08:00",
       "company_id": "tencent_hunyuan",
       "company_name": "腾讯混元 (Hunyuan)",
       "region": "国内",
@@ -8861,6 +9148,597 @@
       "milestone_dim_label": "旗舰模型发布",
       "milestone_dim_label_en": "Flagship Model",
       "is_recent_72h": true
+    },
+    {
+      "id": "ai_tool_tool_gh_n8n-io_n8n",
+      "date": "2026-11-27T16:18:27+08:00",
+      "company_id": "indie_opensource",
+      "company_name": "独立实验室 & 开源黑马",
+      "region": "全球开源",
+      "category": "开源工具/仓库",
+      "category_en": "Open-Source Repo",
+      "title": "开源工具更新：n8n stable",
+      "title_en": "Open-source release: n8n stable",
+      "what_it_does": "AI 智能体节点现已支持过滤空白聊天记忆；AI 构建器允许字段引用检查通过未列出的输出架构字段；并为所有工作流的归档与取消发布操作应用“总是允许”策略。",
+      "what_it_does_en": "详见官方 Release 说明。",
+      "who_cares": "",
+      "limitations": "许可证：多许可证/自定义条款 (见仓库 LICENSE)",
+      "limitations_en": "License: 多许可证/自定义条款 (见仓库 LICENSE)",
+      "source_id": "github-releases",
+      "source_name": "GitHub Releases API",
+      "source_url": "https://github.com/n8n-io/n8n/releases/tag/stable",
+      "is_first_hand": true,
+      "source_tier": "first_party",
+      "is_open_source": true,
+      "milestone_dim": "api_agent_eng",
+      "milestone_dim_label": "API 与 Agent 工程",
+      "milestone_dim_label_en": "API & Agent Eng",
+      "is_recent_72h": true,
+      "related_sources": [
+        {
+          "source_name": "GitHub Releases API",
+          "url": "https://github.com/n8n-io/n8n/releases/tag/stable",
+          "is_first_hand": true
+        },
+        {
+          "source_name": "GitHub Releases API",
+          "url": "https://github.com/n8n-io/n8n/releases/tag/n8n%403.4.0",
+          "is_first_hand": true
+        }
+      ]
+    },
+    {
+      "id": "ai_raw_github-releases_cf84a3f5646f",
+      "date": "2026-11-27T16:11:21+08:00",
+      "company_id": "indie_opensource",
+      "company_name": "独立实验室 & 开源黑马",
+      "region": "全球开源",
+      "category": "开源突破",
+      "category_en": "Open Source",
+      "title": "[GitHub Release] Ollama 发布 v0.40.19-rc0",
+      "title_en": "[GitHub Release] Ollama 发布 v0.40.19-rc0",
+      "what_it_does": "量化工具新增目标文件大小与比特率的自动最优类型选择功能；重构帕累托优化、拉格朗日惩罚及量化检查函数",
+      "what_it_does_en": "版本 v0.40.19-rc0（Pre-release/RC | 许可: MIT）。",
+      "who_cares": "",
+      "limitations": "",
+      "limitations_en": "",
+      "source_id": "github-releases",
+      "source_name": "GitHub Releases 官方版本",
+      "source_url": "https://github.com/ollama/ollama/releases/tag/v0.40.19-rc0",
+      "is_first_hand": true,
+      "source_tier": "first_party",
+      "is_open_source": true,
+      "milestone_dim": "open_source_eco",
+      "milestone_dim_label": "开源权重与生态",
+      "milestone_dim_label_en": "Open Source",
+      "is_recent_72h": true,
+      "related_sources": [
+        {
+          "source_name": "GitHub Releases 官方版本",
+          "url": "https://github.com/ollama/ollama/releases/tag/v0.40.19-rc0",
+          "is_first_hand": true
+        },
+        {
+          "source_name": "GitHub Releases 官方版本",
+          "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12810",
+          "is_first_hand": true
+        },
+        {
+          "source_name": "GitHub Releases 官方版本",
+          "url": "https://github.com/ggml-org/llama.cpp/releases/tag/v1.1.0",
+          "is_first_hand": true
+        },
+        {
+          "source_name": "GitHub Releases 官方版本",
+          "url": "https://github.com/ollama/ollama/releases/tag/v0.40.18",
+          "is_first_hand": true
+        },
+        {
+          "source_name": "GitHub Releases 官方版本",
+          "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12755",
+          "is_first_hand": true
+        },
+        {
+          "source_name": "GitHub Releases 官方版本",
+          "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12734",
+          "is_first_hand": true
+        },
+        {
+          "source_name": "GitHub Releases 官方版本",
+          "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12721",
+          "is_first_hand": true
+        },
+        {
+          "source_name": "GitHub Releases 官方版本",
+          "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12686",
+          "is_first_hand": true
+        }
+      ]
+    },
+    {
+      "id": "ai_tool_tool_gh_ggml-org_llama.cpp",
+      "date": "2026-11-27T16:11:21+08:00",
+      "company_id": "indie_opensource",
+      "company_name": "独立实验室 & 开源黑马",
+      "region": "全球开源",
+      "category": "开源工具/仓库",
+      "category_en": "Open-Source Repo",
+      "title": "开源工具更新：llama.cpp b12810",
+      "title_en": "Open-source release: llama.cpp b12810",
+      "what_it_does": "新增支持 Inkling 2、Domyn Edge 4B 等多种模型架构；将 DFlash 推测解码拆分为独立方法；弃用旧版 llama_batch API 并全面转向 llama_batch_ext。",
+      "what_it_does_en": "修复了激活值与权重缩放中的准确性问题；移除了不再需要的 w8a8 与 f16 混合量化模式。",
+      "who_cares": "",
+      "limitations": "许可证：MIT",
+      "limitations_en": "License: MIT",
+      "source_id": "github-releases",
+      "source_name": "GitHub Releases API",
+      "source_url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12810",
+      "is_first_hand": true,
+      "source_tier": "first_party",
+      "is_open_source": true,
+      "milestone_dim": "api_agent_eng",
+      "milestone_dim_label": "API 与 Agent 工程",
+      "milestone_dim_label_en": "API & Agent Eng",
+      "is_recent_72h": true,
+      "related_sources": [
+        {
+          "source_name": "GitHub Releases API",
+          "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12810",
+          "is_first_hand": true
+        },
+        {
+          "source_name": "GitHub Releases API",
+          "url": "https://github.com/ggml-org/llama.cpp/releases/tag/v1.1.0",
+          "is_first_hand": true
+        },
+        {
+          "source_name": "GitHub Releases API",
+          "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12755",
+          "is_first_hand": true
+        },
+        {
+          "source_name": "GitHub Releases API",
+          "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12734",
+          "is_first_hand": true
+        },
+        {
+          "source_name": "GitHub Releases API",
+          "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12721",
+          "is_first_hand": true
+        },
+        {
+          "source_name": "GitHub Releases API",
+          "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12686",
+          "is_first_hand": true
+        },
+        {
+          "source_name": "GitHub Releases API",
+          "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12676",
+          "is_first_hand": true
+        },
+        {
+          "source_name": "GitHub Releases API",
+          "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12671",
+          "is_first_hand": true
+        }
+      ]
+    },
+    {
+      "id": "ai_ev_evt_81511ef63fbd",
+      "date": "2026-11-27T15:26:10+08:00",
+      "company_id": "deepseek",
+      "company_name": "DeepSeek",
+      "region": "国内",
+      "category": "模型与产品",
+      "category_en": "Model & Product",
+      "title": "知乎成为DeepSeek影子股_公司新闻",
+      "title_en": "知乎成为DeepSeek影子股_公司新闻",
+      "what_it_does": "",
+      "what_it_does_en": "知乎成为DeepSeek影子股_公司新闻 证券之星",
+      "who_cares": "",
+      "limitations": "",
+      "limitations_en": "",
+      "source_id": "rss-gnews-ai-models-zh",
+      "source_name": "证券之星",
+      "source_url": "https://news.google.com/rss/articles/CBMiZEFVX3lxTE5rclJQNDhwMWl3S0loUzVnZEJBR1JlandONFhpc3VhVnpxVk1rbUhEYUJPQnNpRFo4MkZCRmRWLTdKYWJMOW9zRjB5eUExMDVrVW5LVHlaWDl2TjB3Sl9zVmxKWGQ?oc=5",
+      "is_first_hand": false,
+      "source_tier": "wire_media",
+      "event_id": "evt_81511ef63fbd",
+      "is_open_source": false,
+      "related_sources": [
+        {
+          "source_name": "证券之星",
+          "url": "https://news.google.com/rss/articles/CBMiZEFVX3lxTE5rclJQNDhwMWl3S0loUzVnZEJBR1JlandONFhpc3VhVnpxVk1rbUhEYUJPQnNpRFo4MkZCRmRWLTdKYWJMOW9zRjB5eUExMDVrVW5LVHlaWDl2TjB3Sl9zVmxKWGQ?oc=5",
+          "is_first_hand": false
+        }
+      ],
+      "milestone_dim": "flagship_release",
+      "milestone_dim_label": "旗舰模型发布",
+      "milestone_dim_label_en": "Flagship Model",
+      "is_recent_72h": true
+    },
+    {
+      "id": "ai_raw_rss-gnews-ai-models-zh_c88d236d813e",
+      "date": "2026-11-27T15:16:00+08:00",
+      "company_id": "tencent_hunyuan",
+      "company_name": "腾讯混元 (Hunyuan)",
+      "region": "国内",
+      "category": "最新动态",
+      "category_en": "Latest Release",
+      "title": "一张图片就能生成3D模型！腾讯发布新一代3D大模型Hy3D 3.6",
+      "title_en": "一张图片就能生成3D模型！腾讯发布新一代3D大模型Hy3D 3.6",
+      "what_it_does": "",
+      "what_it_does_en": "一张图片就能生成3D模型！腾讯发布新一代3D大模型Hy3D 3.6 驱动之家",
+      "who_cares": "",
+      "limitations": "",
+      "limitations_en": "",
+      "source_id": "rss-gnews-ai-models-zh",
+      "source_name": "驱动之家",
+      "source_url": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE1GMU1ZUUZ1dUlMYUJ5MjJULUFYcTBhZ0c4TzZXZ2FmcnBtSG9BNmNFdE84b2YzVkEyMEZYTVVmMGJlbTVyckx2Rm9JZjFIM2ZzRnRwa2JYWUU?oc=5",
+      "is_first_hand": false,
+      "source_tier": "wire_media",
+      "is_open_source": false,
+      "milestone_dim": "flagship_release",
+      "milestone_dim_label": "旗舰模型发布",
+      "milestone_dim_label_en": "Flagship Model",
+      "is_recent_72h": true,
+      "related_sources": [
+        {
+          "source_name": "驱动之家",
+          "url": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE1GMU1ZUUZ1dUlMYUJ5MjJULUFYcTBhZ0c4TzZXZ2FmcnBtSG9BNmNFdE84b2YzVkEyMEZYTVVmMGJlbTVyckx2Rm9JZjFIM2ZzRnRwa2JYWUU?oc=5",
+          "is_first_hand": false
+        }
+      ]
+    },
+    {
+      "id": "ai_ev_evt_e6fbe196f54d",
+      "date": "2026-11-27T15:05:43+08:00",
+      "company_id": "openai",
+      "company_name": "OpenAI",
+      "region": "海外",
+      "category": "模型与产品",
+      "category_en": "Model & Product",
+      "title": "刚刚，Tibo承诺「连续28天发布或重置」，OpenAI遭遇信任危机",
+      "title_en": "刚刚，Tibo承诺「连续28天发布或重置」，OpenAI遭遇信任危机",
+      "what_it_does": "",
+      "what_it_does_en": "刚刚，Tibo承诺「连续28天发布或重置」，OpenAI遭遇信任危机 36Kr",
+      "who_cares": "",
+      "limitations": "",
+      "limitations_en": "",
+      "source_id": "rss-gnews-ai-models-zh",
+      "source_name": "36Kr",
+      "source_url": "https://news.google.com/rss/articles/CBMiTkFVX3lxTFBQNTQ5aDRoZ3JCMlV0bFFlVHlFTWtvNDZ1WnlIZ1NkVzJXZFNxT2hDb2xYY21BeFZfQXltRVVGZUkxU0x5b2RyYlhlS0F1QQ?oc=5",
+      "is_first_hand": false,
+      "source_tier": "wire_media",
+      "event_id": "evt_e6fbe196f54d",
+      "is_open_source": false,
+      "related_sources": [
+        {
+          "source_name": "36Kr",
+          "url": "https://news.google.com/rss/articles/CBMiTkFVX3lxTFBQNTQ5aDRoZ3JCMlV0bFFlVHlFTWtvNDZ1WnlIZ1NkVzJXZFNxT2hDb2xYY21BeFZfQXltRVVGZUkxU0x5b2RyYlhlS0F1QQ?oc=5",
+          "is_first_hand": false
+        }
+      ],
+      "milestone_dim": "flagship_release",
+      "milestone_dim_label": "旗舰模型发布",
+      "milestone_dim_label_en": "Flagship Model",
+      "is_recent_72h": true
+    },
+    {
+      "id": "ai_ev_evt_0efaef3ff2ad",
+      "date": "2026-11-27T14:37:30+08:00",
+      "company_id": "deepseek",
+      "company_name": "DeepSeek",
+      "region": "国内",
+      "category": "模型与产品",
+      "category_en": "Model & Product",
+      "title": "V4全系列模型上线后，DeepSeek Harness开发者预览版开放测试",
+      "title_en": "V4全系列模型上线后，DeepSeek Harness开发者预览版开放测试",
+      "what_it_does": "",
+      "what_it_does_en": "V4全系列模型上线后，DeepSeek Harness开发者预览版开放测试 财联社",
+      "who_cares": "",
+      "limitations": "",
+      "limitations_en": "",
+      "source_id": "rss-gnews-ai-models-zh",
+      "source_name": "财联社",
+      "source_url": "https://news.google.com/rss/articles/CBMiSEFVX3lxTE4wd0JWNXNkT3NmUy1UV09ldm1iSXY3dTllQ1o1ZFg5MFZPS1BRY3RCTUJLc05UYWJTb1R6VHhoT0NXM3hJQU5xLQ?oc=5",
+      "is_first_hand": false,
+      "source_tier": "wire_media",
+      "event_id": "evt_0efaef3ff2ad",
+      "is_open_source": false,
+      "related_sources": [
+        {
+          "source_name": "财联社",
+          "url": "https://news.google.com/rss/articles/CBMiSEFVX3lxTE4wd0JWNXNkT3NmUy1UV09ldm1iSXY3dTllQ1o1ZFg5MFZPS1BRY3RCTUJLc05UYWJTb1R6VHhoT0NXM3hJQU5xLQ?oc=5",
+          "is_first_hand": false
+        }
+      ],
+      "milestone_dim": "flagship_release",
+      "milestone_dim_label": "旗舰模型发布",
+      "milestone_dim_label_en": "Flagship Model",
+      "is_recent_72h": true
+    },
+    {
+      "id": "ai_ev_evt_032ac3aa81c2",
+      "date": "2026-11-27T14:14:08+08:00",
+      "company_id": "tencent_hunyuan",
+      "company_name": "腾讯混元 (Hunyuan)",
+      "region": "国内",
+      "category": "模型与产品",
+      "category_en": "Model & Product",
+      "title": "腾讯混元发布 3D 生成大模型 Hy3D 3.6，面向专业 3D 创作",
+      "title_en": "腾讯混元发布 3D 生成大模型 Hy3D 3.6，面向专业 3D 创作",
+      "what_it_does": "",
+      "what_it_does_en": "腾讯混元发布3D生成大模型Hy3D 3.6，旨在服务专业3D创作领域。",
+      "who_cares": "",
+      "limitations": "",
+      "limitations_en": "",
+      "source_id": "rss-gnews-ai-models-zh",
+      "source_name": "智东西",
+      "source_url": "https://news.google.com/rss/articles/CBMiS0FVX3lxTE1CR3JDVFhtMkpmSWdsS1NhUkM1UEtjNVFEaGJFb2VidE9QM0xoOWJCS0RpT1Vybzdrd0xKNDdDVXMxOENEUW1Qemt1NA?oc=5",
+      "is_first_hand": false,
+      "source_tier": "wire_media",
+      "event_id": "evt_032ac3aa81c2",
+      "is_open_source": false,
+      "related_sources": [
+        {
+          "source_name": "智东西",
+          "url": "https://news.google.com/rss/articles/CBMiS0FVX3lxTE1CR3JDVFhtMkpmSWdsS1NhUkM1UEtjNVFEaGJFb2VidE9QM0xoOWJCS0RpT1Vybzdrd0xKNDdDVXMxOENEUW1Qemt1NA?oc=5",
+          "is_first_hand": false
+        },
+        {
+          "source_name": "电子工程专辑EE Times China",
+          "url": "https://news.google.com/rss/articles/CBMiU0FVX3lxTE5IOV9JbHRtYlM2ZlNoYld5WW1fRkZ1ZzJLM0JiZC1KSFFSSXB1VEZrRzdybWdIdUFCd1ZTbmhna0lmWjVRMTdjcEN0cXlrSmRqclkw?oc=5",
+          "is_first_hand": false
+        },
+        {
+          "source_name": "新浪财经_金融信息服务商",
+          "url": "https://news.google.com/rss/articles/CBMipwFBVV95cUxPd3VGeHk0NmVmQVpKTkpOSW1QRTZERWxheWtRUFl3Z2ZOamo3YlJuSUoxa2dyby1uX3IwMEtEbjBqdnpfVTFoejZwME4xeE1RSGRvSTFsUUp6WGI2YnJvblN5QV9UNmFGc2g2ZHowRHNZRnZJU0ZaMmYyS2hBYkNrUU1pSGdqVjBoWkpEX2pqUW1yd2U4aHYzTGlYbEZZZVZlekUzYWRoSQ?oc=5",
+          "is_first_hand": false
+        },
+        {
+          "source_name": "维度网",
+          "url": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE8zSVBnRWxQY2J6NUdRN3dQTXpGNV9oLW9jNGhOdW1jTUJGNXZFekZXY0hfUGt0dU93OXhiZEVmaG1PVGNqTGIwWmlyaXJwWHljY0EtYmNUTjU?oc=5",
+          "is_first_hand": false
+        },
+        {
+          "source_name": "Sohu",
+          "url": "https://news.google.com/rss/articles/CBMiiAFBVV95cUxPdDV0XzJSWmJ1ajNIb004ZnNYQ1duc2xIQURteXlRT2pqZ01sR043bWpPWkMxMF9XVlhnaEpLQ0lrX0E1V0lKT29obUpfcklBZk10Rm9mWVA1ZUp1YmtLMXlway03MEQtR1RFemRWX05ianhmZnZ0OXNPemhDbVBFV0paN0dUX20t?oc=5",
+          "is_first_hand": false
+        },
+        {
+          "source_name": "新浪",
+          "url": "https://news.google.com/rss/articles/CBMifEFVX3lxTE16dDhiclFvWUE3VGRRNnhrWHNGTkRCTFo4aDlqSEFqbGxZQUk3bGMwQ2tTaE9pN1ZfeFFRRHZVNEhCMk9jR2tfSDM5MkJ2YXlxMGdyLVNwU1RnVUQzZVh6WDI0X1RrRWxqd0VfelFFczBnb2NtWS03SXJDLXU?oc=5",
+          "is_first_hand": false
+        },
+        {
+          "source_name": "新浪",
+          "url": "https://news.google.com/rss/articles/CBMicEFVX3lxTE1xU2hLc0dNdXU1dUw4U283dlY4aGNicjFhaDcwMHlBTkZUNmY4dlZwRUYwZktNQjYzS3dXSmlmU0wtd0VqSDJmMmpaYzZ4QzBCbjByZUJrbF9yRHRVdUJBQ0lNcWI5Z1NxTWs3S3czcFg?oc=5",
+          "is_first_hand": false
+        }
+      ],
+      "milestone_dim": "flagship_release",
+      "milestone_dim_label": "旗舰模型发布",
+      "milestone_dim_label_en": "Flagship Model",
+      "is_recent_72h": true
+    },
+    {
+      "id": "ai_raw_rss-gnews-ai-models-zh_c5b4a0af1145",
+      "date": "2026-11-27T14:05:00+08:00",
+      "company_id": "tencent_hunyuan",
+      "company_name": "腾讯混元 (Hunyuan)",
+      "region": "国内",
+      "category": "最新动态",
+      "category_en": "Latest Release",
+      "title": "腾讯混元发布最新一代3D大模型Hy3D 3.6 - 新浪财经_金融信息服务商",
+      "title_en": "腾讯混元发布最新一代3D大模型Hy3D 3.6 - 新浪财经_金融信息服务商",
+      "what_it_does": "",
+      "what_it_does_en": "腾讯混元发布最新一代3D大模型Hy3D 3.6 新浪财经_金融信息服务商",
+      "who_cares": "",
+      "limitations": "",
+      "limitations_en": "",
+      "source_id": "rss-gnews-ai-models-zh",
+      "source_name": "新浪财经_金融信息服务商",
+      "source_url": "https://news.google.com/rss/articles/CBMipwFBVV95cUxPd3VGeHk0NmVmQVpKTkpOSW1QRTZERWxheWtRUFl3Z2ZOamo3YlJuSUoxa2dyby1uX3IwMEtEbjBqdnpfVTFoejZwME4xeE1RSGRvSTFsUUp6WGI2YnJvblN5QV9UNmFGc2g2ZHowRHNZRnZJU0ZaMmYyS2hBYkNrUU1pSGdqVjBoWkpEX2pqUW1yd2U4aHYzTGlYbEZZZVZlekUzYWRoSQ?oc=5",
+      "is_first_hand": false,
+      "source_tier": "wire_media",
+      "is_open_source": false,
+      "milestone_dim": "flagship_release",
+      "milestone_dim_label": "旗舰模型发布",
+      "milestone_dim_label_en": "Flagship Model",
+      "is_recent_72h": true,
+      "related_sources": [
+        {
+          "source_name": "新浪财经_金融信息服务商",
+          "url": "https://news.google.com/rss/articles/CBMipwFBVV95cUxPd3VGeHk0NmVmQVpKTkpOSW1QRTZERWxheWtRUFl3Z2ZOamo3YlJuSUoxa2dyby1uX3IwMEtEbjBqdnpfVTFoejZwME4xeE1RSGRvSTFsUUp6WGI2YnJvblN5QV9UNmFGc2g2ZHowRHNZRnZJU0ZaMmYyS2hBYkNrUU1pSGdqVjBoWkpEX2pqUW1yd2U4aHYzTGlYbEZZZVZlekUzYWRoSQ?oc=5",
+          "is_first_hand": false
+        },
+        {
+          "source_name": "维度",
+          "url": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE8zSVBnRWxQY2J6NUdRN3dQTXpGNV9oLW9jNGhOdW1jTUJGNXZFekZXY0hfUGt0dU93OXhiZEVmaG1PVGNqTGIwWmlyaXJwWHljY0EtYmNUTjU?oc=5",
+          "is_first_hand": false
+        }
+      ]
+    },
+    {
+      "id": "ai_raw_rss-gnews-ai-models-zh_15201b862c5b",
+      "date": "2026-11-27T11:46:54+08:00",
+      "company_id": "tencent_hunyuan",
+      "company_name": "腾讯混元 (Hunyuan)",
+      "region": "国内",
+      "category": "最新动态",
+      "category_en": "Latest Release",
+      "title": "腾讯混元推出3D大模型Hy3D 3.6，面数升至200万、贴图分辨率升级至8K",
+      "title_en": "腾讯混元推出3D大模型Hy3D 3.6，面数升至200万、贴图分辨率升级至8K",
+      "what_it_does": "",
+      "what_it_does_en": "腾讯混元推出3D大模型Hy3D 3.6，面数升至200万、贴图分辨率升级至8K 金融界",
+      "who_cares": "",
+      "limitations": "",
+      "limitations_en": "",
+      "source_id": "rss-gnews-ai-models-zh",
+      "source_name": "金融界",
+      "source_url": "https://news.google.com/rss/articles/CBMiZkFVX3lxTE9OVGFGNXpvcDdNa0hlRTdSdzh0b0tYZEpiUVhvYml3azJfUVF3WHZtRmlPSU1NSHo3OURHaG5LSDZ6dTQwcVNDVDM5ZWJfVGdzdU5hVEVJOEZXYWpCMk5LODY0RGF4dw?oc=5",
+      "is_first_hand": false,
+      "source_tier": "wire_media",
+      "is_open_source": false,
+      "milestone_dim": "flagship_release",
+      "milestone_dim_label": "旗舰模型发布",
+      "milestone_dim_label_en": "Flagship Model",
+      "is_recent_72h": true,
+      "related_sources": [
+        {
+          "source_name": "金融界",
+          "url": "https://news.google.com/rss/articles/CBMiZkFVX3lxTE9OVGFGNXpvcDdNa0hlRTdSdzh0b0tYZEpiUVhvYml3azJfUVF3WHZtRmlPSU1NSHo3OURHaG5LSDZ6dTQwcVNDVDM5ZWJfVGdzdU5hVEVJOEZXYWpCMk5LODY0RGF4dw?oc=5",
+          "is_first_hand": false
+        }
+      ]
+    },
+    {
+      "id": "ai_raw_rss-gnews-ai-models-zh_cfcd745e46e9",
+      "date": "2026-11-27T11:09:29+08:00",
+      "company_id": "tencent_hunyuan",
+      "company_name": "腾讯混元 (Hunyuan)",
+      "region": "国内",
+      "category": "最新动态",
+      "category_en": "Latest Release",
+      "title": "混元 Hy3D 3.6 发布：优化高模和 PBR 材质贴图生成能力",
+      "title_en": "混元 Hy3D 3.6 发布：优化高模和 PBR 材质贴图生成能力",
+      "what_it_does": "",
+      "what_it_does_en": "混元 Hy3D 3.6 发布：优化高模和 PBR 材质贴图生成能力 DoNews",
+      "who_cares": "",
+      "limitations": "",
+      "limitations_en": "",
+      "source_id": "rss-gnews-ai-models-zh",
+      "source_name": "DoNews",
+      "source_url": "https://news.google.com/rss/articles/CBMiXkFVX3lxTE9RUm91VWtKU0UzeG5pYmNFZzdwOGY5bVNJcTRqRE42aXU2U0ZCUFNRSDZ2VHZBSkdteGd5aU96dXp4NEwzRjhYTTZla3dSXzV3UTBKck40ekdzSVl0WlE?oc=5",
+      "is_first_hand": false,
+      "source_tier": "wire_media",
+      "is_open_source": false,
+      "milestone_dim": "flagship_release",
+      "milestone_dim_label": "旗舰模型发布",
+      "milestone_dim_label_en": "Flagship Model",
+      "is_recent_72h": true,
+      "related_sources": [
+        {
+          "source_name": "DoNews",
+          "url": "https://news.google.com/rss/articles/CBMiXkFVX3lxTE9RUm91VWtKU0UzeG5pYmNFZzdwOGY5bVNJcTRqRE42aXU2U0ZCUFNRSDZ2VHZBSkdteGd5aU96dXp4NEwzRjhYTTZla3dSXzV3UTBKck40ekdzSVl0WlE?oc=5",
+          "is_first_hand": false
+        }
+      ]
+    },
+    {
+      "id": "ai_raw_rss-gnews-ai-models-zh_a13db4ffdb75",
+      "date": "2026-11-27T10:22:00+08:00",
+      "company_id": "indie_opensource",
+      "company_name": "独立实验室 & 开源黑马",
+      "region": "全球开源",
+      "category": "最新动态",
+      "category_en": "Latest Release",
+      "title": "农业农村部：首个农耕文明领域大模型“天稷”发布",
+      "title_en": "农业农村部：首个农耕文明领域大模型“天稷”发布",
+      "what_it_does": "",
+      "what_it_does_en": "农业农村部：首个农耕文明领域大模型“天稷”发布 中国新闻网",
+      "who_cares": "",
+      "limitations": "",
+      "limitations_en": "",
+      "source_id": "rss-gnews-ai-models-zh",
+      "source_name": "中国",
+      "source_url": "https://news.google.com/rss/articles/CBMibEFVX3lxTE5ySDRLU0w3aHN1QkNFWG82UXY0cWpqa0NzRUtYSW1VSEtDT01KUWkyZVNTTlBVRDRxQm5fWm5Mb1hmbGt6ZmxpazFNUng1QTdFV3RkSVlOOXhQNXVrbHJjcmlla2FBaUh6eGxvSg?oc=5",
+      "is_first_hand": false,
+      "source_tier": "wire_media",
+      "is_open_source": false,
+      "milestone_dim": "flagship_release",
+      "milestone_dim_label": "旗舰模型发布",
+      "milestone_dim_label_en": "Flagship Model",
+      "is_recent_72h": true,
+      "related_sources": [
+        {
+          "source_name": "中国",
+          "url": "https://news.google.com/rss/articles/CBMibEFVX3lxTE5ySDRLU0w3aHN1QkNFWG82UXY0cWpqa0NzRUtYSW1VSEtDT01KUWkyZVNTTlBVRDRxQm5fWm5Mb1hmbGt6ZmxpazFNUng1QTdFV3RkSVlOOXhQNXVrbHJjcmlla2FBaUh6eGxvSg?oc=5",
+          "is_first_hand": false
+        },
+        {
+          "source_name": "中国",
+          "url": "https://news.google.com/rss/articles/CBMiaEFVX3lxTE5UWF9oaFV5VzQ3eERiaEhrTFllaHF1WldqVURJMkxkTjFOX3U0TXAzUDRGNzFSNFRoaU41Q3Y5d2VtdzJGZHg2REZUbi1ycGlxUEZQYmRkaDJ0T3d5TllmU3o3YUJ6OUp1?oc=5",
+          "is_first_hand": false
+        },
+        {
+          "source_name": "华尔街见闻 A股快讯",
+          "url": "https://wallstreetcn.com/livenews/3206657",
+          "is_first_hand": false
+        },
+        {
+          "source_name": "中国青年",
+          "url": "https://news.google.com/rss/articles/CBMiZEFVX3lxTE1MdUNOMWZiWHBBLXN0eDhsSnh1ZjZuMU1yeGg0MEN4a1FxSlRYc2tnTEd1aHMwS2hWZUlZUE96Y1c4dFFxYWN3bzNIZ1hwcWltMG5jVEg1d0paSjVyNDBZSE92aW8?oc=5",
+          "is_first_hand": false
+        }
+      ]
+    },
+    {
+      "id": "ai_raw_rss-gnews-ai-models-zh_916af419ac19",
+      "date": "2026-11-27T09:21:00+08:00",
+      "company_id": "openai",
+      "company_name": "OpenAI",
+      "region": "海外",
+      "category": "最新动态",
+      "category_en": "Latest Release",
+      "title": "资讯 | 通用人工智能企业竞争力指数发布，OpenAI列第一",
+      "title_en": "资讯 | 通用人工智能企业竞争力指数发布，OpenAI列第一",
+      "what_it_does": "",
+      "what_it_does_en": "资讯 | 通用人工智能企业竞争力指数发布，OpenAI列第一 上观新闻",
+      "who_cares": "",
+      "limitations": "",
+      "limitations_en": "",
+      "source_id": "rss-gnews-ai-models-zh",
+      "source_name": "上观",
+      "source_url": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE5yYjBWdktrQjc2Yllta2hLdXFhYldENzNmYkRPOTRTa01wXy1Dd2Nna2ZGVEVwNERJb0JuQTlOOEdzTl9Tcy1kYlNmdFlVd2ZNcUFQTm9IVDVaQQ?oc=5",
+      "is_first_hand": false,
+      "source_tier": "wire_media",
+      "is_open_source": false,
+      "milestone_dim": "flagship_release",
+      "milestone_dim_label": "旗舰模型发布",
+      "milestone_dim_label_en": "Flagship Model",
+      "is_recent_72h": true,
+      "related_sources": [
+        {
+          "source_name": "上观",
+          "url": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE5yYjBWdktrQjc2Yllta2hLdXFhYldENzNmYkRPOTRTa01wXy1Dd2Nna2ZGVEVwNERJb0JuQTlOOEdzTl9Tcy1kYlNmdFlVd2ZNcUFQTm9IVDVaQQ?oc=5",
+          "is_first_hand": false
+        }
+      ]
+    },
+    {
+      "id": "ai_raw_rss-gnews-ai-models-zh_19789111f54e",
+      "date": "2026-11-27T08:55:08+08:00",
+      "company_id": "openai",
+      "company_name": "OpenAI",
+      "region": "海外",
+      "category": "最新动态",
+      "category_en": "Latest Release",
+      "title": "中信证券：OpenAI发布GPT-6.2 Astra与Sol 看好物理AI，关注国产硬件供应链_滚动新闻",
+      "title_en": "【券商聚焦】中信证券：OpenAI发布GPT-6.2 Astra与Sol 看好物理AI，关注国产硬件供应链_滚动新闻",
+      "what_it_does": "",
+      "what_it_does_en": "【券商聚焦】中信证券：OpenAI发布GPT-6.2 Astra与Sol 看好物理AI，关注国产硬件供应链_滚动新闻 证券之星",
+      "who_cares": "",
+      "limitations": "",
+      "limitations_en": "",
+      "source_id": "rss-gnews-ai-models-zh",
+      "source_name": "证券之星",
+      "source_url": "https://news.google.com/rss/articles/CBMiZEFVX3lxTE12Q2VUWXBkT2E3QjNuNU1nV1JWMGZHbTlpMmFpZERZMEZpYzdNdkFFQkxfV1BvWlpMT1FBWG43V0NJUlcwOWFhcWd3T3dnVlJCUnBCS1gwWXUxZWpIQzRZMWR4clo?oc=5",
+      "is_first_hand": false,
+      "source_tier": "wire_media",
+      "is_open_source": false,
+      "milestone_dim": "flagship_release",
+      "milestone_dim_label": "旗舰模型发布",
+      "milestone_dim_label_en": "Flagship Model",
+      "is_recent_72h": true,
+      "related_sources": [
+        {
+          "source_name": "证券之星",
+          "url": "https://news.google.com/rss/articles/CBMiZEFVX3lxTE12Q2VUWXBkT2E3QjNuNU1nV1JWMGZHbTlpMmFpZERZMEZpYzdNdkFFQkxfV1BvWlpMT1FBWG43V0NJUlcwOWFhcWd3T3dnVlJCUnBCS1gwWXUxZWpIQzRZMWR4clo?oc=5",
+          "is_first_hand": false
+        }
+      ]
     },
     {
       "id": "ai_ev_evt_f6da37e9185b",
@@ -8930,6 +9808,39 @@
       ]
     },
     {
+      "id": "ai_raw_rss-gnews-opensource-ai_adf39844c488",
+      "date": "2026-11-27T08:00:00+08:00",
+      "company_id": "indie_opensource",
+      "company_name": "独立实验室 & 开源黑马",
+      "region": "全球开源",
+      "category": "最新动态",
+      "category_en": "Latest Release",
+      "title": "【全球 AI 动态】Sage-Med-Preview: 3B-Active Medical AI Tops 31 Benchmarks",
+      "title_en": "Sage-Med-Preview: 3B-Active Medical AI Tops 31 Benchmarks",
+      "what_it_does": "",
+      "what_it_does_en": "Sage-Med-Preview: 3B-Active Medical AI Tops 31 Benchmarks explainx.ai",
+      "who_cares": "",
+      "limitations": "",
+      "limitations_en": "",
+      "source_id": "rss-gnews-opensource-ai",
+      "source_name": "explainx.ai",
+      "source_url": "https://news.google.com/rss/articles/CBMisAFBVV95cUxNUmlmcWZ1VWFqZWtUUmxBdjNxVXRQdFFKQXZrM0ZPS0FES3BDa3dtTDFFNFZQTWozX0t0d2lLSzNmcWpQT01WTWJOcUtXaFo0b3ZBMVF0a180a2tCWThBbG0yS01lbm4zaFZTTEtiT1R6aEhGZFY1VW9rQTFPUGJjbF9aVTNEd2hFbF95N3VFLVZ1R3hTdWo2TzlkcTlhbFVHYzNpNlBRb1dVMkxkUGcxTg?oc=5",
+      "is_first_hand": false,
+      "source_tier": "wire_media",
+      "is_open_source": false,
+      "milestone_dim": "research_breakthrough",
+      "milestone_dim_label": "算法与科研突破",
+      "milestone_dim_label_en": "Research & Math",
+      "is_recent_72h": true,
+      "related_sources": [
+        {
+          "source_name": "explainx.ai",
+          "url": "https://news.google.com/rss/articles/CBMisAFBVV95cUxNUmlmcWZ1VWFqZWtUUmxBdjNxVXRQdFFKQXZrM0ZPS0FES3BDa3dtTDFFNFZQTWozX0t0d2lLSzNmcWpQT01WTWJOcUtXaFo0b3ZBMVF0a180a2tCWThBbG0yS01lbm4zaFZTTEtiT1R6aEhGZFY1VW9rQTFPUGJjbF9aVTNEd2hFbF95N3VFLVZ1R3hTdWo2TzlkcTlhbFVHYzNpNlBRb1dVMkxkUGcxTg?oc=5",
+          "is_first_hand": false
+        }
+      ]
+    },
+    {
       "id": "ai_ev_evt_7dd370bd0998",
       "date": "2026-11-27T07:17:19+08:00",
       "company_id": "anthropic",
@@ -8967,44 +9878,6 @@
       "milestone_dim_label": "旗舰模型发布",
       "milestone_dim_label_en": "Flagship Model",
       "is_recent_72h": true
-    },
-    {
-      "id": "ai_raw_wscn-a-stock-channel_f3745fd61447",
-      "date": "2026-11-27T07:16:36+08:00",
-      "company_id": "indie_opensource",
-      "company_name": "独立实验室 & 开源黑马",
-      "region": "全球开源",
-      "category": "最新动态",
-      "category_en": "Latest Release",
-      "title": "首个农耕文明领域大模型“天稷”发布",
-      "title_en": "首个农耕文明领域大模型“天稷”发布",
-      "what_it_does": "",
-      "what_it_does_en": "从农业农村部了解到，日前首个农耕文明领域大模型“天稷”发布。该模型涵盖8000万条覆盖传统农耕技艺、现代智慧农业与农耕文明演进脉络的知识条目，为农业生产提出智慧决策建议。（央视）",
-      "who_cares": "",
-      "limitations": "",
-      "limitations_en": "",
-      "source_id": "wscn-a-stock-channel",
-      "source_name": "华尔街见闻 A股快讯",
-      "source_url": "https://wallstreetcn.com/livenews/3206657",
-      "is_first_hand": false,
-      "source_tier": "wire_media",
-      "is_open_source": false,
-      "milestone_dim": "flagship_release",
-      "milestone_dim_label": "旗舰模型发布",
-      "milestone_dim_label_en": "Flagship Model",
-      "is_recent_72h": true,
-      "related_sources": [
-        {
-          "source_name": "华尔街见闻 A股快讯",
-          "url": "https://wallstreetcn.com/livenews/3206657",
-          "is_first_hand": false
-        },
-        {
-          "source_name": "中国青年",
-          "url": "https://news.google.com/rss/articles/CBMiZEFVX3lxTE1MdUNOMWZiWHBBLXN0eDhsSnh1ZjZuMU1yeGg0MEN4a1FxSlRYc2tnTEd1aHMwS2hWZUlZUE96Y1c4dFFxYWN3bzNIZ1hwcWltMG5jVEg1d0paSjVyNDBZSE92aW8?oc=5",
-          "is_first_hand": false
-        }
-      ]
     },
     {
       "id": "ai_ev_evt_46a81e353183",
@@ -9122,6 +9995,45 @@
       ]
     },
     {
+      "id": "ai_ev_evt_b9f41baf7513",
+      "date": "2026-11-27T04:10:23+08:00",
+      "company_id": "anthropic",
+      "company_name": "Anthropic",
+      "region": "海外",
+      "category": "模型与产品",
+      "category_en": "Model & Product",
+      "title": "在OpenAI和Anthropic对其数据关闭大门后，一家中国AI开发者转而求助谷歌和Meta",
+      "title_en": "After OpenAI and Anthropic shut the door on their data, a Chinese AI developer is turning to Google and Meta instead",
+      "what_it_does": "中国AI公司智谱AI（Z.AI）和月之暗面（Moonshot AI）不得不推迟其下一代旗舰模型的发布，并正在寻找新的训练数据源。",
+      "what_it_does_en": "Chinese AI companies Z.AI and Moonshot AI have to delay their next flagship models and are looking for new sources of training data.",
+      "who_cares": "",
+      "limitations": "",
+      "limitations_en": "",
+      "source_id": "rss-the-decoder",
+      "source_name": "The Decoder (AI前沿)",
+      "source_url": "https://the-decoder.com/after-openai-and-anthropic-shut-the-door-on-their-data-a-chinese-ai-developer-is-turning-to-google-and-meta-instead",
+      "is_first_hand": false,
+      "source_tier": "wire_media",
+      "event_id": "evt_b9f41baf7513",
+      "is_open_source": false,
+      "related_sources": [
+        {
+          "source_name": "The Decoder (AI前沿)",
+          "url": "https://the-decoder.com/after-openai-and-anthropic-shut-the-door-on-their-data-a-chinese-ai-developer-is-turning-to-google-and-meta-instead",
+          "is_first_hand": false
+        },
+        {
+          "source_name": "Coinpaper",
+          "url": "https://news.google.com/rss/articles/CBMiswFBVV95cUxQcXQ1eVp0Y0xQTGZDWURXQndNR0tTS1VRdmFxMUpYOFp2OGdjUWh3M0xUcUpuZk9BVU92R2hrRElhaTlSWlhPRWZrVkpid3hkcnoxOHRlOElZRzhtOW9kRTBoUzRDdkNfUk5WQzRTLW9IYXhTTzQ3a2VQT2FoR0lEYldCdURlVE5Qd05SLUFkSnVySnBrbDVNZTItT1dpWVBlVUtXdVpqTi1LejBWR2E0MHkwTQ?oc=5",
+          "is_first_hand": false
+        }
+      ],
+      "milestone_dim": "flagship_release",
+      "milestone_dim_label": "旗舰模型发布",
+      "milestone_dim_label_en": "Flagship Model",
+      "is_recent_72h": true
+    },
+    {
       "id": "ai_ev_evt_0845a8b786b5",
       "date": "2026-11-27T04:10:23+08:00",
       "company_id": "anthropic",
@@ -9159,107 +10071,6 @@
       "milestone_dim_label": "旗舰模型发布",
       "milestone_dim_label_en": "Flagship Model",
       "is_recent_72h": true
-    },
-    {
-      "id": "ai_raw_github-releases_cf84a3f5646f",
-      "date": "2026-11-27T01:52:02+08:00",
-      "company_id": "indie_opensource",
-      "company_name": "独立实验室 & 开源黑马",
-      "region": "全球开源",
-      "category": "开源突破",
-      "category_en": "Open Source",
-      "title": "[GitHub Release] Ollama 发布 v0.40.19-rc0",
-      "title_en": "[GitHub Release] Ollama 发布 v0.40.19-rc0",
-      "what_it_does": "量化工具新增目标文件大小与比特率的自动最优类型选择功能；重构帕累托优化、拉格朗日惩罚及量化检查函数",
-      "what_it_does_en": "版本 v0.40.19-rc0（Pre-release/RC | 许可: MIT）。",
-      "who_cares": "",
-      "limitations": "",
-      "limitations_en": "",
-      "source_id": "github-releases",
-      "source_name": "GitHub Releases 官方版本",
-      "source_url": "https://github.com/ollama/ollama/releases/tag/v0.40.19-rc0",
-      "is_first_hand": true,
-      "source_tier": "first_party",
-      "is_open_source": true,
-      "milestone_dim": "open_source_eco",
-      "milestone_dim_label": "开源权重与生态",
-      "milestone_dim_label_en": "Open Source",
-      "is_recent_72h": true,
-      "related_sources": [
-        {
-          "source_name": "GitHub Releases 官方版本",
-          "url": "https://github.com/ollama/ollama/releases/tag/v0.40.19-rc0",
-          "is_first_hand": true
-        },
-        {
-          "source_name": "GitHub Releases 官方版本",
-          "url": "https://github.com/ggml-org/llama.cpp/releases/tag/v1.1.0",
-          "is_first_hand": true
-        },
-        {
-          "source_name": "GitHub Releases 官方版本",
-          "url": "https://github.com/ollama/ollama/releases/tag/v0.40.18",
-          "is_first_hand": true
-        },
-        {
-          "source_name": "GitHub Releases 官方版本",
-          "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12755",
-          "is_first_hand": true
-        },
-        {
-          "source_name": "GitHub Releases 官方版本",
-          "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12734",
-          "is_first_hand": true
-        },
-        {
-          "source_name": "GitHub Releases 官方版本",
-          "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12721",
-          "is_first_hand": true
-        },
-        {
-          "source_name": "GitHub Releases 官方版本",
-          "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12686",
-          "is_first_hand": true
-        },
-        {
-          "source_name": "GitHub Releases 官方版本",
-          "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12676",
-          "is_first_hand": true
-        }
-      ]
-    },
-    {
-      "id": "ai_raw_rss-gnews-ai-models-zh_3046768ac3f1",
-      "date": "2026-11-27T01:40:55+08:00",
-      "company_id": "deepseek",
-      "company_name": "DeepSeek",
-      "region": "国内",
-      "category": "最新动态",
-      "category_en": "Latest Release",
-      "title": "V4全系列模型上线后，DeepSeek Harness开发者预览版开放测试",
-      "title_en": "V4全系列模型上线后，DeepSeek Harness开发者预览版开放测试",
-      "what_it_does": "",
-      "what_it_does_en": "V4全系列模型上线后，DeepSeek Harness开发者预览版开放测试 财联社",
-      "who_cares": "",
-      "limitations": "",
-      "limitations_en": "",
-      "source_id": "rss-gnews-ai-models-zh",
-      "source_name": "财联社",
-      "source_url": "https://news.google.com/rss/articles/CBMiSEFVX3lxTE4wd0JWNXNkT3NmUy1UV09ldm1iSXY3dTllQ1o1ZFg5MFZPS1BRY3RCTUJLc05UYWJTb1R6VHhoT0NXM3hJQU5xLQ?oc=5",
-      "is_first_hand": false,
-      "source_tier": "wire_media",
-      "is_open_source": false,
-      "milestone_dim": "flagship_release",
-      "milestone_dim_label": "旗舰模型发布",
-      "milestone_dim_label_en": "Flagship Model",
-      "is_recent_72h": true,
-      "related_sources": [
-        {
-          "source_name": "财联社",
-          "url": "https://news.google.com/rss/articles/CBMiSEFVX3lxTE4wd0JWNXNkT3NmUy1UV09ldm1iSXY3dTllQ1o1ZFg5MFZPS1BRY3RCTUJLc05UYWJTb1R6VHhoT0NXM3hJQU5xLQ?oc=5",
-          "is_first_hand": false
-        }
-      ]
     },
     {
       "id": "ai_raw_rss-the-decoder_1b40e9b59a9a",
@@ -9361,70 +10172,75 @@
       ]
     },
     {
-      "id": "ai_ev_evt_189f28d79064",
+      "id": "ai_base_openai_anti_distillation",
       "date": "2026-11-26T23:45:08+08:00",
-      "company_id": "anthropic",
-      "company_name": "Anthropic",
+      "company_id": "openai",
+      "company_name": "OpenAI",
       "region": "海外",
-      "category": "模型与产品",
-      "category_en": "Model & Product",
+      "category": "安全治理与防提取",
+      "category_en": "Safety & Governance",
       "title": "OpenAI 官方公布反蒸馏防护进展：GPT-6.2 Astra 思考链提取成功率从 54% 降至 0.2%",
-      "title_en": "在 OpenAI 和 Anthropic 封禁蒸馏数据后，月之暗面转向 Google 与 Meta 模型获取训练数据",
+      "title_en": "OpenAI details anti-distillation defenses cutting GPT-6.2 Astra CoT extraction from 54% to 0.2%",
       "what_it_does": "通过 API 行为指纹识别、诱饵响应混淆与大规模账号封禁体系，阻断竞争对手利用自动化批量调用窃取闭源旗舰推理思维链与模型能力。",
-      "what_it_does_en": "在OpenAI和Anthropic封禁蒸馏数据后，中国AI开发者转而向Google与Meta的模型获取训练数据。",
-      "who_cares": "",
-      "limitations": "",
-      "limitations_en": "",
-      "source_id": "aihot",
+      "what_it_does_en": "Hardens closed frontier APIs against unauthorized chain-of-thought scraping and automated model distillation.",
+      "who_cares": "模型安全工程师、大模型厂商与企业 API 架构师",
+      "limitations": "仅限 OpenAI 闭源托管 API 内部安全策略，不开放权重与检测算法细节。",
+      "limitations_en": "Proprietary server-side enforcement on OpenAI closed endpoints.",
       "source_name": "OpenAI Official",
       "source_url": "https://openai.com/news/#anti-distillation-gpt-6-2",
+      "is_open_source": false,
       "is_first_hand": true,
       "source_tier": "first_party",
-      "event_id": "evt_189f28d79064",
-      "is_open_source": false,
+      "milestone_dim": "commercial_governance",
+      "is_baseline_milestone": true,
+      "milestone_dim_label": "商业化与安全治理",
+      "milestone_dim_label_en": "Governance & Commercial",
+      "is_recent_72h": true,
       "related_sources": [
-        {
-          "source_name": "AIHOT 前沿",
-          "url": "https://aihot.news/items/g7y9qa582hic2dmfdwpmgp1i4",
-          "is_first_hand": false
-        },
         {
           "source_name": "OpenAI Official",
           "url": "https://openai.com/news/#anti-distillation-gpt-6-2",
           "is_first_hand": true
+        },
+        {
+          "source_name": "AIHOT 前沿",
+          "url": "https://aihot.news/items/g7y9qa582hic2dmfdwpmgp1i4",
+          "is_first_hand": false
         }
       ],
-      "milestone_dim": "commercial_governance",
-      "milestone_dim_label": "商业化与安全治理",
-      "milestone_dim_label_en": "Governance & Commercial",
-      "is_recent_72h": true
+      "event_id": "evt_189f28d79064"
     },
     {
-      "id": "ai_raw_rss-gnews-ai-models-zh_537e6bd96ff3",
+      "id": "ai_base_zhipu_glm54_55",
       "date": "2026-11-26T22:07:00+08:00",
       "company_id": "zhipu_glm",
       "company_name": "智谱 AI (GLM)",
       "region": "国内",
-      "category": "最新动态",
-      "category_en": "Latest Release",
+      "category": "旗舰与开源编程",
+      "category_en": "Flagship & Open Coding",
       "title": "智谱 AI 推进「GLM-5.4 与 GLM-5.5」旗舰及「GLM-5.3-Flash」，持续开放 THUDM 与 zai-org 开源权重",
-      "title_en": "智谱GLM-5.5延期是老外造谣：性能Fable级、上万张国产AI卡进展顺利",
+      "title_en": "Zhipu AI advances GLM-5.4 / GLM-5.5 flagships and GLM-5.3-Flash alongside open-weight releases",
       "what_it_does": "记者获悉，智谱GLM-5.4于今日中午上线Coding Plan订阅体系，官方尚未正式发布。另据智谱官方社群消息，GLM-5.4采用Loop Transformer架构，是国内首款基于该架构的旗舰模型。内测用户反馈其综合表现优于3万亿级…",
-      "what_it_does_en": "智谱GLM-5.5延期是老外造谣：性能Fable级、上万张国产AI卡进展顺利 驱动之家",
-      "who_cares": "",
-      "limitations": "",
-      "limitations_en": "",
-      "source_id": "rss-gnews-ai-models-zh",
+      "what_it_does_en": "Upgrades repo-level coding, structured Chinese tool-use, and high-throughput Flash API inference.",
+      "who_cares": "中文企业私有化团队、Agent 工程团队与开源开发者",
+      "limitations": "旗舰超大规模版本以 MaaS 云 API 为主，轻量级与中小参数权重开源发布。",
+      "limitations_en": "Frontier weights via BigModel API; compact/open tiers on Hugging Face & GitHub.",
       "source_name": "Zhipu AI 官方",
       "source_url": "https://bigmodel.cn/",
+      "is_open_source": true,
       "is_first_hand": true,
       "source_tier": "first_party",
-      "is_open_source": true,
       "milestone_dim": "open_source_eco",
+      "is_baseline_milestone": true,
       "milestone_dim_label": "开源权重与生态",
       "milestone_dim_label_en": "Open Source",
       "is_recent_72h": true,
       "related_sources": [
+        {
+          "source_name": "Zhipu AI 官方",
+          "url": "https://bigmodel.cn/",
+          "is_first_hand": true
+        },
         {
           "source_name": "驱动之家",
           "url": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE4yRDVINVAtdUZkcmJ2dFV1M3dhMnhLXzBnSGVCZlRSaHVHYk5kRmhvQVAyZ1RKejYtZWpJZGIwZlh5NlZDZTlhcHNnQTQyWHZzdEE1QlJMdzQ?oc=5",
@@ -9434,11 +10250,6 @@
           "source_name": "Sohu",
           "url": "https://news.google.com/rss/articles/CBMiiAFBVV95cUxNd0xpaDlkcS1LYWstUl95aVVfaWRvbzEycXVqb1hyMzJtcVpiYzctNVVEZnpJamZadkxKcnpTSWVLT2ZmYWdpZjZMUkhRNTk3N3ZmcXBiS2JjcTd4OFVFNVAxTG0zWWwtaHNVaUw1ZlNETVFYUU41TGNsd3Vralg3N0N1UURJcFlR?oc=5",
           "is_first_hand": false
-        },
-        {
-          "source_name": "Zhipu AI 官方",
-          "url": "https://bigmodel.cn/",
-          "is_first_hand": true
         },
         {
           "source_name": "MarkTechPost (AI论文/模型)",
@@ -9750,23 +10561,23 @@
       "is_recent_72h": true
     },
     {
-      "id": "ai_raw_rss-gnews-opensource-ai_8082aba16341",
+      "id": "ai_raw_rss-gnews-ai-models-en_dee2911783ce",
       "date": "2026-11-26T17:37:04+08:00",
       "company_id": "anthropic",
       "company_name": "Anthropic",
       "region": "海外",
       "category": "最新动态",
       "category_en": "Latest Release",
-      "title": "【全球 AI 动态】Staff at Anthropic and Open AI sound alarm on advanced models too powerful to release",
-      "title_en": "Staff at Anthropic and Open AI sound alarm on advanced models too powerful to release",
+      "title": "【国际外交动态】Anthropic and OpenAI staff doubt unreleased frontier models can ship safely, Axios reports",
+      "title_en": "Anthropic and OpenAI staff doubt unreleased frontier models can ship safely, Axios reports",
       "what_it_does": "",
-      "what_it_does_en": "Staff at Anthropic and Open AI sound alarm on advanced models too powerful to release SiliconANGLE",
+      "what_it_does_en": "Anthropic and OpenAI staff doubt unreleased frontier models can ship safely, Axios reports CASRAI",
       "who_cares": "",
       "limitations": "",
       "limitations_en": "",
-      "source_id": "rss-gnews-opensource-ai",
-      "source_name": "SiliconANGLE",
-      "source_url": "https://news.google.com/rss/articles/CBMivwFBVV95cUxPQXpHa0RwVHVTMDFmaVpkVzZBRmNxdmJuTVlPUDV0UWl2c0xzeERhY1VyQ2x3cng4QTRpMTB2MzNnclNDOHJCNWhSNlhsY3QxMXFxU1dMYnBLNVVBa3RiamcxMFd4cVd1ZFVOcFJEcVFNR29PR051c3NMRllTczlqVUlUUzVGUDBObmZJRVplbkZTVlRVdlZFU014aEJJTEVwM1lfYWpydU9LY1BraG1vNjZoY1d1S2g3U1RsSTF1RQ?oc=5",
+      "source_id": "rss-gnews-ai-models-en",
+      "source_name": "CASRAI",
+      "source_url": "https://news.google.com/rss/articles/CBMijwFBVV95cUxPMW43QW5vSHpwcmR3c1hjOVFHNy1ReXRhZGhQNXpZSmlsNUVhRnRuNGZROE5BM2hkWGlQcTZsVmNDc1Jnc1ByZGlSd3h6UWJZOWtUZXRva3dFMFp0d3k3Sk9LZ2xzUVBQMnNVRDRyYkFJNzVTVnlteVZyOWc1RmZpaVRiQnMteWNIZUk2aHVqTQ?oc=5",
       "is_first_hand": false,
       "source_tier": "wire_media",
       "is_open_source": false,
@@ -9776,8 +10587,8 @@
       "is_recent_72h": true,
       "related_sources": [
         {
-          "source_name": "SiliconANGLE",
-          "url": "https://news.google.com/rss/articles/CBMivwFBVV95cUxPQXpHa0RwVHVTMDFmaVpkVzZBRmNxdmJuTVlPUDV0UWl2c0xzeERhY1VyQ2x3cng4QTRpMTB2MzNnclNDOHJCNWhSNlhsY3QxMXFxU1dMYnBLNVVBa3RiamcxMFd4cVd1ZFVOcFJEcVFNR29PR051c3NMRllTczlqVUlUUzVGUDBObmZJRVplbkZTVlRVdlZFU014aEJJTEVwM1lfYWpydU9LY1BraG1vNjZoY1d1S2g3U1RsSTF1RQ?oc=5",
+          "source_name": "CASRAI",
+          "url": "https://news.google.com/rss/articles/CBMijwFBVV95cUxPMW43QW5vSHpwcmR3c1hjOVFHNy1ReXRhZGhQNXpZSmlsNUVhRnRuNGZROE5BM2hkWGlQcTZsVmNDc1Jnc1ByZGlSd3h6UWJZOWtUZXRva3dFMFp0d3k3Sk9LZ2xzUVBQMnNVRDRyYkFJNzVTVnlteVZyOWc1RmZpaVRiQnMteWNIZUk2aHVqTQ?oc=5",
           "is_first_hand": false
         },
         {
@@ -9786,13 +10597,13 @@
           "is_first_hand": false
         },
         {
-          "source_name": "BigGo Finance",
-          "url": "https://news.google.com/rss/articles/CBMidkFVX3lxTE5CajJfOWt0dlBXTU8tdThTNGIzNzNPUTc4Xzd6MGsyaTNDUWg1b1RoUC1RZmpTaURPMnVfWEpiUk9SVGFXMUpvRmhtUDRFaldSOEdqUFhGa2hpZjdneTdncm1IcVZwMFp3T09fcVFDTllnT2ZBUVE?oc=5",
+          "source_name": "SiliconANGLE",
+          "url": "https://news.google.com/rss/articles/CBMivwFBVV95cUxPQXpHa0RwVHVTMDFmaVpkVzZBRmNxdmJuTVlPUDV0UWl2c0xzeERhY1VyQ2x3cng4QTRpMTB2MzNnclNDOHJCNWhSNlhsY3QxMXFxU1dMYnBLNVVBa3RiamcxMFd4cVd1ZFVOcFJEcVFNR29PR051c3NMRllTczlqVUlUUzVGUDBObmZJRVplbkZTVlRVdlZFU014aEJJTEVwM1lfYWpydU9LY1BraG1vNjZoY1d1S2g3U1RsSTF1RQ?oc=5",
           "is_first_hand": false
         },
         {
-          "source_name": "CASRAI",
-          "url": "https://news.google.com/rss/articles/CBMijwFBVV95cUxPMW43QW5vSHpwcmR3c1hjOVFHNy1ReXRhZGhQNXpZSmlsNUVhRnRuNGZROE5BM2hkWGlQcTZsVmNDc1Jnc1ByZGlSd3h6UWJZOWtUZXRva3dFMFp0d3k3Sk9LZ2xzUVBQMnNVRDRyYkFJNzVTVnlteVZyOWc1RmZpaVRiQnMteWNIZUk2aHVqTQ?oc=5",
+          "source_name": "BigGo Finance",
+          "url": "https://news.google.com/rss/articles/CBMidkFVX3lxTE5CajJfOWt0dlBXTU8tdThTNGIzNzNPUTc4Xzd6MGsyaTNDUWg1b1RoUC1RZmpTaURPMnVfWEpiUk9SVGFXMUpvRmhtUDRFaldSOEdqUFhGa2hpZjdneTdncm1IcVZwMFp3T09fcVFDTllnT2ZBUVE?oc=5",
           "is_first_hand": false
         },
         {
@@ -9887,70 +10698,70 @@
       "is_recent_72h": true
     },
     {
-      "id": "ai_tool_tool_gh_ggml-org_llama.cpp",
-      "date": "2026-11-26T17:16:47+08:00",
-      "company_id": "indie_opensource",
-      "company_name": "独立实验室 & 开源黑马",
-      "region": "全球开源",
-      "category": "开源工具/仓库",
-      "category_en": "Open-Source Repo",
-      "title": "开源工具更新：llama.cpp v1.1.0",
-      "title_en": "Open-source release: llama.cpp v1.1.0",
-      "what_it_does": "新增支持 Inkling 2、Domyn Edge 4B 等多种模型架构；将 DFlash 推测解码拆分为独立方法；弃用旧版 llama_batch API 并全面转向 llama_batch_ext。",
-      "what_it_does_en": "新增支持 Inkling 2、Domyn Edge 4B 等多种模型架构；将 DFlash 推测解码拆分为独立方法；弃用旧版 llama_batch API 并全面转向 llama_batch_ext。",
+      "id": "ai_raw_rss-gnews-opensource-ai_8082aba16341",
+      "date": "2026-11-26T17:37:04+08:00",
+      "company_id": "anthropic",
+      "company_name": "Anthropic",
+      "region": "海外",
+      "category": "最新动态",
+      "category_en": "Latest Release",
+      "title": "Anthropic和OpenAI员工对过于强大而无法发布的先进模型发出警报",
+      "title_en": "Staff at Anthropic and Open AI sound alarm on advanced models too powerful to release",
+      "what_it_does": "",
+      "what_it_does_en": "",
       "who_cares": "",
-      "limitations": "许可证：MIT",
-      "limitations_en": "License: MIT",
-      "source_id": "github-releases",
-      "source_name": "GitHub Releases API",
-      "source_url": "https://github.com/ggml-org/llama.cpp/releases/tag/v1.1.0",
-      "is_first_hand": true,
-      "source_tier": "first_party",
-      "is_open_source": true,
-      "milestone_dim": "api_agent_eng",
-      "milestone_dim_label": "API 与 Agent 工程",
-      "milestone_dim_label_en": "API & Agent Eng",
+      "limitations": "",
+      "limitations_en": "",
+      "source_id": "rss-gnews-opensource-ai",
+      "source_name": "SiliconANGLE",
+      "source_url": "https://news.google.com/rss/articles/CBMivwFBVV95cUxPQXpHa0RwVHVTMDFmaVpkVzZBRmNxdmJuTVlPUDV0UWl2c0xzeERhY1VyQ2x3cng4QTRpMTB2MzNnclNDOHJCNWhSNlhsY3QxMXFxU1dMYnBLNVVBa3RiamcxMFd4cVd1ZFVOcFJEcVFNR29PR051c3NMRllTczlqVUlUUzVGUDBObmZJRVplbkZTVlRVdlZFU014aEJJTEVwM1lfYWpydU9LY1BraG1vNjZoY1d1S2g3U1RsSTF1RQ?oc=5",
+      "is_first_hand": false,
+      "source_tier": "wire_media",
+      "is_open_source": false,
+      "milestone_dim": "flagship_release",
+      "milestone_dim_label": "旗舰模型发布",
+      "milestone_dim_label_en": "Flagship Model",
       "is_recent_72h": true,
       "related_sources": [
         {
-          "source_name": "GitHub Releases API",
-          "url": "https://github.com/ggml-org/llama.cpp/releases/tag/v1.1.0",
-          "is_first_hand": true
+          "source_name": "SiliconANGLE",
+          "url": "https://news.google.com/rss/articles/CBMivwFBVV95cUxPQXpHa0RwVHVTMDFmaVpkVzZBRmNxdmJuTVlPUDV0UWl2c0xzeERhY1VyQ2x3cng4QTRpMTB2MzNnclNDOHJCNWhSNlhsY3QxMXFxU1dMYnBLNVVBa3RiamcxMFd4cVd1ZFVOcFJEcVFNR29PR051c3NMRllTczlqVUlUUzVGUDBObmZJRVplbkZTVlRVdlZFU014aEJJTEVwM1lfYWpydU9LY1BraG1vNjZoY1d1S2g3U1RsSTF1RQ?oc=5",
+          "is_first_hand": false
         },
         {
-          "source_name": "GitHub Releases API",
-          "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12755",
-          "is_first_hand": true
+          "source_name": "Digg",
+          "url": "https://news.google.com/rss/articles/CBMiUkFVX3lxTE1kVnVCYjU0bWotaVBIeUZLNlZPaVhRaUpDYURjVzdsWGNvRlpkb0ptZlJ3RTJheXYwc3NKSHhwTDJ6MEJyNHlPMmpfc2pqaUJ4VlE?oc=5",
+          "is_first_hand": false
         },
         {
-          "source_name": "GitHub Releases API",
-          "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12734",
-          "is_first_hand": true
+          "source_name": "BigGo Finance",
+          "url": "https://news.google.com/rss/articles/CBMidkFVX3lxTE5CajJfOWt0dlBXTU8tdThTNGIzNzNPUTc4Xzd6MGsyaTNDUWg1b1RoUC1RZmpTaURPMnVfWEpiUk9SVGFXMUpvRmhtUDRFaldSOEdqUFhGa2hpZjdneTdncm1IcVZwMFp3T09fcVFDTllnT2ZBUVE?oc=5",
+          "is_first_hand": false
         },
         {
-          "source_name": "GitHub Releases API",
-          "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12721",
-          "is_first_hand": true
+          "source_name": "CASRAI",
+          "url": "https://news.google.com/rss/articles/CBMijwFBVV95cUxPMW43QW5vSHpwcmR3c1hjOVFHNy1ReXRhZGhQNXpZSmlsNUVhRnRuNGZROE5BM2hkWGlQcTZsVmNDc1Jnc1ByZGlSd3h6UWJZOWtUZXRva3dFMFp0d3k3Sk9LZ2xzUVBQMnNVRDRyYkFJNzVTVnlteVZyOWc1RmZpaVRiQnMteWNIZUk2aHVqTQ?oc=5",
+          "is_first_hand": false
         },
         {
-          "source_name": "GitHub Releases API",
-          "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12686",
-          "is_first_hand": true
+          "source_name": "Decrypt",
+          "url": "https://news.google.com/rss/articles/CBMikwFBVV95cUxNcnkzb3R3VlF2RnJLRlRVUnV6LWFqM0RjRHRPcENHd3I2aDNZc2ZyRUhXbVB2aDVoaDZTQWtWUUtZdGJIZmEyektwVENxYWs3UGs4SkpBMm45S2prR3hKVlRPNUZtem1GUDJUR29jbW03SmMtVVg0cThMV1U3T2h6ZThSYTROTXozWWNqZTVQcHZxRm8?oc=5",
+          "is_first_hand": false
         },
         {
-          "source_name": "GitHub Releases API",
-          "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12676",
-          "is_first_hand": true
+          "source_name": "Tom's Hardware",
+          "url": "https://news.google.com/rss/articles/CBMikgNBVV95cUxPUDBvdGZPSXFmVHpDeGFIc1gyZTM2SDVpY1lsRF80djNqaDNzSkF5Uy1kbFdaT3ZFcG1abTRHVFFHYmFyZmVfMmVtUERkNVM0bU9xYlZUUF9qY3Vpa0tKRXlhZ2RqdVo2UmRvSjN1SklUOXA4anJfX2t4cURCLWQwTXJycUJURjNEZVB6ellRTUF4QWt4ZS1TOWZTNHNmUkN0elFXTFBNak5IMG5ONWpRM3QzUjZDTTAzcmgxcGFDMWFYd1NFc09LS1dDTTRvU1MwZ092ZEhsSkFHcW5zbTdpTjgxcmVzTHo2eUdZbUwta0VyT0h0am40MDhaMlZBeUJiUVluVy05TUlPbGRmdkptbDBUMHpLbFlBOFAweUR2OWlSUVN3R1NESHExdG5zOGE3U2pHWTdhOWFla040TUVHOWFRcXRaS2NGeV90MXFNd3NqMGRPRUlBR0tBcjAwMXlSTHJjOWVBM2dPZmdJd0VfNUtXNmcyQV91QTAtc0JGNU9kUTBKRXQ2VkpXUUo0aFBrOGc?oc=5",
+          "is_first_hand": false
         },
         {
-          "source_name": "GitHub Releases API",
-          "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12671",
-          "is_first_hand": true
+          "source_name": "Nacionale",
+          "url": "https://news.google.com/rss/articles/CBMivwFBVV95cUxOUllFa3RaMEdGVE1xamJUakRpNnNaWXpPYkFjRkhhLTdfczFfVVhuQTNMLTNLWDRybUpOQmpFQUJKVFFQeEl3SzZKRUdaSzZ2MWlxR1hmT1NINnBBa09HaktPWXBfYXh0M0p5bFFaOXNsWVZNVEw2X1laOVpZam01LW5NRkd3Tl96cDMtYTFRZWNNcVcxbE02Z1k1ZER1RmUzRThJUWtMU3dVM3FUMEEySlJqZlg3YzgtMmtEUHItMA?oc=5",
+          "is_first_hand": false
         },
         {
-          "source_name": "GitHub Releases API",
-          "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12649",
-          "is_first_hand": true
+          "source_name": "Axios",
+          "url": "https://news.google.com/rss/articles/CBMiggFBVV95cUxNWnJmY2hLTWlhTHcwN3pVSEhYOXlYUThYQXJ3RWxobVlPR2lweWpSQUY1NklSLVNVUHI4c0wwdnN3azBiV05wTVV6ZmRMTllRR1dvcmNYdjRheHZDOUNVaTBxUFpuS3BZUVBvZ2tpMlpTSS1oYWZ3SC16RVZEME51a0FB?oc=5",
+          "is_first_hand": false
         }
       ]
     },
@@ -10008,39 +10819,6 @@
         {
           "source_name": "Sohu",
           "url": "https://news.google.com/rss/articles/CBMijAFBVV95cUxNZUl0cV9QZXZ2WTZZRmNpT0h0ZHgtd3J3eTFwRUlvdHZkZktCZ0NSNllsVVp2VVhtNTdtLVVvcXBlUEVmaHdWTzJDUFZjY3JCSkxDa3BpU1R3U1RVYnlkRmJZNmduR2toN3ZoNmFHbUpXQkJqTHNKYUhpZFE1eW8wOHA2TXlBTFpqdEhXdw?oc=5",
-          "is_first_hand": false
-        }
-      ]
-    },
-    {
-      "id": "ai_raw_rss-gnews-ai-models-zh_02a44dd46606",
-      "date": "2026-11-26T16:20:43+08:00",
-      "company_id": "openai",
-      "company_name": "OpenAI",
-      "region": "海外",
-      "category": "最新动态",
-      "category_en": "Latest Release",
-      "title": "刚刚，Tibo承诺「连续28天发布或重置」，OpenAI遭遇信任危机",
-      "title_en": "刚刚，Tibo承诺「连续28天发布或重置」，OpenAI遭遇信任危机",
-      "what_it_does": "",
-      "what_it_does_en": "刚刚，Tibo承诺「连续28天发布或重置」，OpenAI遭遇信任危机 36Kr",
-      "who_cares": "",
-      "limitations": "",
-      "limitations_en": "",
-      "source_id": "rss-gnews-ai-models-zh",
-      "source_name": "36Kr",
-      "source_url": "https://news.google.com/rss/articles/CBMiTkFVX3lxTFBQNTQ5aDRoZ3JCMlV0bFFlVHlFTWtvNDZ1WnlIZ1NkVzJXZFNxT2hDb2xYY21BeFZfQXltRVVGZUkxU0x5b2RyYlhlS0F1QQ?oc=5",
-      "is_first_hand": false,
-      "source_tier": "wire_media",
-      "is_open_source": false,
-      "milestone_dim": "flagship_release",
-      "milestone_dim_label": "旗舰模型发布",
-      "milestone_dim_label_en": "Flagship Model",
-      "is_recent_72h": true,
-      "related_sources": [
-        {
-          "source_name": "36Kr",
-          "url": "https://news.google.com/rss/articles/CBMiTkFVX3lxTFBQNTQ5aDRoZ3JCMlV0bFFlVHlFTWtvNDZ1WnlIZ1NkVzJXZFNxT2hDb2xYY21BeFZfQXltRVVGZUkxU0x5b2RyYlhlS0F1QQ?oc=5",
           "is_first_hand": false
         }
       ]
@@ -10176,44 +10954,6 @@
           "source_name": "凤凰",
           "url": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE0xRGt3NnpTUmFQbnpJYjIxZ3plX3Jsd2RqQkhlazR2V1NzOE1wWW5abWFET0FwcHctSzVJeTA5ZzI1NWJ4NEhSc3V5S1pwMGc?oc=5",
           "is_first_hand": false
-        }
-      ]
-    },
-    {
-      "id": "ai_tool_tool_gh_n8n-io_n8n",
-      "date": "2026-11-26T15:23:36+08:00",
-      "company_id": "indie_opensource",
-      "company_name": "独立实验室 & 开源黑马",
-      "region": "全球开源",
-      "category": "开源工具/仓库",
-      "category_en": "Open-Source Repo",
-      "title": "开源工具更新：n8n stable",
-      "title_en": "Open-source release: n8n stable",
-      "what_it_does": "AI 智能体节点现已支持过滤空白聊天记忆；AI 构建器允许字段引用检查通过未列出的输出架构字段；并为所有工作流的归档与取消发布操作应用“总是允许”策略。",
-      "what_it_does_en": "MCP 执行数据增加大小限制以提升稳定性；统一表达式引擎的 URL 路径提取逻辑；优化工作流数据数组拼接的内存占用。",
-      "who_cares": "",
-      "limitations": "许可证：多许可证/自定义条款 (见仓库 LICENSE)",
-      "limitations_en": "License: 多许可证/自定义条款 (见仓库 LICENSE)",
-      "source_id": "github-releases",
-      "source_name": "GitHub Releases API",
-      "source_url": "https://github.com/n8n-io/n8n/releases/tag/stable",
-      "is_first_hand": true,
-      "source_tier": "first_party",
-      "is_open_source": true,
-      "milestone_dim": "api_agent_eng",
-      "milestone_dim_label": "API 与 Agent 工程",
-      "milestone_dim_label_en": "API & Agent Eng",
-      "is_recent_72h": true,
-      "related_sources": [
-        {
-          "source_name": "GitHub Releases API",
-          "url": "https://github.com/n8n-io/n8n/releases/tag/stable",
-          "is_first_hand": true
-        },
-        {
-          "source_name": "GitHub Releases API",
-          "url": "https://github.com/n8n-io/n8n/releases/tag/n8n%403.4.0",
-          "is_first_hand": true
         }
       ]
     },
@@ -11558,49 +12298,6 @@
       ]
     },
     {
-      "id": "ai_tool_tool_gh_all-hands-ai_openhands",
-      "date": "2026-11-25T22:13:07+08:00",
-      "company_id": "indie_opensource",
-      "company_name": "独立实验室 & 开源黑马",
-      "region": "全球开源",
-      "category": "开源工具/仓库",
-      "category_en": "Open-Source Repo",
-      "title": "开源工具更新：OpenHands v1.46.0",
-      "title_en": "Open-source release: OpenHands v1.46.0",
-      "what_it_does": "更新了相关项目文档并进行了常规维护；补充了 macOS 系统的安装注意事项。",
-      "what_it_does_en": "例行维护与更新；提示macOS系统下未签名应用的安装说明",
-      "who_cares": "",
-      "limitations": "许可证：MIT",
-      "limitations_en": "License: MIT",
-      "source_id": "github-releases",
-      "source_name": "GitHub Releases API",
-      "source_url": "https://github.com/OpenHands/OpenHands/releases/tag/v1.46.0",
-      "is_first_hand": true,
-      "source_tier": "first_party",
-      "is_open_source": true,
-      "milestone_dim": "open_source_eco",
-      "milestone_dim_label": "开源权重与生态",
-      "milestone_dim_label_en": "Open Source",
-      "is_recent_72h": true,
-      "related_sources": [
-        {
-          "source_name": "GitHub Releases API",
-          "url": "https://github.com/OpenHands/OpenHands/releases/tag/v1.46.0",
-          "is_first_hand": true
-        },
-        {
-          "source_name": "GitHub Releases API",
-          "url": "https://github.com/OpenHands/OpenHands/releases/tag/v1.45.0",
-          "is_first_hand": true
-        },
-        {
-          "source_name": "GitHub Releases API",
-          "url": "https://github.com/OpenHands/OpenHands/releases/tag/v1.44.0",
-          "is_first_hand": true
-        }
-      ]
-    },
-    {
       "id": "ai_raw_rss-gnews-ai-models-zh_8c57f366fddc",
       "date": "2026-11-25T22:06:00+08:00",
       "company_id": "deepseek",
@@ -11780,45 +12477,6 @@
         {
           "source_name": "AIHOT 前沿",
           "url": "https://aihot.news/items/s3f4vqrfwio323h66k1q5dx9t",
-          "is_first_hand": false
-        }
-      ],
-      "milestone_dim": "flagship_release",
-      "milestone_dim_label": "旗舰模型发布",
-      "milestone_dim_label_en": "Flagship Model",
-      "is_recent_72h": true
-    },
-    {
-      "id": "ai_ev_evt_375e763c2235",
-      "date": "2026-11-25T18:02:48+08:00",
-      "company_id": "anthropic",
-      "company_name": "Anthropic",
-      "region": "海外",
-      "category": "模型与产品",
-      "category_en": "Model & Product",
-      "title": "Axios报道称，Anthropic和OpenAI员工怀疑未发布的前沿模型能否安全上线",
-      "title_en": "Anthropic and OpenAI staff doubt unreleased frontier models can ship safely, Axios reports",
-      "what_it_does": "",
-      "what_it_does_en": "Anthropic and OpenAI staff doubt unreleased frontier models can ship safely, Axios reports CASRAI",
-      "who_cares": "",
-      "limitations": "",
-      "limitations_en": "",
-      "source_id": "rss-gnews-ai-models-en",
-      "source_name": "CASRAI",
-      "source_url": "https://news.google.com/rss/articles/CBMijwFBVV95cUxPMW43QW5vSHpwcmR3c1hjOVFHNy1ReXRhZGhQNXpZSmlsNUVhRnRuNGZROE5BM2hkWGlQcTZsVmNDc1Jnc1ByZGlSd3h6UWJZOWtUZXRva3dFMFp0d3k3Sk9LZ2xzUVBQMnNVRDRyYkFJNzVTVnlteVZyOWc1RmZpaVRiQnMteWNIZUk2aHVqTQ?oc=5",
-      "is_first_hand": false,
-      "source_tier": "wire_media",
-      "event_id": "evt_375e763c2235",
-      "is_open_source": false,
-      "related_sources": [
-        {
-          "source_name": "CASRAI",
-          "url": "https://news.google.com/rss/articles/CBMijwFBVV95cUxPMW43QW5vSHpwcmR3c1hjOVFHNy1ReXRhZGhQNXpZSmlsNUVhRnRuNGZROE5BM2hkWGlQcTZsVmNDc1Jnc1ByZGlSd3h6UWJZOWtUZXRva3dFMFp0d3k3Sk9LZ2xzUVBQMnNVRDRyYkFJNzVTVnlteVZyOWc1RmZpaVRiQnMteWNIZUk2aHVqTQ?oc=5",
-          "is_first_hand": false
-        },
-        {
-          "source_name": "ForkLog",
-          "url": "https://news.google.com/rss/articles/CBMipwFBVV95cUxNREczVUFHb0ZYb3d0WXVIb1NGb29JemQzYkVkTEp3SWVGalRfVmZXelZadEMzN0V6SXZFV1BpQ09EbEsxUzU1bDNzbmRnUWJMdlYxVDc5YzZKTnhXcFp1b0M1UUluRU9qWFIzOWE0Q2tWM28tV3RZTW90LTEyal8tMUZyYUFGMDlqV21hcDVWOFRyY0JRTWpfemFJX1RaQ082aFhKcEVDVQ?oc=5",
           "is_first_hand": false
         }
       ],
@@ -12738,72 +13396,6 @@
       "is_recent_72h": true
     },
     {
-      "id": "ai_raw_openai-news-rss_a8844c1994b5",
-      "date": "2026-11-24T21:00:00+08:00",
-      "company_id": "openai",
-      "company_name": "OpenAI",
-      "region": "海外",
-      "category": "官方一手",
-      "category_en": "First-Hand Official",
-      "title": "【全球 AI 动态】GPT-6 models demonstrate intrinsic protein-design capabilities",
-      "title_en": "GPT-6 models demonstrate intrinsic protein-design capabilities",
-      "what_it_does": "",
-      "what_it_does_en": "GPT-6 models design protein structures and sequences using reasoning and code. Lab tests found evidence of binding across five targets.",
-      "who_cares": "",
-      "limitations": "",
-      "limitations_en": "",
-      "source_id": "openai-news-rss",
-      "source_name": "OpenAI 官方动态",
-      "source_url": "https://openai.com/index/gpt-6-models-demonstrate-intrinsic-protein-design-capabilities",
-      "is_first_hand": true,
-      "source_tier": "first_party",
-      "is_open_source": false,
-      "milestone_dim": "flagship_release",
-      "milestone_dim_label": "旗舰模型发布",
-      "milestone_dim_label_en": "Flagship Model",
-      "is_recent_72h": true,
-      "related_sources": [
-        {
-          "source_name": "OpenAI 官方动态",
-          "url": "https://openai.com/index/gpt-6-models-demonstrate-intrinsic-protein-design-capabilities",
-          "is_first_hand": true
-        }
-      ]
-    },
-    {
-      "id": "ai_raw_rss-gnews-ai-models-zh_f24c4a672b8c",
-      "date": "2026-11-24T20:14:16+08:00",
-      "company_id": "openai",
-      "company_name": "OpenAI",
-      "region": "海外",
-      "category": "最新动态",
-      "category_en": "Latest Release",
-      "title": "在 OpenAI 发布会上演示模型的王若宸回国了",
-      "title_en": "在 OpenAI 发布会上演示模型的王若宸回国了",
-      "what_it_does": "",
-      "what_it_does_en": "在 OpenAI 发布会上演示模型的王若宸回国了 Sohu",
-      "who_cares": "",
-      "limitations": "",
-      "limitations_en": "",
-      "source_id": "rss-gnews-ai-models-zh",
-      "source_name": "Sohu",
-      "source_url": "https://news.google.com/rss/articles/CBMijAFBVV95cUxPbHg0bHozTjQxVUV1VnFVSVptWWNnd1dCWHY2cDY2V1dMRGczV25IcUJMa2RwOTFKUDhheXF4eTlacjBvRW5mVjMweWhDd3JETmR3OUNVZTlNckIxcEZYbXhQMllZcWMxZ1oySVVuLUtYWG1LVTc4RjJ6QjNXa19wUE1uMzQ1S0FlcXgwMw?oc=5",
-      "is_first_hand": false,
-      "source_tier": "wire_media",
-      "is_open_source": false,
-      "milestone_dim": "flagship_release",
-      "milestone_dim_label": "旗舰模型发布",
-      "milestone_dim_label_en": "Flagship Model",
-      "is_recent_72h": true,
-      "related_sources": [
-        {
-          "source_name": "Sohu",
-          "url": "https://news.google.com/rss/articles/CBMijAFBVV95cUxPbHg0bHozTjQxVUV1VnFVSVptWWNnd1dCWHY2cDY2V1dMRGczV25IcUJMa2RwOTFKUDhheXF4eTlacjBvRW5mVjMweWhDd3JETmR3OUNVZTlNckIxcEZYbXhQMllZcWMxZ1oySVVuLUtYWG1LVTc4RjJ6QjNXa19wUE1uMzQ1S0FlcXgwMw?oc=5",
-          "is_first_hand": false
-        }
-      ]
-    },
-    {
       "id": "ai_raw_rss-gnews-ai-models-en_11c36437d916",
       "date": "2026-11-24T20:05:53+08:00",
       "company_id": "kimi",
@@ -12833,39 +13425,6 @@
           "source_name": "Fello AI",
           "url": "https://news.google.com/rss/articles/CBMiQkFVX3lxTE9HREdZR0drZDBrV21mSmdXNGFqVkFqYXllb1FIakZHZ1N3Z1RsREUzdi1yN2Q2YnE3dEw3eW9oLWFhdw?oc=5",
           "is_first_hand": false
-        }
-      ]
-    },
-    {
-      "id": "ai_raw_openai-news-rss_29914bdc7ac0",
-      "date": "2026-11-24T19:00:00+08:00",
-      "company_id": "openai",
-      "company_name": "OpenAI",
-      "region": "海外",
-      "category": "官方一手",
-      "category_en": "First-Hand Official",
-      "title": "【外媒快讯】Searching for distant planets with Astra",
-      "title_en": "Searching for distant planets with Astra",
-      "what_it_does": "",
-      "what_it_does_en": "See how two amateur astronomers used Codex and Astra to find potential exoplanets in public data from NASA’s Kepler and TESS space telescopes.",
-      "who_cares": "",
-      "limitations": "",
-      "limitations_en": "",
-      "source_id": "openai-news-rss",
-      "source_name": "OpenAI 官方动态",
-      "source_url": "https://openai.com/index/searching-for-distant-planets-with-astra",
-      "is_first_hand": true,
-      "source_tier": "first_party",
-      "is_open_source": false,
-      "milestone_dim": "flagship_release",
-      "milestone_dim_label": "旗舰模型发布",
-      "milestone_dim_label_en": "Flagship Model",
-      "is_recent_72h": true,
-      "related_sources": [
-        {
-          "source_name": "OpenAI 官方动态",
-          "url": "https://openai.com/index/searching-for-distant-planets-with-astra",
-          "is_first_hand": true
         }
       ]
     },
@@ -12934,7 +13493,7 @@
       "milestone_dim": "commercial_governance",
       "milestone_dim_label": "商业化与安全治理",
       "milestone_dim_label_en": "Governance & Commercial",
-      "is_recent_72h": true
+      "is_recent_72h": false
     },
     {
       "id": "ai_raw_ithome_12f0aca744ca",
@@ -12960,7 +13519,7 @@
       "milestone_dim": "open_source_eco",
       "milestone_dim_label": "开源权重与生态",
       "milestone_dim_label_en": "Open Source",
-      "is_recent_72h": true,
+      "is_recent_72h": false,
       "related_sources": [
         {
           "source_name": "IT之家",
@@ -13010,7 +13569,7 @@
           "is_first_hand": false
         }
       ],
-      "is_recent_72h": true
+      "is_recent_72h": false
     },
     {
       "id": "ai_ev_evt_1235ff5fffc6",
@@ -13054,7 +13613,7 @@
       "milestone_dim": "flagship_release",
       "milestone_dim_label": "旗舰模型发布",
       "milestone_dim_label_en": "Flagship Model",
-      "is_recent_72h": true
+      "is_recent_72h": false
     },
     {
       "id": "ai_ev_evt_f9ef03b883d8",
@@ -13108,7 +13667,7 @@
       "milestone_dim": "flagship_release",
       "milestone_dim_label": "旗舰模型发布",
       "milestone_dim_label_en": "Flagship Model",
-      "is_recent_72h": true
+      "is_recent_72h": false
     },
     {
       "id": "ai_raw_rss-gnews-ai-models-en_024131e086e6",
@@ -13134,7 +13693,7 @@
       "milestone_dim": "api_agent_eng",
       "milestone_dim_label": "API 与 Agent 工程",
       "milestone_dim_label_en": "API & Agent Eng",
-      "is_recent_72h": true,
+      "is_recent_72h": false,
       "related_sources": [
         {
           "source_name": "Fello AI",
@@ -13167,7 +13726,7 @@
       "milestone_dim": "flagship_release",
       "milestone_dim_label": "旗舰模型发布",
       "milestone_dim_label_en": "Flagship Model",
-      "is_recent_72h": true,
+      "is_recent_72h": false,
       "related_sources": [
         {
           "source_name": "观点",
@@ -13207,7 +13766,7 @@
           "is_first_hand": false
         }
       ],
-      "is_recent_72h": true
+      "is_recent_72h": false
     },
     {
       "id": "ai_raw_rss-gnews-ai-models-zh_beb97e6fe9ee",
@@ -14371,22 +14930,22 @@
       ]
     },
     {
-      "id": "ai_raw_huggingface-hub_9183737a66f3",
+      "id": "ai_tool_tool_hf_qwen_qwen2-vl-2b-instruct",
       "date": "2026-11-20T14:46:42+08:00",
       "company_id": "qwen",
       "company_name": "阿里千问 (Qwen)",
       "region": "国内",
-      "category": "开源突破",
-      "category_en": "Open Source",
-      "title": "【外媒快讯】[HF 模型卡] Qwen/Qwen2-VL-2B-Instruct 更新 (apache-2.0)",
-      "title_en": "[HF 模型卡] Qwen/Qwen2-VL-2B-Instruct 更新 (apache-2.0)",
-      "what_it_does": "阿里通义千问 (Qwen) 旗下 Qwen2-VL-2B-Instruct（2B 参数档 · 跨模态视觉感知）：图文多模态理解与对话生成；支持输入图像与文本并生成精准分析回复，适用于视觉问答、图表解析与多模态代理（近期下载 90.6 万…",
-      "what_it_does_en": "Hugging Face 官方机构 Qwen 更新模型 Qwen/Qwen2-VL-2B-Instruct（开源权重可用 (GA)，许可：apache-2.0，近期下载：906211）。",
+      "category": "开源权重",
+      "category_en": "Open Weights",
+      "title": "开源模型权重：Qwen2-VL-2B-Instruct (APACHE-2.0)",
+      "title_en": "Open-source release: Qwen2-VL-2B-Instruct",
+      "what_it_does": "阿里通义千问 (Qwen) 旗下 Qwen2-VL-2B-Instruct（2B 参数档 · 跨模态视觉感知）：图文多模态理解与对话生成；支持输入图像与文本并生成精准分析回复，适用于视觉问答、图表解析与多模态代理（近期下载 90.5 万…",
+      "what_it_does_en": "阿里通义千问 (Qwen) 旗下 Qwen2-VL-2B-Instruct（2B 参数档 · 跨模态视觉感知）：图文多模态理解与对话生成；支持输入图像与文本并生成精准分析回复，适用于视觉问答、图表解析与多模态代理（近期下载 90.5 万次）",
       "who_cares": "",
-      "limitations": "",
-      "limitations_en": "",
+      "limitations": "许可证：apache-2.0",
+      "limitations_en": "License: apache-2.0",
       "source_id": "huggingface-hub",
-      "source_name": "Hugging Face 官方模型库",
+      "source_name": "Hugging Face Hub API",
       "source_url": "https://huggingface.co/Qwen/Qwen2-VL-2B-Instruct",
       "is_first_hand": true,
       "source_tier": "first_party",
@@ -14397,7 +14956,7 @@
       "is_recent_72h": false,
       "related_sources": [
         {
-          "source_name": "Hugging Face 官方模型库",
+          "source_name": "Hugging Face Hub API",
           "url": "https://huggingface.co/Qwen/Qwen2-VL-2B-Instruct",
           "is_first_hand": true
         }

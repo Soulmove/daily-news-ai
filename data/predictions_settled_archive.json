@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "updated_at": "2026-11-27T08:36:18+08:00",
+  "updated_at": "2026-11-27T17:41:51+08:00",
   "settled": {
     "pred_seed_nvda_sec_502": {
       "prediction_id": "pred_seed_nvda_sec_502",
@@ -295,6 +295,58 @@
         "evidence_title": "11 月 25 日公布的美国 10 月核心 PCE 通胀同比涨幅能否回落至 2.7% 及以下？",
         "note": "已过预定截止窗口且权威信源未出现满足开奖条件的实锤落地，按落空条件自动结算。",
         "brier_score": 0.1681
+      }
+    },
+    "pred_live_gold_rebound_window": {
+      "prediction_id": "pred_live_gold_rebound_window",
+      "mode": "live",
+      "status": "settled",
+      "category": "market",
+      "title": "现货黄金 11 月底（11 月 30 日收盘）前能否重新站上 3,700 美元/盎司？",
+      "title_en": "Can spot gold reclaim and close above $3,700/oz before the end of November?",
+      "target_entity_id": "ent_gold_metals",
+      "target_entity": "现货黄金 / 贵金属",
+      "question": "11 月 30 日收盘前，国际现货黄金或 COMEX 主力期金任意交易日收盘价能否站上 3,700 美元？",
+      "question_en": "Before Nov 30 close, will spot/COMEX gold settle at or above $3,700/oz?",
+      "created_at": "2026-11-23T17:07:49+08:00",
+      "due_at": "2026-11-30T20:00:00+08:00",
+      "win_rule": "11 月 30 日前国际现货黄金或 COMEX 主力期金官方日收盘价 >= 3,700 美元/盎司",
+      "lose_rule": "整个 11 月剩余交易日金价收盘始终低于 3,700 美元/盎司",
+      "indeterminate_rule": "主要贵金属交易所数据中断",
+      "supporting_evidence": [
+        "金价此前杀跌后逢低实物买盘与央行配置预期升温，今日金价反弹近 3%"
+      ],
+      "opposing_evidence": [
+        "美联储鹰派表态与美元高位运行仍压制黄金短线反弹空间"
+      ],
+      "core_assumption": "直接按国际现货黄金 / COMEX 期金官方收盘价自动核验",
+      "invalidation_trigger": "突发超预期紧缩决议导致大宗金属流动性抛售",
+      "probability_pct": 48,
+      "probability_note": "基于公开官方日程与权威信源建立的客观验证观察题，事件实锤或到期后自动核验开奖",
+      "current_judgment": "国际金价已重新站上 3,700 美元/盎司上方（核验参考：3706.86），预测提前命中！",
+      "versions": [
+        {
+          "version": 1,
+          "updated_at": "2026-11-23T17:07:49+08:00",
+          "judgment": "跟踪黄金期现反弹强度与美元实际利率走势",
+          "probability_pct": 52,
+          "reason": "由大宗金属剧震事件自动立项"
+        },
+        {
+          "version": 2,
+          "updated_at": "2026-11-27T17:41:51+08:00",
+          "judgment": "国际金价已重新站上 3,700 美元/盎司上方（核验参考：3706.86），预测提前命中！",
+          "probability_pct": 100,
+          "reason": "事件实锤达成开奖条件，自动结算完成"
+        }
+      ],
+      "settlement": {
+        "outcome": "correct",
+        "settled_at": "2026-11-27T17:41:51+08:00",
+        "evidence_url": "https://quote.eastmoney.com/",
+        "evidence_title": "国际金价实时报价突破 3,700 美元（3706.86）",
+        "note": "国际金价已重新站上 3,700 美元/盎司上方（核验参考：3706.86），预测提前命中！",
+        "brier_score": 0.2704
       }
     }
   }

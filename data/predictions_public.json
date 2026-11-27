@@ -1,7 +1,7 @@
 {
   "schema_version": "4.1",
-  "generated_at": "2026-11-27T08:36:18+08:00",
-  "batch_id": "smart-20261127-083618",
+  "generated_at": "2026-11-27T17:41:51+08:00",
+  "batch_id": "smart-20261127-174151",
   "note": "基于公开官方日程与权威信源建立的客观验证观察题，事件实锤或到期后自动核验开奖。",
   "predictions": [
     {
@@ -184,7 +184,7 @@
       "invalidation_trigger": "11 月 25 日核心 PCE 与 12 月非农就业超预期回落",
       "probability_pct": 62,
       "probability_note": "锚定北京时间 2026 年 12 月 10 日 03:00 美联储议息声明官方利率数字自动开奖",
-      "current_judgment": "最新动态：黄金、白银上涨！机构称市场已基本消化美联储12月加息预期；聚焦 11 月 25 日 PCE 与 12 月非农对北京时间 12 月 10 日 03:00 FOMC 决议的定价指引",
+      "current_judgment": "最新动态：欧元区消费者大幅上调通胀预期 为欧洲央行加息提供了依据；聚焦 11 月 25 日 PCE 与 12 月非农对北京时间 12 月 10 日 03:00 FOMC 决议的定价指引",
       "current_judgment_en": "Fed officials highlight sticky inflation; PCE & NFP will decide whether Dec 10 brings another hike.",
       "versions": [
         {
@@ -238,10 +238,10 @@
         },
         {
           "version": 8,
-          "updated_at": "2026-11-27T08:36:18+08:00",
-          "judgment": "最新动态：黄金、白银上涨！机构称市场已基本消化美联储12月加息预期；聚焦 11 月 25 日 PCE 与 12 月非农对北京时间 12 月 10 日 03:00 FOMC 决议的定价指引",
+          "updated_at": "2026-11-27T17:41:51+08:00",
+          "judgment": "最新动态：欧元区消费者大幅上调通胀预期 为欧洲央行加息提供了依据；聚焦 11 月 25 日 PCE 与 12 月非农对北京时间 12 月 10 日 03:00 FOMC 决议的定价指引",
           "probability_pct": 62,
-          "reason": "参考最新美联储报道：黄金、白银上涨！机构称市场已基本消化美联储12月加息预期"
+          "reason": "参考最新美联储报道：欧元区消费者大幅上调通胀预期 为欧洲央行加息提供了依据"
         }
       ],
       "settlement": null
@@ -378,7 +378,7 @@
     {
       "prediction_id": "pred_live_gold_rebound_window",
       "mode": "live",
-      "status": "open",
+      "status": "settled",
       "category": "market",
       "title": "现货黄金 11 月底（11 月 30 日收盘）前能否重新站上 3,700 美元/盎司？",
       "title_en": "Can spot gold reclaim and close above $3,700/oz before the end of November?",
@@ -401,7 +401,7 @@
       "invalidation_trigger": "突发超预期紧缩决议导致大宗金属流动性抛售",
       "probability_pct": 48,
       "probability_note": "基于公开官方日程与权威信源建立的客观验证观察题，事件实锤或到期后自动核验开奖",
-      "current_judgment": "金价急跌后迎来近 3% 逢低反弹，但 11 月底前能否一举站回 3,700 美元还要看明天美国核心 PCE 数据",
+      "current_judgment": "国际金价已重新站上 3,700 美元/盎司上方（核验参考：3706.86），预测提前命中！",
       "versions": [
         {
           "version": 1,
@@ -409,9 +409,23 @@
           "judgment": "跟踪黄金期现反弹强度与美元实际利率走势",
           "probability_pct": 52,
           "reason": "由大宗金属剧震事件自动立项"
+        },
+        {
+          "version": 2,
+          "updated_at": "2026-11-27T17:41:51+08:00",
+          "judgment": "国际金价已重新站上 3,700 美元/盎司上方（核验参考：3706.86），预测提前命中！",
+          "probability_pct": 100,
+          "reason": "事件实锤达成开奖条件，自动结算完成"
         }
       ],
-      "settlement": null
+      "settlement": {
+        "outcome": "correct",
+        "settled_at": "2026-11-27T17:41:51+08:00",
+        "evidence_url": "https://quote.eastmoney.com/",
+        "evidence_title": "国际金价实时报价突破 3,700 美元（3706.86）",
+        "note": "国际金价已重新站上 3,700 美元/盎司上方（核验参考：3706.86），预测提前命中！",
+        "brier_score": 0.2704
+      }
     },
     {
       "prediction_id": "pred_live_nvda_post_return_hold",

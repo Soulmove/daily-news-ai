@@ -1,51 +1,43 @@
 {
   "schema_version": "4.2",
-  "batch_id": "smart-20261127-083618",
-  "input_batch_id": "raw-20261127-083530",
-  "input_cutoff_at": "2026-11-27T08:35:30+08:00",
-  "generated_at": "2026-11-27T08:36:18+08:00",
-  "published_at": "2026-11-27T08:38:42+08:00",
+  "batch_id": "smart-20261127-174151",
+  "input_batch_id": "raw-20261127-174050",
+  "input_cutoff_at": "2026-11-27T17:40:50+08:00",
+  "generated_at": "2026-11-27T17:41:51+08:00",
+  "published_at": "2026-11-27T17:43:58+08:00",
   "category": "tech",
   "category_label": "科技/AI",
   "generation_mode": "ai_v3_mega_overlay",
-  "model_name": "gemini-3.5-flash-lite",
+  "model_name": "gemini-3.1-flash-lite",
   "quality_flags": [
     "deterministic_fresh_base"
   ],
   "key_changes": [
     {
-      "headline": "OpenAI 承认 GPT-6.2 计费出错并修复，Astra 额度消耗加快 40%、Sol 加快 25%",
-      "detail": "OpenAI承认GPT-6.2计费系统此前存在错误折扣，修复后Astra和Sol用户的额度消耗速度较上周分别加快40%和25%。",
-      "event_id": "evt_46a81e353183",
-      "storyline_id": "st_52b245d968b3"
+      "headline": "腾讯混元发布 3D 生成大模型 Hy3D 3.6，面向专业 3D 创作",
+      "detail": "腾讯混元发布3D生成大模型Hy3D 3.6，旨在服务专业3D创作领域。",
+      "event_id": "evt_032ac3aa81c2",
+      "storyline_id": "st_60ac5ff6eb64"
     },
     {
-      "headline": "Anthropic 平台工程负责人莱斯谈 AI 如何改变工程师晋升与面试标准",
-      "detail": "Anthropic平台工程负责人凯特琳·莱斯表示，随着AI普及，单纯以项目完成时间来判断软件工程师是否具备晋升条件的参考价值已大不如前。",
-      "event_id": "evt_7dd370bd0998",
-      "storyline_id": "st_58a24ebcb433"
+      "headline": "TrendForce：DRAM 需求面临更大不确定性，一般型内存合约价 2028 年转跌风险升温",
+      "detail": "IT之家 11 月 27 日消息，TrendForce（集邦）今日刊文表示，近期的一系列变化导致 DRAM 需求面临更大不确定性 ，供应链正重新检视 2027~2028 年产销规划，导致整体 DRAM 采购动能略微放缓。在需求方面，影响 DRAM 市场的风险因素包括美国国内政治局势变化、Neocloud 企业融资难度上升期以及出口管制等；",
+      "event_id": "evt_b7cb00302d46",
+      "storyline_id": "st_2ffbbd755942"
     },
     {
-      "headline": "在 OpenAI 和 Anthropic 封禁蒸馏数据后，月之暗面转向 Google 与 Meta 模型获取训练数据",
-      "detail": "在OpenAI和Anthropic封禁蒸馏数据后，中国AI开发者转而向Google与Meta的模型获取训练数据。",
-      "event_id": "evt_189f28d79064",
-      "storyline_id": "st_2b4e1ceaf3ae"
+      "headline": "腾讯开源DFly2：一种复用目标模型稀疏KV缓存的投机采样方案",
+      "detail": "腾讯开源了面向稀疏注意力大模型的投机采样方案DFly2。该方案的每个草稿层均复用目标模型的KV缓存及Top-k索引选择，无需额外增加草稿KV内存，并将服务能力提升至64K。",
+      "event_id": "evt_dee1f00c3f0c",
+      "storyline_id": "st_7067afee67ac"
     }
   ],
   "overview_sections": [
     {
-      "title": "前沿科技与人工智能核心脉络",
+      "title": "AI基础设施与应用演进",
       "points": [
         {
-          "text": "大模型厂商在API计费机制、数据蒸馏合规与训练数据源获取上面临持续调整。",
-          "source_refs": []
-        },
-        {
-          "text": "生成式AI工具对软件工程职业生态与企业研发效率的重塑效应日益显现。",
-          "source_refs": []
-        },
-        {
-          "text": "硬件驱动程序与显示优化工具在修复旧Bug的同时暴露出新的兼容性瑕疵。",
+          "text": "AI模型正向多模态与高效推理方向快速迭代，同时硬件供应链面临需求周期的重新评估。",
           "source_refs": []
         }
       ]
@@ -54,25 +46,28 @@
   "events": [
     {
       "schema_version": "4.1",
-      "event_id": "evt_46a81e353183",
-      "storyline_id": "st_52b245d968b3",
+      "event_id": "evt_b9f41baf7513",
+      "storyline_id": "st_32b3a2f533d3",
       "article_ids": [
-        "rss-the-decoder_1b40e9b59a9a",
-        "ithome_cdc22f2f09f3",
-        "aihot_2080c92da57a",
-        "aihot_a2a3441ffdf9"
+        "rss-the-decoder_dc9aebda979d",
+        "rss-gnews-ai-models-en_468b899dcfb4"
       ],
       "legacy_event_ids": [],
-      "title": "OpenAI 承认 GPT-6.2 计费出错并修复，Astra 额度消耗加快 40%、Sol 加快 25%",
+      "title": "在OpenAI和Anthropic对其数据关闭大门后，一家中国AI开发者转而求助谷歌和Meta",
       "category": "tech",
       "entities": [
-        "OpenAI"
+        "OpenAI",
+        "Anthropic / Claude"
       ],
       "entity_ids": [
-        "ent_openai"
+        "ent_openai",
+        "ent_anthropic",
+        "ent_google"
       ],
       "entity_confidences": {
-        "OpenAI": 0.99
+        "OpenAI": 0.99,
+        "Anthropic / Claude": 0.86,
+        "Google / DeepMind / Gemini": 0.76
       },
       "matched_entities": [
         {
@@ -86,208 +81,7 @@
           "tickers": [],
           "reason": "正文/实体匹配关键词「openai」",
           "confidence": 0.99
-        }
-      ],
-      "importance": "high",
-      "sentiment": "Mixed",
-      "special_note": null,
-      "material_stage": null,
-      "material_stage_label": null,
-      "material_stage_confidence": null,
-      "thumbnail_url": "https://the-decoder.com/wp-content/uploads/2026/10/openai.png",
-      "publisher_name": "The Decoder (AI前沿)",
-      "source_status": "ok",
-      "evidence_status": "multi_source",
-      "evidence_label": "多独立来源提及（待核官方全文）",
-      "evidence_status_reason": "已有 3 家独立媒体族提及（含摘要或正文首段）；多源转载不代表官方公告已证实",
-      "attribution_warning": null,
-      "regulatory_note": null,
-      "contradictions": [],
-      "downweight_reasons": [],
-      "quality_flags": [],
-      "material_depth": "title_and_excerpt",
-      "source_count": 4,
-      "platform_count": 3,
-      "independent_publisher_count": 3,
-      "reprint_count": 0,
-      "published_at": "2026-11-27T01:28:56+08:00",
-      "event_date": "2026-11-27",
-      "event_time": "2026-11-27T01:28:56+08:00",
-      "stale": false,
-      "event_date_source": "llm_extracted",
-      "is_stale_rehash": false,
-      "time_trust_level": "article_timestamp",
-      "time_confidence": "article_timestamp",
-      "first_discovered_at": "2026-11-27T08:35:30+08:00",
-      "first_reported_at": "2026-11-27T01:28:56+08:00",
-      "latest_fact_update_at": "2026-11-27T06:59:06+08:00",
-      "latest_reported_at": "2026-11-27T06:59:06+08:00",
-      "fetched_at": "2026-11-27T08:35:30+08:00",
-      "input_batch_id": "raw-20261127-083530",
-      "fact_summary": "OpenAI承认GPT-6.2计费系统此前存在错误折扣，修复后Astra和Sol用户的额度消耗速度较上周分别加快40%和25%。",
-      "fact_atoms": [
-        {
-          "atom_id": "fa_13076474",
-          "subject": "OpenAI",
-          "metric_or_action": "OpenAI 承认 GPT-6.2 计费出错并修复，Astra 额度消耗加快 40%、Sol 加快 25%",
-          "value": "40",
-          "unit": "%",
-          "period": "单次披露/未注明周期",
-          "scope": "新闻事件陈述",
-          "fact_status": "multi_source_reported",
-          "attribution": "The Decoder (AI前沿)",
-          "source_ref": "rss-the-decoder_1b40e9b59a9a",
-          "source_url": "https://the-decoder.com/gpt-6-2-astra-users-now-hit-limits-40-faster-after-openai-patched-a-pricing-error",
-          "source_excerpt_or_locator": "OpenAI says a billing bug gave GPT-6.2 users incorrect discounts. After the fix, Astra and Sol users hit their limits 40 and 25 percent faster than last week. As an apology, subscr",
-          "published_at": "2026-11-27T01:28:56+08:00",
-          "discovered_at": "2026-11-27T08:35:30+08:00",
-          "revision": 1
-        }
-      ],
-      "ai_analysis": "计费算法的修正直接改变了高频开发者的调用成本预期，迫使企业客户重新评估大模型API的单位经济效益。",
-      "unverified_claims": [],
-      "speculation_or_outlook": null,
-      "sources": [
-        {
-          "item_id": "rss-the-decoder_1b40e9b59a9a",
-          "article_id": "rss-the-decoder_1b40e9b59a9a",
-          "source_id": "rss-the-decoder",
-          "source_name": "The Decoder (AI前沿)",
-          "publisher_name": "The Decoder (AI前沿)",
-          "source_status": "ok",
-          "source_kind": "news",
-          "source_tier": "direct_media",
-          "publisher_family": "thedecoder",
-          "is_reprint_copy": false,
-          "title": "GPT-6.2 Astra users now hit limits 40% faster after OpenAI patched a pricing error",
-          "url": "https://the-decoder.com/gpt-6-2-astra-users-now-hit-limits-40-faster-after-openai-patched-a-pricing-error",
-          "published_at": "2026-11-27T01:28:56+08:00",
-          "published_at_source": "upstream_rfc2822",
-          "fetched_at": "2026-11-27T08:35:41+08:00",
-          "excerpt": "OpenAI says a billing bug gave GPT-6.2 users incorrect discounts. After the fix, Astra and Sol users hit their limits 40 and 25 percent faster than last week. As an apology, subscribers get an extra reset, and business users get free Fast Mode through year-en…",
-          "thumbnail_url": "https://the-decoder.com/wp-content/uploads/2026/10/openai.png",
-          "deep_fetch_status": null,
-          "title_zh": "在OpenAI修复定价错误后，GPT-6.2 Astra用户触及使用限制的速度加快了40%"
         },
-        {
-          "item_id": "ithome_cdc22f2f09f3",
-          "article_id": "ithome_cdc22f2f09f3",
-          "source_id": "ithome",
-          "source_name": "IT之家",
-          "publisher_name": "IT之家",
-          "source_status": "ok",
-          "source_kind": "news",
-          "source_tier": "aggregator_lead",
-          "publisher_family": "ithome",
-          "is_reprint_copy": false,
-          "title": "GPT-6.2 额度突然不耐用了？OpenAI 承认计费出错，修复后 Astra 消耗速度加快 40%、Sol 加快 25%",
-          "url": "https://www.ithome.com/1/033/138.htm",
-          "published_at": "2026-11-27T06:59:06+08:00",
-          "published_at_source": "upstream_local_cst",
-          "fetched_at": "2026-11-27T08:35:30+08:00",
-          "excerpt": null,
-          "thumbnail_url": null,
-          "deep_fetch_status": null
-        },
-        {
-          "item_id": "aihot_2080c92da57a",
-          "article_id": "aihot_2080c92da57a",
-          "source_id": "aihot",
-          "source_name": "AIHOT 前沿",
-          "publisher_name": "AIHOT 前沿",
-          "source_status": "ok",
-          "source_kind": "news",
-          "source_tier": "aggregator_lead",
-          "publisher_family": "aihot",
-          "is_reprint_copy": false,
-          "title": "OpenAI 承认 GPT-6.2 计费出错并修复，Astra 额度消耗加快 40%、Sol 加快 25%",
-          "url": "https://aihot.news/items/lj1rskqimfkpe2i2cmlvv76lj",
-          "published_at": "2026-11-27T06:59:06+08:00",
-          "published_at_source": "upstream_rfc2822",
-          "fetched_at": "2026-11-27T08:35:30+08:00",
-          "excerpt": null,
-          "thumbnail_url": null,
-          "deep_fetch_status": null
-        },
-        {
-          "item_id": "aihot_a2a3441ffdf9",
-          "article_id": "aihot_a2a3441ffdf9",
-          "source_id": "aihot",
-          "source_name": "AIHOT 前沿",
-          "publisher_name": "AIHOT 前沿",
-          "source_status": "ok",
-          "source_kind": "news",
-          "source_tier": "aggregator_lead",
-          "publisher_family": "aihot",
-          "is_reprint_copy": false,
-          "title": "OpenAI 修复 GPT-6.2 计费错误后用户额度消耗加快",
-          "url": "https://aihot.news/items/lk9a23znjvexu4h331w0cvnkq",
-          "published_at": "2026-11-27T01:28:56+08:00",
-          "published_at_source": "upstream_rfc2822",
-          "fetched_at": "2026-11-27T08:35:30+08:00",
-          "excerpt": null,
-          "thumbnail_url": null,
-          "deep_fetch_status": null
-        }
-      ],
-      "verification": {
-        "all_refs_valid": true,
-        "has_primary_url": true,
-        "rejected_refs": [],
-        "has_first_party": false
-      },
-      "followup": null,
-      "is_new_in_batch": true,
-      "update_kind": "new_discovery",
-      "heavy_score": 78.2,
-      "radar_score": 88,
-      "severity_tier": "S",
-      "severity_label": "S级重磅",
-      "heavy_reason_tag": "科研/模型里程碑",
-      "summary_en": "OpenAI says a billing bug gave GPT-6.2 users incorrect discounts. After the fix, Astra and Sol users hit their limits 40 and 25 percent faster than last week.",
-      "summary": "OpenAI承认GPT-6.2计费系统此前存在错误折扣，修复后Astra和Sol用户的额度消耗速度较上周分别加快40%和25%。",
-      "summary_zh": "OpenAI承认GPT-6.2计费系统此前存在错误折扣，修复后Astra和Sol用户的额度消耗速度较上周分别加快40%和25%。",
-      "deep_qa": [
-        {
-          "question": "大模型计费策略的微调对企业级用户的算力预算规划有何实质影响？",
-          "answer": "迫使企业转向更精细化的提示词工程与多模型混用策略，以对冲API单价或消耗速度变动带来的成本超支风险。",
-          "historical_parallel": "云计算早期按需实例计费规则变动时企业IT架构师的成本优化周期。"
-        },
-        {
-          "question": "底层模型版本迭代伴随的额度消耗加快说明了什么？",
-          "answer": "表明更高级别的推理能力需要消耗倍增的算力资源，纯粹的降本增效在模型规模化扩展阶段面临物理瓶颈。",
-          "historical_parallel": "历代大模型从早期轻量版向深度推理架构演进过程中的单位算力成本变化。"
-        }
-      ],
-      "ai_overlaid": true,
-      "translation_attempts": 0,
-      "translation_error": null,
-      "title_zh": "OpenAI 承认 GPT-6.2 计费出错并修复，Astra 额度消耗加快 40%、Sol 加快 25%",
-      "translation_status": "native_zh",
-      "title_en": "GPT-6.2 Astra users now hit limits 40% faster after OpenAI patched a pricing error",
-      "ai_analysis_en": ""
-    },
-    {
-      "schema_version": "4.1",
-      "event_id": "evt_7dd370bd0998",
-      "storyline_id": "st_58a24ebcb433",
-      "article_ids": [
-        "ithome-rss_8c47fdc2c23f",
-        "aihot_b70ce0fd60a8"
-      ],
-      "legacy_event_ids": [],
-      "title": "Anthropic 平台工程负责人莱斯谈 AI 如何改变工程师晋升与面试标准",
-      "category": "tech",
-      "entities": [
-        "Anthropic / Claude"
-      ],
-      "entity_ids": [
-        "ent_anthropic"
-      ],
-      "entity_confidences": {
-        "Anthropic / Claude": 0.86
-      },
-      "matched_entities": [
         {
           "entity_id": "ent_anthropic",
           "canonical_name": "Anthropic / Claude",
@@ -299,183 +93,6 @@
           "tickers": [],
           "reason": "正文/实体匹配关键词「anthropic」",
           "confidence": 0.86
-        }
-      ],
-      "importance": "high",
-      "sentiment": "Mixed",
-      "special_note": null,
-      "material_stage": null,
-      "material_stage_label": null,
-      "material_stage_confidence": null,
-      "thumbnail_url": "https://img.ithome.com/newsuploadfiles/2024/10/1e49cd7b-4b1b-4d78-b322-580914f2f7fa.png?x-bce-process=image/watermark,text_QUnnlJ_miJA,type_RlpMYW5UaW5nSGVpU0JHQg==,size_23,color_ffffffdd,skw_1,skc_00000051,g_7,blr_50,bls_50,x_9,y_9",
-      "publisher_name": "IT之家 实时快讯",
-      "source_status": "ok",
-      "evidence_status": "multi_source",
-      "evidence_label": "多独立来源提及（待核官方全文）",
-      "evidence_status_reason": "已有 2 家独立媒体族提及（含摘要或正文首段）；多源转载不代表官方公告已证实",
-      "attribution_warning": null,
-      "regulatory_note": null,
-      "contradictions": [],
-      "downweight_reasons": [],
-      "quality_flags": [],
-      "material_depth": "title_and_excerpt",
-      "source_count": 2,
-      "platform_count": 2,
-      "independent_publisher_count": 2,
-      "reprint_count": 0,
-      "published_at": "2026-11-27T07:17:19+08:00",
-      "event_date": "2026-11-27",
-      "event_time": "2026-11-27T07:17:19+08:00",
-      "stale": false,
-      "event_date_source": "llm_extracted",
-      "is_stale_rehash": false,
-      "time_trust_level": "article_timestamp",
-      "time_confidence": "article_timestamp",
-      "first_discovered_at": "2026-11-27T08:35:30+08:00",
-      "first_reported_at": "2026-11-27T07:17:19+08:00",
-      "latest_fact_update_at": "2026-11-27T07:17:19+08:00",
-      "latest_reported_at": "2026-11-27T07:17:19+08:00",
-      "fetched_at": "2026-11-27T08:35:30+08:00",
-      "input_batch_id": "raw-20261127-083530",
-      "fact_summary": "Anthropic平台工程负责人凯特琳·莱斯表示，随着AI普及，单纯以项目完成时间来判断软件工程师是否具备晋升条件的参考价值已大不如前。",
-      "fact_atoms": [
-        {
-          "atom_id": "fa_90012982",
-          "subject": "Anthropic / Claude",
-          "metric_or_action": "Anthropic 平台工程负责人莱斯谈 AI 如何改变工程师晋升与面试标准",
-          "value": null,
-          "unit": null,
-          "period": "单次披露/未注明周期",
-          "scope": "新闻事件陈述",
-          "fact_status": "multi_source_reported",
-          "attribution": "IT之家 实时快讯",
-          "source_ref": "ithome-rss_8c47fdc2c23f",
-          "source_url": "https://www.ithome.com/1/033/141.htm",
-          "source_excerpt_or_locator": "IT之家 11 月 27 日消息，在 Anthropic，AI 正在改变软件工程师的晋升标准。据《商业内幕》今天（27 日）报道，Anthropic 平台工程负责人凯特琳 · 莱斯近期谈到了 AI 对工程师职业发展的影响。她指出，AI 普及后，单纯以 项目完成时间 来判断工程师是否具备晋升条件，已经没有过去那么大的参考价值。过去需要数年才能完成的工作，现在几",
-          "published_at": "2026-11-27T07:17:19+08:00",
-          "discovered_at": "2026-11-27T08:35:30+08:00",
-          "revision": 1
-        }
-      ],
-      "ai_analysis": "生成式编程工具彻底重构了软件工程的生产力基准，迫使科技企业将考核核心从代码产出量转向架构设计与系统性问题解决能力。",
-      "unverified_claims": [],
-      "speculation_or_outlook": null,
-      "sources": [
-        {
-          "item_id": "ithome-rss_8c47fdc2c23f",
-          "article_id": "ithome-rss_8c47fdc2c23f",
-          "source_id": "ithome-rss",
-          "source_name": "IT之家 实时快讯",
-          "publisher_name": "IT之家 实时快讯",
-          "source_status": "ok",
-          "source_kind": "news",
-          "source_tier": "direct_media",
-          "publisher_family": "ithome",
-          "is_reprint_copy": false,
-          "title": "Anthropic 平台工程负责人莱斯：AI 改变工程师晋升标准，不再只看项目耗时",
-          "url": "https://www.ithome.com/1/033/141.htm",
-          "published_at": "2026-11-27T07:17:19+08:00",
-          "published_at_source": "upstream_rfc2822",
-          "fetched_at": "2026-11-27T08:35:31+08:00",
-          "excerpt": "IT之家 11 月 27 日消息，在 Anthropic，AI 正在改变软件工程师的晋升标准。据《商业内幕》今天（27 日）报道，Anthropic 平台工程负责人凯特琳 · 莱斯近期谈到了 AI 对工程师职业发展的影响。她指出，AI 普及后，单纯以 项目完成时间 来判断工程师是否具备晋升条件，已经没有过去那么大的参考价值。过去需要数年才能完成的工作，现在几个月就能完成。相比项目耗时，她的团队更看重 降低系统延迟、避免事故等 实际成果。“归根结底，还是看实际影响。",
-          "thumbnail_url": "https://img.ithome.com/newsuploadfiles/2024/10/1e49cd7b-4b1b-4d78-b322-580914f2f7fa.png?x-bce-process=image/watermark,text_QUnnlJ_miJA,type_RlpMYW5UaW5nSGVpU0JHQg==,size_23,color_ffffffdd,skw_1,skc_00000051,g_7,blr_50,bls_50,x_9,y_9",
-          "deep_fetch_status": null
-        },
-        {
-          "item_id": "aihot_b70ce0fd60a8",
-          "article_id": "aihot_b70ce0fd60a8",
-          "source_id": "aihot",
-          "source_name": "AIHOT 前沿",
-          "publisher_name": "AIHOT 前沿",
-          "source_status": "ok",
-          "source_kind": "news",
-          "source_tier": "aggregator_lead",
-          "publisher_family": "aihot",
-          "is_reprint_copy": false,
-          "title": "Anthropic 平台工程负责人莱斯谈 AI 如何改变工程师晋升与面试标准",
-          "url": "https://aihot.news/items/lhfu46wizfknen95q1puf8wnf",
-          "published_at": "2026-11-27T07:17:19+08:00",
-          "published_at_source": "upstream_rfc2822",
-          "fetched_at": "2026-11-27T08:35:30+08:00",
-          "excerpt": null,
-          "thumbnail_url": null,
-          "deep_fetch_status": null
-        }
-      ],
-      "verification": {
-        "all_refs_valid": true,
-        "has_primary_url": true,
-        "rejected_refs": [],
-        "has_first_party": false
-      },
-      "followup": null,
-      "is_new_in_batch": true,
-      "update_kind": "new_discovery",
-      "heavy_score": 57.5,
-      "radar_score": 82,
-      "severity_tier": "A",
-      "severity_label": "A级要闻",
-      "heavy_reason_tag": "巨头重大变动",
-      "summary": "Anthropic平台工程负责人凯特琳·莱斯表示，随着AI普及，单纯以项目完成时间来判断软件工程师是否具备晋升条件的参考价值已大不如前。",
-      "summary_zh": "Anthropic平台工程负责人凯特琳·莱斯表示，随着AI普及，单纯以项目完成时间来判断软件工程师是否具备晋升条件的参考价值已大不如前。",
-      "deep_qa": [
-        {
-          "question": "AI辅助编程工具普及后，初级软件工程师的职业成长路径发生了怎样的断层？",
-          "answer": "传统依靠编写基础代码积累经验的路径被大大压缩，迫使新人必须跳过初级阶段直接提升系统抽象与审查能力。",
-          "historical_parallel": "工业自动化普及后传统蓝领技工向设备操作与维护工程师的转型周期。"
-        },
-        {
-          "question": "科技企业重新定义工程师晋升标准的根本驱动力是什么？",
-          "answer": "当AI将代码编写效率提升数倍后，代码量本身沦为无效指标，企业必须围绕业务价值创造和代码安全负责。",
-          "historical_parallel": "编译器和高级语言出现后，程序员考核指标从汇编行数向软件架构设计的转变。"
-        }
-      ],
-      "ai_overlaid": true,
-      "translation_attempts": 0,
-      "translation_error": null,
-      "title_zh": "Anthropic 平台工程负责人莱斯谈 AI 如何改变工程师晋升与面试标准",
-      "translation_status": "native_zh",
-      "title_en": "",
-      "summary_en": "",
-      "ai_analysis_en": ""
-    },
-    {
-      "schema_version": "4.1",
-      "event_id": "evt_0845a8b786b5",
-      "storyline_id": "st_c9849407a572",
-      "article_ids": [
-        "rss-the-decoder_dc9aebda979d",
-        "rss-gnews-ai-models-en_468b899dcfb4"
-      ],
-      "legacy_event_ids": [],
-      "title": "随着中国AI开发者面临延误，OpenAI、谷歌和Anthropic获得喘息之机",
-      "category": "tech",
-      "entities": [
-        "OpenAI",
-        "Anthropic / Claude"
-      ],
-      "entity_ids": [
-        "ent_openai",
-        "ent_google",
-        "ent_anthropic"
-      ],
-      "entity_confidences": {
-        "OpenAI": 0.99,
-        "Google / DeepMind / Gemini": 0.86,
-        "Anthropic / Claude": 0.86
-      },
-      "matched_entities": [
-        {
-          "entity_id": "ent_openai",
-          "canonical_name": "OpenAI",
-          "entity_type": "company",
-          "sector": "AI 模型与应用",
-          "matched_aliases": [
-            "openai"
-          ],
-          "tickers": [],
-          "reason": "正文/实体匹配关键词「openai」",
-          "confidence": 0.99
         },
         {
           "entity_id": "ent_google",
@@ -495,19 +112,7 @@
             }
           ],
           "reason": "正文/实体匹配关键词「google」",
-          "confidence": 0.86
-        },
-        {
-          "entity_id": "ent_anthropic",
-          "canonical_name": "Anthropic / Claude",
-          "entity_type": "company",
-          "sector": "AI 模型与安全",
-          "matched_aliases": [
-            "anthropic"
-          ],
-          "tickers": [],
-          "reason": "正文/实体匹配关键词「anthropic」",
-          "confidence": 0.86
+          "confidence": 0.76
         }
       ],
       "importance": "medium",
@@ -533,25 +138,25 @@
       "independent_publisher_count": 2,
       "reprint_count": 0,
       "published_at": "2026-11-26T23:45:08+08:00",
-      "event_date": "2026-11-27",
+      "event_date": "2026-11-26",
       "event_time": "2026-11-26T23:45:08+08:00",
       "stale": false,
       "event_date_source": "llm_extracted",
       "is_stale_rehash": false,
       "time_trust_level": "article_timestamp",
       "time_confidence": "article_timestamp",
-      "first_discovered_at": "2026-11-27T08:35:30+08:00",
+      "first_discovered_at": "2026-11-27T17:40:50+08:00",
       "first_reported_at": "2026-11-26T23:45:08+08:00",
       "latest_fact_update_at": "2026-11-27T04:10:23+08:00",
       "latest_reported_at": "2026-11-27T04:10:23+08:00",
-      "fetched_at": "2026-11-27T08:35:30+08:00",
-      "input_batch_id": "raw-20261127-083530",
-      "fact_summary": "因合规与数据限制，中国AI公司智谱AI和月之暗面不得不推迟下一代旗舰模型的发布，并寻找新的训练数据源。",
+      "fetched_at": "2026-11-27T17:40:50+08:00",
+      "input_batch_id": "raw-20261127-174050",
+      "fact_summary": "中国AI公司智谱AI（Z.AI）和月之暗面（Moonshot AI）不得不推迟其下一代旗舰模型的发布，并正在寻找新的训练数据源。",
       "fact_atoms": [
         {
-          "atom_id": "fa_22027532",
+          "atom_id": "fa_97103579",
           "subject": "OpenAI",
-          "metric_or_action": "OpenAI, Google and Anthropic Gain Breathing Room as Chinese AI Developers Face Delays",
+          "metric_or_action": "After OpenAI and Anthropic shut the door on their data, a Chinese AI developer is turning to Google and Meta instead",
           "value": null,
           "unit": null,
           "period": "单次披露/未注明周期",
@@ -562,11 +167,11 @@
           "source_url": "https://the-decoder.com/after-openai-and-anthropic-shut-the-door-on-their-data-a-chinese-ai-developer-is-turning-to-google-and-meta-instead",
           "source_excerpt_or_locator": "Chinese AI companies Z.AI and Moonshot AI have to delay their next flagship models and are looking for new sources of training data. The article After OpenAI and Anthropic shut the",
           "published_at": "2026-11-26T23:45:08+08:00",
-          "discovered_at": "2026-11-27T08:35:30+08:00",
+          "discovered_at": "2026-11-27T17:40:50+08:00",
           "revision": 1
         }
       ],
-      "ai_analysis": "海外大厂对数据蒸馏和云漏洞的封堵，正在实质性延长中国领先AI企业的下一代模型迭代周期。",
+      "ai_analysis": "反映OpenAI / Anthropic / Claude技术架构与商业落地节奏变化，实际效果仍待开发者生态与第三方实测验证。",
       "unverified_claims": [],
       "speculation_or_outlook": null,
       "sources": [
@@ -585,7 +190,7 @@
           "url": "https://the-decoder.com/after-openai-and-anthropic-shut-the-door-on-their-data-a-chinese-ai-developer-is-turning-to-google-and-meta-instead",
           "published_at": "2026-11-26T23:45:08+08:00",
           "published_at_source": "upstream_rfc2822",
-          "fetched_at": "2026-11-27T08:35:41+08:00",
+          "fetched_at": "2026-11-27T17:41:02+08:00",
           "excerpt": "Chinese AI companies Z.AI and Moonshot AI have to delay their next flagship models and are looking for new sources of training data. The article After OpenAI and Anthropic shut the door on their data, a Chinese AI developer is turning to Google and Meta inste…",
           "thumbnail_url": "https://the-decoder.com/wp-content/uploads/2026/11/us_china.png",
           "deep_fetch_status": null,
@@ -606,7 +211,7 @@
           "url": "https://news.google.com/rss/articles/CBMiswFBVV95cUxQcXQ1eVp0Y0xQTGZDWURXQndNR0tTS1VRdmFxMUpYOFp2OGdjUWh3M0xUcUpuZk9BVU92R2hrRElhaTlSWlhPRWZrVkpid3hkcnoxOHRlOElZRzhtOW9kRTBoUzRDdkNfUk5WQzRTLW9IYXhTTzQ3a2VQT2FoR0lEYldCdURlVE5Qd05SLUFkSnVySnBrbDVNZTItT1dpWVBlVUtXdVpqTi1LejBWR2E0MHkwTQ?oc=5",
           "published_at": "2026-11-27T04:10:23+08:00",
           "published_at_source": "upstream_rfc2822",
-          "fetched_at": "2026-11-27T08:35:41+08:00",
+          "fetched_at": "2026-11-27T17:41:02+08:00",
           "excerpt": "OpenAI, Google and Anthropic Gain Breathing Room as Chinese AI Developers Face Delays Coinpaper",
           "thumbnail_url": null,
           "deep_fetch_status": null,
@@ -626,20 +231,19 @@
       "radar_score": 82,
       "severity_tier": "B",
       "severity_label": "B级常规",
-      "title_en": "OpenAI, Google and Anthropic Gain Breathing Room as Chinese AI Developers Face Delays",
+      "title_en": "After OpenAI and Anthropic shut the door on their data, a Chinese AI developer is turning to Google and Meta instead",
       "summary_en": "Chinese AI companies Z.AI and Moonshot AI have to delay their next flagship models and are looking for new sources of training data.",
-      "summary": "因合规与数据限制，中国AI公司智谱AI和月之暗面不得不推迟下一代旗舰模型的发布，并寻找新的训练数据源。",
-      "summary_zh": "因合规与数据限制，中国AI公司智谱AI和月之暗面不得不推迟下一代旗舰模型的发布，并寻找新的训练数据源。",
-      "ai_overlaid": true,
+      "summary": "中国AI公司智谱AI（Z.AI）和月之暗面（Moonshot AI）不得不推迟其下一代旗舰模型的发布，并正在寻找新的训练数据源。",
+      "summary_zh": "中国AI公司智谱AI（Z.AI）和月之暗面（Moonshot AI）不得不推迟其下一代旗舰模型的发布，并正在寻找新的训练数据源。",
       "translation_attempts": 0,
       "translation_error": null,
-      "title_zh": "随着中国AI开发者面临延误，OpenAI、谷歌和Anthropic获得喘息之机",
+      "title_zh": "在OpenAI和Anthropic对其数据关闭大门后，一家中国AI开发者转而求助谷歌和Meta",
       "translation_status": "native_zh",
       "ai_analysis_en": "",
       "deep_qa": [
         {
           "question": "这次技术变化对普通开发者或用户意味着什么？",
-          "answer": "聚焦OpenAI / Anthropic / Claude能力边界与使用成本变化：因合规与数据限制，中国AI公司智谱AI和月之暗面不得不推迟下一代旗舰模型的发布，并寻找新的训练数据源。",
+          "answer": "聚焦OpenAI / Anthropic / Claude能力边界与使用成本变化：中国AI公司智谱AI（Z.AI）和月之暗面（Moonshot AI）不得不推迟其下一代旗舰模型的发布，并正在寻找新的训练数据源。",
           "historical_parallel": "历次大模型与算力架构迭代中，推理单价下探与生态开放通常在 1~2 个季度内显著拉动应用渗透率。"
         },
         {
@@ -651,34 +255,41 @@
     },
     {
       "schema_version": "4.1",
-      "event_id": "evt_4a0c524c3e6a",
-      "storyline_id": "st_d8fa56824f3a",
+      "event_id": "evt_b7cb00302d46",
+      "storyline_id": "st_2ffbbd755942",
       "article_ids": [
-        "aihot_b2b12f3feccb"
+        "ithome-rss_17580090da65",
+        "wscn-us-stock-channel_7bc137504c33"
       ],
       "legacy_event_ids": [],
-      "title": "GTA VI 全人工开发 vs Anthropic 813亿美元IPO：TechCrunch 论效率不该是唯一信条",
+      "title": "TrendForce：DRAM 需求面临更大不确定性，一般型内存合约价 2028 年转跌风险升温",
       "category": "tech",
-      "entities": [
-        "Anthropic / Claude"
-      ],
+      "entities": [],
       "entity_ids": [
-        "ent_anthropic"
+        "ent_memory_chips"
       ],
       "entity_confidences": {
-        "Anthropic / Claude": 0.86
+        "存储芯片 (DRAM / HBM / NAND)": 0.86
       },
       "matched_entities": [
         {
-          "entity_id": "ent_anthropic",
-          "canonical_name": "Anthropic / Claude",
-          "entity_type": "company",
-          "sector": "AI 模型与安全",
+          "entity_id": "ent_memory_chips",
+          "canonical_name": "存储芯片 (DRAM / HBM / NAND)",
+          "entity_type": "industry",
+          "sector": "半导体",
           "matched_aliases": [
-            "anthropic"
+            "dram"
           ],
-          "tickers": [],
-          "reason": "正文/实体匹配关键词「anthropic」",
+          "tickers": [
+            {
+              "symbol": "MU",
+              "market": "US",
+              "exchange": "NASDAQ",
+              "currency": "USD",
+              "label": "MU.US (NASDAQ)"
+            }
+          ],
+          "reason": "正文/实体匹配关键词「dram」",
           "confidence": 0.86
         }
       ],
@@ -688,79 +299,97 @@
       "material_stage": null,
       "material_stage_label": null,
       "material_stage_confidence": null,
-      "thumbnail_url": null,
-      "publisher_name": "AIHOT 前沿",
+      "thumbnail_url": "https://img.ithome.com/newsuploadfiles/2026/11/9b6ae607-2148-42f1-a0c1-3f173e23cb52.jpg",
+      "publisher_name": "IT之家 实时快讯",
       "source_status": "ok",
-      "evidence_status": "single_source",
-      "evidence_label": "单一独立来源线索",
-      "evidence_status_reason": "目前仅见 1 家独立来源（共 1 条引用含转载，仅基于标题素材），尚未见独立渠道交叉或官方确认",
+      "evidence_status": "multi_source",
+      "evidence_label": "多独立来源提及（待核官方全文）",
+      "evidence_status_reason": "已有 2 家独立媒体族提及（含摘要或正文首段）；多源转载不代表官方公告已证实",
       "attribution_warning": null,
       "regulatory_note": null,
       "contradictions": [],
-      "downweight_reasons": [
-        "仅含标题素材 (-8)"
-      ],
+      "downweight_reasons": [],
       "quality_flags": [],
-      "material_depth": "title_only",
-      "source_count": 1,
-      "platform_count": 1,
-      "independent_publisher_count": 1,
+      "material_depth": "title_and_excerpt",
+      "source_count": 2,
+      "platform_count": 2,
+      "independent_publisher_count": 2,
       "reprint_count": 0,
-      "published_at": "2026-11-27T00:00:00+08:00",
+      "published_at": "2026-11-27T15:47:29+08:00",
       "event_date": "2026-11-27",
-      "event_time": "2026-11-27T00:00:00+08:00",
+      "event_time": "2026-11-27T15:47:29+08:00",
       "stale": false,
       "event_date_source": "llm_extracted",
       "is_stale_rehash": false,
       "time_trust_level": "article_timestamp",
       "time_confidence": "article_timestamp",
-      "first_discovered_at": "2026-11-27T08:35:30+08:00",
-      "first_reported_at": "2026-11-27T00:00:00+08:00",
-      "latest_fact_update_at": "2026-11-27T00:00:00+08:00",
-      "latest_reported_at": "2026-11-27T00:00:00+08:00",
-      "fetched_at": "2026-11-27T08:35:30+08:00",
-      "input_batch_id": "raw-20261127-083530",
-      "fact_summary": "TechCrunch发文探讨GTA VI全人工开发与Anthropic 813亿美元IPO，论证效率不该是唯一信条。",
+      "first_discovered_at": "2026-11-27T17:40:50+08:00",
+      "first_reported_at": "2026-11-27T15:47:29+08:00",
+      "latest_fact_update_at": "2026-11-27T16:42:06+08:00",
+      "latest_reported_at": "2026-11-27T16:42:06+08:00",
+      "fetched_at": "2026-11-27T17:40:50+08:00",
+      "input_batch_id": "raw-20261127-174050",
+      "fact_summary": "IT之家 11 月 27 日消息，TrendForce（集邦）今日刊文表示，近期的一系列变化导致 DRAM 需求面临更大不确定性 ，供应链正重新检视 2027~2028 年产销规划，导致整体 DRAM 采购动能略微放缓。在需求方面，影响 DRAM 市场的风险因素包括美国国内政治局势变化、Neocloud 企业融资难度上升期以及出口管制等；而在供给方面，几大 DRAM 内存原厂按容量计算的出货量近期将持续显著增长。",
       "fact_atoms": [
         {
-          "atom_id": "fa_68459130",
-          "subject": "Anthropic / Claude",
-          "metric_or_action": "GTA VI 全人工开发 vs Anthropic 813亿美元IPO：TechCrunch 论效率不该是唯一信条",
-          "value": "813",
-          "unit": "亿美元",
+          "atom_id": "fa_67701752",
+          "subject": "存储芯片 (DRAM / HBM / NAND)",
+          "metric_or_action": "TrendForce：DRAM 需求面临更大不确定性，一般型内存合约价 2028 年转跌风险升温",
+          "value": null,
+          "unit": null,
           "period": "单次披露/未注明周期",
-          "scope": "新闻事件陈述",
-          "fact_status": "reported_unconfirmed_by_filing",
-          "attribution": "AIHOT 前沿",
-          "source_ref": "aihot_b2b12f3feccb",
-          "source_url": "https://aihot.news/items/b1zff9dlfo30renglnfd5ub87",
-          "source_excerpt_or_locator": "GTA VI 全人工开发 vs Anthropic 813亿美元IPO：TechCrunch 论效率不该是唯一信条",
-          "published_at": "2026-11-27T00:00:00+08:00",
-          "discovered_at": "2026-11-27T08:35:30+08:00",
+          "scope": "订单/合同/意向",
+          "fact_status": "multi_source_reported",
+          "attribution": "IT之家 实时快讯",
+          "source_ref": "ithome-rss_17580090da65",
+          "source_url": "https://www.ithome.com/1/033/570.htm",
+          "source_excerpt_or_locator": "IT之家 11 月 27 日消息，TrendForce（集邦）今日刊文表示，近期的一系列变化导致 DRAM 需求面临更大不确定性 ，供应链正重新检视 2027~2028 年产销规划，导致整体 DRAM 采购动能略微放缓。在需求方面，影响 DRAM 市场的风险因素包括美国国内政治局势变化、Neocloud 企业融资难度上升期以及出口管制等；而在供给方面，几大 ",
+          "published_at": "2026-11-27T16:42:06+08:00",
+          "discovered_at": "2026-11-27T17:40:50+08:00",
           "revision": 1
         }
       ],
-      "ai_analysis": "在资本狂热追逐AI极速自动化的背景下，该讨论重新审视了人工创意与工匠精神在高端数字内容创作中的不可替代性。",
+      "ai_analysis": "反映存储芯片 (DRAM / HBM / NAND)技术架构与商业落地节奏变化，实际效果仍待开发者生态与第三方实测验证。",
       "unverified_claims": [],
       "speculation_or_outlook": null,
       "sources": [
         {
-          "item_id": "aihot_b2b12f3feccb",
-          "article_id": "aihot_b2b12f3feccb",
-          "source_id": "aihot",
-          "source_name": "AIHOT 前沿",
-          "publisher_name": "AIHOT 前沿",
+          "item_id": "ithome-rss_17580090da65",
+          "article_id": "ithome-rss_17580090da65",
+          "source_id": "ithome-rss",
+          "source_name": "IT之家 实时快讯",
+          "publisher_name": "IT之家 实时快讯",
           "source_status": "ok",
           "source_kind": "news",
-          "source_tier": "aggregator_lead",
-          "publisher_family": "aihot",
+          "source_tier": "direct_media",
+          "publisher_family": "ithome",
           "is_reprint_copy": false,
-          "title": "GTA VI 全人工开发 vs Anthropic 813亿美元IPO：TechCrunch 论效率不该是唯一信条",
-          "url": "https://aihot.news/items/b1zff9dlfo30renglnfd5ub87",
-          "published_at": "2026-11-27T00:00:00+08:00",
+          "title": "TrendForce：DRAM 需求面临更大不确定性，一般型内存合约价 2028 年转跌风险升温",
+          "url": "https://www.ithome.com/1/033/570.htm",
+          "published_at": "2026-11-27T16:42:06+08:00",
           "published_at_source": "upstream_rfc2822",
-          "fetched_at": "2026-11-27T08:35:30+08:00",
-          "excerpt": null,
+          "fetched_at": "2026-11-27T17:40:52+08:00",
+          "excerpt": "IT之家 11 月 27 日消息，TrendForce（集邦）今日刊文表示，近期的一系列变化导致 DRAM 需求面临更大不确定性 ，供应链正重新检视 2027~2028 年产销规划，导致整体 DRAM 采购动能略微放缓。在需求方面，影响 DRAM 市场的风险因素包括美国国内政治局势变化、Neocloud 企业融资难度上升期以及出口管制等；而在供给方面，几大 DRAM 内存原厂按容量计算的出货量近期将持续显著增长。该机构预计一般型 DRAM 内存的合约价格将渐趋平稳。",
+          "thumbnail_url": "https://img.ithome.com/newsuploadfiles/2026/11/9b6ae607-2148-42f1-a0c1-3f173e23cb52.jpg",
+          "deep_fetch_status": null
+        },
+        {
+          "item_id": "wscn-us-stock-channel_7bc137504c33",
+          "article_id": "wscn-us-stock-channel_7bc137504c33",
+          "source_id": "wscn-us-stock-channel",
+          "source_name": "华尔街见闻 美股快讯",
+          "publisher_name": "华尔街见闻 美股快讯",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "wallstreetcn",
+          "is_reprint_copy": false,
+          "title": "集邦咨询：需求能见度低、供应链转趋保守 2028年DRAM合约价走跌风险升温",
+          "url": "https://wallstreetcn.com/livenews/3206885",
+          "published_at": "2026-11-27T15:47:29+08:00",
+          "published_at_source": "upstream_api",
+          "fetched_at": "2026-11-27T17:40:52+08:00",
+          "excerpt": "根据TrendForce集邦咨询最新存储器产业研究，2026年第四季上旬起，供应链考量美国政策环境变化可能影响后续数据中心建设节奏，且NVIDIA（英伟达）未来或将调整对Neocloud厂商的融资政策，加上国际形势影响先进制程芯片流向、算力租赁，正重新检视2027至2028年的产销规划，导致整体DRAM采购动能略微放缓。",
           "thumbnail_url": null,
           "deep_fetch_status": null
         }
@@ -774,287 +403,214 @@
       "followup": null,
       "is_new_in_batch": true,
       "update_kind": "new_discovery",
-      "heavy_score": 56.0,
-      "radar_score": 53,
+      "heavy_score": 41.4,
+      "radar_score": 82,
       "severity_tier": "B",
       "severity_label": "B级常规",
-      "summary": "TechCrunch发文探讨GTA VI全人工开发与Anthropic 813亿美元IPO，论证效率不该是唯一信条。",
-      "summary_zh": "TechCrunch发文探讨GTA VI全人工开发与Anthropic 813亿美元IPO，论证效率不该是唯一信条。",
-      "ai_overlaid": true,
       "translation_attempts": 0,
       "translation_error": null,
-      "title_zh": "GTA VI 全人工开发 vs Anthropic 813亿美元IPO：TechCrunch 论效率不该是唯一信条",
+      "title_zh": "TrendForce：DRAM 需求面临更大不确定性，一般型内存合约价 2028 年转跌风险升温",
       "translation_status": "native_zh",
+      "summary_zh": "IT之家 11 月 27 日消息，TrendForce（集邦）今日刊文表示，近期的一系列变化导致 DRAM 需求面临更大不确定性 ，供应链正重新检视 2027~2028 年产销规划，导致整体 DRAM 采购动能略微放缓。在需求方面，影响 DRAM 市场的风险因素包括美国国内政治局势变化、Neocloud 企业融资难度上升期以及出口管制等；而在供给方面，几大 DRAM 内存原厂按容量计算的出货量近期将持续显著增长。",
       "title_en": "",
       "summary_en": "",
-      "ai_analysis_en": ""
+      "ai_analysis_en": "",
+      "deep_qa": [
+        {
+          "question": "这次技术变化对普通开发者或用户意味着什么？",
+          "answer": "聚焦相关产业链能力边界与使用成本变化：IT之家 11 月 27 日消息，TrendForce（集邦）今日刊文表示，近期的一系列变化导致 DRAM 需求面临更大不确定性 ，供应链正重新检视 2027~2028 年产销规划，导致整体 DRAM 采购动能略微放缓。",
+          "historical_parallel": "历次大模型与算力架构迭代中，推理单价下探与生态开放通常在 1~2 个季度内显著拉动应用渗透率。"
+        },
+        {
+          "question": "该进展目前处于什么验证阶段？",
+          "answer": "需结合官方技术报告、独立第三方复现基准以及下游云厂与终端真实接入节奏交叉确认。",
+          "historical_parallel": "2025 年以来主流开源/闭源大模型竞赛证明，公开基准与真实开发者采用率决定商业化天花板。"
+        }
+      ]
     },
     {
       "schema_version": "4.1",
-      "event_id": "evt_1cc74543cdb5",
-      "storyline_id": "st_9dea8782e960",
+      "event_id": "evt_032ac3aa81c2",
+      "storyline_id": "st_60ac5ff6eb64",
       "article_ids": [
-        "ithome-rss_4da50f8a4bf7"
+        "rss-gnews-ai-models-zh_1e63f9def6b4",
+        "rss-gnews-ai-models-zh_0e19b6ac60f2",
+        "rss-gnews-ai-models-zh_c5b4a0af1145",
+        "rss-gnews-ai-models-zh_8e7323845dd8"
       ],
       "legacy_event_ids": [],
-      "title": "用户反馈英伟达 621.40 驱动“按下葫芦浮起瓢”：修复 SSD 写入后又出现黑屏",
+      "title": "腾讯混元发布 3D 生成大模型 Hy3D 3.6，面向专业 3D 创作",
       "category": "tech",
       "entities": [
-        "英伟达 (NVIDIA)"
+        "腾讯 (Tencent)"
       ],
       "entity_ids": [
-        "ent_nvidia"
+        "ent_tencent"
       ],
       "entity_confidences": {
-        "英伟达 (NVIDIA)": 0.86
+        "腾讯 (Tencent)": 0.96
       },
       "matched_entities": [
         {
-          "entity_id": "ent_nvidia",
-          "canonical_name": "英伟达 (NVIDIA)",
+          "entity_id": "ent_tencent",
+          "canonical_name": "腾讯 (Tencent)",
           "entity_type": "company",
-          "sector": "半导体 / AI算力",
+          "sector": "互联网 / AI模型与应用",
           "matched_aliases": [
-            "英伟达"
+            "腾讯",
+            "混元"
           ],
           "tickers": [
             {
-              "symbol": "NVDA",
-              "market": "US",
-              "exchange": "NASDAQ",
-              "currency": "USD",
-              "label": "NVDA.US (NASDAQ)"
+              "symbol": "00700",
+              "market": "HK",
+              "exchange": "HKEX",
+              "currency": "HKD",
+              "label": "00700.HK (HKEX)"
             }
           ],
-          "reason": "正文/实体匹配关键词「英伟达」",
-          "confidence": 0.86
-        }
-      ],
-      "importance": "medium",
-      "sentiment": "Mixed",
-      "special_note": null,
-      "material_stage": null,
-      "material_stage_label": null,
-      "material_stage_confidence": null,
-      "thumbnail_url": "https://img.ithome.com/newsuploadfiles/2026/11/ceda4a97-3484-4074-a9c2-a70cdb52c72b.jpg",
-      "publisher_name": "IT之家 实时快讯",
-      "source_status": "ok",
-      "evidence_status": "single_source",
-      "evidence_label": "单一独立来源线索",
-      "evidence_status_reason": "目前仅见 1 家独立来源（共 1 条引用含转载，含摘要/首段），尚未见独立渠道交叉或官方确认",
-      "attribution_warning": null,
-      "regulatory_note": null,
-      "contradictions": [],
-      "downweight_reasons": [],
-      "quality_flags": [],
-      "material_depth": "title_and_excerpt",
-      "source_count": 1,
-      "platform_count": 1,
-      "independent_publisher_count": 1,
-      "reprint_count": 0,
-      "published_at": "2026-11-27T07:27:44+08:00",
-      "event_date": "2026-11-27",
-      "event_time": "2026-11-27T07:27:44+08:00",
-      "stale": false,
-      "event_date_source": "llm_extracted",
-      "is_stale_rehash": false,
-      "time_trust_level": "article_timestamp",
-      "time_confidence": "article_timestamp",
-      "first_discovered_at": "2026-11-27T08:35:30+08:00",
-      "first_reported_at": "2026-11-27T07:27:44+08:00",
-      "latest_fact_update_at": "2026-11-27T07:27:44+08:00",
-      "latest_reported_at": "2026-11-27T07:27:44+08:00",
-      "fetched_at": "2026-11-27T08:35:30+08:00",
-      "input_batch_id": "raw-20261127-083530",
-      "fact_summary": "英伟达GeForce 621.40 WHQL驱动在修复固态硬盘异常写入问题后，又引入了黑屏、无信号及屏幕闪烁等新Bug。",
-      "fact_atoms": [
-        {
-          "atom_id": "fa_72781739",
-          "subject": "英伟达 (NVIDIA)",
-          "metric_or_action": "用户反馈英伟达 621.40 驱动“按下葫芦浮起瓢”：修复 SSD 写入后又出现黑屏",
-          "value": null,
-          "unit": null,
-          "period": "季度口径",
-          "scope": "新闻事件陈述",
-          "fact_status": "reported_unconfirmed_by_filing",
-          "attribution": "IT之家 实时快讯",
-          "source_ref": "ithome-rss_4da50f8a4bf7",
-          "source_url": "https://www.ithome.com/1/033/143.htm",
-          "source_excerpt_or_locator": "IT之家 11 月 27 日消息，科技媒体 TechPowerUp 昨日（11 月 26 日）发布博文，报道称英伟达 GeForce 621.40 WHQL 驱动（11 月 24 日推送）在修复固态硬盘异常写入问题后，却又引入新的 Bug， 部分用户又发现，安装该版本后出现了黑屏、显示器无信号以及屏幕闪烁等新故障。根据英伟达官方反馈论坛的用户回帖，一名 RT",
-          "published_at": "2026-11-27T07:27:44+08:00",
-          "discovered_at": "2026-11-27T08:35:30+08:00",
-          "revision": 1
-        }
-      ],
-      "ai_analysis": "驱动程序开发的复杂性导致顾此失彼的现象频发，直接影响了高端显卡用户的日常体验与稳定性预期。",
-      "unverified_claims": [],
-      "speculation_or_outlook": null,
-      "sources": [
-        {
-          "item_id": "ithome-rss_4da50f8a4bf7",
-          "article_id": "ithome-rss_4da50f8a4bf7",
-          "source_id": "ithome-rss",
-          "source_name": "IT之家 实时快讯",
-          "publisher_name": "IT之家 实时快讯",
-          "source_status": "ok",
-          "source_kind": "news",
-          "source_tier": "direct_media",
-          "publisher_family": "ithome",
-          "is_reprint_copy": false,
-          "title": "用户反馈英伟达 621.40 驱动“按下葫芦浮起瓢”：修复 SSD 写入后又出现黑屏",
-          "url": "https://www.ithome.com/1/033/143.htm",
-          "published_at": "2026-11-27T07:27:44+08:00",
-          "published_at_source": "upstream_rfc2822",
-          "fetched_at": "2026-11-27T08:35:31+08:00",
-          "excerpt": "IT之家 11 月 27 日消息，科技媒体 TechPowerUp 昨日（11 月 26 日）发布博文，报道称英伟达 GeForce 621.40 WHQL 驱动（11 月 24 日推送）在修复固态硬盘异常写入问题后，却又引入新的 Bug， 部分用户又发现，安装该版本后出现了黑屏、显示器无信号以及屏幕闪烁等新故障。根据英伟达官方反馈论坛的用户回帖，一名 RTX 5060 显卡用户表示，安装 621.40 驱动后，显示器立即失去信号，且此后每次开机都会出现同样情况。",
-          "thumbnail_url": "https://img.ithome.com/newsuploadfiles/2026/11/ceda4a97-3484-4074-a9c2-a70cdb52c72b.jpg",
-          "deep_fetch_status": null
-        }
-      ],
-      "verification": {
-        "all_refs_valid": true,
-        "has_primary_url": true,
-        "rejected_refs": [],
-        "has_first_party": false
-      },
-      "followup": null,
-      "is_new_in_batch": true,
-      "update_kind": "new_discovery",
-      "heavy_score": 36.8,
-      "radar_score": 76,
-      "severity_tier": "B",
-      "severity_label": "B级常规",
-      "summary": "英伟达GeForce 621.40 WHQL驱动在修复固态硬盘异常写入问题后，又引入了黑屏、无信号及屏幕闪烁等新Bug。",
-      "summary_zh": "英伟达GeForce 621.40 WHQL驱动在修复固态硬盘异常写入问题后，又引入了黑屏、无信号及屏幕闪烁等新Bug。",
-      "ai_overlaid": true,
-      "translation_attempts": 0,
-      "translation_error": null,
-      "title_zh": "用户反馈英伟达 621.40 驱动“按下葫芦浮起瓢”：修复 SSD 写入后又出现黑屏",
-      "translation_status": "native_zh",
-      "title_en": "",
-      "summary_en": "",
-      "ai_analysis_en": ""
-    },
-    {
-      "schema_version": "4.1",
-      "event_id": "evt_135f8cc2c8c2",
-      "storyline_id": "st_2101e8d3bcdc",
-      "article_ids": [
-        "ithome-rss_85c49d783aec"
-      ],
-      "legacy_event_ids": [],
-      "title": "英伟达 G-SYNC 新工具上线：解决约 60 FPS 时 OLED 屏幕亮度闪烁问题",
-      "category": "tech",
-      "entities": [
-        "英伟达 (NVIDIA)"
-      ],
-      "entity_ids": [
-        "ent_nvidia"
-      ],
-      "entity_confidences": {
-        "英伟达 (NVIDIA)": 0.96
-      },
-      "matched_entities": [
-        {
-          "entity_id": "ent_nvidia",
-          "canonical_name": "英伟达 (NVIDIA)",
-          "entity_type": "company",
-          "sector": "半导体 / AI算力",
-          "matched_aliases": [
-            "英伟达",
-            "nvidia"
-          ],
-          "tickers": [
-            {
-              "symbol": "NVDA",
-              "market": "US",
-              "exchange": "NASDAQ",
-              "currency": "USD",
-              "label": "NVDA.US (NASDAQ)"
-            }
-          ],
-          "reason": "正文/实体匹配关键词「英伟达 / nvidia」",
+          "reason": "正文/实体匹配关键词「腾讯 / 混元」",
           "confidence": 0.96
         }
       ],
-      "importance": "medium",
+      "importance": "high",
       "sentiment": "Mixed",
       "special_note": null,
       "material_stage": null,
       "material_stage_label": null,
       "material_stage_confidence": null,
-      "thumbnail_url": "https://img.ithome.com/newsuploadfiles/2026/11/66c7fabd-2c07-46f9-876b-ac60a74217e4.jpg?x-bce-process=image/format,f_auto",
-      "publisher_name": "IT之家 实时快讯",
+      "thumbnail_url": null,
+      "publisher_name": "智东西",
       "source_status": "ok",
-      "evidence_status": "single_source",
-      "evidence_label": "单一独立来源线索",
-      "evidence_status_reason": "目前仅见 1 家独立来源（共 1 条引用含转载，含摘要/首段），尚未见独立渠道交叉或官方确认",
+      "evidence_status": "multi_source",
+      "evidence_label": "多独立来源提及（待核官方全文）",
+      "evidence_status_reason": "已有 4 家独立媒体族提及（含摘要或正文首段）；多源转载不代表官方公告已证实",
       "attribution_warning": null,
       "regulatory_note": null,
       "contradictions": [],
       "downweight_reasons": [],
       "quality_flags": [],
       "material_depth": "title_and_excerpt",
-      "source_count": 1,
+      "source_count": 4,
       "platform_count": 1,
-      "independent_publisher_count": 1,
+      "independent_publisher_count": 4,
       "reprint_count": 0,
-      "published_at": "2026-11-27T07:13:23+08:00",
+      "published_at": "2026-11-27T11:45:00+08:00",
       "event_date": "2026-11-27",
-      "event_time": "2026-11-27T07:13:23+08:00",
+      "event_time": "2026-11-27T11:45:00+08:00",
       "stale": false,
       "event_date_source": "llm_extracted",
       "is_stale_rehash": false,
       "time_trust_level": "article_timestamp",
       "time_confidence": "article_timestamp",
-      "first_discovered_at": "2026-11-27T08:35:30+08:00",
-      "first_reported_at": "2026-11-27T07:13:23+08:00",
-      "latest_fact_update_at": "2026-11-27T07:13:23+08:00",
-      "latest_reported_at": "2026-11-27T07:13:23+08:00",
-      "fetched_at": "2026-11-27T08:35:30+08:00",
-      "input_batch_id": "raw-20261127-083530",
-      "fact_summary": "NVIDIA Profile Inspector开发者Orbmu2k发布免费开源工具NVIDIA G-SYNC Tweaks，旨在解决约60 FPS时OLED屏幕亮度闪烁问题。",
+      "first_discovered_at": "2026-11-27T17:40:50+08:00",
+      "first_reported_at": "2026-11-27T11:45:00+08:00",
+      "latest_fact_update_at": "2026-11-27T14:14:08+08:00",
+      "latest_reported_at": "2026-11-27T14:14:08+08:00",
+      "fetched_at": "2026-11-27T17:40:50+08:00",
+      "input_batch_id": "raw-20261127-174050",
+      "fact_summary": "腾讯混元发布3D生成大模型Hy3D 3.6，旨在服务专业3D创作领域。",
       "fact_atoms": [
         {
-          "atom_id": "fa_23504068",
-          "subject": "英伟达 (NVIDIA)",
-          "metric_or_action": "英伟达 G-SYNC 新工具上线：解决约 60 FPS 时 OLED 屏幕亮度闪烁问题",
+          "atom_id": "fa_30772128",
+          "subject": "腾讯 (Tencent)",
+          "metric_or_action": "腾讯混元发布 3D 生成大模型 Hy3D 3.6，面向专业 3D 创作",
           "value": null,
           "unit": null,
           "period": "单次披露/未注明周期",
           "scope": "新闻事件陈述",
-          "fact_status": "reported_unconfirmed_by_filing",
-          "attribution": "IT之家 实时快讯",
-          "source_ref": "ithome-rss_85c49d783aec",
-          "source_url": "https://www.ithome.com/1/033/140.htm",
-          "source_excerpt_or_locator": "IT之家 11 月 27 日消息，据 Wccftech 今日报道，NVIDIA Profile Inspector 开发者 Orbmu2k 发布了一款名为 NVIDIA G-SYNC Tweaks 的免费开源工具。这款工具可用于调整英伟达显卡驱动中未公开的 G-SYNC、可变刷新率（VRR）相关参数，重点解决部分高刷显示器在 60 FPS 时提前触发低帧率补",
-          "published_at": "2026-11-27T07:13:23+08:00",
-          "discovered_at": "2026-11-27T08:35:30+08:00",
+          "fact_status": "multi_source_reported",
+          "attribution": "智东西",
+          "source_ref": "rss-gnews-ai-models-zh_1e63f9def6b4",
+          "source_url": "https://news.google.com/rss/articles/CBMiS0FVX3lxTE1CR3JDVFhtMkpmSWdsS1NhUkM1UEtjNVFEaGJFb2VidE9QM0xoOWJCS0RpT1Vybzdrd0xKNDdDVXMxOENEUW1Qemt1NA?oc=5",
+          "source_excerpt_or_locator": "腾讯混元发布3D大模型Hy3D 3.6，优化专业级3D资产生成 智东西",
+          "published_at": "2026-11-27T14:14:08+08:00",
+          "discovered_at": "2026-11-27T17:40:50+08:00",
           "revision": 1
         }
       ],
-      "ai_analysis": "社区开发者通过开源工具弥补官方驱动生态在特定刷新率适配上的空白，体现了极客生态对硬件完美主义的自发纠偏。",
+      "ai_analysis": "该模型通过降低3D内容生产门槛，将AI应用场景从文本与图像进一步拓展至高价值的工业与游戏设计领域。",
       "unverified_claims": [],
       "speculation_or_outlook": null,
       "sources": [
         {
-          "item_id": "ithome-rss_85c49d783aec",
-          "article_id": "ithome-rss_85c49d783aec",
-          "source_id": "ithome-rss",
-          "source_name": "IT之家 实时快讯",
-          "publisher_name": "IT之家 实时快讯",
+          "item_id": "rss-gnews-ai-models-zh_1e63f9def6b4",
+          "article_id": "rss-gnews-ai-models-zh_1e63f9def6b4",
+          "source_id": "rss-gnews-ai-models-zh",
+          "source_name": "智东西",
+          "publisher_name": "智东西",
           "source_status": "ok",
           "source_kind": "news",
           "source_tier": "direct_media",
-          "publisher_family": "ithome",
+          "publisher_family": "m",
           "is_reprint_copy": false,
-          "title": "英伟达 G-SYNC 新工具上线：解决约 60 FPS 时 OLED 屏幕亮度闪烁问题",
-          "url": "https://www.ithome.com/1/033/140.htm",
-          "published_at": "2026-11-27T07:13:23+08:00",
+          "title": "腾讯混元发布3D大模型Hy3D 3.6，优化专业级3D资产生成",
+          "url": "https://news.google.com/rss/articles/CBMiS0FVX3lxTE1CR3JDVFhtMkpmSWdsS1NhUkM1UEtjNVFEaGJFb2VidE9QM0xoOWJCS0RpT1Vybzdrd0xKNDdDVXMxOENEUW1Qemt1NA?oc=5",
+          "published_at": "2026-11-27T14:14:08+08:00",
           "published_at_source": "upstream_rfc2822",
-          "fetched_at": "2026-11-27T08:35:31+08:00",
-          "excerpt": "IT之家 11 月 27 日消息，据 Wccftech 今日报道，NVIDIA Profile Inspector 开发者 Orbmu2k 发布了一款名为 NVIDIA G-SYNC Tweaks 的免费开源工具。这款工具可用于调整英伟达显卡驱动中未公开的 G-SYNC、可变刷新率（VRR）相关参数，重点解决部分高刷显示器在 60 FPS 时提前触发低帧率补偿（LFC），导致 OLED 屏幕亮度闪烁以及其他显示器出现卡顿的问题。",
-          "thumbnail_url": "https://img.ithome.com/newsuploadfiles/2026/11/66c7fabd-2c07-46f9-876b-ac60a74217e4.jpg?x-bce-process=image/format,f_auto",
+          "fetched_at": "2026-11-27T17:41:02+08:00",
+          "excerpt": "腾讯混元发布3D大模型Hy3D 3.6，优化专业级3D资产生成 智东西",
+          "thumbnail_url": null,
+          "deep_fetch_status": null
+        },
+        {
+          "item_id": "rss-gnews-ai-models-zh_0e19b6ac60f2",
+          "article_id": "rss-gnews-ai-models-zh_0e19b6ac60f2",
+          "source_id": "rss-gnews-ai-models-zh",
+          "source_name": "电子工程专辑EE Times China",
+          "publisher_name": "电子工程专辑EE Times China",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "eetchina",
+          "is_reprint_copy": false,
+          "title": "腾讯混元发布3D大模型Hy3D 3.6",
+          "url": "https://news.google.com/rss/articles/CBMiU0FVX3lxTE5IOV9JbHRtYlM2ZlNoYld5WW1fRkZ1ZzJLM0JiZC1KSFFSSXB1VEZrRzdybWdIdUFCd1ZTbmhna0lmWjVRMTdjcEN0cXlrSmRqclkw?oc=5",
+          "published_at": "2026-11-27T11:45:00+08:00",
+          "published_at_source": "upstream_rfc2822",
+          "fetched_at": "2026-11-27T17:41:02+08:00",
+          "excerpt": "腾讯混元发布3D大模型Hy3D 3.6 电子工程专辑EE Times China",
+          "thumbnail_url": null,
+          "deep_fetch_status": null
+        },
+        {
+          "item_id": "rss-gnews-ai-models-zh_c5b4a0af1145",
+          "article_id": "rss-gnews-ai-models-zh_c5b4a0af1145",
+          "source_id": "rss-gnews-ai-models-zh",
+          "source_name": "新浪财经_金融信息服务商",
+          "publisher_name": "新浪财经_金融信息服务商",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "finance",
+          "is_reprint_copy": false,
+          "title": "腾讯混元发布最新一代3D大模型Hy3D 3.6 - 新浪财经_金融信息服务商",
+          "url": "https://news.google.com/rss/articles/CBMipwFBVV95cUxPd3VGeHk0NmVmQVpKTkpOSW1QRTZERWxheWtRUFl3Z2ZOamo3YlJuSUoxa2dyby1uX3IwMEtEbjBqdnpfVTFoejZwME4xeE1RSGRvSTFsUUp6WGI2YnJvblN5QV9UNmFGc2g2ZHowRHNZRnZJU0ZaMmYyS2hBYkNrUU1pSGdqVjBoWkpEX2pqUW1yd2U4aHYzTGlYbEZZZVZlekUzYWRoSQ?oc=5",
+          "published_at": "2026-11-27T12:25:34+08:00",
+          "published_at_source": "upstream_rfc2822",
+          "fetched_at": "2026-11-27T17:41:02+08:00",
+          "excerpt": "腾讯混元发布最新一代3D大模型Hy3D 3.6 新浪财经_金融信息服务商",
+          "thumbnail_url": null,
+          "deep_fetch_status": null
+        },
+        {
+          "item_id": "rss-gnews-ai-models-zh_8e7323845dd8",
+          "article_id": "rss-gnews-ai-models-zh_8e7323845dd8",
+          "source_id": "rss-gnews-ai-models-zh",
+          "source_name": "维度网",
+          "publisher_name": "维度网",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "wedoany",
+          "is_reprint_copy": false,
+          "title": "中国腾讯发布新一代3D大模型Hy3D 3.6",
+          "url": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE8zSVBnRWxQY2J6NUdRN3dQTXpGNV9oLW9jNGhOdW1jTUJGNXZFekZXY0hfUGt0dU93OXhiZEVmaG1PVGNqTGIwWmlyaXJwWHljY0EtYmNUTjU?oc=5",
+          "published_at": "2026-11-27T14:05:00+08:00",
+          "published_at_source": "upstream_rfc2822",
+          "fetched_at": "2026-11-27T17:41:02+08:00",
+          "excerpt": "中国腾讯发布新一代3D大模型Hy3D 3.6 维度网",
+          "thumbnail_url": null,
           "deep_fetch_status": null
         }
       ],
@@ -1067,16 +623,29 @@
       "followup": null,
       "is_new_in_batch": true,
       "update_kind": "new_discovery",
-      "heavy_score": 36.8,
-      "radar_score": 76,
-      "severity_tier": "B",
-      "severity_label": "B级常规",
-      "summary": "NVIDIA Profile Inspector开发者Orbmu2k发布免费开源工具NVIDIA G-SYNC Tweaks，旨在解决约60 FPS时OLED屏幕亮度闪烁问题。",
-      "summary_zh": "NVIDIA Profile Inspector开发者Orbmu2k发布免费开源工具NVIDIA G-SYNC Tweaks，旨在解决约60 FPS时OLED屏幕亮度闪烁问题。",
+      "heavy_score": 82.8,
+      "radar_score": 94,
+      "severity_tier": "A",
+      "severity_label": "A级要闻",
+      "heavy_reason_tag": "要闻聚焦",
+      "summary": "腾讯混元发布3D生成大模型Hy3D 3.6，旨在服务专业3D创作领域。",
+      "summary_zh": "腾讯混元发布3D生成大模型Hy3D 3.6，旨在服务专业3D创作领域。",
+      "deep_qa": [
+        {
+          "question": "Hy3D 3.6在专业创作领域的竞争优势是什么？",
+          "answer": "其核心在于对复杂几何结构与纹理的生成精度，能够显著缩短3D资产的建模周期。",
+          "historical_parallel": "早期AI图像生成模型对传统设计流程的颠覆过程。"
+        },
+        {
+          "question": "3D生成大模型对游戏产业的商业模式有何影响？",
+          "answer": "将大幅降低游戏开发成本，推动UGC（用户生成内容）生态的爆发，改变游戏资产的生产与分发逻辑。",
+          "historical_parallel": "游戏引擎技术普及对独立游戏开发者的赋能效应。"
+        }
+      ],
       "ai_overlaid": true,
       "translation_attempts": 0,
       "translation_error": null,
-      "title_zh": "英伟达 G-SYNC 新工具上线：解决约 60 FPS 时 OLED 屏幕亮度闪烁问题",
+      "title_zh": "腾讯混元发布 3D 生成大模型 Hy3D 3.6，面向专业 3D 创作",
       "translation_status": "native_zh",
       "title_en": "",
       "summary_en": "",
@@ -1172,12 +741,12 @@
       "first_reported_at": "2026-11-26T08:00:00+08:00",
       "latest_fact_update_at": "2026-11-26T19:37:17+08:00",
       "latest_reported_at": "2026-11-26T19:37:17+08:00",
-      "fetched_at": "2026-11-27T08:35:30+08:00",
-      "input_batch_id": "raw-20261127-083530",
+      "fetched_at": "2026-11-27T17:40:50+08:00",
+      "input_batch_id": "raw-20261127-174050",
       "fact_summary": "explainx.ai与Hugging Face推出适用于AMD Ryzen和Radeon的llama.cpp基准测试仪表板，追踪2款Radeon GPU性能。",
       "fact_atoms": [
         {
-          "atom_id": "fa_53650966",
+          "atom_id": "fa_54347876",
           "subject": "AMD (超威半导体)",
           "metric_or_action": "Introducing the llama.cpp benchmark dashboard for AMD Ryzen and Radeon",
           "value": null,
@@ -1213,7 +782,7 @@
           "url": "https://news.google.com/rss/articles/CBMikgFBVV95cUxNd3hsRHpvTlJHMVRtSWlsTTlONm8tek5DS0cycmEybEdBTG5VTloyX2E3Q0FIWnJFSTNwS244dk5zbTVJaTQ0MnBlbXRZckc3ZnRoTDR1c3NWbHlDY0FpMTkyT2hHTUFpUXNERXpqN2xLakZkZnI4QmpiNWNBMjRIYjd3c0lHOUowblMwSFJnR09ldw?oc=5",
           "published_at": "2026-11-26T08:00:00+08:00",
           "published_at_source": "upstream_rfc2822",
-          "fetched_at": "2026-11-27T08:35:41+08:00",
+          "fetched_at": "2026-11-27T17:41:02+08:00",
           "excerpt": "llama.cpp AMD Benchmark Dashboard: 2 Radeon GPUs Tracked explainx.ai",
           "thumbnail_url": null,
           "deep_fetch_status": null,
@@ -1234,7 +803,7 @@
           "url": "https://huggingface.co/blog/ggml-org/llamacpp-amd-bench",
           "published_at": "2026-11-26T19:37:17+08:00",
           "published_at_source": "upstream_rfc2822",
-          "fetched_at": "2026-11-27T08:35:41+08:00",
+          "fetched_at": "2026-11-27T17:41:02+08:00",
           "excerpt": null,
           "thumbnail_url": null,
           "deep_fetch_status": null,
@@ -1249,14 +818,14 @@
       },
       "followup": {
         "is_continuing": true,
-        "prev_batch_id": "smart-20261126-231639",
-        "prev_event_id": "evt_bc41391b6850",
-        "prev_title": "Hugging Face 上线 llama.cpp AMD Ryzen 与 Radeon 基准测试面板",
+        "prev_batch_id": "smart-20261127-083618",
+        "prev_event_id": "evt_1a80a0589f80",
+        "prev_title": "推出适用于 AMD Ryzen 和 Radeon 的 llama.cpp 基准测试仪表板",
         "delta_note": "同一事件在最新批次出现表述修订或信息补充"
       },
       "is_new_in_batch": false,
       "update_kind": "new_discovery",
-      "heavy_score": 36.0,
+      "heavy_score": 25.9,
       "radar_score": 82,
       "severity_tier": "B",
       "severity_label": "B级常规",
@@ -1285,205 +854,45 @@
     },
     {
       "schema_version": "4.1",
-      "event_id": "evt_dbf03f1b1e4d",
-      "storyline_id": "st_9e8c0340ff5a",
+      "event_id": "evt_911bce27b2ad",
+      "storyline_id": "st_6c7276dde789",
       "article_ids": [
-        "sina-7x24_25baec058c21"
+        "rss-9to5google_a69629bc6f28"
       ],
       "legacy_event_ids": [],
-      "title": "看图：软银信用违约互换涨幅超过部分AI同业",
+      "title": "亚马逊“黑色星期五”主场促销现已开启！涵盖苹果、谷歌、Anker、乐高、电视等产品",
       "category": "tech",
       "entities": [
-        "Anthropic / Claude",
-        "OpenAI"
+        "苹果 (Apple)"
       ],
       "entity_ids": [
-        "ent_anthropic",
-        "ent_openai"
-      ],
-      "entity_confidences": {
-        "Anthropic / Claude": 0.76,
-        "OpenAI": 0.92
-      },
-      "matched_entities": [
-        {
-          "entity_id": "ent_anthropic",
-          "canonical_name": "Anthropic / Claude",
-          "entity_type": "company",
-          "sector": "AI 模型与安全",
-          "matched_aliases": [
-            "anthropic"
-          ],
-          "tickers": [],
-          "reason": "正文/实体匹配关键词「anthropic」",
-          "confidence": 0.76
-        },
-        {
-          "entity_id": "ent_openai",
-          "canonical_name": "OpenAI",
-          "entity_type": "company",
-          "sector": "AI 模型与应用",
-          "matched_aliases": [
-            "openai"
-          ],
-          "tickers": [],
-          "reason": "正文/实体匹配关键词「openai」",
-          "confidence": 0.92
-        }
-      ],
-      "importance": "medium",
-      "sentiment": "Mixed",
-      "special_note": null,
-      "material_stage": null,
-      "material_stage_label": null,
-      "material_stage_confidence": null,
-      "thumbnail_url": null,
-      "publisher_name": "新浪财经 7×24 电报",
-      "source_status": "ok",
-      "evidence_status": "single_source",
-      "evidence_label": "单一独立来源线索",
-      "evidence_status_reason": "目前仅见 1 家独立来源（共 1 条引用含转载，含摘要/首段），尚未见独立渠道交叉或官方确认",
-      "attribution_warning": null,
-      "regulatory_note": null,
-      "contradictions": [],
-      "downweight_reasons": [],
-      "quality_flags": [],
-      "material_depth": "body_lead_extracted",
-      "source_count": 1,
-      "platform_count": 1,
-      "independent_publisher_count": 1,
-      "reprint_count": 0,
-      "published_at": "2026-11-27T08:33:59+08:00",
-      "event_date": "2026-11-27",
-      "event_time": "2026-11-27T08:33:59+08:00",
-      "stale": false,
-      "event_date_source": "llm_extracted",
-      "is_stale_rehash": false,
-      "time_trust_level": "article_timestamp",
-      "time_confidence": "article_timestamp",
-      "first_discovered_at": "2026-11-27T08:35:30+08:00",
-      "first_reported_at": "2026-11-27T08:33:59+08:00",
-      "latest_fact_update_at": "2026-11-27T08:33:59+08:00",
-      "latest_reported_at": "2026-11-27T08:33:59+08:00",
-      "fetched_at": "2026-11-27T08:35:30+08:00",
-      "input_batch_id": "raw-20261127-083530",
-      "fact_summary": "软银信用违约互换涨幅超过部分AI同业，正值Anthropic上市后股价表现疲软之际，市场对软银深度绑定的OpenAI前景产生担忧。",
-      "fact_atoms": [
-        {
-          "atom_id": "fa_37268717",
-          "subject": "Anthropic / Claude",
-          "metric_or_action": "看图：软银信用违约互换涨幅超过部分AI同业",
-          "value": null,
-          "unit": null,
-          "period": "单次披露/未注明周期",
-          "scope": "新闻事件陈述",
-          "fact_status": "reported_unconfirmed_by_filing",
-          "attribution": "新浪财经 7×24 电报",
-          "source_ref": "sina-7x24_25baec058c21",
-          "source_url": "https://finance.sina.cn/7x24/2026-11-27/detail-inkacqym1083282.d.html",
-          "source_excerpt_or_locator": "信用交易员对软银的看法愈发悲观，其债务保险成本大幅走高，涨幅高于日本本土以及部分海外同业。本轮信用违约互换价格飙升，正值Anthropic上市后股价表现疲软之际，市场由此对OpenAI的IPO前景产生担忧。这对软银而言至关重要，软银有大额投资与这家公司的命运绑定。近期行情变化使得软银的信用风险表现弱于SpaceX和甲骨文，而此前两家一直是AI板块信用市场的风",
-          "published_at": "2026-11-27T08:33:59+08:00",
-          "discovered_at": "2026-11-27T08:35:30+08:00",
-          "revision": 1
-        }
-      ],
-      "ai_analysis": "一级市场AI巨头估值波动正迅速通过资本纽带传导至投资机构的信用风险定价体系中。",
-      "unverified_claims": [],
-      "speculation_or_outlook": null,
-      "sources": [
-        {
-          "item_id": "sina-7x24_25baec058c21",
-          "article_id": "sina-7x24_25baec058c21",
-          "source_id": "sina-7x24",
-          "source_name": "新浪财经 7×24 电报",
-          "publisher_name": "新浪财经 7×24 电报",
-          "source_status": "ok",
-          "source_kind": "news",
-          "source_tier": "direct_media",
-          "publisher_family": "sina-7x24",
-          "is_reprint_copy": false,
-          "title": "看图：软银信用违约互换涨幅超过部分AI同业",
-          "url": "https://finance.sina.cn/7x24/2026-11-27/detail-inkacqym1083282.d.html",
-          "published_at": "2026-11-27T08:33:59+08:00",
-          "published_at_source": "upstream_api",
-          "fetched_at": "2026-11-27T08:35:31+08:00",
-          "excerpt": "信用交易员对软银的看法愈发悲观，其债务保险成本大幅走高，涨幅高于日本本土以及部分海外同业。本轮信用违约互换价格飙升，正值Anthropic上市后股价表现疲软之际，市场由此对OpenAI的IPO前景产生担忧。这对软银而言至关重要，软银有大额投资与这家公司的命运绑定。近期行情变化使得软银的信用风险表现弱于SpaceX和甲骨文，而此前两家一直是AI板块信用市场的风向标。至少还有一点值得宽慰：软银的信用风险水平远低于CoreWeave。CoreWeave的信用违约互换已经深陷垃圾债区间，数据显示其未来五年违约概率超过70%。",
-          "thumbnail_url": null,
-          "deep_fetch_status": "extracted_body_lead"
-        }
-      ],
-      "verification": {
-        "all_refs_valid": true,
-        "has_primary_url": true,
-        "rejected_refs": [],
-        "has_first_party": false
-      },
-      "followup": null,
-      "is_new_in_batch": true,
-      "update_kind": "new_discovery",
-      "heavy_score": 20.7,
-      "radar_score": 76,
-      "severity_tier": "B",
-      "severity_label": "B级常规",
-      "summary": "软银信用违约互换涨幅超过部分AI同业，正值Anthropic上市后股价表现疲软之际，市场对软银深度绑定的OpenAI前景产生担忧。",
-      "summary_zh": "软银信用违约互换涨幅超过部分AI同业，正值Anthropic上市后股价表现疲软之际，市场对软银深度绑定的OpenAI前景产生担忧。",
-      "ai_overlaid": true,
-      "translation_attempts": 0,
-      "translation_error": null,
-      "title_zh": "看图：软银信用违约互换涨幅超过部分AI同业",
-      "translation_status": "native_zh",
-      "title_en": "",
-      "summary_en": "",
-      "ai_analysis_en": ""
-    },
-    {
-      "schema_version": "4.1",
-      "event_id": "evt_189f28d79064",
-      "storyline_id": "st_2b4e1ceaf3ae",
-      "article_ids": [
-        "aihot_f40abaa7f3d3"
-      ],
-      "legacy_event_ids": [],
-      "title": "在 OpenAI 和 Anthropic 封禁蒸馏数据后，月之暗面转向 Google 与 Meta 模型获取训练数据",
-      "category": "tech",
-      "entities": [
-        "OpenAI",
-        "Anthropic / Claude"
-      ],
-      "entity_ids": [
-        "ent_openai",
-        "ent_anthropic",
+        "ent_apple",
         "ent_google"
       ],
       "entity_confidences": {
-        "OpenAI": 0.99,
-        "Anthropic / Claude": 0.86,
+        "苹果 (Apple)": 0.92,
         "Google / DeepMind / Gemini": 0.86
       },
       "matched_entities": [
         {
-          "entity_id": "ent_openai",
-          "canonical_name": "OpenAI",
+          "entity_id": "ent_apple",
+          "canonical_name": "苹果 (Apple)",
           "entity_type": "company",
-          "sector": "AI 模型与应用",
+          "sector": "消费电子与端侧AI",
           "matched_aliases": [
-            "openai"
+            "apple"
           ],
-          "tickers": [],
-          "reason": "正文/实体匹配关键词「openai」",
-          "confidence": 0.99
-        },
-        {
-          "entity_id": "ent_anthropic",
-          "canonical_name": "Anthropic / Claude",
-          "entity_type": "company",
-          "sector": "AI 模型与安全",
-          "matched_aliases": [
-            "anthropic"
+          "tickers": [
+            {
+              "symbol": "AAPL",
+              "market": "US",
+              "exchange": "NASDAQ",
+              "currency": "USD",
+              "label": "AAPL.US (NASDAQ)"
+            }
           ],
-          "tickers": [],
-          "reason": "正文/实体匹配关键词「anthropic」",
-          "confidence": 0.86
+          "reason": "正文/实体匹配关键词「apple」",
+          "confidence": 0.92
         },
         {
           "entity_id": "ent_google",
@@ -1506,165 +915,14 @@
           "confidence": 0.86
         }
       ],
-      "importance": "high",
+      "importance": "medium",
       "sentiment": "Mixed",
       "special_note": null,
       "material_stage": null,
       "material_stage_label": null,
       "material_stage_confidence": null,
-      "thumbnail_url": "https://aihot.news/og/items/g7y9qa582hic2dmfdwpmgp1i4.png",
-      "publisher_name": "AIHOT 前沿",
-      "source_status": "ok",
-      "evidence_status": "single_source",
-      "evidence_label": "单一独立来源线索",
-      "evidence_status_reason": "目前仅见 1 家独立来源（共 1 条引用含转载，含摘要/首段），尚未见独立渠道交叉或官方确认",
-      "attribution_warning": null,
-      "regulatory_note": null,
-      "contradictions": [],
-      "downweight_reasons": [],
-      "quality_flags": [],
-      "material_depth": "body_lead_extracted",
-      "source_count": 1,
-      "platform_count": 1,
-      "independent_publisher_count": 1,
-      "reprint_count": 0,
-      "published_at": "2026-11-26T23:45:08+08:00",
-      "event_date": "2026-11-26",
-      "event_time": "2026-11-26T23:45:08+08:00",
-      "stale": false,
-      "event_date_source": "llm_extracted",
-      "is_stale_rehash": false,
-      "time_trust_level": "article_timestamp",
-      "time_confidence": "article_timestamp",
-      "first_discovered_at": "2026-11-27T08:35:30+08:00",
-      "first_reported_at": "2026-11-26T23:45:08+08:00",
-      "latest_fact_update_at": "2026-11-26T23:45:08+08:00",
-      "latest_reported_at": "2026-11-26T23:45:08+08:00",
-      "fetched_at": "2026-11-27T08:35:30+08:00",
-      "input_batch_id": "raw-20261127-083530",
-      "fact_summary": "在OpenAI和Anthropic封禁蒸馏数据后，中国AI开发者转而向Google与Meta的模型获取训练数据。",
-      "fact_atoms": [
-        {
-          "atom_id": "fa_21146229",
-          "subject": "OpenAI",
-          "metric_or_action": "在 OpenAI 和 Anthropic 封禁蒸馏数据后，月之暗面转向 Google 与 Meta 模型获取训练数据",
-          "value": "3",
-          "unit": "万亿参数",
-          "period": "单次披露/未注明周期",
-          "scope": "新闻事件陈述",
-          "fact_status": "reported_unconfirmed_by_filing",
-          "attribution": "AIHOT 前沿",
-          "source_ref": "aihot_f40abaa7f3d3",
-          "source_url": "https://aihot.news/items/g7y9qa582hic2dmfdwpmgp1i4",
-          "source_excerpt_or_locator": "After OpenAI and Anthropic shut the door on their data, a Chinese AI developer is turning to Google and Meta instead 据 Reuters 援引消息人士报道，因美国封堵云漏洞、NVIDIA 限制出货且 OpenAI 与 Anthropic 阻止数",
-          "published_at": "2026-11-26T23:45:08+08:00",
-          "discovered_at": "2026-11-27T08:35:30+08:00",
-          "revision": 1
-        }
-      ],
-      "ai_analysis": "大模型开源与闭源阵营间的数据安全壁垒正在重塑全球AI供应链的数据流向路径。",
-      "unverified_claims": [],
-      "speculation_or_outlook": null,
-      "sources": [
-        {
-          "item_id": "aihot_f40abaa7f3d3",
-          "article_id": "aihot_f40abaa7f3d3",
-          "source_id": "aihot",
-          "source_name": "AIHOT 前沿",
-          "publisher_name": "AIHOT 前沿",
-          "source_status": "ok",
-          "source_kind": "news",
-          "source_tier": "aggregator_lead",
-          "publisher_family": "aihot",
-          "is_reprint_copy": false,
-          "title": "在 OpenAI 和 Anthropic 封禁蒸馏数据后，月之暗面转向 Google 与 Meta 模型获取训练数据",
-          "url": "https://aihot.news/items/g7y9qa582hic2dmfdwpmgp1i4",
-          "published_at": "2026-11-26T23:45:08+08:00",
-          "published_at_source": "upstream_rfc2822",
-          "fetched_at": "2026-11-27T08:35:30+08:00",
-          "excerpt": "After OpenAI and Anthropic shut the door on their data, a Chinese AI developer is turning to Google and Meta instead 据 Reuters 援引消息人士报道，因美国封堵云漏洞、NVIDIA 限制出货且 OpenAI 与 Anthropic 阻止数据抓取蒸馏，Z.AI 约 3 万亿参数的 GLM-5.5 可能从 11 月推迟到 2027 年第一季度，为此先发布了 7500 亿参数的 GLM-5.4 并称新设计可媲美 2 至 3 万亿参数系统。 Chinese AI companies Z.AI and Moonshot AI have to delay their next flagship models and are looking for new sources of training data. The effects now reach beyond previously known delays, after the US closed the cloud loophole for Nvidia chips, Nvidia halted shipments to Southeast Asia, and US compa…",
-          "thumbnail_url": "https://aihot.news/og/items/g7y9qa582hic2dmfdwpmgp1i4.png",
-          "deep_fetch_status": "extracted_body_lead"
-        }
-      ],
-      "verification": {
-        "all_refs_valid": true,
-        "has_primary_url": true,
-        "rejected_refs": [],
-        "has_first_party": false
-      },
-      "followup": null,
-      "is_new_in_batch": true,
-      "update_kind": "new_discovery",
-      "heavy_score": 56.0,
-      "radar_score": 76,
-      "severity_tier": "A",
-      "severity_label": "A级要闻",
-      "heavy_reason_tag": "巨头重大变动",
-      "summary": "在OpenAI和Anthropic封禁蒸馏数据后，中国AI开发者转而向Google与Meta的模型获取训练数据。",
-      "summary_zh": "在OpenAI和Anthropic封禁蒸馏数据后，中国AI开发者转而向Google与Meta的模型获取训练数据。",
-      "deep_qa": [
-        {
-          "question": "从OpenAI/Anthropic转向Google/Meta获取训练数据反映了怎样的行业博弈？",
-          "answer": "反映出不同科技巨头在开源开放策略与数据出口管制上的差异化合规尺度，为追赶者提供了利用间隙的战略空间。",
-          "historical_parallel": "历史上跨国科技巨头在不同开源协议与软件标准之争中形成的灰色生态利用期。"
-        },
-        {
-          "question": "模型蒸馏数据获取渠道的变迁对中小AI开发者的成本有何冲击？",
-          "answer": "迫使开发者增加数据清洗和多源合规验证的合规成本，延长了产品研发的验证周期。",
-          "historical_parallel": "早期互联网爬虫协议收紧后垂直搜索引擎获取公开数据成本激增的阶段。"
-        }
-      ],
-      "ai_overlaid": true,
-      "translation_attempts": 0,
-      "translation_error": null,
-      "title_zh": "在 OpenAI 和 Anthropic 封禁蒸馏数据后，月之暗面转向 Google 与 Meta 模型获取训练数据",
-      "translation_status": "native_zh",
-      "title_en": "",
-      "summary_en": "",
-      "ai_analysis_en": ""
-    },
-    {
-      "schema_version": "4.1",
-      "event_id": "evt_dfb1feb74578",
-      "storyline_id": "st_6d1222da3319",
-      "article_ids": [
-        "rss-gnews-ai-models-zh_507858742a8d"
-      ],
-      "legacy_event_ids": [],
-      "title": "OpenAI最新发布，AI制药热度飙升，港股通医疗ETF华宝（159137）标的指数盘中涨超3%！脑机接口也有新突破",
-      "category": "tech",
-      "entities": [
-        "OpenAI"
-      ],
-      "entity_ids": [
-        "ent_openai"
-      ],
-      "entity_confidences": {
-        "OpenAI": 0.99
-      },
-      "matched_entities": [
-        {
-          "entity_id": "ent_openai",
-          "canonical_name": "OpenAI",
-          "entity_type": "company",
-          "sector": "AI 模型与应用",
-          "matched_aliases": [
-            "openai"
-          ],
-          "tickers": [],
-          "reason": "正文/实体匹配关键词「openai」",
-          "confidence": 0.99
-        }
-      ],
-      "importance": "medium",
-      "sentiment": "Bullish",
-      "special_note": null,
-      "material_stage": null,
-      "material_stage_label": null,
-      "material_stage_confidence": null,
-      "thumbnail_url": null,
-      "publisher_name": "新浪财经",
+      "thumbnail_url": "https://9to5google.com/wp-content/uploads/sites/4/2026/11/Amazon-Black-Friday-Main-Event-2026-now-live.jpg?quality=82&strip=all&w=1600",
+      "publisher_name": "9to5Google",
       "source_status": "ok",
       "evidence_status": "single_source",
       "evidence_label": "单一独立来源线索",
@@ -1679,63 +937,64 @@
       "platform_count": 1,
       "independent_publisher_count": 1,
       "reprint_count": 0,
-      "published_at": "2026-11-26T23:31:05+08:00",
-      "event_date": "2026-11-26",
-      "event_time": "2026-11-26T23:31:05+08:00",
+      "published_at": "2026-11-27T16:02:12+08:00",
+      "event_date": "2026-11-27",
+      "event_time": "2026-11-27T16:02:12+08:00",
       "stale": false,
       "event_date_source": "llm_extracted",
       "is_stale_rehash": false,
       "time_trust_level": "article_timestamp",
       "time_confidence": "article_timestamp",
-      "first_discovered_at": "2026-11-26T13:03:56+08:00",
-      "first_reported_at": "2026-11-26T23:31:05+08:00",
-      "latest_fact_update_at": "2026-11-26T23:31:05+08:00",
-      "latest_reported_at": "2026-11-26T23:31:05+08:00",
-      "fetched_at": "2026-11-27T08:35:30+08:00",
-      "input_batch_id": "raw-20261127-083530",
-      "fact_summary": "OpenAI发布新进展带动AI制药热度，港股通医疗ETF标的指数盘中涨超3%。",
+      "first_discovered_at": "2026-11-27T17:40:50+08:00",
+      "first_reported_at": "2026-11-27T16:02:12+08:00",
+      "latest_fact_update_at": "2026-11-27T16:02:12+08:00",
+      "latest_reported_at": "2026-11-27T16:02:12+08:00",
+      "fetched_at": "2026-11-27T17:40:50+08:00",
+      "input_batch_id": "raw-20261127-174050",
+      "fact_summary": "亚马逊“黑色星期五”官方主场促销活动现已上线！数百万件商品参与优惠，“今日特惠”板块推出全新折扣，更有精选限时抢购商品等你来拿。",
       "fact_atoms": [
         {
-          "atom_id": "fa_75291151",
-          "subject": "OpenAI",
-          "metric_or_action": "OpenAI最新发布，AI制药热度飙升，港股通医疗ETF华宝（159137）标的指数盘中涨超3%！脑机接口也有新突破",
-          "value": "3",
-          "unit": "%",
+          "atom_id": "fa_50249202",
+          "subject": "苹果 (Apple)",
+          "metric_or_action": "Amazon main event Black Friday sale now live! Apple, Google, Anker, LEGO, TVs, more",
+          "value": null,
+          "unit": null,
           "period": "单次披露/未注明周期",
           "scope": "新闻事件陈述",
           "fact_status": "reported_unconfirmed_by_filing",
-          "attribution": "新浪财经",
-          "source_ref": "rss-gnews-ai-models-zh_507858742a8d",
-          "source_url": "https://news.google.com/rss/articles/CBMimAFBVV95cUxPX19NWkRSYkx2M2NqQm1ZR3pvTXpRb2wybHg4VjY4WUZuQVVyNW9pRHRvVWRLMmtJVW5pcVFQcTRNZFFNZUhHamNoZXNRd3M4LVBwMVJZdmJtMk1waGNDb01EMVFMVlpQNDNzYy1zSEdVZC1QamtTbVhJTGQ2c3R6S0tJZlNCbGtQTGxObDJONHdmN3J6blhKTg?oc=5",
-          "source_excerpt_or_locator": "OpenAI最新发布，AI制药热度飙升，港股通医疗ETF华宝（159137）标的指数盘中涨超3%！脑机接口也有新突破 新浪财经",
-          "published_at": "2026-11-26T23:31:05+08:00",
-          "discovered_at": "2026-11-26T13:03:56+08:00",
+          "attribution": "9to5Google",
+          "source_ref": "rss-9to5google_a69629bc6f28",
+          "source_url": "https://9to5toys.com/2026/11/27/amazon-official-black-friday-sale-live-2026",
+          "source_excerpt_or_locator": "The official main event Amazon Black Friday sale is now live! Millions of deals, all-new discounts in the Today’s Big Deals section , and a fresh collection of Doorbusters now up f",
+          "published_at": "2026-11-27T16:02:12+08:00",
+          "discovered_at": "2026-11-27T17:40:50+08:00",
           "revision": 1
         }
       ],
-      "ai_analysis": "AI制药作为AI应用落地的核心场景，正获得资本市场的持续关注，其研发效率的提升直接转化为医疗企业的估值溢价。",
+      "ai_analysis": "反映苹果 (Apple) / Google / DeepMind / Gemini技术架构与商业落地节奏变化，实际效果仍待开发者生态与第三方实测验证。",
       "unverified_claims": [],
       "speculation_or_outlook": null,
       "sources": [
         {
-          "item_id": "rss-gnews-ai-models-zh_507858742a8d",
-          "article_id": "rss-gnews-ai-models-zh_507858742a8d",
-          "source_id": "rss-gnews-ai-models-zh",
-          "source_name": "新浪财经",
-          "publisher_name": "新浪财经",
+          "item_id": "rss-9to5google_a69629bc6f28",
+          "article_id": "rss-9to5google_a69629bc6f28",
+          "source_id": "rss-9to5google",
+          "source_name": "9to5Google",
+          "publisher_name": "9to5Google",
           "source_status": "ok",
           "source_kind": "news",
           "source_tier": "direct_media",
-          "publisher_family": "finance",
+          "publisher_family": "9to5google",
           "is_reprint_copy": false,
-          "title": "OpenAI最新发布，AI制药热度飙升，港股通医疗ETF华宝（159137）标的指数盘中涨超3%！脑机接口也有新突破",
-          "url": "https://news.google.com/rss/articles/CBMimAFBVV95cUxPX19NWkRSYkx2M2NqQm1ZR3pvTXpRb2wybHg4VjY4WUZuQVVyNW9pRHRvVWRLMmtJVW5pcVFQcTRNZFFNZUhHamNoZXNRd3M4LVBwMVJZdmJtMk1waGNDb01EMVFMVlpQNDNzYy1zSEdVZC1QamtTbVhJTGQ2c3R6S0tJZlNCbGtQTGxObDJONHdmN3J6blhKTg?oc=5",
-          "published_at": "2026-11-26T23:31:05+08:00",
+          "title": "Amazon main event Black Friday sale now live! Apple, Google, Anker, LEGO, TVs, more",
+          "url": "https://9to5toys.com/2026/11/27/amazon-official-black-friday-sale-live-2026",
+          "published_at": "2026-11-27T16:02:12+08:00",
           "published_at_source": "upstream_rfc2822",
-          "fetched_at": "2026-11-27T08:35:41+08:00",
-          "excerpt": "OpenAI最新发布，AI制药热度飙升，港股通医疗ETF华宝（159137）标的指数盘中涨超3%！脑机接口也有新突破 新浪财经",
-          "thumbnail_url": null,
-          "deep_fetch_status": null
+          "fetched_at": "2026-11-27T17:41:02+08:00",
+          "excerpt": "The official main event Amazon Black Friday sale is now live! Millions of deals, all-new discounts in the Today’s Big Deals section , and a fresh collection of Doorbusters now up for grabs. The wild discounts on AirPods Pro 3 at an insane $100 off , the crazy…",
+          "thumbnail_url": "https://9to5google.com/wp-content/uploads/sites/4/2026/11/Amazon-Black-Friday-Main-Event-2026-now-live.jpg?quality=82&strip=all&w=1600",
+          "deep_fetch_status": null,
+          "title_zh": "亚马逊“黑色星期五”主场促销现已开启！涵盖苹果、谷歌、Anker、乐高、电视等产品"
         }
       ],
       "verification": {
@@ -1744,61 +1003,219 @@
         "rejected_refs": [],
         "has_first_party": false
       },
-      "followup": {
-        "is_continuing": true,
-        "prev_batch_id": "smart-20261126-231639",
-        "prev_event_id": "evt_dfb1feb74578",
-        "prev_title": "OpenAI最新发布，AI制药热度飙升，港股通医疗ETF华宝（159137）标的指数盘中涨超3%！脑机接口也有新突破",
-        "delta_note": "同一事件在最新批次出现表述修订或信息补充"
-      },
+      "followup": null,
       "is_new_in_batch": true,
       "update_kind": "new_discovery",
-      "heavy_score": 46.0,
+      "heavy_score": 36.8,
       "radar_score": 76,
       "severity_tier": "B",
       "severity_label": "B级常规",
-      "summary": "OpenAI发布新进展带动AI制药热度，港股通医疗ETF标的指数盘中涨超3%。",
-      "summary_zh": "OpenAI发布新进展带动AI制药热度，港股通医疗ETF标的指数盘中涨超3%。",
-      "ai_overlaid": true,
+      "title_en": "Amazon main event Black Friday sale now live! Apple, Google, Anker, LEGO, TVs, more",
+      "summary_en": "The official main event Amazon Black Friday sale is now live! Millions of deals, all-new discounts in the Today's Big Deals section, and a fresh collection of Doorbusters now up for grabs.",
+      "summary": "亚马逊“黑色星期五”官方主场促销活动现已上线！数百万件商品参与优惠，“今日特惠”板块推出全新折扣，更有精选限时抢购商品等你来拿。",
+      "summary_zh": "亚马逊“黑色星期五”官方主场促销活动现已上线！数百万件商品参与优惠，“今日特惠”板块推出全新折扣，更有精选限时抢购商品等你来拿。",
       "translation_attempts": 0,
       "translation_error": null,
-      "title_zh": "OpenAI最新发布，AI制药热度飙升，港股通医疗ETF华宝（159137）标的指数盘中涨超3%！脑机接口也有新突破",
+      "title_zh": "亚马逊“黑色星期五”主场促销现已开启！涵盖苹果、谷歌、Anker、乐高、电视等产品",
       "translation_status": "native_zh",
+      "ai_analysis_en": ""
+    },
+    {
+      "schema_version": "4.1",
+      "event_id": "evt_bee0a4dbd109",
+      "storyline_id": "st_59537c6dfbca",
+      "article_ids": [
+        "huggingface-hub_14b5b5da6754"
+      ],
+      "legacy_event_ids": [],
+      "title": "[HF 模型卡] google/timesfm-3.0-pytorch 更新 (自定义开源许可 (详见模型卡))",
+      "category": "tech",
+      "entities": [],
+      "entity_ids": [
+        "ent_google",
+        "ent_ai_infra_tools"
+      ],
+      "entity_confidences": {
+        "Google / DeepMind / Gemini": 0.86,
+        "AI 推理与框架生态 (vLLM / llama.cpp / Transformers)": 0.86
+      },
+      "matched_entities": [
+        {
+          "entity_id": "ent_google",
+          "canonical_name": "Google / DeepMind / Gemini",
+          "entity_type": "company",
+          "sector": "AI 模型与云基础设施",
+          "matched_aliases": [
+            "google"
+          ],
+          "tickers": [
+            {
+              "symbol": "GOOGL",
+              "market": "US",
+              "exchange": "NASDAQ",
+              "currency": "USD",
+              "label": "GOOGL.US (NASDAQ)"
+            }
+          ],
+          "reason": "正文/实体匹配关键词「google」",
+          "confidence": 0.86
+        },
+        {
+          "entity_id": "ent_ai_infra_tools",
+          "canonical_name": "AI 推理与框架生态 (vLLM / llama.cpp / Transformers)",
+          "entity_type": "tech",
+          "sector": "AI 开源基础设施",
+          "matched_aliases": [
+            "pytorch"
+          ],
+          "tickers": [],
+          "reason": "正文/实体匹配关键词「pytorch」",
+          "confidence": 0.86
+        }
+      ],
+      "importance": "medium",
+      "sentiment": "Bullish",
+      "special_note": null,
+      "material_stage": "ga",
+      "material_stage_label": "正式可用 (GA)",
+      "material_stage_confidence": 0.86,
+      "thumbnail_url": null,
+      "publisher_name": "Hugging Face 官方模型库",
+      "source_status": "ok",
+      "evidence_status": "single_source",
+      "evidence_label": "一手官方/披露已证实",
+      "evidence_status_reason": "包含官方/监管/代码仓库一手出处（独立来源 1 家），请仍以原文披露范围为准",
+      "attribution_warning": null,
+      "regulatory_note": null,
+      "contradictions": [],
+      "downweight_reasons": [],
+      "quality_flags": [],
+      "material_depth": "first_party_or_metadata",
+      "source_count": 1,
+      "platform_count": 1,
+      "independent_publisher_count": 1,
+      "reprint_count": 0,
+      "published_at": "2026-11-27T15:27:25+08:00",
+      "event_date": "2026-11-27",
+      "event_time": "2026-11-27T15:27:25+08:00",
+      "stale": false,
+      "event_date_source": "llm_extracted",
+      "is_stale_rehash": false,
+      "time_trust_level": "verified_official",
+      "time_confidence": "verified_official",
+      "first_discovered_at": "2026-11-27T17:40:50+08:00",
+      "first_reported_at": "2026-11-27T15:27:25+08:00",
+      "latest_fact_update_at": "2026-11-27T15:27:25+08:00",
+      "latest_reported_at": "2026-11-27T15:27:25+08:00",
+      "fetched_at": "2026-11-27T17:40:50+08:00",
+      "input_batch_id": "raw-20261127-174050",
+      "fact_summary": "Hugging Face 官方机构 google 更新模型 google/timesfm-3.0-pytorch（开源权重可用 (GA)，许可：自定义开源许可 (详见模型卡)，近期下载：352404）。",
+      "fact_atoms": [
+        {
+          "atom_id": "fa_41681237",
+          "subject": "Google / DeepMind / Gemini",
+          "metric_or_action": "[HF 模型卡] google/timesfm-3.0-pytorch 更新 (自定义开源许可 (详见模型卡))",
+          "value": "正式可用 (GA)",
+          "unit": "可用状态",
+          "period": "单次披露/未注明周期",
+          "scope": "模型/产品/技术指标",
+          "fact_status": "first_party_confirmed",
+          "attribution": "Hugging Face 官方模型库",
+          "source_ref": "huggingface-hub_14b5b5da6754",
+          "source_url": "https://huggingface.co/google/timesfm-3.0-pytorch",
+          "source_excerpt_or_locator": "Hugging Face 官方机构 google 更新模型 google/timesfm-3.0-pytorch（开源权重可用 (GA)，许可：自定义开源许可 (详见模型卡)，近期下载：352404）。",
+          "published_at": "2026-11-27T15:27:25+08:00",
+          "discovered_at": "2026-11-27T17:40:50+08:00",
+          "revision": 1
+        }
+      ],
+      "ai_analysis": "反映Google / DeepMind / Gemini / AI 推理与框架生态 (vLLM / llama.cpp / Transformers)技术架构与商业落地节奏变化，实际效果仍待开发者生态与第三方实测验证。",
+      "unverified_claims": [],
+      "speculation_or_outlook": null,
+      "sources": [
+        {
+          "item_id": "huggingface-hub_14b5b5da6754",
+          "article_id": "huggingface-hub_14b5b5da6754",
+          "source_id": "huggingface-hub",
+          "source_name": "Hugging Face 官方模型库",
+          "publisher_name": "Hugging Face 官方模型库",
+          "source_status": "ok",
+          "source_kind": "model_card",
+          "source_tier": "tech_material",
+          "publisher_family": "hf-google",
+          "is_reprint_copy": false,
+          "title": "[HF 模型卡] google/timesfm-3.0-pytorch 更新 (自定义开源许可 (详见模型卡))",
+          "url": "https://huggingface.co/google/timesfm-3.0-pytorch",
+          "published_at": "2026-11-27T15:27:25+08:00",
+          "published_at_source": "huggingface_api",
+          "fetched_at": "2026-11-27T17:41:16+08:00",
+          "excerpt": "Hugging Face 官方机构 google 更新模型 google/timesfm-3.0-pytorch（开源权重可用 (GA)，许可：自定义开源许可 (详见模型卡)，近期下载：352404）。",
+          "thumbnail_url": null,
+          "deep_fetch_status": null
+        }
+      ],
+      "verification": {
+        "all_refs_valid": true,
+        "has_primary_url": true,
+        "rejected_refs": [],
+        "has_first_party": true
+      },
+      "followup": null,
+      "is_new_in_batch": true,
+      "update_kind": "new_discovery",
+      "heavy_score": 36.8,
+      "radar_score": 61,
+      "severity_tier": "B",
+      "severity_label": "B级常规",
+      "translation_attempts": 0,
+      "translation_error": null,
+      "title_zh": "[HF 模型卡] google/timesfm-3.0-pytorch 更新 (自定义开源许可 (详见模型卡))",
+      "translation_status": "native_zh",
+      "summary_zh": "Hugging Face 官方机构 google 更新模型 google/timesfm-3.0-pytorch（开源权重可用 (GA)，许可：自定义开源许可 (详见模型卡)，近期下载：352404）。",
       "title_en": "",
       "summary_en": "",
       "ai_analysis_en": ""
     },
     {
       "schema_version": "4.1",
-      "event_id": "evt_ffccabec70dd",
-      "storyline_id": "st_83e069574e13",
+      "event_id": "evt_dee1f00c3f0c",
+      "storyline_id": "st_7067afee67ac",
       "article_ids": [
-        "wscn-us-stock-channel_d17e406b056f"
+        "rss-marktechpost_fa62444b3b6c",
+        "rss-gnews-opensource-ai_6567c337c0dc"
       ],
       "legacy_event_ids": [],
-      "title": "华尔街见闻早餐 | 2026年11月27日",
+      "title": "腾讯开源DFly2：一种复用目标模型稀疏KV缓存的投机采样方案",
       "category": "tech",
       "entities": [
-        "中美外交与元首峰会"
+        "腾讯 (Tencent)"
       ],
       "entity_ids": [
-        "ent_us_china_diplomacy"
+        "ent_tencent"
       ],
       "entity_confidences": {
-        "中美外交与元首峰会": 0.82
+        "腾讯 (Tencent)": 0.86
       },
       "matched_entities": [
         {
-          "entity_id": "ent_us_china_diplomacy",
-          "canonical_name": "中美外交与元首峰会",
-          "entity_type": "macro",
-          "sector": "国际关系与地缘宏观",
+          "entity_id": "ent_tencent",
+          "canonical_name": "腾讯 (Tencent)",
+          "entity_type": "company",
+          "sector": "互联网 / AI模型与应用",
           "matched_aliases": [
-            "外交部"
+            "tencent"
           ],
-          "tickers": [],
-          "reason": "正文/实体匹配关键词「外交部」",
-          "confidence": 0.82
+          "tickers": [
+            {
+              "symbol": "00700",
+              "market": "HK",
+              "exchange": "HKEX",
+              "currency": "HKD",
+              "label": "00700.HK (HKEX)"
+            }
+          ],
+          "reason": "正文/实体匹配关键词「tencent」",
+          "confidence": 0.86
         }
       ],
       "importance": "medium",
@@ -1807,7 +1224,184 @@
       "material_stage": null,
       "material_stage_label": null,
       "material_stage_confidence": null,
-      "thumbnail_url": null,
+      "thumbnail_url": "https://s.w.org/images/core/emoji/17.0.2/72x72/25c0.png",
+      "publisher_name": "MarkTechPost (AI论文/模型)",
+      "source_status": "ok",
+      "evidence_status": "multi_source",
+      "evidence_label": "多独立来源提及（待核官方全文）",
+      "evidence_status_reason": "已有 2 家独立媒体族提及（含摘要或正文首段）；多源转载不代表官方公告已证实",
+      "attribution_warning": null,
+      "regulatory_note": null,
+      "contradictions": [],
+      "downweight_reasons": [],
+      "quality_flags": [],
+      "material_depth": "title_and_excerpt",
+      "source_count": 2,
+      "platform_count": 2,
+      "independent_publisher_count": 2,
+      "reprint_count": 0,
+      "published_at": "2026-11-26T08:00:00+08:00",
+      "event_date": "2026-11-27",
+      "event_time": "2026-11-26T08:00:00+08:00",
+      "stale": false,
+      "event_date_source": "llm_extracted",
+      "is_stale_rehash": false,
+      "time_trust_level": "article_timestamp",
+      "time_confidence": "article_timestamp",
+      "first_discovered_at": "2026-11-27T17:40:50+08:00",
+      "first_reported_at": "2026-11-26T08:00:00+08:00",
+      "latest_fact_update_at": "2026-11-27T11:31:30+08:00",
+      "latest_reported_at": "2026-11-27T11:31:30+08:00",
+      "fetched_at": "2026-11-27T17:40:50+08:00",
+      "input_batch_id": "raw-20261127-174050",
+      "fact_summary": "腾讯开源了面向稀疏注意力大模型的投机采样方案DFly2。该方案的每个草稿层均复用目标模型的KV缓存及Top-k索引选择，无需额外增加草稿KV内存，并将服务能力提升至64K。",
+      "fact_atoms": [
+        {
+          "atom_id": "fa_76066041",
+          "subject": "腾讯 (Tencent)",
+          "metric_or_action": "Tencent Open-Sources DFly2: Speculative Decoding That Reuses the Target’s Sparse KV Cache",
+          "value": null,
+          "unit": null,
+          "period": "单次披露/未注明周期",
+          "scope": "新闻事件陈述",
+          "fact_status": "multi_source_reported",
+          "attribution": "MarkTechPost (AI论文/模型)",
+          "source_ref": "rss-marktechpost_fa62444b3b6c",
+          "source_url": "https://www.marktechpost.com/2026/11/26/tencent-dfly2-speculative-decoding-sparse-models",
+          "source_excerpt_or_locator": "Tencent open-sourced DFly2, a speculative decoding drafter for sparse-attention LLMs. Each draft layer reuses the target's KV cache and top-k indexer picks, adding no draft KV memo",
+          "published_at": "2026-11-27T11:31:30+08:00",
+          "discovered_at": "2026-11-27T17:40:50+08:00",
+          "revision": 1
+        }
+      ],
+      "ai_analysis": "反映腾讯 (Tencent)技术架构与商业落地节奏变化，实际效果仍待开发者生态与第三方实测验证。",
+      "unverified_claims": [],
+      "speculation_or_outlook": null,
+      "sources": [
+        {
+          "item_id": "rss-marktechpost_fa62444b3b6c",
+          "article_id": "rss-marktechpost_fa62444b3b6c",
+          "source_id": "rss-marktechpost",
+          "source_name": "MarkTechPost (AI论文/模型)",
+          "publisher_name": "MarkTechPost (AI论文/模型)",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "marktechpost",
+          "is_reprint_copy": false,
+          "title": "Tencent Open-Sources DFly2: Speculative Decoding That Reuses the Target’s Sparse KV Cache",
+          "url": "https://www.marktechpost.com/2026/11/26/tencent-dfly2-speculative-decoding-sparse-models",
+          "published_at": "2026-11-27T11:31:30+08:00",
+          "published_at_source": "upstream_rfc2822",
+          "fetched_at": "2026-11-27T17:41:02+08:00",
+          "excerpt": "Tencent open-sourced DFly2, a speculative decoding drafter for sparse-attention LLMs. Each draft layer reuses the target's KV cache and top-k indexer picks, adding no draft KV memory and lifting 64K serving throughput by up to 81%. The post Tencent Open-Sourc…",
+          "thumbnail_url": "https://s.w.org/images/core/emoji/17.0.2/72x72/25c0.png",
+          "deep_fetch_status": null,
+          "title_zh": "腾讯开源DFly2：一种复用目标模型稀疏KV缓存的投机采样方案"
+        },
+        {
+          "item_id": "rss-gnews-opensource-ai_6567c337c0dc",
+          "article_id": "rss-gnews-opensource-ai_6567c337c0dc",
+          "source_id": "rss-gnews-opensource-ai",
+          "source_name": "explainx.ai",
+          "publisher_name": "explainx.ai",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "explainx",
+          "is_reprint_copy": false,
+          "title": "Tencent DFly2 Open Drafter: Up to 4.55× Faster Decoding",
+          "url": "https://news.google.com/rss/articles/CBMitAFBVV95cUxPVHpkYzlhd0FPVXVmMVZtQl9rTW02QjNZaUNJQVlJUkN0SmhXTmdfLXpuamdSMTBnNFJmTkk4NmxKYmN1WEJnay02Qzh6c0tZWDIzRm9IVTlUaGNJOFd5aENZUUNjMXdIcmZXT2o3ZXVHVWhvVUx0bTM4UWpLZzM0a3VHMW9vZlMzOFRLV2Rqc3ZRTmlOR2h4ZWJManU4YWNqbnB4OE9LZzBONUlPLWJUb180aXU?oc=5",
+          "published_at": "2026-11-26T08:00:00+08:00",
+          "published_at_source": "upstream_rfc2822",
+          "fetched_at": "2026-11-27T17:41:02+08:00",
+          "excerpt": "Tencent DFly2 Open Drafter: Up to 4.55× Faster Decoding explainx.ai",
+          "thumbnail_url": null,
+          "deep_fetch_status": null,
+          "title_zh": "腾讯 DFly2 Open Drafter：解码速度最高提升 4.55 倍"
+        }
+      ],
+      "verification": {
+        "all_refs_valid": true,
+        "has_primary_url": true,
+        "rejected_refs": [],
+        "has_first_party": false
+      },
+      "followup": null,
+      "is_new_in_batch": false,
+      "update_kind": "new_discovery",
+      "heavy_score": 36.0,
+      "radar_score": 82,
+      "severity_tier": "B",
+      "severity_label": "B级常规",
+      "title_en": "Tencent Open-Sources DFly2: Speculative Decoding That Reuses the Target's Sparse KV Cache",
+      "summary_en": "Tencent open-sourced DFly2, a speculative decoding drafter for sparse-attention LLMs. Each draft layer reuses the target's KV cache and top-k indexer picks, adding no draft KV memory and lifting 64K serving…",
+      "summary": "腾讯开源了面向稀疏注意力大模型的投机采样方案DFly2。该方案的每个草稿层均复用目标模型的KV缓存及Top-k索引选择，无需额外增加草稿KV内存，并将服务能力提升至64K。",
+      "summary_zh": "腾讯开源了面向稀疏注意力大模型的投机采样方案DFly2。该方案的每个草稿层均复用目标模型的KV缓存及Top-k索引选择，无需额外增加草稿KV内存，并将服务能力提升至64K。",
+      "translation_attempts": 0,
+      "translation_error": null,
+      "title_zh": "腾讯开源DFly2：一种复用目标模型稀疏KV缓存的投机采样方案",
+      "translation_status": "native_zh",
+      "ai_analysis_en": "",
+      "deep_qa": [
+        {
+          "question": "这次技术变化对普通开发者或用户意味着什么？",
+          "answer": "聚焦腾讯 (Tencent)能力边界与使用成本变化：腾讯开源了面向稀疏注意力大模型的投机采样方案DFly2。该方案的每个草稿层均复用目标模型的KV缓存及Top-k索引选择，无需额外增加草稿KV内存，并将服务能力提升至64K。",
+          "historical_parallel": "历次大模型与算力架构迭代中，推理单价下探与生态开放通常在 1~2 个季度内显著拉动应用渗透率。"
+        },
+        {
+          "question": "该进展目前处于什么验证阶段？",
+          "answer": "需结合官方技术报告、独立第三方复现基准以及下游云厂与终端真实接入节奏交叉确认。",
+          "historical_parallel": "2025 年以来主流开源/闭源大模型竞赛证明，公开基准与真实开发者采用率决定商业化天花板。"
+        }
+      ]
+    },
+    {
+      "schema_version": "4.1",
+      "event_id": "evt_1bf13cf4cbb6",
+      "storyline_id": "st_aa8b7368d5ea",
+      "article_ids": [
+        "wscn-us-stock-channel_97c1f17438a6"
+      ],
+      "legacy_event_ids": [],
+      "title": "美国假日季给AI购物机器人一次证明“万亿美元”热潮的机会",
+      "category": "tech",
+      "entities": [],
+      "entity_ids": [
+        "ent_google"
+      ],
+      "entity_confidences": {
+        "Google / DeepMind / Gemini": 0.76
+      },
+      "matched_entities": [
+        {
+          "entity_id": "ent_google",
+          "canonical_name": "Google / DeepMind / Gemini",
+          "entity_type": "company",
+          "sector": "AI 模型与云基础设施",
+          "matched_aliases": [
+            "谷歌"
+          ],
+          "tickers": [
+            {
+              "symbol": "GOOGL",
+              "market": "US",
+              "exchange": "NASDAQ",
+              "currency": "USD",
+              "label": "GOOGL.US (NASDAQ)"
+            }
+          ],
+          "reason": "正文/实体匹配关键词「谷歌」",
+          "confidence": 0.76
+        }
+      ],
+      "importance": "medium",
+      "sentiment": "Mixed",
+      "special_note": null,
+      "material_stage": null,
+      "material_stage_label": null,
+      "material_stage_confidence": null,
+      "thumbnail_url": "https://static.wscn.net/wscn/_static/share.png",
       "publisher_name": "华尔街见闻 美股快讯",
       "source_status": "ok",
       "evidence_status": "single_source",
@@ -1823,47 +1417,47 @@
       "platform_count": 1,
       "independent_publisher_count": 1,
       "reprint_count": 0,
-      "published_at": "2026-11-27T07:12:11+08:00",
+      "published_at": "2026-11-27T06:52:28+08:00",
       "event_date": "2026-11-27",
-      "event_time": "2026-11-27T07:12:11+08:00",
+      "event_time": "2026-11-27T06:52:28+08:00",
       "stale": false,
       "event_date_source": "llm_extracted",
       "is_stale_rehash": false,
       "time_trust_level": "article_timestamp",
       "time_confidence": "article_timestamp",
-      "first_discovered_at": "2026-11-27T08:35:30+08:00",
-      "first_reported_at": "2026-11-27T07:12:11+08:00",
-      "latest_fact_update_at": "2026-11-27T07:12:11+08:00",
-      "latest_reported_at": "2026-11-27T07:12:11+08:00",
-      "fetched_at": "2026-11-27T08:35:30+08:00",
-      "input_batch_id": "raw-20261127-083530",
-      "fact_summary": "美股休市，AI交易抛售暂缓，泛欧股指反弹近2%、科技板块涨近3%，伦铜等基本金属反弹；布油涨超2%、三连涨。美国针对中国进口产品税率将提升20%，中国外交部：中方将继续采取必要措施捍卫自身正当权益。中国商务部：坚决反对美对中国等经济体加征301关税；望美中推动对等降税安排尽快落地实施。商务部：中方将密切关注欧方混动汽车保障措施后续调查进展。特朗普称Q3美国GDP数据造假、被蓄意压低，称此举是为了干扰中期选举。",
+      "first_discovered_at": "2026-11-27T17:40:50+08:00",
+      "first_reported_at": "2026-11-27T06:52:28+08:00",
+      "latest_fact_update_at": "2026-11-27T06:52:28+08:00",
+      "latest_reported_at": "2026-11-27T06:52:28+08:00",
+      "fetched_at": "2026-11-27T17:40:50+08:00",
+      "input_batch_id": "raw-20261127-174050",
+      "fact_summary": "今年假日季美国零售网站获得的AI辅助流量将比去年同期增长一倍以上，科技巨头纷纷推出购物机器人等新工具。",
       "fact_atoms": [
         {
-          "atom_id": "fa_78910870",
-          "subject": "中美外交与元首峰会",
-          "metric_or_action": "华尔街见闻早餐 | 2026年11月27日",
-          "value": "2",
-          "unit": "%",
+          "atom_id": "fa_61781278",
+          "subject": "Google / DeepMind / Gemini",
+          "metric_or_action": "美国假日季给AI购物机器人一次证明“万亿美元”热潮的机会",
+          "value": null,
+          "unit": null,
           "period": "季度口径",
           "scope": "新闻事件陈述",
           "fact_status": "reported_unconfirmed_by_filing",
           "attribution": "华尔街见闻 美股快讯",
-          "source_ref": "wscn-us-stock-channel_d17e406b056f",
-          "source_url": "https://wallstreetcn.com/livenews/3206655",
-          "source_excerpt_or_locator": "美股休市，AI交易抛售暂缓，泛欧股指反弹近2%、科技板块涨近3%，伦铜等基本金属反弹；布油涨超2%、三连涨。美国针对中国进口产品税率将提升20%，中国外交部：中方将继续采取必要措施捍卫自身正当权益。中国商务部：坚决反对美对中国等经济体加征301关税；望美中推动对等降税安排尽快落地实施。商务部：中方将密切关注欧方混动汽车保障措施后续调查进展。特朗普称Q3美国G",
-          "published_at": "2026-11-27T07:12:11+08:00",
-          "discovered_at": "2026-11-27T08:35:30+08:00",
+          "source_ref": "wscn-us-stock-channel_97c1f17438a6",
+          "source_url": "https://wallstreetcn.com/livenews/3206648",
+          "source_excerpt_or_locator": "购物机器人有望彻底革新电商行业，今年假日季（感恩节+圣诞节）美国零售网站获得的人工智能（AI）辅助流量将比去年同期增长一倍以上。包括谷歌、Meta和亚马逊在内的科技巨头正在开发购物机器人及相关协议，为这一转变做准备，其中一些公司已推出价格保护、通用购物车等新工具和功能。由OpenAI的ChatGPT引领的购物机器人崛起，可能对目前由谷歌、Meta和亚马逊主导",
+          "published_at": "2026-11-27T06:52:28+08:00",
+          "discovered_at": "2026-11-27T17:40:50+08:00",
           "revision": 1
         }
       ],
-      "ai_analysis": "反映中美外交与元首峰会技术架构与商业落地节奏变化，实际效果仍待开发者生态与第三方实测验证。",
+      "ai_analysis": "生成式人工智能在电商领域的规模化落地，正在将传统的搜索流量红利转化为智能代理的决策转化率。",
       "unverified_claims": [],
       "speculation_or_outlook": null,
       "sources": [
         {
-          "item_id": "wscn-us-stock-channel_d17e406b056f",
-          "article_id": "wscn-us-stock-channel_d17e406b056f",
+          "item_id": "wscn-us-stock-channel_97c1f17438a6",
+          "article_id": "wscn-us-stock-channel_97c1f17438a6",
           "source_id": "wscn-us-stock-channel",
           "source_name": "华尔街见闻 美股快讯",
           "publisher_name": "华尔街见闻 美股快讯",
@@ -1872,14 +1466,14 @@
           "source_tier": "direct_media",
           "publisher_family": "wallstreetcn",
           "is_reprint_copy": false,
-          "title": "华尔街见闻早餐 | 2026年11月27日",
-          "url": "https://wallstreetcn.com/livenews/3206655",
-          "published_at": "2026-11-27T07:12:11+08:00",
+          "title": "美国假日季给AI购物机器人一次证明“万亿美元”热潮的机会",
+          "url": "https://wallstreetcn.com/livenews/3206648",
+          "published_at": "2026-11-27T06:52:28+08:00",
           "published_at_source": "upstream_api",
-          "fetched_at": "2026-11-27T08:35:31+08:00",
-          "excerpt": "美股休市，AI交易抛售暂缓，泛欧股指反弹近2%、科技板块涨近3%，伦铜等基本金属反弹；布油涨超2%、三连涨。美国针对中国进口产品税率将提升20%，中国外交部：中方将继续采取必要措施捍卫自身正当权益。中国商务部：坚决反对美对中国等经济体加征301关税；望美中推动对等降税安排尽快落地实施。商务部：中方将密切关注欧方混动汽车保障措施后续调查进展。特朗普称Q3美国GDP数据造假、被蓄意压低，称此举是为了干扰中期选举。英伟达被曝要求合作伙伴向东南亚四国新马泰印尼断供服务器，在评估如何满足美国新出口限制要求。",
-          "thumbnail_url": null,
-          "deep_fetch_status": null
+          "fetched_at": "2026-11-27T17:40:52+08:00",
+          "excerpt": "购物机器人有望彻底革新电商行业，今年假日季（感恩节+圣诞节）美国零售网站获得的人工智能（AI）辅助流量将比去年同期增长一倍以上。包括谷歌、Meta和亚马逊在内的科技巨头正在开发购物机器人及相关协议，为这一转变做准备，其中一些公司已推出价格保护、通用购物车等新工具和功能。由OpenAI的ChatGPT引领的购物机器人崛起，可能对目前由谷歌、Meta和亚马逊主导的数字广告业构成冲击——OpenAI的广告业务在不到200天内已达到10亿美元的年化收入运行率。（彭博）",
+          "thumbnail_url": "https://static.wscn.net/wscn/_static/share.png",
+          "deep_fetch_status": "meta_only"
         }
       ],
       "verification": {
@@ -1891,28 +1485,30 @@
       "followup": null,
       "is_new_in_batch": true,
       "update_kind": "new_discovery",
-      "heavy_score": 20.7,
+      "heavy_score": 42.0,
       "radar_score": 76,
       "severity_tier": "B",
       "severity_label": "B级常规",
+      "summary": "今年假日季美国零售网站获得的AI辅助流量将比去年同期增长一倍以上，科技巨头纷纷推出购物机器人等新工具。",
+      "summary_zh": "今年假日季美国零售网站获得的AI辅助流量将比去年同期增长一倍以上，科技巨头纷纷推出购物机器人等新工具。",
+      "ai_overlaid": true,
       "translation_attempts": 0,
       "translation_error": null,
-      "title_zh": "华尔街见闻早餐 | 2026年11月27日",
+      "title_zh": "美国假日季给AI购物机器人一次证明“万亿美元”热潮的机会",
       "translation_status": "native_zh",
-      "summary_zh": "美股休市，AI交易抛售暂缓，泛欧股指反弹近2%、科技板块涨近3%，伦铜等基本金属反弹；布油涨超2%、三连涨。美国针对中国进口产品税率将提升20%，中国外交部：中方将继续采取必要措施捍卫自身正当权益。中国商务部：坚决反对美对中国等经济体加征301关税；望美中推动对等降税安排尽快落地实施。商务部：中方将密切关注欧方混动汽车保障措施后续调查进展。特朗普称Q3美国GDP数据造假、被蓄意压低，称此举是为了干扰中期选举。",
       "title_en": "",
       "summary_en": "",
       "ai_analysis_en": ""
     },
     {
       "schema_version": "4.1",
-      "event_id": "evt_f6da37e9185b",
-      "storyline_id": "st_a84814026ebe",
+      "event_id": "evt_81511ef63fbd",
+      "storyline_id": "st_d3b4dd8da8cb",
       "article_ids": [
-        "ithome-rss_9bed24002fcf"
+        "rss-gnews-ai-models-zh_119d13c56066"
       ],
       "legacy_event_ids": [],
-      "title": "DeepSeek 灰度测试“消耗额度”：直观展示对话成本，此前已实施限额",
+      "title": "知乎成为DeepSeek影子股_公司新闻",
       "category": "tech",
       "entities": [
         "DeepSeek (深度求索)"
@@ -1943,8 +1539,8 @@
       "material_stage": null,
       "material_stage_label": null,
       "material_stage_confidence": null,
-      "thumbnail_url": "https://img.ithome.com/newsuploadfiles/2026/11/b854bfc7-7f1e-4cd5-a1ad-8cd74534ce41.jpg",
-      "publisher_name": "IT之家 实时快讯",
+      "thumbnail_url": null,
+      "publisher_name": "证券之星",
       "source_status": "ok",
       "evidence_status": "single_source",
       "evidence_label": "单一独立来源线索",
@@ -1959,37 +1555,37 @@
       "platform_count": 1,
       "independent_publisher_count": 1,
       "reprint_count": 0,
-      "published_at": "2026-11-27T08:21:03+08:00",
+      "published_at": "2026-11-27T15:26:10+08:00",
       "event_date": "2026-11-27",
-      "event_time": "2026-11-27T08:21:03+08:00",
+      "event_time": "2026-11-27T15:26:10+08:00",
       "stale": false,
       "event_date_source": "llm_extracted",
       "is_stale_rehash": false,
       "time_trust_level": "article_timestamp",
       "time_confidence": "article_timestamp",
-      "first_discovered_at": "2026-11-27T08:35:30+08:00",
-      "first_reported_at": "2026-11-27T08:21:03+08:00",
-      "latest_fact_update_at": "2026-11-27T08:21:03+08:00",
-      "latest_reported_at": "2026-11-27T08:21:03+08:00",
-      "fetched_at": "2026-11-27T08:35:30+08:00",
-      "input_batch_id": "raw-20261127-083530",
-      "fact_summary": "IT之家 11 月 27 日消息，昨日起，有部分 DeepSeek 用户反馈，网页端和移动端 App 内正在灰度测试“显示本轮消耗额度”功能。用户在完成一轮对话后，界面会弹出详情页，展示本次交互消耗的 Token 数量及其对应的估算金额（价格和 API 持平）。尽管当前面向个人用户的对话服务依然免费，但该功能让单次对话背后的计算成本变得可见。根据用户提供的截图，额度按“空闲时段”价格估算。",
+      "first_discovered_at": "2026-11-27T17:40:50+08:00",
+      "first_reported_at": "2026-11-27T15:26:10+08:00",
+      "latest_fact_update_at": "2026-11-27T15:26:10+08:00",
+      "latest_reported_at": "2026-11-27T15:26:10+08:00",
+      "fetched_at": "2026-11-27T17:40:50+08:00",
+      "input_batch_id": "raw-20261127-174050",
+      "fact_summary": "知乎成为DeepSeek影子股_公司新闻 证券之星",
       "fact_atoms": [
         {
-          "atom_id": "fa_66798442",
+          "atom_id": "fa_24465993",
           "subject": "DeepSeek (深度求索)",
-          "metric_or_action": "DeepSeek 灰度测试“消耗额度”：直观展示对话成本，此前已实施限额",
+          "metric_or_action": "知乎成为DeepSeek影子股_公司新闻",
           "value": null,
           "unit": null,
           "period": "单次披露/未注明周期",
           "scope": "新闻事件陈述",
           "fact_status": "reported_unconfirmed_by_filing",
-          "attribution": "IT之家 实时快讯",
-          "source_ref": "ithome-rss_9bed24002fcf",
-          "source_url": "https://www.ithome.com/1/033/157.htm",
-          "source_excerpt_or_locator": "IT之家 11 月 27 日消息，昨日起，有部分 DeepSeek 用户反馈，网页端和移动端 App 内正在灰度测试“显示本轮消耗额度”功能。用户在完成一轮对话后，界面会弹出详情页，展示本次交互消耗的 Token 数量及其对应的估算金额（价格和 API 持平）。尽管当前面向个人用户的对话服务依然免费，但该功能让单次对话背后的计算成本变得可见。根据用户提供的截",
-          "published_at": "2026-11-27T08:21:03+08:00",
-          "discovered_at": "2026-11-27T08:35:30+08:00",
+          "attribution": "证券之星",
+          "source_ref": "rss-gnews-ai-models-zh_119d13c56066",
+          "source_url": "https://news.google.com/rss/articles/CBMiZEFVX3lxTE5rclJQNDhwMWl3S0loUzVnZEJBR1JlandONFhpc3VhVnpxVk1rbUhEYUJPQnNpRFo4MkZCRmRWLTdKYWJMOW9zRjB5eUExMDVrVW5LVHlaWDl2TjB3Sl9zVmxKWGQ?oc=5",
+          "source_excerpt_or_locator": "知乎成为DeepSeek影子股_公司新闻 证券之星",
+          "published_at": "2026-11-27T15:26:10+08:00",
+          "discovered_at": "2026-11-27T17:40:50+08:00",
           "revision": 1
         }
       ],
@@ -1998,23 +1594,23 @@
       "speculation_or_outlook": null,
       "sources": [
         {
-          "item_id": "ithome-rss_9bed24002fcf",
-          "article_id": "ithome-rss_9bed24002fcf",
-          "source_id": "ithome-rss",
-          "source_name": "IT之家 实时快讯",
-          "publisher_name": "IT之家 实时快讯",
+          "item_id": "rss-gnews-ai-models-zh_119d13c56066",
+          "article_id": "rss-gnews-ai-models-zh_119d13c56066",
+          "source_id": "rss-gnews-ai-models-zh",
+          "source_name": "证券之星",
+          "publisher_name": "证券之星",
           "source_status": "ok",
           "source_kind": "news",
           "source_tier": "direct_media",
-          "publisher_family": "ithome",
+          "publisher_family": "finance",
           "is_reprint_copy": false,
-          "title": "DeepSeek 灰度测试“消耗额度”：直观展示对话成本，此前已实施限额",
-          "url": "https://www.ithome.com/1/033/157.htm",
-          "published_at": "2026-11-27T08:21:03+08:00",
+          "title": "知乎成为DeepSeek影子股_公司新闻",
+          "url": "https://news.google.com/rss/articles/CBMiZEFVX3lxTE5rclJQNDhwMWl3S0loUzVnZEJBR1JlandONFhpc3VhVnpxVk1rbUhEYUJPQnNpRFo4MkZCRmRWLTdKYWJMOW9zRjB5eUExMDVrVW5LVHlaWDl2TjB3Sl9zVmxKWGQ?oc=5",
+          "published_at": "2026-11-27T15:26:10+08:00",
           "published_at_source": "upstream_rfc2822",
-          "fetched_at": "2026-11-27T08:35:31+08:00",
-          "excerpt": "IT之家 11 月 27 日消息，昨日起，有部分 DeepSeek 用户反馈，网页端和移动端 App 内正在灰度测试“显示本轮消耗额度”功能。用户在完成一轮对话后，界面会弹出详情页，展示本次交互消耗的 Token 数量及其对应的估算金额（价格和 API 持平）。尽管当前面向个人用户的对话服务依然免费，但该功能让单次对话背后的计算成本变得可见。根据用户提供的截图，额度按“空闲时段”价格估算。",
-          "thumbnail_url": "https://img.ithome.com/newsuploadfiles/2026/11/b854bfc7-7f1e-4cd5-a1ad-8cd74534ce41.jpg",
+          "fetched_at": "2026-11-27T17:41:02+08:00",
+          "excerpt": "知乎成为DeepSeek影子股_公司新闻 证券之星",
+          "thumbnail_url": null,
           "deep_fetch_status": null
         }
       ],
@@ -2033,12 +1629,472 @@
       "severity_label": "B级常规",
       "translation_attempts": 0,
       "translation_error": null,
-      "title_zh": "DeepSeek 灰度测试“消耗额度”：直观展示对话成本，此前已实施限额",
+      "title_zh": "知乎成为DeepSeek影子股_公司新闻",
       "translation_status": "native_zh",
-      "summary_zh": "IT之家 11 月 27 日消息，昨日起，有部分 DeepSeek 用户反馈，网页端和移动端 App 内正在灰度测试“显示本轮消耗额度”功能。用户在完成一轮对话后，界面会弹出详情页，展示本次交互消耗的 Token 数量及其对应的估算金额（价格和 API 持平）。尽管当前面向个人用户的对话服务依然免费，但该功能让单次对话背后的计算成本变得可见。根据用户提供的截图，额度按“空闲时段”价格估算。",
+      "summary_zh": "知乎成为DeepSeek影子股_公司新闻 证券之星",
       "title_en": "",
       "summary_en": "",
       "ai_analysis_en": ""
+    },
+    {
+      "schema_version": "4.1",
+      "event_id": "evt_e6fbe196f54d",
+      "storyline_id": "st_053b773a60de",
+      "article_ids": [
+        "rss-gnews-ai-models-zh_02a44dd46606"
+      ],
+      "legacy_event_ids": [],
+      "title": "刚刚，Tibo承诺「连续28天发布或重置」，OpenAI遭遇信任危机",
+      "category": "tech",
+      "entities": [
+        "OpenAI"
+      ],
+      "entity_ids": [
+        "ent_openai"
+      ],
+      "entity_confidences": {
+        "OpenAI": 0.99
+      },
+      "matched_entities": [
+        {
+          "entity_id": "ent_openai",
+          "canonical_name": "OpenAI",
+          "entity_type": "company",
+          "sector": "AI 模型与应用",
+          "matched_aliases": [
+            "openai"
+          ],
+          "tickers": [],
+          "reason": "正文/实体匹配关键词「openai」",
+          "confidence": 0.99
+        }
+      ],
+      "importance": "medium",
+      "sentiment": "Bearish",
+      "special_note": null,
+      "material_stage": null,
+      "material_stage_label": null,
+      "material_stage_confidence": null,
+      "thumbnail_url": null,
+      "publisher_name": "36Kr",
+      "source_status": "ok",
+      "evidence_status": "single_source",
+      "evidence_label": "单一独立来源线索",
+      "evidence_status_reason": "目前仅见 1 家独立来源（共 1 条引用含转载，含摘要/首段），尚未见独立渠道交叉或官方确认",
+      "attribution_warning": null,
+      "regulatory_note": null,
+      "contradictions": [],
+      "downweight_reasons": [],
+      "quality_flags": [],
+      "material_depth": "title_and_excerpt",
+      "source_count": 1,
+      "platform_count": 1,
+      "independent_publisher_count": 1,
+      "reprint_count": 0,
+      "published_at": "2026-11-27T15:05:43+08:00",
+      "event_date": "2026-11-27",
+      "event_time": "2026-11-27T15:05:43+08:00",
+      "stale": false,
+      "event_date_source": "llm_extracted",
+      "is_stale_rehash": false,
+      "time_trust_level": "article_timestamp",
+      "time_confidence": "article_timestamp",
+      "first_discovered_at": "2026-11-27T17:40:50+08:00",
+      "first_reported_at": "2026-11-27T15:05:43+08:00",
+      "latest_fact_update_at": "2026-11-27T15:05:43+08:00",
+      "latest_reported_at": "2026-11-27T15:05:43+08:00",
+      "fetched_at": "2026-11-27T17:40:50+08:00",
+      "input_batch_id": "raw-20261127-174050",
+      "fact_summary": "刚刚，Tibo承诺「连续28天发布或重置」，OpenAI遭遇信任危机 36Kr",
+      "fact_atoms": [
+        {
+          "atom_id": "fa_70618051",
+          "subject": "OpenAI",
+          "metric_or_action": "刚刚，Tibo承诺「连续28天发布或重置」，OpenAI遭遇信任危机",
+          "value": null,
+          "unit": null,
+          "period": "单次披露/未注明周期",
+          "scope": "新闻事件陈述",
+          "fact_status": "reported_unconfirmed_by_filing",
+          "attribution": "36Kr",
+          "source_ref": "rss-gnews-ai-models-zh_02a44dd46606",
+          "source_url": "https://news.google.com/rss/articles/CBMiTkFVX3lxTFBQNTQ5aDRoZ3JCMlV0bFFlVHlFTWtvNDZ1WnlIZ1NkVzJXZFNxT2hDb2xYY21BeFZfQXltRVVGZUkxU0x5b2RyYlhlS0F1QQ?oc=5",
+          "source_excerpt_or_locator": "刚刚，Tibo承诺「连续28天发布或重置」，OpenAI遭遇信任危机 36Kr",
+          "published_at": "2026-11-27T15:05:43+08:00",
+          "discovered_at": "2026-11-27T17:40:50+08:00",
+          "revision": 1
+        }
+      ],
+      "ai_analysis": "反映OpenAI技术架构与商业落地节奏变化，实际效果仍待开发者生态与第三方实测验证。",
+      "unverified_claims": [],
+      "speculation_or_outlook": null,
+      "sources": [
+        {
+          "item_id": "rss-gnews-ai-models-zh_02a44dd46606",
+          "article_id": "rss-gnews-ai-models-zh_02a44dd46606",
+          "source_id": "rss-gnews-ai-models-zh",
+          "source_name": "36Kr",
+          "publisher_name": "36Kr",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "m",
+          "is_reprint_copy": false,
+          "title": "刚刚，Tibo承诺「连续28天发布或重置」，OpenAI遭遇信任危机",
+          "url": "https://news.google.com/rss/articles/CBMiTkFVX3lxTFBQNTQ5aDRoZ3JCMlV0bFFlVHlFTWtvNDZ1WnlIZ1NkVzJXZFNxT2hDb2xYY21BeFZfQXltRVVGZUkxU0x5b2RyYlhlS0F1QQ?oc=5",
+          "published_at": "2026-11-27T15:05:43+08:00",
+          "published_at_source": "upstream_rfc2822",
+          "fetched_at": "2026-11-27T17:41:02+08:00",
+          "excerpt": "刚刚，Tibo承诺「连续28天发布或重置」，OpenAI遭遇信任危机 36Kr",
+          "thumbnail_url": null,
+          "deep_fetch_status": null
+        }
+      ],
+      "verification": {
+        "all_refs_valid": true,
+        "has_primary_url": true,
+        "rejected_refs": [],
+        "has_first_party": false
+      },
+      "followup": null,
+      "is_new_in_batch": true,
+      "update_kind": "new_discovery",
+      "heavy_score": 36.8,
+      "radar_score": 76,
+      "severity_tier": "B",
+      "severity_label": "B级常规",
+      "translation_attempts": 0,
+      "translation_error": null,
+      "title_zh": "刚刚，Tibo承诺「连续28天发布或重置」，OpenAI遭遇信任危机",
+      "translation_status": "native_zh",
+      "summary_zh": "刚刚，Tibo承诺「连续28天发布或重置」，OpenAI遭遇信任危机 36Kr",
+      "title_en": "",
+      "summary_en": "",
+      "ai_analysis_en": ""
+    },
+    {
+      "schema_version": "4.1",
+      "event_id": "evt_0efaef3ff2ad",
+      "storyline_id": "st_1b410572fef0",
+      "article_ids": [
+        "rss-gnews-ai-models-zh_3046768ac3f1"
+      ],
+      "legacy_event_ids": [],
+      "title": "V4全系列模型上线后，DeepSeek Harness开发者预览版开放测试",
+      "category": "tech",
+      "entities": [
+        "DeepSeek (深度求索)"
+      ],
+      "entity_ids": [
+        "ent_deepseek"
+      ],
+      "entity_confidences": {
+        "DeepSeek (深度求索)": 0.86
+      },
+      "matched_entities": [
+        {
+          "entity_id": "ent_deepseek",
+          "canonical_name": "DeepSeek (深度求索)",
+          "entity_type": "tech",
+          "sector": "AI 模型与开源推理",
+          "matched_aliases": [
+            "deepseek"
+          ],
+          "tickers": [],
+          "reason": "正文/实体匹配关键词「deepseek」",
+          "confidence": 0.86
+        }
+      ],
+      "importance": "high",
+      "sentiment": "Mixed",
+      "special_note": null,
+      "material_stage": "beta",
+      "material_stage_label": "测试开放 (Beta)",
+      "material_stage_confidence": 0.96,
+      "thumbnail_url": null,
+      "publisher_name": "财联社",
+      "source_status": "ok",
+      "evidence_status": "single_source",
+      "evidence_label": "单一独立来源线索",
+      "evidence_status_reason": "目前仅见 1 家独立来源（共 1 条引用含转载，含摘要/首段），尚未见独立渠道交叉或官方确认",
+      "attribution_warning": null,
+      "regulatory_note": null,
+      "contradictions": [],
+      "downweight_reasons": [],
+      "quality_flags": [],
+      "material_depth": "title_and_excerpt",
+      "source_count": 1,
+      "platform_count": 1,
+      "independent_publisher_count": 1,
+      "reprint_count": 0,
+      "published_at": "2026-11-27T14:37:30+08:00",
+      "event_date": "2026-11-27",
+      "event_time": "2026-11-27T14:37:30+08:00",
+      "stale": false,
+      "event_date_source": "llm_extracted",
+      "is_stale_rehash": false,
+      "time_trust_level": "article_timestamp",
+      "time_confidence": "article_timestamp",
+      "first_discovered_at": "2026-11-27T17:40:50+08:00",
+      "first_reported_at": "2026-11-27T14:37:30+08:00",
+      "latest_fact_update_at": "2026-11-27T14:37:30+08:00",
+      "latest_reported_at": "2026-11-27T14:37:30+08:00",
+      "fetched_at": "2026-11-27T17:40:50+08:00",
+      "input_batch_id": "raw-20261127-174050",
+      "fact_summary": "V4全系列模型上线后，DeepSeek Harness开发者预览版开放测试 财联社",
+      "fact_atoms": [
+        {
+          "atom_id": "fa_21125611",
+          "subject": "DeepSeek (深度求索)",
+          "metric_or_action": "V4全系列模型上线后，DeepSeek Harness开发者预览版开放测试",
+          "value": "测试开放 (Beta)",
+          "unit": "可用状态",
+          "period": "单次披露/未注明周期",
+          "scope": "模型/产品/技术指标",
+          "fact_status": "reported_unconfirmed_by_filing",
+          "attribution": "财联社",
+          "source_ref": "rss-gnews-ai-models-zh_3046768ac3f1",
+          "source_url": "https://news.google.com/rss/articles/CBMiSEFVX3lxTE4wd0JWNXNkT3NmUy1UV09ldm1iSXY3dTllQ1o1ZFg5MFZPS1BRY3RCTUJLc05UYWJTb1R6VHhoT0NXM3hJQU5xLQ?oc=5",
+          "source_excerpt_or_locator": "V4全系列模型上线后，DeepSeek Harness开发者预览版开放测试 财联社",
+          "published_at": "2026-11-27T14:37:30+08:00",
+          "discovered_at": "2026-11-27T17:40:50+08:00",
+          "revision": 1
+        }
+      ],
+      "ai_analysis": "反映DeepSeek (深度求索)技术架构与商业落地节奏变化，实际效果仍待开发者生态与第三方实测验证。",
+      "unverified_claims": [],
+      "speculation_or_outlook": null,
+      "sources": [
+        {
+          "item_id": "rss-gnews-ai-models-zh_3046768ac3f1",
+          "article_id": "rss-gnews-ai-models-zh_3046768ac3f1",
+          "source_id": "rss-gnews-ai-models-zh",
+          "source_name": "财联社",
+          "publisher_name": "财联社",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "cls",
+          "is_reprint_copy": false,
+          "title": "V4全系列模型上线后，DeepSeek Harness开发者预览版开放测试",
+          "url": "https://news.google.com/rss/articles/CBMiSEFVX3lxTE4wd0JWNXNkT3NmUy1UV09ldm1iSXY3dTllQ1o1ZFg5MFZPS1BRY3RCTUJLc05UYWJTb1R6VHhoT0NXM3hJQU5xLQ?oc=5",
+          "published_at": "2026-11-27T14:37:30+08:00",
+          "published_at_source": "upstream_rfc2822",
+          "fetched_at": "2026-11-27T17:41:02+08:00",
+          "excerpt": "V4全系列模型上线后，DeepSeek Harness开发者预览版开放测试 财联社",
+          "thumbnail_url": null,
+          "deep_fetch_status": null
+        }
+      ],
+      "verification": {
+        "all_refs_valid": true,
+        "has_primary_url": true,
+        "rejected_refs": [],
+        "has_first_party": false
+      },
+      "followup": null,
+      "is_new_in_batch": true,
+      "update_kind": "new_discovery",
+      "heavy_score": 36.8,
+      "radar_score": 76,
+      "severity_tier": "A",
+      "severity_label": "A级要闻",
+      "heavy_reason_tag": "科研/模型里程碑",
+      "translation_attempts": 0,
+      "translation_error": null,
+      "title_zh": "V4全系列模型上线后，DeepSeek Harness开发者预览版开放测试",
+      "translation_status": "native_zh",
+      "summary_zh": "V4全系列模型上线后，DeepSeek Harness开发者预览版开放测试 财联社",
+      "title_en": "",
+      "summary_en": "",
+      "ai_analysis_en": "",
+      "deep_qa": [
+        {
+          "question": "DeepSeek Harness预览版开放对开发者生态意味着什么？",
+          "answer": "该预览版降低了模型调优与集成的门槛，允许开发者更早介入模型生态，有助于加速DeepSeek在垂直领域的应用落地与社区共建。",
+          "historical_parallel": "类似于OpenAI早期开放API，通过开发者生态的快速扩张确立模型在行业内的技术标准地位。"
+        }
+      ]
+    },
+    {
+      "schema_version": "4.1",
+      "event_id": "evt_50bfc1ed15cc",
+      "storyline_id": "st_3f7b5bf4410d",
+      "article_ids": [
+        "techcrunch-rss_38a520f78cfc",
+        "rss-the-decoder_f261652396a6"
+      ],
+      "legacy_event_ids": [],
+      "title": "英伟达暂停向东南亚地区供应芯片",
+      "category": "tech",
+      "entities": [
+        "英伟达 (NVIDIA)"
+      ],
+      "entity_ids": [
+        "ent_nvidia"
+      ],
+      "entity_confidences": {
+        "英伟达 (NVIDIA)": 0.86
+      },
+      "matched_entities": [
+        {
+          "entity_id": "ent_nvidia",
+          "canonical_name": "英伟达 (NVIDIA)",
+          "entity_type": "company",
+          "sector": "半导体 / AI算力",
+          "matched_aliases": [
+            "nvidia"
+          ],
+          "tickers": [
+            {
+              "symbol": "NVDA",
+              "market": "US",
+              "exchange": "NASDAQ",
+              "currency": "USD",
+              "label": "NVDA.US (NASDAQ)"
+            }
+          ],
+          "reason": "正文/实体匹配关键词「nvidia」",
+          "confidence": 0.86
+        }
+      ],
+      "importance": "medium",
+      "sentiment": "Mixed",
+      "special_note": null,
+      "material_stage": null,
+      "material_stage_label": null,
+      "material_stage_confidence": null,
+      "thumbnail_url": null,
+      "publisher_name": "TechCrunch AI & Tech",
+      "source_status": "ok",
+      "evidence_status": "multi_source",
+      "evidence_label": "多独立来源提及（待核官方全文）",
+      "evidence_status_reason": "已有 2 家独立媒体族提及（含摘要或正文首段）；多源转载不代表官方公告已证实",
+      "attribution_warning": null,
+      "regulatory_note": null,
+      "contradictions": [],
+      "downweight_reasons": [],
+      "quality_flags": [],
+      "material_depth": "title_and_excerpt",
+      "source_count": 2,
+      "platform_count": 2,
+      "independent_publisher_count": 2,
+      "reprint_count": 0,
+      "published_at": "2026-11-26T19:21:16+08:00",
+      "event_date": "2026-11-27",
+      "event_time": "2026-11-26T19:21:16+08:00",
+      "stale": false,
+      "event_date_source": "llm_extracted",
+      "is_stale_rehash": false,
+      "time_trust_level": "article_timestamp",
+      "time_confidence": "article_timestamp",
+      "first_discovered_at": "2026-11-27T17:40:50+08:00",
+      "first_reported_at": "2026-11-26T19:21:16+08:00",
+      "latest_fact_update_at": "2026-11-27T04:03:54+08:00",
+      "latest_reported_at": "2026-11-27T04:03:54+08:00",
+      "fetched_at": "2026-11-27T17:40:50+08:00",
+      "input_batch_id": "raw-20261127-174050",
+      "fact_summary": "英伟达已通知戴尔、超微电脑等合作伙伴，停止向马来西亚、新加坡、泰国及印尼发货服务器。",
+      "fact_atoms": [
+        {
+          "atom_id": "fa_95112272",
+          "subject": "英伟达 (NVIDIA)",
+          "metric_or_action": "Nvidia hits pause on chip shipments to Southeast Asia",
+          "value": null,
+          "unit": null,
+          "period": "单次披露/未注明周期",
+          "scope": "新闻事件陈述",
+          "fact_status": "multi_source_reported",
+          "attribution": "TechCrunch AI & Tech",
+          "source_ref": "techcrunch-rss_38a520f78cfc",
+          "source_url": "https://techcrunch.com/2026/11/26/nvidia-hits-pause-on-chip-shipments-to-southeast-asia",
+          "source_excerpt_or_locator": "Nvidia has told manufacturing partners to pause server shipments to Malaysia, Singapore, Thailand and Indonesia as the U.S. tightens its push to keep AI chips out of China.",
+          "published_at": "2026-11-27T04:03:54+08:00",
+          "discovered_at": "2026-11-27T17:40:50+08:00",
+          "revision": 1
+        }
+      ],
+      "ai_analysis": "反映英伟达 (NVIDIA)技术架构与商业落地节奏变化，实际效果仍待开发者生态与第三方实测验证。",
+      "unverified_claims": [],
+      "speculation_or_outlook": null,
+      "sources": [
+        {
+          "item_id": "techcrunch-rss_38a520f78cfc",
+          "article_id": "techcrunch-rss_38a520f78cfc",
+          "source_id": "techcrunch-rss",
+          "source_name": "TechCrunch AI & Tech",
+          "publisher_name": "TechCrunch AI & Tech",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "techcrunch",
+          "is_reprint_copy": false,
+          "title": "Nvidia hits pause on chip shipments to Southeast Asia",
+          "url": "https://techcrunch.com/2026/11/26/nvidia-hits-pause-on-chip-shipments-to-southeast-asia",
+          "published_at": "2026-11-27T04:03:54+08:00",
+          "published_at_source": "upstream_rfc2822",
+          "fetched_at": "2026-11-27T17:40:52+08:00",
+          "excerpt": "Nvidia has told manufacturing partners to pause server shipments to Malaysia, Singapore, Thailand and Indonesia as the U.S. tightens its push to keep AI chips out of China.",
+          "thumbnail_url": null,
+          "deep_fetch_status": null,
+          "title_zh": "英伟达暂停向东南亚地区供应芯片"
+        },
+        {
+          "item_id": "rss-the-decoder_f261652396a6",
+          "article_id": "rss-the-decoder_f261652396a6",
+          "source_id": "rss-the-decoder",
+          "source_name": "The Decoder (AI前沿)",
+          "publisher_name": "The Decoder (AI前沿)",
+          "source_status": "ok",
+          "source_kind": "news",
+          "source_tier": "direct_media",
+          "publisher_family": "thedecoder",
+          "is_reprint_copy": false,
+          "title": "Nvidia halts server shipments to Malaysia, Singapore, Thailand, and Indonesia after tighter US export controls",
+          "url": "https://the-decoder.com/nvidia-halts-server-shipments-to-malaysia-singapore-thailand-and-indonesia-after-tighter-us-export-controls",
+          "published_at": "2026-11-26T19:21:16+08:00",
+          "published_at_source": "upstream_rfc2822",
+          "fetched_at": "2026-11-27T17:41:02+08:00",
+          "excerpt": "Nvidia has told partners such as Dell and Supermicro to stop shipping servers to Malaysia, Singapore, Thailand, and Indonesia. Following new US export controls targeting Chinese cloud access, dealers are already seeking buyers for thousands of B300 chips, whi…",
+          "thumbnail_url": null,
+          "deep_fetch_status": null,
+          "title_zh": "受美国出口管制收紧影响，英伟达暂停向马来西亚、新加坡、泰国及印尼供应服务器"
+        }
+      ],
+      "verification": {
+        "all_refs_valid": true,
+        "has_primary_url": true,
+        "rejected_refs": [],
+        "has_first_party": false
+      },
+      "followup": null,
+      "is_new_in_batch": true,
+      "update_kind": "new_discovery",
+      "heavy_score": 50.0,
+      "radar_score": 82,
+      "severity_tier": "B",
+      "severity_label": "B级常规",
+      "title_en": "Nvidia hits pause on chip shipments to Southeast Asia",
+      "summary_en": "Nvidia has told partners such as Dell and Supermicro to stop shipping servers to Malaysia, Singapore, Thailand, and Indonesia.",
+      "summary": "英伟达已通知戴尔、超微电脑等合作伙伴，停止向马来西亚、新加坡、泰国及印尼发货服务器。",
+      "summary_zh": "英伟达已通知戴尔、超微电脑等合作伙伴，停止向马来西亚、新加坡、泰国及印尼发货服务器。",
+      "translation_attempts": 0,
+      "translation_error": null,
+      "title_zh": "英伟达暂停向东南亚地区供应芯片",
+      "translation_status": "native_zh",
+      "ai_analysis_en": "",
+      "deep_qa": [
+        {
+          "question": "这次技术变化对普通开发者或用户意味着什么？",
+          "answer": "聚焦英伟达 (NVIDIA)能力边界与使用成本变化：英伟达已通知戴尔、超微电脑等合作伙伴，停止向马来西亚、新加坡、泰国及印尼发货服务器。",
+          "historical_parallel": "历次大模型与算力架构迭代中，推理单价下探与生态开放通常在 1~2 个季度内显著拉动应用渗透率。"
+        },
+        {
+          "question": "该进展目前处于什么验证阶段？",
+          "answer": "需结合官方技术报告、独立第三方复现基准以及下游云厂与终端真实接入节奏交叉确认。",
+          "historical_parallel": "2025 年以来主流开源/闭源大模型竞赛证明，公开基准与真实开发者采用率决定商业化天花板。"
+        }
+      ]
     }
   ]
 }
