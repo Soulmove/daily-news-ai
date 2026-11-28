@@ -1,1487 +1,7 @@
 {
-  "ts": 1795807948.9142866,
-  "updated_at": "2026-11-28T03:29:03+08:00",
+  "ts": 1795833921.1220248,
+  "updated_at": "2026-11-28T10:41:32+08:00",
   "items": {
-    "evt_b6aa617a290d": {
-      "one_liner": "华尔街交易极端紧缩后的剧烈衰退转向预期，利好长期美债与黄金，利空美元现金资产。",
-      "expectation_gap": "市场未充分计价高利率持续至触发信用坍塌、进而迫使美联储非理性急降息的宏观断层风险。",
-      "transmission_layers": [
-        {
-          "tier": 1,
-          "tier_label": "一阶直接冲击（核心受益或受损主体）",
-          "summary": "长端美债收益率下行直接推高债券资产估值。",
-          "stocks": [
-            {
-              "name": "iShares 20+ Year T",
-              "code": "TLT",
-              "market": "美股",
-              "exposure_logic": "直接受益于长端利率暴跌带来的资本利得",
-              "direction": "positive"
-            }
-          ]
-        },
-        {
-          "tier": 2,
-          "tier_label": "二阶产业链传导",
-          "summary": "无风险利率急降缓解高负债高成长科技股估值压制。",
-          "stocks": [
-            {
-              "name": "Invesco QQQ Trust",
-              "code": "QQQ",
-              "market": "美股",
-              "exposure_logic": "分母端改善对冲盈利下修预期",
-              "direction": "positive"
-            }
-          ]
-        },
-        {
-          "tier": 3,
-          "tier_label": "三阶宏观或避险跷跷板",
-          "summary": "美元信用面临阶段性重定价，黄金迎来强货币对冲买盘。",
-          "stocks": [
-            {
-              "name": "SPDR Gold Shares",
-              "code": "GLD",
-              "market": "美股",
-              "exposure_logic": "受益于实际利率下行与美元走弱",
-              "direction": "positive"
-            }
-          ]
-        }
-      ],
-      "historical_precedents": [
-        {
-          "date": "2019-07-31",
-          "event_title": "美联储开启预防性降息周期",
-          "t1_reaction": "美债收益率跳水，长端国债基金单日大涨",
-          "t5_reaction": "成长股估值切换，黄金突破前期震荡区间",
-          "lesson": "当市场开始计价猛烈降息时，短端反应最剧烈，长端次之，需警惕衰退兑现带来的商品抛压"
-        }
-      ],
-      "quant_if_then": [
-        {
-          "case": "bull",
-          "label": "正向验证阈值",
-          "trigger_metric": "美国2年期与10年期国债收益率利差",
-          "threshold": "由倒挂转为迅速走陡（Steepener）超过25BP",
-          "action_implication": "加仓长久期美债及黄金资产"
-        },
-        {
-          "case": "bear",
-          "label": "证伪退出阈值",
-          "trigger_metric": "核心PCE年率",
-          "threshold": "连续两个月反弹超预期至3.5%以上",
-          "action_implication": "迅速止盈降息预期交易，转向现金防御"
-        }
-      ],
-      "_ts": 1795573968.96433
-    },
-    "华尔街开始押注美联储再这么加息离猛烈降息不远了": {
-      "one_liner": "华尔街交易极端紧缩后的剧烈衰退转向预期，利好长期美债与黄金，利空美元现金资产。",
-      "expectation_gap": "市场未充分计价高利率持续至触发信用坍塌、进而迫使美联储非理性急降息的宏观断层风险。",
-      "transmission_layers": [
-        {
-          "tier": 1,
-          "tier_label": "一阶直接冲击（核心受益或受损主体）",
-          "summary": "长端美债收益率下行直接推高债券资产估值。",
-          "stocks": [
-            {
-              "name": "iShares 20+ Year T",
-              "code": "TLT",
-              "market": "美股",
-              "exposure_logic": "直接受益于长端利率暴跌带来的资本利得",
-              "direction": "positive"
-            }
-          ]
-        },
-        {
-          "tier": 2,
-          "tier_label": "二阶产业链传导",
-          "summary": "无风险利率急降缓解高负债高成长科技股估值压制。",
-          "stocks": [
-            {
-              "name": "Invesco QQQ Trust",
-              "code": "QQQ",
-              "market": "美股",
-              "exposure_logic": "分母端改善对冲盈利下修预期",
-              "direction": "positive"
-            }
-          ]
-        },
-        {
-          "tier": 3,
-          "tier_label": "三阶宏观或避险跷跷板",
-          "summary": "美元信用面临阶段性重定价，黄金迎来强货币对冲买盘。",
-          "stocks": [
-            {
-              "name": "SPDR Gold Shares",
-              "code": "GLD",
-              "market": "美股",
-              "exposure_logic": "受益于实际利率下行与美元走弱",
-              "direction": "positive"
-            }
-          ]
-        }
-      ],
-      "historical_precedents": [
-        {
-          "date": "2019-07-31",
-          "event_title": "美联储开启预防性降息周期",
-          "t1_reaction": "美债收益率跳水，长端国债基金单日大涨",
-          "t5_reaction": "成长股估值切换，黄金突破前期震荡区间",
-          "lesson": "当市场开始计价猛烈降息时，短端反应最剧烈，长端次之，需警惕衰退兑现带来的商品抛压"
-        }
-      ],
-      "quant_if_then": [
-        {
-          "case": "bull",
-          "label": "正向验证阈值",
-          "trigger_metric": "美国2年期与10年期国债收益率利差",
-          "threshold": "由倒挂转为迅速走陡（Steepener）超过25BP",
-          "action_implication": "加仓长久期美债及黄金资产"
-        },
-        {
-          "case": "bear",
-          "label": "证伪退出阈值",
-          "trigger_metric": "核心PCE年率",
-          "threshold": "连续两个月反弹超预期至3.5%以上",
-          "action_implication": "迅速止盈降息预期交易，转向现金防御"
-        }
-      ],
-      "_ts": 1795573968.96433
-    },
-    "evt_45fb520deead": {
-      "one_liner": "中美元首会晤达成战略稳定共识，边际缓和地缘溢价，利好跨境供应链修复与外资偏好回暖。",
-      "expectation_gap": "市场此前完全计价地缘政治常态化脱钩，预期差在于政策沟通渠道实质性恢复超预期。",
-      "transmission_layers": [
-        {
-          "tier": 1,
-          "tier_label": "一阶直接冲击（核心受益或受损主体）",
-          "summary": "跨国贸易及高依赖度出口制造企业估值修复。",
-          "stocks": [
-            {
-              "name": "中国中免",
-              "code": "601888.SH",
-              "market": "A股",
-              "exposure_logic": "受益于外部宏观预期稳定带动的消费信心回暖",
-              "direction": "positive"
-            }
-          ]
-        },
-        {
-          "tier": 2,
-          "tier_label": "二阶产业链传导",
-          "summary": "在美中互信重建背景下，外资对中国核心资产风险偏好上修。",
-          "stocks": [
-            {
-              "name": "腾讯控股",
-              "code": "00700.HK",
-              "market": "港股",
-              "exposure_logic": "港股互联网板块受益于整体流动性与风险偏好双升",
-              "direction": "positive"
-            }
-          ]
-        },
-        {
-          "tier": 3,
-          "tier_label": "三阶宏观或避险跷跷板",
-          "summary": "极端地缘避险资产需求降温，人民币汇率获得宏观底气。",
-          "stocks": [
-            {
-              "name": "招商银行",
-              "code": "600036.SH",
-              "market": "A股",
-              "exposure_logic": "宏观基本面企稳与外资回流利好大行估值修复",
-              "direction": "positive"
-            }
-          ]
-        }
-      ],
-      "historical_precedents": [
-        {
-          "date": "2023-11-15",
-          "event_title": "旧金山中美元首会晤",
-          "t1_reaction": "中概股及港股大盘单日显著放量上涨",
-          "t5_reaction": "外资连续多日净流入A/H股核心资产",
-          "lesson": "高层会晤带来的预期差修复往往带来短期的估值修复行情，持续性取决于后续实质性政策落地"
-        }
-      ],
-      "quant_if_then": [
-        {
-          "case": "bull",
-          "label": "正向验证阈值",
-          "trigger_metric": "北向资金/港股通单日净流入额",
-          "threshold": "连续5个交易日净流入超百亿人民币",
-          "action_implication": "加大配置中国核心资产及大消费板块"
-        },
-        {
-          "case": "bear",
-          "label": "证伪退出阈值",
-          "trigger_metric": "双边经贸限制加码新闻",
-          "threshold": "出台新的实质性制裁法案",
-          "action_implication": "迅速收缩敞口，重回防御防御策略"
-        }
-      ],
-      "_ts": 1795573968.96433
-    },
-    "国台办中美元首会晤作出两国关系新战略指引": {
-      "one_liner": "中美元首会晤达成战略稳定共识，边际缓和地缘溢价，利好跨境供应链修复与外资偏好回暖。",
-      "expectation_gap": "市场此前完全计价地缘政治常态化脱钩，预期差在于政策沟通渠道实质性恢复超预期。",
-      "transmission_layers": [
-        {
-          "tier": 1,
-          "tier_label": "一阶直接冲击（核心受益或受损主体）",
-          "summary": "跨国贸易及高依赖度出口制造企业估值修复。",
-          "stocks": [
-            {
-              "name": "中国中免",
-              "code": "601888.SH",
-              "market": "A股",
-              "exposure_logic": "受益于外部宏观预期稳定带动的消费信心回暖",
-              "direction": "positive"
-            }
-          ]
-        },
-        {
-          "tier": 2,
-          "tier_label": "二阶产业链传导",
-          "summary": "在美中互信重建背景下，外资对中国核心资产风险偏好上修。",
-          "stocks": [
-            {
-              "name": "腾讯控股",
-              "code": "00700.HK",
-              "market": "港股",
-              "exposure_logic": "港股互联网板块受益于整体流动性与风险偏好双升",
-              "direction": "positive"
-            }
-          ]
-        },
-        {
-          "tier": 3,
-          "tier_label": "三阶宏观或避险跷跷板",
-          "summary": "极端地缘避险资产需求降温，人民币汇率获得宏观底气。",
-          "stocks": [
-            {
-              "name": "招商银行",
-              "code": "600036.SH",
-              "market": "A股",
-              "exposure_logic": "宏观基本面企稳与外资回流利好大行估值修复",
-              "direction": "positive"
-            }
-          ]
-        }
-      ],
-      "historical_precedents": [
-        {
-          "date": "2023-11-15",
-          "event_title": "旧金山中美元首会晤",
-          "t1_reaction": "中概股及港股大盘单日显著放量上涨",
-          "t5_reaction": "外资连续多日净流入A/H股核心资产",
-          "lesson": "高层会晤带来的预期差修复往往带来短期的估值修复行情，持续性取决于后续实质性政策落地"
-        }
-      ],
-      "quant_if_then": [
-        {
-          "case": "bull",
-          "label": "正向验证阈值",
-          "trigger_metric": "北向资金/港股通单日净流入额",
-          "threshold": "连续5个交易日净流入超百亿人民币",
-          "action_implication": "加大配置中国核心资产及大消费板块"
-        },
-        {
-          "case": "bear",
-          "label": "证伪退出阈值",
-          "trigger_metric": "双边经贸限制加码新闻",
-          "threshold": "出台新的实质性制裁法案",
-          "action_implication": "迅速收缩敞口，重回防御防御策略"
-        }
-      ],
-      "_ts": 1795573968.96433
-    },
-    "evt_6bbd53ce354c": {
-      "one_liner": "AI商业化变现遭遇资本幻觉破裂，英伟达大跌与Anthropic破发引发算力产业链估值杀跌。",
-      "expectation_gap": "市场此前将AI基础设施资本开支视为无限增长曲线，未料到初创企业估值倒挂与巨头内部治理风险共振。",
-      "transmission_layers": [
-        {
-          "tier": 1,
-          "tier_label": "一阶直接冲击（核心受益或受损主体）",
-          "summary": "AI算力龙头及明星AI独角兽估值系统性承压。",
-          "stocks": [
-            {
-              "name": "英伟达",
-              "code": "NVDA",
-              "market": "美股",
-              "exposure_logic": "AI交易拥挤度见顶后的资金抛售直接冲击股价",
-              "direction": "negative"
-            }
-          ]
-        },
-        {
-          "tier": 2,
-          "tier_label": "二阶产业链传导",
-          "summary": "AI服务器订单与硬件供应链面临业绩兑现证伪审视。",
-          "stocks": [
-            {
-              "name": "工业富联",
-              "code": "601138.SH",
-              "market": "A股",
-              "exposure_logic": "作为英伟达核心代工及AI服务器链条传导利空",
-              "direction": "negative"
-            }
-          ]
-        },
-        {
-          "tier": 3,
-          "tier_label": "三阶宏观或避险跷跷板",
-          "summary": "科技成长股资金流出，部分回流至传统价值红利板块。",
-          "stocks": [
-            {
-              "name": "中国石油",
-              "code": "601857.SH",
-              "market": "A股",
-              "exposure_logic": "避险及高股息资金获得短期青睐",
-              "direction": "positive"
-            }
-          ]
-        }
-      ],
-      "historical_precedents": [
-        {
-          "date": "2024-03-08",
-          "event_title": "AI硬件股高位震荡回调",
-          "t1_reaction": "半导体指数单日大跌超5%",
-          "t5_reaction": "资金开始甄别伪AI概念，算力龙头经历数周震荡消化估值",
-          "lesson": "当一级市场明星标的破发与高管大举减持共振时，二级市场同类高估值资产将面临估值杀戮"
-        }
-      ],
-      "quant_if_then": [
-        {
-          "case": "bull",
-          "label": "正向验证阈值",
-          "trigger_metric": "费城半导体指数SOX",
-          "threshold": "5日均线上穿且成交量放大超20%",
-          "action_implication": "左侧逢低吸纳优质AI硬件核心标的"
-        },
-        {
-          "case": "bear",
-          "label": "证伪退出阈值",
-          "trigger_metric": "纳斯达克100指数",
-          "threshold": "跌破200日均线且科技龙头财报指引集体下修",
-          "action_implication": "清仓所有高估值AI产业链标的"
-        }
-      ],
-      "_ts": 1795573968.96433
-    },
-    "美股收盘ai交易疑虑重燃英伟达跌近6anthropic跌": {
-      "one_liner": "AI商业化变现遭遇资本幻觉破裂，英伟达大跌与Anthropic破发引发算力产业链估值杀跌。",
-      "expectation_gap": "市场此前将AI基础设施资本开支视为无限增长曲线，未料到初创企业估值倒挂与巨头内部治理风险共振。",
-      "transmission_layers": [
-        {
-          "tier": 1,
-          "tier_label": "一阶直接冲击（核心受益或受损主体）",
-          "summary": "AI算力龙头及明星AI独角兽估值系统性承压。",
-          "stocks": [
-            {
-              "name": "英伟达",
-              "code": "NVDA",
-              "market": "美股",
-              "exposure_logic": "AI交易拥挤度见顶后的资金抛售直接冲击股价",
-              "direction": "negative"
-            }
-          ]
-        },
-        {
-          "tier": 2,
-          "tier_label": "二阶产业链传导",
-          "summary": "AI服务器订单与硬件供应链面临业绩兑现证伪审视。",
-          "stocks": [
-            {
-              "name": "工业富联",
-              "code": "601138.SH",
-              "market": "A股",
-              "exposure_logic": "作为英伟达核心代工及AI服务器链条传导利空",
-              "direction": "negative"
-            }
-          ]
-        },
-        {
-          "tier": 3,
-          "tier_label": "三阶宏观或避险跷跷板",
-          "summary": "科技成长股资金流出，部分回流至传统价值红利板块。",
-          "stocks": [
-            {
-              "name": "中国石油",
-              "code": "601857.SH",
-              "market": "A股",
-              "exposure_logic": "避险及高股息资金获得短期青睐",
-              "direction": "positive"
-            }
-          ]
-        }
-      ],
-      "historical_precedents": [
-        {
-          "date": "2024-03-08",
-          "event_title": "AI硬件股高位震荡回调",
-          "t1_reaction": "半导体指数单日大跌超5%",
-          "t5_reaction": "资金开始甄别伪AI概念，算力龙头经历数周震荡消化估值",
-          "lesson": "当一级市场明星标的破发与高管大举减持共振时，二级市场同类高估值资产将面临估值杀戮"
-        }
-      ],
-      "quant_if_then": [
-        {
-          "case": "bull",
-          "label": "正向验证阈值",
-          "trigger_metric": "费城半导体指数SOX",
-          "threshold": "5日均线上穿且成交量放大超20%",
-          "action_implication": "左侧逢低吸纳优质AI硬件核心标的"
-        },
-        {
-          "case": "bear",
-          "label": "证伪退出阈值",
-          "trigger_metric": "纳斯达克100指数",
-          "threshold": "跌破200日均线且科技龙头财报指引集体下修",
-          "action_implication": "清仓所有高估值AI产业链标的"
-        }
-      ],
-      "_ts": 1795573968.96433
-    },
-    "brk_w_ev_evt_8b709922f712": {
-      "one_liner": "Anthropic上市闪崩与高管抛售触发一级转二级市场估值泡沫破裂，压制全行业一级退出预期。",
-      "expectation_gap": "市场此前盲目信仰大模型无上限烧钱模式，创始人高管大举套现直接粉碎了长线持有的市场叙事。",
-      "transmission_layers": [
-        {
-          "tier": 1,
-          "tier_label": "一阶直接冲击（核心受益或受损主体）",
-          "summary": "AI初创公司美股上市窗口关闭，一二级市场估值倒挂。",
-          "stocks": [
-            {
-              "name": "微软",
-              "code": "MSFT",
-              "market": "美股",
-              "exposure_logic": "作为大模型生态核心盟友面临估值同频拖累",
-              "direction": "negative"
-            }
-          ]
-        },
-        {
-          "tier": 2,
-          "tier_label": "二阶产业链传导",
-          "summary": "大模型厂商放缓算力基础设施采购预算预期升温。",
-          "stocks": [
-            {
-              "name": "美光科技",
-              "code": "MU",
-              "market": "美股",
-              "exposure_logic": "AI存储芯片需求高增长预期遭到修正",
-              "direction": "negative"
-            }
-          ]
-        },
-        {
-          "tier": 3,
-          "tier_label": "三阶宏观或避险跷跷板",
-          "summary": "VC/PE一级市场流动性枯竭传导至全市场风险偏好收缩。",
-          "stocks": [
-            {
-              "name": "SPDR S&P 500 ETF T",
-              "code": "SPY",
-              "market": "美gg",
-              "exposure_logic": "科技权重拖累整体大盘多头情绪",
-              "direction": "negative"
-            }
-          ]
-        }
-      ],
-      "historical_precedents": [
-        {
-          "date": "2021-11-10",
-          "event_title": "高成长科技股IPO破发潮",
-          "t1_reaction": "新股板块遭遇集体跌停与破发潮",
-          "t5_reaction": "一级市场估值整体下调30%-50%",
-          "lesson": "高管在上市初期的大规模套现是极强的负面价格信号，散户及机构应立刻规避同类概念股"
-        }
-      ],
-      "quant_if_then": [
-        {
-          "case": "bull",
-          "label": "正向验证阈值",
-          "trigger_metric": "Anthropic股价",
-          "threshold": "重回IPO发行价上方并企稳3个交易日",
-          "action_implication": "判断AI板块情绪企稳，恢复中小市值科技股配置"
-        },
-        {
-          "case": "bear",
-          "label": "证伪退出阈值",
-          "trigger_metric": "AI初创板块破发率",
-          "threshold": "超过80%的近期上市AI标的跌破发行价20%以上",
-          "action_implication": "全面撤出AI应用层及VC持仓敞口"
-        }
-      ],
-      "_ts": 1795573968.96433
-    },
-    "anthropic上市5天即破发2万亿美元估值昙花一现": {
-      "one_liner": "Anthropic上市闪崩与高管抛售触发一级转二级市场估值泡沫破裂，压制全行业一级退出预期。",
-      "expectation_gap": "市场此前盲目信仰大模型无上限烧钱模式，创始人高管大举套现直接粉碎了长线持有的市场叙事。",
-      "transmission_layers": [
-        {
-          "tier": 1,
-          "tier_label": "一阶直接冲击（核心受益或受损主体）",
-          "summary": "AI初创公司美股上市窗口关闭，一二级市场估值倒挂。",
-          "stocks": [
-            {
-              "name": "微软",
-              "code": "MSFT",
-              "market": "美股",
-              "exposure_logic": "作为大模型生态核心盟友面临估值同频拖累",
-              "direction": "negative"
-            }
-          ]
-        },
-        {
-          "tier": 2,
-          "tier_label": "二阶产业链传导",
-          "summary": "大模型厂商放缓算力基础设施采购预算预期升温。",
-          "stocks": [
-            {
-              "name": "美光科技",
-              "code": "MU",
-              "market": "美股",
-              "exposure_logic": "AI存储芯片需求高增长预期遭到修正",
-              "direction": "negative"
-            }
-          ]
-        },
-        {
-          "tier": 3,
-          "tier_label": "三阶宏观或避险跷跷板",
-          "summary": "VC/PE一级市场流动性枯竭传导至全市场风险偏好收缩。",
-          "stocks": [
-            {
-              "name": "SPDR S&P 500 ETF T",
-              "code": "SPY",
-              "market": "美gg",
-              "exposure_logic": "科技权重拖累整体大盘多头情绪",
-              "direction": "negative"
-            }
-          ]
-        }
-      ],
-      "historical_precedents": [
-        {
-          "date": "2021-11-10",
-          "event_title": "高成长科技股IPO破发潮",
-          "t1_reaction": "新股板块遭遇集体跌停与破发潮",
-          "t5_reaction": "一级市场估值整体下调30%-50%",
-          "lesson": "高管在上市初期的大规模套现是极强的负面价格信号，散户及机构应立刻规避同类概念股"
-        }
-      ],
-      "quant_if_then": [
-        {
-          "case": "bull",
-          "label": "正向验证阈值",
-          "trigger_metric": "Anthropic股价",
-          "threshold": "重回IPO发行价上方并企稳3个交易日",
-          "action_implication": "判断AI板块情绪企稳，恢复中小市值科技股配置"
-        },
-        {
-          "case": "bear",
-          "label": "证伪退出阈值",
-          "trigger_metric": "AI初创板块破发率",
-          "threshold": "超过80%的近期上市AI标的跌破发行价20%以上",
-          "action_implication": "全面撤出AI应用层及VC持仓敞口"
-        }
-      ],
-      "_ts": 1795573968.96433
-    },
-    "evt_22b48ab02d39": {
-      "one_liner": "AI内部安全警报频发触发强监管合规预期，利空软件应用层扩张，利好AI安全与合规审计服务。",
-      "expectation_gap": "市场原先仅关注模型参数规模竞赛，忽略了由于模型失控带来的全球立法监管急刹车风险。",
-      "transmission_layers": [
-        {
-          "tier": 1,
-          "tier_label": "一阶直接冲击（核心受益或受损主体）",
-          "summary": "大模型研发巨头面临潜在的合规暂停及诉讼风暴。",
-          "stocks": [
-            {
-              "name": "Alphabet Inc.",
-              "code": "GOOGL",
-              "market": "美股",
-              "exposure_logic": "AI安全合规成本激增压制短期研发敏捷性",
-              "direction": "negative"
-            }
-          ]
-        },
-        {
-          "tier": 2,
-          "tier_label": "二阶产业链传导",
-          "summary": "企业级AI落地进度因安全审核加码而出现延期。",
-          "stocks": [
-            {
-              "name": "Salesforce",
-              "code": "CRM",
-              "market": "美股",
-              "exposure_logic": "企业软件AI功能商业化落地周期被迫拉长",
-              "direction": "negative"
-            }
-          ]
-        },
-        {
-          "tier": 3,
-          "tier_label": "三阶宏观或避险跷跷板",
-          "summary": "网络安全与合规管理板块获得政策驱动型增量资金。",
-          "stocks": [
-            {
-              "name": "Palo Alto Networks",
-              "code": "PANW",
-              "market": "美股",
-              "exposure_logic": "受益于AI安全合规与漏洞防范需求集中爆发",
-              "direction": "positive"
-            }
-          ]
-        }
-      ],
-      "historical_precedents": [
-        {
-          "date": "2023-05-16",
-          "event_title": "OpenAI CEO出席美国国会AI听证会",
-          "t1_reaction": "AI概念股短线承压，合规软件股逆势上涨",
-          "t5_reaction": "市场开始定价严格AI监管法案出台预期",
-          "lesson": "内部员工公开对技术失控发声是监管风暴的前兆，应果断从纯AI应用端转向AI安全赛道"
-        }
-      ],
-      "quant_if_then": [
-        {
-          "case": "bull",
-          "label": "正向验证阈值",
-          "trigger_metric": "网络安全板块ETF",
-          "threshold": "相对纳斯达克指数超额收益率连续5日为正",
-          "action_implication": "超配AI安全与数据合规标的"
-        },
-        {
-          "case": "bear",
-          "label": "证伪退出阈值",
-          "trigger_metric": "全球主要经济体AI紧急暂停令",
-          "threshold": "出台具有法律约束力的模型训练暂停法案",
-          "action_implication": "清仓所有高风险大模型概念股票"
-        }
-      ],
-      "_ts": 1795573968.96433
-    },
-    "anthropic和openai员工对过于强大而无法发布": {
-      "one_liner": "AI内部安全警报频发触发强监管合规预期，利空软件应用层扩张，利好AI安全与合规审计服务。",
-      "expectation_gap": "市场原先仅关注模型参数规模竞赛，忽略了由于模型失控带来的全球立法监管急刹车风险。",
-      "transmission_layers": [
-        {
-          "tier": 1,
-          "tier_label": "一阶直接冲击（核心受益或受损主体）",
-          "summary": "大模型研发巨头面临潜在的合规暂停及诉讼风暴。",
-          "stocks": [
-            {
-              "name": "Alphabet Inc.",
-              "code": "GOOGL",
-              "market": "美股",
-              "exposure_logic": "AI安全合规成本激增压制短期研发敏捷性",
-              "direction": "negative"
-            }
-          ]
-        },
-        {
-          "tier": 2,
-          "tier_label": "二阶产业链传导",
-          "summary": "企业级AI落地进度因安全审核加码而出现延期。",
-          "stocks": [
-            {
-              "name": "Salesforce",
-              "code": "CRM",
-              "market": "美股",
-              "exposure_logic": "企业软件AI功能商业化落地周期被迫拉长",
-              "direction": "negative"
-            }
-          ]
-        },
-        {
-          "tier": 3,
-          "tier_label": "三阶宏观或避险跷跷板",
-          "summary": "网络安全与合规管理板块获得政策驱动型增量资金。",
-          "stocks": [
-            {
-              "name": "Palo Alto Networks",
-              "code": "PANW",
-              "market": "美股",
-              "exposure_logic": "受益于AI安全合规与漏洞防范需求集中爆发",
-              "direction": "positive"
-            }
-          ]
-        }
-      ],
-      "historical_precedents": [
-        {
-          "date": "2023-05-16",
-          "event_title": "OpenAI CEO出席美国国会AI听证会",
-          "t1_reaction": "AI概念股短线承压，合规软件股逆势上涨",
-          "t5_reaction": "市场开始定价严格AI监管法案出台预期",
-          "lesson": "内部员工公开对技术失控发声是监管风暴的前兆，应果断从纯AI应用端转向AI安全赛道"
-        }
-      ],
-      "quant_if_then": [
-        {
-          "case": "bull",
-          "label": "正向验证阈值",
-          "trigger_metric": "网络安全板块ETF",
-          "threshold": "相对纳斯达克指数超额收益率连续5日为正",
-          "action_implication": "超配AI安全与数据合规标的"
-        },
-        {
-          "case": "bear",
-          "label": "证伪退出阈值",
-          "trigger_metric": "全球主要经济体AI紧急暂停令",
-          "threshold": "出台具有法律约束力的模型训练暂停法案",
-          "action_implication": "清仓所有高风险大模型概念股票"
-        }
-      ],
-      "_ts": 1795573968.96433
-    },
-    "evt_f320fcf0dd2e": {
-      "one_liner": "中东地缘政治危机骤然升级引发原油供给中断恐慌，利好全球能源与黄金板块，利空航空航运。",
-      "expectation_gap": "市场此前低估了霍尔木兹海峡封锁的极端尾部风险，预期差在于原油地缘溢价未被充分计价。",
-      "transmission_layers": [
-        {
-          "tier": 1,
-          "tier_label": "一阶直接冲击（核心受益或受损主体）",
-          "summary": "国际原油期货价格面临供给断链引发的暴涨压力。",
-          "stocks": [
-            {
-              "name": "中国海油",
-              "code": "600938.SH",
-              "market": "A股",
-              "exposure_logic": "高弹性纯上游油气开采受益于油价飙升",
-              "direction": "positive"
-            }
-          ]
-        },
-        {
-          "tier": 2,
-          "tier_label": "二阶产业链传导",
-          "summary": "中东航线受阻导致全球远洋运输成本与保费暴增。",
-          "stocks": [
-            {
-              "name": "中远海控",
-              "code": "601919.SH",
-              "market": "A股",
-              "exposure_logic": "地缘冲突带来的航线绕行推高运价逻辑",
-              "direction": "positive"
-            }
-          ]
-        },
-        {
-          "tier": 3,
-          "tier_label": "三阶宏观或避险跷跷板",
-          "summary": "高油价重燃滞胀预期，全球股市估值分母端承压。",
-          "stocks": [
-            {
-              "name": "中国国航",
-              "code": "601111.SH",
-              "market": "A股",
-              "exposure_logic": "航油成本飙升与美元汇率波动双重受损",
-              "direction": "negative"
-            }
-          ]
-        }
-      ],
-      "historical_precedents": [
-        {
-          "date": "2022-02-24",
-          "event_title": "地缘冲突引发能源供给危机",
-          "t1_reaction": "国际油价单日飙升超8%，石油板块集体涨停",
-          "t5_reaction": "全球通胀预期大幅上修，航空及交通运输板块深度回调",
-          "lesson": "霍尔木兹海峡等全球关键咽喉要道发生阻断威胁时，原油与黄金是最高效率的对冲工具"
-        }
-      ],
-      "quant_if_then": [
-        {
-          "case": "bull",
-          "label": "正向验证阈值",
-          "trigger_metric": "布伦特原油主力合约",
-          "threshold": "突破95美元/桶并伴随持仓量大增",
-          "action_implication": "大幅增持石油天然气开采及黄金多头头寸"
-        },
-        {
-          "case": "bear",
-          "label": "证伪退出阈值",
-          "trigger_metric": "地缘外交缓和声明及美军护航落地",
-          "threshold": "霍尔木兹海峡航行恢复正常且油价回落至80美元",
-          "action_implication": "迅速止盈能源多头，回补航空及中下游制造"
-        }
-      ],
-      "_ts": 1795573968.96433
-    },
-    "伊朗外交官只要美国实施封锁伊朗就反对船只通过霍尔木兹海峡": {
-      "one_liner": "中东地缘政治危机骤然升级引发原油供给中断恐慌，利好全球能源与黄金板块，利空航空航运。",
-      "expectation_gap": "市场此前低估了霍尔木兹海峡封锁的极端尾部风险，预期差在于原油地缘溢价未被充分计价。",
-      "transmission_layers": [
-        {
-          "tier": 1,
-          "tier_label": "一阶直接冲击（核心受益或受损主体）",
-          "summary": "国际原油期货价格面临供给断链引发的暴涨压力。",
-          "stocks": [
-            {
-              "name": "中国海油",
-              "code": "600938.SH",
-              "market": "A股",
-              "exposure_logic": "高弹性纯上游油气开采受益于油价飙升",
-              "direction": "positive"
-            }
-          ]
-        },
-        {
-          "tier": 2,
-          "tier_label": "二阶产业链传导",
-          "summary": "中东航线受阻导致全球远洋运输成本与保费暴增。",
-          "stocks": [
-            {
-              "name": "中远海控",
-              "code": "601919.SH",
-              "market": "A股",
-              "exposure_logic": "地缘冲突带来的航线绕行推高运价逻辑",
-              "direction": "positive"
-            }
-          ]
-        },
-        {
-          "tier": 3,
-          "tier_label": "三阶宏观或避险跷跷板",
-          "summary": "高油价重燃滞胀预期，全球股市估值分母端承压。",
-          "stocks": [
-            {
-              "name": "中国国航",
-              "code": "601111.SH",
-              "market": "A股",
-              "exposure_logic": "航油成本飙升与美元汇率波动双重受损",
-              "direction": "negative"
-            }
-          ]
-        }
-      ],
-      "historical_precedents": [
-        {
-          "date": "2022-02-24",
-          "event_title": "地缘冲突引发能源供给危机",
-          "t1_reaction": "国际油价单日飙升超8%，石油板块集体涨停",
-          "t5_reaction": "全球通胀预期大幅上修，航空及交通运输板块深度回调",
-          "lesson": "霍尔木兹海峡等全球关键咽喉要道发生阻断威胁时，原油与黄金是最高效率的对冲工具"
-        }
-      ],
-      "quant_if_then": [
-        {
-          "case": "bull",
-          "label": "正向验证阈值",
-          "trigger_metric": "布伦特原油主力合约",
-          "threshold": "突破95美元/桶并伴随持仓量大增",
-          "action_implication": "大幅增持石油天然气开采及黄金多头头寸"
-        },
-        {
-          "case": "bear",
-          "label": "证伪退出阈值",
-          "trigger_metric": "地缘外交缓和声明及美军护航落地",
-          "threshold": "霍尔木兹海峡航行恢复正常且油价回落至80美元",
-          "action_implication": "迅速止盈能源多头，回补航空及中下游制造"
-        }
-      ],
-      "_ts": 1795573968.96433
-    },
-    "evt_bc3c2f7f5d33": {
-      "one_liner": "美国情报核心系统曝出非密信息泄露与黑客入侵，敲响美政企网络安全与情报基础设施警钟。",
-      "expectation_gap": "市场此前高估了美国最高级别国家安全机构的网络防御能力，事件暴露出国家级IT基础设施软肋。",
-      "transmission_layers": [
-        {
-          "tier": 1,
-          "tier_label": "一阶直接冲击（核心受益或受损主体）",
-          "summary": "政府及国防级网络安全供应商迎来紧急防御预算落地。",
-          "stocks": [
-            {
-              "name": "CrowdStrike",
-              "code": "CRWD",
-              "market": "美股",
-              "exposure_logic": "顶尖网络安全服务商受益于特权防护需求激增",
-              "direction": "positive"
-            }
-          ]
-        },
-        {
-          "tier": 2,
-          "tier_label": "二阶产业链传导",
-          "summary": "国防信息化与信创安全产业链订单预期显著抬升。",
-          "stocks": [
-            {
-              "name": "奇安信",
-              "code": "688561.SH",
-              "market": "A股",
-              "exposure_logic": "对标海外安全事件引发国内自主可控安全板块共振",
-              "direction": "positive"
-            }
-          ]
-        },
-        {
-          "tier": 3,
-          "tier_label": "三阶宏观或避险跷跷板",
-          "summary": "数据安全与隐私保护政策收紧，传统IT外包及云服务面临审计压力。",
-          "stocks": [
-            {
-              "name": "Amazon.com Inc.",
-              "code": "AMZN",
-              "market": "美股",
-              "exposure_logic": "云基础设施安全信任度遭遇阶段性舆论扰动",
-              "direction": "negative"
-            }
-          ]
-        }
-      ],
-      "historical_precedents": [
-        {
-          "date": "2020-12-13",
-          "event_title": "SolarWinds黑客攻击事件爆发",
-          "t1_reaction": "网络安全板块逆势大涨，赛门铁克等标的创历史新高",
-          "t5_reaction": "美国政府及联邦机构全面追加网络安全采购预算",
-          "lesson": "高级别情报系统遭到入侵会直接重塑资本市场对网络安全行业的长期支出预期"
-        }
-      ],
-      "quant_if_then": [
-        {
-          "case": "bull",
-          "label": "正向验证阈值",
-          "trigger_metric": "全球网络安全指数ETF",
-          "threshold": "单周涨幅超过5%且成交量放大",
-          "action_implication": "加仓全球网络安全头部供应商"
-        },
-        {
-          "case": "bear",
-          "label": "证伪退出阈值",
-          "trigger_metric": "情报泄露后续调查报告",
-          "threshold": "官方证实无实质性系统沦陷且属于虚惊一场",
-          "action_implication": "迅速平仓网络安全主题的超额投机头寸"
-        }
-      ],
-      "_ts": 1795573968.96433
-    },
-    "媒体美国中情局和国家情报总监办公室发现非机密信息遭泄露": {
-      "one_liner": "美国情报核心系统曝出非密信息泄露与黑客入侵，敲响美政企网络安全与情报基础设施警钟。",
-      "expectation_gap": "市场此前高估了美国最高级别国家安全机构的网络防御能力，事件暴露出国家级IT基础设施软肋。",
-      "transmission_layers": [
-        {
-          "tier": 1,
-          "tier_label": "一阶直接冲击（核心受益或受损主体）",
-          "summary": "政府及国防级网络安全供应商迎来紧急防御预算落地。",
-          "stocks": [
-            {
-              "name": "CrowdStrike",
-              "code": "CRWD",
-              "market": "美股",
-              "exposure_logic": "顶尖网络安全服务商受益于特权防护需求激增",
-              "direction": "positive"
-            }
-          ]
-        },
-        {
-          "tier": 2,
-          "tier_label": "二阶产业链传导",
-          "summary": "国防信息化与信创安全产业链订单预期显著抬升。",
-          "stocks": [
-            {
-              "name": "奇安信",
-              "code": "688561.SH",
-              "market": "A股",
-              "exposure_logic": "对标海外安全事件引发国内自主可控安全板块共振",
-              "direction": "positive"
-            }
-          ]
-        },
-        {
-          "tier": 3,
-          "tier_label": "三阶宏观或避险跷跷板",
-          "summary": "数据安全与隐私保护政策收紧，传统IT外包及云服务面临审计压力。",
-          "stocks": [
-            {
-              "name": "Amazon.com Inc.",
-              "code": "AMZN",
-              "market": "美股",
-              "exposure_logic": "云基础设施安全信任度遭遇阶段性舆论扰动",
-              "direction": "negative"
-            }
-          ]
-        }
-      ],
-      "historical_precedents": [
-        {
-          "date": "2020-12-13",
-          "event_title": "SolarWinds黑客攻击事件爆发",
-          "t1_reaction": "网络安全板块逆势大涨，赛门铁克等标的创历史新高",
-          "t5_reaction": "美国政府及联邦机构全面追加网络安全采购预算",
-          "lesson": "高级别情报系统遭到入侵会直接重塑资本市场对网络安全行业的长期支出预期"
-        }
-      ],
-      "quant_if_then": [
-        {
-          "case": "bull",
-          "label": "正向验证阈值",
-          "trigger_metric": "全球网络安全指数ETF",
-          "threshold": "单周涨幅超过5%且成交量放大",
-          "action_implication": "加仓全球网络安全头部供应商"
-        },
-        {
-          "case": "bear",
-          "label": "证伪退出阈值",
-          "trigger_metric": "情报泄露后续调查报告",
-          "threshold": "官方证实无实质性系统沦陷且属于虚惊一场",
-          "action_implication": "迅速平仓网络安全主题的超额投机头寸"
-        }
-      ],
-      "_ts": 1795573968.96433
-    },
-    "evt_796636fbd607": {
-      "one_liner": "AI交易热潮降温与硬件订单分化共振，半导体领跌而戴尔AI服务器订单逆势超预期。",
-      "expectation_gap": "市场未料到AI硬件需求出现结构性分化：传统芯片及存储大跌，而服务器集成商订单超预期形成强支撑。",
-      "transmission_layers": [
-        {
-          "tier": 1,
-          "tier_label": "一阶直接冲击（核心受益或受损主体）",
-          "summary": "AI优化服务器订单超预期的龙头直接利好业绩兑现。",
-          "stocks": [
-            {
-              "name": "戴尔科技",
-              "code": "DELL",
-              "market": "美股",
-              "exposure_logic": "全年AI优化服务器营收指引上调直接提振基本面",
-              "direction": "positive"
-            }
-          ]
-        },
-        {
-          "tier": 2,
-          "tier_label": "二阶产业链传导",
-          "summary": "存储及传统AI芯片遭遇过去透支行情的获利回吐。",
-          "stocks": [
-            {
-              "name": "美光科技",
-              "code": "MU",
-              "market": "美股",
-              "exposure_logic": "存储芯片板块遭遇恐慌性杀跌",
-              "direction": "negative"
-            }
-          ]
-        },
-        {
-          "tier": 3,
-          "tier_label": "三阶宏观或避险跷跷板",
-          "summary": "资金从高位高风险科技股向道指权重等传统价值股切换。",
-          "stocks": [
-            {
-              "name": "高盛",
-              "code": "GS",
-              "market": "美股",
-              "exposure_logic": "道指成分股受益于资金高低切换分流",
-              "direction": "positive"
-            }
-          ]
-        }
-      ],
-      "historical_precedents": [
-        {
-          "date": "2023-08-24",
-          "event_title": "英伟达财报超预期但科技股分化",
-          "t1_reaction": "半导体指数先涨后跌，服务器组装厂表现强于纯芯片",
-          "t5_reaction": "市场从盲目炒作芯片上游转向筛选具备实际交付能力的集成商",
-          "lesson": "当AI产业链出现局部订单上调时，应精细化结构选股，剔除纯概念炒作、拥抱强订单兑现"
-        }
-      ],
-      "quant_if_then": [
-        {
-          "case": "bull",
-          "label": "正向验证阈值",
-          "trigger_metric": "服务器整机厂季度AI订单积压增速",
-          "threshold": "环比增长保持在20%以上",
-          "action_implication": "逢低配置AI服务器及硬件集成制造龙头"
-        },
-        {
-          "case": "bear",
-          "label": "证伪退出阈值",
-          "trigger_metric": "半导体存储现货价格指数",
-          "threshold": "连续3周出现价格松动下跌",
-          "action_implication": "清仓整个存储及硬件制造产业链"
-        }
-      ],
-      "_ts": 1795573968.96433
-    },
-    "华尔街见闻早餐2026年11月25日": {
-      "one_liner": "AI交易热潮降温与硬件订单分化共振，半导体领跌而戴尔AI服务器订单逆势超预期。",
-      "expectation_gap": "市场未料到AI硬件需求出现结构性分化：传统芯片及存储大跌，而服务器集成商订单超预期形成强支撑。",
-      "transmission_layers": [
-        {
-          "tier": 1,
-          "tier_label": "一阶直接冲击（核心受益或受损主体）",
-          "summary": "AI优化服务器订单超预期的龙头直接利好业绩兑现。",
-          "stocks": [
-            {
-              "name": "戴尔科技",
-              "code": "DELL",
-              "market": "美股",
-              "exposure_logic": "全年AI优化服务器营收指引上调直接提振基本面",
-              "direction": "positive"
-            }
-          ]
-        },
-        {
-          "tier": 2,
-          "tier_label": "二阶产业链传导",
-          "summary": "存储及传统AI芯片遭遇过去透支行情的获利回吐。",
-          "stocks": [
-            {
-              "name": "美光科技",
-              "code": "MU",
-              "market": "美股",
-              "exposure_logic": "存储芯片板块遭遇恐慌性杀跌",
-              "direction": "negative"
-            }
-          ]
-        },
-        {
-          "tier": 3,
-          "tier_label": "三阶宏观或避险跷跷板",
-          "summary": "资金从高位高风险科技股向道指权重等传统价值股切换。",
-          "stocks": [
-            {
-              "name": "高盛",
-              "code": "GS",
-              "market": "美股",
-              "exposure_logic": "道指成分股受益于资金高低切换分流",
-              "direction": "positive"
-            }
-          ]
-        }
-      ],
-      "historical_precedents": [
-        {
-          "date": "2023-08-24",
-          "event_title": "英伟达财报超预期但科技股分化",
-          "t1_reaction": "半导体指数先涨后跌，服务器组装厂表现强于纯芯片",
-          "t5_reaction": "市场从盲目炒作芯片上游转向筛选具备实际交付能力的集成商",
-          "lesson": "当AI产业链出现局部订单上调时，应精细化结构选股，剔除纯概念炒作、拥抱强订单兑现"
-        }
-      ],
-      "quant_if_then": [
-        {
-          "case": "bull",
-          "label": "正向验证阈值",
-          "trigger_metric": "服务器整机厂季度AI订单积压增速",
-          "threshold": "环比增长保持在20%以上",
-          "action_implication": "逢低配置AI服务器及硬件集成制造龙头"
-        },
-        {
-          "case": "bear",
-          "label": "证伪退出阈值",
-          "trigger_metric": "半导体存储现货价格指数",
-          "threshold": "连续3周出现价格松动下跌",
-          "action_implication": "清仓整个存储及硬件制造产业链"
-        }
-      ],
-      "_ts": 1795573968.96433
-    },
-    "evt_6f59e9323992": {
-      "one_liner": "Anthropic SDK集成Google Cloud数据控制，标志着AI巨头与公有云巨头数据主权合作深化。",
-      "expectation_gap": "市场此前担心大模型独立厂商与云巨头由于闭源生态产生恶性竞争，预期差在于合规协同加速。",
-      "transmission_layers": [
-        {
-          "tier": 1,
-          "tier_label": "一阶直接冲击（核心受益或受损主体）",
-          "summary": "Google云生态与大模型API结合提升企业级客户粘性。",
-          "stocks": [
-            {
-              "name": "Alphabet Inc.",
-              "code": "GOOGL",
-              "market": "美股",
-              "exposure_logic": "Google Cloud直接通过数据控制功能抢占B端大客户",
-              "direction": "positive"
-            }
-          ]
-        },
-        {
-          "tier": 2,
-          "tier_label": "二阶产业链传导",
-          "summary": "企业级SaaS服务商借助合规SDK加速AI应用落地。",
-          "stocks": [
-            {
-              "name": "Snowflake Inc.",
-              "code": "SNOW",
-              "market": "美股",
-              "exposure_logic": "数据仓库与大模型结合的安全性得到增强",
-              "direction": "positive"
-            }
-          ]
-        },
-        {
-          "tier": 3,
-          "tier_label": "三阶宏观或避险跷跷板",
-          "summary": "云计算板块整体估值因B端商业化落地实质推进而获得底部支撑。",
-          "stocks": [
-            {
-              "name": "微软",
-              "code": "MSFT",
-              "market": "美股",
-              "exposure_logic": "云厂商AI变现路径受到行业同行的正向验证",
-              "direction": "positive"
-            }
-          ]
-        }
-      ],
-      "historical_precedents": [
-        {
-          "date": "2023-10-05",
-          "event_title": "各大公有云厂商密集发布企业级AI数据隐私套件",
-          "t1_reaction": "云计算板块龙头小幅收红",
-          "t5_reaction": "大企业客户上云接入AI的审批周期明显缩短",
-          "lesson": "解决数据控制权是打通企业级AI大模型商业化最后一公里的核心钥匙"
-        }
-      ],
-      "quant_if_then": [
-        {
-          "case": "bull",
-          "label": "正向验证阈值",
-          "trigger_metric": "Google Cloud季度营收增速",
-          "threshold": "突破25%并实现利润率持续扩张",
-          "action_implication": "加大配置公有云及AI API集成服务商"
-        },
-        {
-          "case": "bear",
-          "label": "证伪退出阈值",
-          "trigger_metric": "企业级云服务数据安全事故发生率",
-          "threshold": "因SDK漏洞导致大客户数据泄露事件曝光",
-          "action_implication": "抛售相关云服务及API集成概念股票"
-        }
-      ],
-      "_ts": 1795573968.96433
-    },
-    "githubreleaseanthropicsdk发布v": {
-      "one_liner": "Anthropic SDK集成Google Cloud数据控制，标志着AI巨头与公有云巨头数据主权合作深化。",
-      "expectation_gap": "市场此前担心大模型独立厂商与云巨头由于闭源生态产生恶性竞争，预期差在于合规协同加速。",
-      "transmission_layers": [
-        {
-          "tier": 1,
-          "tier_label": "一阶直接冲击（核心受益或受损主体）",
-          "summary": "Google云生态与大模型API结合提升企业级客户粘性。",
-          "stocks": [
-            {
-              "name": "Alphabet Inc.",
-              "code": "GOOGL",
-              "market": "美股",
-              "exposure_logic": "Google Cloud直接通过数据控制功能抢占B端大客户",
-              "direction": "positive"
-            }
-          ]
-        },
-        {
-          "tier": 2,
-          "tier_label": "二阶产业链传导",
-          "summary": "企业级SaaS服务商借助合规SDK加速AI应用落地。",
-          "stocks": [
-            {
-              "name": "Snowflake Inc.",
-              "code": "SNOW",
-              "market": "美股",
-              "exposure_logic": "数据仓库与大模型结合的安全性得到增强",
-              "direction": "positive"
-            }
-          ]
-        },
-        {
-          "tier": 3,
-          "tier_label": "三阶宏观或避险跷跷板",
-          "summary": "云计算板块整体估值因B端商业化落地实质推进而获得底部支撑。",
-          "stocks": [
-            {
-              "name": "微软",
-              "code": "MSFT",
-              "market": "美股",
-              "exposure_logic": "云厂商AI变现路径受到行业同行的正向验证",
-              "direction": "positive"
-            }
-          ]
-        }
-      ],
-      "historical_precedents": [
-        {
-          "date": "2023-10-05",
-          "event_title": "各大公有云厂商密集发布企业级AI数据隐私套件",
-          "t1_reaction": "云计算板块龙头小幅收红",
-          "t5_reaction": "大企业客户上云接入AI的审批周期明显缩短",
-          "lesson": "解决数据控制权是打通企业级AI大模型商业化最后一公里的核心钥匙"
-        }
-      ],
-      "quant_if_then": [
-        {
-          "case": "bull",
-          "label": "正向验证阈值",
-          "trigger_metric": "Google Cloud季度营收增速",
-          "threshold": "突破25%并实现利润率持续扩张",
-          "action_implication": "加大配置公有云及AI API集成服务商"
-        },
-        {
-          "case": "bear",
-          "label": "证伪退出阈值",
-          "trigger_metric": "企业级云服务数据安全事故发生率",
-          "threshold": "因SDK漏洞导致大客户数据泄露事件曝光",
-          "action_implication": "抛售相关云服务及API集成概念股票"
-        }
-      ],
-      "_ts": 1795573968.96433
-    },
-    "evt_7be64e95d809": {
-      "one_liner": "纳斯达克受半导体暴跌拖累重挫，存储与光通信芯片遭主力资金无差别砸盘。",
-      "expectation_gap": "市场此前预期AI硬件景气度具备强持续性，预期差在于高涨幅后的机构年末获利了结与流动性踩踏。",
-      "transmission_layers": [
-        {
-          "tier": 1,
-          "tier_label": "一阶直接冲击（核心受益或受损主体）",
-          "summary": "存储及半导体芯片产业链龙头遭遇重仓抛售。",
-          "stocks": [
-            {
-              "name": "美光科技",
-              "code": "MU",
-              "market": "美股",
-              "exposure_logic": "存储芯片跌幅居前直接拖累基本面预期",
-              "direction": "negative"
-            }
-          ]
-        },
-        {
-          "tier": 2,
-          "tier_label": "二阶产业链传导",
-          "summary": "A股及港股半导体与光模块产业链同步出现情绪传导性杀跌。",
-          "stocks": [
-            {
-              "name": "中际旭创",
-              "code": "300308.SZ",
-              "market": "A股",
-              "exposure_logic": "海外半导体大跌引发A股光通信AI算力链情绪共振调整",
-              "direction": "negative"
-            }
-          ]
-        },
-        {
-          "tier": 3,
-          "tier_label": "三阶宏观或避险跷跷板",
-          "summary": "资金自科技赛道流出，生物科技等逆周期板块获得避险买盘。",
-          "stocks": [
-            {
-              "name": "iShares Biotechnol",
-              "code": "IBB",
-              "market": "美股",
-              "exposure_logic": "生物科技板块逆势上涨成为资金避风港",
-              "direction": "positive"
-            }
-          ]
-        }
-      ],
-      "historical_precedents": [
-        {
-          "date": "2024-04-19",
-          "event_title": "美股半导体板块遭遇黑天鹅式重挫",
-          "t1_reaction": "费城半导体指数单日大跌超过7%",
-          "t5_reaction": "板块进入为期一个月的震荡筑底与筹码换手阶段",
-          "lesson": "当半导体指数单日跌幅超7%时，切忌盲目左侧抄底，等待市场情绪企稳与成交量萎缩后再行布局"
-        }
-      ],
-      "quant_if_then": [
-        {
-          "case": "bull",
-          "label": "正向验证阈值",
-          "trigger_metric": "纳斯达克半导体指数成交量",
-          "threshold": "连续3日出现放量止跌阳线",
-          "action_implication": "分批左侧建仓A/美两地光模块与半导体龙头"
-        },
-        {
-          "case": "bear",
-          "label": "证伪退出阈值",
-          "trigger_metric": "半导体板块跌破关键支撑位",
-          "threshold": "半导体指数跌破半年线且无护盘资金介入",
-          "action_implication": "严格执行止损，全面降低权益仓位"
-        }
-      ],
-      "_ts": 1795573968.96433
-    },
-    "纳斯达克100指数跌幅收窄至不足2": {
-      "one_liner": "纳斯达克受半导体暴跌拖累重挫，存储与光通信芯片遭主力资金无差别砸盘。",
-      "expectation_gap": "市场此前预期AI硬件景气度具备强持续性，预期差在于高涨幅后的机构年末获利了结与流动性踩踏。",
-      "transmission_layers": [
-        {
-          "tier": 1,
-          "tier_label": "一阶直接冲击（核心受益或受损主体）",
-          "summary": "存储及半导体芯片产业链龙头遭遇重仓抛售。",
-          "stocks": [
-            {
-              "name": "美光科技",
-              "code": "MU",
-              "market": "美股",
-              "exposure_logic": "存储芯片跌幅居前直接拖累基本面预期",
-              "direction": "negative"
-            }
-          ]
-        },
-        {
-          "tier": 2,
-          "tier_label": "二阶产业链传导",
-          "summary": "A股及港股半导体与光模块产业链同步出现情绪传导性杀跌。",
-          "stocks": [
-            {
-              "name": "中际旭创",
-              "code": "300308.SZ",
-              "market": "A股",
-              "exposure_logic": "海外半导体大跌引发A股光通信AI算力链情绪共振调整",
-              "direction": "negative"
-            }
-          ]
-        },
-        {
-          "tier": 3,
-          "tier_label": "三阶宏观或避险跷跷板",
-          "summary": "资金自科技赛道流出，生物科技等逆周期板块获得避险买盘。",
-          "stocks": [
-            {
-              "name": "iShares Biotechnol",
-              "code": "IBB",
-              "market": "美股",
-              "exposure_logic": "生物科技板块逆势上涨成为资金避风港",
-              "direction": "positive"
-            }
-          ]
-        }
-      ],
-      "historical_precedents": [
-        {
-          "date": "2024-04-19",
-          "event_title": "美股半导体板块遭遇黑天鹅式重挫",
-          "t1_reaction": "费城半导体指数单日大跌超过7%",
-          "t5_reaction": "板块进入为期一个月的震荡筑底与筹码换手阶段",
-          "lesson": "当半导体指数单日跌幅超7%时，切忌盲目左侧抄底，等待市场情绪企稳与成交量萎缩后再行布局"
-        }
-      ],
-      "quant_if_then": [
-        {
-          "case": "bull",
-          "label": "正向验证阈值",
-          "trigger_metric": "纳斯达克半导体指数成交量",
-          "threshold": "连续3日出现放量止跌阳线",
-          "action_implication": "分批左侧建仓A/美两地光模块与半导体龙头"
-        },
-        {
-          "case": "bear",
-          "label": "证伪退出阈值",
-          "trigger_metric": "半导体板块跌破关键支撑位",
-          "threshold": "半导体指数跌破半年线且无护盘资金介入",
-          "action_implication": "严格执行止损，全面降低权益仓位"
-        }
-      ],
-      "_ts": 1795573968.96433
-    },
     "evt_1bbb9de4846c": {
       "one_liner": "战损超预期加剧俄劳动力枯竭与长期消耗战，推升地缘溢价与军工需求。",
       "expectation_gap": "市场此前低估了俄方人员损耗对长期工业产能的侵蚀，避险资产定价尚未完全反映潜在的二次动员风险。",
@@ -7549,6 +6069,746 @@
         }
       ],
       "_ts": 1795807948.9142866
+    },
+    "evt_2f7d266de5b7": {
+      "one_liner": "美联储降息预期提前推升全球高风险资产，光通信与中概股迎估值修复，流动性敏感标的直接受益。",
+      "expectation_gap": "市场此前过度计价鹰派长期化，当前对流动性转向节点前置的定价存在超调，短期弹性由高贝塔科技股主导。",
+      "transmission_layers": [
+        {
+          "tier": 1,
+          "tier_label": "一阶直接冲击（核心受益或受损主体）",
+          "summary": "流动性宽松压降无风险利率，直接利好高成长科技及海外中概资产。",
+          "stocks": [
+            {
+              "name": "阿里巴巴",
+              "code": "09988.HK",
+              "market": "港股",
+              "exposure_logic": "美元流动性边际松动直接缓解港股核心资产估值压制",
+              "direction": "positive"
+            }
+          ]
+        },
+        {
+          "tier": 2,
+          "tier_label": "二阶产业链传导",
+          "summary": "AI基建需求景气叠加资金成本下行，光通信与算力硬件景气度获双重确认。",
+          "stocks": [
+            {
+              "name": "中际旭创",
+              "code": "300308.SZ",
+              "market": "A股",
+              "exposure_logic": "北美云厂商资本开支持续，受益于海外流动性改善及订单落地",
+              "direction": "positive"
+            }
+          ]
+        },
+        {
+          "tier": 3,
+          "tier_label": "三阶宏观或避险跷跷板",
+          "summary": "实际利率下行触发避险资产流出，黄金及美元指数阶段性承压。",
+          "stocks": [
+            {
+              "name": "SPDR黄金ETF",
+              "code": "GLD",
+              "market": "美股",
+              "exposure_logic": "降息预期压低实际收益率，资金阶段性自黄金流向风险资产",
+              "direction": "negative"
+            }
+          ]
+        }
+      ],
+      "historical_precedents": [
+        {
+          "date": "2023-11-14",
+          "event_title": "美国10月CPI低于预期引发联储转向定价",
+          "t1_reaction": "美股纳指大涨超2%，中概互联网指数单日反弹逾4%",
+          "t5_reaction": "成长风格连续四周跑赢大盘，长端美债收益率显著下行",
+          "lesson": "宏观拐点预期往往引发高贝塔资产脉冲式行情，需警惕预期过满后的回调"
+        }
+      ],
+      "quant_if_then": [
+        {
+          "case": "bull",
+          "label": "正向验证阈值",
+          "trigger_metric": "美国10年期国债收益率",
+          "threshold": "跌破 4.10%",
+          "action_implication": "加仓高贝塔光通信与互联网龙头"
+        },
+        {
+          "case": "bear",
+          "label": "证伪退出阈值",
+          "trigger_metric": "美国核心PCE同比",
+          "threshold": "高于预期 0.3%以上",
+          "action_implication": "迅速止盈高弹性科技股，切入防御板块"
+        }
+      ],
+      "_ts": 1795833921.1220248
+    },
+    "交易员缩减对美联储加息押注预计明年晚些转向宽松": {
+      "one_liner": "美联储降息预期提前推升全球高风险资产，光通信与中概股迎估值修复，流动性敏感标的直接受益。",
+      "expectation_gap": "市场此前过度计价鹰派长期化，当前对流动性转向节点前置的定价存在超调，短期弹性由高贝塔科技股主导。",
+      "transmission_layers": [
+        {
+          "tier": 1,
+          "tier_label": "一阶直接冲击（核心受益或受损主体）",
+          "summary": "流动性宽松压降无风险利率，直接利好高成长科技及海外中概资产。",
+          "stocks": [
+            {
+              "name": "阿里巴巴",
+              "code": "09988.HK",
+              "market": "港股",
+              "exposure_logic": "美元流动性边际松动直接缓解港股核心资产估值压制",
+              "direction": "positive"
+            }
+          ]
+        },
+        {
+          "tier": 2,
+          "tier_label": "二阶产业链传导",
+          "summary": "AI基建需求景气叠加资金成本下行，光通信与算力硬件景气度获双重确认。",
+          "stocks": [
+            {
+              "name": "中际旭创",
+              "code": "300308.SZ",
+              "market": "A股",
+              "exposure_logic": "北美云厂商资本开支持续，受益于海外流动性改善及订单落地",
+              "direction": "positive"
+            }
+          ]
+        },
+        {
+          "tier": 3,
+          "tier_label": "三阶宏观或避险跷跷板",
+          "summary": "实际利率下行触发避险资产流出，黄金及美元指数阶段性承压。",
+          "stocks": [
+            {
+              "name": "SPDR黄金ETF",
+              "code": "GLD",
+              "market": "美股",
+              "exposure_logic": "降息预期压低实际收益率，资金阶段性自黄金流向风险资产",
+              "direction": "negative"
+            }
+          ]
+        }
+      ],
+      "historical_precedents": [
+        {
+          "date": "2023-11-14",
+          "event_title": "美国10月CPI低于预期引发联储转向定价",
+          "t1_reaction": "美股纳指大涨超2%，中概互联网指数单日反弹逾4%",
+          "t5_reaction": "成长风格连续四周跑赢大盘，长端美债收益率显著下行",
+          "lesson": "宏观拐点预期往往引发高贝塔资产脉冲式行情，需警惕预期过满后的回调"
+        }
+      ],
+      "quant_if_then": [
+        {
+          "case": "bull",
+          "label": "正向验证阈值",
+          "trigger_metric": "美国10年期国债收益率",
+          "threshold": "跌破 4.10%",
+          "action_implication": "加仓高贝塔光通信与互联网龙头"
+        },
+        {
+          "case": "bear",
+          "label": "证伪退出阈值",
+          "trigger_metric": "美国核心PCE同比",
+          "threshold": "高于预期 0.3%以上",
+          "action_implication": "迅速止盈高弹性科技股，切入防御板块"
+        }
+      ],
+      "_ts": 1795833921.1220248
+    },
+    "evt_5b2021310281": {
+      "one_liner": "霍尔木兹海峡地缘冲突升级刺激原油供给风险溢价，油轮运输板块与传统能源迎短期爆发。",
+      "expectation_gap": "市场此前对中东航运及能源供应链定价偏向麻木，突发地缘事件引发供给中断重定价。",
+      "transmission_layers": [
+        {
+          "tier": 1,
+          "tier_label": "一阶直接冲击（核心受益或受损主体）",
+          "summary": "中东原油运输咽喉受阻，直接推高全球原油期货及油轮运费。",
+          "stocks": [
+            {
+              "name": "中远海能",
+              "code": "600026.SH",
+              "market": "A股",
+              "exposure_logic": "中东航线地缘风险推升VLCC运费预期",
+              "direction": "positive"
+            }
+          ]
+        },
+        {
+          "tier": 2,
+          "tier_label": "二阶产业链传导",
+          "summary": "油价飙升直接增厚上游油气开采企业盈利，化工品成本端支撑增强。",
+          "stocks": [
+            {
+              "name": "中国海油",
+              "code": "600938.SH",
+              "market": "A股",
+              "exposure_logic": "油价中枢上移直接兑现高弹性业绩红利",
+              "direction": "positive"
+            }
+          ]
+        },
+        {
+          "tier": 3,
+          "tier_label": "三阶宏观或避险跷跷板",
+          "summary": "能源通胀预期回升压制全球制造业利润率，避险资金涌入黄金与美元。",
+          "stocks": [
+            {
+              "name": "SPDR黄金ETF",
+              "code": "GLD",
+              "market": "美股",
+              "exposure_logic": "地缘避险情绪推升贵金属配置需求",
+              "direction": "positive"
+            }
+          ]
+        }
+      ],
+      "historical_precedents": [
+        {
+          "date": "2019-06-13",
+          "event_title": "阿曼湾油轮遇袭事件",
+          "t1_reaction": "布伦特原油期货日内飙升逾4%，航运股集体大涨",
+          "t5_reaction": "若无实质性封锁，油价在情绪消退后逐步回吐涨幅",
+          "lesson": "地缘冲突对大宗商品的冲击呈脉冲式，持续性取决于供应链实质阻断程度"
+        }
+      ],
+      "quant_if_then": [
+        {
+          "case": "bull",
+          "label": "正向验证阈值",
+          "trigger_metric": "布伦特原油主力合约",
+          "threshold": "突破 90美元/桶",
+          "action_implication": "增持能源上游及油服板块"
+        },
+        {
+          "case": "bear",
+          "label": "证伪退出阈值",
+          "trigger_metric": "霍尔木兹海峡通行量",
+          "threshold": "恢复正常无延误",
+          "action_implication": "迅速撤出航运及溢价原油多头仓位"
+        }
+      ],
+      "_ts": 1795833921.1220248
+    },
+    "伊朗称两艘油轮在霍尔木兹海峡发生爆炸": {
+      "one_liner": "霍尔木兹海峡地缘冲突升级刺激原油供给风险溢价，油轮运输板块与传统能源迎短期爆发。",
+      "expectation_gap": "市场此前对中东航运及能源供应链定价偏向麻木，突发地缘事件引发供给中断重定价。",
+      "transmission_layers": [
+        {
+          "tier": 1,
+          "tier_label": "一阶直接冲击（核心受益或受损主体）",
+          "summary": "中东原油运输咽喉受阻，直接推高全球原油期货及油轮运费。",
+          "stocks": [
+            {
+              "name": "中远海能",
+              "code": "600026.SH",
+              "market": "A股",
+              "exposure_logic": "中东航线地缘风险推升VLCC运费预期",
+              "direction": "positive"
+            }
+          ]
+        },
+        {
+          "tier": 2,
+          "tier_label": "二阶产业链传导",
+          "summary": "油价飙升直接增厚上游油气开采企业盈利，化工品成本端支撑增强。",
+          "stocks": [
+            {
+              "name": "中国海油",
+              "code": "600938.SH",
+              "market": "A股",
+              "exposure_logic": "油价中枢上移直接兑现高弹性业绩红利",
+              "direction": "positive"
+            }
+          ]
+        },
+        {
+          "tier": 3,
+          "tier_label": "三阶宏观或避险跷跷板",
+          "summary": "能源通胀预期回升压制全球制造业利润率，避险资金涌入黄金与美元。",
+          "stocks": [
+            {
+              "name": "SPDR黄金ETF",
+              "code": "GLD",
+              "market": "美股",
+              "exposure_logic": "地缘避险情绪推升贵金属配置需求",
+              "direction": "positive"
+            }
+          ]
+        }
+      ],
+      "historical_precedents": [
+        {
+          "date": "2019-06-13",
+          "event_title": "阿曼湾油轮遇袭事件",
+          "t1_reaction": "布伦特原油期货日内飙升逾4%，航运股集体大涨",
+          "t5_reaction": "若无实质性封锁，油价在情绪消退后逐步回吐涨幅",
+          "lesson": "地缘冲突对大宗商品的冲击呈脉冲式，持续性取决于供应链实质阻断程度"
+        }
+      ],
+      "quant_if_then": [
+        {
+          "case": "bull",
+          "label": "正向验证阈值",
+          "trigger_metric": "布伦特原油主力合约",
+          "threshold": "突破 90美元/桶",
+          "action_implication": "增持能源上游及油服板块"
+        },
+        {
+          "case": "bear",
+          "label": "证伪退出阈值",
+          "trigger_metric": "霍尔木兹海峡通行量",
+          "threshold": "恢复正常无延误",
+          "action_implication": "迅速撤出航运及溢价原油多头仓位"
+        }
+      ],
+      "_ts": 1795833921.1220248
+    },
+    "evt_62e66ac7d459": {
+      "one_liner": "中美俄大国外交框架重构缓和地缘政治溢价，利好跨境贸易与全球供应链预期稳定。",
+      "expectation_gap": "市场此前对大国博弈持续升级呈悲观一致预期，多边协调机制提出边际改善地缘风险偏好。",
+      "transmission_layers": [
+        {
+          "tier": 1,
+          "tier_label": "一阶直接冲击（核心受益或受损主体）",
+          "summary": "大国关系缓和预期降低地缘政治尾部风险，直接修复跨境贸易资产。",
+          "stocks": [
+            {
+              "name": "中国远洋海控",
+              "code": "601919.SH",
+              "market": "A股",
+              "exposure_logic": "全球贸易航线政策预期趋稳，估值压制缓解",
+              "direction": "positive"
+            }
+          ]
+        },
+        {
+          "tier": 2,
+          "tier_label": "二阶产业链传导",
+          "summary": "跨国供应链摩擦预期下降，出口制造与全球化布局企业经营确定性增强。",
+          "stocks": [
+            {
+              "name": "三一重工",
+              "code": "600031.SH",
+              "market": "A股",
+              "exposure_logic": "海外基建与设备出口的地缘合规风险溢价下降",
+              "direction": "positive"
+            }
+          ]
+        },
+        {
+          "tier": 3,
+          "tier_label": "三阶宏观或避险跷跷板",
+          "summary": "系统性地缘风险溢价收窄，极端避险资产配置需求边际减弱。",
+          "stocks": [
+            {
+              "name": "iShares黄金信托",
+              "code": "IAU",
+              "market": "美股",
+              "exposure_logic": "大国地缘缓和削弱部分极端避险溢价",
+              "direction": "negative"
+            }
+          ]
+        }
+      ],
+      "historical_precedents": [
+        {
+          "date": "2022-11-14",
+          "event_title": "巴厘岛元首会晤",
+          "t1_reaction": "中美关系阶段性缓和带动中概股与A股核心资产强势反弹",
+          "t5_reaction": "外资连续多日大幅净流入，离岸人民币汇率显著升值",
+          "lesson": "高层战略对话释放的稳定信号是扭转外资悲观预期、催化估值修复的核心催化剂"
+        }
+      ],
+      "quant_if_then": [
+        {
+          "case": "bull",
+          "label": "正向验证阈值",
+          "trigger_metric": "北向资金单日净流入额",
+          "threshold": "连续3日大于 50亿元",
+          "action_implication": "积极配置外资重仓的蓝筹核心资产"
+        },
+        {
+          "case": "bear",
+          "label": "证伪退出阈值",
+          "trigger_metric": "双边经贸制裁清单新增数",
+          "threshold": "单周超预期新增 3起以上",
+          "action_implication": "降低高曝光出口链标的仓位"
+        }
+      ],
+      "_ts": 1795833921.1220248
+    },
+    "中国学者中美俄三国协调可替代特朗普g2构想": {
+      "one_liner": "中美俄大国外交框架重构缓和地缘政治溢价，利好跨境贸易与全球供应链预期稳定。",
+      "expectation_gap": "市场此前对大国博弈持续升级呈悲观一致预期，多边协调机制提出边际改善地缘风险偏好。",
+      "transmission_layers": [
+        {
+          "tier": 1,
+          "tier_label": "一阶直接冲击（核心受益或受损主体）",
+          "summary": "大国关系缓和预期降低地缘政治尾部风险，直接修复跨境贸易资产。",
+          "stocks": [
+            {
+              "name": "中国远洋海控",
+              "code": "601919.SH",
+              "market": "A股",
+              "exposure_logic": "全球贸易航线政策预期趋稳，估值压制缓解",
+              "direction": "positive"
+            }
+          ]
+        },
+        {
+          "tier": 2,
+          "tier_label": "二阶产业链传导",
+          "summary": "跨国供应链摩擦预期下降，出口制造与全球化布局企业经营确定性增强。",
+          "stocks": [
+            {
+              "name": "三一重工",
+              "code": "600031.SH",
+              "market": "A股",
+              "exposure_logic": "海外基建与设备出口的地缘合规风险溢价下降",
+              "direction": "positive"
+            }
+          ]
+        },
+        {
+          "tier": 3,
+          "tier_label": "三阶宏观或避险跷跷板",
+          "summary": "系统性地缘风险溢价收窄，极端避险资产配置需求边际减弱。",
+          "stocks": [
+            {
+              "name": "iShares黄金信托",
+              "code": "IAU",
+              "market": "美股",
+              "exposure_logic": "大国地缘缓和削弱部分极端避险溢价",
+              "direction": "negative"
+            }
+          ]
+        }
+      ],
+      "historical_precedents": [
+        {
+          "date": "2022-11-14",
+          "event_title": "巴厘岛元首会晤",
+          "t1_reaction": "中美关系阶段性缓和带动中概股与A股核心资产强势反弹",
+          "t5_reaction": "外资连续多日大幅净流入，离岸人民币汇率显著升值",
+          "lesson": "高层战略对话释放的稳定信号是扭转外资悲观预期、催化估值修复的核心催化剂"
+        }
+      ],
+      "quant_if_then": [
+        {
+          "case": "bull",
+          "label": "正向验证阈值",
+          "trigger_metric": "北向资金单日净流入额",
+          "threshold": "连续3日大于 50亿元",
+          "action_implication": "积极配置外资重仓的蓝筹核心资产"
+        },
+        {
+          "case": "bear",
+          "label": "证伪退出阈值",
+          "trigger_metric": "双边经贸制裁清单新增数",
+          "threshold": "单周超预期新增 3起以上",
+          "action_implication": "降低高曝光出口链标的仓位"
+        }
+      ],
+      "_ts": 1795833921.1220248
+    },
+    "evt_a24550fa6457": {
+      "one_liner": "AI行业头部放慢开发步伐引发算力硬件军备竞赛放缓担忧，短期压制高估值AI应用与半导体。",
+      "expectation_gap": "市场习惯于线性外推AI技术军备竞赛的无休止加速，领头羊呼吁刹车打破了极致乐观预期。",
+      "transmission_layers": [
+        {
+          "tier": 1,
+          "tier_label": "一阶直接冲击（核心受益或受损主体）",
+          "summary": "AI龙头主动刹车传导至资本开支可持续性担忧，重挫GPU与算力芯片。",
+          "stocks": [
+            {
+              "name": "英伟达",
+              "code": "NVDA",
+              "market": "美股",
+              "exposure_logic": "开发放缓预期直接动摇算力硬件需求超高增长的底层逻辑",
+              "direction": "negative"
+            }
+          ]
+        },
+        {
+          "tier": 2,
+          "tier_label": "二阶产业链传导",
+          "summary": "上游高带宽存储与光模块订单增速预期受累，国内AI算力链同步承压。",
+          "stocks": [
+            {
+              "name": "工业富联",
+              "code": "601138.SH",
+              "market": "A股",
+              "exposure_logic": "AI服务器代工订单指引面临增速放缓扰动",
+              "direction": "negative"
+            }
+          ]
+        },
+        {
+          "tier": 3,
+          "tier_label": "三阶宏观或避险跷跷板",
+          "summary": "科技股抱团瓦解释放的流动性向传统价值及防御红利板块回流。",
+          "stocks": [
+            {
+              "name": "长江电力",
+              "code": "600900.SH",
+              "market": "A股",
+              "exposure_logic": "高估值科技主线资金分流，低波红利资产重获青睐",
+              "direction": "positive"
+            }
+          ]
+        }
+      ],
+      "historical_precedents": [
+        {
+          "date": "2023-03-29",
+          "event_title": "千名学者联名呼吁暂停大型AI研发6个月",
+          "t1_reaction": "AI概念股盘中出现明显震荡回调，英伟达股价承压",
+          "t5_reaction": "市场随后重新聚焦商业化落地，算力大厂财报超预期驱动行情再创新高",
+          "lesson": "伦理与放缓呼吁多为短期情绪扰动，不改产业资本开支的长周期趋势"
+        }
+      ],
+      "quant_if_then": [
+        {
+          "case": "bull",
+          "label": "正向验证阈值",
+          "trigger_metric": "北美四大云厂商季度资本开支",
+          "threshold": "同比增速保持在 30%以上",
+          "action_implication": "逢低吸纳AI算力与硬件龙头"
+        },
+        {
+          "case": "bear",
+          "label": "证伪退出阈值",
+          "trigger_metric": "头部AI公司研发投入指引",
+          "threshold": "宣布实质性下调幅度超 15%",
+          "action_implication": "坚决清仓高估值AI纯概念标的"
+        }
+      ],
+      "_ts": 1795833921.1220248
+    },
+    "发布地球最强模型仅几天后openai首席科学家发长文呼吁": {
+      "one_liner": "AI行业头部放慢开发步伐引发算力硬件军备竞赛放缓担忧，短期压制高估值AI应用与半导体。",
+      "expectation_gap": "市场习惯于线性外推AI技术军备竞赛的无休止加速，领头羊呼吁刹车打破了极致乐观预期。",
+      "transmission_layers": [
+        {
+          "tier": 1,
+          "tier_label": "一阶直接冲击（核心受益或受损主体）",
+          "summary": "AI龙头主动刹车传导至资本开支可持续性担忧，重挫GPU与算力芯片。",
+          "stocks": [
+            {
+              "name": "英伟达",
+              "code": "NVDA",
+              "market": "美股",
+              "exposure_logic": "开发放缓预期直接动摇算力硬件需求超高增长的底层逻辑",
+              "direction": "negative"
+            }
+          ]
+        },
+        {
+          "tier": 2,
+          "tier_label": "二阶产业链传导",
+          "summary": "上游高带宽存储与光模块订单增速预期受累，国内AI算力链同步承压。",
+          "stocks": [
+            {
+              "name": "工业富联",
+              "code": "601138.SH",
+              "market": "A股",
+              "exposure_logic": "AI服务器代工订单指引面临增速放缓扰动",
+              "direction": "negative"
+            }
+          ]
+        },
+        {
+          "tier": 3,
+          "tier_label": "三阶宏观或避险跷跷板",
+          "summary": "科技股抱团瓦解释放的流动性向传统价值及防御红利板块回流。",
+          "stocks": [
+            {
+              "name": "长江电力",
+              "code": "600900.SH",
+              "market": "A股",
+              "exposure_logic": "高估值科技主线资金分流，低波红利资产重获青睐",
+              "direction": "positive"
+            }
+          ]
+        }
+      ],
+      "historical_precedents": [
+        {
+          "date": "2023-03-29",
+          "event_title": "千名学者联名呼吁暂停大型AI研发6个月",
+          "t1_reaction": "AI概念股盘中出现明显震荡回调，英伟达股价承压",
+          "t5_reaction": "市场随后重新聚焦商业化落地，算力大厂财报超预期驱动行情再创新高",
+          "lesson": "伦理与放缓呼吁多为短期情绪扰动，不改产业资本开支的长周期趋势"
+        }
+      ],
+      "quant_if_then": [
+        {
+          "case": "bull",
+          "label": "正向验证阈值",
+          "trigger_metric": "北美四大云厂商季度资本开支",
+          "threshold": "同比增速保持在 30%以上",
+          "action_implication": "逢低吸纳AI算力与硬件龙头"
+        },
+        {
+          "case": "bear",
+          "label": "证伪退出阈值",
+          "trigger_metric": "头部AI公司研发投入指引",
+          "threshold": "宣布实质性下调幅度超 15%",
+          "action_implication": "坚决清仓高估值AI纯概念标的"
+        }
+      ],
+      "_ts": 1795833921.1220248
+    },
+    "evt_3af6bd997560": {
+      "one_liner": "中东核心阵营高级人物遇袭加剧加沙局势反复，刺激军工国防与黄金避险情绪抬升。",
+      "expectation_gap": "市场此前对巴以局部停火谈判存乐观预期，暗杀事件暴露停火脆弱性，地缘风险溢价迅速回补。",
+      "transmission_layers": [
+        {
+          "tier": 1,
+          "tier_label": "一阶直接冲击（核心受益或受损主体）",
+          "summary": "加沙局势再度恶化，直接推升国防军工板块的短期情绪溢价。",
+          "stocks": [
+            {
+              "name": "洛克希德马丁",
+              "code": "LMT",
+              "market": "美股",
+              "exposure_logic": "中东冲突长期化推高全球军售与防务需求预期",
+              "direction": "positive"
+            }
+          ]
+        },
+        {
+          "tier": 2,
+          "tier_label": "二阶产业链传导",
+          "summary": "地区局势升级进一步扰动原油供应链安全，石化与贵金属板块获得支撑。",
+          "stocks": [
+            {
+              "name": "中国石油",
+              "code": "601857.SH",
+              "market": "A股",
+              "exposure_logic": "地缘溢价支撑油价维持高位运行",
+              "direction": "positive"
+            }
+          ]
+        },
+        {
+          "tier": 3,
+          "tier_label": "三阶宏观或避险跷跷板",
+          "summary": "中东局势扩大化忧虑刺激全球资金寻求避险，贵金属和美债配置上升。",
+          "stocks": [
+            {
+              "name": "SPDR黄金ETF",
+              "code": "GLD",
+              "market": "美股",
+              "exposure_logic": "尾部地缘风险驱动避险买盘涌入黄金",
+              "direction": "positive"
+            }
+          ]
+        }
+      ],
+      "historical_precedents": [
+        {
+          "date": "2024-07-31",
+          "event_title": "哈马斯领导人哈尼亚遇袭身亡",
+          "t1_reaction": "国际金价盘中跳涨突破关键关口，国防军工板块走强",
+          "t5_reaction": "若未引发全面地区战争，资产价格在情绪消化后回归主线宏观逻辑",
+          "lesson": "定点清除类事件具有高突发性，对大宗与避险资产的提振主要为日内至数日级别"
+        }
+      ],
+      "quant_if_then": [
+        {
+          "case": "bull",
+          "label": "正向验证阈值",
+          "trigger_metric": "VIX恐慌指数",
+          "threshold": "突破 20.0 关口",
+          "action_implication": "增配黄金及国防军工对冲组合"
+        },
+        {
+          "case": "bear",
+          "label": "证伪退出阈值",
+          "trigger_metric": "地区各方表态及冲突外溢范围",
+          "threshold": "明确声明不升级且无报复行动",
+          "action_implication": "平仓地缘避险多头头寸"
+        }
+      ],
+      "_ts": 1795833921.1220248
+    },
+    "以色列暗杀失败哈马斯领导人之子在袭击中幸存": {
+      "one_liner": "中东核心阵营高级人物遇袭加剧加沙局势反复，刺激军工国防与黄金避险情绪抬升。",
+      "expectation_gap": "市场此前对巴以局部停火谈判存乐观预期，暗杀事件暴露停火脆弱性，地缘风险溢价迅速回补。",
+      "transmission_layers": [
+        {
+          "tier": 1,
+          "tier_label": "一阶直接冲击（核心受益或受损主体）",
+          "summary": "加沙局势再度恶化，直接推升国防军工板块的短期情绪溢价。",
+          "stocks": [
+            {
+              "name": "洛克希德马丁",
+              "code": "LMT",
+              "market": "美股",
+              "exposure_logic": "中东冲突长期化推高全球军售与防务需求预期",
+              "direction": "positive"
+            }
+          ]
+        },
+        {
+          "tier": 2,
+          "tier_label": "二阶产业链传导",
+          "summary": "地区局势升级进一步扰动原油供应链安全，石化与贵金属板块获得支撑。",
+          "stocks": [
+            {
+              "name": "中国石油",
+              "code": "601857.SH",
+              "market": "A股",
+              "exposure_logic": "地缘溢价支撑油价维持高位运行",
+              "direction": "positive"
+            }
+          ]
+        },
+        {
+          "tier": 3,
+          "tier_label": "三阶宏观或避险跷跷板",
+          "summary": "中东局势扩大化忧虑刺激全球资金寻求避险，贵金属和美债配置上升。",
+          "stocks": [
+            {
+              "name": "SPDR黄金ETF",
+              "code": "GLD",
+              "market": "美股",
+              "exposure_logic": "尾部地缘风险驱动避险买盘涌入黄金",
+              "direction": "positive"
+            }
+          ]
+        }
+      ],
+      "historical_precedents": [
+        {
+          "date": "2024-07-31",
+          "event_title": "哈马斯领导人哈尼亚遇袭身亡",
+          "t1_reaction": "国际金价盘中跳涨突破关键关口，国防军工板块走强",
+          "t5_reaction": "若未引发全面地区战争，资产价格在情绪消化后回归主线宏观逻辑",
+          "lesson": "定点清除类事件具有高突发性，对大宗与避险资产的提振主要为日内至数日级别"
+        }
+      ],
+      "quant_if_then": [
+        {
+          "case": "bull",
+          "label": "正向验证阈值",
+          "trigger_metric": "VIX恐慌指数",
+          "threshold": "突破 20.0 关口",
+          "action_implication": "增配黄金及国防军工对冲组合"
+        },
+        {
+          "case": "bear",
+          "label": "证伪退出阈值",
+          "trigger_metric": "地区各方表态及冲突外溢范围",
+          "threshold": "明确声明不升级且无报复行动",
+          "action_implication": "平仓地缘避险多头头寸"
+        }
+      ],
+      "_ts": 1795833921.1220248
     }
   }
 }
